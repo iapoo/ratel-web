@@ -1,0 +1,32 @@
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+.DS_Store
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+
+.DS_Store
+.vscode/
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+classes
+
+### NetBeans ###
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+node_modules/
+src/.umi/
