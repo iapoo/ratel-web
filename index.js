@@ -1,0 +1,7 @@
+console.log(__filename)
+console.log(Math.round(3.1))
+console.log(Math.round(3.5))
+console.log(Math.round(3.8))
+const angle = Math.asin(0.5)
+console.log(angle * 180 / Math.PI)
+console.log(Math.PI / 6)
