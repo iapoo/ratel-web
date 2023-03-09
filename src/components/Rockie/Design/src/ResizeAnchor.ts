@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable complexity */
-import { Point2, Rectangle, } from '@/components/Engine'
+import { Point2, Rectangle, Rotation, } from '@/components/Engine'
 import { Editor, } from '../../Editor/src/Editor'
 import { SelectionLayer, } from '../../Editor/src/SelectionLayer'
 import { Anchor, } from './Anchor'
@@ -154,6 +154,9 @@ export class ResizeAnchor extends Anchor {
           }
         })
         this.target.boundary = Rectangle.makeLTWH(newLeft, newTop, newWidth, newHeight)
+
+        //Recalculate rotation because it depends on width and height
+        this.target.rotation = new Rotation(this.target.rotation.radius, this.target.width / 2, this.target.height / 2)
 
         this.holder.layoutAnchors()
         this.lastMovingTime = nowTime

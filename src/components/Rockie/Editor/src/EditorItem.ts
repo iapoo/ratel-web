@@ -1,4 +1,4 @@
-import { Rectangle, } from '@/components/Engine'
+import { Rectangle, Rotation, } from '@/components/Engine'
 import { EntityShape, } from '../../Shapes'
 
 export interface EditorItem {
@@ -16,5 +16,6 @@ export interface EditorItem {
   readonly items: EditorItem[]
   readonly category: string;
   readonly type: string;
+  readonly rotation: Rotation;
   saveData: (data: any) => void;
 }

@@ -47,22 +47,23 @@ export class RotationAnchor extends Anchor {
         this.target.width / 2 - Holder.ANCHOR_RADIUS + x,
         -Holder.ANCHOR_RADIUS + y,
       );
-      let angle = GraphicsUtils.getTriangleAngle(target, start, end);
+      let angle = GraphicsUtils.getTriangleAngleEx(target, end, start);
       console.log(
         `rotation anchor moving x=${x} y =${y}   endX=${end.x} endY =${end.y} startx=${this._startX} startY=${this._startY} centerX=${this._centerX} centerY=${this._centerY} and angle=${angle}`,
       );
 
-      angle = Math.round(angle / 15) * 15;
+      angle = Math.round(angle / 5) * 5;
 
       // TODO: 鼠标移动会导致Anchor重定位，结果导致鼠标位置突变而引起图形突变。这里延缓变化频率以修复问题
       const nowTime = new Date().getTime();
       if (nowTime - this.lastMovingTime > Anchor.MIN_MOVING_INTERVAL) {
         // this.holder.rotate = new Rotation(this.target.width / 2, this.target.height / 2, angle)
         this.target.rotation = new Rotation(
-          this.target.left + this.target.width / 2,
-          this.target.top + this.target.height / 2,
           (angle * Math.PI) / 180,
+           this.target.width / 2,
+          this.target.height / 2,
         );
+        
         // this.holder.rotate = new Rotation(this.target.left + this.target.width / 2, this.target.top + this.target.height / 2, angle * Math.PI / 180)
         // this.holder.layoutAnchors()
         this.lastMovingTime = nowTime;

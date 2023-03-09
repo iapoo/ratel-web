@@ -1,8 +1,8 @@
 import React, { useEffect, useState, } from 'react'
 import styles from './index.css'
 import Workspace from '@/components/Workspace'
-import { Button, Collapse, } from 'antd'
-import { Utils, } from '../Utils'
+import { Button, Collapse, Space, } from 'antd'
+import { Utils, RequestUtils, } from '../Utils'
 
 import { Editor, } from '../../Rockie/Editor'
 import { LineAction, ShapeAction, TableAction, } from '../../Rockie/Actions'
@@ -89,10 +89,15 @@ export default (props: any) => {
     str = decodeURI(haha)
     console.log(str)
   }
+
+  const login = () => {
+    RequestUtils.login()    
+  }
   return (
     <div {...props}>
       <Collapse defaultActiveKey={[ '1', '2', ]} onChange={onChange}>
-        <Panel header='This is panel header 1' key='1'>
+        <Panel header='This is panel header 1' key='1' >
+          <Space wrap>
           <Button type='primary' onClick={addRectangle}>Rectangle</Button>
           <Button type='primary' onClick={addLine}>Line</Button>
           <Button type='primary' onClick={addTable}>Table</Button>
@@ -100,6 +105,8 @@ export default (props: any) => {
           <Button type='primary' onClick={resize}>Resize</Button>
           <Button type='primary' onClick={zoom}>Zoom</Button>
           <Button type='primary' onClick={load}>Load</Button>
+          <Button type='primary' onClick={login}>Login</Button>
+          </Space>
         </Panel>
         <Panel header='This is panel header 2' key='2' />
         <Panel header='This is panel header 3' key='3'>

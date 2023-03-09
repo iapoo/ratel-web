@@ -1,4 +1,5 @@
 /* eslint-disable max-params */
+import { Rotation } from '@/components/Engine'
 import { Editor, EditorItem, } from '@/components/Rockie/Editor'
 import { Connector, LineEntity, ShapeEntity, Shapes, TableEntity, } from '@/components/Rockie/Items'
 import { Categories, } from '@/components/Rockie/Items/src/Item'
@@ -22,8 +23,8 @@ export class StorageService {
   }
 
   private static loadLineEntity (itemData: EditorItemData): EditorItem {
-    const LineEntity = new LineEntity()
-    return LineEntity
+    const lineEntity = new LineEntity()
+    return lineEntity
   }
 
   private static loadConnector (itemData: EditorItemData): EditorItem {
@@ -36,6 +37,9 @@ export class StorageService {
     const shapeEntity = new ShapeEntity(itemData.left, itemData.top, itemData.width, itemData.height)
     shapeEntity.type = itemData.type
     shapeEntity.text = itemData.text
+    if(itemData.rotation) {
+      shapeEntity.rotation = new Rotation(itemData.rotation, shapeEntity.width / 2, shapeEntity.height /2)
+    }
     return shapeEntity
   }
 
@@ -71,7 +75,10 @@ export class StorageService {
 
     const data = JSON.stringify(this._storageData)
     console.log(data)
+    StorageService.testdata = data
   }
+
+  public static testdata = ''
 
   public load () {
     let source = `{"version":"1.0","author":"","sheets":[{"name":"","index":0,"zoom":1,"x":0,"y":0,"width":2000,"height":2000,"title":"File 1","key":"1","items":[{"type":"Rectangle","left":12,"top":28,"width":200,"height":200,"text":"","items":[],"shape":{"left":0,"top":0,"width":100,"height":100,"text":""}}]},{"name":"","index":0,"zoom":1,"x":0,"y":0,"width":2000,"height":2000,"title":"File 2","key":"2","items":[{"type":"Rectangle","left":220,"top":188,"width":200,"height":200,"text":"","items":[],"shape":{"left":0,"top":0,"width":100,"height":100,"text":""}}]},{"name":"","index":0,"zoom":1,"x":0,"y":0,"width":2000,"height":2000,"title":"File 3","key":"3","items":[{"type":"Rectangle","left":572,"top":-4,"width":200,"height":200,"text":"","items":[],"shape":{"left":0,"top":0,"width":100,"height":100,"text":""}}]}]}`
@@ -79,7 +86,8 @@ export class StorageService {
     source = `
     {"version":"1.0","author":"","sheets":[{"name":"","index":0,"zoom":1,"x":0,"y":0,"width":2000,"height":2000,"title":"File 1","key":"1","items":[{"type":"Rectangle","category":"Shape","left":124,"top":44,"width":200,"height":200,"text":"fasfsffa","items":[],"shape":{"left":0,"top":0,"width":100,"height":100,"text":""}},{"type":"","category":"Table","left":410,"top":154,"width":300,"height":300,"text":"","items":[],"shape":{"left":0,"top":0,"width":100,"height":100,"text":""}}]},{"name":"","index":0,"zoom":1,"x":0,"y":0,"width":2000,"height":2000,"title":"File 2","key":"2","items":[]},{"name":"","index":0,"zoom":1,"x":0,"y":0,"width":2000,"height":2000,"title":"File 3","key":"3","items":[]}]}
     `
-    const data = JSON.parse(source)
+    let data = JSON.parse(source)
+    data = JSON.parse(StorageService.testdata)
     this._storageData = data
 
     console.log(this._storageData)
@@ -122,6 +130,7 @@ export class StorageService {
     editorItemData.top = editorItem.top
     editorItemData.width = editorItem.width
     editorItemData.height = editorItem.height
+    editorItemData.rotation = editorItem.rotation.radius
     editorItemData.text = editorItem.text
     editorItemData.items.length = 0
     editorItemData.category = editorItem.category
