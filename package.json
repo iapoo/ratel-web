@@ -1,5 +1,5 @@
 {
-  "name": "umi-electron-typescript-template",
+  "name": "ratel",
   "version": "1.0.0",
   "scripts": {
     "start": "umi dev",
@@ -104,7 +104,7 @@
     }
   },
   "build": {
-    "appId": "com.allentom.umi-electron-typescript-template",
+    "appId": "com.ivipi.ratel",
     "files": [
       "dist/",
       "node_modules/",

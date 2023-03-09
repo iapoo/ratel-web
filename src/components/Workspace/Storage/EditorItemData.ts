@@ -9,6 +9,7 @@ export class EditorItemData {
     public top: number
     public width: number
     public height: number
+    public rotation: number
     public text: string
     public items: Array<EditorItemData> = new Array<EditorItemData>(0)
     public shape: ShapeData
@@ -22,5 +23,6 @@ export class EditorItemData {
       this.height = height
       this.text = text
       this.shape = new ShapeData()
+      this.rotation = 0
     }
 }

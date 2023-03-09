@@ -18,6 +18,7 @@ export abstract class Anchor extends Control {
     this.height = 8
     this.stroke = Paint.makeColorPaint(Colors.Blue)
     this.fill = Paint.makeColorPaint(Colors.White)
+    this.stroke.setAntiAlias(true)
     this.onPointerClick((e) => {
       this.handlePointerClick(e.x, e.y)
     })

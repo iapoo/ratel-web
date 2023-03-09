@@ -66,6 +66,7 @@ export abstract class Item implements EditorItem {
 
   public set rotation (value: Rotation) {
     this._rotation = value
+    this._shape.rotation = value
   }
 
   public get shape (): EntityShape {
@@ -213,7 +214,10 @@ export abstract class Item implements EditorItem {
     data.top = this.top
     data.width = this.width
     data.height = this.height
-    data.rotation = this.rotation
+    data.rotation = {}
+    data.rotation.radius = this.rotation.radius
+    data.rotation.px = this.rotation.px
+    data.rotation.py = this.rotation.py
     data.items = []
     this.items.forEach(child => {
       const itemData = {}

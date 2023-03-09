@@ -1312,6 +1312,22 @@ export class GraphicsUtils {
   private static getPointDistance (start: Point2, end: Point2): number {
     return Math.sqrt((start.x - end.x) * (start.x - end.x) + (start.y - end.y) * (start.y - end.y))
   }
+
+
+  public static getTriangleAngleEx(target: Point2, start: Point2, end: Point2) {
+    const numerator = start.y*(target.x- end.x) + target.y*(end.x-start.x) + end.y*(start.x-target.x);
+    const denominator = (start.x-target.x)*(target.x-end.x) + (start.y-target.y)*(target.y-end.y);
+    const ratio = numerator/denominator;
+
+    const angleRad = Math.atan(ratio);
+    const angleDeg = (angleRad*180)/Math.PI;
+
+    //if(angleDeg<0){
+    // angleDeg = 180+angleDeg;
+    //}
+
+    return angleDeg;
+  }
 }
 
 export class ParagraphBuilder {

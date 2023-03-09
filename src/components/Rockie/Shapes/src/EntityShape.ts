@@ -37,7 +37,7 @@ export class EntityShape extends AbstractTextShape {
 
   constructor (text = '', left = 0, top = 0, width = 100, height = 100) {
     super(text, left, top, width, height)
-    this._type = EntityShapeType.Ellipse
+    this._type = EntityShapeType.Rectangle
   }
 
   public get type () {
