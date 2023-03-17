@@ -53,7 +53,7 @@ export class Painter {
     if (!this._started) {
       this._timer = setInterval(() => {
         this.render()
-      }, 60)
+      }, 15)
     }
   }
 
