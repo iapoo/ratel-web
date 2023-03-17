@@ -279,13 +279,13 @@ export default (props: any) => {
       <div style={{ position: 'absolute', width: '100%', height: `calc(100% - ${Utils.TITLE_HEIGHT}px + 16px) `, zIndex: 2, }} >
         <div style={{ width: '100%', height: '100%', overflow: 'scroll', display: 'grid', placeItems: 'center', }}>
           <div style={{ width: contentWidth, height: contentHeight, }}>
-            <div style={{ width: '100%', height: Editor.SHADOW_SIZE, backgroundColor: 'red', }} />
+            <div style={{ width: '100%', height: Editor.SHADOW_SIZE, backgroundColor: 'lightgray', }} />
             <div style={{ width: '100%', height: editorHeight, boxSizing: 'border-box', }}>
-              <div style={{ width: Editor.SHADOW_SIZE, height: '100%', float: 'left', backgroundColor: 'green', }} />
+              <div style={{ width: Editor.SHADOW_SIZE, height: '100%', float: 'left', backgroundColor: 'lightgray', }} />
               <div id='editor-container' style={{ width: editorWidth, height: '100%', float: 'left', backgroundColor: 'darkgray', }} />
-              <div style={{ width: Editor.SHADOW_SIZE, height: '100%', float: 'left', backgroundColor: 'yellow', }} />
+              <div style={{ width: Editor.SHADOW_SIZE, height: '100%', float: 'left', backgroundColor: 'lightgray', }} />
             </div>
-            <div style={{ width: '100%', height: Editor.SHADOW_SIZE, backgroundColor: 'blue', }} />
+            <div style={{ width: '100%', height: Editor.SHADOW_SIZE, backgroundColor: 'lightgray', }} />
           </div>
         </div>
       </div>

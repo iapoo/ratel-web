@@ -109,8 +109,8 @@ export default (props: any) => {
           </Space>
         </Panel>
         <Panel header='This is panel header 2' key='2' />
-        <Panel header='This is panel header 3' key='3'>
-          <p>{text}</p>
+        <Panel header='Document Explorer' key='3'>
+          
         </Panel>
       </Collapse>
     </div>
