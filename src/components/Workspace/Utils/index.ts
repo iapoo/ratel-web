@@ -6,7 +6,7 @@ export { SystemUtils } from './SystemUtils'
 export { RequestUtils } from './RequestUtils'
 
 export class Utils {
-    public static HEADER_HEIGHT = 64
+    public static HEADER_HEIGHT = 96
     public static FOOTER_HEIGHT = 32
     public static TITLE_HEIGHT = 56
     public static DEFAULT_NAVIGATOR_WIDTH = 200

@@ -14,101 +14,16 @@ import Avatar from 'antd/lib/avatar/avatar'
 import { setInterval } from 'timers'
 import { UserInfo } from '../Utils/RequestUtils'
 
-const { confirm } = Modal;
-
-const onClick: MenuProps['onClick'] = (e) => {
-  alert('click');
-};
-const menuItems: MenuProps['items'] = [
-  {
-    label: 'Navigation One',
-    key: 'mail',
-    icon: <MailOutlined />,
-  },
-  {
-    label: 'Navigation Two',
-    key: 'app',
-    icon: <AppstoreOutlined />,
-    disabled: true,
-  },
-  {
-    label: 'Navigation Three - Submenu',
-    key: 'SubMenu',
-    icon: <SettingOutlined />,
-    children: [
-      {
-        type: 'group',
-        label: 'Item 1',
-        children: [
-          {
-            label: 'Option 1',
-            key: 'setting:1',
-          },
-          {
-            label: 'Option 2',
-            key: 'setting:2',
-          },
-        ],
-      },
-      {
-        type: 'group',
-        label: 'Item 2',
-        children: [
-          {
-            label: 'Option 3',
-            key: 'setting:3',
-          },
-          {
-            label: 'Option 4',
-            key: 'setting:4',
-          },
-        ],
-      },
-    ],
-  },
-  {
-    label: (
-      <a href="https://ant.design" target="_blank" rel="noopener noreferrer">
-        Navigation Four - Link
-      </a>
-    ),
-    key: 'alipay',
-  },
-]
 
 export default (props: any) => {
-  const [initialized, setInitialized,] = useState<boolean>(false)
   const [modal2Open, setModal2Open] = useState(false)
   const [bounds, setBounds] = useState({ left: 0, top: 0, bottom: 0, right: 0 });
   const draggleRef = useRef<HTMLDivElement>(null);
   const [disabled, setDisabled] = useState(false);
   const [loginForm,] = Form.useForm()
-  const [online, setOnline,] = useState<boolean>(false)
-  const [userInfo, setUserInfo,] = useState<UserInfo | null>(null)
-
-  let timer: any = null
 
   useEffect(() => {
-    if (!initialized) {
-      initialize()
-    }
   })
-
-  const initialize = () => {
-    setInitialized(true)
-    timer = setInterval(async () => {
-      const onlineResult = await RequestUtils.isOnline()
-      setOnline(onlineResult)
-      setUserInfo(RequestUtils.userInfo)
-    }, 2000)
-
-  }
-
-  const login = () => {
-    setModal2Open(true)
-    //const loginResponse = RequestUtils.login('', '')
-
-  }
 
   const onOk = () => {
     loginForm.submit()
@@ -170,22 +85,9 @@ export default (props: any) => {
 
 
   return (
-    <div style={{ position: 'absolute', top: '0px', height: `${Utils.HEADER_HEIGHT}px`, width: '100%'}}>
-      <div style={{width: '100%', height: '50%', }}>
-        <div style={{ width: '100%', float: 'left' }}>
-          <Menu mode='horizontal' items={menuItems} onClick={onClick} />
-        </div>
-        <div style={{ position: 'absolute', height: '50%', width: '90px', right: '0px', display:'table'}}>
-          <div style={{display: 'table-cell', verticalAlign: 'middle', }}>
-            {userInfo?.customerName} {online ? <Button type='primary' onClick={logout}>退出</Button> : <Button type='primary' onClick={login}>登录</Button>}
-          </div>
-        </div>
-      </div>
-      <div style={{ width: '100%',height: '50%'  }}>
-        <Menu mode='horizontal' items={menuItems} onClick={onClick} />
-      </div>
+    <div>      
       <Modal
-        title="Vertically centered modal dialog"
+        title="Login"
         centered
         visible={modal2Open}
         onOk={onOk}
