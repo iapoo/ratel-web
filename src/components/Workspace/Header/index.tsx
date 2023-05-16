@@ -13,12 +13,14 @@ import CryptoJs from 'crypto-js'
 import Avatar from 'antd/lib/avatar/avatar'
 import { setInterval } from 'timers'
 import { UserInfo } from '../Utils/RequestUtils'
+import LoginFormWindow from './LoginFormWindow'
 
 const { confirm } = Modal;
 
 const onClick: MenuProps['onClick'] = (e) => {
   alert('click');
 };
+
 const menuItems: MenuProps['items'] = [
   {
     label: 'Navigation One',
@@ -78,13 +80,10 @@ const menuItems: MenuProps['items'] = [
 
 export default (props: any) => {
   const [initialized, setInitialized,] = useState<boolean>(false)
-  const [modal2Open, setModal2Open] = useState(false)
-  const [bounds, setBounds] = useState({ left: 0, top: 0, bottom: 0, right: 0 });
   const draggleRef = useRef<HTMLDivElement>(null);
-  const [disabled, setDisabled] = useState(false);
-  const [loginForm,] = Form.useForm()
   const [online, setOnline,] = useState<boolean>(false)
   const [userInfo, setUserInfo,] = useState<UserInfo | null>(null)
+  const [loginFormWindowVisible, setLoginFormWindowVisible, ] = useState<boolean>(false)
 
   let timer: any = null
 
@@ -105,20 +104,15 @@ export default (props: any) => {
   }
 
   const login = () => {
-    setModal2Open(true)
-    //const loginResponse = RequestUtils.login('', '')
-
+    setLoginFormWindowVisible(!loginFormWindowVisible)
   }
 
-  const onOk = () => {
-    loginForm.submit()
-    setModal2Open(false)
+  const handleLoginFormWindowCancel = () => {
+    setLoginFormWindowVisible(false)
   }
-
-  const onCancel = () => {
-    setModal2Open(false)
+  const handleLoginFormWindowOk = () => {
+    setLoginFormWindowVisible(false)
   }
-
   const onStart = (_event: DraggableEvent, uiData: DraggableData) => {
     const { clientWidth, clientHeight } = window.document.documentElement;
     const targetRect = draggleRef.current?.getBoundingClientRect();
@@ -184,60 +178,7 @@ export default (props: any) => {
       <div style={{ width: '100%',height: '50%'  }}>
         <Menu mode='horizontal' items={menuItems} onClick={onClick} />
       </div>
-      <Modal
-        title="Vertically centered modal dialog"
-        centered
-        visible={modal2Open}
-        onOk={onOk}
-        onCancel={onCancel}
-        maskClosable={false}
-        modalRender={(modal) => (
-          <Draggable
-            disabled={disabled}
-            bounds={bounds}
-            onStart={(event, uiData) => onStart(event, uiData)}
-          >
-            <div ref={draggleRef}>{modal}</div>
-          </Draggable>
-        )}
-      >
-        <div style={{ paddingTop: '32px', }}>
-          <Form
-            name='loginForm'
-            form={loginForm}
-            className='login-form'
-            initialValues={{ userName: 'Admin', userPassword: 'Password1', remember: true, }}
-            onFinish={onFinish}
-            style={{ maxWidth: '100%', }}
-          >
-            <Form.Item name='userName' rules={[{ message: '请输入账号名称!', },]} style={{ marginBottom: '4px', }} >
-              <Input
-                prefix={<Avatar size='small' src='/login/login-user.png' />}
-                placeholder='请输入账号'
-                size='middle'
-                bordered={false}
-                style={{ width: '100%', }}
-              />
-            </Form.Item>
-            <div style={{ marginLeft: '40px', width: '280px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', }} />
-            <Form.Item name='userPassword' rules={[{ required: false, message: '请输入账号密码!', },]} style={{ marginBottom: '4px', }}>
-              <Input.Password
-                prefix={<Avatar size='small' src='/login/login-password.png' />}
-                type='password'
-                placeholder='请输入密码'
-                size='middle'
-                bordered={false}
-                style={{ width: '100%', }}
-              />
-            </Form.Item>
-            <div style={{ marginLeft: '40px', width: '280px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', }} />
-            <Form.Item name='remember' valuePropName='checked' style={{ marginBottom: '4px', }}>
-              <Checkbox style={{ float: 'right', fontSize: '14px', }}>记住密码</Checkbox>
-            </Form.Item>
-
-          </Form>
-        </div>
-      </Modal>
+      <LoginFormWindow visible={loginFormWindowVisible} x={60} y={60} onWindowCancel={handleLoginFormWindowCancel} onWindowOk={handleLoginFormWindowOk}/>
     </div>
   )
 }
