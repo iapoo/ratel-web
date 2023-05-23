@@ -2,12 +2,11 @@ import React, { FC, useEffect, useState, useRef } from 'react'
 import styles from './index.css'
 import { Form, Input, Checkbox, Row, Col, Button, Modal, Menu, message, Alert, } from 'antd'
 import { RequestUtils, Utils, } from '../../Utils'
-import type { DraggableData, DraggableEvent } from 'react-draggable';
-import Draggable from 'react-draggable';
 import axios from 'axios'
 import Avatar from 'antd/lib/avatar/avatar'
+import { Folder } from '../../Utils/RequestUtils'
 
-interface LoginFormWindowProps {
+interface OpenFileWindowProps {
   visible: boolean;
   x: number;
   y: number;
@@ -15,20 +14,19 @@ interface LoginFormWindowProps {
   onWindowOk: () => void
 }
 
-const LoginFormWindowPage: FC<LoginFormWindowProps> = ({
+const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
   visible, x, y, onWindowCancel, onWindowOk,
 }) => {
   const [dataLoading, setDataLoading,] = useState<boolean>(false)
   const [modalX, setModalX,] = useState<number>(0)
   const [modalY, setModalY,] = useState<number>(0)
-  const [disabled, setDisabled, ] = useState<boolean>(true)
   const [origModalX, setOrigModalX,] = useState<number>(0)
   const [origModalY, setOrigModalY,] = useState<number>(0)
   const [windowVisible, setWindowVisible,] = useState<boolean>(false)
   const draggleRef = useRef<HTMLDivElement>(null);
   const [loginForm,] = Form.useForm()
   const [errorVisible, setErrorVisible,] = useState<boolean>(false)
-  const [bounds, setBounds, ] = useState({left: 0, top: 0, bottom: 0, right: 0})
+  const [folders, setFolders] = useState<Folder[]>([])
 
   if (origModalX != x) {
     setOrigModalX(x)
@@ -51,26 +49,26 @@ const LoginFormWindowPage: FC<LoginFormWindowProps> = ({
       setDataLoading(true)
       setErrorVisible(false)
       const fetchData = async () => {
-
+        const folderData = await RequestUtils.getFolders(null)
+        if(folderData?.data?.success && folderData?.data?.data) {
+          let folders : Folder[] = []
+          folderData.data.data.records?.forEach((record: any) => {
+            let folder: Folder = {
+              folderId: 0,
+              folderName: '',
+              parentId: null
+            }
+            folder.folderId = record.folderId
+            folder.folderName = record.folderName
+            folder.parentId = record.parentId
+            folders.push(folder)
+          })
+          console.log(folderData)
+        }
       }
       fetchData()
     }
   })
-
-  const handleDragStart = (e: DraggableEvent, data: DraggableData) => {
-    console.log('start = ', data)
-    const { clientWidth, clientHeight } = window.document.documentElement;
-    const targetRect = draggleRef.current?.getBoundingClientRect();
-    if (!targetRect) {
-      return;
-    }
-    setBounds({
-      left: -targetRect.left + data.x,
-      right: clientWidth - (targetRect.right - data.x),
-      top: -targetRect.top + data.y,
-      bottom: clientHeight - (targetRect.bottom - data.y),
-    });
-  }
 
   const onOk = () => {
     loginForm.submit()
@@ -122,50 +120,11 @@ const LoginFormWindowPage: FC<LoginFormWindowProps> = ({
 
   return (
     <div>
-      <Modal
-        title={
-          <div style={{ width: '100%', cursor: 'move', }}
-            onMouseOver={() => {
-              if (disabled) {
-                setDisabled(false);
-              }
-            }}
-            onMouseOut={() => {
-              setDisabled(true);
-            }}
-            // fix eslintjsx-a11y/mouse-events-have-key-events
-            // https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/blob/master/docs/rules/mouse-events-have-key-events.md
-            onFocus={() => {}}
-            onBlur={() => {}}
-            // end
-          >
-            Login
-          </div>
-        }
-        centered
-        open={visible}
-        onOk={onOk}
-        onCancel={onCancel}
-        maskClosable={false}
-        modalRender={(modal) => (
-          <Draggable
-            //disabled={disable}
-            bounds={bounds}
-            onStart={handleDragStart}            
-          >
-            <div ref={draggleRef}>{modal}</div>
-          </Draggable>
-        )}
-      >
+      <Modal title="New File" centered open={visible} onOk={onOk} onCancel={onCancel} maskClosable={false} >
         <div style={{ paddingTop: '32px', }}>
-          <Form
-            name='LoginFormWindow'
-            form={loginForm}
-            className='login-form'
+          <Form name='OpenFileWindow' form={loginForm} className='login-form'
             initialValues={{ userName: 'Admin', userPassword: 'Password1', remember: true, }}
-            onFinish={onFinish}
-            style={{ maxWidth: '100%', }}
-          >
+            onFinish={onFinish} style={{ maxWidth: '100%', }} >
             <Form.Item name='userName' rules={[{ message: '请输入账号名称!', },]} style={{ marginBottom: '4px', }} >
               <Input
                 prefix={<Avatar size='small' src='/login/login-user.png' />}
@@ -200,4 +159,4 @@ const LoginFormWindowPage: FC<LoginFormWindowProps> = ({
   )
 }
 
-export default LoginFormWindowPage
+export default OpenFileWindowPage
