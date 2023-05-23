@@ -12,6 +12,20 @@ export interface UserInfo {
     nickName: string,
 
 }
+
+export interface Folder {
+    folderId: number;
+    folderName: string;
+    parentId: number | null;
+}
+
+export interface Document {
+    documentId: number;
+    documentName: string;
+    content: string;
+    folderId: number;
+}
+
 export class RequestUtils {
 
     private static online_: boolean = false
@@ -184,18 +198,27 @@ export class RequestUtils {
         }
     }
 
-    public static getFolders = ()=> {
-        return axios.post(`${RequestUtils.serverAddress}/login`, {
-            name: RequestUtils.userName_,
-            password: RequestUtils.password_
-        }, {
+    public static getFolders = (parentId: number | null)=> {
+        const data = {
+            parentId: parentId
+        }
+        const config = {
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Token': RequestUtils.token
             }
-        })
+        }
+        return axios.post(`http://127.0.0.1:8081/folder/folders`, data, config)
     }
 
     public static getDocuments() {
+        const data = {}
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Token': RequestUtils.token
+            }
+        }
         return axios.post(`${RequestUtils.serverAddress}/login`, {
             name: RequestUtils.userName_,
             password: RequestUtils.password_
