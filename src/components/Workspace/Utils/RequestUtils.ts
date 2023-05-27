@@ -23,7 +23,7 @@ export interface Document {
     documentId: number;
     documentName: string;
     content: string;
-    folderId: number;
+    folderId: number | null;
 }
 
 export class RequestUtils {
@@ -211,22 +211,17 @@ export class RequestUtils {
         return axios.post(`http://127.0.0.1:8081/folder/folders`, data, config)
     }
 
-    public static getDocuments() {
-        const data = {}
+    public static getDocuments(folderId: number | null) {
+        const data = {
+            folderId: folderId
+        }
         const config = {
             headers: {
                 'Content-Type': 'application/json',
                 'Token': RequestUtils.token
             }
         }
-        return axios.post(`${RequestUtils.serverAddress}/login`, {
-            name: RequestUtils.userName_,
-            password: RequestUtils.password_
-        }, {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
+        return axios.post(`http://127.0.0.1:8081/document/documents`, data, config)
     }
 
     public static loadDocument() {
