@@ -1,10 +1,12 @@
 import React, { FC, useEffect, useState, useRef } from 'react'
 import styles from './index.css'
-import { Form, Input, Checkbox, Row, Col, Button, Modal, Menu, message, Alert, } from 'antd'
+import { Form, Input, Checkbox, Tree, Row, Col, Button, Modal, Menu, message, Alert, } from 'antd'
 import { RequestUtils, Utils, } from '../../Utils'
 import axios from 'axios'
 import Avatar from 'antd/lib/avatar/avatar'
-import { Folder } from '../../Utils/RequestUtils'
+import { Document, Folder } from '../../Utils/RequestUtils'
+import type { DataNode, TreeProps,} from 'antd/es/tree';
+
 
 interface OpenFileWindowProps {
   visible: boolean;
@@ -13,6 +15,39 @@ interface OpenFileWindowProps {
   onWindowCancel: () => void;
   onWindowOk: () => void
 }
+
+const FOLDER = 'FOLDER_'
+const DOC = "DOC_"
+
+const treeData2: DataNode[] = [
+  {
+    title: 'parent 1',
+    key: '0-0',
+    children: [
+      {
+        title: 'parent 1-0',
+        key: '0-0-0',
+        disabled: true,
+        children: [
+          {
+            title: 'leaf',
+            key: '0-0-0-0',
+            disableCheckbox: true,
+          },
+          {
+            title: 'leaf',
+            key: '0-0-0-1',
+          },
+        ],
+      },
+      {
+        title: 'parent 1-1',
+        key: '0-0-1',
+        children: [{ title: <span style={{ color: '#1677ff' }}>sss</span>, key: '0-0-1-0' }],
+      },
+    ],
+  },
+];
 
 const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
   visible, x, y, onWindowCancel, onWindowOk,
@@ -27,6 +62,8 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
   const [loginForm,] = Form.useForm()
   const [errorVisible, setErrorVisible,] = useState<boolean>(false)
   const [folders, setFolders] = useState<Folder[]>([])
+  const [treeData, setTreeData, ] = useState<DataNode[]>([])
+  const [treeMap, setTreeMap, ] = useState<Map<string, Folder | Document >>()
 
   if (origModalX != x) {
     setOrigModalX(x)
@@ -49,26 +86,66 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
       setDataLoading(true)
       setErrorVisible(false)
       const fetchData = async () => {
-        const folderData = await RequestUtils.getFolders(null)
-        if(folderData?.data?.success && folderData?.data?.data) {
-          let folders : Folder[] = []
-          folderData.data.data.records?.forEach((record: any) => {
-            let folder: Folder = {
-              folderId: 0,
-              folderName: '',
-              parentId: null
-            }
-            folder.folderId = record.folderId
-            folder.folderName = record.folderName
-            folder.parentId = record.parentId
-            folders.push(folder)
-          })
-          console.log(folderData)
-        }
-      }
+        let nodeMap: Map<string, Folder | Document > = new Map<string, Folder | Document >()
+        let nodes: DataNode[] = []
+        await fetchFolder(nodeMap, nodes, null)
+        await fetchDocument(nodeMap, nodes, null)
+        setTreeData(nodes)
+        setTreeMap(nodeMap)
+    }
       fetchData()
     }
   })
+
+  const fetchFolder = async (nodeMap: Map<string, Folder | Document >, nodes: DataNode[], parentId: number | null) => {
+    const folderData = await RequestUtils.getFolders(parentId)
+    if(folderData?.data?.success && folderData?.data?.data) {
+      let records = folderData.data.data.records
+      let count = records.length
+      for(let i = 0; i < count; i ++) {
+        let record = records[i]
+        let folder: Folder = {
+          folderId: record.folderId,
+          folderName: record.folderName,
+          parentId: record.parentId
+        }
+        let key = FOLDER + record.folderId
+        let dataNode: DataNode = {
+          key:  key,
+          title: record.folderName,
+          children:[]
+        }
+        nodes.push(dataNode)
+        nodeMap.set(key, folder)
+        console.log(`fetch Folder: parentId = ${parentId} folderId = ${key}`)
+        await fetchFolder(nodeMap, dataNode.children!, folder.folderId)
+        await fetchDocument(nodeMap, dataNode.children!, folder.folderId)
+      }
+    }    
+  }
+
+  const fetchDocument = async (nodeMap: Map<string, Folder | Document >, nodes: DataNode[], parentId: number | null) => {
+    const folderData = await RequestUtils.getDocuments(parentId)
+    if(folderData?.data?.success && folderData?.data?.data) {
+      folderData.data.data.records?.forEach((record: any) => {
+        let document: Document = {
+          folderId: record.folderId,
+          documentId: record.documentId,
+          documentName: record.documentName,
+          content: record.content
+        }
+        let key = DOC + record.documentId
+        let dataNode: DataNode = {
+          key:  key,
+          title: record.documentName,
+          children:[]
+        }
+        nodes.push(dataNode)
+        nodeMap.set(key, document)
+        console.log(`fetch Document: folderId = ${parentId} documentId = ${key}`)
+      })
+    }    
+  }
 
   const onOk = () => {
     loginForm.submit()
@@ -80,79 +157,28 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
     }
   }
 
-  const onFinish = (values: any) => {
-    console.log('Receive values:', values)
-    const { userName, userPassword } = values
-    const data = {
-      'name': userName,
-      'password': userPassword, //CryptoJs.SHA1(password).toString()
-    }
-    const config = {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }
+  const onSelect: TreeProps['onSelect'] = (selectedKeys, info) => {
+    console.log('selected', selectedKeys, info);
 
-    setErrorVisible(false)
-    axios.post(`${RequestUtils.serverAddress}/login`, data, config)
-      .then(response => {
-        if (response.status == 200 && response.data.success) {
-          console.log('Login succeed')
-          RequestUtils.token = response.data.data
-          RequestUtils.userName = userName
-          RequestUtils.password = userPassword
-          RequestUtils.online = true
-          localStorage.setItem('auth.token', response.data.data)
-          RequestUtils.checkOnline()
-          if (onWindowOk) {
-            onWindowOk()
-          }
-        } else if (response.status == 200 && !response.data.success) {
-          console.log('Login failed')
-          setErrorVisible(true)
-        }
-        console.log('Login data: ', response.data)
-      })
-      .catch(error => {
-        console.log('Login error: ', error)
-      })
-  }
+  };
+
+  const onCheck: TreeProps['onCheck'] = (checkedKeys, info) => {
+    console.log('onCheck', checkedKeys, info);
+  };
 
   return (
     <div>
       <Modal title="New File" centered open={visible} onOk={onOk} onCancel={onCancel} maskClosable={false} >
-        <div style={{ paddingTop: '32px', }}>
-          <Form name='OpenFileWindow' form={loginForm} className='login-form'
-            initialValues={{ userName: 'Admin', userPassword: 'Password1', remember: true, }}
-            onFinish={onFinish} style={{ maxWidth: '100%', }} >
-            <Form.Item name='userName' rules={[{ message: '请输入账号名称!', },]} style={{ marginBottom: '4px', }} >
-              <Input
-                prefix={<Avatar size='small' src='/login/login-user.png' />}
-                placeholder='请输入账号'
-                size='middle'
-                bordered={false}
-                style={{ width: '100%', }}
-              />
-            </Form.Item>
-            <div style={{ marginLeft: '40px', width: '280px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', }} />
-            <Form.Item name='userPassword' rules={[{ required: false, message: '请输入账号密码!', },]} style={{ marginBottom: '4px', }}>
-              <Input.Password
-                prefix={<Avatar size='small' src='/login/login-password.png' />}
-                type='password'
-                placeholder='请输入密码'
-                size='middle'
-                bordered={false}
-                style={{ width: '100%', }}
-              />
-            </Form.Item>
-            <div style={{ marginLeft: '40px', width: '280px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', }} />
-            <Form.Item name='remember' valuePropName='checked' style={{ marginBottom: '4px', }}>
-              <Checkbox style={{ float: 'right', fontSize: '14px', }}>记住密码</Checkbox>
-            </Form.Item>
-            {errorVisible && (
-              <Alert message="Alert Message Text" type="success" closable/>
-            )}
-          </Form>
+        <div style={{ width: '100%', height: '480px'}}>
+        <Tree style={{width: '100%', height:'100%', overflow: 'scroll'}}
+      checkable
+      //defaultExpandedKeys={['0-0-0', '0-0-1']}
+      //defaultSelectedKeys={['0-0-0', '0-0-1']}
+      //defaultCheckedKeys={['0-0-0', '0-0-1']}
+      //onSelect={onSelect}
+      //onCheck={onCheck}
+      treeData={treeData}
+    />
         </div>
       </Modal>
     </div>
