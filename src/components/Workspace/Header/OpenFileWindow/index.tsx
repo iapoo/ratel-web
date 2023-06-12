@@ -1,11 +1,11 @@
 import React, { FC, useEffect, useState, useRef } from 'react'
 import styles from './index.css'
-import { Form, Input, Checkbox, Tree, Row, Col, Button, Modal, Menu, message, Alert, } from 'antd'
+import { Form, Input, Checkbox, Tree, Row, Col, Button, Modal, Menu, message, Alert, Space, } from 'antd'
 import { RequestUtils, Utils, } from '../../Utils'
 import axios from 'axios'
 import Avatar from 'antd/lib/avatar/avatar'
 import { Document, Folder } from '../../Utils/RequestUtils'
-import type { DataNode, TreeProps,} from 'antd/es/tree';
+import type { DataNode, TreeProps, } from 'antd/es/tree';
 
 
 interface OpenFileWindowProps {
@@ -59,11 +59,13 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
   const [origModalY, setOrigModalY,] = useState<number>(0)
   const [windowVisible, setWindowVisible,] = useState<boolean>(false)
   const draggleRef = useRef<HTMLDivElement>(null);
-  const [loginForm,] = Form.useForm()
+  const [addFolderForm,] = Form.useForm()
   const [errorVisible, setErrorVisible,] = useState<boolean>(false)
   const [folders, setFolders] = useState<Folder[]>([])
-  const [treeData, setTreeData, ] = useState<DataNode[]>([])
-  const [treeMap, setTreeMap, ] = useState<Map<string, Folder | Document >>()
+  const [treeData, setTreeData,] = useState<DataNode[]>([])
+  const [treeMap, setTreeMap,] = useState<Map<string, Folder | Document>>()
+  const [addFolderWindowVisible, setAddFolderWindowVisible,] = useState<boolean>(false)
+  const [selectedFolderKey, setSelectedFolderKey,] = useState<string>('')
 
   if (origModalX != x) {
     setOrigModalX(x)
@@ -86,23 +88,23 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
       setDataLoading(true)
       setErrorVisible(false)
       const fetchData = async () => {
-        let nodeMap: Map<string, Folder | Document > = new Map<string, Folder | Document >()
+        let nodeMap: Map<string, Folder | Document> = new Map<string, Folder | Document>()
         let nodes: DataNode[] = []
         await fetchFolder(nodeMap, nodes, null)
         await fetchDocument(nodeMap, nodes, null)
         setTreeData(nodes)
         setTreeMap(nodeMap)
-    }
+      }
       fetchData()
     }
   })
 
-  const fetchFolder = async (nodeMap: Map<string, Folder | Document >, nodes: DataNode[], parentId: number | null) => {
+  const fetchFolder = async (nodeMap: Map<string, Folder | Document>, nodes: DataNode[], parentId: number | null) => {
     const folderData = await RequestUtils.getFolders(parentId)
-    if(folderData?.data?.success && folderData?.data?.data) {
+    if (folderData?.data?.success && folderData?.data?.data) {
       let records = folderData.data.data.records
       let count = records.length
-      for(let i = 0; i < count; i ++) {
+      for (let i = 0; i < count; i++) {
         let record = records[i]
         let folder: Folder = {
           folderId: record.folderId,
@@ -111,9 +113,9 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
         }
         let key = FOLDER + record.folderId
         let dataNode: DataNode = {
-          key:  key,
+          key: key,
           title: record.folderName,
-          children:[]
+          children: []
         }
         nodes.push(dataNode)
         nodeMap.set(key, folder)
@@ -121,12 +123,12 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
         await fetchFolder(nodeMap, dataNode.children!, folder.folderId)
         await fetchDocument(nodeMap, dataNode.children!, folder.folderId)
       }
-    }    
+    }
   }
 
-  const fetchDocument = async (nodeMap: Map<string, Folder | Document >, nodes: DataNode[], parentId: number | null) => {
-    const folderData = await RequestUtils.getDocuments(parentId)
-    if(folderData?.data?.success && folderData?.data?.data) {
+  const fetchDocument = async (nodeMap: Map<string, Folder | Document>, nodes: DataNode[], folderId: number | null) => {
+    const folderData = await RequestUtils.getDocuments(folderId)
+    if (folderData?.data?.success && folderData?.data?.data) {
       folderData.data.data.records?.forEach((record: any) => {
         let document: Document = {
           folderId: record.folderId,
@@ -136,19 +138,19 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
         }
         let key = DOC + record.documentId
         let dataNode: DataNode = {
-          key:  key,
+          key: key,
           title: record.documentName,
-          children:[]
+          children: []
         }
         nodes.push(dataNode)
         nodeMap.set(key, document)
-        console.log(`fetch Document: folderId = ${parentId} documentId = ${key}`)
+        console.log(`fetch Document: folderId = ${folderId} documentId = ${key}`)
       })
-    }    
+    }
   }
 
   const onOk = () => {
-    loginForm.submit()
+    //addFolderForm.submit()
   }
 
   const onCancel = () => {
@@ -157,29 +159,74 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
     }
   }
 
-  const onSelect: TreeProps['onSelect'] = (selectedKeys, info) => {
-    console.log('selected', selectedKeys, info);
+  const openAddFolder = () => {
+    setAddFolderWindowVisible(true)
+  }
+  const confirmAddFolder = () => {
+    addFolderForm.submit()
+  }
 
+  const cancelAddFolder = () => {
+    setAddFolderWindowVisible(false)
+  }
+
+  const onFolderSelect: TreeProps['onSelect'] = (selectedKeys, info) => {
+    console.log('selected', selectedKeys, info);
+    setSelectedFolderKey(selectedKeys[0].toString())
   };
 
   const onCheck: TreeProps['onCheck'] = (checkedKeys, info) => {
     console.log('onCheck', checkedKeys, info);
   };
 
+  const onFormFinish = (values: any) => {
+    console.log('Receive values:', values)
+    const { folderName } = values
+    let parentId: number | null = null
+    setErrorVisible(false)
+    if (selectedFolderKey?.startsWith(FOLDER)) {
+      parentId = parseInt(selectedFolderKey.substring(7))
+    } else if (selectedFolderKey?.startsWith(DOC)) {
+      parentId = parseInt(selectedFolderKey.substring(4))
+    }
+    const fetchFolderData = async () => {
+      const folderData = await RequestUtils.addFolder(folderName, parentId)
+      if (folderData.data?.success && folderData?.data?.data) {
+        console.log('Add folder wwith data: ', folderData.data.data)
+      } else {
+        console.log('Add folder with error: ', folderData.data)
+        setErrorVisible(true)
+      }
+    }
+    fetchFolderData()
+  }
   return (
     <div>
-      <Modal title="New File" centered open={visible} onOk={onOk} onCancel={onCancel} maskClosable={false} >
-        <div style={{ width: '100%', height: '480px'}}>
-        <Tree style={{width: '100%', height:'100%', overflow: 'scroll'}}
-      checkable
-      //defaultExpandedKeys={['0-0-0', '0-0-1']}
-      //defaultSelectedKeys={['0-0-0', '0-0-1']}
-      //defaultCheckedKeys={['0-0-0', '0-0-1']}
-      //onSelect={onSelect}
-      //onCheck={onCheck}
-      treeData={treeData}
-    />
+      <Modal title="Open File" centered open={visible} onOk={onOk} onCancel={onCancel} maskClosable={false}  >
+        <div style={{ width: '100%', height: '480px' }}>
+          <Space wrap>
+            <Button onClick={openAddFolder}>Add Folder</Button>
+            <Button>Delete Folder</Button>
+          </Space>
+          <Tree style={{ width: '100%', height: '100%', overflow: 'scroll' }}
+            //checkable
+            selectable
+            //defaultExpandedKeys={['0-0-0', '0-0-1']}
+            //defaultSelectedKeys={['0-0-0', '0-0-1']}
+            //defaultCheckedKeys={['0-0-0', '0-0-1']}
+            onSelect={onFolderSelect}
+            //onCheck={onCheck}
+            treeData={treeData}
+          />
         </div>
+      </Modal>
+      <Modal title="Modal" centered open={addFolderWindowVisible} onOk={confirmAddFolder} onCancel={cancelAddFolder} okText="确认" cancelText="取消" >
+        <Form name="addFolderForm" form={addFolderForm} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }} style={{ maxWidth: 600 }} initialValues={{ remember: true }}
+          onFinish={onFormFinish} autoComplete="off">
+          <Form.Item label="FolderName" name="folderName" rules={[{ required: true, message: 'Please input new folder name!' }]} >
+            <Input />
+          </Form.Item>
+        </Form>
       </Modal>
     </div>
   )
