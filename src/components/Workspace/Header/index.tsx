@@ -10,9 +10,10 @@ import { setInterval } from 'timers'
 import { UserInfo } from '../Utils/RequestUtils'
 import LoginFormWindow from './LoginFormWindow'
 import NewFileWindow from './NewFileWindow';
-import { DownloadOutlined, FileAddOutlined, FolderOpenOutlined, SaveOutlined, SearchOutlined } from '@ant-design/icons';
+import { DownloadOutlined, FileAddOutlined, FileTextOutlined, FolderOpenOutlined, FormOutlined, SaveOutlined, SearchOutlined } from '@ant-design/icons';
 import OpenFileWindow from './OpenFileWindow';
 import SaveFileWindow from './SaveFileWindow';
+import { StorageService } from '../Storage';
 
 const { confirm } = Modal;
 
@@ -25,6 +26,7 @@ export default (props: any) => {
   const [newFileWindowVisible, setNewFileWindowVisible,] = useState<boolean>(false)
   const [openFileWindowVisible, setOpenFileWindowVisible,] = useState<boolean>(false)
   const [saveFileWindowVisible, setSaveFileWindowVisible,] = useState<boolean>(false)
+  const [selectedDocumentName, setSelectedDocumentName,] = useState<string>('Untitled')
 
   useEffect(() => {
     if (!initialized) {
@@ -66,8 +68,25 @@ export default (props: any) => {
   const handleOpenFileWindowCancel = () => {
     setOpenFileWindowVisible(false)
   }
-  const handleOpenFileWindowOk = () => {
-    setOpenFileWindowVisible(false)
+  const handleOpenFileWindowOk = (documentId: number) => {
+    const fetchDocumentData = async() => {
+      const documentData = await RequestUtils.loadDocument(documentId)
+      if(documentData.data?.success) {
+        console.log(`Load document successfully: documentId = ${documentId}`)        
+        let content = documentData.data.data.content.content
+        const storage = new StorageService()
+        storage.editors = Utils.editors
+        storage.loadDocument(content)
+        Utils.storageData = storage.storageData
+        if (Utils.loadData) {
+          Utils.loadData()
+        }
+      } else {
+        console.log(`Load document failed: documentId = ${documentId}`)
+      }
+      setOpenFileWindowVisible(false)
+    }
+    fetchDocumentData()
   }
 
 
@@ -82,17 +101,35 @@ export default (props: any) => {
     RequestUtils.logout()
   }
 
+  const handleUpdateDocumentName = (e: any ) => {
+    if(e.target.value) {
+      setSelectedDocumentName(e.target.value)
+    }
+  }
+
   const handleFileNew = () => {
-    setNewFileWindowVisible(!newFileWindowVisible)
+    if(online) {
+      setNewFileWindowVisible(!newFileWindowVisible)
+    } else {
+      login()
+    }
   }
 
 
   const handleFileOpen = () => {
-    setOpenFileWindowVisible(!openFileWindowVisible)
+    if(online) {
+      setOpenFileWindowVisible(!openFileWindowVisible)
+    } else {
+      login()
+    }
   }
 
   const handleFileSave = () => {
-    setSaveFileWindowVisible(!saveFileWindowVisible)
+    if(online) {
+      setSaveFileWindowVisible(!saveFileWindowVisible)
+    } else {
+      login()
+    }
   }
 
   const fileItems: MenuProps['items'] = [
@@ -286,7 +323,9 @@ export default (props: any) => {
               </Dropdown>
               <Dropdown menu={{ items: helpItems }}>
                 <Button type='text' size='small'>Help</Button>
-              </Dropdown>
+              </Dropdown>   
+              <FileTextOutlined style={{marginLeft: '24px'}}/>
+              <Input placeholder='Basic usage' type='text' value={selectedDocumentName} bordered={false} style={{paddingLeft: '0px'}} onChange={handleUpdateDocumentName} />
             </Space>
           </Space>
         </div>
@@ -320,7 +359,7 @@ export default (props: any) => {
       <LoginFormWindow visible={loginFormWindowVisible} x={60} y={60} onWindowCancel={handleLoginFormWindowCancel} onWindowOk={handleLoginFormWindowOk} />
       <NewFileWindow visible={newFileWindowVisible} x={60} y={60} onWindowCancel={handleNewFileWindowCancel} onWindowOk={handleNewFileWindowOk} />
       <OpenFileWindow visible={openFileWindowVisible} x={60} y={60} onWindowCancel={handleOpenFileWindowCancel} onWindowOk={handleOpenFileWindowOk} />
-      <SaveFileWindow visible={saveFileWindowVisible} x={60} y={60} onWindowCancel={handleSaveFileWindowCancel} onWindowOk={handleSaveFileWindowOk} />
+      <SaveFileWindow visible={saveFileWindowVisible} x={60} y={60} documentName={selectedDocumentName} onWindowCancel={handleSaveFileWindowCancel} onWindowOk={handleSaveFileWindowOk} />
     </div>
   )
 }

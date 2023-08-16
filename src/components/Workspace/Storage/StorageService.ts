@@ -99,6 +99,12 @@ export class StorageService {
     // }
   }
 
+
+  public loadDocument (documentData: string) {
+    let data = JSON.parse(documentData)
+    this._storageData = data
+  }
+  
   private loadEditor (editor: Editor, editorData: EditorData) {
     editor.contentLayer.removeAllEditorItems()
     const itemCount = editorData.items.length
