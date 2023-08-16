@@ -6,12 +6,14 @@ import axios from 'axios'
 import Avatar from 'antd/lib/avatar/avatar'
 import { Document, Folder } from '../../Utils/RequestUtils'
 import type { DataNode, TreeProps, } from 'antd/es/tree';
+import { StorageService } from '../../Storage'
 
 
 interface SaveFileWindowProps {
   visible: boolean;
   x: number;
   y: number;
+  documentName: string;
   onWindowCancel: () => void;
   onWindowOk: () => void
 }
@@ -20,7 +22,7 @@ const FOLDER = 'FOLDER_'
 const DOC = "DOC_"
 
 const SaveFileWindowPage: FC<SaveFileWindowProps> = ({
-  visible, x, y, onWindowCancel, onWindowOk,
+  visible, x, y, documentName, onWindowCancel, onWindowOk,
 }) => {
   const [dataLoading, setDataLoading,] = useState<boolean>(false)
   const [modalX, setModalX,] = useState<number>(0)
@@ -36,6 +38,7 @@ const SaveFileWindowPage: FC<SaveFileWindowProps> = ({
   const [treeMap, setTreeMap,] = useState<Map<string, Folder | Document>>()
   const [addFolderWindowVisible, setAddFolderWindowVisible,] = useState<boolean>(false)
   const [selectedFolderKey, setSelectedFolderKey,] = useState<string>('')
+  const [errorMessage, setErrorMessage, ] = useState<string>('')
 
   if (origModalX != x) {
     setOrigModalX(x)
@@ -126,12 +129,20 @@ const SaveFileWindowPage: FC<SaveFileWindowProps> = ({
     } else if (selectedFolderKey?.startsWith(DOC)) {
       folderId = parseInt(selectedFolderKey.substring(4))
     }
+
+    const storage = new StorageService()
+    storage.editors = Utils.editors
+    storage.save()
+    const documentData = storage.storageData
+    const documentContent = JSON.stringify(documentData)
+    console.log(documentContent)
     const saveDocumentData = async () => {
-      const documentData = await RequestUtils.saveDocument('testDoc', 'test doc content', folderId)
+      const documentData = await RequestUtils.saveDocument(documentName, documentContent, folderId)
       if (documentData.data?.success && documentData?.data?.data) {
         console.log('Save document wwith data: ', documentData.data.data)
       } else {
         console.log('Save document with error: ', documentData.data)
+        setErrorMessage(documentData.data.message)
         setErrorVisible(true)
       }
     }
@@ -204,6 +215,7 @@ const SaveFileWindowPage: FC<SaveFileWindowProps> = ({
             treeData={treeData}
           />
         </div>
+        {errorVisible ? <Alert message={errorMessage} type="error" showIcon/> : ''}          
       </Modal>
       <Modal title="Modal" centered open={addFolderWindowVisible} onOk={confirmAddFolder} onCancel={cancelAddFolder} okText="确认" cancelText="取消" >
         <Form name="addFolderForm" form={addFolderForm} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }} style={{ maxWidth: 600 }} initialValues={{ remember: true }}

@@ -224,16 +224,19 @@ export class RequestUtils {
         return axios.post(`http://127.0.0.1:8081/document/documents`, data, config)
     }
 
-    public static loadDocument() {
-        return axios.post(`${RequestUtils.serverAddress}/login`, {
-            name: RequestUtils.userName_,
-            password: RequestUtils.password_
-        }, {
+    public static loadDocument(documentId: number) {
+        const data = {
+            documentId: documentId
+        }
+        const config = {
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Token': RequestUtils.token
             }
-        })
+        }
+        return axios.post(`http://127.0.0.1:8081/document/document`, data, config)
     }
+
 
     public static saveDocument(documentName: String, content: string, folderId: number | null) {
         const data = {

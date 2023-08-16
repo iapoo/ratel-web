@@ -6,6 +6,7 @@ import axios from 'axios'
 import Avatar from 'antd/lib/avatar/avatar'
 import { Document, Folder } from '../../Utils/RequestUtils'
 import type { DataNode, TreeProps, } from 'antd/es/tree';
+import { FileFilled, FileOutlined, FolderFilled, FolderOutlined } from '@ant-design/icons'
 
 
 interface OpenFileWindowProps {
@@ -13,7 +14,7 @@ interface OpenFileWindowProps {
   x: number;
   y: number;
   onWindowCancel: () => void;
-  onWindowOk: () => void
+  onWindowOk: (documentId: number) => void
 }
 
 const FOLDER = 'FOLDER_'
@@ -61,6 +62,7 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
   const draggleRef = useRef<HTMLDivElement>(null);
   const [addFolderForm,] = Form.useForm()
   const [errorVisible, setErrorVisible,] = useState<boolean>(false)
+  const [errorMessage, setErrorMessage, ] = useState<string>('')
   const [folders, setFolders] = useState<Folder[]>([])
   const [treeData, setTreeData,] = useState<DataNode[]>([])
   const [treeMap, setTreeMap,] = useState<Map<string, Folder | Document>>()
@@ -87,17 +89,18 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
     if (!dataLoading) {
       setDataLoading(true)
       setErrorVisible(false)
-      const fetchData = async () => {
-        let nodeMap: Map<string, Folder | Document> = new Map<string, Folder | Document>()
-        let nodes: DataNode[] = []
-        await fetchFolder(nodeMap, nodes, null)
-        await fetchDocument(nodeMap, nodes, null)
-        setTreeData(nodes)
-        setTreeMap(nodeMap)
-      }
       fetchData()
     }
   })
+
+  const fetchData = async () => {
+    let nodeMap: Map<string, Folder | Document> = new Map<string, Folder | Document>()
+    let nodes: DataNode[] = []
+    await fetchFolder(nodeMap, nodes, null)
+    await fetchDocument(nodeMap, nodes, null)
+    setTreeData(nodes)
+    setTreeMap(nodeMap)
+  }
 
   const fetchFolder = async (nodeMap: Map<string, Folder | Document>, nodes: DataNode[], parentId: number | null) => {
     const folderData = await RequestUtils.getFolders(parentId)
@@ -115,6 +118,7 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
         let dataNode: DataNode = {
           key: key,
           title: record.folderName,
+          icon: <FolderOutlined/>,
           children: []
         }
         nodes.push(dataNode)
@@ -140,6 +144,7 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
         let dataNode: DataNode = {
           key: key,
           title: record.documentName,
+          icon: <FileOutlined/>,
           children: []
         }
         nodes.push(dataNode)
@@ -151,6 +156,14 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
 
   const onOk = () => {
     //addFolderForm.submit()
+    if(selectedFolderKey?.length > 0) {
+      if(selectedFolderKey.startsWith(DOC)) {
+        let documentId = Number(selectedFolderKey.substring(DOC.length))
+        if(onWindowOk) {
+          onWindowOk(documentId)
+        }
+      }
+    }
   }
 
   const onCancel = () => {
@@ -161,6 +174,8 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
 
   const openAddFolder = () => {
     setAddFolderWindowVisible(true)
+    setErrorVisible(false)
+    setErrorMessage('')
   }
   const confirmAddFolder = () => {
     addFolderForm.submit()
@@ -168,11 +183,16 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
 
   const cancelAddFolder = () => {
     setAddFolderWindowVisible(false)
+
   }
 
   const onFolderSelect: TreeProps['onSelect'] = (selectedKeys, info) => {
     console.log('selected', selectedKeys, info);
-    setSelectedFolderKey(selectedKeys[0].toString())
+    if(selectedKeys.length > 0) {
+      setSelectedFolderKey(selectedKeys[0].toString())
+    } else {
+      setSelectedFolderKey("");
+    }
   };
 
   const onCheck: TreeProps['onCheck'] = (checkedKeys, info) => {
@@ -184,6 +204,7 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
     const { folderName } = values
     let parentId: number | null = null
     setErrorVisible(false)
+    setErrorMessage('')
     if (selectedFolderKey?.startsWith(FOLDER)) {
       parentId = parseInt(selectedFolderKey.substring(7))
     } else if (selectedFolderKey?.startsWith(DOC)) {
@@ -191,11 +212,16 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
     }
     const fetchFolderData = async () => {
       const folderData = await RequestUtils.addFolder(folderName, parentId)
-      if (folderData.data?.success && folderData?.data?.data) {
-        console.log('Add folder wwith data: ', folderData.data.data)
+      if (folderData.data?.success) {
+        console.log('Add folder wwith data: ', folderData.data.message)
+        setErrorMessage('')
+        setErrorVisible(false)     
+        setAddFolderWindowVisible(false)   
+        fetchData()
       } else {
         console.log('Add folder with error: ', folderData.data)
-        setErrorVisible(true)
+        setErrorMessage(`Add folder with error: ${folderData.data.message}`)
+        setErrorVisible(true)        
       }
     }
     fetchFolderData()
@@ -209,6 +235,7 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
             <Button>Delete Folder</Button>
           </Space>
           <Tree style={{ width: '100%', height: '100%', overflow: 'scroll' }}
+            showLine showIcon
             //checkable
             selectable
             //defaultExpandedKeys={['0-0-0', '0-0-1']}
@@ -226,7 +253,8 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
           <Form.Item label="FolderName" name="folderName" rules={[{ required: true, message: 'Please input new folder name!' }]} >
             <Input />
           </Form.Item>
-        </Form>
+          {errorVisible ? <Alert message={errorMessage} type="error" showIcon/> : ''}          
+          </Form>
       </Modal>
     </div>
   )
