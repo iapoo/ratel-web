@@ -1,4 +1,5 @@
 
+import { DataNode } from 'antd/es/tree';
 import axios from 'axios'
 import moment from 'moment'
 
@@ -17,6 +18,7 @@ export interface Folder {
     folderId: number;
     folderName: string;
     parentId: number | null;
+    data: DataNode;
 }
 
 export interface Document {
@@ -24,6 +26,14 @@ export interface Document {
     documentName: string;
     content: string;
     folderId: number | null;
+}
+
+export function isFolder(source:  Folder | Document | undefined ): source is Folder {
+    return (<Folder>source).data != undefined
+}
+
+export function isDocument(source:  Folder | Document | undefined ): source is Document {
+    return (<Document>source).documentName != undefined
 }
 
 export class RequestUtils {
@@ -237,7 +247,6 @@ export class RequestUtils {
         return axios.post(`http://127.0.0.1:8081/document/document`, data, config)
     }
 
-
     public static saveDocument(documentName: String, content: string, folderId: number | null) {
         const data = {
             documentName: documentName,
@@ -254,6 +263,25 @@ export class RequestUtils {
             }
         }
         return axios.post(`http://127.0.0.1:8081/document/add`, data, config)
+    }
+
+    public static updateDocument(documentId: number, documentName: String, content: string, folderId: number | null) {
+        const data = {
+            documentId: documentId,
+            documentName: documentName,
+            content: {
+                contentName: documentName,
+                content: content,
+            },
+            folderId: folderId
+        }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Token': RequestUtils.token
+            }
+        }
+        return axios.post(`http://127.0.0.1:8081/document/update`, data, config)
     }
 
     public static addFolder(folderName: String, parentId: number | null) {
