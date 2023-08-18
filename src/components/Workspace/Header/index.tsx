@@ -27,6 +27,8 @@ export default (props: any) => {
   const [openFileWindowVisible, setOpenFileWindowVisible,] = useState<boolean>(false)
   const [saveFileWindowVisible, setSaveFileWindowVisible,] = useState<boolean>(false)
   const [selectedDocumentName, setSelectedDocumentName,] = useState<string>('Untitled')
+  const [selectedFolderId, setSelectedFolderId,] = useState<number|null>(null)
+  const [selectedDocumentId, setSelectedDocumentId,] = useState<number|null>(null);
 
   useEffect(() => {
     if (!initialized) {
@@ -132,6 +134,15 @@ export default (props: any) => {
     }
   }
 
+
+  const handleFileSaveAs = () => {
+    if(online) {
+      setSaveFileWindowVisible(!saveFileWindowVisible)
+    } else {
+      login()
+    }
+  }
+
   const fileItems: MenuProps['items'] = [
     {
       key: 'New',
@@ -141,13 +152,13 @@ export default (props: any) => {
     },
     {
       key: 'OpenFrom',
-      label: 'OpenFrom',
+      label: 'Open From',
       disabled: true,
       icon: <FolderOpenOutlined/>,
     },
     {
       key: 'Open',
-      label: 'Open',
+      label: 'Open ...',
       icon: <FolderOpenOutlined/>,
       onClick: handleFileOpen
     },
@@ -158,8 +169,14 @@ export default (props: any) => {
       onClick: handleFileSave
     },
     {
+      key: 'SaveAs',
+      label: 'Save As ...',
+      icon: <SaveOutlined/>,
+      onClick: handleFileSaveAs
+    },
+    {
       key: 'Export',
-      label: 'Export',
+      label: 'Export ...',
       icon: <DownloadOutlined/>
     },
   ];
@@ -359,7 +376,7 @@ export default (props: any) => {
       <LoginFormWindow visible={loginFormWindowVisible} x={60} y={60} onWindowCancel={handleLoginFormWindowCancel} onWindowOk={handleLoginFormWindowOk} />
       <NewFileWindow visible={newFileWindowVisible} x={60} y={60} onWindowCancel={handleNewFileWindowCancel} onWindowOk={handleNewFileWindowOk} />
       <OpenFileWindow visible={openFileWindowVisible} x={60} y={60} onWindowCancel={handleOpenFileWindowCancel} onWindowOk={handleOpenFileWindowOk} />
-      <SaveFileWindow visible={saveFileWindowVisible} x={60} y={60} documentName={selectedDocumentName} onWindowCancel={handleSaveFileWindowCancel} onWindowOk={handleSaveFileWindowOk} />
+      <SaveFileWindow visible={saveFileWindowVisible} x={60} y={60} selectedFolderId={selectedFolderId} selectedDocumentId={selectedDocumentId} selectedDocumentName={selectedDocumentName} onWindowCancel={handleSaveFileWindowCancel} onWindowOk={handleSaveFileWindowOk} />
     </div>
   )
 }

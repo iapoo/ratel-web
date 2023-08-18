@@ -109,17 +109,18 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
       let count = records.length
       for (let i = 0; i < count; i++) {
         let record = records[i]
-        let folder: Folder = {
-          folderId: record.folderId,
-          folderName: record.folderName,
-          parentId: record.parentId
-        }
         let key = FOLDER + record.folderId
         let dataNode: DataNode = {
           key: key,
           title: record.folderName,
           icon: <FolderOutlined/>,
           children: []
+        }
+        let folder: Folder = {
+          folderId: record.folderId,
+          folderName: record.folderName,
+          parentId: record.parentId,
+          data: dataNode
         }
         nodes.push(dataNode)
         nodeMap.set(key, folder)
@@ -234,7 +235,8 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
             <Button onClick={openAddFolder}>Add Folder</Button>
             <Button>Delete Folder</Button>
           </Space>
-          <Tree style={{ width: '100%', height: '100%', overflow: 'scroll' }}
+          <Tree style={{ width: '100%', height: '100%', overflow: 'scroll', margin: '8px' }}
+            height={420}
             showLine showIcon
             //checkable
             selectable

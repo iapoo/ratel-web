@@ -10,6 +10,11 @@ export class SystemUtils {
         return data;
     }
 
+    public static handleInternalError(message: string) {
+        alert(message)
+        console.log(message)
+    }
+
 }
 
 
