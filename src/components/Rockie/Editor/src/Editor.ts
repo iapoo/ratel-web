@@ -59,6 +59,7 @@ export class Editor extends Painter {
   private _targetItem: EditorItem | undefined
   private _title: string
   private _key: string
+  private _modified: boolean
 
   public constructor (canvasId: string | HTMLCanvasElement) {
     super(canvasId)
@@ -75,6 +76,7 @@ export class Editor extends Painter {
     this._maskLayer.editor = this
     this._title = ''
     this._key = ''
+    this._modified = false
     this.root.addNode(this._backgroundLayer)
     this.root.addNode(this._contentLayer)
     this.root.addNode(this._controllerLayer)
@@ -181,6 +183,14 @@ export class Editor extends Painter {
 
   public set key (value: string) {
     this._key = value
+  }
+
+  public isModified(): boolean {
+    return this._modified
+  }
+
+  public resetModified() {
+    this._modified = false
   }
 
   public resize (width: number, height: number) {
@@ -319,6 +329,7 @@ export class Editor extends Painter {
     // console.log(`handle Mouse Down ... x = ${e.x}`)
     this._startPointX = e.x
     this._startPointY = e.y
+    this._modified = true
     if (this._action) {
       // console.log(`handlePointerClick... x = ${e.x}  start=${this.action_.item.start.x} end=${this.action_.item.end.x} width=${this.action_.item.width}  height=${this.action_.item.height}`)
       this.contentLayer.addEditorItem(this._action.item)

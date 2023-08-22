@@ -42,6 +42,7 @@ export default (props: any) => {
   const [ contentHeight, setContentHeight, ] = useState<string>(DEFAULT_PAINTER_HEIGHT + 'px')
   const [ editorWidth, setEditorWidth, ] = useState<string>(DEFAULT_PAINTER_WIDTH + 'px')
   const [ editorHeight, setEditorHeight, ] = useState<string>(DEFAULT_PAINTER_HEIGHT + 'px')
+  const [ documentModified, setdocumentModified, ] = useState<boolean>(false)
 
   const newTabIndex = useRef(4)
 
@@ -135,13 +136,15 @@ export default (props: any) => {
     container?.append(canvas!)
     editor?.activate()
     Utils.currentEditor = editor!
-    updateEditors()
+    updateEditors(panes)
     Utils.onEditorSizeChanged = updateEditorSize
     Utils.loadData = loadData
+    Utils.checkIfModified = checkIfDocumentModified
     updateEditorSize()
+    checkIfDocumentModified(false)
   }
 
-  const updateEditors = () => {
+  const updateEditors = (panes: Pane[]) => {
     Utils.editors.length = 0
     panes.forEach(pane => {
       Utils.editors.push(pane.editor!)
@@ -197,7 +200,8 @@ export default (props: any) => {
 
     container?.append(activateCanvas!)
     Utils.currentEditor = activeEditor!
-    updateEditors()
+    updateEditors(panes)
+    checkIfDocumentModified(false)
   }
 
   const onChange = (newActiveKey: string) => {
@@ -216,7 +220,7 @@ export default (props: any) => {
         Utils.currentEditor = editor!
       }
     }
-    updateEditors()
+    updateEditors(panes)
   }
 
   const add = () => {
@@ -242,7 +246,7 @@ export default (props: any) => {
     }
     container?.append(canvas!)
     Utils.currentEditor = editor!
-    updateEditors()
+    updateEditors(panes)
   }
 
   const remove = (targetKey: string) => {
@@ -263,15 +267,33 @@ export default (props: any) => {
     }
     setPanes(newPanes)
     setActiveKey(newActiveKey)
-    updateEditors()
+    updateEditors(panes)
   }
 
   const onEdit = (targetKey: string, action: 'add' | 'remove') => {
+    checkIfDocumentModified(true)
     if (action === 'add') {
       add()
     } else {
       remove(targetKey)
     }
+  }
+
+  const checkIfDocumentModified = (ifModified: boolean)=> {
+    if(ifModified) {
+      setdocumentModified(true)
+      Utils.isModified = true
+    } else {
+      let modified = false
+      panes.forEach( pane => {
+        if(pane.editor?.isModified()) {
+          modified = true
+        }
+      })
+      setdocumentModified(modified)
+      Utils.isModified = modified
+    }
+
   }
 
   return (

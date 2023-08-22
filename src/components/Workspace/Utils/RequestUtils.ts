@@ -169,9 +169,6 @@ export class RequestUtils {
 
     public static async isOnline() {
         const nowTime = moment().valueOf()
-        if(RequestUtils.online_) {
-            return true
-        }
         const token = localStorage.getItem('auth.token')
         RequestUtils.token = token == null ? '' : token
         if(!RequestUtils.token) {
@@ -184,6 +181,10 @@ export class RequestUtils {
                 return true;
             } else {
                 return false;
+            }
+        } else {
+            if(RequestUtils.online_) {
+                return true
             }
         }
         return true

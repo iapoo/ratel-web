@@ -22,7 +22,11 @@ export class Utils {
 
     public static onEditorSizeChanged : ()=> void
 
+    public static isModified: boolean = false
+
     public static loadData: () => void
 
     public static saveData: () => void
+
+    public static checkIfModified: (ifModified: boolean) => void
 }
