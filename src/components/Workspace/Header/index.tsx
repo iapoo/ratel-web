@@ -29,6 +29,7 @@ export default (props: any) => {
   const [selectedDocumentName, setSelectedDocumentName,] = useState<string>('Untitled')
   const [selectedFolderId, setSelectedFolderId,] = useState<number|null>(null)
   const [selectedDocumentId, setSelectedDocumentId,] = useState<number|null>(null);
+  const [discardModifiedDocumentWindowVisible, setDiscardModifiedDocumentWindowVisible, ] = useState<boolean>(false)
 
   useEffect(() => {
     if (!initialized) {
@@ -110,10 +111,13 @@ export default (props: any) => {
   }
 
   const handleFileNew = () => {
-    if(online) {
-      setNewFileWindowVisible(!newFileWindowVisible)
+    if(Utils.checkIfModified) {
+      Utils.checkIfModified(false)
+    }
+    if(Utils.isModified) {
+      setDiscardModifiedDocumentWindowVisible(true)  
     } else {
-      login()
+      setNewFileWindowVisible(!newFileWindowVisible)
     }
   }
 
@@ -141,6 +145,19 @@ export default (props: any) => {
     } else {
       login()
     }
+  }
+
+  const confirmDiscardModifiedDocument = () => {
+    setDiscardModifiedDocumentWindowVisible(false)
+    if(online) {
+      setNewFileWindowVisible(!newFileWindowVisible)
+    } else {
+      login()
+    }
+  }
+
+  const cancelDiscardModifiedDocument = () => {
+    setDiscardModifiedDocumentWindowVisible(false)
   }
 
   const fileItems: MenuProps['items'] = [
@@ -377,6 +394,9 @@ export default (props: any) => {
       <NewFileWindow visible={newFileWindowVisible} x={60} y={60} onWindowCancel={handleNewFileWindowCancel} onWindowOk={handleNewFileWindowOk} />
       <OpenFileWindow visible={openFileWindowVisible} x={60} y={60} onWindowCancel={handleOpenFileWindowCancel} onWindowOk={handleOpenFileWindowOk} />
       <SaveFileWindow visible={saveFileWindowVisible} x={60} y={60} selectedFolderId={selectedFolderId} selectedDocumentId={selectedDocumentId} selectedDocumentName={selectedDocumentName} onWindowCancel={handleSaveFileWindowCancel} onWindowOk={handleSaveFileWindowOk} />
+      <Modal title="Modal" centered open={discardModifiedDocumentWindowVisible} onOk={confirmDiscardModifiedDocument} onCancel={cancelDiscardModifiedDocument} okText="确认" cancelText="取消" >
+        <p>File is modified, are you sure to discard your modification?</p>
+      </Modal>
     </div>
   )
 }
