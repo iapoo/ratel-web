@@ -51,7 +51,9 @@ const NewFileWindowPage: FC<NewFileWindowProps> = ({
   })
 
   const onOk = () => {
-    loginForm.submit()
+    if(onWindowOk) {
+      onWindowOk()
+    }
   }
 
   const onCancel = () => {

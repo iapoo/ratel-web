@@ -68,6 +68,8 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
   const [treeMap, setTreeMap,] = useState<Map<string, Folder | Document>>()
   const [addFolderWindowVisible, setAddFolderWindowVisible,] = useState<boolean>(false)
   const [selectedFolderKey, setSelectedFolderKey,] = useState<string>('')
+  const [confirmDeleteFolderWindowVisible, setConfirmDeleteFolderWindowVisible,] = useState<boolean>(false)
+  const [confirmDeleteDocumentWindowVisible, setConfirmDeleteDocumentWindowVisible,] = useState<boolean>(false)
 
   if (origModalX != x) {
     setOrigModalX(x)
@@ -178,6 +180,14 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
     setErrorVisible(false)
     setErrorMessage('')
   }
+  
+  const handleDeleteFolder = () => {
+    setConfirmDeleteFolderWindowVisible(true)
+  }
+
+  const handleDeleteDocument = () => {
+    setConfirmDeleteDocumentWindowVisible(true)
+  }
   const confirmAddFolder = () => {
     addFolderForm.submit()
   }
@@ -194,7 +204,51 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
     } else {
       setSelectedFolderKey("");
     }
-  };
+  }
+
+  const confirmDeleteFolder = ()=> {
+    if(selectedFolderKey?.length > 0) {
+      if(selectedFolderKey.startsWith(FOLDER)) {
+        let folderId = Number(selectedFolderKey.substring(FOLDER.length))
+        const fetchDeleteFolderData = async () => {
+          const deleteFolderData = await RequestUtils.deleteFolder(folderId)
+          if(deleteFolderData.data?.success) {
+            console.log('Delete folder with data:', deleteFolderData.data.message)
+          } else {
+            console.log('Delete folder with error:', deleteFolderData.data)
+            alert('Failed to delete folder.')
+          }
+          setConfirmDeleteFolderWindowVisible(false)
+        }
+        fetchDeleteFolderData()
+      }
+    }
+  }
+  const cancelDeleteFolder = ()=> {
+    setConfirmDeleteFolderWindowVisible(false)
+  }
+  const confirmDeleteDocument = ()=> {
+    if(selectedFolderKey?.length > 0) {
+      if(selectedFolderKey.startsWith(DOC)) {
+        let documentId = Number(selectedFolderKey.substring(DOC.length))
+        const fetchDeleteDocumentData = async () => {
+          const deleteDocumentData = await RequestUtils.deleteDocument(documentId)
+          if(deleteDocumentData.data?.success) {
+            console.log('Delete document with data:', deleteDocumentData.data.message)
+          } else {
+            console.log('Delete document with error:', deleteDocumentData.data)
+            alert('Failed to delete document.')
+          }
+          setConfirmDeleteDocumentWindowVisible(false)
+        }
+        fetchDeleteDocumentData()
+      }
+    }
+  }
+
+  const cancelDeleteDocument = ()=> {
+    setConfirmDeleteDocumentWindowVisible(false)
+  }
 
   const onCheck: TreeProps['onCheck'] = (checkedKeys, info) => {
     console.log('onCheck', checkedKeys, info);
@@ -233,7 +287,8 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
         <div style={{ width: '100%', height: '480px' }}>
           <Space wrap>
             <Button onClick={openAddFolder}>Add Folder</Button>
-            <Button>Delete Folder</Button>
+            <Button onClick={handleDeleteFolder}>Delete Folder</Button>
+            <Button onClick={handleDeleteDocument}>Delete Document</Button>
           </Space>
           <Tree style={{ width: '100%', height: '100%', overflow: 'scroll', margin: '8px' }}
             height={420}
@@ -258,6 +313,13 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
           {errorVisible ? <Alert message={errorMessage} type="error" showIcon/> : ''}          
           </Form>
       </Modal>
+      <Modal title="Modal" centered open={confirmDeleteFolderWindowVisible} onOk={confirmDeleteFolder} onCancel={cancelDeleteFolder} okText="确认" cancelText="取消" >
+        <p>Are you sure to delete the folder?</p>
+      </Modal>
+      <Modal title="Modal" centered open={confirmDeleteDocumentWindowVisible} onOk={confirmDeleteDocument} onCancel={cancelDeleteDocument} okText="确认" cancelText="取消" >
+        <p>Are your sure to delete the document?</p>
+      </Modal>
+
     </div>
   )
 }

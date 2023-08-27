@@ -99,12 +99,22 @@ export class StorageService {
     // }
   }
 
-
   public loadDocument (documentData: string) {
     let data = JSON.parse(documentData)
     this._storageData = data
   }
-  
+
+  public loadNewDocument () {
+    let documentData = `
+    {"version":"1.0","author":"",
+    "sheets":[{"name":"","index":0,"zoom":1,"x":0,"y":0,"width":2000,"height":2000,"title":"File 1","key":"1","items":[]},
+    {"name":"","index":0,"zoom":1,"x":0,"y":0,"width":2000,"height":2000,"title":"File 2","key":"2","items":[]},
+    {"name":"","index":0,"zoom":1,"x":0,"y":0,"width":2000,"height":2000,"title":"File 3","key":"3","items":[]}]}
+    `
+    let data = JSON.parse(documentData)
+    this._storageData = data
+  }
+
   private loadEditor (editor: Editor, editorData: EditorData) {
     editor.contentLayer.removeAllEditorItems()
     const itemCount = editorData.items.length

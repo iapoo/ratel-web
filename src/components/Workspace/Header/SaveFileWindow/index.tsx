@@ -24,6 +24,8 @@ interface SaveFileWindowProps {
 const FOLDER = 'FOLDER_'
 const DOC = "DOC_"
 
+const ERROR_DOCUMENT_EXISTS = 'File already exists, are you sure to overwrite it?'
+
 const SaveFileWindowPage: FC<SaveFileWindowProps> = ({
   visible, x, y, selectedFolderId, selectedDocumentId, selectedDocumentName, onWindowCancel, onWindowOk,
 }) => {
@@ -203,6 +205,9 @@ const SaveFileWindowPage: FC<SaveFileWindowProps> = ({
       SystemUtils.handleInternalError(`Unknown documentData, documentId = ${documentId}`)
      }
     }
+    if(onWindowOk) {
+      onWindowOk()
+    }
   }
 
   const doSaveFile = (folderId: number | null, overwrite: boolean, documentId: number, newDocumentName: string) => {
@@ -221,6 +226,9 @@ const SaveFileWindowPage: FC<SaveFileWindowProps> = ({
       }
       if (documentData.data?.success) {
         console.log('Save document wwith data: ', documentData.data.data)
+        Utils.editors.forEach(editor => {
+          editor.resetModified()
+        })
         setErrorMessage('')
         setErrorVisible(false)
       } else {
@@ -301,7 +309,7 @@ const SaveFileWindowPage: FC<SaveFileWindowProps> = ({
     <div>
       <Modal title="Save File" centered open={visible} onOk={handleSaveFile} onCancel={onCancel} maskClosable={false}  >
         <div style={{ width: '100%', height: '480px' }}>
-          <Space wrap>
+          <Space  style={{padding: '4px'}}>
             <Button onClick={saveAddFolder}>Add Folder</Button>
             <Button>Delete Folder</Button>
           </Space>
