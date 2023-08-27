@@ -182,6 +182,7 @@ export default (props: any) => {
         const item = StorageService.loadItemData(itemData)
         editor.contentLayer.addEditorItem(item)
       })
+      editor.resetModified()
       editor.start()
       panes.push(pane)
       if (sheetIndex == 0) {
@@ -285,8 +286,8 @@ export default (props: any) => {
       Utils.isModified = true
     } else {
       let modified = false
-      panes.forEach( pane => {
-        if(pane.editor?.isModified()) {
+      Utils.editors.forEach( editor => {
+        if(editor.isModified()) {
           modified = true
         }
       })

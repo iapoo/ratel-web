@@ -285,6 +285,19 @@ export class RequestUtils {
         return axios.post(`http://127.0.0.1:8081/document/update`, data, config)
     }
 
+    public static deleteDocument(documentId: number) {
+        const data = {
+            documentId: documentId
+        }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Token': RequestUtils.token
+            }
+        }
+        return axios.post(`http://127.0.0.1:8081/document/delete`, data, config)
+    }
+
     public static addFolder(folderName: String, parentId: number | null) {
         const data = {
             folderName: folderName,
@@ -297,5 +310,18 @@ export class RequestUtils {
             }
         }
         return axios.post(`http://127.0.0.1:8081/folder/add`, data, config)
+    }
+
+    public static deleteFolder(folderId: number) {
+        const data = {
+            folderId: folderId
+        }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Token': RequestUtils.token
+            }
+        }
+        return axios.post(`http://127.0.0.1:8081/folder/delete`, data, config)
     }
 }

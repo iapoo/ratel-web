@@ -10,18 +10,23 @@ import { setInterval } from 'timers'
 import { UserInfo } from '../Utils/RequestUtils'
 import LoginFormWindow from './LoginFormWindow'
 import NewFileWindow from './NewFileWindow';
-import { DownloadOutlined, FileAddOutlined, FileTextOutlined, FolderOpenOutlined, FormOutlined, SaveOutlined, SearchOutlined } from '@ant-design/icons';
+import { DownloadOutlined, FileAddOutlined, FileOutlined, FileTextOutlined, FolderOpenOutlined, FormOutlined, SaveOutlined, SearchOutlined } from '@ant-design/icons';
 import OpenFileWindow from './OpenFileWindow';
 import SaveFileWindow from './SaveFileWindow';
 import { StorageService } from '../Storage';
 
 const { confirm } = Modal;
 
+const DOCUMENT_MODIFIED_TEXT_NO = '[未修改]'
+const DOCUMENT_MODIFIED_TEXT_YES = '[已修改]'
+const DOCUMENT_NEW_NAME_PREFIX = 'Untitled'
+
 export default (props: any) => {
   const [initialized, setInitialized,] = useState<boolean>(false)
   const draggleRef = useRef<HTMLDivElement>(null);
   const [online, setOnline,] = useState<boolean>(false)
   const [userInfo, setUserInfo,] = useState<UserInfo | null>(null)
+  const [documentModifiedText, setDocumentModifiedText] = useState<string>(DOCUMENT_MODIFIED_TEXT_NO)
   const [loginFormWindowVisible, setLoginFormWindowVisible,] = useState<boolean>(false)
   const [newFileWindowVisible, setNewFileWindowVisible,] = useState<boolean>(false)
   const [openFileWindowVisible, setOpenFileWindowVisible,] = useState<boolean>(false)
@@ -30,6 +35,7 @@ export default (props: any) => {
   const [selectedFolderId, setSelectedFolderId,] = useState<number|null>(null)
   const [selectedDocumentId, setSelectedDocumentId,] = useState<number|null>(null);
   const [discardModifiedDocumentWindowVisible, setDiscardModifiedDocumentWindowVisible, ] = useState<boolean>(false)
+  const [newDocumentIndex, setNewDocumentIndex,] = useState<number>(0)
 
   useEffect(() => {
     if (!initialized) {
@@ -39,7 +45,16 @@ export default (props: any) => {
 
   const initialize = () => {
     setInitialized(true)
+    refreshNewDocumentName()
     const timer = setInterval(async () => {
+      if(Utils.checkIfModified) {
+        Utils.checkIfModified(false)
+      }
+      let modifiedText = DOCUMENT_MODIFIED_TEXT_NO
+      if(Utils.isModified) {
+        modifiedText = DOCUMENT_MODIFIED_TEXT_YES
+      }
+      setDocumentModifiedText(modifiedText)
       const onlineResult = await RequestUtils.isOnline()
       setOnline(onlineResult)
       setUserInfo(RequestUtils.userInfo)
@@ -48,6 +63,12 @@ export default (props: any) => {
     return () => {
       clearInterval(timer)
     }
+  }
+
+  const refreshNewDocumentName = () => {
+    let newIndex = newDocumentIndex + 1
+    setNewDocumentIndex(newIndex)
+    setSelectedDocumentName(DOCUMENT_NEW_NAME_PREFIX + newIndex)
   }
 
   const login = () => {
@@ -66,7 +87,15 @@ export default (props: any) => {
   }
   const handleNewFileWindowOk = () => {
     setNewFileWindowVisible(false)
-  }
+    const storage = new StorageService()
+    storage.editors = Utils.editors
+    storage.loadNewDocument()
+    Utils.storageData = storage.storageData
+    if (Utils.loadData) {
+      Utils.loadData()
+    }
+    refreshNewDocumentName()
+}
 
   const handleOpenFileWindowCancel = () => {
     setOpenFileWindowVisible(false)
@@ -84,6 +113,12 @@ export default (props: any) => {
         if (Utils.loadData) {
           Utils.loadData()
         }
+        if(Utils.checkIfModified) {
+          Utils.checkIfModified(false)
+        }
+        setSelectedDocumentId(documentId)
+        setSelectedFolderId(documentData.data.data.folderId)
+        setSelectedDocumentName(documentData.data.data.documentName)
       } else {
         console.log(`Load document failed: documentId = ${documentId}`)
       }
@@ -132,7 +167,33 @@ export default (props: any) => {
 
   const handleFileSave = () => {
     if(online) {
-      setSaveFileWindowVisible(!saveFileWindowVisible)
+      if(!selectedDocumentId) {
+        setSaveFileWindowVisible(!saveFileWindowVisible)
+        if(Utils.checkIfModified) {
+          Utils.checkIfModified(false)
+        }
+      } else {
+        const storage = new StorageService()
+        storage.editors = Utils.editors
+        storage.save()
+        const documentData = storage.storageData
+        const documentContent = JSON.stringify(documentData)
+        console.log(documentContent)
+        const saveDocumentData = async () => {
+          let documentData = null
+          documentData = await RequestUtils.updateDocument(selectedDocumentId, selectedDocumentName, documentContent, selectedFolderId)
+          if (documentData.data?.success) {
+            console.log('Save document wwith data: ', documentData.data.data)
+            Utils.editors.forEach(editor => {
+              editor.resetModified()
+            })
+          } else {
+            console.log('Save document with error: ', documentData.data)
+            alert(`Failed to save document, message: ${documentData.data.message}`)
+          }
+        }
+        saveDocumentData()
+      }
     } else {
       login()
     }
@@ -142,7 +203,10 @@ export default (props: any) => {
   const handleFileSaveAs = () => {
     if(online) {
       setSaveFileWindowVisible(!saveFileWindowVisible)
-    } else {
+      if(Utils.checkIfModified) {
+        Utils.checkIfModified(false)
+      }
+  } else {
       login()
     }
   }
@@ -185,12 +249,12 @@ export default (props: any) => {
       icon: <SaveOutlined/>,
       onClick: handleFileSave
     },
-    {
-      key: 'SaveAs',
-      label: 'Save As ...',
-      icon: <SaveOutlined/>,
-      onClick: handleFileSaveAs
-    },
+//    {
+//      key: 'SaveAs',
+//      label: 'Save As ...',
+//      icon: <SaveOutlined/>,
+//      onClick: handleFileSaveAs
+//    },
     {
       key: 'Export',
       label: 'Export ...',
@@ -359,7 +423,8 @@ export default (props: any) => {
                 <Button type='text' size='small'>Help</Button>
               </Dropdown>   
               <FileTextOutlined style={{marginLeft: '24px'}}/>
-              <Input placeholder='Basic usage' type='text' value={selectedDocumentName} bordered={false} style={{paddingLeft: '0px'}} onChange={handleUpdateDocumentName} />
+              <Input placeholder='Document Name' type='text' value={selectedDocumentName} bordered={false} style={{paddingLeft: '0px', paddingRight: '0px', width: '70px', fontWeight:'bolder'}} onChange={handleUpdateDocumentName} />
+              <Button type='text' size='small' icon={<FileOutlined/>} style={{paddingLeft: '0px', fontSize: '11px', color: 'gray', fontStyle: 'italic'}}>{documentModifiedText}</Button>
             </Space>
           </Space>
         </div>
