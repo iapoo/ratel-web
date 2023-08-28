@@ -3,7 +3,7 @@ import styles from './index.css'
 import Workspace from '@/components/Workspace'
 import { Form, Input, Checkbox, Row, Col, Button, Modal, Menu, Space, Tooltip, Dropdown, Divider, } from 'antd'
 import type { MenuProps } from 'antd';
-import { RequestUtils, Utils, } from '../Utils'
+import { RequestUtils, SystemUtils, Utils, } from '../Utils'
 import type { DraggableData, DraggableEvent } from 'react-draggable';
 import axios from 'axios'
 import { setInterval } from 'timers'
@@ -36,6 +36,7 @@ export default (props: any) => {
   const [selectedDocumentId, setSelectedDocumentId,] = useState<number|null>(null);
   const [discardModifiedDocumentWindowVisible, setDiscardModifiedDocumentWindowVisible, ] = useState<boolean>(false)
   const [newDocumentIndex, setNewDocumentIndex,] = useState<number>(0)
+  const [disableFileName, setDisableFileName, ] = useState<boolean>(false)
 
   useEffect(() => {
     if (!initialized) {
@@ -100,31 +101,47 @@ export default (props: any) => {
   const handleOpenFileWindowCancel = () => {
     setOpenFileWindowVisible(false)
   }
-  const handleOpenFileWindowOk = (documentId: number) => {
-    const fetchDocumentData = async() => {
-      const documentData = await RequestUtils.loadDocument(documentId)
-      if(documentData.data?.success) {
-        console.log(`Load document successfully: documentId = ${documentId}`)        
-        let content = documentData.data.data.content.content
-        const storage = new StorageService()
-        storage.editors = Utils.editors
-        storage.loadDocument(content)
-        Utils.storageData = storage.storageData
-        if (Utils.loadData) {
-          Utils.loadData()
-        }
-        if(Utils.checkIfModified) {
-          Utils.checkIfModified(false)
-        }
+
+  const handleOpenFileWindowOk = (documentId: number, documentName: string | null, folderId: number | null) => {    
+    if(disableFileName) { // Save File, will do in popup window
+      if(documentName != null) {
+        setOpenFileWindowVisible(false)
         setSelectedDocumentId(documentId)
-        setSelectedFolderId(documentData.data.data.folderId)
-        setSelectedDocumentName(documentData.data.data.documentName)
+        setSelectedDocumentName(documentName)
+        setSelectedFolderId(folderId)
       } else {
-        console.log(`Load document failed: documentId = ${documentId}`)
+        SystemUtils.handleInternalError('Invalid document name provided')
       }
-      setOpenFileWindowVisible(false)
-    }
-    fetchDocumentData()
+    } else { // Open File
+      if(documentId == null) {
+        alert('Invalid document ID provided here.')
+        return
+      }
+      const fetchDocumentData = async() => {
+        const documentData = await RequestUtils.loadDocument(documentId)
+        if(documentData.data?.success) {
+          console.log(`Load document successfully: documentId = ${documentId}`)        
+          let content = documentData.data.data.content.content
+          const storage = new StorageService()
+          storage.editors = Utils.editors
+          storage.loadDocument(content)
+          Utils.storageData = storage.storageData
+          if (Utils.loadData) {
+            Utils.loadData()
+          }
+          if(Utils.checkIfModified) {
+            Utils.checkIfModified(false)
+          }
+          setSelectedDocumentId(documentId)
+          setSelectedFolderId(documentData.data.data.folderId)
+          setSelectedDocumentName(documentData.data.data.documentName)
+        } else {
+          console.log(`Load document failed: documentId = ${documentId}`)
+        }
+        setOpenFileWindowVisible(false)
+      }
+      fetchDocumentData()
+      }
   }
 
 
@@ -160,12 +177,47 @@ export default (props: any) => {
   const handleFileOpen = () => {
     if(online) {
       setOpenFileWindowVisible(!openFileWindowVisible)
+      setDisableFileName(false)
+    } else {
+      login()
+    }
+  }
+  const handleFileSave = () => {
+    if(online) {
+      if(!selectedDocumentId) {
+        setOpenFileWindowVisible(!openFileWindowVisible)
+        setDisableFileName(true)
+        if(Utils.checkIfModified) {
+          Utils.checkIfModified(false)
+        }
+      } else {
+        const storage = new StorageService()
+        storage.editors = Utils.editors
+        storage.save()
+        const documentData = storage.storageData
+        const documentContent = JSON.stringify(documentData)
+        console.log(documentContent)
+        const saveDocumentData = async () => {
+          let documentData = null
+          documentData = await RequestUtils.updateDocument(selectedDocumentId, selectedDocumentName, documentContent, selectedFolderId)
+          if (documentData.data?.success) {
+            console.log('Save document wwith data: ', documentData.data.data)
+            Utils.editors.forEach(editor => {
+              editor.resetModified()
+            })
+          } else {
+            console.log('Save document with error: ', documentData.data)
+            alert(`Failed to save document, message: ${documentData.data.message}`)
+          }
+        }
+        saveDocumentData()
+      }
     } else {
       login()
     }
   }
 
-  const handleFileSave = () => {
+  const handleFileSave2 = () => {
     if(online) {
       if(!selectedDocumentId) {
         setSaveFileWindowVisible(!saveFileWindowVisible)
@@ -422,9 +474,9 @@ export default (props: any) => {
               <Dropdown menu={{ items: helpItems }}>
                 <Button type='text' size='small'>Help</Button>
               </Dropdown>   
-              <FileTextOutlined style={{marginLeft: '24px'}}/>
+              <Button type='text' size='small' icon={<FileOutlined/>} style={{paddingLeft: '0px', fontSize: '11px', color: 'gray', fontStyle: 'italic',marginLeft: '24px'}}>{documentModifiedText}</Button>
+              <FileTextOutlined />
               <Input placeholder='Document Name' type='text' value={selectedDocumentName} bordered={false} style={{paddingLeft: '0px', paddingRight: '0px', width: '70px', fontWeight:'bolder'}} onChange={handleUpdateDocumentName} />
-              <Button type='text' size='small' icon={<FileOutlined/>} style={{paddingLeft: '0px', fontSize: '11px', color: 'gray', fontStyle: 'italic'}}>{documentModifiedText}</Button>
             </Space>
           </Space>
         </div>
@@ -457,7 +509,7 @@ export default (props: any) => {
       </div>
       <LoginFormWindow visible={loginFormWindowVisible} x={60} y={60} onWindowCancel={handleLoginFormWindowCancel} onWindowOk={handleLoginFormWindowOk} />
       <NewFileWindow visible={newFileWindowVisible} x={60} y={60} onWindowCancel={handleNewFileWindowCancel} onWindowOk={handleNewFileWindowOk} />
-      <OpenFileWindow visible={openFileWindowVisible} x={60} y={60} onWindowCancel={handleOpenFileWindowCancel} onWindowOk={handleOpenFileWindowOk} />
+      <OpenFileWindow visible={openFileWindowVisible} x={60} y={60} onWindowCancel={handleOpenFileWindowCancel} onWindowOk={handleOpenFileWindowOk} disableFileName={disableFileName} selectedFolderId={selectedFolderId} selectedDocumentId={selectedDocumentId} selectedDocumentName={selectedDocumentName} />
       <SaveFileWindow visible={saveFileWindowVisible} x={60} y={60} selectedFolderId={selectedFolderId} selectedDocumentId={selectedDocumentId} selectedDocumentName={selectedDocumentName} onWindowCancel={handleSaveFileWindowCancel} onWindowOk={handleSaveFileWindowOk} />
       <Modal title="Modal" centered open={discardModifiedDocumentWindowVisible} onOk={confirmDiscardModifiedDocument} onCancel={cancelDiscardModifiedDocument} okText="确认" cancelText="取消" >
         <p>File is modified, are you sure to discard your modification?</p>

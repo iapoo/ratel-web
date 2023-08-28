@@ -49,6 +49,10 @@ const SaveFileWindowPage: FC<SaveFileWindowProps> = ({
   const [confirmOverwriteFolderId, setConfirmOverwriteFolderId, ] = useState<number|null>(null)
   const [confirmOverwriteDocumentId, setConfirmOverwriteDocumentId, ] = useState<number>(0)
   const [confirmOverwriteDocumentName, setConfirmOverwriteDocumentName, ] = useState<string>('')
+  const [confirmDeleteFolderWindowVisible, setConfirmDeleteFolderWindowVisible,] = useState<boolean>(false)
+  const [confirmDeleteDocumentWindowVisible, setConfirmDeleteDocumentWindowVisible,] = useState<boolean>(false)
+  const [selectedFolderIsFolder, setSelectedFolderIsFolder, ] = useState<boolean>(false)
+  const [selectedFolderIsDocument, setSelectedFolderIsDocument, ] = useState<boolean>(false)
 
   if (origModalX != x) {
     setOrigModalX(x)
@@ -70,17 +74,18 @@ const SaveFileWindowPage: FC<SaveFileWindowProps> = ({
     if (!dataLoading) {
       setDataLoading(true)
       setErrorVisible(false)
-      const fetchData = async () => {
-        let nodeMap: Map<string, Folder | Document> = new Map<string, Folder | Document>()
-        let nodes: DataNode[] = []
-        await fetchFolder(nodeMap, nodes, null)
-        await fetchDocument(nodeMap, nodes, null)
-        setTreeData(nodes)
-        setTreeMap(nodeMap)
-      }
       fetchData()
     }
   })
+
+  const fetchData = async () => {
+    let nodeMap: Map<string, Folder | Document> = new Map<string, Folder | Document>()
+    let nodes: DataNode[] = []
+    await fetchFolder(nodeMap, nodes, null)
+    await fetchDocument(nodeMap, nodes, null)
+    setTreeData(nodes)
+    setTreeMap(nodeMap)
+  }
 
   const fetchFolder = async (nodeMap: Map<string, Folder | Document>, nodes: DataNode[], parentId: number | null) => {
     const folderData = await RequestUtils.getFolders(parentId)
@@ -250,6 +255,14 @@ const SaveFileWindowPage: FC<SaveFileWindowProps> = ({
     setAddFolderWindowVisible(true)
   }
 
+  const handleDeleteFolder = () => {
+    setConfirmDeleteFolderWindowVisible(true)
+  }
+
+  const handleDeleteDocument = () => {
+    setConfirmDeleteDocumentWindowVisible(true)
+  }
+
   const confirmAddFolder = () => {
     addFolderForm.submit()
   }
@@ -273,12 +286,67 @@ const SaveFileWindowPage: FC<SaveFileWindowProps> = ({
 
   const onFolderSelect: TreeProps['onSelect'] = (selectedKeys, info) => {
     console.log('selected', selectedKeys, info);
+    setSelectedFolderIsDocument(false)
+    setSelectedFolderIsFolder(false)
     if(selectedKeys.length > 0) {
-      setSelectedFolderKey(selectedKeys[0].toString())
+      let selectedKey = selectedKeys[0].toString()
+      setSelectedFolderKey(selectedKey)
+      if(selectedKey.startsWith(FOLDER)) {
+        setSelectedFolderIsFolder(true)        
+      }
+      if(selectedKey.startsWith(DOC)) {
+        setSelectedFolderIsDocument(true)        
+      }
     } else {
-      setSelectedFolderKey("");
+      setSelectedFolderKey("");      
     }
   };
+
+  const confirmDeleteFolder = ()=> {
+    if(selectedFolderKey?.length > 0) {
+      if(selectedFolderKey.startsWith(FOLDER)) {
+        let folderId = Number(selectedFolderKey.substring(FOLDER.length))
+        const fetchDeleteFolderData = async () => {
+          const deleteFolderData = await RequestUtils.deleteFolder(folderId)
+          if(deleteFolderData.data?.success) {
+            console.log('Delete folder with data:', deleteFolderData.data.message)
+          } else {
+            console.log('Delete folder with error:', deleteFolderData.data)
+            alert('Failed to delete folder.')
+          }
+          setConfirmDeleteFolderWindowVisible(false)
+          fetchData()
+        }
+        fetchDeleteFolderData()
+      }
+    }
+  }
+  const cancelDeleteFolder = ()=> {
+    setConfirmDeleteFolderWindowVisible(false)
+  }
+  const confirmDeleteDocument = ()=> {
+    if(selectedFolderKey?.length > 0) {
+      if(selectedFolderKey.startsWith(DOC)) {
+        let documentId = Number(selectedFolderKey.substring(DOC.length))
+        const fetchDeleteDocumentData = async () => {
+          const deleteDocumentData = await RequestUtils.deleteDocument(documentId)
+          if(deleteDocumentData.data?.success) {
+            console.log('Delete document with data:', deleteDocumentData.data.message)
+          } else {
+            console.log('Delete document with error:', deleteDocumentData.data)
+            alert('Failed to delete document.')
+          }
+          setConfirmDeleteDocumentWindowVisible(false)
+          fetchData()
+        }
+        fetchDeleteDocumentData()
+      }
+    }
+  }
+
+  const cancelDeleteDocument = ()=> {
+    setConfirmDeleteDocumentWindowVisible(false)
+  }
 
   const onCheck: TreeProps['onCheck'] = (checkedKeys, info) => {
     console.log('onCheck', checkedKeys, info);
@@ -311,20 +379,23 @@ const SaveFileWindowPage: FC<SaveFileWindowProps> = ({
         <div style={{ width: '100%', height: '480px' }}>
           <Space  style={{padding: '4px'}}>
             <Button onClick={saveAddFolder}>Add Folder</Button>
-            <Button>Delete Folder</Button>
+            <Button onClick={handleDeleteFolder} disabled={!selectedFolderIsFolder}>Delete Folder</Button>
+            <Button onClick={handleDeleteDocument} disabled={!selectedFolderIsDocument}>Delete Document</Button>
           </Space>
-          <Tree style={{ width: '100%', height: '100%', overflow: 'scroll', margin: '8px' }}
-            height={420}
-            showLine showIcon
-            //checkable
-            selectable
-            //defaultExpandedKeys={['0-0-0', '0-0-1']}
-            //defaultSelectedKeys={['0-0-0', '0-0-1']}
-            //defaultCheckedKeys={['0-0-0', '0-0-1']}
-            onSelect={onFolderSelect}
-            //onCheck={onCheck}
-            treeData={treeData}
-          />
+          <div style={{ width: '100%', height: '440px',borderWidth: '1px', borderColor: 'silver', borderStyle: 'solid', marginTop: '8px' }}>
+              <Tree style={{ width: '100%', height: '100%', overflow: 'scroll', margin: '8px' }}
+                height={420}
+                showLine showIcon
+                //checkable
+                selectable
+                //defaultExpandedKeys={['0-0-0', '0-0-1']}
+                //defaultSelectedKeys={['0-0-0', '0-0-1']}
+                //defaultCheckedKeys={['0-0-0', '0-0-1']}
+                onSelect={onFolderSelect}
+                //onCheck={onCheck}
+                treeData={treeData}
+              />
+          </div>
         </div>
         {errorVisible ? <Alert message={errorMessage} type="error" showIcon/> : ''}          
       </Modal>
@@ -338,6 +409,12 @@ const SaveFileWindowPage: FC<SaveFileWindowProps> = ({
       </Modal>
       <Modal title="Modal" centered open={confirmOverwriteWindowVisible} onOk={confirmOverwriteDocument} onCancel={cancelOverwriteDocument} okText="确认" cancelText="取消" >
         <p>File already exists, are you sure to overwrite it?</p>
+      </Modal>
+      <Modal title="Modal" centered open={confirmDeleteFolderWindowVisible} onOk={confirmDeleteFolder} onCancel={cancelDeleteFolder} okText="确认" cancelText="取消" >
+        <p>Are you sure to delete the folder?</p>
+      </Modal>
+      <Modal title="Modal" centered open={confirmDeleteDocumentWindowVisible} onOk={confirmDeleteDocument} onCancel={cancelDeleteDocument} okText="确认" cancelText="取消" >
+        <p>Are your sure to delete the document?</p>
       </Modal>
     </div>
   )
