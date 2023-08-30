@@ -12,8 +12,10 @@ export class Utils {
     public static DEFAULT_NAVIGATOR_WIDTH = 200
     public static MIN_NAVIGATOR_WIDTH = 32
     public static MAX_NAVIGATOR_WIDTH = 480
-    public static DEFAULT_DIVIDER_WIDTH = 6
+    public static DEFAULT_DIVIDER_WIDTH = 6    
 
+    public static enablePropertyEditor: boolean = false
+    
     public static currentEditor: Editor | undefined
 
     public static editors: Array<Editor> = new Array<Editor>(0)

@@ -10,10 +10,12 @@ import { setInterval } from 'timers'
 import { UserInfo } from '../Utils/RequestUtils'
 import LoginFormWindow from './LoginFormWindow'
 import NewFileWindow from './NewFileWindow';
-import { DownloadOutlined, FileAddOutlined, FileOutlined, FileTextOutlined, FolderOpenOutlined, FormOutlined, SaveOutlined, SearchOutlined } from '@ant-design/icons';
+import { DownloadOutlined, FileAddOutlined, FileOutlined, FileTextOutlined, FolderOpenOutlined, FormOutlined, SaveOutlined, SearchOutlined, SolutionOutlined } from '@ant-design/icons';
 import OpenFileWindow from './OpenFileWindow';
 import SaveFileWindow from './SaveFileWindow';
 import { StorageService } from '../Storage';
+//import { RectangleOutlined } from '@icons';
+import { Rectangle, RoundRectangle } from '@/components/Resource/Icons';
 
 const { confirm } = Modal;
 
@@ -276,6 +278,10 @@ export default (props: any) => {
     setDiscardModifiedDocumentWindowVisible(false)
   }
 
+  const handlePropertyEditorChange = () => {
+    Utils.enablePropertyEditor = !Utils.enablePropertyEditor
+  }
+
   const fileItems: MenuProps['items'] = [
     {
       key: 'New',
@@ -502,7 +508,16 @@ export default (props: any) => {
               <Button type="text" size='small' icon={<SearchOutlined />}>
                 Search
               </Button>
-              <Button type="text" icon={<SearchOutlined />} href="https://www.google.com" />
+              <Button type="text" icon={<SearchOutlined/>} href="https://www.google.com" />
+            </Space>
+          </Space>
+        </div>
+        <div style={{ float: 'right', height: '100%', display: 'table', marginRight: '8px' }}>
+          <Space direction="horizontal" style={{ display: 'table-cell', verticalAlign: 'middle' }}>
+            <Space wrap>
+              <Tooltip title="Property Editor">
+                <Button shape="circle" type="text" icon={<Rectangle/>} onClick={handlePropertyEditorChange} />
+              </Tooltip>
             </Space>
           </Space>
         </div>
