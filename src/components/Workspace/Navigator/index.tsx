@@ -1,12 +1,14 @@
 import React, { useEffect, useState, } from 'react'
 import styles from './index.css'
 import Workspace from '@/components/Workspace'
-import { Button, Collapse, Space, } from 'antd'
+import { Button, Collapse, Space, Tooltip, } from 'antd'
 import { Utils, RequestUtils, } from '../Utils'
 
 import { Editor, } from '../../Rockie/Editor'
 import { LineAction, ShapeAction, TableAction, } from '../../Rockie/Actions'
 import { StorageService, } from '../Storage'
+import { Rectangle,  RoundRectangle,  Text,  Ellipse,  Square,  Circle,  Process,  Diamond,  Parallelogram,  Hexagon,  Triangle,
+  Cylinder,  Cloud,  Document,  InternalStorage,  Cube,  Step,  Trapezoid,  Tape,  Note,  Card,  Callout,  Actor,} from '@/components/Resource/Icons'
 
 const { Panel, } = Collapse
 const text = `
@@ -106,6 +108,75 @@ export default (props: any) => {
           <Button type='primary' onClick={zoom}>Zoom</Button>
           <Button type='primary' onClick={load}>Load</Button>
           <Button type='primary' onClick={login}>Login</Button>
+          <Tooltip title="Rectangle">
+            <Button type='text' size='large' icon={<Rectangle />} onClick={addRectangle}/>
+          </Tooltip>
+          <Tooltip title="RoundRectangle">
+            <Button type='text' size='large' icon={<RoundRectangle />} onClick={addRectangle}/>
+          </Tooltip>
+          <Tooltip title="Text">
+            <Button type='text' size='large' icon={<Text />} onClick={addRectangle}/>
+          </Tooltip>
+          <Tooltip title="Ellipse">
+            <Button type='text' size='large' icon={<Ellipse />} onClick={addRectangle}/>
+          </Tooltip>
+          <Tooltip title="Square">
+            <Button type='text' size='large' icon={<Square />} onClick={addRectangle}/>
+          </Tooltip>
+          <Tooltip title="Circle">
+            <Button type='text' size='large' icon={<Circle />} onClick={addRectangle}/>
+          </Tooltip>
+          <Tooltip title="Process">
+            <Button type='text' size='large' icon={<Process />} onClick={addRectangle}/>
+          </Tooltip>
+          <Tooltip title="Diamond">
+            <Button type='text' size='large' icon={<Diamond />} onClick={addRectangle}/>
+          </Tooltip>
+          <Tooltip title="Parallelogram">
+            <Button type='text' size='large' icon={<Parallelogram />} onClick={addRectangle}/>
+          </Tooltip>
+          <Tooltip title="Hexagon">
+            <Button type='text' size='large' icon={<Hexagon />} onClick={addRectangle}/>
+          </Tooltip>
+          <Tooltip title="Triangle">
+            <Button type='text' size='large' icon={<Triangle />} onClick={addRectangle}/>
+          </Tooltip>
+          <Tooltip title="Cylinder">
+            <Button type='text' size='large' icon={<Cylinder />} onClick={addRectangle}/>
+          </Tooltip>
+          <Tooltip title="Cloud">
+            <Button type='text' size='large' icon={<Cloud />} onClick={addRectangle}/>
+          </Tooltip>
+          <Tooltip title="Document">
+            <Button type='text' size='large' icon={<Document />} onClick={addRectangle}/>
+          </Tooltip>
+          <Tooltip title="InternalStorage">
+            <Button type='text' size='large' icon={<InternalStorage />} onClick={addRectangle}/>
+          </Tooltip>
+          <Tooltip title="Cube">
+            <Button type='text' size='large' icon={<Cube />} onClick={addRectangle}/>
+          </Tooltip>
+          <Tooltip title="Step">
+            <Button type='text' size='large' icon={<Step />} onClick={addRectangle}/>
+          </Tooltip>
+          <Tooltip title="Trapezoid">
+            <Button type='text' size='large' icon={<Trapezoid />} onClick={addRectangle}/>
+          </Tooltip>
+          <Tooltip title="Tape">
+            <Button type='text' size='large' icon={<Tape />} onClick={addRectangle}/>
+          </Tooltip>
+          <Tooltip title="Note">
+            <Button type='text' size='large' icon={<Note />} onClick={addRectangle}/>
+          </Tooltip>
+          <Tooltip title="Card">
+            <Button type='text' size='large' icon={<Card />} onClick={addRectangle}/>
+          </Tooltip>
+          <Tooltip title="Callout">
+            <Button type='text' size='large' icon={<Callout />} onClick={addRectangle}/>
+          </Tooltip>
+          <Tooltip title="Actor">
+            <Button type='text' size='large' icon={<Actor />} onClick={addRectangle}/>
+          </Tooltip>
           </Space>
         </Panel>
         <Panel header='This is panel header 2' key='2' />

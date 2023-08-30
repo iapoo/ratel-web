@@ -10,10 +10,12 @@ import Navigator from './../Navigator'
 import PropertyEditor from './../PropertyEditor'
 import Content from './../Content'
 import Draggable, { DraggableData, DraggableEvent, } from 'react-draggable' // Both at the same time
+import { setInterval } from 'timers'
 
 export default (props: any) => {
   const [ initialized, setInitialized, ] = useState<boolean>(false)
   const [ navigatorWidth, setNavigatorWidth, ] = useState<number>(Utils.DEFAULT_NAVIGATOR_WIDTH)
+  const [ enablePropertyEditor, setEnablePropertyEditor] = useState<boolean>(false)
 
   useEffect(() => {
     if (!initialized) {
@@ -23,6 +25,13 @@ export default (props: any) => {
 
   const initialize = async () => {
     setInitialized(true)
+    const timer = setInterval(async () => {
+      setEnablePropertyEditor(Utils.enablePropertyEditor)
+    }, 100)
+
+    return () => {
+      clearInterval(timer)
+    }
   }
 
   const handleDragStart = (e: DraggableEvent, data: DraggableData) => {
@@ -46,7 +55,7 @@ export default (props: any) => {
   }
 
   return (
-    <div style={{ position: 'absolute', top: `${Utils.HEADER_HEIGHT}px`, bottom: `${Utils.FOOTER_HEIGHT}px`, right: '0px', left: '0px', backgroundColor: 'yellow', }} >
+    <div style={{ position: 'absolute', top: `${Utils.HEADER_HEIGHT}px`, bottom: `${Utils.FOOTER_HEIGHT}px`, right: '0px', left: '0px', backgroundColor: 'gray', }} >
       <Navigator style={{ position: 'absolute', top: '0px', bottom: '0px', left: '0px', width: `${navigatorWidth}px`, backgroundColor: 'gray', }} />
       <Draggable
         axis='x'
@@ -61,8 +70,8 @@ export default (props: any) => {
         onStop={handleDragStop}>
         <div className='handle' style={{ position: 'absolute', top: '0px', bottom: '0px', left: `${navigatorWidth} + px`, width: `${Utils.DEFAULT_DIVIDER_WIDTH}px`, zIndex: 999, }} />
       </Draggable>
-      <Content style={{ position: 'absolute', top: '0px', bottom: '0px', left: `${navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH}px`, right: '200px', backgroundColor: 'lightgray', }} />
-      <PropertyEditor style={{ position: 'absolute', top: '0px', bottom: '0px', right: '0px', width: '200px', backgroundColor: 'gray', }} />
+      <Content style={{ position: 'absolute', top: '0px', bottom: '0px', left: `${navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH}px`, right: `${enablePropertyEditor ? '280px' : '0px'} `, backgroundColor: 'lightgray', }} />
+      <PropertyEditor style={{ position: 'absolute', top: '0px', bottom: '0px', right: '0px', width: `${enablePropertyEditor ? '280px' : '0px'} `, backgroundColor: 'silver', }} />
 
     </div>
   )
