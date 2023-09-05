@@ -32,12 +32,22 @@ export enum EntityShapeType {
   Actor
 }
 
+export enum EntityShapeFreezeType {
+  None,
+  AspectRatio,
+  Width,
+  Height,
+  WidthHeight
+}
+
 export class EntityShape extends AbstractTextShape {
   private _type: EntityShapeType = EntityShapeType.Rectangle
+  private _freezeType: EntityShapeFreezeType;
 
-  constructor (text = '', left = 0, top = 0, width = 100, height = 100) {
+  constructor (text = '', left = 0, top = 0, width = 100, height = 100, type = EntityShapeType.Rectangle, freezeType = EntityShapeFreezeType.None) {
     super(text, left, top, width, height)
-    this._type = EntityShapeType.Rectangle
+    this._type = type
+    this._freezeType = freezeType
   }
 
   public get type () {
@@ -46,6 +56,14 @@ export class EntityShape extends AbstractTextShape {
 
   public set type (value: EntityShapeType) {
     this._type = value
+  }
+
+  public set freezeType(value: EntityShapeFreezeType) {
+    this._freezeType = value
+  }
+
+  public get freezeType () {
+    return this._freezeType
   }
 
   protected buildShape () {
@@ -64,7 +82,7 @@ export class EntityShape extends AbstractTextShape {
       this.path.addRectangle(Rectangle.makeLTWH(0, 0, this.width, this.height))
       break
     case EntityShapeType.Circle:
-      this.path.addRectangle(Rectangle.makeLTWH(0, 0, this.width, this.height))
+      this.path.addOval(Rectangle.makeLTWH(0, 0, this.width, this.height))
       break
     case EntityShapeType.Process:
       this.path.addRectangle(Rectangle.makeLTWH(0, 0, this.width, this.height))
