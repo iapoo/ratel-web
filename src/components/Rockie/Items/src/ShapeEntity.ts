@@ -3,6 +3,7 @@ import { Point2, } from '@/components/Engine'
 import { EntityShape, } from '../../Shapes'
 import { Entity, } from './Entity'
 import { Categories, Type, } from './Item'
+import { EntityShapeFreezeType, EntityShapeType } from '../../Shapes/src/EntityShape'
 
 export class Shapes {
   public static TYPE_RECTANGLE = 'Rectangle'
@@ -52,37 +53,44 @@ export class Shapes {
   public static DESC_CARD = 'Card'
   public static DESC_CALLOUT = 'Callout'
   public static DESC_ACTOR = 'Actor'
+
+  public static FREEZE_NONE = 'None'
+  public static FREEZE_WIDTH = 'Width'
+  public static FREEZE_WIDTH_HEIGHT =  'WidthHeight'
+  public static FREEZE_HEIGHT = 'Height'
+  public static FREEZE_ASPECT_RATIO = 'AspectRatio'
 }
 
 const ShapeTypes = [
-  { name: Shapes.TYPE_RECTANGLE, description: Shapes.DESC_RECTANGLE, },
-  { name: Shapes.TYPE_ROUND_RECTANGLE, description: Shapes.DESC_ROUND_RECTANGLE, },
-  { name: Shapes.TYPE_TEXT, description: Shapes.DESC_TEXT, },
-  { name: Shapes.TYPE_ELLIPSE, description: Shapes.DESC_ELLIPSE, },
-  { name: Shapes.TYPE_SQUARE, description: Shapes.DESC_SQUARE, },
-  { name: Shapes.TYPE_CIRCLE, description: Shapes.DESC_CIRCLE, },
-  { name: Shapes.TYPE_PROCESS, description: Shapes.DESC_PROCESS, },
-  { name: Shapes.TYPE_DIAMOND, description: Shapes.DESC_DIAMOND, },
-  { name: Shapes.TYPE_PARALLELOGRAM, description: Shapes.DESC_PARALLELOGRAM, },
-  { name: Shapes.TYPE_HEXAGON, description: Shapes.DESC_HEXAGON, },
-  { name: Shapes.TYPE_TRIANGLE, description: Shapes.DESC_TRIANGLE, },
-  { name: Shapes.TYPE_CYLINDER, description: Shapes.DESC_CYLINDER, },
-  { name: Shapes.TYPE_CLOUD, description: Shapes.DESC_CLOUD, },
-  { name: Shapes.TYPE_DOCUMENT, description: Shapes.DESC_DOCUMENT, },
-  { name: Shapes.TYPE_INTERNAL_STORAGE, description: Shapes.DESC_INTERNAL_STORAGE, },
-  { name: Shapes.TYPE_CUBE, description: Shapes.DESC_CUBE, },
-  { name: Shapes.TYPE_STEP, description: Shapes.DESC_STEP, },
-  { name: Shapes.TYPE_TRAPEZOID, description: Shapes.DESC_TRAPEZOID, },
-  { name: Shapes.TYPE_TAPE, description: Shapes.DESC_TAPE, },
-  { name: Shapes.TYPE_NOTE, description: Shapes.DESC_NOTE, },
-  { name: Shapes.TYPE_CARD, description: Shapes.DESC_CARD, },
-  { name: Shapes.TYPE_CALLOUT, description: Shapes.DESC_CALLOUT, },
-  { name: Shapes.TYPE_ACTOR, description: Shapes.DESC_ACTOR, },
+  { name: Shapes.TYPE_RECTANGLE, description: Shapes.DESC_RECTANGLE, freeze: Shapes.FREEZE_NONE },
+  { name: Shapes.TYPE_ROUND_RECTANGLE, description: Shapes.DESC_ROUND_RECTANGLE, freeze: Shapes.FREEZE_NONE },
+  { name: Shapes.TYPE_TEXT, description: Shapes.DESC_TEXT, freeze: Shapes.FREEZE_NONE },
+  { name: Shapes.TYPE_ELLIPSE, description: Shapes.DESC_ELLIPSE, freeze: Shapes.FREEZE_NONE },
+  { name: Shapes.TYPE_SQUARE, description: Shapes.DESC_SQUARE, freeze: Shapes.FREEZE_ASPECT_RATIO },
+  { name: Shapes.TYPE_CIRCLE, description: Shapes.DESC_CIRCLE, freeze: Shapes.FREEZE_NONE },
+  { name: Shapes.TYPE_PROCESS, description: Shapes.DESC_PROCESS, freeze: Shapes.FREEZE_NONE },
+  { name: Shapes.TYPE_DIAMOND, description: Shapes.DESC_DIAMOND, freeze: Shapes.FREEZE_NONE },
+  { name: Shapes.TYPE_PARALLELOGRAM, description: Shapes.DESC_PARALLELOGRAM, freeze: Shapes.FREEZE_NONE },
+  { name: Shapes.TYPE_HEXAGON, description: Shapes.DESC_HEXAGON, freeze: Shapes.FREEZE_NONE },
+  { name: Shapes.TYPE_TRIANGLE, description: Shapes.DESC_TRIANGLE, freeze: Shapes.FREEZE_NONE },
+  { name: Shapes.TYPE_CYLINDER, description: Shapes.DESC_CYLINDER, freeze: Shapes.FREEZE_NONE },
+  { name: Shapes.TYPE_CLOUD, description: Shapes.DESC_CLOUD, freeze: Shapes.FREEZE_NONE },
+  { name: Shapes.TYPE_DOCUMENT, description: Shapes.DESC_DOCUMENT, freeze: Shapes.FREEZE_NONE },
+  { name: Shapes.TYPE_INTERNAL_STORAGE, description: Shapes.DESC_INTERNAL_STORAGE, freeze: Shapes.FREEZE_NONE },
+  { name: Shapes.TYPE_CUBE, description: Shapes.DESC_CUBE, freeze: Shapes.FREEZE_NONE },
+  { name: Shapes.TYPE_STEP, description: Shapes.DESC_STEP, freeze: Shapes.FREEZE_NONE },
+  { name: Shapes.TYPE_TRAPEZOID, description: Shapes.DESC_TRAPEZOID, freeze: Shapes.FREEZE_NONE },
+  { name: Shapes.TYPE_TAPE, description: Shapes.DESC_TAPE, freeze: Shapes.FREEZE_NONE },
+  { name: Shapes.TYPE_NOTE, description: Shapes.DESC_NOTE, freeze: Shapes.FREEZE_NONE },
+  { name: Shapes.TYPE_CARD, description: Shapes.DESC_CARD, freeze: Shapes.FREEZE_NONE },
+  { name: Shapes.TYPE_CALLOUT, description: Shapes.DESC_CALLOUT, freeze: Shapes.FREEZE_NONE },
+  { name: Shapes.TYPE_ACTOR, description: Shapes.DESC_ACTOR, freeze: Shapes.FREEZE_NONE },
 ]
 
 export interface ShapeOptions {
   shapeType: string
-  enableLengthWidthRatio?:boolean
+  freezetype: string
+  enableLengthWidthRatio?: boolean
   lengthWidthRatio?: number
   modifierStart?: Point2
   modifierEnd?: Point2
@@ -91,7 +99,7 @@ export interface ShapeOptions {
 }
 
 export class ShapeEntity extends Entity {
-  private _enableLengthWidthRatio:boolean
+  private _enableLengthWidthRatio: boolean
 
   private _lengthWidthRatio: number
 
@@ -101,7 +109,7 @@ export class ShapeEntity extends Entity {
 
   private _modifiable = false;
 
-  public constructor (left: number, top: number, width: number, height: number, shapeOptions: ShapeOptions = { shapeType: Shapes.TYPE_RECTANGLE, }) {
+  public constructor(left: number, top: number, width: number, height: number, shapeOptions: ShapeOptions = { shapeType: Shapes.TYPE_RECTANGLE,  freezetype: Shapes.FREEZE_NONE }) {
     super(left, top, width, height)
     this.type = shapeOptions.shapeType
     this._enableLengthWidthRatio = shapeOptions.enableLengthWidthRatio ? shapeOptions.enableLengthWidthRatio : false
@@ -109,59 +117,153 @@ export class ShapeEntity extends Entity {
     this._modifiable = shapeOptions.modifiable ? shapeOptions.modifiable : false
     this._modifierStart = shapeOptions.modifierStart ? shapeOptions.modifierStart : new Point2(0, 0)
     this._modifierEnd = shapeOptions.modifierEnd ? shapeOptions.modifierEnd : new Point2(0, 0)
-
-    switch (shapeOptions.shapeType) {
-    case Shapes.TYPE_RECTANGLE:
-      this._shape = new EntityShape('', left, top, width, height)
-      break
-    default:
-      break
-    }
+    let freezeType = this.parseEntityShapeFreezeType(shapeOptions.freezetype)
+    let shapeType = this.parseEntityShapeType(this.type)
+    this._shape = new EntityShape('', left, top, width, height, shapeType , freezeType)
   }
 
-  public get enableLengthWidthRatio (): boolean {
+  public get enableLengthWidthRatio(): boolean {
     return this._enableLengthWidthRatio
   }
 
-  public set enableLengthWidthRatio (value: boolean) {
+  public set enableLengthWidthRatio(value: boolean) {
     this._enableLengthWidthRatio = value
   }
-  public get lengthWidthRatio (): number {
+  public get lengthWidthRatio(): number {
     return this._lengthWidthRatio
   }
 
-  public set lengthWidthRatio (value: number) {
+  public set lengthWidthRatio(value: number) {
     this._lengthWidthRatio = value
   }
-  public get modifiable (): boolean {
+  public get modifiable(): boolean {
     return this._modifiable
   }
 
-  public get modifierStart (): Point2 {
+  public get modifierStart(): Point2 {
     return this._modifierStart
   }
 
-  public set modifierStart (value: Point2) {
+  public set modifierStart(value: Point2) {
     this._modifierStart = new Point2(value.x, value.y)
   }
 
-  public get modifierEnd (): Point2 {
+  public get modifierEnd(): Point2 {
     return this._modifierEnd
   }
 
-  public set modifierEnd (value: Point2) {
+  public set modifierEnd(value: Point2) {
     this._modifierEnd = new Point2(value.x, value.y)
   }
 
-  public get types (): Type[] {
+  public get types(): Type[] {
     return ShapeTypes
   }
 
-  public get category (): string {
+  public get category(): string {
     return Categories.SHAPE
   }
 
-  protected save (data: any) {}
+  protected save(data: any) { }
 
-  protected load (data: any) {}
+  protected load(data: any) { }
+
+  private parseEntityShapeFreezeType(freezeType: string): EntityShapeFreezeType {
+    let entityFreezeType = EntityShapeFreezeType.None
+    switch (freezeType) {
+      case Shapes.FREEZE_WIDTH:
+        entityFreezeType = EntityShapeFreezeType.Width
+        break;
+      case Shapes.FREEZE_HEIGHT:
+        entityFreezeType = EntityShapeFreezeType.Height
+        break;
+      case Shapes.FREEZE_WIDTH_HEIGHT:
+        entityFreezeType = EntityShapeFreezeType.WidthHeight
+        break;
+        case Shapes.FREEZE_ASPECT_RATIO:
+          entityFreezeType = EntityShapeFreezeType.AspectRatio
+          break;
+        case Shapes.FREEZE_NONE:
+      default:  
+        entityFreezeType = EntityShapeFreezeType.None
+        break;
+    }
+
+    return entityFreezeType;
+  }
+  private parseEntityShapeType(type: string): EntityShapeType {
+    let shapeType = EntityShapeType.Rectangle
+    switch (type) {
+      case Shapes.TYPE_RECTANGLE:
+        shapeType = EntityShapeType.Rectangle
+        break;
+      case Shapes.TYPE_ROUND_RECTANGLE:
+        shapeType = EntityShapeType.RoundRectangle
+        break;
+      case Shapes.TYPE_TEXT:
+        shapeType = EntityShapeType.Text
+        break;
+      case Shapes.TYPE_ELLIPSE:
+        shapeType = EntityShapeType.Ellipse
+        break;
+      case Shapes.TYPE_SQUARE:
+        shapeType = EntityShapeType.Square
+        break;
+      case Shapes.TYPE_CIRCLE:
+        shapeType = EntityShapeType.Circle
+        break;
+      case Shapes.TYPE_PROCESS:
+        shapeType = EntityShapeType.Process
+        break;
+      case Shapes.TYPE_DIAMOND:
+        shapeType = EntityShapeType.Diamond
+        break;
+      case Shapes.TYPE_PARALLELOGRAM:
+        shapeType = EntityShapeType.Parallelogram
+        break;
+      case Shapes.TYPE_HEXAGON:
+        shapeType = EntityShapeType.Hexagon
+        break;
+      case Shapes.TYPE_TRIANGLE:
+        shapeType = EntityShapeType.Triangle
+        break;
+      case Shapes.TYPE_CYLINDER:
+        shapeType = EntityShapeType.Cylinder
+        break;
+      case Shapes.TYPE_CLOUD:
+        shapeType = EntityShapeType.Cloud
+        break;
+      case Shapes.TYPE_DOCUMENT:
+        shapeType = EntityShapeType.Document
+        break;
+      case Shapes.TYPE_INTERNAL_STORAGE:
+        shapeType = EntityShapeType.InternalStorage
+        break;
+      case Shapes.TYPE_CUBE:
+        shapeType = EntityShapeType.Cube
+        break;
+      case Shapes.TYPE_STEP:
+        shapeType = EntityShapeType.Step
+        break;
+      case Shapes.TYPE_TRAPEZOID:
+        shapeType = EntityShapeType.Trapezoid
+        break;
+      case Shapes.TYPE_TAPE:
+        shapeType = EntityShapeType.Tape
+        break;
+      case Shapes.TYPE_NOTE:
+        shapeType = EntityShapeType.Note
+        break;
+      case Shapes.TYPE_CARD:
+        shapeType = EntityShapeType.Card
+        break;
+      case Shapes.TYPE_CALLOUT:
+        shapeType = EntityShapeType.Callout
+        break;
+      case Shapes.TYPE_ACTOR:
+        shapeType = EntityShapeType.Actor
+        break;
+    }
+    return shapeType
+  }
 }

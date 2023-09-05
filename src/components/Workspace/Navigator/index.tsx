@@ -9,6 +9,7 @@ import { LineAction, ShapeAction, TableAction, } from '../../Rockie/Actions'
 import { StorageService, } from '../Storage'
 import { Rectangle,  RoundRectangle,  Text,  Ellipse,  Square,  Circle,  Process,  Diamond,  Parallelogram,  Hexagon,  Triangle,
   Cylinder,  Cloud,  Document,  InternalStorage,  Cube,  Step,  Trapezoid,  Tape,  Note,  Card,  Callout,  Actor,} from '@/components/Resource/Icons'
+import { ShapeEntity, Shapes } from '@/components/Rockie/Items'
 
 const { Panel, } = Collapse
 const text = `
@@ -36,6 +37,19 @@ export default (props: any) => {
   const addRectangle = () => {
     if (Utils.currentEditor) {
       Utils.currentEditor.action = new ShapeAction(Utils.currentEditor)
+    }
+  }
+
+  const addEllipse = () => {
+    if (Utils.currentEditor) {
+      Utils.currentEditor.action = new ShapeAction(Utils.currentEditor, Shapes.TYPE_ELLIPSE)
+    }
+  }
+
+
+  const addSquare = () => {
+    if (Utils.currentEditor) {
+      Utils.currentEditor.action = new ShapeAction(Utils.currentEditor, Shapes.TYPE_SQUARE, Shapes.FREEZE_ASPECT_RATIO)
     }
   }
 
@@ -118,10 +132,10 @@ export default (props: any) => {
             <Button type='text' size='large' icon={<Text />} onClick={addRectangle}/>
           </Tooltip>
           <Tooltip title="Ellipse">
-            <Button type='text' size='large' icon={<Ellipse />} onClick={addRectangle}/>
+            <Button type='text' size='large' icon={<Ellipse />} onClick={addEllipse}/>
           </Tooltip>
           <Tooltip title="Square">
-            <Button type='text' size='large' icon={<Square />} onClick={addRectangle}/>
+            <Button type='text' size='large' icon={<Square />} onClick={addSquare}/>
           </Tooltip>
           <Tooltip title="Circle">
             <Button type='text' size='large' icon={<Circle />} onClick={addRectangle}/>
