@@ -86,18 +86,36 @@ export class EntityShape extends AbstractTextShape {
       break
     case EntityShapeType.Process:
       this.path.addRectangle(Rectangle.makeLTWH(0, 0, this.width, this.height))
+      this.path.addRectangle(Rectangle.makeLTWH(10, 0, this.width - 20, this.height))
       break
     case EntityShapeType.Diamond:
-      this.path.addRectangle(Rectangle.makeLTWH(0, 0, this.width, this.height))
+      this.path.moveTo(this.width / 2, 0)
+      this.path.lineTo(this.width, this.height / 2)
+      this.path.lineTo(this.width / 2, this.height)
+      this.path.lineTo(0, this.height / 2)
+      this.path.lineTo(this.width / 2, 0)
       break
     case EntityShapeType.Parallelogram:
-      this.path.addRectangle(Rectangle.makeLTWH(0, 0, this.width, this.height))
+      this.path.moveTo(20, 0)
+      this.path.lineTo(this.width, 0)
+      this.path.lineTo(this.width - 20, this.height)
+      this.path.lineTo(0, this.height)
+      this.path.lineTo(20, 0)
       break
     case EntityShapeType.Hexagon:
-      this.path.addRectangle(Rectangle.makeLTWH(0, 0, this.width, this.height))
+      this.path.moveTo(20, 0)
+      this.path.lineTo(this.width - 20, 0)
+      this.path.lineTo(this.width, this.height / 2)
+      this.path.lineTo(this.width - 20, this.height)
+      this.path.lineTo(20, this.height)
+      this.path.lineTo(0, this.height / 2)
+      this.path.lineTo(20, 0)
       break
     case EntityShapeType.Triangle:
-      this.path.addRectangle(Rectangle.makeLTWH(0, 0, this.width, this.height))
+      this.path.moveTo(this.width / 2, 0)
+      this.path.lineTo(this.width, this.height)
+      this.path.lineTo(0, this.height)
+      this.path.lineTo(this.width / 2, 0)
       break
     case EntityShapeType.Cylinder:
       this.path.addRectangle(Rectangle.makeLTWH(0, 0, this.width, this.height))

@@ -61,30 +61,30 @@ export class Shapes {
   public static FREEZE_ASPECT_RATIO = 'AspectRatio'
 }
 
-const ShapeTypes = [
-  { name: Shapes.TYPE_RECTANGLE, description: Shapes.DESC_RECTANGLE, freeze: Shapes.FREEZE_NONE },
-  { name: Shapes.TYPE_ROUND_RECTANGLE, description: Shapes.DESC_ROUND_RECTANGLE, freeze: Shapes.FREEZE_NONE },
-  { name: Shapes.TYPE_TEXT, description: Shapes.DESC_TEXT, freeze: Shapes.FREEZE_NONE },
-  { name: Shapes.TYPE_ELLIPSE, description: Shapes.DESC_ELLIPSE, freeze: Shapes.FREEZE_NONE },
-  { name: Shapes.TYPE_SQUARE, description: Shapes.DESC_SQUARE, freeze: Shapes.FREEZE_ASPECT_RATIO },
-  { name: Shapes.TYPE_CIRCLE, description: Shapes.DESC_CIRCLE, freeze: Shapes.FREEZE_NONE },
-  { name: Shapes.TYPE_PROCESS, description: Shapes.DESC_PROCESS, freeze: Shapes.FREEZE_NONE },
-  { name: Shapes.TYPE_DIAMOND, description: Shapes.DESC_DIAMOND, freeze: Shapes.FREEZE_NONE },
-  { name: Shapes.TYPE_PARALLELOGRAM, description: Shapes.DESC_PARALLELOGRAM, freeze: Shapes.FREEZE_NONE },
-  { name: Shapes.TYPE_HEXAGON, description: Shapes.DESC_HEXAGON, freeze: Shapes.FREEZE_NONE },
-  { name: Shapes.TYPE_TRIANGLE, description: Shapes.DESC_TRIANGLE, freeze: Shapes.FREEZE_NONE },
-  { name: Shapes.TYPE_CYLINDER, description: Shapes.DESC_CYLINDER, freeze: Shapes.FREEZE_NONE },
-  { name: Shapes.TYPE_CLOUD, description: Shapes.DESC_CLOUD, freeze: Shapes.FREEZE_NONE },
-  { name: Shapes.TYPE_DOCUMENT, description: Shapes.DESC_DOCUMENT, freeze: Shapes.FREEZE_NONE },
-  { name: Shapes.TYPE_INTERNAL_STORAGE, description: Shapes.DESC_INTERNAL_STORAGE, freeze: Shapes.FREEZE_NONE },
-  { name: Shapes.TYPE_CUBE, description: Shapes.DESC_CUBE, freeze: Shapes.FREEZE_NONE },
-  { name: Shapes.TYPE_STEP, description: Shapes.DESC_STEP, freeze: Shapes.FREEZE_NONE },
-  { name: Shapes.TYPE_TRAPEZOID, description: Shapes.DESC_TRAPEZOID, freeze: Shapes.FREEZE_NONE },
-  { name: Shapes.TYPE_TAPE, description: Shapes.DESC_TAPE, freeze: Shapes.FREEZE_NONE },
-  { name: Shapes.TYPE_NOTE, description: Shapes.DESC_NOTE, freeze: Shapes.FREEZE_NONE },
-  { name: Shapes.TYPE_CARD, description: Shapes.DESC_CARD, freeze: Shapes.FREEZE_NONE },
-  { name: Shapes.TYPE_CALLOUT, description: Shapes.DESC_CALLOUT, freeze: Shapes.FREEZE_NONE },
-  { name: Shapes.TYPE_ACTOR, description: Shapes.DESC_ACTOR, freeze: Shapes.FREEZE_NONE },
+export const ShapeTypes = [
+  { name: Shapes.TYPE_RECTANGLE, description: Shapes.DESC_RECTANGLE, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80 },
+  { name: Shapes.TYPE_ROUND_RECTANGLE, description: Shapes.DESC_ROUND_RECTANGLE, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80 },
+  { name: Shapes.TYPE_TEXT, description: Shapes.DESC_TEXT, freeze: Shapes.FREEZE_NONE, text: 'Text2', left: 0, top: 0, width: 160, height: 80 },
+  { name: Shapes.TYPE_ELLIPSE, description: Shapes.DESC_ELLIPSE, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80 },
+  { name: Shapes.TYPE_SQUARE, description: Shapes.DESC_SQUARE, freeze: Shapes.FREEZE_ASPECT_RATIO, text: '', left: 0, top: 0, width: 100, height: 100 },
+  { name: Shapes.TYPE_CIRCLE, description: Shapes.DESC_CIRCLE, freeze: Shapes.FREEZE_ASPECT_RATIO , text: '', left: 0, top: 0, width: 100, height: 100},
+  { name: Shapes.TYPE_PROCESS, description: Shapes.DESC_PROCESS, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80 },
+  { name: Shapes.TYPE_DIAMOND, description: Shapes.DESC_DIAMOND, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80 },
+  { name: Shapes.TYPE_PARALLELOGRAM, description: Shapes.DESC_PARALLELOGRAM, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80 },
+  { name: Shapes.TYPE_HEXAGON, description: Shapes.DESC_HEXAGON, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80 },
+  { name: Shapes.TYPE_TRIANGLE, description: Shapes.DESC_TRIANGLE, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80 },
+  { name: Shapes.TYPE_CYLINDER, description: Shapes.DESC_CYLINDER, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80 },
+  { name: Shapes.TYPE_CLOUD, description: Shapes.DESC_CLOUD, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80 },
+  { name: Shapes.TYPE_DOCUMENT, description: Shapes.DESC_DOCUMENT, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80 },
+  { name: Shapes.TYPE_INTERNAL_STORAGE, description: Shapes.DESC_INTERNAL_STORAGE, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80 },
+  { name: Shapes.TYPE_CUBE, description: Shapes.DESC_CUBE, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80 },
+  { name: Shapes.TYPE_STEP, description: Shapes.DESC_STEP, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80 },
+  { name: Shapes.TYPE_TRAPEZOID, description: Shapes.DESC_TRAPEZOID, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80 },
+  { name: Shapes.TYPE_TAPE, description: Shapes.DESC_TAPE, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80 },
+  { name: Shapes.TYPE_NOTE, description: Shapes.DESC_NOTE, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80 },
+  { name: Shapes.TYPE_CARD, description: Shapes.DESC_CARD, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80 },
+  { name: Shapes.TYPE_CALLOUT, description: Shapes.DESC_CALLOUT, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80 },
+  { name: Shapes.TYPE_ACTOR, description: Shapes.DESC_ACTOR, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80 },
 ]
 
 export interface ShapeOptions {
@@ -119,7 +119,8 @@ export class ShapeEntity extends Entity {
     this._modifierEnd = shapeOptions.modifierEnd ? shapeOptions.modifierEnd : new Point2(0, 0)
     let freezeType = this.parseEntityShapeFreezeType(shapeOptions.freezetype)
     let shapeType = this.parseEntityShapeType(this.type)
-    this._shape = new EntityShape('', left, top, width, height, shapeType , freezeType)
+    let text = this.parseEntityShapeText(this.type)
+    this._shape = new EntityShape(text, left, top, width, height, shapeType , freezeType)
   }
 
   public get enableLengthWidthRatio(): boolean {
@@ -167,6 +168,16 @@ export class ShapeEntity extends Entity {
   protected save(data: any) { }
 
   protected load(data: any) { }
+
+  private parseEntityShapeText(type: string): string {
+    let text = ''
+    ShapeTypes.forEach(shapeType => {
+      if(shapeType.name == type) {
+        text = shapeType.text
+      }
+    }) 
+    return text
+  }
 
   private parseEntityShapeFreezeType(freezeType: string): EntityShapeFreezeType {
     let entityFreezeType = EntityShapeFreezeType.None
