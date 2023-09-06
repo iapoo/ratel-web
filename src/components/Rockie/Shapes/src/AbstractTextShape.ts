@@ -27,7 +27,7 @@ export abstract class AbstractTextShape extends Shape {
       super(left, top, width, height)
       // this.filled = false
       this._textPadding = AbstractTextShape.DEFAULT_TEXT_PADDING
-      this._text = text
+      this._text = ''
       this._fontPaint = new Paint()
       this._fontPaint.setColor(Colors.Blue)
       // this.path.addRectangle(Rectangle.makeLTWH(0, 0, width, height))
