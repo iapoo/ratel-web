@@ -62,29 +62,29 @@ export class Shapes {
 }
 
 export const ShapeTypes = [
-  { name: Shapes.TYPE_RECTANGLE, description: Shapes.DESC_RECTANGLE, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80 },
-  { name: Shapes.TYPE_ROUND_RECTANGLE, description: Shapes.DESC_ROUND_RECTANGLE, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80 },
-  { name: Shapes.TYPE_TEXT, description: Shapes.DESC_TEXT, freeze: Shapes.FREEZE_NONE, text: 'Text2', left: 0, top: 0, width: 160, height: 80 },
-  { name: Shapes.TYPE_ELLIPSE, description: Shapes.DESC_ELLIPSE, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80 },
-  { name: Shapes.TYPE_SQUARE, description: Shapes.DESC_SQUARE, freeze: Shapes.FREEZE_ASPECT_RATIO, text: '', left: 0, top: 0, width: 100, height: 100 },
-  { name: Shapes.TYPE_CIRCLE, description: Shapes.DESC_CIRCLE, freeze: Shapes.FREEZE_ASPECT_RATIO , text: '', left: 0, top: 0, width: 100, height: 100},
-  { name: Shapes.TYPE_PROCESS, description: Shapes.DESC_PROCESS, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80 },
-  { name: Shapes.TYPE_DIAMOND, description: Shapes.DESC_DIAMOND, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80 },
-  { name: Shapes.TYPE_PARALLELOGRAM, description: Shapes.DESC_PARALLELOGRAM, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80 },
-  { name: Shapes.TYPE_HEXAGON, description: Shapes.DESC_HEXAGON, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80 },
-  { name: Shapes.TYPE_TRIANGLE, description: Shapes.DESC_TRIANGLE, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80 },
-  { name: Shapes.TYPE_CYLINDER, description: Shapes.DESC_CYLINDER, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80 },
-  { name: Shapes.TYPE_CLOUD, description: Shapes.DESC_CLOUD, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80 },
-  { name: Shapes.TYPE_DOCUMENT, description: Shapes.DESC_DOCUMENT, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80 },
-  { name: Shapes.TYPE_INTERNAL_STORAGE, description: Shapes.DESC_INTERNAL_STORAGE, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80 },
-  { name: Shapes.TYPE_CUBE, description: Shapes.DESC_CUBE, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80 },
-  { name: Shapes.TYPE_STEP, description: Shapes.DESC_STEP, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80 },
-  { name: Shapes.TYPE_TRAPEZOID, description: Shapes.DESC_TRAPEZOID, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80 },
-  { name: Shapes.TYPE_TAPE, description: Shapes.DESC_TAPE, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80 },
-  { name: Shapes.TYPE_NOTE, description: Shapes.DESC_NOTE, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80 },
-  { name: Shapes.TYPE_CARD, description: Shapes.DESC_CARD, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80 },
-  { name: Shapes.TYPE_CALLOUT, description: Shapes.DESC_CALLOUT, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80 },
-  { name: Shapes.TYPE_ACTOR, description: Shapes.DESC_ACTOR, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80 },
+  { name: Shapes.TYPE_RECTANGLE, description: Shapes.DESC_RECTANGLE, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80, modifiable: false, modifier: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0 },
+  { name: Shapes.TYPE_ROUND_RECTANGLE, description: Shapes.DESC_ROUND_RECTANGLE, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80, modifiable: true, modifier: 0.5, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0.5, modifierEndY: 0 },
+  { name: Shapes.TYPE_TEXT, description: Shapes.DESC_TEXT, freeze: Shapes.FREEZE_NONE, text: 'Text2', left: 0, top: 0, width: 160, height: 80, modifiable: false, modifier: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0 },
+  { name: Shapes.TYPE_ELLIPSE, description: Shapes.DESC_ELLIPSE, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80, modifiable: false, modifier: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0 },
+  { name: Shapes.TYPE_SQUARE, description: Shapes.DESC_SQUARE, freeze: Shapes.FREEZE_ASPECT_RATIO, text: '', left: 0, top: 0, width: 100, height: 100, modifiable: false, modifier: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0 },
+  { name: Shapes.TYPE_CIRCLE, description: Shapes.DESC_CIRCLE, freeze: Shapes.FREEZE_ASPECT_RATIO , text: '', left: 0, top: 0, width: 100, height: 100, modifiable: false, modifier: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0},
+  { name: Shapes.TYPE_PROCESS, description: Shapes.DESC_PROCESS, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80, modifiable: false, modifier: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0 },
+  { name: Shapes.TYPE_DIAMOND, description: Shapes.DESC_DIAMOND, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80, modifiable: false, modifier: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0 },
+  { name: Shapes.TYPE_PARALLELOGRAM, description: Shapes.DESC_PARALLELOGRAM, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80, modifiable: false, modifier: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0 },
+  { name: Shapes.TYPE_HEXAGON, description: Shapes.DESC_HEXAGON, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80, modifiable: false, modifier: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0 },
+  { name: Shapes.TYPE_TRIANGLE, description: Shapes.DESC_TRIANGLE, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80, modifiable: false, modifier: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0 },
+  { name: Shapes.TYPE_CYLINDER, description: Shapes.DESC_CYLINDER, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80, modifiable: false, modifier: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0 },
+  { name: Shapes.TYPE_CLOUD, description: Shapes.DESC_CLOUD, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80, modifiable: false, modifier: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0 },
+  { name: Shapes.TYPE_DOCUMENT, description: Shapes.DESC_DOCUMENT, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80, modifiable: false, modifier: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0 },
+  { name: Shapes.TYPE_INTERNAL_STORAGE, description: Shapes.DESC_INTERNAL_STORAGE, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80, modifiable: false, modifier: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0 },
+  { name: Shapes.TYPE_CUBE, description: Shapes.DESC_CUBE, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80, modifiable: false, modifier: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0 },
+  { name: Shapes.TYPE_STEP, description: Shapes.DESC_STEP, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80, modifiable: false, modifier: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0 },
+  { name: Shapes.TYPE_TRAPEZOID, description: Shapes.DESC_TRAPEZOID, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80, modifiable: false, modifier: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0 },
+  { name: Shapes.TYPE_TAPE, description: Shapes.DESC_TAPE, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80, modifiable: false, modifier: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0 },
+  { name: Shapes.TYPE_NOTE, description: Shapes.DESC_NOTE, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80, modifiable: false, modifier: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0 },
+  { name: Shapes.TYPE_CARD, description: Shapes.DESC_CARD, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80, modifiable: false, modifier: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0 },
+  { name: Shapes.TYPE_CALLOUT, description: Shapes.DESC_CALLOUT, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80, modifiable: false, modifier: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0 },
+  { name: Shapes.TYPE_ACTOR, description: Shapes.DESC_ACTOR, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 160, height: 80, modifiable: false, modifier: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0 },
 ]
 
 export interface ShapeOptions {
@@ -92,9 +92,7 @@ export interface ShapeOptions {
   freezetype: string
   enableLengthWidthRatio?: boolean
   lengthWidthRatio?: number
-  modifierStart?: Point2
-  modifierEnd?: Point2
-  modifiable?: boolean
+  modifier?: number
 
 }
 
@@ -103,23 +101,21 @@ export class ShapeEntity extends Entity {
 
   private _lengthWidthRatio: number
 
-  private _modifierStart: Point2 = new Point2(0, 0);
-
-  private _modifierEnd: Point2 = new Point2(0, 0);
-
-  private _modifiable = false;
-
   public constructor(left: number, top: number, width: number, height: number, shapeOptions: ShapeOptions = { shapeType: Shapes.TYPE_RECTANGLE,  freezetype: Shapes.FREEZE_NONE }) {
     super(left, top, width, height)
     this.type = shapeOptions.shapeType
     this._enableLengthWidthRatio = shapeOptions.enableLengthWidthRatio ? shapeOptions.enableLengthWidthRatio : false
     this._lengthWidthRatio = shapeOptions.lengthWidthRatio ? shapeOptions.lengthWidthRatio : 1
-    this._modifiable = shapeOptions.modifiable ? shapeOptions.modifiable : false
-    this._modifierStart = shapeOptions.modifierStart ? shapeOptions.modifierStart : new Point2(0, 0)
-    this._modifierEnd = shapeOptions.modifierEnd ? shapeOptions.modifierEnd : new Point2(0, 0)
+    ShapeTypes.forEach(shapeType => {
+      if(shapeType.name == shapeOptions.shapeType) {
+        this.modifiable = shapeType.modifiable
+        this.modifier = shapeType.modifier
+      }
+    }) 
     let freezeType = this.parseEntityShapeFreezeType(shapeOptions.freezetype)
     let shapeType = this.parseEntityShapeType(this.type)
     let text = this.parseEntityShapeText(this.type)
+
     this._shape = new EntityShape(text, left, top, width, height, shapeType , freezeType)
   }
 
@@ -137,24 +133,15 @@ export class ShapeEntity extends Entity {
   public set lengthWidthRatio(value: number) {
     this._lengthWidthRatio = value
   }
-  public get modifiable(): boolean {
-    return this._modifiable
-  }
 
-  public get modifierStart(): Point2 {
-    return this._modifierStart
-  }
-
-  public set modifierStart(value: Point2) {
-    this._modifierStart = new Point2(value.x, value.y)
-  }
-
-  public get modifierEnd(): Point2 {
-    return this._modifierEnd
-  }
-
-  public set modifierEnd(value: Point2) {
-    this._modifierEnd = new Point2(value.x, value.y)
+  public getShapeType() {
+    let theShapeType = ShapeTypes[0]
+    ShapeTypes.forEach(shapeType => {
+      if(shapeType.name == this.type) {
+        theShapeType = shapeType
+      }
+    })
+    return theShapeType
   }
 
   public get types(): Type[] {

@@ -1,3 +1,4 @@
+import { Rectangle } from '@/components/Engine'
 import { Anchor, } from './Anchor'
 
 /**
@@ -16,5 +17,7 @@ export class DivideAnchor extends Anchor {
 
   }
   protected buildAnchor () {
+    this.path.reset()
+    this.path.addOval(Rectangle.makeLTWH(0, 0, this.width, this.height))
   }
 }

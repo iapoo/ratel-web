@@ -1,9 +1,9 @@
-import { Colors, Control, Paint, } from '@/components/Engine'
+import { Colors, Control, Paint, Rectangle, Shape, } from '@/components/Engine'
 import { Item, } from '../../Items'
 import { Editor, } from '../../Editor/src/Editor'
 import { Holder, } from './Holder'
 
-export abstract class Anchor extends Control {
+export abstract class Anchor extends Shape {
   protected static readonly MIN_MOVING_INTERVAL = 100;
   private _target: Item | undefined;
   private _editor: Editor;
@@ -14,8 +14,8 @@ export abstract class Anchor extends Control {
     super()
     this._editor = editor
     this._holder = holder
-    this.width = 8
-    this.height = 8
+    this.width = 10
+    this.height = 10
     this.stroke = Paint.makeColorPaint(Colors.Blue)
     this.fill = Paint.makeColorPaint(Colors.White)
     this.stroke.setAntiAlias(true)

@@ -166,5 +166,7 @@ export class PointAnchor extends Anchor {
     }
   }
   protected buildAnchor () {
+    this.path.reset()
+    this.path.addOval(Rectangle.makeLTWH(0, 0, this.width, this.height))
   }
 }

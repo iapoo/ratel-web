@@ -3,6 +3,7 @@ import { Colors, PaintStyle, Rectangle, Point2, Rotation, Rectangle2D, } from '.
 import { Connector, } from './Connector'
 import { EntityShape, } from '../../Shapes'
 import { EditorItem, } from '../../Editor'
+import { ShapeTypes } from './ShapeEntity';
 
 export interface Type {
   name: string;
@@ -47,6 +48,10 @@ export abstract class Item implements EditorItem {
 
   private _items: Array<EditorItem> = new Array<EditorItem>(0);
 
+  private _modifiable = false
+
+  private _modifier = 0
+
   public constructor (left: number, top: number, width: number, height: number) {
     this._boundary = Rectangle.makeLTWH(left, top, width, height)
     this._shape = new EntityShape('', left, top, width, height)
@@ -67,6 +72,29 @@ export abstract class Item implements EditorItem {
   public set rotation (value: Rotation) {
     this._rotation = value
     this._shape.rotation = value
+  }
+
+  public get modifiable(): boolean {
+    return this._modifiable
+  }
+
+  public set modifiable(value: boolean) {
+    this._modifiable = value
+  }
+
+
+  public get modifier(): number {
+    return this._modifier
+  }
+
+  public set modifier(value: number) {
+    if(value < 0) {
+      this._modifier = 0
+    } else if(value > 1) {
+      this._modifier = 1
+    } else {
+      this._modifier = value
+    }
   }
 
   public get shape (): EntityShape {
@@ -206,7 +234,7 @@ export abstract class Item implements EditorItem {
   public getIndexOfConnector (connector: Connector): number {
     return this._connectors.indexOf(connector)
   }
-
+  
   public saveData (data: any) {
     data.type = this.type
     data.text = this.text
@@ -243,6 +271,8 @@ export abstract class Item implements EditorItem {
       item.boundary = Rectangle.makeLTWH(item.left * widthZoom, item.top * heightZoom, item.width * widthZoom, item.height * heightZoom)
     })
   }
+
+
 
   public abstract get types(): Type[]
 

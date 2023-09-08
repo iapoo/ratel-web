@@ -1,4 +1,4 @@
-import { GraphicsUtils, Point2, Rotation } from '@/components/Engine';
+import { GraphicsUtils, Point2, Rectangle, Rotation } from '@/components/Engine';
 import { Anchor } from './Anchor';
 import { Holder } from './Holder';
 
@@ -70,5 +70,8 @@ export class RotationAnchor extends Anchor {
       }
     }
   }
-  protected buildAnchor() {}
+  protected buildAnchor() {
+    this.path.reset()
+    this.path.addOval(Rectangle.makeLTWH(0, 0, this.width, this.height))
+  }
 }
