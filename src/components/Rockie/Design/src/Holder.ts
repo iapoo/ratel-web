@@ -6,9 +6,10 @@ import { ResizeAnchor, ResizeType, } from './ResizeAnchor'
 import { RotationAnchor, } from './RotationAnchor'
 import { ReshapeAnchor, } from './ReshapeAnchor'
 import { Control, Rectangle, Scale, } from '@/components/Engine'
-import { Connector, Item, LineEntity, LineType, } from '../../Items'
+import { Connector, Item, LineEntity, LineType, Shapes, } from '../../Items'
 import { Editor, } from '../../Editor/src/Editor'
 import { PointAnchor, } from './PointAnchor'
+import { ShapeEntity, ShapeTypes } from '../../Items/src/ShapeEntity'
 
 export class Holder extends Control {
   public static readonly PADDING = 32;
@@ -180,8 +181,6 @@ export class Holder extends Control {
 
     this._rotationAnchor.left = this._target.width - Holder.ANCHOR_RADIUS
     this._rotationAnchor.top = -Holder.ANCHOR_DISTANCE
-    this._reshapeAnchor.left = Holder.ANCHOR_DISTANCE
-    this._reshapeAnchor.top = Holder.ANCHOR_DISTANCE
     this._leftResizeAnchor.left = -Holder.ANCHOR_RADIUS
     this._leftResizeAnchor.top = this._target.height / 2 - Holder.ANCHOR_RADIUS
     this.leftTopResizeAnchor.left = -Holder.ANCHOR_RADIUS
@@ -206,6 +205,19 @@ export class Holder extends Control {
     this._rightCreationAnchor.top = this._target.height / 2 - Holder.ANCHOR_RADIUS
     this._bottomCreationAnchor.left = this._target.width / 2 - Holder.ANCHOR_RADIUS
     this._bottomCreationAnchor.top = this._target.height + Holder.ANCHOR_DISTANCE
+
+    if(this.target instanceof ShapeEntity) {
+      let shapeType = this.target.getShapeType()
+      let startX = shapeType.modifierStartX * this.target.width
+      let startY = shapeType.modifierStartY * this.target.height
+      let endX = shapeType.modifierEndX * this.target.width
+      let endY = shapeType.modifierEndY * this.target.height
+      let x = (endX - startX) * this.target.modifier +  startX
+      let y = (endY - startY) * this.target.modifier + startY
+      this._reshapeAnchor.left = x - Holder.ANCHOR_RADIUS
+      this._reshapeAnchor.top = y - Holder.ANCHOR_RADIUS
+    }
+
     if (this._target instanceof Connector) {
       this._sourceConnectionAnchor.left = (this._target.start.x > this._target.end.x) ? (this._target.start.x - this._target.end.x) - Holder.ANCHOR_RADIUS : -Holder.ANCHOR_RADIUS
       this._sourceConnectionAnchor.top = (this._target.start.y > this._target.end.y) ? (this._target.start.y - this._target.end.y) - Holder.ANCHOR_RADIUS : -Holder.ANCHOR_RADIUS
