@@ -3,7 +3,7 @@ import { Point2, } from '@/components/Engine'
 import { EntityShape, } from '../../Shapes'
 import { Entity, } from './Entity'
 import { Categories, Type, } from './Item'
-import { EntityShapeFreezeType, EntityShapeType } from '../../Shapes/src/EntityShape'
+import { EntityShapeFreezeType, EntityShapeType, ShapeTypeInfo } from '../../Shapes/src/EntityShape'
 
 export class Shapes {
   public static TYPE_RECTANGLE = 'Rectangle'
@@ -112,11 +112,9 @@ export class ShapeEntity extends Entity {
         this.modifier = shapeType.modifier
       }
     }) 
-    let freezeType = this.parseEntityShapeFreezeType(shapeOptions.freezetype)
-    let shapeType = this.parseEntityShapeType(this.type)
     let text = this.parseEntityShapeText(this.type)
-
-    this._shape = new EntityShape(text, left, top, width, height, shapeType , freezeType)
+    let typeInfo = this.parseTypeInfo(shapeOptions)
+    this._shape = new EntityShape(text, left, top, width, height, typeInfo)
   }
 
   public get enableLengthWidthRatio(): boolean {
@@ -189,6 +187,30 @@ export class ShapeEntity extends Entity {
 
     return entityFreezeType;
   }
+
+  private parseTypeInfo(shapeOptions: ShapeOptions): ShapeTypeInfo{
+    let theShapeType = ShapeTypes[0]
+    ShapeTypes.forEach(shapeType => {
+      if(shapeType.name == shapeOptions.shapeType) {
+        theShapeType = shapeType
+      }
+    }) 
+    let freezeType = this.parseEntityShapeFreezeType(shapeOptions.freezetype)
+    let shapeType = this.parseEntityShapeType(this.type)
+    return {
+      type: shapeType, 
+      freeze: freezeType,
+      text: theShapeType.text,
+      left: theShapeType.left,
+      top: theShapeType.top,
+      width: theShapeType.width,
+      height: theShapeType.height,
+      modifier: theShapeType.modifier,
+      modifierStart: new Point2(theShapeType.modifierStartX, theShapeType.modifierEndY),
+      modifierEnd: new Point2(theShapeType.modifierEndX, theShapeType.modifierEndY)
+    }
+  }
+
   private parseEntityShapeType(type: string): EntityShapeType {
     let shapeType = EntityShapeType.Rectangle
     switch (type) {

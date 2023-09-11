@@ -40,36 +40,67 @@ export enum EntityShapeFreezeType {
   WidthHeight
 }
 
+export interface ShapeTypeInfo {
+  type: EntityShapeType
+  freeze: EntityShapeFreezeType
+  text: string
+  left: number
+  top: number
+  width: number
+  height: number
+  modifier: number
+  modifierStart: Point2
+  modifierEnd: Point2
+}
+
 export class EntityShape extends AbstractTextShape {
-  private _type: EntityShapeType = EntityShapeType.Rectangle
-  private _freezeType: EntityShapeFreezeType;
+  private _typeInfo: ShapeTypeInfo
+  private _modifier: number
 
-  constructor (text = '', left = 0, top = 0, width = 100, height = 100, type = EntityShapeType.Rectangle, freezeType = EntityShapeFreezeType.None) {
+  constructor (text = '', left = 0, top = 0, width = 100, height = 100, typeInfo: ShapeTypeInfo =  {
+    type: EntityShapeType.Rectangle, 
+    freeze: EntityShapeFreezeType.None,
+    text: '',
+    left: 0,
+    top: 0,
+    width: 100,
+    height: 100,
+    modifier: 0,
+    modifierStart: new Point2(0,0),
+    modifierEnd: new Point2(0,0)
+  }) {
     super(text, left, top, width, height)
-    this._type = type
-    this._freezeType = freezeType
+    this._typeInfo = typeInfo
+    this._modifier = typeInfo.modifier
   }
 
-  public get type () {
-    return this._type
+  public get modifier() {
+    return this._modifier
   }
 
-  public set type (value: EntityShapeType) {
-    this._type = value
+  public set modifier(value: number) {
+    this._modifier = value
+    this.markDirty()
   }
 
-  public set freezeType(value: EntityShapeFreezeType) {
-    this._freezeType = value
+  public get typeInfo () {
+    return this._typeInfo
   }
 
-  public get freezeType () {
-    return this._freezeType
+  public set typeInfo (value: ShapeTypeInfo) {
+    this._typeInfo = value
   }
 
-  protected buildShape () {
-    switch (this._type) {
+
+  protected buildShape () {    
+    if(!this._typeInfo) {
+      return
+    }
+    switch (this._typeInfo.type) {
     case EntityShapeType.RoundRectangle:
-      this.path.addRRect(new RoundRectangle(0, 0, this.width, this.height, 6, 6))
+      let roundWidth = this.width * this.modifier * (this.typeInfo.modifierEnd.x - this.typeInfo.modifierStart.x)
+      let roundHeight = this.height * this.modifier * (this.typeInfo.modifierEnd.x - this.typeInfo.modifierStart.x)
+      this.path.addRRect(new RoundRectangle(0, 0, this.width, this.height, roundWidth, roundHeight))
       break
     case EntityShapeType.Text:
       this.stroked = false
