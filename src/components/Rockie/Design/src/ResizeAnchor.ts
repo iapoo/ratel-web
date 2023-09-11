@@ -69,7 +69,7 @@ export class ResizeAnchor extends Anchor {
 
   public handlePointerMove (x: number, y: number) {
     // console.log(`'anchor Pointer moving' x=${x} y =${y}`)
-    if (!this.target) {
+    if (!this.target || !this.target.shape || !this.target.shape.typeInfo) {
       console.log(`'anchor Pointer moving bad target' x=${x} y =${y}`)
       return
     }
@@ -82,7 +82,7 @@ export class ResizeAnchor extends Anchor {
       switch (this._resizeType) {
         case ResizeType.Left: {
           const resizeX = x - this._startX
-          switch(this.target.shape.freezeType) {
+          switch(this.target.shape.typeInfo.freeze) {
             case EntityShapeFreezeType.Width:
               newLeft = this.target.left + resizeX
               newWidth = this.target.width - resizeX >= this.target.minWidth ? this.target.width - resizeX : this.target.minWidth
@@ -111,7 +111,7 @@ export class ResizeAnchor extends Anchor {
         case ResizeType.LeftTop: {
           const resizeX = x - this._startX
           const resizeY = y - this._startY
-          switch(this.target.shape.freezeType) {
+          switch(this.target.shape.typeInfo.freeze) {
             case EntityShapeFreezeType.Width:
               newLeft = this.target.left + resizeX
               newTop = this.target.top + resizeY
@@ -149,7 +149,7 @@ export class ResizeAnchor extends Anchor {
         }
         case ResizeType.Top: {
           const resizeY = y - this._startY
-          switch(this.target.shape.freezeType) {
+          switch(this.target.shape.typeInfo.freeze) {
             case EntityShapeFreezeType.Width:
               newTop = this.target.top + resizeY
               newHeight = this.target.height - resizeY >= this.target.minHeight ? this.target.height - resizeY : this.target.minHeight
@@ -178,7 +178,7 @@ export class ResizeAnchor extends Anchor {
         case ResizeType.RightTop: {
           const resizeX = x - this._startX
           const resizeY = y - this._startY
-          switch(this.target.shape.freezeType) {
+          switch(this.target.shape.typeInfo.freeze) {
             case EntityShapeFreezeType.Width:
               newTop = this.target.top + resizeY
               newWidth = this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
@@ -211,7 +211,7 @@ export class ResizeAnchor extends Anchor {
         }
         case ResizeType.Right: {
           const resizeX = x - this._startX
-          switch(this.target.shape.freezeType) {
+          switch(this.target.shape.typeInfo.freeze) {
             case EntityShapeFreezeType.Width:
               newWidth = this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
               break
@@ -235,7 +235,7 @@ export class ResizeAnchor extends Anchor {
         case ResizeType.RightBottom: {
           const resizeX = x - this._startX
           const resizeY = y - this._startY
-          switch(this.target.shape.freezeType) {
+          switch(this.target.shape.typeInfo.freeze) {
             case EntityShapeFreezeType.Width:
               newWidth = this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
               newHeight = this.target.height + resizeY >= this.target.minHeight ? this.target.height + resizeY : this.target.minHeight
@@ -263,7 +263,7 @@ export class ResizeAnchor extends Anchor {
         }
         case ResizeType.Bottom: {
           const resizeY = y - this._startY
-          switch(this.target.shape.freezeType) {
+          switch(this.target.shape.typeInfo.freeze) {
             case EntityShapeFreezeType.Width:
               newHeight = this.target.height + resizeY >= this.target.minHeight ? this.target.height + resizeY : this.target.minHeight
               break
@@ -288,7 +288,7 @@ export class ResizeAnchor extends Anchor {
         default: {
           const resizeX = x - this._startX
           const resizeY = y - this._startY
-          switch(this.target.shape.freezeType) {
+          switch(this.target.shape.typeInfo.freeze) {
             case EntityShapeFreezeType.Width:
               newLeft = this.target.left + resizeX
               newWidth = this.target.width - resizeX >= this.target.minWidth ? this.target.width - resizeX : this.target.minWidth

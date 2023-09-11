@@ -267,6 +267,14 @@ export class Holder extends Control {
       this.addNode(this._sourceConnectionAnchor)
       this.addNode(this._targetConnectionAnchor)
     } else {
+      this.addNode(this._leftResizeAnchor)
+      this.addNode(this._leftTopResizeAnchor)
+      this.addNode(this._topResizeAnchor)
+      this.addNode(this._rightTopResizeAnchor)
+      this.addNode(this._rightResizeAnchor)
+      this.addNode(this._rightBottomResizeAnchor)
+      this.addNode(this._bottomResizeAnchor)
+      this.addNode(this._leftBottomResizeAnchor)
       if (this._inSelection) {
         this.addNode(this._leftCreationAnchor)
         this.addNode(this._topCreationAnchor)
@@ -277,14 +285,6 @@ export class Holder extends Control {
           this.addNode(this._reshapeAnchor)
         }
       }
-      this.addNode(this._leftResizeAnchor)
-      this.addNode(this._leftTopResizeAnchor)
-      this.addNode(this._topResizeAnchor)
-      this.addNode(this._rightTopResizeAnchor)
-      this.addNode(this._rightResizeAnchor)
-      this.addNode(this._rightBottomResizeAnchor)
-      this.addNode(this._bottomResizeAnchor)
-      this.addNode(this._leftBottomResizeAnchor)
     }
   }
 
@@ -296,6 +296,14 @@ export class Holder extends Control {
       this.removeNode(this._sourceConnectionAnchor)
       this.removeNode(this._targetConnectionAnchor)
     } else {
+      this.removeNode(this._leftResizeAnchor)
+      this.removeNode(this._leftTopResizeAnchor)
+      this.removeNode(this._topResizeAnchor)
+      this.removeNode(this._rightTopResizeAnchor)
+      this.removeNode(this._rightResizeAnchor)
+      this.removeNode(this._rightBottomResizeAnchor)
+      this.removeNode(this._bottomResizeAnchor)
+      this.removeNode(this._leftBottomResizeAnchor)
       if (this._inSelection) {
         this.removeNode(this._leftCreationAnchor)
         this.removeNode(this._topCreationAnchor)
@@ -306,14 +314,6 @@ export class Holder extends Control {
           this.removeNode(this._reshapeAnchor)
         }
       }
-      this.removeNode(this._leftResizeAnchor)
-      this.removeNode(this._leftTopResizeAnchor)
-      this.removeNode(this._topResizeAnchor)
-      this.removeNode(this._rightTopResizeAnchor)
-      this.removeNode(this._rightResizeAnchor)
-      this.removeNode(this._rightBottomResizeAnchor)
-      this.removeNode(this._bottomResizeAnchor)
-      this.removeNode(this._leftBottomResizeAnchor)
     }
   }
 }

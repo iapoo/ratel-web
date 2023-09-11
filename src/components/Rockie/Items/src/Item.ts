@@ -95,6 +95,7 @@ export abstract class Item implements EditorItem {
     } else {
       this._modifier = value
     }
+    this._shape.modifier = this._modifier
   }
 
   public get shape (): EntityShape {
@@ -234,7 +235,7 @@ export abstract class Item implements EditorItem {
   public getIndexOfConnector (connector: Connector): number {
     return this._connectors.indexOf(connector)
   }
-  
+
   public saveData (data: any) {
     data.type = this.type
     data.text = this.text
