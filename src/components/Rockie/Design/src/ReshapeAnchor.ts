@@ -1,4 +1,4 @@
-import { Colors, MathUtils, Paint } from '@/components/Engine'
+import { Colors, MathUtils, Paint, Point2 } from '@/components/Engine'
 import { Editor } from '../../Editor'
 import { Anchor, } from './Anchor'
 import { Holder } from './Holder'
@@ -52,17 +52,47 @@ export class ReshapeAnchor extends Anchor {
       let startY = shapeType.modifierStartY * this.target.height
       let endX = shapeType.modifierEndX * this.target.width
       let endY = shapeType.modifierEndY * this.target.height
-      let modifierX = (endX - startX) * this.target.modifier +  startX
-      let modifierY = (endY - startY) * this.target.modifier + startY
+      let modifierX = this.target.modifier.x +  startX
+      let modifierY = this.target.modifier.y + startY
+      if(shapeType.modifyInPercent) {
+        modifierX = (endX - startX) * this.target.modifier.x +  startX
+        modifierY = (endY - startY) * this.target.modifier.y + startY
+      }
       let newModifierX = modifierX + resizeX
       let newModifierY = modifierY + resizeY
-      let newModifierPoint = MathUtils.getNearestPointOfPointToLine(newModifierX, newModifierY, startX, startY, endX, endY)
-      let newModifier = Math.sqrt((newModifierPoint.x - startX) * (newModifierPoint.x - startX) + (newModifierPoint.y - startY) * (newModifierPoint.y - startY)) /
-        Math.sqrt((endX - startX) * (endX - startX) + (endY - startX) * (endY - startX))
+      let targetModifier = this.target.modifier
+      if(shapeType.modifyInLine) {
+        let newModifierPoint = MathUtils.getNearestPointOfPointToLine(newModifierX, newModifierY, startX, startY, endX, endY)
+        //let newModifierValue = Math.sqrt((newModifierPoint.x - startX) * (newModifierPoint.x - startX) + (newModifierPoint.y - startY) * (newModifierPoint.y - startY))
+        let newModifierXValue = newModifierPoint.x < startX ? startX : (newModifierPoint.x > endX ? endX : newModifierPoint.x)
+        let newModifierYValue = newModifierPoint.y < startY ? startY : (newModifierPoint.y > endY ? endY : newModifierPoint.y)
+        //console.log(newModifierPoint)
+        if(shapeType.modifyInPercent) {
+          //newModifierValue = Math.sqrt((newModifierPoint.x - startX) * (newModifierPoint.x - startX) + (newModifierPoint.y - startY) * (newModifierPoint.y - startY)) /
+          //Math.sqrt((endX - startX) * (endX - startX) + (endY - startX) * (endY - startX))
+          newModifierXValue = (endX - startX) > 0 ? (newModifierX - startX) / (endX - startX) : 0
+          newModifierYValue = (endY - startY) > 0 ? (newModifierY - startY) / (endY - startY) : 0
+          newModifierXValue = newModifierXValue < 0 ? 0 : (newModifierXValue > 1 ? 1 : newModifierXValue)
+          newModifierYValue = newModifierYValue < 0 ? 0 : (newModifierYValue > 1 ? 1 : newModifierYValue)
+        }  
+        targetModifier = new Point2(newModifierXValue, newModifierYValue)
+      } else {
+        let newModifierXValue = newModifierX - startX
+        let newModifierYValue = newModifierY - startY
+        newModifierXValue = newModifierXValue < startX ? startX : (newModifierXValue > endX ? endX : newModifierXValue)
+        newModifierYValue = newModifierYValue < startY ? startY : (newModifierYValue > endY ? endY : newModifierYValue)
+        if(shapeType.modifyInPercent) {
+          newModifierXValue = (newModifierX - startX) / (endX - startX)
+          newModifierYValue = (newModifierY - startY) / (endY - startY)
+          newModifierXValue = newModifierXValue < 0 ? 0 : (newModifierXValue > 1 ? 1 : newModifierXValue)
+          newModifierYValue = newModifierYValue < 0 ? 0 : (newModifierYValue > 1 ? 1 : newModifierYValue)
+        }  
+        targetModifier = new Point2(newModifierXValue, newModifierYValue)
+      }
         // TODO: 鼠标移动会导致Anchor重定位，结果导致鼠标位置突变而引起图形突变。这里延缓变化频率以修复问题
       const nowTime = new Date().getTime()
       if (nowTime - this.lastMovingTime > Anchor.MIN_MOVING_INTERVAL) {
-        this.target.modifier = newModifier
+        this.target.modifier = targetModifier
         this.holder.layoutAnchors()
         this.lastMovingTime = nowTime
       }

@@ -50,7 +50,7 @@ export abstract class Item implements EditorItem {
 
   private _modifiable = false
 
-  private _modifier = 0
+  private _modifier = new Point2(0,0)
 
   public constructor (left: number, top: number, width: number, height: number) {
     this._boundary = Rectangle.makeLTWH(left, top, width, height)
@@ -83,20 +83,15 @@ export abstract class Item implements EditorItem {
   }
 
 
-  public get modifier(): number {
+  public get modifier(): Point2 {
     return this._modifier
   }
 
-  public set modifier(value: number) {
-    if(value < 0) {
-      this._modifier = 0
-    } else if(value > 1) {
-      this._modifier = 1
-    } else {
-      this._modifier = value
-    }
+  public set modifier(value: Point2) {
+    this._modifier = new Point2(value.x, value.y)
     this._shape.modifier = this._modifier
   }
+
 
   public get shape (): EntityShape {
     return this._shape

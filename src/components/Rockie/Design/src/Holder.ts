@@ -211,9 +211,13 @@ export class Holder extends Control {
       let startX = shapeType.modifierStartX * this.target.width
       let startY = shapeType.modifierStartY * this.target.height
       let endX = shapeType.modifierEndX * this.target.width
-      let endY = shapeType.modifierEndY * this.target.height
-      let x = (endX - startX) * this.target.modifier +  startX
-      let y = (endY - startY) * this.target.modifier + startY
+      let endY = shapeType.modifierEndY * this.target.height      
+      let x = this.target.modifier.x +  startX
+      let y = this.target.modifier.y + startY
+      if(shapeType.modifyInPercent) { // only for x
+        x = (endX - startX) * this.target.modifier.x +  startX
+        y = (endY - startY) * this.target.modifier.y + startY
+      }
       this._reshapeAnchor.left = x - Holder.ANCHOR_RADIUS
       this._reshapeAnchor.top = y - Holder.ANCHOR_RADIUS
     }
