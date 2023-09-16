@@ -47,20 +47,20 @@ export class ReshapeAnchor extends Anchor {
       const resizeX = x - this._startX
       const resizeY = y - this._startY
 
-      let shapeType = this.target.getShapeType()
+      let shapeType = this.target.shapeType
       let startX = shapeType.modifierStartX * this.target.width
       let startY = shapeType.modifierStartY * this.target.height
       let endX = shapeType.modifierEndX * this.target.width
       let endY = shapeType.modifierEndY * this.target.height
-      let modifierX = this.target.modifier.x +  startX
-      let modifierY = this.target.modifier.y + startY
+      let modifierX = this.target.shape.modifier.x +  startX
+      let modifierY = this.target.shape.modifier.y + startY
       if(shapeType.modifyInPercent) {
-        modifierX = (endX - startX) * this.target.modifier.x +  startX
-        modifierY = (endY - startY) * this.target.modifier.y + startY
+        modifierX = (endX - startX) * this.target.shape.modifier.x +  startX
+        modifierY = (endY - startY) * this.target.shape.modifier.y + startY
       }
       let newModifierX = modifierX + resizeX
       let newModifierY = modifierY + resizeY
-      let targetModifier = this.target.modifier
+      let targetModifier = this.target.shape.modifier
       if(shapeType.modifyInLine) {
         let newModifierPoint = MathUtils.getNearestPointOfPointToLine(newModifierX, newModifierY, startX, startY, endX, endY)
         //let newModifierValue = Math.sqrt((newModifierPoint.x - startX) * (newModifierPoint.x - startX) + (newModifierPoint.y - startY) * (newModifierPoint.y - startY))
@@ -92,7 +92,7 @@ export class ReshapeAnchor extends Anchor {
         // TODO: 鼠标移动会导致Anchor重定位，结果导致鼠标位置突变而引起图形突变。这里延缓变化频率以修复问题
       const nowTime = new Date().getTime()
       if (nowTime - this.lastMovingTime > Anchor.MIN_MOVING_INTERVAL) {
-        this.target.modifier = targetModifier
+        this.target.shape.modifier = targetModifier
         this.holder.layoutAnchors()
         this.lastMovingTime = nowTime
       }

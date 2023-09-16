@@ -44,13 +44,9 @@ export abstract class Item implements EditorItem {
 
   private _connectors: Connector[] = [];
 
-  private _stype = ''
+  private _type = ''
 
   private _items: Array<EditorItem> = new Array<EditorItem>(0);
-
-  private _modifiable = false
-
-  private _modifier = new Point2(0,0)
 
   public constructor (left: number, top: number, width: number, height: number) {
     this._boundary = Rectangle.makeLTWH(left, top, width, height)
@@ -73,25 +69,6 @@ export abstract class Item implements EditorItem {
     this._rotation = value
     this._shape.rotation = value
   }
-
-  public get modifiable(): boolean {
-    return this._modifiable
-  }
-
-  public set modifiable(value: boolean) {
-    this._modifiable = value
-  }
-
-
-  public get modifier(): Point2 {
-    return this._modifier
-  }
-
-  public set modifier(value: Point2) {
-    this._modifier = new Point2(value.x, value.y)
-    this._shape.modifier = this._modifier
-  }
-
 
   public get shape (): EntityShape {
     return this._shape
@@ -141,7 +118,7 @@ export abstract class Item implements EditorItem {
   }
 
   public get type (): string {
-    return this._stype
+    return this._type
   }
 
   public set type (value: string) {
@@ -153,7 +130,7 @@ export abstract class Item implements EditorItem {
       }
     })
     if (index >= 0) {
-      this._stype = value
+      this._type = value
     }
   }
 
