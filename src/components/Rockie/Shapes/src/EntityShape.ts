@@ -46,6 +46,11 @@ export enum ModifierDirection {
   XY
 }
 
+export enum AdapterDirection {
+  X,
+  Y
+}
+
 export interface ShapeTypeInfo {
   type: EntityShapeType
   freeze: EntityShapeFreezeType
@@ -59,12 +64,21 @@ export interface ShapeTypeInfo {
   modifierEnd: Point2
   modifyInLine: boolean
   modifyInPercent: boolean
+  adapter: Point2
+  adapterDirection: AdapterDirection
+  adapterSize: number
+  adapterStart: Point2
+  adapterEnd: Point2
+  adaptInLine: boolean
+  adaptInPercent: boolean
 }
 
 
 export class EntityShape extends AbstractTextShape {
   private _typeInfo: ShapeTypeInfo
   private _modifier: Point2
+  private _adapter: Point2
+  private _adapterSize: number
 
   constructor (text = '', left = 0, top = 0, width = 100, height = 100, typeInfo: ShapeTypeInfo =  {
     type: EntityShapeType.Rectangle, 
@@ -78,11 +92,20 @@ export class EntityShape extends AbstractTextShape {
     modifierStart: new Point2(0,0),
     modifierEnd: new Point2(0,0),
     modifyInLine: true,
-    modifyInPercent: true
+    modifyInPercent: true,
+    adapter: new Point2(0,0),
+    adapterDirection: AdapterDirection.X,
+    adapterSize: 0,
+    adapterStart: new Point2(),
+    adapterEnd: new Point2(),
+    adaptInLine: true,
+    adaptInPercent: true
   }) {
     super(text, left, top, width, height)
     this._typeInfo = typeInfo
     this._modifier = typeInfo.modifier
+    this._adapter = typeInfo.adapter
+    this._adapterSize = typeInfo.adapterSize
   }
 
   public get modifier() {
@@ -91,6 +114,24 @@ export class EntityShape extends AbstractTextShape {
 
   public set modifier(value: Point2) {
     this._modifier = value
+    this.markDirty()
+  }
+
+  public get adapter() {
+    return this._adapter
+  }
+
+  public set adapter(value: Point2) {
+    this._adapter = value
+    this.markDirty()
+  }
+
+  public get adapterSize() {
+    return this._adapterSize
+  }
+
+  public set adapterSize(value: number) {
+    this._adapterSize = value
     this.markDirty()
   }
 
@@ -109,9 +150,19 @@ export class EntityShape extends AbstractTextShape {
     }
     let modifierWidth = this.modifier.x + this.typeInfo.modifierStart.x * this.width
     let modifierHeight = this.modifier.y + this.typeInfo.modifierStart.y * this.height
+    let adapterWidth = this.adapter.x + this.typeInfo.adapterStart.x * this.width
+    let adapterHeight = this.adapter.y + this.typeInfo.adapterStart.y * this.height
+    let adapterSizeX = this.adapterSize
+    let adapterSizeY = this.adapterSize
     if(this._typeInfo?.modifyInPercent) {
       modifierWidth = this.width * this.modifier.x * (this.typeInfo.modifierEnd.x - this.typeInfo.modifierStart.x) + this.typeInfo.modifierStart.x * this.width
       modifierHeight = this.height * this.modifier.y * (this.typeInfo.modifierEnd.y - this.typeInfo.modifierStart.y) + this.typeInfo.modifierStart.y * this.height
+    }
+    if(this._typeInfo?.adaptInPercent) {
+      adapterWidth = this.width * this.adapter.x * (this.typeInfo.adapterEnd.x - this.typeInfo.adapterStart.x) + this.typeInfo.adapterStart.x * this.width
+      adapterHeight = this.height * this.adapter.y * (this.typeInfo.adapterEnd.y - this.typeInfo.adapterStart.y) + this.typeInfo.adapterStart.y * this.height
+      adapterSizeX = this.adapterSize * (this.typeInfo.modifierEnd.x - this.typeInfo.modifierStart.x) * this.width
+      adapterSizeY = this.adapterSize * (this.typeInfo.modifierEnd.y - this.typeInfo.modifierStart.y) * this.height
     }
     switch (this._typeInfo.type) {
     case EntityShapeType.RoundRectangle:
@@ -196,12 +247,13 @@ export class EntityShape extends AbstractTextShape {
       break
     case EntityShapeType.Document: {
       modifierHeight = this.height - modifierHeight
-      let k = modifierHeight / 0.75
+      let k = modifierHeight / 0.35
       //this.path.addRectangle(Rectangle.makeLTWH(0, 0, this.width, this.height))
       this.path.moveTo(0, 0)
       this.path.lineTo(0, this.height - modifierHeight)
-      this.path.cubicTo(this.width * 0.05, this.height - modifierHeight + k, this.width * 0.45, this.height - modifierHeight + k, this.width * 0.5, this.height  - modifierHeight)
-      this.path.cubicTo(this.width * 0.55, this.height  - modifierHeight - k, this.width * 0.95, this.height  - modifierHeight - k, this.width, this.height  - modifierHeight)
+      //this.path.cubicTo(this.width * 0.05, this.height - modifierHeight + k, this.width * 0.45, this.height - modifierHeight + k, this.width * 0.5, this.height  - modifierHeight)
+      //this.path.cubicTo(this.width * 0.55, this.height  - modifierHeight - k, this.width * 0.95, this.height  - modifierHeight - k, this.width, this.height  - modifierHeight)
+      this.path.cubicTo(this.width * 0.5, this.height  - modifierHeight + k, this.width * 0.5, this.height  - modifierHeight - k, this.width, this.height  - modifierHeight)
       this.path.lineTo(this.width, 0)
       this.path.lineTo(0, 0)
       break
@@ -243,15 +295,17 @@ export class EntityShape extends AbstractTextShape {
       this.path.lineTo(modifierWidth, 0)
       break
     case EntityShapeType.Tape: {
-      let k = modifierHeight / 0.75
+      let k = modifierHeight / 0.35
       //this.path.addRectangle(Rectangle.makeLTWH(0, 0, this.width, this.height))
       this.path.moveTo(0, modifierHeight)
       this.path.lineTo(0, this.height - modifierHeight)
-      this.path.cubicTo(this.width * 0.05, this.height - modifierHeight + k, this.width * 0.45, this.height - modifierHeight + k, this.width * 0.5, this.height  - modifierHeight)
-      this.path.cubicTo(this.width * 0.55, this.height - modifierHeight - k, this.width * 0.95, this.height - modifierHeight - k, this.width, this.height  - modifierHeight)
+      //this.path.cubicTo(this.width * 0.05, this.height - modifierHeight + k, this.width * 0.45, this.height - modifierHeight + k, this.width * 0.5, this.height  - modifierHeight)
+      //this.path.cubicTo(this.width * 0.55, this.height - modifierHeight - k, this.width * 0.95, this.height - modifierHeight - k, this.width, this.height  - modifierHeight)
+      this.path.cubicTo(this.width * 0.5, this.height - modifierHeight + k, this.width * 0.5 , this.height - modifierHeight - k, this.width, this.height  - modifierHeight)
       this.path.lineTo(this.width, modifierHeight)
-      this.path.cubicTo(this.width * 0.95, modifierHeight - k, this.width * 0.55, modifierHeight - k, this.width * 0.5, modifierHeight)
-      this.path.cubicTo(this.width * 0.45, modifierHeight + k, this.width * 0.05, modifierHeight + k, 0, modifierHeight)
+      //this.path.cubicTo(this.width * 0.95, modifierHeight - k, this.width * 0.55, modifierHeight - k, this.width * 0.5, modifierHeight)
+      //this.path.cubicTo(this.width * 0.45, modifierHeight + k, this.width * 0.05, modifierHeight + k, 0, modifierHeight)
+      this.path.cubicTo(this.width * 0.5, modifierHeight - k, this.width * 0.5, modifierHeight + k, 0, modifierHeight)
       break
     }
     case EntityShapeType.Note:
@@ -268,13 +322,37 @@ export class EntityShape extends AbstractTextShape {
       this.path.lineTo(modifierWidth, 0)
       break
     case EntityShapeType.Card:
-      this.path.addRectangle(Rectangle.makeLTWH(0, 0, this.width, this.height))
+      this.path.moveTo(0, modifierHeight)
+      this.path.lineTo(0, this.height)
+      this.path.lineTo(this.width, this.height)
+      this.path.lineTo(this.width, 0)
+      this.path.lineTo(modifierWidth, 0)
+      this.path.lineTo(0, modifierHeight)
       break
     case EntityShapeType.Callout:
-      this.path.addRectangle(Rectangle.makeLTWH(0, 0, this.width, this.height))
+      this.path.moveTo(0, 0)
+      this.path.lineTo(0, adapterHeight)
+      this.path.lineTo(adapterWidth, adapterHeight)
+      this.path.lineTo(modifierWidth, modifierHeight)
+      this.path.lineTo(adapterWidth + adapterSizeX, adapterHeight)
+      this.path.lineTo(this.width, adapterHeight)
+      this.path.lineTo(this.width, 0)
+      this.path.lineTo(0, 0)
       break
     case EntityShapeType.Actor:
-      this.path.addRectangle(Rectangle.makeLTWH(0, 0, this.width, this.height))
+      //this.filled = false
+      this.path.addOval(Rectangle.makeLTWH(this.width * 0.25, 0, this.width * 0.5, this.height * 0.25))
+      this.path.moveTo(0, this.height / 3)
+      this.path.lineTo(this.width, this.height / 3)
+      this.path.close()
+      this.path.moveTo(this.width * 0.5, this.height * 0.25)
+      this.path.lineTo(this.width * 0.5, this.height * 2 / 3)
+      this.path.close()
+      this.path.moveTo(0, this.height)
+      this.path.lineTo(this.width * 0.5, this.height * 2 / 3)
+      this.path.lineTo(this.width, this.height)
+      this.path.lineTo(this.width * 0.5, this.height * 2 / 3)
+      this.path.lineTo(0, this.height)
       break
     case EntityShapeType.Rectangle:
     default:

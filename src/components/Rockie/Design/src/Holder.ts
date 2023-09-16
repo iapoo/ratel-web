@@ -10,6 +10,8 @@ import { Connector, Item, LineEntity, LineType, Shapes, } from '../../Items'
 import { Editor, } from '../../Editor/src/Editor'
 import { PointAnchor, } from './PointAnchor'
 import { ShapeEntity, ShapeTypes } from '../../Items/src/ShapeEntity'
+import { AdapterAnchor, AdapterType } from './AdapterAnchor'
+import { AdapterDirection } from '../../Shapes/src/EntityShape'
 
 export class Holder extends Control {
   public static readonly PADDING = 32;
@@ -34,6 +36,8 @@ export class Holder extends Control {
   private _targetConnectionAnchor: ConnectionAnchor;
   private _startAnchor:PointAnchor
   private _endAnchor: PointAnchor
+  private _startAdapterAnchor: AdapterAnchor
+  private _endAdapterAnchor: AdapterAnchor
   private _target: Item;
   private _inHolder: boolean;
   private _editor: Editor;
@@ -60,6 +64,8 @@ export class Holder extends Control {
     this._targetConnectionAnchor = new ConnectionAnchor(editor, this)
     this._startAnchor = new PointAnchor(editor, this, true)
     this._endAnchor = new PointAnchor(editor, this, false)
+    this._startAdapterAnchor = new AdapterAnchor(editor, this, AdapterType.BEGIN)
+    this._endAdapterAnchor = new AdapterAnchor(editor, this, AdapterType.END)
     this.stroked = false
     this.filled = false
     this.clipped = false
@@ -91,6 +97,8 @@ export class Holder extends Control {
     this._bottomCreationAnchor.target = target
     this._startAnchor.target = target
     this._endAnchor.target = target
+    this._startAdapterAnchor.target = target
+    this._endAdapterAnchor.target = target
     this.layoutAnchors()
     if (this._inHolder) {
       this.addAnchors()
@@ -207,19 +215,37 @@ export class Holder extends Control {
     this._bottomCreationAnchor.top = this._target.height + Holder.ANCHOR_DISTANCE
 
     if(this.target instanceof ShapeEntity) {
-      let shapeType = this.target.getShapeType()
+      let shapeType = this.target.shapeType
       let startX = shapeType.modifierStartX * this.target.width
       let startY = shapeType.modifierStartY * this.target.height
       let endX = shapeType.modifierEndX * this.target.width
       let endY = shapeType.modifierEndY * this.target.height      
-      let x = this.target.modifier.x +  startX
-      let y = this.target.modifier.y + startY
+      let x = this.target.shape.modifier.x +  startX
+      let y = this.target.shape.modifier.y + startY
       if(shapeType.modifyInPercent) { // only for x
-        x = (endX - startX) * this.target.modifier.x +  startX
-        y = (endY - startY) * this.target.modifier.y + startY
+        x = (endX - startX) * this.target.shape.modifier.x +  startX
+        y = (endY - startY) * this.target.shape.modifier.y + startY
       }
       this._reshapeAnchor.left = x - Holder.ANCHOR_RADIUS
       this._reshapeAnchor.top = y - Holder.ANCHOR_RADIUS
+      let startAdapterX = shapeType.adapterStartX * this.target.width
+      let startAdapterY = shapeType.adapterStartY * this.target.height
+      let endAdapterX = shapeType.adapterEndX * this.target.width
+      let endAdapterY = shapeType.adapterEndY * this.target.height
+      let adapterX = this.target.shape.adapter.x + startX
+      let adapterY = this.target.shape.adapter.y + startY
+      let adapterEndX = this.target.shape.typeInfo.adapterDirection == AdapterDirection.X ? adapterX + this.target.shape.adapterSize : adapterX
+      let adapterEndY = this.target.shape.typeInfo.adapterDirection == AdapterDirection.Y ? adapterY + this.target.shape.adapterSize : adapterY
+      if(shapeType.adaptInPercent) {
+        adapterX = (endAdapterX - startAdapterX) * this.target.shape.adapter.x + startAdapterX
+        adapterY = (endAdapterY - startAdapterY) * this.target.shape.adapter.y + startAdapterY
+        adapterEndX = this.target.shape.typeInfo.adapterDirection == AdapterDirection.X ? adapterX + (endAdapterX - startAdapterX) *this.target.shape.adapterSize : adapterX
+        adapterEndY = this.target.shape.typeInfo.adapterDirection == AdapterDirection.Y ? adapterY + (endAdapterY - startAdapterY) *this.target.shape.adapterSize : adapterY
+      }
+      this._startAdapterAnchor.left = adapterX - Holder.ANCHOR_RADIUS
+      this._startAdapterAnchor.top = adapterY - Holder.ANCHOR_RADIUS
+      this._endAdapterAnchor.left = adapterEndX - Holder.ANCHOR_RADIUS
+      this._endAdapterAnchor.top = adapterEndY - Holder.ANCHOR_RADIUS
     }
 
     if (this._target instanceof Connector) {
@@ -285,8 +311,14 @@ export class Holder extends Control {
         this.addNode(this._rightCreationAnchor)
         this.addNode(this._bottomCreationAnchor)
         this.addNode(this._rotationAnchor)
-        if (this._target.modifiable) {
-          this.addNode(this._reshapeAnchor)
+        if(this._target instanceof ShapeEntity) {
+          if (this._target.shapeType.modifiable) {
+            this.addNode(this._reshapeAnchor)
+          }
+          if(this._target.shapeType.adaptable) {
+            this.addNode(this._endAdapterAnchor)
+            this.addNode(this._startAdapterAnchor)
+          }
         }
       }
     }
@@ -314,8 +346,14 @@ export class Holder extends Control {
         this.removeNode(this._rightCreationAnchor)
         this.removeNode(this._bottomCreationAnchor)
         this.removeNode(this._rotationAnchor)
-        if (this._target.modifiable) {
-          this.removeNode(this._reshapeAnchor)
+        if(this._target instanceof ShapeEntity) {
+          if (this._target.shapeType.modifiable) {
+            this.removeNode(this._reshapeAnchor)
+          }
+          if(this._target.shapeType.adaptable) {
+            this.removeNode(this._startAdapterAnchor)
+            this.removeNode(this._endAdapterAnchor)
+          }
         }
       }
     }
