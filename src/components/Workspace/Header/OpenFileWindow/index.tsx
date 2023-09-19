@@ -374,7 +374,7 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
         }
       }
     } else {
-     let documentData = treeMap?.get('' + documentId); 
+     let documentData = treeMap?.get(DOC + documentId); 
      if(isDocument(documentData)) {
       if(selectedDocumentName == documentData.documentName && selectedDocumentId == documentData.documentId) {
         doSaveFile(folderId, true, documentData.documentId, documentData.documentName)

@@ -5,6 +5,11 @@ export class ShapeData {
     public width: number
     public height: number
     public text: string
+    public modifierX: number = 0
+    public modifierY: number = 0
+    public adapterX: number = 0
+    public adapterY: number = 0
+    public adapterSize: number = 0
 
     public constructor (left = 0, top = 0, width = 100, height = 100, text = '') {
       this.left = left

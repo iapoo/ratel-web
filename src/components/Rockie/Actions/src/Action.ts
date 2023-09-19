@@ -4,16 +4,14 @@ import { Editor, } from '../../Editor/src/Editor'
 export abstract class Action {
   private _name: string | undefined;
   private _type: string | undefined;
-  private _freezeType: string | undefined
   private _url: string | undefined;
   private _description: string | undefined;
   private _item: Item;
   private _editor: Editor;
 
-  public constructor (editor: Editor, type: string | undefined = undefined, freezeType: string | undefined = undefined, name: string | undefined = undefined,  description: string | undefined = undefined, url: string | undefined = undefined) {
+  public constructor (editor: Editor, type: string | undefined = undefined, name: string | undefined = undefined,  description: string | undefined = undefined, url: string | undefined = undefined) {
     this._editor = editor
     this._type = type
-    this._freezeType = freezeType
     this._name = name
     this._description = description
     this._url = url
@@ -44,15 +42,7 @@ export abstract class Action {
   public set type (value: string | undefined) {
     this._type = value
   }
-   
-  public get freezeType (): string | undefined {
-    return this._freezeType
-  }
-
-  public set freezeType (value: string | undefined) {
-    this._freezeType = value
-  }
-   
+     
   public get description (): string | undefined {
     return this._description
   }

@@ -20,8 +20,7 @@ export class ShapeAction extends Action {
       }
     })
     const shapeEntity = new ShapeEntity(left, top, width, height, {
-      shapeType: this.type ? this.type : Shapes.TYPE_RECTANGLE,
-      freezetype: this.freezeType ? this.freezeType : Shapes.FREEZE_NONE
+      shapeType: this.type ? this.type : Shapes.TYPE_RECTANGLE
     })
     shapeEntity.shape.stroke.setColor(Theme.DEFAULT_STROKE_COLOR)
 
