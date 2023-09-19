@@ -170,13 +170,12 @@ export const ShapeTypes = [
 
 export interface ShapeOptions {
   shapeType: string
-  freezetype: string
 }
 
 export class ShapeEntity extends Entity {
   private _shapeType: ShapeType
 
-  public constructor(left: number, top: number, width: number, height: number, shapeOptions: ShapeOptions = { shapeType: Shapes.TYPE_RECTANGLE,  freezetype: Shapes.FREEZE_NONE }) {
+  public constructor(left: number, top: number, width: number, height: number, shapeOptions: ShapeOptions = { shapeType: Shapes.TYPE_RECTANGLE }) {
     super(left, top, width, height)
     this.type = shapeOptions.shapeType
     this._shapeType = this.getShapeType()
@@ -265,7 +264,7 @@ export class ShapeEntity extends Entity {
         theShapeType = shapeType
       }
     }) 
-    let freezeType = this.parseEntityShapeFreezeType(shapeOptions.freezetype)
+    let freezeType = this.parseEntityShapeFreezeType(theShapeType.freeze)
     let shapeType = this.parseEntityShapeType(this.type)
     let adapterDirection = this.parseAdaptDirection(theShapeType.adapterDirection)
     return {

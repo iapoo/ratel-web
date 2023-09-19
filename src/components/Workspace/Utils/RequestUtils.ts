@@ -29,10 +29,16 @@ export interface Document {
 }
 
 export function isFolder(source:  Folder | Document | undefined ): source is Folder {
+    if( source == undefined) {
+        return false
+    }
     return (<Folder>source).data != undefined
 }
 
 export function isDocument(source:  Folder | Document | undefined ): source is Document {
+    if( source == undefined) {
+        return false
+    }
     return (<Document>source).documentName != undefined
 }
 

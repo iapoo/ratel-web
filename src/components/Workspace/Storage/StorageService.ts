@@ -1,49 +1,56 @@
 /* eslint-disable max-params */
-import { Rotation } from '@/components/Engine'
+import { Point2, Rotation } from '@/components/Engine'
 import { Editor, EditorItem, } from '@/components/Rockie/Editor'
-import { Connector, LineEntity, ShapeEntity, Shapes, TableEntity, } from '@/components/Rockie/Items'
+import { Connector, LineEntity, ShapeEntity, ShapeTypes, Shapes, TableEntity, } from '@/components/Rockie/Items'
 import { Categories, } from '@/components/Rockie/Items/src/Item'
 import { EditorData, } from './EditorData'
 import { EditorItemData, } from './EditorItemData'
 import { StorageData, } from './StorageData'
+import { EntityShape } from '@/components/Rockie/Shapes'
+import { ShapeData } from './ShapeData'
 
 export class StorageService {
-  public static loadItemData (itemData: EditorItemData): EditorItem {
+  public static loadItemData(itemData: EditorItemData): EditorItem {
     switch (itemData.category) {
-    case Categories.LINE:
-      return this.loadLineEntity(itemData)
-    case Categories.CONNECTOR:
-      return this.loadConnector(itemData)
-    case Categories.TABLE:
-      return this.loadTableEntity(itemData)
-    case Categories.SHAPE:
-    default:
-      return this.loadShapeEntity(itemData)
+      case Categories.LINE:
+        return this.loadLineEntity(itemData)
+      case Categories.CONNECTOR:
+        return this.loadConnector(itemData)
+      case Categories.TABLE:
+        return this.loadTableEntity(itemData)
+      case Categories.SHAPE:
+      default:
+        return this.loadShapeEntity(itemData)
     }
   }
 
-  private static loadLineEntity (itemData: EditorItemData): EditorItem {
+  private static loadLineEntity(itemData: EditorItemData): EditorItem {
     const lineEntity = new LineEntity()
     return lineEntity
   }
 
-  private static loadConnector (itemData: EditorItemData): EditorItem {
+  private static loadConnector(itemData: EditorItemData): EditorItem {
     const connector = new Connector()
 
     return connector
   }
 
-  private static loadShapeEntity (itemData: EditorItemData): EditorItem {
-    const shapeEntity = new ShapeEntity(itemData.left, itemData.top, itemData.width, itemData.height)
+  private static loadShapeEntity(itemData: EditorItemData): EditorItem {
+    const shapeEntity = new ShapeEntity(itemData.left, itemData.top, itemData.width, itemData.height, {
+      shapeType: itemData.type
+    })
     shapeEntity.type = itemData.type
     shapeEntity.text = itemData.text
-    if(itemData.rotation) {
-      shapeEntity.rotation = new Rotation(itemData.rotation, shapeEntity.width / 2, shapeEntity.height /2)
+    if (itemData.rotation) {
+      shapeEntity.rotation = new Rotation(itemData.rotation, shapeEntity.width / 2, shapeEntity.height / 2)
     }
+    shapeEntity.shape.modifier = new Point2(itemData.shape.modifierX, itemData.shape.modifierY)
+    shapeEntity.shape.adapter = new Point2(itemData.shape.adapterX, itemData.shape.adapterY)
+
     return shapeEntity
   }
 
-  private static loadTableEntity (itemData: EditorItemData): EditorItem {
+  private static loadTableEntity(itemData: EditorItemData): EditorItem {
     const tableEntity = new TableEntity(itemData.left, itemData.top, itemData.width, itemData.height)
 
     return tableEntity
@@ -51,19 +58,19 @@ export class StorageService {
   private _editors: Array<Editor> = new Array<Editor>(0)
   private _storageData: StorageData = new StorageData()
 
-  public get editors () {
+  public get editors() {
     return this._editors
   }
 
-  public set editors (value: Array<Editor>) {
-    this._editors = [ ...value, ]
+  public set editors(value: Array<Editor>) {
+    this._editors = [...value,]
   }
 
-  public get storageData () {
+  public get storageData() {
     return this._storageData
   }
 
-  public save () {
+  public save() {
     this._storageData.sheets.length = 0
     const count = this._editors.length
     for (let i = 0; i < count; i++) {
@@ -80,7 +87,7 @@ export class StorageService {
 
   public static testdata = ''
 
-  public load () {
+  public load() {
     let source = `{"version":"1.0","author":"","sheets":[{"name":"","index":0,"zoom":1,"x":0,"y":0,"width":2000,"height":2000,"title":"File 1","key":"1","items":[{"type":"Rectangle","left":12,"top":28,"width":200,"height":200,"text":"","items":[],"shape":{"left":0,"top":0,"width":100,"height":100,"text":""}}]},{"name":"","index":0,"zoom":1,"x":0,"y":0,"width":2000,"height":2000,"title":"File 2","key":"2","items":[{"type":"Rectangle","left":220,"top":188,"width":200,"height":200,"text":"","items":[],"shape":{"left":0,"top":0,"width":100,"height":100,"text":""}}]},{"name":"","index":0,"zoom":1,"x":0,"y":0,"width":2000,"height":2000,"title":"File 3","key":"3","items":[{"type":"Rectangle","left":572,"top":-4,"width":200,"height":200,"text":"","items":[],"shape":{"left":0,"top":0,"width":100,"height":100,"text":""}}]}]}`
 
     source = `
@@ -99,12 +106,12 @@ export class StorageService {
     // }
   }
 
-  public loadDocument (documentData: string) {
+  public loadDocument(documentData: string) {
     let data = JSON.parse(documentData)
     this._storageData = data
   }
 
-  public loadNewDocument () {
+  public loadNewDocument() {
     let documentData = `
     {"version":"1.0","author":"",
     "sheets":[{"name":"","index":0,"zoom":1,"x":0,"y":0,"width":2000,"height":2000,"title":"File 1","key":"1","items":[]},
@@ -115,7 +122,7 @@ export class StorageService {
     this._storageData = data
   }
 
-  private loadEditor (editor: Editor, editorData: EditorData) {
+  private loadEditor(editor: Editor, editorData: EditorData) {
     editor.contentLayer.removeAllEditorItems()
     const itemCount = editorData.items.length
     for (let i = 0; i < itemCount; i++) {
@@ -125,11 +132,11 @@ export class StorageService {
     }
   }
 
-  private loadEditorItem (editorItem: EditorItem, editorItemData: EditorItemData) {
+  private loadEditorItem(editorItem: EditorItem, editorItemData: EditorItemData) {
 
   }
 
-  private saveEditor (editor: Editor, editorData: EditorData) {
+  private saveEditor(editor: Editor, editorData: EditorData) {
     editorData.title = editor.title
     editorData.key = editor.key
     const itemCount = editor.contentLayer.getEditorItemCount()
@@ -141,7 +148,7 @@ export class StorageService {
     }
   }
 
-  private saveEditorItem (editorItem: EditorItem, editorItemData: EditorItemData) {
+  private saveEditorItem(editorItem: EditorItem, editorItemData: EditorItemData) {
     editorItemData.left = editorItem.left
     editorItemData.top = editorItem.top
     editorItemData.width = editorItem.width
@@ -151,6 +158,18 @@ export class StorageService {
     editorItemData.items.length = 0
     editorItemData.category = editorItem.category
     editorItemData.type = editorItem.type
+    switch (editorItem.category) {
+      case Categories.CONNECTOR:
+        break
+      case Categories.LINE:
+        break
+      case Categories.TABLE:
+        break
+      case Categories.SHAPE:
+      default:
+        this.saveShapeData(editorItem.shape, editorItemData)
+        break
+    }
     const itemCount = editorItem.items.length
     for (let i = 0; i < itemCount; i++) {
       const childItem = editorItem.items[i]
@@ -158,5 +177,14 @@ export class StorageService {
       this.saveEditorItem(childItem, editorItemData)
       editorItemData.items.push(editorItemData)
     }
+  }
+
+  private saveShapeData(shape: EntityShape, editorItemData: EditorItemData) {
+    editorItemData.shape = new ShapeData(shape.left, shape.top, shape.width, shape.height)
+    editorItemData.shape.modifierX = shape.modifier.x
+    editorItemData.shape.modifierY = shape.modifier.y
+    editorItemData.shape.adapterX = shape.adapter.x
+    editorItemData.shape.adapterY = shape.adapter.y
+    editorItemData.shape.adapterSize = shape.adapterSize
   }
 }

@@ -56,14 +56,8 @@ export default (props: any) => {
   }
 
   const addShape = (type: string) => {
-    let freezeType = Shapes.FREEZE_NONE
-    ShapeTypes.forEach(shapeType => {
-      if(shapeType.name == type) {
-        freezeType =  shapeType.freeze
-      }
-    })
     if (Utils.currentEditor) {
-      Utils.currentEditor.action = new ShapeAction(Utils.currentEditor, type, freezeType)
+      Utils.currentEditor.action = new ShapeAction(Utils.currentEditor, type)
     }
   }
 
