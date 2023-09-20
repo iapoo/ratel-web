@@ -1,7 +1,7 @@
 import { Colors, Line2D, MathUtils, Point2, Rectangle, Rectangle2D, } from '@/components/Engine'
 import { ConnectorShape, } from '../../Shapes'
 import { Entity, } from './Entity'
-import { Categories, Item, ShapeType, Type, } from './Item'
+import { Categories, Item, Type, } from './Item'
 
 export enum ConnectorType {
   Line,

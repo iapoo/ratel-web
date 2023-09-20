@@ -17,6 +17,7 @@ export interface EditorItem {
   readonly category: string;
   readonly type: string;
   readonly rotation: Rotation;
+  readonly id: string;
   saveData: (data: any) => void;
   loadData: (data: any) => void;
 }

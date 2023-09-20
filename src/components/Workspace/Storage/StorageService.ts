@@ -1,13 +1,16 @@
 /* eslint-disable max-params */
 import { Point2, Rotation } from '@/components/Engine'
 import { Editor, EditorItem, } from '@/components/Rockie/Editor'
-import { Connector, LineEntity, ShapeEntity, ShapeTypes, Shapes, TableEntity, } from '@/components/Rockie/Items'
+import { Connector, ConnectorType, LineEntity, ShapeEntity, ShapeTypes, Shapes, TableEntity, } from '@/components/Rockie/Items'
 import { Categories, } from '@/components/Rockie/Items/src/Item'
 import { EditorData, } from './EditorData'
 import { EditorItemData, } from './EditorItemData'
 import { StorageData, } from './StorageData'
 import { EntityShape } from '@/components/Rockie/Shapes'
 import { ShapeData } from './ShapeData'
+import { LineData } from './LineData'
+import { ConnectorData } from './ConnectorData'
+import { Consts } from '../Utils'
 
 export class StorageService {
   public static loadItemData(itemData: EditorItemData): EditorItem {
@@ -25,27 +28,34 @@ export class StorageService {
   }
 
   private static loadLineEntity(itemData: EditorItemData): EditorItem {
-    const lineEntity = new LineEntity()
+    let lineData = itemData as LineData
+    let lineEntity = new LineEntity(new Point2(lineData.startX, lineData.startY), new Point2(lineData.endX, lineData.endY))
+    if (itemData.rotation) {
+      lineEntity.rotation = new Rotation(itemData.rotation, lineEntity.width / 2, lineEntity.height / 2)
+    }
+    lineEntity.text = itemData.text
     return lineEntity
   }
 
   private static loadConnector(itemData: EditorItemData): EditorItem {
-    const connector = new Connector()
-
+    let connectorData = itemData as ConnectorData
+    let connector = new Connector(new Point2(connectorData.startX, connectorData.startY), new Point2(connectorData.endX, connectorData.endY))
+    connector.connectorType = connectorData.connectorType ? Consts.parseConnectorTypeString(connectorData.connectorType) : undefined
     return connector
   }
 
   private static loadShapeEntity(itemData: EditorItemData): EditorItem {
-    const shapeEntity = new ShapeEntity(itemData.left, itemData.top, itemData.width, itemData.height, {
-      shapeType: itemData.type
+    let shapeData = itemData as ShapeData
+    const shapeEntity = new ShapeEntity(shapeData.left, shapeData.top, shapeData.width, shapeData.height, {
+      shapeType: shapeData.type
     })
-    shapeEntity.type = itemData.type
-    shapeEntity.text = itemData.text
-    if (itemData.rotation) {
-      shapeEntity.rotation = new Rotation(itemData.rotation, shapeEntity.width / 2, shapeEntity.height / 2)
+    shapeEntity.type = shapeData.type
+    shapeEntity.text = shapeData.text
+    if (shapeData.rotation) {
+      shapeEntity.rotation = new Rotation(shapeData.rotation, shapeEntity.width / 2, shapeEntity.height / 2)
     }
-    shapeEntity.shape.modifier = new Point2(itemData.shape.modifierX, itemData.shape.modifierY)
-    shapeEntity.shape.adapter = new Point2(itemData.shape.adapterX, itemData.shape.adapterY)
+    shapeEntity.shape.modifier = new Point2(shapeData.modifierX, shapeData.modifierY)
+    shapeEntity.shape.adapter = new Point2(shapeData.adapterX, shapeData.adapterY)
 
     return shapeEntity
   }
@@ -142,49 +152,73 @@ export class StorageService {
     const itemCount = editor.contentLayer.getEditorItemCount()
     for (let i = 0; i < itemCount; i++) {
       const editorItem = editor.contentLayer.getEditorItem(i)
-      const editorItemData = new EditorItemData()
-      this.saveEditorItem(editorItem, editorItemData)
+      const editorItemData = this.saveEditorItem(editorItem)
       editorData.items.push(editorItemData)
     }
   }
 
-  private saveEditorItem(editorItem: EditorItem, editorItemData: EditorItemData) {
-    editorItemData.left = editorItem.left
-    editorItemData.top = editorItem.top
-    editorItemData.width = editorItem.width
-    editorItemData.height = editorItem.height
-    editorItemData.rotation = editorItem.rotation.radius
-    editorItemData.text = editorItem.text
-    editorItemData.items.length = 0
-    editorItemData.category = editorItem.category
-    editorItemData.type = editorItem.type
+  private saveEditorItem(editorItem: EditorItem): EditorItemData {
+    let editorItemData: EditorItemData
     switch (editorItem.category) {
-      case Categories.CONNECTOR:
-        break
       case Categories.LINE:
+        editorItemData = this.saveLineData(editorItem as LineEntity)
         break
+      case Categories.CONNECTOR:
+        editorItemData = this.saveConnectorData(editorItem as Connector)
+        break;
       case Categories.TABLE:
-        break
       case Categories.SHAPE:
       default:
-        this.saveShapeData(editorItem.shape, editorItemData)
+        editorItemData = this.saveShapeData(editorItem as ShapeEntity)
         break
     }
+    editorItemData.id = editorItem.id
+    editorItemData.items.length = 0
     const itemCount = editorItem.items.length
     for (let i = 0; i < itemCount; i++) {
       const childItem = editorItem.items[i]
-      const editorItemData = new EditorItemData()
-      this.saveEditorItem(childItem, editorItemData)
-      editorItemData.items.push(editorItemData)
+      const childEditorItemData = this.saveEditorItem(childItem)
+      editorItemData.items.push(childEditorItemData)
     }
+    return editorItemData
   }
 
-  private saveShapeData(shape: EntityShape, editorItemData: EditorItemData) {
-    editorItemData.shape = new ShapeData(shape.left, shape.top, shape.width, shape.height)
-    editorItemData.shape.modifierX = shape.modifier.x
-    editorItemData.shape.modifierY = shape.modifier.y
-    editorItemData.shape.adapterX = shape.adapter.x
-    editorItemData.shape.adapterY = shape.adapter.y
-    editorItemData.shape.adapterSize = shape.adapterSize
+  private saveShapeData(shapeEntity: ShapeEntity) : EditorItemData {
+    let shapeData = new ShapeData(shapeEntity.type, shapeEntity.category, shapeEntity.left, shapeEntity.top, shapeEntity.width, shapeEntity.height, shapeEntity.text,)
+    shapeData.rotation = shapeEntity.rotation.radius
+    shapeData.modifierX = shapeEntity.shape.modifier.x
+    shapeData.modifierY = shapeEntity.shape.modifier.y
+    shapeData.adapterX = shapeEntity.shape.adapter.x
+    shapeData.adapterY = shapeEntity.shape.adapter.y
+    shapeData.adapterSize = shapeEntity.shape.adapterSize
+
+    return shapeData
   }
+
+  private saveLineData(lineEntity: LineEntity) : EditorItemData {
+    let lineData = new LineData(lineEntity.start.x, lineEntity.start.y, lineEntity.end.x, lineEntity.end.y, lineEntity.text, lineEntity.rotation.radius)
+
+    return lineData
+  }
+
+
+  private saveConnectorData(connector: Connector) : EditorItemData {
+    let connectorData = new ConnectorData(connector.start.x, connector.start.y, connector.end.x, connector.end.y, connector.text, connector.rotation.radius)
+    if(connector.source) {
+      connectorData.source = connector.source.id
+    }
+    if(connector.target) {
+      connectorData.target = connector.target.id
+    }
+    if(connector.sourceJoint) {
+
+    }
+    if(connector.targetJoint) {
+
+    }
+    connectorData.connectorType = connector.connectorType ?  Consts.parseConnectorType(connector.connectorType) : null
+
+    return connectorData
+  }
+
 }
