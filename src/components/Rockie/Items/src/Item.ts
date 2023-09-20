@@ -4,6 +4,7 @@ import { Connector, } from './Connector'
 import { EntityShape, } from '../../Shapes'
 import { EditorItem, } from '../../Editor'
 import { ShapeTypes } from './ShapeEntity';
+import { SystemUtils } from '@/components/Workspace/Utils';
 
 export interface Type {
   name: string;
@@ -48,9 +49,15 @@ export abstract class Item implements EditorItem {
 
   private _items: Array<EditorItem> = new Array<EditorItem>(0);
 
+  private _id: string = SystemUtils.generateID()
+
   public constructor (left: number, top: number, width: number, height: number) {
     this._boundary = Rectangle.makeLTWH(left, top, width, height)
     this._shape = new EntityShape('', left, top, width, height)
+  }
+
+  public get id(): string {
+    return this._id
   }
 
   public get minWidth (): number {
