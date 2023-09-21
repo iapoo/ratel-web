@@ -204,6 +204,7 @@ export default (props: any) => {
     }
 
     container?.append(activateCanvas!)
+    activeEditor?.activate()
     Utils.currentEditor = activeEditor!
     updateEditors(panes)
     checkIfDocumentModified(false)
