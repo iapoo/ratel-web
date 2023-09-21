@@ -60,6 +60,10 @@ export abstract class Item implements EditorItem {
     return this._id
   }
 
+  public set id(value: string) {
+    this._id = value
+  }
+  
   public get minWidth (): number {
     return Item.MIN_WIDTH
   }

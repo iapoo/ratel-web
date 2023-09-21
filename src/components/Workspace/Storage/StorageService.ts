@@ -1,7 +1,7 @@
 /* eslint-disable max-params */
 import { Point2, Rotation } from '@/components/Engine'
 import { Editor, EditorItem, } from '@/components/Rockie/Editor'
-import { Connector, ConnectorType, LineEntity, ShapeEntity, ShapeTypes, Shapes, TableEntity, } from '@/components/Rockie/Items'
+import { Connector, ConnectorType, Entity, LineEntity, ShapeEntity, ShapeTypes, Shapes, TableEntity, } from '@/components/Rockie/Items'
 import { Categories, } from '@/components/Rockie/Items/src/Item'
 import { EditorData, } from './EditorData'
 import { EditorItemData, } from './EditorItemData'
@@ -10,7 +10,7 @@ import { EntityShape } from '@/components/Rockie/Shapes'
 import { ShapeData } from './ShapeData'
 import { LineData } from './LineData'
 import { ConnectorData } from './ConnectorData'
-import { Consts } from '../Utils'
+import { Consts, SystemUtils } from '../Utils'
 
 export class StorageService {
   public static loadItemData(itemData: EditorItemData): EditorItem {
@@ -27,20 +27,51 @@ export class StorageService {
     }
   }
 
+  public static refreshItemData(itemData: EditorItemData, items: EditorItem[]) {
+    if (itemData.category == Categories.CONNECTOR) {
+      let connectorData = itemData as ConnectorData
+      let connector: Connector | null = null
+      items.forEach(item => {
+        if(connectorData.id == item.id) {
+          connector = item as Connector
+        }
+      })
+      items.forEach(item => {
+        if(connectorData.source == item.id && connector) {
+          let entity = item as Entity
+          connector.source =  entity
+          entity.addConnector(connector)
+        }
+        if(connectorData.target == item.id && connector) {
+          let entity = item as Entity
+          connector.target =  entity
+          entity.addConnector(connector)
+        }
+      })
+      console.log(connector)
+    }
+  }
+
   private static loadLineEntity(itemData: EditorItemData): EditorItem {
     let lineData = itemData as LineData
-    let lineEntity = new LineEntity(new Point2(lineData.startX, lineData.startY), new Point2(lineData.endX, lineData.endY))
+    let start = SystemUtils.parsePointString(lineData.start)
+    let end = SystemUtils.parsePointString(lineData.end)
+    let lineEntity = new LineEntity(start, end)
     if (itemData.rotation) {
       lineEntity.rotation = new Rotation(itemData.rotation, lineEntity.width / 2, lineEntity.height / 2)
     }
     lineEntity.text = itemData.text
+    lineEntity.id = itemData.id
     return lineEntity
   }
 
   private static loadConnector(itemData: EditorItemData): EditorItem {
     let connectorData = itemData as ConnectorData
-    let connector = new Connector(new Point2(connectorData.startX, connectorData.startY), new Point2(connectorData.endX, connectorData.endY))
+    let start = SystemUtils.parsePointString(connectorData.start)
+    let end = SystemUtils.parsePointString(connectorData.end)
+    let connector = new Connector(start, end)
     connector.connectorType = connectorData.connectorType ? Consts.parseConnectorTypeString(connectorData.connectorType) : undefined
+    connector.id = connectorData.id
     return connector
   }
 
@@ -51,11 +82,12 @@ export class StorageService {
     })
     shapeEntity.type = shapeData.type
     shapeEntity.text = shapeData.text
+    shapeEntity.id = shapeData.id
     if (shapeData.rotation) {
       shapeEntity.rotation = new Rotation(shapeData.rotation, shapeEntity.width / 2, shapeEntity.height / 2)
     }
-    shapeEntity.shape.modifier = new Point2(shapeData.modifierX, shapeData.modifierY)
-    shapeEntity.shape.adapter = new Point2(shapeData.adapterX, shapeData.adapterY)
+    shapeEntity.shape.modifier = SystemUtils.parsePointString(shapeData.modifier)
+    shapeEntity.shape.adapter = SystemUtils.parsePointString(shapeData.adapter)
 
     return shapeEntity
   }
@@ -132,19 +164,19 @@ export class StorageService {
     this._storageData = data
   }
 
-  private loadEditor(editor: Editor, editorData: EditorData) {
-    editor.contentLayer.removeAllEditorItems()
-    const itemCount = editorData.items.length
-    for (let i = 0; i < itemCount; i++) {
-      const editorItemData = editorData.items[i]
-      const editorItem = editor.contentLayer.getEditorItem(i)
-      this.loadEditorItem(editorItem, editorItemData)
-    }
-  }
+  //private loadEditor(editor: Editor, editorData: EditorData) {
+  //  editor.contentLayer.removeAllEditorItems()
+  //  const itemCount = editorData.items.length
+  //  for (let i = 0; i < itemCount; i++) {
+  //    const editorItemData = editorData.items[i]
+  //    const editorItem = editor.contentLayer.getEditorItem(i)
+  //    this.loadEditorItem(editorItem, editorItemData)
+  //  }
+  //}
 
-  private loadEditorItem(editorItem: EditorItem, editorItemData: EditorItemData) {
+  //private loadEditorItem(editorItem: EditorItem, editorItemData: EditorItemData) {
 
-  }
+  //}
 
   private saveEditor(editor: Editor, editorData: EditorData) {
     editorData.title = editor.title
@@ -211,7 +243,7 @@ export class StorageService {
       connectorData.target = connector.target.id
     }
     if(connector.sourceJoint) {
-
+      connectorData.s
     }
     if(connector.targetJoint) {
 
