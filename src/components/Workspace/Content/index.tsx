@@ -182,6 +182,10 @@ export default (props: any) => {
         const item = StorageService.loadItemData(itemData)
         editor.contentLayer.addEditorItem(item)
       })
+      //Update item reference by id
+      sheetData.items.forEach(itemData => {
+        StorageService.refreshItemData(itemData, editor.contentLayer.getAllEditorItems())
+      })
       editor.resetModified()
       editor.start()
       panes.push(pane)
