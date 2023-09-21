@@ -636,10 +636,12 @@ export class Editor extends Painter {
     // this._textArea.style.position = 'absolute'
     const parent = this._textArea.parentElement
     // const pos = this.getRelativePosition(parent)
-    const pos = parent.getBoundingClientRect()
-    // console.log(`'Cursor x = ${parent.offsetLeft} , pos = ${pos}`)
-    this._textArea.style.left = (Editor.SHADOW_SIZE + (editorItem.left + x) * this._zoom + pos.left) + 'px'
-    this._textArea.style.top = (Editor.SHADOW_SIZE + (editorItem.top + y) * this._zoom + pos.top) + 'px'
+    if(parent) {
+      const pos = parent.getBoundingClientRect()
+      // console.log(`'Cursor x = ${parent.offsetLeft} , pos = ${pos}`)
+      this._textArea.style.left = (Editor.SHADOW_SIZE + (editorItem.left + x) * this._zoom + pos.left) + 'px'
+      this._textArea.style.top = (Editor.SHADOW_SIZE + (editorItem.top + y) * this._zoom + pos.top) + 'px'
+    }
   }
 
   private handleTextAreaKeyDown (e: KeyboardEvent) {
