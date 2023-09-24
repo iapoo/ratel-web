@@ -62,6 +62,25 @@ export class SystemUtils {
         } 
         return new Point2()
     }
+
+    /**
+     * REF: https://www.jb51.net/javascript/2915111pf.htm
+     * REF: https://www.php.cn/faq/526256.html
+     * @param content 
+     * @param fileName 
+     * @param fileFormat 
+     * @param fileType 
+     */
+    public static generateDownloadFile(content: any, fileName: string) {
+        let alink = document.createElement('a');
+        alink.download = fileName;
+        alink.style.display = 'none';
+        let blob = new Blob([content]);
+        alink.href = URL.createObjectURL(blob);
+        document.body.appendChild(alink);
+        alink.click();
+        document.body.removeChild(alink);
+    }
 }
 
 

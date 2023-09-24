@@ -6,6 +6,10 @@ export class Consts {
     public static CONNECTOR_TYPE_LINE = 'Line'
     public static CONNECTOR_TYPE_CURVE = 'Curve'
     public static CONNECTOR_TYPE_CROSS_LINE = 'CrossLine'
+
+    public static FONT_SIZE_DEFAULT = 14
+    public static FONT_SIZE_MIN = 6
+    public static FONT_SIZE_MAX = 72
     
     public static parseConnectorType(connectorType: ConnectorType) : string {
         switch(connectorType) {

@@ -228,6 +228,24 @@ export class Editor extends Painter {
     super.render()
   }
 
+  public export(format: 'png' | 'jpg' = 'png'): any {
+    try {
+        this._backgroundLayer.visible = false
+        this._selectionLayer.visible = false
+        this.render()
+        const image = this.engine.surface.makeImageSnapshot()
+        const data = image.encodeToBytes()
+        let encoded = ''
+        if(data) {
+          //encoded = Buffer.from(data).toString('base64');
+        }
+        return data
+    } finally{
+      this._backgroundLayer.visible = true
+      this._selectionLayer.visible = true
+    }
+  }
+
   public handlePointerMove (e: PointerEvent) {
     // console.log(`Moving... x = ${e.x} action=${this._action}`)
     if (this._action) {

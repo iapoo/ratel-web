@@ -1,7 +1,7 @@
 import React, { useEffect, useState, } from 'react'
 import styles from './index.css'
 import Workspace from '@/components/Workspace'
-import { Button, } from 'antd'
+import { Button, Drawer, } from 'antd'
 import { Engine, Rectangle2D, EngineUtils, Line2D, } from '../../Engine'
 import { Player, } from '../../Player'
 import { Editor, } from '../../Rockie/Editor'
@@ -71,7 +71,9 @@ export default (props: any) => {
         <div className='handle' style={{ position: 'absolute', top: '0px', bottom: '0px', left: `${navigatorWidth} + px`, width: `${Utils.DEFAULT_DIVIDER_WIDTH}px`, zIndex: 999, }} />
       </Draggable>
       <Content style={{ position: 'absolute', top: '0px', bottom: '0px', left: `${navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH}px`, right: `${enablePropertyEditor ? '280px' : '0px'} `, backgroundColor: 'lightgray', }} />
-      <PropertyEditor style={{ position: 'absolute', top: '0px', bottom: '0px', right: '0px', width: `${enablePropertyEditor ? '280px' : '0px'} `, backgroundColor: 'silver', }} />
+      <Drawer placement='right' mask={false} closable={false}  open={enablePropertyEditor} getContainer={false}>
+        <PropertyEditor/>
+      </Drawer>
 
     </div>
   )

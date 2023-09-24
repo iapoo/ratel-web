@@ -218,10 +218,8 @@ export class StorageService {
   private saveShapeData(shapeEntity: ShapeEntity) : EditorItemData {
     let shapeData = new ShapeData(shapeEntity.type, shapeEntity.category, shapeEntity.left, shapeEntity.top, shapeEntity.width, shapeEntity.height, shapeEntity.text,)
     shapeData.rotation = shapeEntity.rotation.radius
-    shapeData.modifierX = shapeEntity.shape.modifier.x
-    shapeData.modifierY = shapeEntity.shape.modifier.y
-    shapeData.adapterX = shapeEntity.shape.adapter.x
-    shapeData.adapterY = shapeEntity.shape.adapter.y
+    shapeData.modifier = shapeEntity.shape.modifier.x + ',' + shapeEntity.shape.modifier.y
+    shapeData.adapter = shapeEntity.shape.adapter.x + ',' + shapeEntity.shape.adapter.y
     shapeData.adapterSize = shapeEntity.shape.adapterSize
 
     return shapeData
@@ -243,7 +241,7 @@ export class StorageService {
       connectorData.target = connector.target.id
     }
     if(connector.sourceJoint) {
-      connectorData.s
+      //connectorData.s
     }
     if(connector.targetJoint) {
 
