@@ -15,6 +15,7 @@ import { MaskLayer, } from './MaskLayer'
 import { SelectionLayer, } from './SelectionLayer'
 import { time, timeStamp, } from 'console'
 import { BackgroundLayer, } from './BackgroundLayer'
+import { EditorEvent } from './EditorEvent'
 
 export class Editor extends Painter {
   /**
@@ -60,6 +61,7 @@ export class Editor extends Painter {
   private _title: string
   private _key: string
   private _modified: boolean
+  private _selectionChangeListeners = new Array<(e: EditorEvent) => void>(0) 
 
   public constructor (canvasId: string | HTMLCanvasElement) {
     super(canvasId)
@@ -115,6 +117,15 @@ export class Editor extends Painter {
     })
   }
 
+  public get selectionChangeListeners() {
+    return this._selectionChangeListeners
+  }
+
+  public onSelectionChange(callback: (e: EditorEvent) => void) {
+    this._selectionChangeListeners.push(callback)
+  }
+
+   
   public get gridSize (): number {
     return this._gridSize
   }
@@ -412,6 +423,7 @@ export class Editor extends Painter {
           theSelectionLayer.inHolder = true
           theSelectionLayer.removeAllEditorItems()
           theSelectionLayer.addEditorItem(clickedEditorItem)
+          this.triggerSelectionChange()
           this._targetColumnResizing = false
           this._targetRowResizing = false
         } else {
@@ -454,6 +466,7 @@ export class Editor extends Painter {
         this.inMoving = true
       } else {
         theSelectionLayer.removeAllEditorItems()
+        this.triggerSelectionChange()
         if (this._target) {
           this._target.shape.focused = false
         }
@@ -1019,5 +1032,12 @@ export class Editor extends Painter {
     // console.log(`newWidth = ${newWidth} nextNewWidth = ${nextNewWidth} maxWidth = ${maxWidth} `)
     this._startPointX = e.x
     this._startPointY = e.y
+  }
+
+  private triggerSelectionChange() {
+    this._selectionChangeListeners.forEach(callback => {
+      const event = new EditorEvent(this)
+      callback(event)
+    })
   }
 }

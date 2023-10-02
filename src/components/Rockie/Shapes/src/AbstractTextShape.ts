@@ -45,6 +45,22 @@ export abstract class AbstractTextShape extends Shape {
       // this.select(7, 7)
     }
 
+    public get font() {
+      return this._font
+    }
+
+    public set font(value: Font) {
+      this._font = value
+    }
+
+    public get fontPaint() {
+      return this._fontPaint
+    }
+
+    public set fontPaint(value: Paint) {
+      this._fontPaint = value
+    }
+    
     public get textPadding () {
       return this._textPadding
     }

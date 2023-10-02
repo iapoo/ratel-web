@@ -40,7 +40,7 @@
     "@turf/turf": "^6.5.0",
     "@umijs/fabric": "^2.10.2",
     "@umijs/preset-react": "^1.8.30",
-    "antd": "^5.5.0",
+    "antd": "^5.7.0",
     "awesome-typescript-loader": "^5.2.1",
     "axios": "^0.19.2",
     "bizcharts": "^4.0.14",
