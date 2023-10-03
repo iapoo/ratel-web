@@ -3,6 +3,11 @@ const CompressionPlugin = require("compression-webpack-plugin")
 //import { ThemeUtils, } from './src/utils/ThemeUtils'
 
 export default defineConfig({
+  locale: {
+    // 默认使用 src/locales/zh-CN.ts 作为多语言文件
+    default: 'en-US', //zh-CN 'en-US'
+    baseSeparator: '-',
+  },
   theme: {
     //'@primary-color': '#1DA57A',
     //'@table-header-bg': ThemeUtils.tableHeaderBg, // 表头背景
