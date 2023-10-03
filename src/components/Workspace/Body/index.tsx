@@ -1,4 +1,4 @@
-import React, { useEffect, useState, } from 'react'
+import React, { FC, useEffect, useState, } from 'react'
 import styles from './index.css'
 import Workspace from '@/components/Workspace'
 import { Button, Drawer, } from 'antd'
@@ -8,11 +8,18 @@ import { Editor, } from '../../Rockie/Editor'
 import { Utils, } from '../Utils'
 import Navigator from './../Navigator'
 import PropertyEditor from './../PropertyEditor'
-import Content from './../Content'
 import Draggable, { DraggableData, DraggableEvent, } from 'react-draggable' // Both at the same time
 import { setInterval } from 'timers'
+import Content from '../Content'
 
-export default (props: any) => {
+
+interface BodyProps {
+  onEditorChange: (oldEditor: Editor | undefined, newEditor: Editor | undefined) => void
+}
+
+const Body: FC<BodyProps> = ({
+  onEditorChange
+}) => {
   const [ initialized, setInitialized, ] = useState<boolean>(false)
   const [ navigatorWidth, setNavigatorWidth, ] = useState<number>(Utils.DEFAULT_NAVIGATOR_WIDTH)
   const [ enablePropertyEditor, setEnablePropertyEditor] = useState<boolean>(false)
@@ -54,6 +61,9 @@ export default (props: any) => {
     // setNavigatorWidth(data.x)
   }
 
+  const handleEditorChange = (oldEditor: Editor | undefined, newEditor: Editor | undefined)=> {
+    onEditorChange(oldEditor, newEditor)
+  }
   return (
     <div style={{ position: 'absolute', top: `${Utils.HEADER_HEIGHT}px`, bottom: `${Utils.FOOTER_HEIGHT}px`, right: '0px', left: '0px', backgroundColor: 'gray', }} >
       <Navigator style={{ position: 'absolute', top: '0px', bottom: '0px', left: '0px', width: `${navigatorWidth}px`, backgroundColor: 'gray', }} />
@@ -70,7 +80,7 @@ export default (props: any) => {
         onStop={handleDragStop}>
         <div className='handle' style={{ position: 'absolute', top: '0px', bottom: '0px', left: `${navigatorWidth} + px`, width: `${Utils.DEFAULT_DIVIDER_WIDTH}px`, zIndex: 999, }} />
       </Draggable>
-      <Content style={{ position: 'absolute', top: '0px', bottom: '0px', left: `${navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH}px`, right: `${enablePropertyEditor ? '280px' : '0px'} `, backgroundColor: 'lightgray', }} />
+      <Content onEditorChange={handleEditorChange}  x={`${navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH}px`} y= {`${enablePropertyEditor ? '280px' : '0px'} `}/>
       <Drawer placement='right' mask={false} closable={false}  open={enablePropertyEditor} getContainer={false}>
         <PropertyEditor/>
       </Drawer>
@@ -78,3 +88,5 @@ export default (props: any) => {
     </div>
   )
 }
+
+export default Body

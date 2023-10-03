@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, FC } from 'react'
 import styles from './index.css'
 import Workspace from '@/components/Workspace'
 import { Form, Input, Checkbox, Row, Col, Button, Modal, Menu, Space, Tooltip, Dropdown, Divider, Select, InputNumber, ColorPicker, } from 'antd'
@@ -17,6 +17,7 @@ import { StorageService } from '../Storage';
 //import { RectangleOutlined } from '@icons';
 import { Rectangle, RoundRectangle } from '@/components/Resource/Icons';
 import { EngineUtils, Font, GraphicsUtils, TextShape } from '@/components/Engine';
+import { Editor, EditorEvent } from '@/components/Rockie/Editor';
 
 const { confirm } = Modal;
 
@@ -32,7 +33,14 @@ const ON_DISCARD_NEW = 'New'
 const ON_DISCARD_OPEN = 'Open'
 const ON_DISCARD_NONE = 'None'
 
-export default (props: any) => {
+interface HeaderProps {
+  previousEditor: Editor | undefined  
+  currentEditor: Editor | undefined  
+}
+
+const Header: FC<HeaderProps> =({
+  previousEditor, currentEditor
+}) => {
   const [initialized, setInitialized,] = useState<boolean>(false)
   const draggleRef = useRef<HTMLDivElement>(null);
   const [online, setOnline,] = useState<boolean>(false)
@@ -53,18 +61,22 @@ export default (props: any) => {
   const [fillColor, setFillColor, ] = useState<string>(Consts.COLOR_FILL_DEFAULT)
   const [strokeColor, setStrokeColor, ] = useState<string>(Consts.COLOR_STROKE_DEFAULT)
   const [lineWidth, setLineWidth, ] = useState<number>(Consts.LINE_WIDTH_DEFAULT)
+  const [zoom, setZoom, ] = useState<number>(Consts.ZOOM_DEFAULT)
+  const [fontSize, setFontSize, ] = useState<number>(Consts.FONT_SIZE_DEFAULT)
   const [selectionValid, setSelectionValid, ] = useState<boolean>(false)
+  //const [currentEditorId, setCurrentEditorId, ] = useState<string>('')
+  //const [currentEditor, setCurrentEditor, ] = useState<Editor | undefined>(undefined)
 
   useEffect(() => {
     if (!initialized) {
       initialize()
     }
+    refresh()
   })
 
   const initialize = () => {
     setInitialized(true)
     refreshNewDocumentName()
-    refreshSelectionInfo()
     const timer = setInterval(async () => {
       if(Utils.checkIfModified) {
         Utils.checkIfModified(false)
@@ -84,19 +96,51 @@ export default (props: any) => {
     }
   }
 
-  const refreshSelectionInfo = () => {
-    if(Utils.currentEditor && Utils.currentEditor.selectionLayer.getEditorItemCount() > 0) {      
-      let editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
-      editorItems.forEach(editorItem => {
-        let shape = editorItem.shape
-        let stroke = shape.stroke
-      })
+  const refresh = () => {
+    if(previousEditor) {
+      previousEditor.removeSelectionChange(handleSelectionChange)
+    }
+    if(currentEditor) {
+      refreshSelectionInfo(currentEditor)
+      currentEditor.onSelectionChange(handleSelectionChange)
+      if(currentEditor.selectionLayer.getEditorItemCount() > 0) {
+        setSelectionValid(true)
+      } else {
+        setSelectionValid(false)
+      }
+    } else {
+      initializeSelectionInfo()
+    }
+  }
+
+  const refreshSelectionInfo = (editor: Editor) => {
+    if(editor.selectionLayer.getEditorItemCount() > 0) {
+      let editorItem = editor.selectionLayer.getEditorItem(0)
+      let shape = editorItem.shape
+      setZoom(editor.zoom)
+      setFontSize(shape.font.fontSize)
+      setLineWidth(shape.stroke.getStroketWidth())
+    } else {
+      initializeSelectionInfo()
+    }
+  }
+
+  const initializeSelectionInfo = () => {
+    setZoom(Consts.ZOOM_DEFAULT)
+    setFontSize(Consts.FONT_SIZE_DEFAULT)
+    setLineWidth(Consts.LINE_WIDTH_DEFAULT)
+    setFillColor(Consts.COLOR_FILL_DEFAULT)
+    setStrokeColor(Consts.COLOR_STROKE_DEFAULT)
+  }
+
+  const handleSelectionChange = (e: EditorEvent) => {    
+    refreshSelectionInfo(e.source)
+    if(e.source.selectionLayer.getEditorItemCount() > 0) {
       setSelectionValid(true)
     } else {
       setSelectionValid(false)
     }
   }
-
 
 
   const refreshNewDocumentName = () => {
@@ -344,6 +388,7 @@ export default (props: any) => {
   }
 
   const handleZoom =  (value: number) => {
+    setZoom(value)
     if (Utils.currentEditor) {
       Utils.currentEditor.zoom = value
     }
@@ -353,6 +398,7 @@ export default (props: any) => {
   }
 
   const handleFontSizeChange = (value: any) => {
+    setFontSize(value)
     if(Utils.currentEditor) {
       let editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
       editorItems.forEach(editorItem => {
@@ -364,7 +410,6 @@ export default (props: any) => {
   }
 
   const handleLineWidthChange = (value: number | null) => {
-    console.log(value)
     if(value != null) {
       setLineWidth(value)
       if(Utils.currentEditor) {
@@ -391,69 +436,21 @@ export default (props: any) => {
   }
 
   const fileItems: MenuProps['items'] = [
-    {
-      key: 'New',
-      label: 'New',
-      icon: <FileAddOutlined/>,
-      onClick: handleFileNew
-    },
-    {
-      key: 'OpenFrom',
-      label: 'Open From',
-      disabled: true,
-      icon: <FolderOpenOutlined/>,
-    },
-    {
-      key: 'Open',
-      label: 'Open ...',
-      icon: <FolderOpenOutlined/>,
-      onClick: handleFileOpen
-    },
-    {
-      key: 'Save',
-      label: 'Save',
-      icon: <SaveOutlined/>,
-      onClick: handleFileSave
-    },
-//    {
-//      key: 'SaveAs',
-//      label: 'Save As ...',
-//      icon: <SaveOutlined/>,
-//      onClick: handleFileSaveAs
-//    },
-    {
-      key: 'Export',
-      label: 'Export ...',
-      icon: <DownloadOutlined/>,
-      onClick: handleExport
-    },
+    { key: 'New', label: 'New', icon: <FileAddOutlined/>, onClick: handleFileNew },
+    { key: 'OpenFrom', label: 'Open From', disabled: true, icon: <FolderOpenOutlined/>, },
+    { key: 'Open', label: 'Open ...', icon: <FolderOpenOutlined/>, onClick: handleFileOpen, },
+    { key: 'Save', label: 'Save', icon: <SaveOutlined/>, onClick: handleFileSave },
+//  { key: 'SaveAs',label: 'Save As ...', icon: <SaveOutlined/>, onClick: handleFileSaveAs },
+    { key: 'Export', label: 'Export ...', icon: <DownloadOutlined/>, onClick: handleExport },
   ];
-  
+
   const editItems: MenuProps['items'] = [
-    {
-      key: 'New',
-      label: 'New',
-    },
-    {
-      key: 'OpenFrom',
-      label: 'OpenFrom',
-    },
-    {
-      key: 'Open',
-      label: 'Open',
-    },
-    {
-      key: 'Save',
-      label: 'Save',
-    },
-    {
-      key: 'SaveAs',
-      label: 'SaveAs',
-    },
-    {
-      key: 'Export',
-      label: 'Export',
-    },
+    { key: 'New', label: 'New', },
+    { key: 'OpenFrom', label: 'OpenFrom', },
+    { key: 'Open', label: 'Open', },
+    { key: 'Save', label: 'Save', },
+    { key: 'SaveAs', label: 'SaveAs', },
+    { key: 'Export', label: 'Export', },
   ];
   
   const viewItems: MenuProps['items'] = [
@@ -607,7 +604,7 @@ export default (props: any) => {
         <div style={{ float: 'left', height: '100%', display: 'table', marginLeft: '8px' }}>
           <Space direction="horizontal" style={{ display: 'table-cell', verticalAlign: 'middle' }}>
             <Space wrap>
-              <Select defaultValue={1} style={{width: 100}} size='small' onChange={handleZoom}
+              <Select style={{width: 100}} value={zoom} size='small' onChange={handleZoom}
                 options= {[
                   {value: 0.25, label: '25%'},
                   {value: 0.5, label: '50%'},
@@ -621,7 +618,7 @@ export default (props: any) => {
                 ]}
               />
               <Tooltip title="Font Size">
-                <InputNumber min={Consts.FONT_SIZE_MIN} max={Consts.FONT_SIZE_MAX} defaultValue={Consts.FONT_SIZE_DEFAULT} onChange={handleFontSizeChange} size='small' style={{width: 60}} disabled={!selectionValid} />
+                <InputNumber min={Consts.FONT_SIZE_MIN} max={Consts.FONT_SIZE_MAX} value={fontSize} onChange={handleFontSizeChange} size='small' style={{width: 60}} disabled={!selectionValid} />
               </Tooltip>
               <Tooltip title="Fill Color">
                 <ColorPicker size='small' value={fillColor} onChange={handleFillColorChange} disabled={!selectionValid} />
@@ -630,7 +627,7 @@ export default (props: any) => {
               <ColorPicker size='small' value={strokeColor} onChange={handleStrokeColorChange} disabled={!selectionValid} />
               </Tooltip>
               <Tooltip title="Line Width">
-                <InputNumber min={Consts.LINE_WIDTH_MIN} max={Consts.LINE_WIDTH_MAX} defaultValue={Consts.LINE_WIDTH_DEFAULT} onChange={handleLineWidthChange} size='small'  style={{width: 55}} disabled={!selectionValid} />
+                <InputNumber min={Consts.LINE_WIDTH_MIN} max={Consts.LINE_WIDTH_MAX} value={lineWidth} onChange={handleLineWidthChange} size='small'  style={{width: 55}} disabled={!selectionValid} />
               </Tooltip>
               <Tooltip title="search">
                 <Button shape="circle" type="text"  size='small' icon={<SearchOutlined />} />
@@ -666,3 +663,6 @@ export default (props: any) => {
     </div>
   )
 }
+
+
+export default Header

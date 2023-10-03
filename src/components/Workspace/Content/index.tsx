@@ -1,6 +1,6 @@
 /* eslint-disable radix */
 /* eslint-disable @typescript-eslint/prefer-for-of */
-import React, { useEffect, useState, useRef, } from 'react'
+import React, { useEffect, useState, useRef, FC, } from 'react'
 import styles from './index.css'
 import Workspace from '@/components/Workspace'
 import { Button, Tabs, } from 'antd'
@@ -20,6 +20,12 @@ interface Pane {
   editor: Editor | null
 }
 
+interface ContentProps {
+  onEditorChange: (oldEditor: Editor | undefined, newEditor: Editor | undefined) => void
+  x: string
+  y: string
+}
+
 const { TabPane, } = Tabs
 const DOCUMENT_PREFIX = 'File '
 const DOCUMENT_CONTENT = 'Dummy'
@@ -32,7 +38,9 @@ const initialPanes: Pane[] = [
   { title: DOCUMENT_PREFIX + '3', content: DOCUMENT_CONTENT, key: '3', editor: null, },
 ]
 
-export default (props: any) => {
+const Content: FC<ContentProps> = ({
+  onEditorChange, x, y
+}) => {
   const [ initialized, setInitialized, ] = useState<boolean>(false)
   const [ activeKey, setActiveKey, ] = useState(initialPanes[0].key)
   const [ panes, setPanes, ] = useState(initialPanes)
@@ -135,7 +143,9 @@ export default (props: any) => {
     const canvas = editor?.container
     container?.append(canvas!)
     editor?.activate()
+    let oldEditor = Utils.currentEditor
     Utils.currentEditor = editor!
+    onEditorChange(oldEditor, Utils.currentEditor)
     updateEditors(panes)
     Utils.onEditorSizeChanged = updateEditorSize
     Utils.loadData = loadData
@@ -205,7 +215,10 @@ export default (props: any) => {
 
     container?.append(activateCanvas!)
     activeEditor?.activate()
+
+    let oldEditor = Utils.currentEditor
     Utils.currentEditor = activeEditor!
+    onEditorChange(oldEditor, Utils.currentEditor)
     updateEditors(panes)
     checkIfDocumentModified(false)
   }
@@ -223,7 +236,9 @@ export default (props: any) => {
         const canvas = editor?.container
         container?.append(canvas!)
         editor?.activate()
+        let oldEditor = Utils.currentEditor
         Utils.currentEditor = editor!
+        onEditorChange(oldEditor, Utils.currentEditor)
       }
     }
     updateEditors(panes)
@@ -251,7 +266,10 @@ export default (props: any) => {
       container?.removeChild(container.lastChild!)
     }
     container?.append(canvas!)
+
+    let oldEditor = Utils.currentEditor
     Utils.currentEditor = editor!
+    onEditorChange(oldEditor, Utils.currentEditor)
     updateEditors(panes)
   }
 
@@ -303,7 +321,7 @@ export default (props: any) => {
   }
 
   return (
-    <div {...props}>
+    <div  style={{ position: 'absolute', top: '0px', bottom: '0px', left: x, right: y, backgroundColor: 'lightgray', }}>
       <div style={{ position: 'absolute', width: '100%', height: `calc(100% - ${Utils.TITLE_HEIGHT}px + 16px) `, zIndex: 2, }} >
         <div style={{ width: '100%', height: '100%', overflow: 'scroll', display: 'grid', placeItems: 'center', }}>
           <div style={{ width: contentWidth, height: contentHeight, }}>
@@ -329,3 +347,5 @@ export default (props: any) => {
     </div>
   )
 }
+
+export default Content
