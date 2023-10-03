@@ -133,7 +133,7 @@ export class Engine {
       const canvasKit: CanvasKit = await CanvasKitInit({
         locateFile: (file: any) => '/resources/' + file,
       })
-      console.log(canvasKit)
+      //console.log(canvasKit)
 
       Engine._canvasKit = canvasKit
       Engine._typeFaceFontProvider = Engine._canvasKit.TypefaceFontProvider.Make()

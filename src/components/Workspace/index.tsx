@@ -17,6 +17,8 @@ export default (props: any) => {
   const [ initialized, setInitialized, ] = useState<boolean>(false)
   const [ editor, setEditor, ] = useState<Editor>()
   const [ ready, setReady, ] = useState<boolean>(false)
+  const [ currentEditor, setCurrentEditor, ] = useState<Editor | undefined>(undefined)
+  const [ previousEditor, setPreviousEditor, ] = useState<Editor | undefined>(undefined)
 
   useEffect(() => {
     if (!initialized) {
@@ -44,10 +46,15 @@ export default (props: any) => {
     setReady(true)
   }
 
+  const handleEditorChange = (oldEditor: Editor | undefined, newEditor: Editor | undefined)=> {
+    setPreviousEditor(oldEditor)
+    setCurrentEditor(newEditor)
+  }
+
   return (
     <div style={{ width: '100%', height: '100%', }}>
-      <Header />
-      <Body/>
+      <Header previousEditor={previousEditor} currentEditor={currentEditor}/>
+      <Body onEditorChange={handleEditorChange}/>
       <Footer/>
     </div>
 

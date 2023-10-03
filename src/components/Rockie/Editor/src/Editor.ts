@@ -16,6 +16,7 @@ import { SelectionLayer, } from './SelectionLayer'
 import { time, timeStamp, } from 'console'
 import { BackgroundLayer, } from './BackgroundLayer'
 import { EditorEvent } from './EditorEvent'
+import { SystemUtils } from '@/components/Workspace/Utils'
 
 export class Editor extends Painter {
   /**
@@ -60,6 +61,7 @@ export class Editor extends Painter {
   private _targetItem: EditorItem | undefined
   private _title: string
   private _key: string
+  private _id: string
   private _modified: boolean
   private _selectionChangeListeners = new Array<(e: EditorEvent) => void>(0) 
 
@@ -78,6 +80,7 @@ export class Editor extends Painter {
     this._maskLayer.editor = this
     this._title = ''
     this._key = ''
+    this._id = SystemUtils.generateID()
     this._modified = false
     this.root.addNode(this._backgroundLayer)
     this.root.addNode(this._contentLayer)
@@ -117,6 +120,10 @@ export class Editor extends Painter {
     })
   }
 
+  public get id(): string {
+    return this._id
+  }
+
   public get selectionChangeListeners() {
     return this._selectionChangeListeners
   }
@@ -124,8 +131,19 @@ export class Editor extends Painter {
   public onSelectionChange(callback: (e: EditorEvent) => void) {
     this._selectionChangeListeners.push(callback)
   }
+  
+  public removeSelectionChange(callback: (e: EditorEvent) => void) {
+    const index = this._selectionChangeListeners.indexOf(callback)
+    if (index >= 0) {
+      this._selectionChangeListeners.splice(index, 1)
+    }
+  }
+  
+  public hasSelectionChange(callback: (e: EditorEvent) => void) {
+    const index = this._selectionChangeListeners.indexOf(callback)
+    return index >= 0
+  }
 
-   
   public get gridSize (): number {
     return this._gridSize
   }

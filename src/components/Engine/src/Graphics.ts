@@ -1448,7 +1448,7 @@ export class Paint {
     return strokeMiter
   }
 
-  public getStrokgetStrokeWidtheMiter (): number {
+  public getStroketWidth (): number {
     const strokeWidth = this._source.getStrokeWidth()
     return strokeWidth
   }
