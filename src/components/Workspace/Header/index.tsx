@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, FC } from 'react'
 import styles from './index.css'
 import Workspace from '@/components/Workspace'
-import { Form, Input, Checkbox, Row, Col, Button, Modal, Menu, Space, Tooltip, Dropdown, Divider, Select, InputNumber, ColorPicker, } from 'antd'
+import { Form, Input, Checkbox, Row, Col, Button, Modal, Menu, Space, Tooltip, Dropdown, Divider, Select, InputNumber, ColorPicker, message,} from 'antd'
 import type { MenuProps } from 'antd';
 import { Consts, RequestUtils, SystemUtils, Utils, } from '../Utils'
 import type { DraggableData, DraggableEvent } from 'react-draggable';
@@ -10,28 +10,19 @@ import { setInterval } from 'timers'
 import { UserInfo } from '../Utils/RequestUtils'
 import LoginFormWindow from './LoginFormWindow'
 import NewFileWindow from './NewFileWindow';
-import { DownOutlined, DownloadOutlined, FileAddOutlined, FileOutlined, FileTextOutlined, FolderOpenOutlined, FormOutlined, SaveOutlined, SearchOutlined, SolutionOutlined } from '@ant-design/icons';
+import { CheckOutlined, DownOutlined, DownloadOutlined, FileAddOutlined, FileOutlined, FileTextOutlined, FolderOpenOutlined, FormOutlined, SaveOutlined, SearchOutlined, SolutionOutlined } from '@ant-design/icons';
 import OpenFileWindow from './OpenFileWindow';
 import SaveFileWindow from './SaveFileWindow';
 import { StorageService } from '../Storage';
 //import { RectangleOutlined } from '@icons';
-import { Rectangle, RoundRectangle } from '@/components/Resource/Icons';
+import { Rectangle } from '@/components/Resource/LargeIcons';
 import { EngineUtils, Font, GraphicsUtils, TextShape } from '@/components/Engine';
 import { Editor, EditorEvent } from '@/components/Rockie/Editor';
+import { useIntl, setLocale, getLocale, } from 'umi';
+import { PlaceHolder, } from '@/components/Resource/Icons'
 
 const { confirm } = Modal;
 
-const DOCUMENT_MODIFIED_TEXT_NO = '[未修改]'
-const DOCUMENT_MODIFIED_TEXT_YES = '[已修改]'
-const DOCUMENT_NEW_NAME_PREFIX = 'Untitled'
-
-const ON_LOGIN_SAVE = 'Save'
-const ON_LOGIN_OPEN = 'Open'
-const ON_LOGIN_NONE = 'None'
-
-const ON_DISCARD_NEW = 'New'
-const ON_DISCARD_OPEN = 'Open'
-const ON_DISCARD_NONE = 'None'
 
 interface HeaderProps {
   previousEditor: Editor | undefined  
@@ -41,6 +32,21 @@ interface HeaderProps {
 const Header: FC<HeaderProps> =({
   previousEditor, currentEditor
 }) => {
+  const [messageApi, contextHolder] = message.useMessage();
+  const intl = useIntl();
+
+  const DOCUMENT_MODIFIED_TEXT_NO = intl.formatMessage({id: 'workspace.header.document-modified-text-no',});
+  const DOCUMENT_MODIFIED_TEXT_YES = intl.formatMessage({id: 'workspace.header.document-modified-text-yes',});
+  const DOCUMENT_NEW_NAME_PREFIX = 'Untitled'
+  
+  const ON_LOGIN_SAVE = 'Save'
+  const ON_LOGIN_OPEN = 'Open'
+  const ON_LOGIN_NONE = 'None'
+  
+  const ON_DISCARD_NEW = 'New'
+  const ON_DISCARD_OPEN = 'Open'
+  const ON_DISCARD_NONE = 'None'
+
   const [initialized, setInitialized,] = useState<boolean>(false)
   const draggleRef = useRef<HTMLDivElement>(null);
   const [online, setOnline,] = useState<boolean>(false)
@@ -50,7 +56,7 @@ const Header: FC<HeaderProps> =({
   const [newFileWindowVisible, setNewFileWindowVisible,] = useState<boolean>(false)
   const [openFileWindowVisible, setOpenFileWindowVisible,] = useState<boolean>(false)
   const [saveFileWindowVisible, setSaveFileWindowVisible,] = useState<boolean>(false)
-  const [selectedDocumentName, setSelectedDocumentName,] = useState<string>('Untitled')
+  const [selectedDocumentName, setSelectedDocumentName,] = useState<string>(DOCUMENT_NEW_NAME_PREFIX)
   const [selectedFolderId, setSelectedFolderId,] = useState<number|null>(null)
   const [selectedDocumentId, setSelectedDocumentId,] = useState<number|null>(null);
   const [discardModifiedDocumentWindowVisible, setDiscardModifiedDocumentWindowVisible, ] = useState<boolean>(false)
@@ -202,7 +208,7 @@ const Header: FC<HeaderProps> =({
         setSelectedDocumentName(documentName)
         setSelectedFolderId(folderId)
       } else {
-        SystemUtils.handleInternalError('Invalid document name provided')
+        messageApi.error(intl.formatMessage({id: 'workspace.header.message-invalid-document-name'}))
       }
     } else { // Open File
       if(documentId == null) {
@@ -435,6 +441,11 @@ const Header: FC<HeaderProps> =({
     setStrokeColor(value)
   }
 
+  const handleLocale = (locale: string) => {
+    setLocale(locale, false)
+    messageApi.info(intl.formatMessage({id: 'workspace.header.message-apply-locale'}))
+  }
+
   const fileItems: MenuProps['items'] = [
     { key: 'New', label: 'New', icon: <FileAddOutlined/>, onClick: handleFileNew },
     { key: 'OpenFrom', label: 'Open From', disabled: true, icon: <FolderOpenOutlined/>, },
@@ -454,116 +465,49 @@ const Header: FC<HeaderProps> =({
   ];
   
   const viewItems: MenuProps['items'] = [
-    {
-      key: 'New',
-      label: 'New',
-    },
-    {
-      key: 'OpenFrom',
-      label: 'OpenFrom',
-    },
-    {
-      key: 'Open',
-      label: 'Open',
-    },
-    {
-      key: 'Save',
-      label: 'Save',
-    },
-    {
-      key: 'SaveAs',
-      label: 'SaveAs',
-    },
-    {
-      key: 'Export',
-      label: 'Export',
-    },
-  ];
-  
+    { key: 'New', label: 'New', },
+    { key: 'OpenFrom', label: 'OpenFrom', },
+    { key: 'Open', label: 'Open', },
+    { key: 'Save', label: 'Save', },
+    { key: 'SaveAs', label: 'SaveAs', },
+    { key: 'Export', label: 'Export', },
+  ];  
   
   const operationItems: MenuProps['items'] = [
-    {
-      key: 'New',
-      label: 'New',
-    },
-    {
-      key: 'OpenFrom',
-      label: 'OpenFrom',
-    },
-    {
-      key: 'Open',
-      label: 'Open',
-    },
-    {
-      key: 'Save',
-      label: 'Save',
-    },
-    {
-      key: 'SaveAs',
-      label: 'SaveAs',
-    },
-    {
-      key: 'Export',
-      label: 'Export',
-    },
+    { key: 'New', label: 'New', },
+    { key: 'OpenFrom', label: 'OpenFrom', },
+    { key: 'Open', label: 'Open', },
+    { key: 'Save', label: 'Save', },
+    { key: 'SaveAs', label: 'SaveAs', },
+    { key: 'Export', label: 'Export', },
   ];
     
   const optionItems: MenuProps['items'] = [
-    {
-      key: 'New',
-      label: 'New',
+    { 
+      key: 'Language', label: 'Language', children:[
+        { key: 'zh-CN', label: '中文', onClick: () => handleLocale('zh-CN'), icon: getLocale() == 'zh-CN' ? <CheckOutlined/> : <PlaceHolder/>, },
+        { key: 'en-US', label: 'English(US)', onClick: () => handleLocale('en-US'), icon: getLocale() == 'en-US' ? <CheckOutlined/> : <PlaceHolder/>, },
+      ]
     },
-    {
-      key: 'OpenFrom',
-      label: 'OpenFrom',
-    },
-    {
-      key: 'Open',
-      label: 'Open',
-    },
-    {
-      key: 'Save',
-      label: 'Save',
-    },
-    {
-      key: 'SaveAs',
-      label: 'SaveAs',
-    },
-    {
-      key: 'Export',
-      label: 'Export',
-    },
+    { key: 'OpenFrom', label: 'OpenFrom', },
+    { key: 'Open', label: 'Open', },
+    { key: 'Save', label: 'Save', },
+    { key: 'SaveAs', label: 'SaveAs', },
+    { key: 'Export', label: 'Export', },
   ];  
   
   const helpItems: MenuProps['items'] = [
-    {
-      key: 'New',
-      label: 'New',
-    },
-    {
-      key: 'OpenFrom',
-      label: 'OpenFrom',
-    },
-    {
-      key: 'Open',
-      label: 'Open',
-    },
-    {
-      key: 'Save',
-      label: 'Save',
-    },
-    {
-      key: 'SaveAs',
-      label: 'SaveAs',
-    },
-    {
-      key: 'Export',
-      label: 'Export',
-    },
+    { key: 'New', label: 'New', },
+    { key: 'OpenFrom', label: 'OpenFrom', },
+    { key: 'Open', label: 'Open', },
+    { key: 'Save', label: 'Save', },
+    { key: 'SaveAs', label: 'SaveAs', },
+    { key: 'Export', label: 'Export', },
   ];
   
   return (
     <div style={{ position: 'absolute', top: '0px', height: `${Utils.HEADER_HEIGHT}px`, width: '100%' }}>
+      {contextHolder}
       <div style={{ width: '100%', height: '50%', borderBottomStyle: 'inset', borderBottomWidth: '1px' }}>
         <div style={{ width: '100%', height: '100%', float: 'left', display: 'table' }}>
           <Space direction="horizontal" style={{ display: 'table-cell', verticalAlign: 'middle' }}>

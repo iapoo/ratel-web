@@ -1,14 +1,14 @@
 import React, { useEffect, useState, } from 'react'
 import styles from './index.css'
 import Workspace from '@/components/Workspace'
-import { Button, Collapse, Space, Tooltip, } from 'antd'
+import { Button, Collapse, Space, Tooltip, message, } from 'antd'
 import { Utils, RequestUtils, } from '../Utils'
 
 import { Editor, } from '../../Rockie/Editor'
 import { LineAction, ShapeAction, TableAction, } from '../../Rockie/Actions'
 import { StorageService, } from '../Storage'
 import { Rectangle,  RoundRectangle,  Text,  Ellipse,  Square,  Circle,  Process,  Diamond,  Parallelogram,  Hexagon,  Triangle,
-  Cylinder,  Cloud,  Document,  InternalStorage,  Cube,  Step,  Trapezoid,  Tape,  Note,  Card,  Callout,  Actor,} from '@/components/Resource/Icons'
+  Cylinder,  Cloud,  Document,  InternalStorage,  Cube,  Step,  Trapezoid,  Tape,  Note,  Card,  Callout,  Actor,} from '@/components/Resource/LargeIcons'
 import { ShapeEntity, Shapes } from '@/components/Rockie/Items'
 import { EntityShapeType } from '@/components/Rockie/Shapes/src/EntityShape'
 import { ShapeTypes } from '@/components/Rockie/Items/src/ShapeEntity'
