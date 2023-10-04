@@ -118,19 +118,20 @@ export default (props: any) => {
   const login = () => {
     RequestUtils.login()    
   }
+  // <Button type='primary' onClick={addRectangle}>Rectangle</Button>
+  // <Button type='primary' onClick={addLine}>Line</Button>
+  // <Button type='primary' onClick={addTable}>Table</Button>
+  // <Button type='primary' onClick={save}>Save</Button>
+  // <Button type='primary' onClick={resize}>Resize</Button>
+  // <Button type='primary' onClick={zoom}>Zoom</Button>
+  // <Button type='primary' onClick={load}>Load</Button>
+  // <Button type='primary' onClick={login}>Login</Button>
+
   return (
     <div {...props}>
       <Collapse defaultActiveKey={[ '1', '2', ]} onChange={onChange}>
         <Panel header='This is panel header 1' key='1' >
           <Space size={2} wrap>
-          <Button type='primary' onClick={addRectangle}>Rectangle</Button>
-          <Button type='primary' onClick={addLine}>Line</Button>
-          <Button type='primary' onClick={addTable}>Table</Button>
-          <Button type='primary' onClick={save}>Save</Button>
-          <Button type='primary' onClick={resize}>Resize</Button>
-          <Button type='primary' onClick={zoom}>Zoom</Button>
-          <Button type='primary' onClick={load}>Load</Button>
-          <Button type='primary' onClick={login}>Login</Button>
           <Tooltip title="Rectangle">
             <Button type='text' size='large' icon={<Rectangle />} onClick={() => addShape(Shapes.TYPE_RECTANGLE)}/>
           </Tooltip>
