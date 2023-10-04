@@ -1,28 +1,20 @@
 import React, { useEffect, useState, useRef, FC } from 'react'
 import styles from './index.css'
-import Workspace from '@/components/Workspace'
 import { Form, Input, Checkbox, Row, Col, Button, Modal, Menu, Space, Tooltip, Dropdown, Divider, Select, InputNumber, ColorPicker, message,} from 'antd'
 import type { MenuProps } from 'antd';
 import { Consts, RequestUtils, SystemUtils, Utils, } from '../Utils'
-import type { DraggableData, DraggableEvent } from 'react-draggable';
-import axios from 'axios'
 import { setInterval } from 'timers'
 import { UserInfo } from '../Utils/RequestUtils'
 import LoginFormWindow from './LoginFormWindow'
 import NewFileWindow from './NewFileWindow';
-import { CheckOutlined, DownOutlined, DownloadOutlined, FileAddOutlined, FileOutlined, FileTextOutlined, FolderOpenOutlined, FormOutlined, SaveOutlined, SearchOutlined, SolutionOutlined } from '@ant-design/icons';
+import { CheckOutlined, DownloadOutlined, FileAddOutlined, FileOutlined, FileTextOutlined, FolderOpenOutlined, FormOutlined, RedoOutlined, SaveOutlined, SearchOutlined, SolutionOutlined, UndoOutlined } from '@ant-design/icons';
 import OpenFileWindow from './OpenFileWindow';
-import SaveFileWindow from './SaveFileWindow';
 import { StorageService } from '../Storage';
-//import { RectangleOutlined } from '@icons';
 import { Rectangle } from '@/components/Resource/LargeIcons';
 import { EngineUtils, Font, GraphicsUtils, TextShape } from '@/components/Engine';
 import { Editor, EditorEvent } from '@/components/Rockie/Editor';
-import { useIntl, setLocale, getLocale, } from 'umi';
+import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
 import { PlaceHolder, } from '@/components/Resource/Icons'
-
-const { confirm } = Modal;
-
 
 interface HeaderProps {
   previousEditor: Editor | undefined  
@@ -42,20 +34,14 @@ const Header: FC<HeaderProps> =({
   const ON_LOGIN_SAVE = 'Save'
   const ON_LOGIN_OPEN = 'Open'
   const ON_LOGIN_NONE = 'None'
-  
-  const ON_DISCARD_NEW = 'New'
-  const ON_DISCARD_OPEN = 'Open'
-  const ON_DISCARD_NONE = 'None'
 
   const [initialized, setInitialized,] = useState<boolean>(false)
-  const draggleRef = useRef<HTMLDivElement>(null);
   const [online, setOnline,] = useState<boolean>(false)
   const [userInfo, setUserInfo,] = useState<UserInfo | null>(null)
   const [documentModifiedText, setDocumentModifiedText] = useState<string>(DOCUMENT_MODIFIED_TEXT_NO)
   const [loginFormWindowVisible, setLoginFormWindowVisible,] = useState<boolean>(false)
   const [newFileWindowVisible, setNewFileWindowVisible,] = useState<boolean>(false)
   const [openFileWindowVisible, setOpenFileWindowVisible,] = useState<boolean>(false)
-  const [saveFileWindowVisible, setSaveFileWindowVisible,] = useState<boolean>(false)
   const [selectedDocumentName, setSelectedDocumentName,] = useState<string>(DOCUMENT_NEW_NAME_PREFIX)
   const [selectedFolderId, setSelectedFolderId,] = useState<number|null>(null)
   const [selectedDocumentId, setSelectedDocumentId,] = useState<number|null>(null);
@@ -63,15 +49,12 @@ const Header: FC<HeaderProps> =({
   const [newDocumentIndex, setNewDocumentIndex,] = useState<number>(0)
   const [disableFileName, setDisableFileName, ] = useState<boolean>(false)
   const [onLoginFormWindowOk, setOnLoginFormWindowOk, ] = useState<string>(ON_LOGIN_NONE)
-  const [onDiscardModifiedDocumentConfirmed, setDiscardModifiedDocumentConfirmed, ] = useState<string>(ON_DISCARD_NONE)
   const [fillColor, setFillColor, ] = useState<string>(Consts.COLOR_FILL_DEFAULT)
   const [strokeColor, setStrokeColor, ] = useState<string>(Consts.COLOR_STROKE_DEFAULT)
   const [lineWidth, setLineWidth, ] = useState<number>(Consts.LINE_WIDTH_DEFAULT)
   const [zoom, setZoom, ] = useState<number>(Consts.ZOOM_DEFAULT)
   const [fontSize, setFontSize, ] = useState<number>(Consts.FONT_SIZE_DEFAULT)
   const [selectionValid, setSelectionValid, ] = useState<boolean>(false)
-  //const [currentEditorId, setCurrentEditorId, ] = useState<string>('')
-  //const [currentEditor, setCurrentEditor, ] = useState<Editor | undefined>(undefined)
 
   useEffect(() => {
     if (!initialized) {
@@ -212,7 +195,7 @@ const Header: FC<HeaderProps> =({
       }
     } else { // Open File
       if(documentId == null) {
-        alert('Invalid document ID provided here.')
+        messageApi.error(intl.formatMessage({id: 'workspace.header.message-invalid-document-id'}))
         return
       }
       const fetchDocumentData = async() => {
@@ -240,14 +223,6 @@ const Header: FC<HeaderProps> =({
       }
       fetchDocumentData()
       }
-  }
-
-
-  const handleSaveFileWindowCancel = () => {
-    setSaveFileWindowVisible(false)
-  }
-  const handleSaveFileWindowOk = () => {
-    setSaveFileWindowVisible(false)
   }
 
   const logout = () => {
@@ -322,57 +297,12 @@ const Header: FC<HeaderProps> =({
       }
       saveDocumentData()
     }
-}
-
-  const handleFileSave2 = () => {
-    if(online) {
-      if(!selectedDocumentId) {
-        setSaveFileWindowVisible(!saveFileWindowVisible)
-        if(Utils.checkIfModified) {
-          Utils.checkIfModified(false)
-        }
-      } else {
-        const storage = new StorageService()
-        storage.editors = Utils.editors
-        storage.save()
-        const documentData = storage.storageData
-        const documentContent = JSON.stringify(documentData)
-        console.log(documentContent)
-        const saveDocumentData = async () => {
-          let documentData = null
-          documentData = await RequestUtils.updateDocument(selectedDocumentId, selectedDocumentName, documentContent, selectedFolderId)
-          if (documentData.data?.success) {
-            console.log('Save document wwith data: ', documentData.data.data)
-            Utils.editors.forEach(editor => {
-              editor.resetModified()
-            })
-          } else {
-            console.log('Save document with error: ', documentData.data)
-            alert(`Failed to save document, message: ${documentData.data.message}`)
-          }
-        }
-        saveDocumentData()
-      }
-    } else {
-      login(ON_LOGIN_NONE)
-    }
-  }
+ }
 
   const handleExport = () => {
     if(Utils.currentEditor) {
       const data = Utils.currentEditor.export()
       SystemUtils.generateDownloadFile(data, 'test.png')
-    }
-  }
-
-  const handleFileSaveAs = () => {
-    if(online) {
-      setSaveFileWindowVisible(!saveFileWindowVisible)
-      if(Utils.checkIfModified) {
-        Utils.checkIfModified(false)
-      }
-  } else {
-      login(ON_LOGIN_NONE)
     }
   }
 
@@ -447,12 +377,11 @@ const Header: FC<HeaderProps> =({
   }
 
   const fileItems: MenuProps['items'] = [
-    { key: 'New', label: 'New', icon: <FileAddOutlined/>, onClick: handleFileNew },
-    { key: 'OpenFrom', label: 'Open From', disabled: true, icon: <FolderOpenOutlined/>, },
-    { key: 'Open', label: 'Open ...', icon: <FolderOpenOutlined/>, onClick: handleFileOpen, },
-    { key: 'Save', label: 'Save', icon: <SaveOutlined/>, onClick: handleFileSave },
-//  { key: 'SaveAs',label: 'Save As ...', icon: <SaveOutlined/>, onClick: handleFileSaveAs },
-    { key: 'Export', label: 'Export ...', icon: <DownloadOutlined/>, onClick: handleExport },
+    { key: 'New', label: <FormattedMessage id='workspace.header.menu-file-new'/>, icon: <FileAddOutlined/>, onClick: handleFileNew },
+    { key: 'OpenFrom', label: <FormattedMessage id='workspace.header.menu-file-open-from'/>, disabled: true, icon: <FolderOpenOutlined/>, },
+    { key: 'Open', label: <FormattedMessage id='workspace.header.menu-file-open'/>, icon: <FolderOpenOutlined/>, onClick: handleFileOpen, },
+    { key: 'Save', label: <FormattedMessage id='workspace.header.menu-file-save'/>, icon: <SaveOutlined/>, onClick: handleFileSave },
+    { key: 'Export', label: <FormattedMessage id='workspace.header.menu-file-export'/>, icon: <DownloadOutlined/>, onClick: handleExport },
   ];
 
   const editItems: MenuProps['items'] = [
@@ -513,22 +442,22 @@ const Header: FC<HeaderProps> =({
           <Space direction="horizontal" style={{ display: 'table-cell', verticalAlign: 'middle' }}>
             <Space wrap>
               <Dropdown menu={{ items: fileItems }}>
-                <Button type='text' size='small'>File</Button>
+                <Button type='text' size='small'><FormattedMessage id='workspace.header.menu-file'/></Button>
               </Dropdown>
               <Dropdown menu={{ items: editItems }}>
-                <Button type='text' size='small'>Edit</Button>
+                <Button type='text' size='small'><FormattedMessage id='workspace.header.menu-edit'/></Button>
               </Dropdown>
               <Dropdown menu={{ items: viewItems }}>
-                <Button type='text' size='small'>View</Button>
+                <Button type='text' size='small'><FormattedMessage id='workspace.header.menu-view'/></Button>
               </Dropdown>
               <Dropdown menu={{ items: operationItems }}>
-                <Button type='text' size='small'>Operation</Button>
+                <Button type='text' size='small'><FormattedMessage id='workspace.header.menu-operation'/></Button>
               </Dropdown>
               <Dropdown menu={{ items: optionItems }}>
-                <Button type='text' size='small'>Option</Button>
+                <Button type='text' size='small'><FormattedMessage id='workspace.header.menu-option'/></Button>
               </Dropdown>
               <Dropdown menu={{ items: helpItems }}>
-                <Button type='text' size='small'>Help</Button>
+                <Button type='text' size='small'><FormattedMessage id='workspace.header.menu-help'/></Button>
               </Dropdown>   
               <Button type='text' size='small' icon={<FileOutlined/>} style={{paddingLeft: '0px', fontSize: '11px', color: 'gray', fontStyle: 'italic',marginLeft: '24px'}}>{documentModifiedText}</Button>
               <FileTextOutlined />
@@ -537,9 +466,11 @@ const Header: FC<HeaderProps> =({
           </Space>
         </div>
         <div style={{ position: 'absolute', height: '50%', width: '240px', right: '0px' }}>
-          <div style={{ float: 'right', display: 'table', height: '100%', marginRight: '8px' }}>
-            <div style={{ display: 'table-cell', verticalAlign: 'middle' }}>
-              {online ? "Welcome " + userInfo?.customerName : ""} {online ? <Button type='primary' onClick={logout}>退出</Button> : <Button type='primary' onClick={() => login(ON_LOGIN_NONE)}>登录</Button>}
+          <div style={{ float: 'right', display: 'table', height: '100%', marginRight: '8px'}}>
+            <div style={{ display: 'table-cell', verticalAlign: 'middle', }}>
+              {online ? intl.formatMessage({id: 'workspace.header.welcome'}) + ' ' + userInfo?.customerName + ' ' : " "}
+              <Button type='primary' style={{display: online ? 'inline': 'none'}} onClick={logout}><FormattedMessage id='workspace.header.button-logout-title'/></Button>
+              <Button type='primary' style={{display: online ? 'none': 'inline'}}  hidden={!online} onClick={() => login(ON_LOGIN_NONE)}><FormattedMessage id='workspace.header.button-login-title'/></Button>
             </div>
           </div>
         </div>
@@ -561,11 +492,19 @@ const Header: FC<HeaderProps> =({
                   {value: 4, label: '400%'},
                 ]}
               />
+              <Divider type='vertical' style={{margin: 0}} />
+              <Tooltip title="Undo">
+                <Button shape="circle" type="text"  size='small' icon={<UndoOutlined />} />
+              </Tooltip>
+              <Tooltip title="Redo">
+                <Button shape="circle" type="text"  size='small' icon={<RedoOutlined />} />
+              </Tooltip>
+              <Divider type='vertical' style={{margin: 0}} />
               <Tooltip title="Font Size">
                 <InputNumber min={Consts.FONT_SIZE_MIN} max={Consts.FONT_SIZE_MAX} value={fontSize} onChange={handleFontSizeChange} size='small' style={{width: 60}} disabled={!selectionValid} />
               </Tooltip>
               <Tooltip title="Fill Color">
-                <ColorPicker size='small' value={fillColor} onChange={handleFillColorChange} disabled={!selectionValid} />
+                <ColorPicker size='small' value={fillColor} onChange={handleFillColorChange} disabled={!selectionValid}/>
               </Tooltip>
               <Tooltip title="Stroke Color">
               <ColorPicker size='small' value={strokeColor} onChange={handleStrokeColorChange} disabled={!selectionValid} />
@@ -600,7 +539,6 @@ const Header: FC<HeaderProps> =({
       <LoginFormWindow visible={loginFormWindowVisible} x={60} y={60} onWindowCancel={handleLoginFormWindowCancel} onWindowOk={handleLoginFormWindowOk}/>
       <NewFileWindow visible={newFileWindowVisible} x={60} y={60} onWindowCancel={handleNewFileWindowCancel} onWindowOk={handleNewFileWindowOk} />
       <OpenFileWindow visible={openFileWindowVisible} x={60} y={60} onWindowCancel={handleOpenFileWindowCancel} onWindowOk={handleOpenFileWindowOk} disableFileName={disableFileName} selectedFolderId={selectedFolderId} selectedDocumentId={selectedDocumentId} selectedDocumentName={selectedDocumentName} />
-      <SaveFileWindow visible={saveFileWindowVisible} x={60} y={60} selectedFolderId={selectedFolderId} selectedDocumentId={selectedDocumentId} selectedDocumentName={selectedDocumentName} onWindowCancel={handleSaveFileWindowCancel} onWindowOk={handleSaveFileWindowOk} />
       <Modal title="Modal" centered open={discardModifiedDocumentWindowVisible} onOk={confirmDiscardModifiedDocument} onCancel={cancelDiscardModifiedDocument} okText="确认" cancelText="取消" >
         <p>File is modified, are you sure to discard your modification?</p>
       </Modal>
