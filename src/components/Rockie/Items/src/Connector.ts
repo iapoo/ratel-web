@@ -2,6 +2,7 @@ import { Colors, Line2D, MathUtils, Point2, Rectangle, Rectangle2D, } from '@/co
 import { ConnectorShape, } from '../../Shapes'
 import { Entity, } from './Entity'
 import { Categories, Item, Type, } from './Item'
+import { EditorItem } from '../../Editor'
 
 export enum ConnectorType {
   Line,
@@ -134,4 +135,10 @@ export class Connector extends Item {
   protected save (data: any) {}
 
   protected load (data: any) {}
+
+  public  clone(): EditorItem {
+    let connector = new Connector(this.start, this.end)
+    return connector;
+  }
+
 }
