@@ -2,6 +2,7 @@ import { Point2, Rectangle, } from '@/components/Engine'
 import { ConnectorShape, } from '../../Shapes'
 import { Entity, } from './Entity'
 import { Categories, Type, } from './Item'
+import { EditorItem } from '../../Editor'
 
 export enum LineType {
   LEFT_TOP,
@@ -90,6 +91,11 @@ export class LineEntity extends Entity {
     return Categories.LINE
   }
 
+  public clone(): EditorItem {
+    let lineEntity = new LineEntity(this.start, this.end)
+    return lineEntity
+  }
+  
   protected save (data: any) {}
 
   protected load (data: any) {}

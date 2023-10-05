@@ -1,10 +1,10 @@
 /* eslint-disable max-params */
-import { Colors, PaintStyle, Rectangle, Point2, Rotation, Rectangle2D, } from './../../../Engine'
+import { Colors, PaintStyle, Rectangle, Rotation, } from './../../../Engine'
 import { Connector, } from './Connector'
 import { EntityShape, } from '../../Shapes'
-import { EditorItem, } from '../../Editor'
-import { ShapeTypes } from './ShapeEntity';
+import { Editor, EditorItem, } from '../../Editor'
 import { SystemUtils } from '@/components/Workspace/Utils';
+import { EditorItemInfo } from './EditorItemInfo';
 
 export interface Type {
   name: string;
@@ -219,35 +219,38 @@ export abstract class Item implements EditorItem {
     return this._connectors.indexOf(connector)
   }
 
-  public saveData (data: any) {
+  public saveData (): EditorItemInfo {
+    let data = new EditorItemInfo()
     data.type = this.type
     data.text = this.text
     data.left = this.left
     data.top = this.top
     data.width = this.width
     data.height = this.height
-    data.rotation = {}
-    data.rotation.radius = this.rotation.radius
-    data.rotation.px = this.rotation.px
-    data.rotation.py = this.rotation.py
+    //data.rotation = {}
+    //data.rotation.radius = this.rotation.radius
+    //data.rotation.px = this.rotation.px
+    //data.rotation.py = this.rotation.py
     data.items = []
     this.items.forEach(child => {
       const itemData = {}
       const item = child as Item
-      item.saveData(itemData)
-      data.items.push(itemData)
+      //item.saveData(itemData)
+     // data.items.push(itemData)
     })
     this.save(data)
+    return data
   }
 
-  public loadData (data: any) {
+  public loadData (data: EditorItemInfo, editor: Editor) {
     this.boundary = Rectangle.makeLTWH(data.left, data.top, data.width, data.height)
     this.text = data.text
     this.type = data.type
-    this.rotation = data.rotation
+    //this.rotation = data.rotation
     // this.items
   }
 
+  
   private updateItemsBoundary (oldBoundary: Rectangle, newBoundary: Rectangle) {
     const widthZoom = newBoundary.width / oldBoundary.width
     const heightZoom = newBoundary.height / oldBoundary.height
@@ -256,7 +259,7 @@ export abstract class Item implements EditorItem {
     })
   }
 
-
+  public abstract clone(): EditorItem
 
   public abstract get types(): Type[]
 

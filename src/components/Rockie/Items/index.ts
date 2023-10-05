@@ -8,5 +8,5 @@ export { ContainerEntity } from './src/ContainerEntity'
 export { GroupEntity } from './src/GroupEntity'
 export { ShapeEntity, Shapes, ShapeTypes, } from './src/ShapeEntity'
 export { TableEntity } from './src/TableEntity'
-
+export { EditorItemInfo, } from './src/EditorItemInfo'
 

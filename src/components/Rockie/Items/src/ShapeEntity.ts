@@ -4,6 +4,7 @@ import { EntityShape, } from '../../Shapes'
 import { Entity, } from './Entity'
 import { Categories, Type, } from './Item'
 import { AdapterDirection, EntityShapeFreezeType, EntityShapeType, ShapeTypeInfo } from '../../Shapes/src/EntityShape'
+import { EditorItem } from '../../Editor'
 
 export class Shapes {
   public static TYPE_RECTANGLE = 'Rectangle'
@@ -196,6 +197,10 @@ export class ShapeEntity extends Entity {
     return this._shapeType
   }
 
+  public clone(): EditorItem {    
+    let shapeEntity = new ShapeEntity(this.left, this.top, this.width, this.height)
+    return shapeEntity
+  }
   protected save(data: any) { }
 
   protected load(data: any) { }
