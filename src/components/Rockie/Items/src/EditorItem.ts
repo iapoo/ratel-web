@@ -1,7 +1,7 @@
 import { Rectangle, Rotation, } from '@/components/Engine'
 import { EntityShape, } from '../../Shapes'
-import { Editor } from './Editor';
 import { EditorItemInfo } from '../../Items';
+import { Editor } from '../../Editor';
 
 export interface EditorItem {
   readonly shape: EntityShape;
@@ -22,5 +22,5 @@ export interface EditorItem {
   id: string;
   saveData: () => EditorItemInfo;
   loadData: (data: EditorItemInfo, editor: Editor) => void;
-  clone: () => EditorItem
+  //clone: () => EditorItem
 }

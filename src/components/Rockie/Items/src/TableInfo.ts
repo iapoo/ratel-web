@@ -1,6 +1,4 @@
-import { EditorItemInfo } from "../../Editor"
-import { Categories } from "./Item"
-import { TableEntity } from "./TableEntity"
+import { EditorItemInfo } from "./EditorItemInfo"
 
 export class TableInfo extends EditorItemInfo {
     

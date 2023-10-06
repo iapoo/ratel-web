@@ -1,4 +1,4 @@
-import { EditorItemInfo } from "../../Editor"
+import { EditorItemInfo } from "./EditorItemInfo"
 
 export class LineInfo extends EditorItemInfo {    
     
