@@ -2,7 +2,10 @@ import { Point2, Rectangle, } from '@/components/Engine'
 import { ConnectorShape, } from '../../Shapes'
 import { Entity, } from './Entity'
 import { Categories, Type, } from './Item'
-import { EditorItem } from '../../Editor'
+import { EditorItem } from './EditorItem'
+import { EditorItemInfo } from './EditorItemInfo'
+import { Editor } from '../../Editor'
+import { LineInfo } from './LineInfo'
 
 export enum LineType {
   LEFT_TOP,
@@ -91,15 +94,19 @@ export class LineEntity extends Entity {
     return Categories.LINE
   }
 
-  public clone(): EditorItem {
-    let lineEntity = new LineEntity(this.start, this.end)
-    return lineEntity
+  // public clone(): EditorItem {
+  //   let lineEntity = new LineEntity(this.start, this.end)
+  //   return lineEntity
+  // }
+
+
+  protected save(): EditorItemInfo {
+    return new LineInfo()
   }
-  
-  protected save (data: any) {}
 
-  protected load (data: any) {}
+  protected load(data: EditorItemInfo, editor: Editor): void {
 
+  }
   private updateLineType () {
     if (this._start.x <= this._end.x) {
       if (this._start.y <= this._end.y) {

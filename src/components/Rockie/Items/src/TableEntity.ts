@@ -3,7 +3,10 @@ import { Colors, Paint, Rectangle, } from '@/components/Engine'
 import { ContainerEntity, } from './ContainerEntity'
 import { Categories, Item, Type, } from './Item'
 import { ShapeEntity, } from './ShapeEntity'
-import { EditorItem } from '../../Editor'
+import { EditorItem } from './EditorItem'
+import { EditorItemInfo } from './EditorItemInfo'
+import { Editor } from '../../Editor'
+import { TableInfo } from './TableInfo'
 
 export class TableEntity extends ContainerEntity {
   public static TABLE_TYPE_TABLE = 'Table'
@@ -45,9 +48,17 @@ export class TableEntity extends ContainerEntity {
       return Categories.TABLE
     }
 
-    public clone(): EditorItem {
-      let tableEntity = new TableEntity(this.left, this.top, this.width, this.height)
-      return tableEntity
+    // public clone(): EditorItem {
+    //   let tableEntity = new TableEntity(this.left, this.top, this.width, this.height)
+    //   return tableEntity
+    // }
+
+    protected save(): EditorItemInfo {
+      return new TableInfo()
+    }
+  
+    protected load(data: EditorItemInfo, editor: Editor): void {
+  
     }
 
     private refreshTable () {

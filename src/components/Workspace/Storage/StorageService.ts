@@ -11,6 +11,7 @@ import { ShapeData } from './ShapeData'
 import { LineData } from './LineData'
 import { ConnectorData } from './ConnectorData'
 import { Consts, SystemUtils } from '../Utils'
+import { CommonUtils } from '@/components/Rockie/Utils'
 
 export class StorageService {
   public static loadItemData(itemData: EditorItemData): EditorItem {
@@ -70,7 +71,7 @@ export class StorageService {
     let start = SystemUtils.parsePointString(connectorData.start)
     let end = SystemUtils.parsePointString(connectorData.end)
     let connector = new Connector(start, end)
-    connector.connectorType = connectorData.connectorType ? Consts.parseConnectorTypeString(connectorData.connectorType) : undefined
+    connector.connectorType = connectorData.connectorType ? CommonUtils.parseConnectorTypeString(connectorData.connectorType) : undefined
     connector.id = connectorData.id
     return connector
   }
@@ -246,7 +247,7 @@ export class StorageService {
     if(connector.targetJoint) {
 
     }
-    connectorData.connectorType = connector.connectorType ?  Consts.parseConnectorType(connector.connectorType) : null
+    connectorData.connectorType = connector.connectorType ?  CommonUtils.parseConnectorType(connector.connectorType) : null
 
     return connectorData
   }

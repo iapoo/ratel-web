@@ -1,7 +1,6 @@
 /* eslint-disable max-params */
 import { Holder, } from '../../Design'
-import { Item, } from '../../Items'
-import { EditorItem, } from './EditorItem'
+import { EditorItem, Item, } from '../../Items'
 import { EditorLayer, } from './EditorLayer'
 
 export class SelectionLayer extends EditorLayer {

@@ -1,4 +1,4 @@
-import { EditorItemInfo } from "../../Editor"
+import { EditorItemInfo } from "./EditorItemInfo"
 
 /* eslint-disable max-params */
 export class ShapeInfo extends EditorItemInfo {

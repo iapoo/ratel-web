@@ -2,9 +2,10 @@
 import { Colors, PaintStyle, Rectangle, Rotation, } from './../../../Engine'
 import { Connector, } from './Connector'
 import { EntityShape, } from '../../Shapes'
-import { Editor, EditorItem, } from '../../Editor'
+import { Editor, } from '../../Editor'
 import { SystemUtils } from '@/components/Workspace/Utils';
 import { EditorItemInfo } from './EditorItemInfo';
+import { EditorItem } from './EditorItem';
 
 export interface Type {
   name: string;
@@ -259,13 +260,13 @@ export abstract class Item implements EditorItem {
     })
   }
 
-  public abstract clone(): EditorItem
+  //public abstract clone(): EditorItem
 
   public abstract get types(): Type[]
 
   public abstract get category(): string;
 
-  protected abstract save(data: any): void
+  protected abstract save(): EditorItemInfo
 
-  protected abstract load(data: any): void
+  protected abstract load(data: EditorItemInfo, editor: Editor): void
 }

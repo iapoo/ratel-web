@@ -1,7 +1,7 @@
 /* eslint-disable max-params */
 import { Control, Graphics, Rectangle, } from '@/components/Engine'
 import { Editor, } from './Editor'
-import { EditorItem, } from './EditorItem'
+import { EditorItem } from '../../Items';
 
 export abstract class EditorLayer extends Control {
   private _editorItems: EditorItem[] = [];

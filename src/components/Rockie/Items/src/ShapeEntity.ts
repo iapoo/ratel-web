@@ -1,10 +1,14 @@
 /* eslint-disable max-params */
-import { Point2, } from '@/components/Engine'
+import { Point2, Rectangle, Rotation, } from '@/components/Engine'
 import { EntityShape, } from '../../Shapes'
 import { Entity, } from './Entity'
 import { Categories, Type, } from './Item'
 import { AdapterDirection, EntityShapeFreezeType, EntityShapeType, ShapeTypeInfo } from '../../Shapes/src/EntityShape'
-import { EditorItem } from '../../Editor'
+import { EditorItem } from './EditorItem'
+import { EditorItemInfo } from './EditorItemInfo'
+import { Editor } from '../../Editor'
+import { ShapeInfo } from './ShapeInfo'
+import { SystemUtils } from '@/components/Workspace/Utils'
 
 export class Shapes {
   public static TYPE_RECTANGLE = 'Rectangle'
@@ -197,14 +201,34 @@ export class ShapeEntity extends Entity {
     return this._shapeType
   }
 
-  public clone(): EditorItem {    
-    let shapeEntity = new ShapeEntity(this.left, this.top, this.width, this.height)
-    return shapeEntity
+  // public clone(): EditorItem {    
+  //   let shapeEntity = new ShapeEntity(this.left, this.top, this.width, this.height)
+  //   return shapeEntity
+  // }
+
+  protected save(): EditorItemInfo {
+    let shapeInfo = new ShapeInfo(this.type, this.category, this.left, this.top, this.width, this.height, this.text,)
+    shapeInfo.rotation = this.rotation.radius
+    shapeInfo.modifier = this.shape.modifier.x + ',' + this.shape.modifier.y
+    shapeInfo.adapter = this.shape.adapter.x + ',' + this.shape.adapter.y
+    shapeInfo.adapterSize = this.shape.adapterSize
+
+    return shapeInfo
   }
-  protected save(data: any) { }
 
-  protected load(data: any) { }
-
+  protected load(itemInfo: EditorItemInfo, editor: Editor): void {
+    let shapeInfo = itemInfo as ShapeInfo
+    this.boundary = Rectangle.makeLTWH(shapeInfo.left, shapeInfo.top, shapeInfo.width, shapeInfo.height)
+    this.type = shapeInfo.type
+    this.text = shapeInfo.text
+    this.id = shapeInfo.id
+    if (shapeInfo.rotation) {
+      this.rotation = new Rotation(shapeInfo.rotation, this.width / 2, this.height / 2)
+    }
+    this.shape.modifier = SystemUtils.parsePointString(shapeInfo.modifier)
+    this.shape.adapter = SystemUtils.parsePointString(shapeInfo.adapter)
+  }
+  
   private getShapeType(): ShapeType {
     let theShapeType = ShapeTypes[0]
     ShapeTypes.forEach(shapeType => {
