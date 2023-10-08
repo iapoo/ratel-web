@@ -16,6 +16,7 @@ import { time, timeStamp, } from 'console'
 import { BackgroundLayer, } from './BackgroundLayer'
 import { EditorEvent } from './EditorEvent'
 import { SystemUtils } from '@/components/Workspace/Utils'
+import { Operation, OperationService, OperationType } from '../../Operations'
 
 export class Editor extends Painter {
   /**
@@ -41,6 +42,7 @@ export class Editor extends Painter {
   private _maskLayer: EditorLayer;
   private _zoom = 1.00;
   private _inMoving = false;
+  private _moved = false;
   private _gridSize = 16;
   private _action: Action | undefined;
   private _startPointX = 0;
@@ -63,6 +65,8 @@ export class Editor extends Painter {
   private _id: string
   private _modified: boolean
   private _selectionChangeListeners = new Array<(e: EditorEvent) => void>(0) 
+  private _operationService: OperationService = new OperationService()
+  private _operationChangeListeners = new Array<(e: EditorEvent) => void>(0)
 
   public constructor (canvasId: string | HTMLCanvasElement) {
     super(canvasId)
@@ -81,6 +85,7 @@ export class Editor extends Painter {
     this._key = ''
     this._id = SystemUtils.generateID()
     this._modified = false
+    this._operationService
     this.root.addNode(this._backgroundLayer)
     this.root.addNode(this._contentLayer)
     this.root.addNode(this._controllerLayer)
@@ -123,14 +128,48 @@ export class Editor extends Painter {
     return this._id
   }
 
+  public get operationService() {
+    return this._operationService
+  }
+
+  public set operationService(value: OperationService) {
+    this._operationService = value
+  }
+
+  public get operationChangeListeners() {
+    return this._operationChangeListeners
+  }
+
+  public onOperationChange(callback: (e:EditorEvent) => void) {
+    const index = this._operationChangeListeners.indexOf(callback)
+    if (index < 0) {
+      this._operationChangeListeners.push(callback)
+    }
+  }
+
+  public removeOperationChange(callback: (e: EditorEvent) => void) {
+    const index = this._operationChangeListeners.indexOf(callback)
+    if (index >= 0) {
+      this._operationChangeListeners.splice(index, 1)
+    }
+  }
+  
+  public hasOperationChange(callback: (e: EditorEvent) => void) {
+    const index = this._operationChangeListeners.indexOf(callback)
+    return index >= 0
+  }
+
   public get selectionChangeListeners() {
     return this._selectionChangeListeners
   }
 
   public onSelectionChange(callback: (e: EditorEvent) => void) {
-    this._selectionChangeListeners.push(callback)
-  }
-  
+    const index = this._selectionChangeListeners.indexOf(callback)
+    if (index < 0) {
+      this._selectionChangeListeners.push(callback)
+    }
+  }  
+
   public removeSelectionChange(callback: (e: EditorEvent) => void) {
     const index = this._selectionChangeListeners.indexOf(callback)
     if (index >= 0) {
@@ -274,6 +313,22 @@ export class Editor extends Painter {
     }
   }
 
+  public undo() {
+    this._operationService.undo()    
+  }
+
+  public redo() {
+    this._operationService.redo()
+  }
+
+  public get undoable() {
+    return this._operationService.getUndoOperations().length > 0
+  }
+
+  public get redoable() {
+    return this._operationService.getRedoOperations().length > 0
+  }
+
   public handlePointerMove (e: PointerEvent) {
     // console.log(`Moving... x = ${e.x} action=${this._action}`)
     if (this._action) {
@@ -286,6 +341,7 @@ export class Editor extends Painter {
     } else if (this.inMoving) {
       // EditorItem is in moving
       this.handlePointMoveInMoving(e)
+      this._moved = true
     } else if (this._inCreatingConnector) {
       // in creating connector
       this.handlePointMoveInCreatingConnector(e)
@@ -401,8 +457,8 @@ export class Editor extends Painter {
       const clickedEditorItem = this.findEditorItem(e.x, e.y)
       const theSelectionLayer = this.selectionLayer as SelectionLayer
       const isEdge = clickedEditorItem ? this.hasEditorItemJoint(clickedEditorItem, e.x, e.y) : false
-      const inClickEditorItem = clickedEditorItem ? this.isInEditorItem(clickedEditorItem, e.x, e.y) : false
-      if (clickedEditorItem && isEdge && !inClickEditorItem) {
+      const inClickEditorItem = clickedEditorItem ? this.isInEditorItem(clickedEditorItem, e.x, e.y) : false      
+      if (clickedEditorItem && isEdge && !inClickEditorItem) { //Create connector
         const targetPoint = this.findEditorItemJoint(clickedEditorItem, e.x, e.y, false)
         const targetEntity = clickedEditorItem as Entity
         const theControllerLayer = this.controllerLayer as ControllerLayer
@@ -505,13 +561,23 @@ export class Editor extends Painter {
   }
 
   public handlePointerUp (e: MouseEvent) {
-    this._action = undefined
-    if (this._inCreatingConnector) {
+    if(this._action) {
+      let editorItemInfo = this._action.item.saveData()
+      let operation = new Operation(this, OperationType.ADD_ITEMS, [editorItemInfo], '')
+      this._operationService.addOperation(this, operation)
+      this.triggerOperationChange()
+      this._action = undefined
+    } else if (this._inCreatingConnector) {
       const theControllerLayer = this.controllerLayer as ControllerLayer
       const connector = theControllerLayer.getEditorItem(0)
       this.controllerLayer.removeAllEditorItems()
       this.contentLayer.addEditorItem(connector)
       this._textFocused = false
+      let editorItemInfo = connector.saveData()
+      let operation = new Operation(this, OperationType.ADD_ITEMS, [editorItemInfo], '')
+      this._operationService.addOperation(this, operation)
+      this.triggerOperationChange()
+      this._action = undefined
       // } else if (this.inMoving_) {
       //  const theSelectionLayer = this.selectionLayer
       //  const editorItem = theSelectionLayer.getEditorItem(0)
@@ -579,6 +645,12 @@ export class Editor extends Painter {
           }
         }
       }
+    }
+    if(this.inMoving && this._moved &&  this._target) {
+      let editorItemInfo = this._target.saveData()
+      let operation = new Operation(this, OperationType.MOVE_ITEMS, [editorItemInfo])
+      this._operationService.addOperation(this, operation)
+      this.triggerOperationChange()
     }
     this.inMoving = false
     this._inCreatingConnector = false
@@ -1053,6 +1125,13 @@ export class Editor extends Painter {
 
   private triggerSelectionChange() {
     this._selectionChangeListeners.forEach(callback => {
+      const event = new EditorEvent(this)
+      callback(event)
+    })
+  }
+
+  private triggerOperationChange() {
+    this._operationChangeListeners.forEach(callback => {
       const event = new EditorEvent(this)
       callback(event)
     })

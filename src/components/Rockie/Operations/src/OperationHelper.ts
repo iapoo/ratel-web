@@ -7,7 +7,6 @@ import { LineInfo } from "../../Items/src/LineInfo"
 import { Rotation } from "@/components/Engine"
 import { CommonUtils } from "../../Utils"
 import { ShapeInfo } from "../../Items/src/ShapeInfo"
-import { Editor } from "../../Editor"
 
 export class OperationHelper {
   public static loadItem(itemInfo: EditorItemInfo): EditorItem {

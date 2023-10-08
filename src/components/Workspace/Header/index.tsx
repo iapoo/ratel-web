@@ -55,6 +55,8 @@ const Header: FC<HeaderProps> =({
   const [zoom, setZoom, ] = useState<number>(Consts.ZOOM_DEFAULT)
   const [fontSize, setFontSize, ] = useState<number>(Consts.FONT_SIZE_DEFAULT)
   const [selectionValid, setSelectionValid, ] = useState<boolean>(false)
+  const [editorUndoable, setEditorUndoable, ] = useState<boolean>(false)
+  const [editorRedoable, setEditorRedoable, ] = useState<boolean>(false)
 
   useEffect(() => {
     if (!initialized) {
@@ -88,15 +90,19 @@ const Header: FC<HeaderProps> =({
   const refresh = () => {
     if(previousEditor) {
       previousEditor.removeSelectionChange(handleSelectionChange)
+      previousEditor.removeOperationChange(handleOperationChange)
     }
     if(currentEditor) {
       refreshSelectionInfo(currentEditor)
+      refreshOperationInfos()
       currentEditor.onSelectionChange(handleSelectionChange)
+      currentEditor.onOperationChange(handleOperationChange)
       if(currentEditor.selectionLayer.getEditorItemCount() > 0) {
         setSelectionValid(true)
       } else {
         setSelectionValid(false)
       }
+
     } else {
       initializeSelectionInfo()
     }
@@ -131,6 +137,14 @@ const Header: FC<HeaderProps> =({
     }
   }
 
+  const handleOperationChange = (e: EditorEvent) => {
+    refreshOperationInfos()
+  }
+
+  const refreshOperationInfos = () => {
+    setEditorUndoable(currentEditor ? currentEditor.undoable : false)
+    setEditorRedoable(currentEditor ? currentEditor.redoable : false)
+  }
 
   const refreshNewDocumentName = () => {
     let newIndex = newDocumentIndex + 1
@@ -177,7 +191,7 @@ const Header: FC<HeaderProps> =({
       Utils.loadData()
     }
     refreshNewDocumentName()
-}
+  }
 
   const handleOpenFileWindowCancel = () => {
     setOpenFileWindowVisible(false)
@@ -246,6 +260,19 @@ const Header: FC<HeaderProps> =({
     }
   }
 
+  const handleUndo = () => {
+    if(currentEditor) {
+      currentEditor.undo()
+      refreshOperationInfos()
+    }
+  }
+
+  const handleRedo = () => {
+    if(currentEditor) {
+      currentEditor.redo()
+      refreshOperationInfos()
+    }
+  }
 
   const handleFileOpen = () => {
     if(online) {
@@ -494,10 +521,10 @@ const Header: FC<HeaderProps> =({
               />
               <Divider type='vertical' style={{margin: 0}} />
               <Tooltip title="Undo">
-                <Button shape="circle" type="text"  size='small' icon={<UndoOutlined />} />
+                <Button shape="circle" type="text"  size='small' icon={<UndoOutlined />} disabled={!editorUndoable} onClick={handleUndo}/>
               </Tooltip>
               <Tooltip title="Redo">
-                <Button shape="circle" type="text"  size='small' icon={<RedoOutlined />} />
+                <Button shape="circle" type="text"  size='small' icon={<RedoOutlined />} disabled={!editorRedoable} onClick={handleRedo}/>
               </Tooltip>
               <Divider type='vertical' style={{margin: 0}} />
               <Tooltip title="Font Size">
