@@ -12,6 +12,7 @@ import View from '../View'
 import { Engine, Rectangle2D, EngineUtils, Line2D, } from '../../Engine'
 import { Util, } from '@antv/g-math'
 import { StorageService, } from '../Storage'
+import { Operation, OperationType } from '@/components/Rockie/Operations'
 
 interface Pane {
   title: string,
@@ -125,6 +126,7 @@ const Content: FC<ContentProps> = ({
   const initialize = async () => {
     setInitialized(true)
     await Engine.initialize()
+    let firstEditor: Editor | undefined = undefined
     for (let i = 0; i < panes.length; i++) {
       const pane = panes[i]
       const canvasId = 'editor-' + pane.key
@@ -137,6 +139,11 @@ const Content: FC<ContentProps> = ({
       editor.key = pane.key
       editor.title = pane.title
       editor.start()
+      if(i == 0) {
+        firstEditor = editor
+      } else {        
+        editor.operationService = firstEditor!.operationService
+      }
     }
     const container = document.getElementById('editor-container')
     const editor = panes[0].editor
@@ -239,6 +246,10 @@ const Content: FC<ContentProps> = ({
         let oldEditor = Utils.currentEditor
         Utils.currentEditor = editor!
         onEditorChange(oldEditor, Utils.currentEditor)
+        if(oldEditor) {
+          let operation = new Operation(oldEditor, OperationType.SELECT_EDITOR, [])
+          Utils.currentEditor.operationService.addOperation(operation)
+        }
       }
     }
     updateEditors(panes)
@@ -271,7 +282,9 @@ const Content: FC<ContentProps> = ({
     Utils.currentEditor = editor!
     onEditorChange(oldEditor, Utils.currentEditor)
     updateEditors(panes)
-  }
+    let operation = new Operation(Utils.currentEditor, OperationType.ADD_EDITOR, [])
+    Utils.currentEditor.operationService.addOperation(operation)
+}
 
   const remove = (targetKey: string) => {
     let newActiveKey = activeKey
@@ -292,6 +305,10 @@ const Content: FC<ContentProps> = ({
     setPanes(newPanes)
     setActiveKey(newActiveKey)
     updateEditors(panes)
+    if(Utils.currentEditor) {
+      let operation = new Operation(Utils.currentEditor, OperationType.REMOVE_EDITOR, [])
+      Utils.currentEditor.operationService.addOperation(operation)
+    }
   }
 
   const onEdit = (targetKey: string, action: 'add' | 'remove') => {

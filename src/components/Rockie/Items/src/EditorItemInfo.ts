@@ -11,6 +11,7 @@ export class EditorItemInfo {
     public text: string
     public items: Array<EditorItemInfo> = new Array<EditorItemInfo>(0)
     public id: string = ''
+    public parentId: string | null = null
 
     public constructor (type = 'Shape', category = 'Rectangle', left = 0, top = 0, width = 100, height = 100, text = '', rotation = 0) {
       this.type = type

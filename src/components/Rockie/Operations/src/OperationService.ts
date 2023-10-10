@@ -23,7 +23,7 @@ export class OperationService {
         return this._editors;
     }
 
-    public addOperation(editor: Editor, operation: Operation) {
+    public addOperation(operation: Operation) {
         this._undoOperations.push(operation)    
     }
 
@@ -51,7 +51,23 @@ export class OperationService {
         
     }
 
+    public getUndoOperation(): Operation | undefined {
+        if(this._undoOperations.length > 0) {
+            return this._undoOperations[this._undoOperations.length - 1]
+        } else {
+            return undefined
+        }
+    }
+
     public getRedoOperations() : Operation[]  {
         return this._redoOperations
+    }
+
+    public getRedoOperation(): Operation | undefined {
+        if(this._redoOperations.length > 0) {
+            return this._redoOperations[this._redoOperations.length - 1]
+        } else {
+            return undefined
+        }
     }
 }
