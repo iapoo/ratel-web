@@ -261,9 +261,9 @@ export abstract class Node {
 
     public removeNodeAt (index: number): void {
       if (index >= 0 && index < this._nodes.length) {
-        this._nodes.splice(index, 1)
         const node = this._nodes[index]
         node._parent = undefined
+        this._nodes.splice(index, 1)
         this.markDirty()
       }
     }

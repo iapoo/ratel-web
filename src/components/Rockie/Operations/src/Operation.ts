@@ -12,7 +12,8 @@ export enum OperationType {
     SELECT_EDITOR,
     ADD_EDITOR,
     REMOVE_EDITOR,
-    RENAME_EDITOR
+    RENAME_EDITOR,
+    MOVE_EDITOR,
 }
 
 export class Operation {
@@ -21,12 +22,14 @@ export class Operation {
     private _type: OperationType
     private _description: string
     private _itemInfos: Array<EditorItemInfo>
+    private _targetEditor: Editor | undefined
 
-    public constructor(editor: Editor, type: OperationType, itemInfos: Array<EditorItemInfo>, description: string = '') {
+    public constructor(editor: Editor, type: OperationType, itemInfos: Array<EditorItemInfo>, description: string = '', targetEditor: Editor | undefined = undefined) {
         this._editor = editor
         this._type = type
         this._description = description
         this._itemInfos = itemInfos
+        this._targetEditor = targetEditor
     }
 
     public get editor() {
@@ -43,5 +46,9 @@ export class Operation {
 
     public get itemInfos() {
         return this._itemInfos
+    }
+
+    public get targetEditor() {
+        return this._targetEditor
     }
 }

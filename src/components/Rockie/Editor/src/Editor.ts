@@ -5,7 +5,7 @@ import { Painter, } from '@/components/Painter'
 import { Engine, Point2, Rectangle2D, Rotation, Shape, Line2D, Node, Container, Rectangle, Graphics, Colors, MouseEvent, MouseCode, PointerEvent as UniPointerEvent, Control, PointerEvent, Path, Scale, KeyEvent, } from '../../../Engine'
 import { Action, } from '../../Actions'
 import { Holder, } from '../../Design'
-import { Connector, EditorItem, Entity, Item, ShapeEntity, TableEntity, } from '../../Items'
+import { Connector, EditorItem, EditorItemInfo, Entity, Item, ShapeEntity, TableEntity, } from '../../Items'
 import { ContentLayer, } from './ContentLayer'
 import { ControllerLayer, } from './ControllerLayer'
 import { EditorLayer, } from './EditorLayer'
@@ -16,7 +16,7 @@ import { time, timeStamp, } from 'console'
 import { BackgroundLayer, } from './BackgroundLayer'
 import { EditorEvent } from './EditorEvent'
 import { SystemUtils } from '@/components/Workspace/Utils'
-import { Operation, OperationService, OperationType } from '../../Operations'
+import { Operation, OperationHelper, OperationService, OperationType } from '../../Operations'
 
 export class Editor extends Painter {
   /**
@@ -314,7 +314,28 @@ export class Editor extends Painter {
   }
 
   public undo() {
-    this._operationService.undo()    
+    let operation = this._operationService.getUndoOperation()
+    if(operation) {
+      switch (operation.type) {
+        case OperationType.ADD_ITEMS:
+          this.handleOperationAddItems(operation.itemInfos)
+          break;
+        case OperationType.REMOVE_ITEMS:
+          this.handleOperationRemoveItems(operation.itemInfos)
+          break;
+        case OperationType.MOVE_ITEMS:
+          break;
+        case OperationType.UPDATE_ITEMS:
+          break;
+        case OperationType.ADD_SELECTION_ITEMS:
+          break;
+        case OperationType.REMOVE_SELECTION_ITEMS:
+          break;
+        default:
+          break;
+      }
+      this._operationService.undo()    
+    }
   }
 
   public redo() {
@@ -562,9 +583,9 @@ export class Editor extends Painter {
 
   public handlePointerUp (e: MouseEvent) {
     if(this._action) {
-      let editorItemInfo = this._action.item.saveData()
+      let editorItemInfo = OperationHelper.saveEditorItem(this._action.item)
       let operation = new Operation(this, OperationType.ADD_ITEMS, [editorItemInfo], '')
-      this._operationService.addOperation(this, operation)
+      this._operationService.addOperation(operation)
       this.triggerOperationChange()
       this._action = undefined
     } else if (this._inCreatingConnector) {
@@ -573,9 +594,9 @@ export class Editor extends Painter {
       this.controllerLayer.removeAllEditorItems()
       this.contentLayer.addEditorItem(connector)
       this._textFocused = false
-      let editorItemInfo = connector.saveData()
+      let editorItemInfo = OperationHelper.saveEditorItem(connector)
       let operation = new Operation(this, OperationType.ADD_ITEMS, [editorItemInfo], '')
-      this._operationService.addOperation(this, operation)
+      this._operationService.addOperation(operation)
       this.triggerOperationChange()
       this._action = undefined
       // } else if (this.inMoving_) {
@@ -647,9 +668,9 @@ export class Editor extends Painter {
       }
     }
     if(this.inMoving && this._moved &&  this._target) {
-      let editorItemInfo = this._target.saveData()
+      let editorItemInfo = OperationHelper.saveEditorItem(this._target)
       let operation = new Operation(this, OperationType.MOVE_ITEMS, [editorItemInfo])
-      this._operationService.addOperation(this, operation)
+      this._operationService.addOperation(operation)
       this.triggerOperationChange()
     }
     this.inMoving = false
@@ -1136,4 +1157,51 @@ export class Editor extends Painter {
       callback(event)
     })
   }
+
+  private handleRemoveEditorItem(id: string) {
+    let itemCount = this._contentLayer.getEditorItemCount()
+    for(let i = itemCount - 1; i >= 0; i --) {
+      let editorItem =  this._contentLayer.getEditorItem(i) as Item;
+      if(editorItem.id == id) {
+        this._contentLayer.removeEditorItemAt(i)
+        break;
+      }
+      let found = this.removeItemById(editorItem, editorItem.id)      
+      if(found) {
+        break;
+      }
+    }
+  }
+
+  private removeItemById(item: Item, id: string): boolean {
+    let count = item.items.length
+    for(let i = count  - 1; i >= 0; i --) {
+      let childItem =  item.items[i] as Item
+      if(childItem.id == id) {
+        childItem.removeItemAt(i)
+        return true
+      }
+      let found = this.removeItemById(childItem, childItem.id)
+      if(found) {
+        return true
+      }
+    }
+    return false
+  }
+
+  private handleOperationAddItems(items: EditorItemInfo[]) {
+    items.forEach(editorItemInfo => {
+      const id = editorItemInfo.id
+      this.handleRemoveEditorItem(id)
+    })
+  }
+
+
+  private handleOperationRemoveItems(items: EditorItemInfo[]) {
+    items.forEach(editorItemInfo => {
+      const id = editorItemInfo.id
+      this.handleRemoveEditorItem(id)
+    })
+  }
+
 }
