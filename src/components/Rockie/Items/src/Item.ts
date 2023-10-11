@@ -152,6 +152,7 @@ export abstract class Item implements EditorItem {
 
   public addItem (item: EditorItem) {
     // console.log(item)
+    
     if (item && this._items.indexOf(item) < 0) {
       this._items.push(item)
       this.shape.addNode(item.shape)

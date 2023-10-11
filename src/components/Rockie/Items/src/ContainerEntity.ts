@@ -1,5 +1,8 @@
-import { ShapeEntity, } from './ShapeEntity'
+import { ShapeEntity, ShapeOptions, Shapes, } from './ShapeEntity'
 
-export abstract class ContainerEntity extends ShapeEntity {
+export class ContainerEntity extends ShapeEntity {
 
+    public constructor(left: number, top: number, width: number, height: number, shapeOptions: ShapeOptions = { shapeType: Shapes.TYPE_RECTANGLE }) {
+        super(left, top, width, height, shapeOptions)
+      }
 }

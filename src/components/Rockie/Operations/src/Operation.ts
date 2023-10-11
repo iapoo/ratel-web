@@ -22,14 +22,16 @@ export class Operation {
     private _type: OperationType
     private _description: string
     private _itemInfos: Array<EditorItemInfo>
-    private _targetEditor: Editor | undefined
+    private _targetEditor: Editor | null
+    private _targetItemId: string | null
 
-    public constructor(editor: Editor, type: OperationType, itemInfos: Array<EditorItemInfo>, description: string = '', targetEditor: Editor | undefined = undefined) {
+    public constructor(editor: Editor, type: OperationType, itemInfos: Array<EditorItemInfo>, description: string = '', targetEditor: Editor | null = null, targetItemId: string | null = null) {
         this._editor = editor
         this._type = type
         this._description = description
         this._itemInfos = itemInfos
         this._targetEditor = targetEditor
+        this._targetItemId = targetItemId
     }
 
     public get editor() {
@@ -50,5 +52,9 @@ export class Operation {
 
     public get targetEditor() {
         return this._targetEditor
+    }
+
+    public get targetItemId() {
+        return this._targetItemId
     }
 }
