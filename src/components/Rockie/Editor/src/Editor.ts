@@ -5,7 +5,7 @@ import { Painter, } from '@/components/Painter'
 import { Engine, Point2, Rectangle2D, Rotation, Shape, Line2D, Node, Container, Rectangle, Graphics, Colors, MouseEvent, MouseCode, PointerEvent as UniPointerEvent, Control, PointerEvent, Path, Scale, KeyEvent, } from '../../../Engine'
 import { Action, } from '../../Actions'
 import { Holder, } from '../../Design'
-import { Connector, EditorItem, EditorItemInfo, Entity, Item, ShapeEntity, TableEntity, } from '../../Items'
+import { Connector, ContainerEntity, EditorItem, EditorItemInfo, Entity, Item, ShapeEntity, TableEntity, } from '../../Items'
 import { ContentLayer, } from './ContentLayer'
 import { ControllerLayer, } from './ControllerLayer'
 import { EditorLayer, } from './EditorLayer'
@@ -455,7 +455,16 @@ export class Editor extends Painter {
     this._modified = true
     if (this._action) {
       // console.log(`handlePointerClick... x = ${e.x}  start=${this.action_.item.start.x} end=${this.action_.item.end.x} width=${this.action_.item.width}  height=${this.action_.item.height}`)
-      this.contentLayer.addEditorItem(this._action.item)
+      const clickedEditorItem = this.findEditorItem(e.x, e.y)
+      if(clickedEditorItem && clickedEditorItem instanceof ContainerEntity) {
+        let point = this.findEditorItemPoint(clickedEditorItem, e.x, e.y)
+        let x = Math.round(point.x / this._zoom - this._action.item.width / 2)
+        let y = Math.round(point.y / this._zoom - this._action.item.height / 2)
+        this._action.item.boundary = Rectangle.makeLTWH(x, y, this._action.item.width, this._action.item.height)
+        clickedEditorItem.addItem(this._action.item)
+      } else {
+        this.contentLayer.addEditorItem(this._action.item)
+      }
       this.controllerLayer.removeAllEditorItems()
       this.controllerLayer.clear()
       if (this._target) {
