@@ -25,6 +25,7 @@ export class OperationService {
 
     public addOperation(operation: Operation) {
         this._undoOperations.push(operation)    
+        this._redoOperations.length = 0
     }
 
     public removeAllOperations() {
@@ -41,7 +42,7 @@ export class OperationService {
 
     public redo() {
         if(this._redoOperations.length > 0) {
-            this._undoOperations.push(this._undoOperations[this._undoOperations.length - 1])
+            this._undoOperations.push(this._redoOperations[this._redoOperations.length - 1])
             this._redoOperations.pop()            
         }
     }

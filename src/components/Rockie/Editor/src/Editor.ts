@@ -67,6 +67,7 @@ export class Editor extends Painter {
   private _selectionChangeListeners = new Array<(e: EditorEvent) => void>(0) 
   private _operationService: OperationService = new OperationService()
   private _operationChangeListeners = new Array<(e: EditorEvent) => void>(0)
+  private _startEditorItemInfos: EditorItemInfo[] = []
 
   public constructor (canvasId: string | HTMLCanvasElement) {
     super(canvasId)
@@ -318,14 +319,16 @@ export class Editor extends Painter {
     if(operation) {
       switch (operation.type) {
         case OperationType.ADD_ITEMS:
-          this.handleOperationAddItems(operation.itemInfos)
+          this.handleOperationUndoAddItems(operation.itemInfos)
           break;
         case OperationType.REMOVE_ITEMS:
-          this.handleOperationRemoveItems(operation.itemInfos)
+          this.handleOperationUndoRemoveItems(operation.itemInfos)
           break;
         case OperationType.MOVE_ITEMS:
+          this.handleOperationUndoMoveItems(operation.origItemInfos)
           break;
         case OperationType.UPDATE_ITEMS:
+          this.handleOperationUndoUpdateItems(operation.origItemInfos)
           break;
         case OperationType.ADD_SELECTION_ITEMS:
           break;
@@ -339,7 +342,30 @@ export class Editor extends Painter {
   }
 
   public redo() {
-    this._operationService.redo()
+    let operation = this._operationService.getRedoOperation()
+    if(operation) {
+      switch(operation.type) {
+        case OperationType.ADD_ITEMS:
+          this.handleOperationRedoAddItems(operation.itemInfos)
+          break;
+        case OperationType.REMOVE_ITEMS:
+          this.handleOperationRedoRemoveItems(operation.itemInfos)
+          break;
+        case OperationType.MOVE_ITEMS:
+          this.handleOperationRedoMoveItems(operation.itemInfos)
+          break;
+        case OperationType.UPDATE_ITEMS:
+          this.handleOperationRedoUpdateItems(operation.itemInfos)
+          break;
+        case OperationType.ADD_SELECTION_ITEMS:
+          break;
+        case OperationType.REMOVE_SELECTION_ITEMS:
+          break;
+        default:
+          break;
+      }
+      this._operationService.redo()
+    }
   }
 
   public get undoable() {
@@ -362,7 +388,6 @@ export class Editor extends Painter {
     } else if (this.inMoving) {
       // EditorItem is in moving
       this.handlePointMoveInMoving(e)
-      this._moved = true
     } else if (this._inCreatingConnector) {
       // in creating connector
       this.handlePointMoveInCreatingConnector(e)
@@ -565,7 +590,9 @@ export class Editor extends Painter {
             }
           }
         }
-
+        this._startEditorItemInfos.length = 0
+        let editorItemInfo = OperationHelper.saveEditorItem(clickedEditorItem)
+        this._startEditorItemInfos.push(editorItemInfo)
         this.inMoving = true
       } else {
         theSelectionLayer.removeAllEditorItems()
@@ -593,7 +620,7 @@ export class Editor extends Painter {
   public handlePointerUp (e: MouseEvent) {
     if(this._action) {
       let editorItemInfo = OperationHelper.saveEditorItem(this._action.item)
-      let operation = new Operation(this, OperationType.ADD_ITEMS, [editorItemInfo], '')
+      let operation = new Operation(this, OperationType.ADD_ITEMS, [editorItemInfo], [])
       this._operationService.addOperation(operation)
       this.triggerOperationChange()
       this._action = undefined
@@ -604,7 +631,7 @@ export class Editor extends Painter {
       this.contentLayer.addEditorItem(connector)
       this._textFocused = false
       let editorItemInfo = OperationHelper.saveEditorItem(connector)
-      let operation = new Operation(this, OperationType.ADD_ITEMS, [editorItemInfo], '')
+      let operation = new Operation(this, OperationType.ADD_ITEMS, [editorItemInfo], [])
       this._operationService.addOperation(operation)
       this.triggerOperationChange()
       this._action = undefined
@@ -676,9 +703,10 @@ export class Editor extends Painter {
         }
       }
     }
-    if(this.inMoving && this._moved &&  this._target) {
-      let editorItemInfo = OperationHelper.saveEditorItem(this._target)
-      let operation = new Operation(this, OperationType.MOVE_ITEMS, [editorItemInfo])
+    if(this.inMoving && this._moved &&  this._target && this._startEditorItemInfos.length > 0) {
+      let origItemInfo = this._startEditorItemInfos[0]
+      let editorItemInfo =  OperationHelper.saveEditorItem(this._target)
+      let operation = new Operation(this, OperationType.MOVE_ITEMS, [editorItemInfo], [origItemInfo])
       this._operationService.addOperation(operation)
       this.triggerOperationChange()
     }
@@ -1075,6 +1103,7 @@ export class Editor extends Painter {
     }
     this._startPointX = e.x
     this._startPointY = e.y
+    this._moved = true
     theSelectionLayer.invalidateLayer()
     theHoverLayer.removeAllEditorItems()
   }
@@ -1182,6 +1211,52 @@ export class Editor extends Painter {
     }
   }
 
+  private handleAddEditorItem(editorItemInfo: EditorItemInfo) {
+    let editorItem = OperationHelper.loadItem(editorItemInfo)
+    this._contentLayer.addEditorItem(editorItem)
+  }
+
+  private handleUpdateEditorItem(editorItemInfo: EditorItemInfo): boolean {
+    let items = this._contentLayer.getAllEditorItems()
+    let count = items.length
+    for(let i = count  - 1; i >= 0; i --) {
+      let item =  items[i] as Item
+      if(item.id == editorItemInfo.id) {   
+        this.updateEditorItemDetail(item, editorItemInfo)     
+        return true
+      }
+      let found = this.updateEditorItem(item, editorItemInfo)
+      if(found) {
+        return true
+      }
+    }
+    return false
+  }
+
+  private updateEditorItem(item: Item, editorItemInfo: EditorItemInfo): boolean {
+    let count = item.items.length
+    for(let i = count  - 1; i >= 0; i --) {
+      let childItem =  item.items[i] as Item
+      if(childItem.id == editorItemInfo.id) {
+        this.updateEditorItemDetail(childItem, editorItemInfo)     
+        return true
+      }
+      let found = this.updateEditorItem(childItem, editorItemInfo)
+      if(found) {
+        return true
+      }
+    }
+    return false
+  }
+
+  private updateEditorItemDetail(item: Item, editorItemInfo: EditorItemInfo) {
+    item.type =  editorItemInfo.type
+    item.boundary = Rectangle.makeLTWH(editorItemInfo.left, editorItemInfo.top, editorItemInfo.width, editorItemInfo.height)
+    //item.rotation = new Rotation(item.width / 2, item.height / 2, editorItemInfo.rotation)
+    item.text = editorItemInfo.text
+    
+  }
+
   private removeItemById(item: Item, id: string): boolean {
     let count = item.items.length
     for(let i = count  - 1; i >= 0; i --) {
@@ -1198,7 +1273,7 @@ export class Editor extends Painter {
     return false
   }
 
-  private handleOperationAddItems(items: EditorItemInfo[]) {
+  private handleOperationUndoAddItems(items: EditorItemInfo[]) {
     items.forEach(editorItemInfo => {
       const id = editorItemInfo.id
       this.handleRemoveEditorItem(id)
@@ -1206,10 +1281,48 @@ export class Editor extends Painter {
   }
 
 
-  private handleOperationRemoveItems(items: EditorItemInfo[]) {
+  private handleOperationUndoRemoveItems(items: EditorItemInfo[]) {
     items.forEach(editorItemInfo => {
       const id = editorItemInfo.id
       this.handleRemoveEditorItem(id)
+    })
+  }
+
+  private handleOperationUndoMoveItems(items: EditorItemInfo[]) {
+    items.forEach(editorItemInfo => {
+      this.handleUpdateEditorItem(editorItemInfo)
+    })
+  }
+
+  private handleOperationUndoUpdateItems(items: EditorItemInfo[]) {
+    items.forEach(editorItemInfo => {
+      this.handleUpdateEditorItem(editorItemInfo)
+    })
+  }
+
+  private handleOperationRedoAddItems(items: EditorItemInfo[]) {
+    items.forEach(editorItemInfo => {
+      this.handleAddEditorItem(editorItemInfo)
+    })
+  }
+
+
+  private handleOperationRedoRemoveItems(items: EditorItemInfo[]) {
+    items.forEach(editorItemInfo => {
+      const id = editorItemInfo.id
+      this.handleRemoveEditorItem(id)
+    })
+  }
+
+  private handleOperationRedoMoveItems(items: EditorItemInfo[]) {
+    items.forEach(editorItemInfo => {
+      this.handleUpdateEditorItem(editorItemInfo)
+    })
+  }
+
+  private handleOperationRedoUpdateItems(items: EditorItemInfo[]) {
+    items.forEach(editorItemInfo => {
+      this.handleUpdateEditorItem(editorItemInfo)
     })
   }
 
