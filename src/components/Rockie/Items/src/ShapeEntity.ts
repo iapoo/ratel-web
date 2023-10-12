@@ -187,6 +187,7 @@ export class ShapeEntity extends Entity {
     let text = this.parseEntityShapeText(this.type)
     let typeInfo = this.parseTypeInfo(shapeOptions)
     this._shape = new EntityShape(text, left, top, width, height, typeInfo)
+    this.updateTheme()
   }
 
   public get types(): Type[] {
@@ -228,7 +229,7 @@ export class ShapeEntity extends Entity {
     this.shape.modifier = SystemUtils.parsePointString(shapeInfo.modifier)
     this.shape.adapter = SystemUtils.parsePointString(shapeInfo.adapter)
   }
-  
+
   private getShapeType(): ShapeType {
     let theShapeType = ShapeTypes[0]
     ShapeTypes.forEach(shapeType => {

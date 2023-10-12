@@ -1,11 +1,12 @@
 /* eslint-disable max-params */
-import { Colors, PaintStyle, Rectangle, Rotation, } from './../../../Engine'
+import { Color, Colors, Paint, PaintStyle, Rectangle, Rotation, } from './../../../Engine'
 import { Connector, } from './Connector'
 import { EntityShape, } from '../../Shapes'
 import { Editor, } from '../../Editor'
 import { SystemUtils } from '@/components/Workspace/Utils';
 import { EditorItemInfo } from './EditorItemInfo';
 import { EditorItem } from './EditorItem';
+import { ThemeUtils } from '@/components/Workspace/Theme';
 
 export interface Type {
   name: string;
@@ -52,9 +53,16 @@ export abstract class Item implements EditorItem {
 
   private _id: string = SystemUtils.generateID()
 
+  private _strokeColor: Color = Colors.Black
+
+  private _fillColor: Color = Colors.White
+
+  private _useTheme: boolean = true
+
   public constructor (left: number, top: number, width: number, height: number) {
     this._boundary = Rectangle.makeLTWH(left, top, width, height)
     this._shape = new EntityShape('', left, top, width, height)
+    this.updateTheme()
   }
 
   public get id(): string {
@@ -146,13 +154,40 @@ export abstract class Item implements EditorItem {
     }
   }
 
+  public get useTheme(): boolean {
+    return this._useTheme
+  }
+
+  public set useTheme(value: boolean) {
+    this._useTheme = value
+    this.updateTheme()
+  }
+
+  public get strokeColor(): Color  {
+    return this._strokeColor
+  }
+
+  public set strokeColor(value: Color ) {
+    this._strokeColor = value
+    this.updateTheme()
+  }
+
+  public get fillColor(): Color {
+    return this._fillColor
+  }
+
+  public set fillColor(value: Color ) {
+    this._fillColor = value
+    this.updateTheme()
+  }
+
   public get items (): EditorItem[] {
     return this._items
   }
 
   public addItem (item: EditorItem) {
     // console.log(item)
-    
+
     if (item && this._items.indexOf(item) < 0) {
       this._items.push(item)
       this.shape.addNode(item.shape)
@@ -219,6 +254,16 @@ export abstract class Item implements EditorItem {
 
   public getIndexOfConnector (connector: Connector): number {
     return this._connectors.indexOf(connector)
+  }
+
+  public updateTheme() {
+    if(this._useTheme) {
+      this._shape.stroke = Paint.makeColorPaint(ThemeUtils.strokeColor)
+      this._shape.fill = Paint.makeColorPaint(ThemeUtils.fillColor)
+    } else {
+      this._shape.stroke = Paint.makeColorPaint(this._strokeColor)
+      this._shape.fill = Paint.makeColorPaint(this._fillColor)    
+    }
   }
 
   public saveData (): EditorItemInfo {
