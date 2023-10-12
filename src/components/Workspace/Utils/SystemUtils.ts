@@ -2,7 +2,7 @@
  * 定义一些全局方法和状态信息
  */
 
-import { Point2 } from "@/components/Engine";
+import { Color, Colors, Point2 } from "@/components/Engine";
 
 export class SystemUtils {
 
@@ -51,6 +51,10 @@ export class SystemUtils {
         return false
     }
 
+    public static generatePointString(point: Point2): string {
+        return point.x + ',' + point.y
+    }
+
     public static parsePointString(point: string): Point2 {
         if(point && point.length >=3) {
             let index = point.indexOf(',')
@@ -61,6 +65,29 @@ export class SystemUtils {
             }
         } 
         return new Point2()
+    }
+
+    public static generateColorString(color: Color): string {
+        let rstr = '0' + color.r.toString(16)
+        let gstr = '0' + color.g.toString(16)
+        let bstr = '0' + color.b.toString(16)
+        let astr = '0' + color.a.toString(16)
+        let rgba = '#' + rstr.slice(-2) + gstr.slice(-2) + bstr.slice(-2) + astr.slice(-2)
+        return rgba.toUpperCase()
+    }
+
+    public static parseColorString(rgba: string | null): Color | null {
+        if(rgba  == null) {
+            return null
+        }
+        if(rgba && rgba.length == 9 && rgba[0] == '#') {
+            let r = parseInt(rgba.slice(1, 3), 16)
+            let g = parseInt(rgba.slice(3, 5), 16)
+            let b = parseInt(rgba.slice(5, 7), 16)
+            let a = parseInt(rgba.slice(7, 9), 16)  
+            return new Color(r, g, b, a);
+        } 
+        return Colors.White
     }
 
     /**

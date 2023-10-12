@@ -1,4 +1,4 @@
-import { Theme, } from '@/components/Workspace/Theme'
+import { Theme, Themes, } from '@/components/Workspace/Theme'
 import { ContainerEntity, Item, Shapes, } from '../../Items'
 import { Action, } from './Action'
 import { ShapeTypes } from '../../Items/src/ShapeEntity'
@@ -21,7 +21,7 @@ export class ContainerAction extends Action {
     const shapeEntity = new ContainerEntity(left, top, width, height, {
       shapeType: this.type ? this.type : Shapes.TYPE_RECTANGLE
     })
-    shapeEntity.shape.stroke.setColor(Theme.DEFAULT_STROKE_COLOR)
+    //shapeEntity.shape.stroke.setColor(Themes.strokeColor)
 
     return shapeEntity
   }

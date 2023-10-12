@@ -1,7 +1,7 @@
 /* eslint-disable max-params */
 import { Point2, Rotation } from '@/components/Engine'
-import { Editor, EditorItem, } from '@/components/Rockie/Editor'
-import { Connector, ConnectorType, Entity, LineEntity, ShapeEntity, ShapeTypes, Shapes, TableEntity, } from '@/components/Rockie/Items'
+import { Editor, } from '@/components/Rockie/Editor'
+import { Connector, ConnectorType, EditorItem, Entity, LineEntity, ShapeEntity, ShapeTypes, Shapes, TableEntity, } from '@/components/Rockie/Items'
 import { Categories, } from '@/components/Rockie/Items/src/Item'
 import { EditorData, } from './EditorData'
 import { EditorItemData, } from './EditorItemData'
@@ -12,6 +12,7 @@ import { LineData } from './LineData'
 import { ConnectorData } from './ConnectorData'
 import { Consts, SystemUtils } from '../Utils'
 import { CommonUtils } from '@/components/Rockie/Utils'
+import { ThemeUtils } from '../Theme'
 
 export class StorageService {
   public static loadItemData(itemData: EditorItemData): EditorItem {
@@ -86,6 +87,20 @@ export class StorageService {
     shapeEntity.id = shapeData.id
     if (shapeData.rotation) {
       shapeEntity.rotation = new Rotation(shapeData.rotation, shapeEntity.width / 2, shapeEntity.height / 2)
+    }
+    shapeEntity.useTheme = itemData.useTheme
+    if(itemData.useTheme) {
+      shapeEntity.strokeColor = ThemeUtils.strokeColor
+      shapeEntity.fillColor = ThemeUtils.fillColor
+    } else {
+      let strokeColor = SystemUtils.parseColorString(shapeData.strokeColor)
+      if(strokeColor) {
+        shapeEntity.strokeColor = strokeColor
+      }
+      let fillColor = SystemUtils.parseColorString(shapeData.fillColor)
+      if(fillColor) {
+        shapeEntity.fillColor = fillColor
+      }
     }
     shapeEntity.shape.modifier = SystemUtils.parsePointString(shapeData.modifier)
     shapeEntity.shape.adapter = SystemUtils.parsePointString(shapeData.adapter)
@@ -206,7 +221,16 @@ export class StorageService {
         break
     }
     editorItemData.id = editorItem.id
-    editorItemData.items.length = 0
+    editorItemData.items.length = 0    
+    editorItemData.useTheme = editorItem.useTheme
+    if(editorItem.useTheme) {
+      editorItemData.strokeColor = null
+      editorItemData.fillColor = null
+    } else {
+      editorItemData.strokeColor = SystemUtils.generateColorString(editorItem.strokeColor)
+      editorItemData.fillColor = SystemUtils.generateColorString(editorItem.strokeColor)
+    }
+    
     const itemCount = editorItem.items.length
     for (let i = 0; i < itemCount; i++) {
       const childItem = editorItem.items[i]
@@ -219,8 +243,8 @@ export class StorageService {
   private saveShapeData(shapeEntity: ShapeEntity) : EditorItemData {
     let shapeData = new ShapeData(shapeEntity.type, shapeEntity.category, shapeEntity.left, shapeEntity.top, shapeEntity.width, shapeEntity.height, shapeEntity.text,)
     shapeData.rotation = shapeEntity.rotation.radius
-    shapeData.modifier = shapeEntity.shape.modifier.x + ',' + shapeEntity.shape.modifier.y
-    shapeData.adapter = shapeEntity.shape.adapter.x + ',' + shapeEntity.shape.adapter.y
+    shapeData.modifier = SystemUtils.generatePointString(shapeEntity.shape.modifier)
+    shapeData.adapter = SystemUtils.generatePointString(shapeEntity.shape.adapter)
     shapeData.adapterSize = shapeEntity.shape.adapterSize
 
     return shapeData
