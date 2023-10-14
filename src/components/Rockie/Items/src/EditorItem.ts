@@ -1,4 +1,4 @@
-import { Color, Rectangle, Rotation, } from '@/components/Engine'
+import { Color, FontSlant, FontWeight, FontWidth, Rectangle, Rotation, TextAlignment, TextDirection, } from '@/components/Engine'
 import { EntityShape, } from '../../Shapes'
 import { EditorItemInfo } from '../../Items';
 import { Editor } from '../../Editor';
@@ -20,8 +20,19 @@ export interface EditorItem {
   readonly type: string;
   readonly rotation: Rotation;
   readonly useTheme: boolean
-  readonly strokeColor: Color 
-  readonly fillColor: Color 
+  strokeColor: Color 
+  fillColor: Color 
+  lineWidth: number
+  fontName: string
+  fontColor: Color
+  fontSize: number
+  fontWidth: FontWidth
+  fontWeight: FontWeight
+  fontSlant: FontSlant
+  textAlignment: TextAlignment
+  textDirection: TextDirection
+  textWrap: boolean
+  multipleLines: boolean
   id: string;
   saveData: () => EditorItemInfo;
   loadData: (data: EditorItemInfo, editor: Editor) => void;

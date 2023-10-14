@@ -11,5 +11,6 @@ export class Consts {
 
     public static COLOR_STROKE_DEFAULT = '#000000'
     public static COLOR_FILL_DEFAULT = '#FFFFFF'
+    public static COLOR_FONT_DEFAULT = '#FFFFFF'
 
 }
