@@ -16,6 +16,7 @@ import { Editor, EditorEvent } from '@/components/Rockie/Editor';
 import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
 import { PlaceHolder, } from '@/components/Resource/Icons'
 import { OperationType } from '@/components/Rockie/Operations';
+import { Item, ShapeEntity } from '@/components/Rockie/Items';
 
 interface HeaderProps {
   previousEditor: Editor | undefined
@@ -55,6 +56,7 @@ const Header: FC<HeaderProps> = ({
   const [lineWidth, setLineWidth,] = useState<number>(Consts.LINE_WIDTH_DEFAULT)
   const [zoom, setZoom,] = useState<number>(Consts.ZOOM_DEFAULT)
   const [fontSize, setFontSize,] = useState<number>(Consts.FONT_SIZE_DEFAULT)
+  const [fontColor, setFontColor, ] = useState<string>(Consts.COLOR_FONT_DEFAULT)
   const [selectionValid, setSelectionValid,] = useState<boolean>(false)
   const [editorUndoable, setEditorUndoable,] = useState<boolean>(false)
   const [editorRedoable, setEditorRedoable,] = useState<boolean>(false)
@@ -116,6 +118,13 @@ const Header: FC<HeaderProps> = ({
       setZoom(editor.zoom)
       setFontSize(shape.font.fontSize)
       setLineWidth(shape.stroke.getStroketWidth())
+      let fillColorValue = SystemUtils.generateColorString(editorItem.fillColor)
+      setFillColor(fillColorValue.substring(0, 7))
+      let strokeColorValue = SystemUtils.generateColorString(editorItem.strokeColor)
+      setStrokeColor(strokeColorValue.substring(0, 7))
+      let fontColorValue = SystemUtils.generateColorString(editorItem.fontColor)
+      setFontColor(fontColorValue.substring(0, 7))
+      //setFontColor(shape.fontPaint.getColor)
     } else {
       initializeSelectionInfo()
     }
@@ -127,6 +136,7 @@ const Header: FC<HeaderProps> = ({
     setLineWidth(Consts.LINE_WIDTH_DEFAULT)
     setFillColor(Consts.COLOR_FILL_DEFAULT)
     setStrokeColor(Consts.COLOR_STROKE_DEFAULT)
+    setFontColor(Consts.COLOR_FONT_DEFAULT)
   }
 
   const handleSelectionChange = (e: EditorEvent) => {
@@ -414,13 +424,42 @@ const Header: FC<HeaderProps> = ({
   }
 
   const handleFillColorChange = (value: any) => {
-    console.log(value)
     setFillColor(value)
+    if (Utils.currentEditor) {
+      let editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
+      editorItems.forEach(editorItem => {
+        let color = SystemUtils.parseColorString(value.toHexString())
+        if(color) {
+          editorItem.fillColor = color
+        }
+      })
+    }
   }
 
   const handleStrokeColorChange = (value: any) => {
-    console.log(value)
     setStrokeColor(value)
+    if (Utils.currentEditor) {
+      let editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
+      editorItems.forEach(editorItem => {
+        let color = SystemUtils.parseColorString(value.toHexString())
+        if(color) {
+          editorItem.strokeColor = color
+        }
+      })
+    }
+  }
+
+  const handleFontColorChange = (value: any) => {
+    setFontColor(value)
+    if (Utils.currentEditor) {
+      let editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
+      editorItems.forEach(editorItem => {
+        let color = SystemUtils.parseColorString(value.toHexString())
+        if(color) {
+          editorItem.fontColor = color
+        }
+      })
+    }
   }
 
   const handleLocale = (locale: string) => {
@@ -560,6 +599,9 @@ const Header: FC<HeaderProps> = ({
               </Tooltip>
               <Tooltip title="Stroke Color">
                 <ColorPicker size='small' value={strokeColor} onChange={handleStrokeColorChange} disabled={!selectionValid} />
+              </Tooltip>
+              <Tooltip title="Font Color">
+                <ColorPicker size='small' value={fontColor} onChange={handleFontColorChange} disabled={!selectionValid} />
               </Tooltip>
               <Tooltip title="Line Width">
                 <InputNumber min={Consts.LINE_WIDTH_MIN} max={Consts.LINE_WIDTH_MAX} value={lineWidth} onChange={handleLineWidthChange} size='small' style={{ width: 55 }} disabled={!selectionValid} />

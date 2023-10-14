@@ -92,6 +92,7 @@ export class StorageService {
     if(itemData.useTheme) {
       shapeEntity.strokeColor = ThemeUtils.strokeColor
       shapeEntity.fillColor = ThemeUtils.fillColor
+      shapeEntity.lineWidth = ThemeUtils.lineWidth
     } else {
       let strokeColor = SystemUtils.parseColorString(shapeData.strokeColor)
       if(strokeColor) {
@@ -100,6 +101,9 @@ export class StorageService {
       let fillColor = SystemUtils.parseColorString(shapeData.fillColor)
       if(fillColor) {
         shapeEntity.fillColor = fillColor
+      }
+      if(shapeData.lineWidth) {
+        shapeEntity.lineWidth = shapeData.lineWidth
       }
     }
     shapeEntity.shape.modifier = SystemUtils.parsePointString(shapeData.modifier)
@@ -226,9 +230,11 @@ export class StorageService {
     if(editorItem.useTheme) {
       editorItemData.strokeColor = null
       editorItemData.fillColor = null
+      editorItemData.lineWidth = null
     } else {
       editorItemData.strokeColor = SystemUtils.generateColorString(editorItem.strokeColor)
       editorItemData.fillColor = SystemUtils.generateColorString(editorItem.strokeColor)
+      editorItemData.lineWidth = editorItem.lineWidth
     }
     
     const itemCount = editorItem.items.length

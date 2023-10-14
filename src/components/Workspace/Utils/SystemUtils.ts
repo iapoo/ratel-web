@@ -68,14 +68,19 @@ export class SystemUtils {
     }
 
     public static generateColorString(color: Color): string {
-        let rstr = '0' + color.r.toString(16)
-        let gstr = '0' + color.g.toString(16)
-        let bstr = '0' + color.b.toString(16)
-        let astr = '0' + color.a.toString(16)
+        let rstr = '0' + Math.round((color.r * 255)).toString(16)
+        let gstr = '0' + Math.round((color.g * 255)).toString(16)
+        let bstr = '0' + Math.round((color.b * 255)).toString(16)
+        let astr = '0' + Math.round((color.a * 255)).toString(16)
         let rgba = '#' + rstr.slice(-2) + gstr.slice(-2) + bstr.slice(-2) + astr.slice(-2)
         return rgba.toUpperCase()
     }
 
+    /**
+     * 
+     * @param rgba #F0F0F0FF or #FFFFFF
+     * @returns 
+     */
     public static parseColorString(rgba: string | null): Color | null {
         if(rgba  == null) {
             return null
@@ -86,10 +91,17 @@ export class SystemUtils {
             let b = parseInt(rgba.slice(5, 7), 16)
             let a = parseInt(rgba.slice(7, 9), 16)  
             return new Color(r, g, b, a);
+        } else if(rgba && rgba.length == 7 && rgba[0] == '#') {
+            let r = parseInt(rgba.slice(1, 3), 16)
+            let g = parseInt(rgba.slice(3, 5), 16)
+            let b = parseInt(rgba.slice(5, 7), 16)
+            let a = 255
+            return new Color(r, g, b, a);
         } 
+
         return Colors.White
     }
-
+    
     /**
      * REF: https://www.jb51.net/javascript/2915111pf.htm
      * REF: https://www.php.cn/faq/526256.html

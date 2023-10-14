@@ -1,5 +1,5 @@
 /* eslint-disable max-params */
-import { Color, Colors, Paint, PaintStyle, Rectangle, Rotation, } from './../../../Engine'
+import { Color, Colors, FontWeight, FontWidth, FontSlant, Paint, PaintStyle, Rectangle, Rotation, } from './../../../Engine'
 import { Connector, } from './Connector'
 import { EntityShape, } from '../../Shapes'
 import { Editor, } from '../../Editor'
@@ -57,7 +57,29 @@ export abstract class Item implements EditorItem {
 
   private _fillColor: Color = Colors.White
 
-  private _useTheme: boolean = true
+  private _useTheme: boolean = false
+
+  private _lineWidth: number = 1
+
+  private _fontName: string = ''
+
+  private _fontSize: number = 14
+
+  private _fontColor: Color = Colors.AliceBlue
+
+  private _fontWeight: FontWeight = FontWeight.NORMAL
+
+  private _fontWidth: FontWidth = FontWidth.NORMAL
+
+  private _fontSlant: FontSlant = FontSlant.UP_RIGHT
+
+  private _textAlignment: number = 1
+
+  private _textDirection: number = 1
+
+  private _textWrap: boolean = true
+
+  private _multipleLines: boolean = true
 
   public constructor (left: number, top: number, width: number, height: number) {
     this._boundary = Rectangle.makeLTWH(left, top, width, height)
@@ -181,6 +203,121 @@ export abstract class Item implements EditorItem {
     this.updateTheme()
   }
 
+  public get lineWidth() {
+    return this._lineWidth
+  }
+
+  public set lineWidth(value: number) {
+    this._lineWidth = value
+    this.updateTheme()
+  }
+
+  public get fontName() {
+    return this._fontName
+  }
+
+  public set fontName(value: string) {
+    this._fontName = value
+    this.updateTheme()
+  }
+
+  public get fontColor() {
+    return this._fontColor
+  }
+
+  public set fontColor(value: Color) {
+    this._fontColor = value
+    this.updateTheme()
+  }
+
+  public get fontWeight() {
+    return this._fontWeight
+  }
+
+  public set fontWeight(value: FontWeight) {
+    this._fontWeight = value
+    this.updateTheme()
+  }
+
+  public get fontWidth() {
+    return this._fontWidth
+  }
+
+  public set fontWidth(value: FontWidth) {
+    this._fontWidth = value
+    this.updateTheme()
+  }
+
+  public get fontSlant() {
+    return this._fontSlant
+  }
+
+  public set fontSlant(value: FontSlant) {
+    this._fontSlant = value
+    this.updateTheme()
+  }
+
+  public get fontSize() {
+    return this._fontSize
+  }
+
+  public set fontSize(value: number) {
+    this._fontSize = value
+    this.updateTheme()
+  }
+
+  public get textAlignment() {
+    return this._textAlignment
+  }
+
+  public set textAlignment(value: number) {
+    this._textAlignment = value
+    this.updateTheme()
+  }
+
+  public get textDirection() {
+    return this._textDirection
+  }
+
+  public set textDirection(value: number) {
+    this._textDirection = value
+    this.updateTheme()
+  }
+
+  public get textWrap() {
+    return this._textWrap
+  }
+
+  public set textWrap(value: boolean) {
+    this._textWrap = value
+    this.updateTheme()
+  }
+
+  public get multipleLines() {
+    return this._multipleLines
+  }
+
+  public set multipleLines(value: boolean) {
+    this._multipleLines = value
+    this.updateTheme()
+  }
+
+  public updateTheme() {
+    if(this._useTheme) {
+      this._shape.stroke.setColor(ThemeUtils.strokeColor)
+      this._shape.fill.setColor(ThemeUtils.fillColor)
+      this._shape.stroke.setStrokeWidth(ThemeUtils.lineWidth)
+      this._shape.font.fontSize = ThemeUtils.fontSize
+      this._shape.fontPaint.setColor(ThemeUtils.fontColor)
+    } else {
+      this._shape.stroke.setColor(this._strokeColor)
+      this._shape.fill.setColor(this._fillColor)    
+      this._shape.stroke.setStrokeWidth(this._lineWidth)
+      this._shape.font.fontSize = this._fontSize
+      this._shape.fontPaint.setColor(this._fontColor)
+    }
+  }
+
   public get items (): EditorItem[] {
     return this._items
   }
@@ -254,16 +391,6 @@ export abstract class Item implements EditorItem {
 
   public getIndexOfConnector (connector: Connector): number {
     return this._connectors.indexOf(connector)
-  }
-
-  public updateTheme() {
-    if(this._useTheme) {
-      this._shape.stroke = Paint.makeColorPaint(ThemeUtils.strokeColor)
-      this._shape.fill = Paint.makeColorPaint(ThemeUtils.fillColor)
-    } else {
-      this._shape.stroke = Paint.makeColorPaint(this._strokeColor)
-      this._shape.fill = Paint.makeColorPaint(this._fillColor)    
-    }
   }
 
   public saveData (): EditorItemInfo {
