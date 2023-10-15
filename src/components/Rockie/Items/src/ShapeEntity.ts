@@ -187,7 +187,7 @@ export class ShapeEntity extends Entity {
     let text = this.parseEntityShapeText(this.type)
     let typeInfo = this.parseTypeInfo(shapeOptions)
     this._shape = new EntityShape(text, left, top, width, height, typeInfo)
-    this.updateTheme()
+    this.initializeTheme()
   }
 
   public get types(): Type[] {

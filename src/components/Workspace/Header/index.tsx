@@ -116,12 +116,13 @@ const Header: FC<HeaderProps> = ({
       let editorItem = editor.selectionLayer.getEditorItem(0)
       let shape = editorItem.shape
       setZoom(editor.zoom)
-      setFontSize(shape.font.fontSize)
-      setLineWidth(shape.stroke.getStroketWidth())
+      setFontSize(editorItem.fontSize)
+      setLineWidth(editorItem.lineWidth)
       let fillColorValue = SystemUtils.generateColorString(editorItem.fillColor)
       setFillColor(fillColorValue.substring(0, 7))
       let strokeColorValue = SystemUtils.generateColorString(editorItem.strokeColor)
       setStrokeColor(strokeColorValue.substring(0, 7))
+      console.log(`${fillColorValue.substring(0, 7)}   ${strokeColorValue.substring(0, 7)}`)
       let fontColorValue = SystemUtils.generateColorString(editorItem.fontColor)
       setFontColor(fontColorValue.substring(0, 7))
       //setFontColor(shape.fontPaint.getColor)
@@ -400,9 +401,10 @@ const Header: FC<HeaderProps> = ({
     if (Utils.currentEditor) {
       let editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
       editorItems.forEach(editorItem => {
-        let shape = editorItem.shape
-        shape.font = new Font(EngineUtils.FONT_NAME_DEFAULT, value)
-        shape.markDirty()
+        //let shape = editorItem.shape
+        //shape.font = new Font(EngineUtils.FONT_NAME_DEFAULT, value)
+        //shape.markDirty()
+        editorItem.fontSize = value
       })
     }
   }
@@ -413,9 +415,10 @@ const Header: FC<HeaderProps> = ({
       if (Utils.currentEditor) {
         let editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
         editorItems.forEach(editorItem => {
-          let shape = editorItem.shape
-          let stroke = shape.stroke
-          stroke.setStrokeWidth(value)
+          editorItem.lineWidth = value
+          //let shape = editorItem.shape
+          //let stroke = shape.stroke
+          //stroke.setStrokeWidth(value)
           //shape.font = new Font(EngineUtils.FONT_NAME_DEFAULT, value)
           //shape.markDirty()        
         })

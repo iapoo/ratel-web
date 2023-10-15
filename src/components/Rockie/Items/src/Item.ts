@@ -84,7 +84,7 @@ export abstract class Item implements EditorItem {
   public constructor (left: number, top: number, width: number, height: number) {
     this._boundary = Rectangle.makeLTWH(left, top, width, height)
     this._shape = new EntityShape('', left, top, width, height)
-    this.updateTheme()
+    this.initializeTheme()
   }
 
   public get id(): string {
@@ -307,16 +307,29 @@ export abstract class Item implements EditorItem {
       this._shape.stroke.setColor(ThemeUtils.strokeColor)
       this._shape.fill.setColor(ThemeUtils.fillColor)
       this._shape.stroke.setStrokeWidth(ThemeUtils.lineWidth)
-      this._shape.font.fontSize = ThemeUtils.fontSize
-      this._shape.fontPaint.setColor(ThemeUtils.fontColor)
+      //this._shape.font.fontSize = ThemeUtils.fontSize
+      //this._shape.fontPaint.setColor(ThemeUtils.fontColor)
+      this._shape.fontColor = ThemeUtils.fontColor
+      this._shape.fontSize = ThemeUtils.fontSize
     } else {
       this._shape.stroke.setColor(this._strokeColor)
       this._shape.fill.setColor(this._fillColor)    
       this._shape.stroke.setStrokeWidth(this._lineWidth)
-      this._shape.font.fontSize = this._fontSize
-      this._shape.fontPaint.setColor(this._fontColor)
+      //this._shape.font.fontSize = this._fontSize
+      this._shape.fontColor = this._fontColor
+      this._shape.fontSize = this._fontSize
+      //this._shape.fontPaint.setColor(this._fontColor)
     }
   }
+
+  public initializeTheme() {
+    this.fillColor = ThemeUtils.fillColor
+    this.strokeColor = ThemeUtils.strokeColor
+    this.lineWidth = ThemeUtils.lineWidth
+    this.fontSize = ThemeUtils.fontSize
+    this.fontColor = ThemeUtils.fontColor
+    this.updateTheme()
+}
 
   public get items (): EditorItem[] {
     return this._items
