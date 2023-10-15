@@ -176,19 +176,19 @@ export class Color {
     this._source = [ (r & 0xff) / 255, (g & 0xff) / 255, (b & 0xff) / 255, (a & 0xff) / 255, ]
   }
 
-  public get a (): number {
+  public get r (): number {
     return this._source[0]
   }
 
-  public get r (): number {
+  public get g (): number {
     return this._source[1]
   }
 
-  public get g (): number {
+  public get b (): number {
     return this._source[2]
   }
 
-  public get b (): number {
+  public get a (): number {
     return this._source[3]
   }
 

@@ -2,7 +2,7 @@
 /* eslint-disable max-params */
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
 
-import { Colors, Font, GlyphRun, Graphics, Paint, Paragraph, ParagraphBuilder, ParagraphStyle, Path, Point2, Rectangle, Rotation, RoundRectangle, Shape, ShapedLine, } from '@/components/Engine'
+import { Color, Colors, Font, GlyphRun, Graphics, Paint, Paragraph, ParagraphBuilder, ParagraphStyle, Path, Point2, Rectangle, Rotation, RoundRectangle, Shape, ShapedLine, } from '@/components/Engine'
 import { Block, CursorMaker, Style, } from './EntityUtils'
 
 export abstract class AbstractTextShape extends Shape {
@@ -61,6 +61,23 @@ export abstract class AbstractTextShape extends Shape {
       this._fontPaint = value
     }
     
+    public get fontColor() {
+      return this._styles[0].color
+    }
+
+    public set fontColor(value: Color) {
+      this._styles[0].color = value
+    }
+
+    public get fontSize() {
+      return this._styles[0].size
+    }
+
+    public set fontSize(value: number) {
+      this._styles[0].size = value
+      this.buildLines()
+    }
+
     public get textPadding () {
       return this._textPadding
     }
