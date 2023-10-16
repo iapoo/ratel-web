@@ -1,4 +1,5 @@
 export default {
+  'workspace.header.alert-failed-save-document': '文件保存失败, 消息: ',
   'workspace.header.button-login-title': '登录',
   'workspace.header.button-logout-title': '退出',
   'workspace.header.document-modified-text-yes': '[已修改]',
@@ -18,5 +19,17 @@ export default {
   'workspace.header.message-apply-locale': '请刷新页面以应用语言修改',
   'workspace.header.message-invalid-document-name': '无效的文档名称',
   'workspace.header.message-invalid-document-id': '无效的文档ID',
+  'workspace.header.title.fill-color': '填充颜色',
+  'workspace.header.title.font-color': '字体颜色',
+  'workspace.header.title.font-size': '字体尺寸',
+  'workspace.header.title.line-width': '边框宽度',
+  'workspace.header.title.redo': '重做',
+  'workspace.header.title.stroke-color': '边框颜色',
+  'workspace.header.title.undo': '撤销',
+  'workspace.header.title.zoom': '缩放',
   'workspace.header.welcome': '欢迎：',
+  'workspace.navigator.panel.basic': '基础',
+  'workspace.navigator.panel.arrows': '箭头',
+  'workspace.navigator.panel.advanced': '高级',
+  'workspace.navigator.panel.general': '通用',
 }

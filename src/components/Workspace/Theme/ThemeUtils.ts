@@ -5,11 +5,11 @@ import { ThemeConstants } from './Theme'
 
 export class ThemeUtils {
   public static get strokeColor(): Color {
-    return Colors.Red
+    return Colors.Black
   }
 
   public static get fillColor(): Color {
-    return Colors.Green
+    return Colors.White
   }
 
   public static get lineWidth(): number {
