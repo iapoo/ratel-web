@@ -355,7 +355,7 @@ const Header: FC<HeaderProps> = ({
           })
         } else {
           console.log('Save document with error: ', documentData.data)
-          alert(`Failed to save document, message: ${documentData.data.message}`)
+          alert(`${intl.formatMessage({ id: 'workspace.header.alert-failed-ave-document' })} ${documentData.data.message}`)
         }
       }
       saveDocumentData()
@@ -573,53 +573,44 @@ const Header: FC<HeaderProps> = ({
         <div style={{ float: 'left', height: '100%', display: 'table', marginLeft: '8px' }}>
           <Space direction="horizontal" style={{ display: 'table-cell', verticalAlign: 'middle' }}>
             <Space wrap>
+            <Tooltip title={<FormattedMessage id='workspace.header.title.zoom'/>}>
               <Select style={{ width: 100 }} value={zoom} size='small' onChange={handleZoom}
-                options={[
-                  { value: 0.25, label: '25%' },
-                  { value: 0.5, label: '50%' },
-                  { value: 0.75, label: '75%' },
-                  { value: 1, label: '100%' },
-                  { value: 1.25, label: '125%' },
-                  { value: 1.5, label: '150%' },
-                  { value: 2, label: '200%' },
-                  { value: 3, label: '300%' },
-                  { value: 4, label: '400%' },
-                ]}
-              />
+                  options={[
+                    { value: 0.25, label: '25%' },
+                    { value: 0.5, label: '50%' },
+                    { value: 0.75, label: '75%' },
+                    { value: 1, label: '100%' },
+                    { value: 1.25, label: '125%' },
+                    { value: 1.5, label: '150%' },
+                    { value: 2, label: '200%' },
+                    { value: 3, label: '300%' },
+                    { value: 4, label: '400%' },
+                  ]}
+                />
+              </Tooltip>
               <Divider type='vertical' style={{ margin: 0 }} />
-              <Tooltip title="Undo">
+              <Tooltip title={<FormattedMessage id='workspace.header.title.undo'/>}>
                 <Button shape="circle" type="text" size='small' icon={<UndoOutlined />} disabled={!editorUndoable} onClick={handleUndo} />
               </Tooltip>
-              <Tooltip title="Redo">
+              <Tooltip title={<FormattedMessage id='workspace.header.title.redo'/>}>
                 <Button shape="circle" type="text" size='small' icon={<RedoOutlined />} disabled={!editorRedoable} onClick={handleRedo} />
               </Tooltip>
               <Divider type='vertical' style={{ margin: 0 }} />
-              <Tooltip title="Font Size">
+              <Tooltip title={<FormattedMessage id='workspace.header.title.redo'/>}>
                 <InputNumber min={Consts.FONT_SIZE_MIN} max={Consts.FONT_SIZE_MAX} value={fontSize} onChange={handleFontSizeChange} size='small' style={{ width: 60 }} disabled={!selectionValid} />
               </Tooltip>
-              <Tooltip title="Fill Color">
+              <Tooltip title={<FormattedMessage id='workspace.header.title.fill-color'/>}>
                 <ColorPicker size='small' value={fillColor} onChange={handleFillColorChange} disabled={!selectionValid} />
               </Tooltip>
-              <Tooltip title="Stroke Color">
+              <Tooltip title={<FormattedMessage id='workspace.header.title.stroke-color'/>}>
                 <ColorPicker size='small' value={strokeColor} onChange={handleStrokeColorChange} disabled={!selectionValid} />
               </Tooltip>
-              <Tooltip title="Font Color">
+              <Tooltip title={<FormattedMessage id='workspace.header.title.font-color'/>}>
                 <ColorPicker size='small' value={fontColor} onChange={handleFontColorChange} disabled={!selectionValid} />
               </Tooltip>
-              <Tooltip title="Line Width">
+              <Tooltip title={<FormattedMessage id='workspace.header.title.line-width'/>}>
                 <InputNumber min={Consts.LINE_WIDTH_MIN} max={Consts.LINE_WIDTH_MAX} value={lineWidth} onChange={handleLineWidthChange} size='small' style={{ width: 55 }} disabled={!selectionValid} />
               </Tooltip>
-              <Tooltip title="search">
-                <Button shape="circle" type="text" size='small' icon={<SearchOutlined />} />
-              </Tooltip>
-              <Button icon={<SearchOutlined />} type="text" >Search</Button>
-              <Tooltip title="search">
-                <Button type="text" size='small' shape="circle" icon={<SearchOutlined />} />
-              </Tooltip>
-              <Button type="text" size='small' icon={<SearchOutlined />}>
-                Search
-              </Button>
-              <Button type="text" icon={<SearchOutlined />} href="https://www.google.com" />
             </Space>
           </Space>
         </div>
