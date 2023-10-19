@@ -49,6 +49,9 @@ export default (props: any) => {
   const handleEditorChange = (oldEditor: Editor | undefined, newEditor: Editor | undefined)=> {
     setPreviousEditor(oldEditor)
     setCurrentEditor(newEditor)
+    if(newEditor) {
+      newEditor.setup(1, 800, 600)
+    }
   }
 
 

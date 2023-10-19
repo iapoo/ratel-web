@@ -30,8 +30,9 @@ interface ContentProps {
 const { TabPane, } = Tabs
 const DOCUMENT_PREFIX = 'File '
 const DOCUMENT_CONTENT = 'Dummy'
-const DEFAULT_PAINTER_WIDTH = 800
-const DEFAULT_PAINTER_HEIGHT = 600
+//TODO FIXME, if setup with same width and height, some strange behavor may happen while zooming. and so make default value some strange
+const DEFAULT_PAINTER_WIDTH = 801
+const DEFAULT_PAINTER_HEIGHT = 599
 
 const initialPanes: Pane[] = [
   { title: DOCUMENT_PREFIX + '1', content: DOCUMENT_CONTENT, key: '1', editor: null, },
@@ -42,15 +43,46 @@ const initialPanes: Pane[] = [
 const Content: FC<ContentProps> = ({
   onEditorChange, x, y
 }) => {
+
+  const getDefaultContentWidth = () => {
+    if (Utils.currentEditor) {
+      return Math.round(Utils.currentEditor.width + Editor.SHADOW_SIZE * 2) + 'px'
+    } else {
+      return (DEFAULT_PAINTER_WIDTH + Editor.SHADOW_SIZE * 2) + 'px'
+    } 
+  }
+  
+  const getDefaultContentHeight = () => {
+    if (Utils.currentEditor) {      
+      return Math.round(Utils.currentEditor.height + Editor.SHADOW_SIZE * 2) + 'px'
+    } else {
+      return (DEFAULT_PAINTER_HEIGHT + Editor.SHADOW_SIZE * 2) + 'px'
+    }
+  }
+  const getDefaultEditorWidth = () => {
+    if (Utils.currentEditor) {
+      return Math.round(Utils.currentEditor.width) + 'px'
+    } else {
+      return DEFAULT_PAINTER_WIDTH + 'px'
+    }
+  }
+  const getDefaultEditorHeight = () => {
+    if (Utils.currentEditor) {
+      return Math.round(Utils.currentEditor.height) + 'px'
+    } else {
+      return DEFAULT_PAINTER_HEIGHT + 'px'
+    }
+  }
+
   const [ initialized, setInitialized, ] = useState<boolean>(false)
   const [ activeKey, setActiveKey, ] = useState(initialPanes[0].key)
   const [ panes, setPanes, ] = useState(initialPanes)
   const [ viewWidth, setViewWidth, ] = useState<number>(300)
   const [ viewHeight, setViewHeight, ] = useState<number>(300)
-  const [ contentWidth, setContentWidth, ] = useState<string>(DEFAULT_PAINTER_WIDTH + 'px')
-  const [ contentHeight, setContentHeight, ] = useState<string>(DEFAULT_PAINTER_HEIGHT + 'px')
-  const [ editorWidth, setEditorWidth, ] = useState<string>(DEFAULT_PAINTER_WIDTH + 'px')
-  const [ editorHeight, setEditorHeight, ] = useState<string>(DEFAULT_PAINTER_HEIGHT + 'px')
+  const [ contentWidth, setContentWidth, ] = useState<string>(getDefaultContentWidth())
+  const [ contentHeight, setContentHeight, ] = useState<string>(getDefaultContentHeight())
+  const [ editorWidth, setEditorWidth, ] = useState<string>(getDefaultEditorWidth())
+  const [ editorHeight, setEditorHeight, ] = useState<string>(getDefaultEditorHeight())
   const [ documentModified, setdocumentModified, ] = useState<boolean>(false)
 
   const newTabIndex = useRef(4)
@@ -109,6 +141,8 @@ const Content: FC<ContentProps> = ({
       }
     }
   }
+
+
   const calculateViewSize = () => {
     const container = document.getElementById('tab-container')
     if (container?.lastElementChild) {

@@ -108,7 +108,9 @@ export class Painter {
     this._engine = Engine.makeEngine(Engine.canvasKit, this._canvasId)
     this._graphics = this._engine.graphics
     this._root.boundary = new Rectangle(0, 0, this._engine.width, this._engine.height)
-    this._engine.root = this._root
+    //this._root = new Layer(0, 0, this._engine.width, this._engine.height)
+    //this._engine.root = this._root
+    //this.initialize()
   }
 
   private initialize () {

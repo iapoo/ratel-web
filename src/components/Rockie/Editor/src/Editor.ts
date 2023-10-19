@@ -68,6 +68,8 @@ export class Editor extends Painter {
   private _operationService: OperationService = new OperationService()
   private _operationChangeListeners = new Array<(e: EditorEvent) => void>(0)
   private _startEditorItemInfos: EditorItemInfo[] = []
+  private _origWidth: number
+  private _origHeight: number
 
   public constructor (canvasId: string | HTMLCanvasElement) {
     super(canvasId)
@@ -87,6 +89,8 @@ export class Editor extends Painter {
     this._id = SystemUtils.generateID()
     this._modified = false
     this._operationService
+    this._origWidth = this.width * this._zoom
+    this._origHeight = this.height * this.zoom
     this.root.addNode(this._backgroundLayer)
     this.root.addNode(this._contentLayer)
     this.root.addNode(this._controllerLayer)
@@ -225,8 +229,15 @@ export class Editor extends Painter {
   }
 
   public set zoom (value: number) {
-    this._zoom = value
-    this.resize(this.width, this.height)
+    this._zoom = value    
+    this.resize(this._origWidth, this._origHeight)
+  }
+
+  public setup(zoom: number, origWidth: number, origHeight: number) {
+    this._origWidth = origWidth
+    this._origHeight = origHeight
+    this._zoom = zoom
+    this.resize(this._origWidth, this._origHeight)
   }
 
   public get action (): Action | undefined {
@@ -261,8 +272,8 @@ export class Editor extends Painter {
     this._modified = false
   }
 
-  public resize (width: number, height: number) {
-    super.resize(width * this._zoom, height * this._zoom)
+  public resize (origWidth: number, origHeight: number) {
+    super.resize(origWidth * this._zoom, origHeight * this._zoom)
   }
 
   public invalidate () {
