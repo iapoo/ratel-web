@@ -7,7 +7,7 @@ import { setInterval } from 'timers'
 import { UserInfo } from '../Utils/RequestUtils'
 import LoginFormWindow from './LoginFormWindow'
 import NewFileWindow from './NewFileWindow';
-import { CheckOutlined, DownloadOutlined, FileAddOutlined, FileOutlined, FileTextOutlined, FolderOpenOutlined, FormOutlined, RedoOutlined, SaveOutlined, SearchOutlined, SolutionOutlined, UndoOutlined } from '@ant-design/icons';
+import { CheckOutlined, DownloadOutlined, FileAddOutlined, FileOutlined, FileTextOutlined, FolderOpenOutlined, FormOutlined, RedoOutlined, SaveOutlined, SearchOutlined, SolutionOutlined, UndoOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons';
 import OpenFileWindow from './OpenFileWindow';
 import { StorageService } from '../Storage';
 import { Rectangle } from '@/components/Resource/LargeIcons';
@@ -55,7 +55,7 @@ const Header: FC<HeaderProps> = ({
   const [fillColor, setFillColor,] = useState<string>(Consts.COLOR_FILL_DEFAULT)
   const [strokeColor, setStrokeColor,] = useState<string>(Consts.COLOR_STROKE_DEFAULT)
   const [lineWidth, setLineWidth,] = useState<number>(Consts.LINE_WIDTH_DEFAULT)
-  const [zoom, setZoom,] = useState<number>(Consts.ZOOM_DEFAULT)
+  const [zoom, setZoom,] = useState<number>(currentEditor? currentEditor.zoom : Consts.ZOOM_DEFAULT)
   const [fontSize, setFontSize,] = useState<number>(Consts.FONT_SIZE_DEFAULT)
   const [fontColor, setFontColor, ] = useState<string>(Consts.COLOR_FONT_DEFAULT)
   const [selectionValid, setSelectionValid,] = useState<boolean>(false)
@@ -133,7 +133,12 @@ const Header: FC<HeaderProps> = ({
   }
 
   const initializeSelectionInfo = () => {
-    setZoom(Consts.ZOOM_DEFAULT)
+    //console.log(`aa  ${Utils.currentEditor?.zoom}     ${zoom}`)
+    if(Utils.currentEditor) {
+      setZoom(Utils.currentEditor.zoom)
+    } else {
+      setZoom(Consts.ZOOM_DEFAULT)
+    }
     setFontSize(Consts.FONT_SIZE_DEFAULT)
     setLineWidth(Consts.LINE_WIDTH_DEFAULT)
     setFillColor(Consts.COLOR_FILL_DEFAULT)
@@ -387,6 +392,19 @@ const Header: FC<HeaderProps> = ({
     Utils.enablePropertyEditor = !Utils.enablePropertyEditor
   }
 
+
+  const zoomOptions = [
+    { value: 0.25, label: '25%' },
+    { value: 0.5, label: '50%' },
+    { value: 0.75, label: '75%' },
+    { value: 1, label: '100%' },
+    { value: 1.25, label: '125%' },
+    { value: 1.5, label: '150%' },
+    { value: 2, label: '200%' },
+    { value: 3, label: '300%' },
+    { value: 4, label: '400%' },
+  ]
+
   const handleZoom = (value: number) => {
     setZoom(value)
     if (Utils.currentEditor) {
@@ -394,6 +412,45 @@ const Header: FC<HeaderProps> = ({
     }
     if (Utils.onEditorSizeChanged) {
       Utils.onEditorSizeChanged()
+    }
+  }
+
+  const handleZoomIn = () => {
+    handleZoomChange(true)
+  }
+
+  const handleZoomOut = () => {
+    handleZoomChange(false)
+  }
+
+  const handleZoomChange = (zoomIn: boolean) => {
+    if (Utils.currentEditor) {
+      let count = zoomOptions.length
+      let zoomIndex = 0
+      let update = false
+      for (let index = 0; index < count; index++) {
+        if (Utils.currentEditor.zoom == zoomOptions[index].value) {
+          zoomIndex = index
+        }
+      }
+      if (zoomIn) {
+        if (zoomIndex < zoomOptions.length - 1) {
+          zoomIndex++
+          update = true
+        }
+      } else {
+        if (zoomIndex > 0) {
+          zoomIndex--
+          update = true
+        }
+      }
+      if(update) {
+        setZoom(zoomOptions[zoomIndex].value)
+        Utils.currentEditor.zoom = zoomOptions[zoomIndex].value
+        if (Utils.onEditorSizeChanged) {
+          Utils.onEditorSizeChanged()
+        }
+      }
     }
   }
 
@@ -609,18 +666,14 @@ const Header: FC<HeaderProps> = ({
             <Space wrap>
             <Tooltip title={<FormattedMessage id='workspace.header.title.zoom'/>}>
               <Select style={{ width: 100 }} value={zoom} size='small' onChange={handleZoom}
-                  options={[
-                    { value: 0.25, label: '25%' },
-                    { value: 0.5, label: '50%' },
-                    { value: 0.75, label: '75%' },
-                    { value: 1, label: '100%' },
-                    { value: 1.25, label: '125%' },
-                    { value: 1.5, label: '150%' },
-                    { value: 2, label: '200%' },
-                    { value: 3, label: '300%' },
-                    { value: 4, label: '400%' },
-                  ]}
+                  options={zoomOptions}
                 />
+              </Tooltip>
+              <Tooltip title={<FormattedMessage id='workspace.header.title.undo'/>}>
+                <Button shape="circle" type="text" size='small' icon={<ZoomInOutlined />} disabled={zoom >= zoomOptions[zoomOptions.length - 1].value}  onClick={handleZoomIn} />
+              </Tooltip>
+              <Tooltip title={<FormattedMessage id='workspace.header.title.redo'/>}>
+                <Button shape="circle" type="text" size='small' icon={<ZoomOutOutlined />} disabled={zoom <= zoomOptions[0].value } onClick={handleZoomOut} />
               </Tooltip>
               <Divider type='vertical' style={{ margin: 0 }} />
               <Tooltip title={<FormattedMessage id='workspace.header.title.undo'/>}>
@@ -643,7 +696,7 @@ const Header: FC<HeaderProps> = ({
                 <ColorPicker size='small' value={fontColor} onChange={handleFontColorChange} disabled={!selectionValid} />
               </Tooltip>
               <Tooltip title={<FormattedMessage id='workspace.header.title.line-width'/>}>
-                <InputNumber min={Consts.LINE_WIDTH_MIN} max={Consts.LINE_WIDTH_MAX} value={lineWidth} onChange={handleLineWidthChange} size='small' style={{ width: 55 }} disabled={!selectionValid} />
+                <InputNumber min={Consts.LINE_WIDTH_MIN} max={Consts.LINE_WIDTH_MAX} value={lineWidth} onChange={handleLineWidthChange} size='small' style={{ width: 50 }} disabled={!selectionValid} />
               </Tooltip>
             </Space>
           </Space>
