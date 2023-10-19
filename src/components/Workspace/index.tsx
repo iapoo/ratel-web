@@ -51,6 +51,7 @@ export default (props: any) => {
     setCurrentEditor(newEditor)
   }
 
+
   return (
     <div style={{ width: '100%', height: '100%', }}>
       <Header previousEditor={previousEditor} currentEditor={currentEditor}/>

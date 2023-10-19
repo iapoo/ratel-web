@@ -13,7 +13,7 @@ export class ThemeUtils {
   }
 
   public static get lineWidth(): number {
-    return 1
+    return 2
   }
 
   public static get fontName(): string {

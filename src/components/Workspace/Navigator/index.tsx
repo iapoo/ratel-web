@@ -1,6 +1,6 @@
-import React, { useEffect, useState, } from 'react'
+import React, { FC, useEffect, useState, } from 'react'
 import styles from './index.css'
-import { Button, Collapse, CollapseProps, Space, Tooltip, message, } from 'antd'
+import { Button, Collapse, CollapseProps, Divider, Image, Popover, Space, Tooltip, message, } from 'antd'
 import { Utils, RequestUtils, } from '../Utils'
 import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
 import { ContainerAction, LineAction, ShapeAction, TableAction, } from '../../Rockie/Actions'
@@ -9,11 +9,16 @@ import {
   Rectangle, RoundRectangle, Text, Ellipse, Square, Circle, Process, Diamond, Parallelogram, Hexagon, Triangle,
   Cylinder, Cloud, Document, InternalStorage, Cube, Step, Trapezoid, Tape, Note, Card, Callout, Actor, Container
 } from '@/components/Resource/LargeIcons'
-import { Shapes } from '@/components/Rockie/Items'
+import { ShapeTypes, Shapes } from '@/components/Rockie/Items'
 
-const { Panel, } = Collapse
+interface NavigatorProps {
+  navigatorWidth: number
+}
 
-export default (props: any) => {
+const Navigator: FC<NavigatorProps> = ({
+  navigatorWidth
+}) => {
+
   const [initialized, setInitialized,] = useState<boolean>(false)
 
   useEffect(() => {
@@ -127,101 +132,55 @@ export default (props: any) => {
   // <Button type='primary' onClick={login}>Login</Button>
 
 
-const items: CollapseProps['items'] = [
-  {
-    key: '1',
-    label: <FormattedMessage id='workspace.navigator.panel.general'/>,
-    children: <Space size={2} wrap>
-    <Tooltip title="Rectangle">
-      <Button type='text' size='large' icon={<Rectangle />} onClick={() => addShape(Shapes.TYPE_RECTANGLE)} />
-    </Tooltip>
-    <Tooltip title="RoundRectangle">
-      <Button type='text' size='large' icon={<RoundRectangle />} onClick={() => addShape(Shapes.TYPE_ROUND_RECTANGLE)} />
-    </Tooltip>
-    <Tooltip title="Text">
-      <Button type='text' size='large' icon={<Text />} onClick={() => addShape(Shapes.TYPE_TEXT)} />
-    </Tooltip>
-    <Tooltip title="Ellipse">
-      <Button type='text' size='large' icon={<Ellipse />} onClick={() => addShape(Shapes.TYPE_ELLIPSE)} />
-    </Tooltip>
-    <Tooltip title="Square">
-      <Button type='text' size='large' icon={<Square />} onClick={() => addShape(Shapes.TYPE_SQUARE)} />
-    </Tooltip>
-    <Tooltip title="Circle">
-      <Button type='text' size='large' icon={<Circle />} onClick={() => addShape(Shapes.TYPE_CIRCLE)} />
-    </Tooltip>
-    <Tooltip title="Process">
-      <Button type='text' size='large' icon={<Process />} onClick={() => addShape(Shapes.TYPE_PROCESS)} />
-    </Tooltip>
-    <Tooltip title="Diamond">
-      <Button type='text' size='large' icon={<Diamond />} onClick={() => addShape(Shapes.TYPE_DIAMOND)} />
-    </Tooltip>
-    <Tooltip title="Parallelogram">
-      <Button type='text' size='large' icon={<Parallelogram />} onClick={() => addShape(Shapes.TYPE_PARALLELOGRAM)} />
-    </Tooltip>
-    <Tooltip title="Hexagon">
-      <Button type='text' size='large' icon={<Hexagon />} onClick={() => addShape(Shapes.TYPE_HEXAGON)} />
-    </Tooltip>
-    <Tooltip title="Triangle">
-      <Button type='text' size='large' icon={<Triangle />} onClick={() => addShape(Shapes.TYPE_TRIANGLE)} />
-    </Tooltip>
-    <Tooltip title="Cylinder">
-      <Button type='text' size='large' icon={<Cylinder />} onClick={() => addShape(Shapes.TYPE_CYLINDER)} />
-    </Tooltip>
-    <Tooltip title="Cloud">
-      <Button type='text' size='large' icon={<Cloud />} onClick={() => addShape(Shapes.TYPE_CLOUD)} />
-    </Tooltip>
-    <Tooltip title="Document">
-      <Button type='text' size='large' icon={<Document />} onClick={() => addShape(Shapes.TYPE_DOCUMENT)} />
-    </Tooltip>
-    <Tooltip title="InternalStorage">
-      <Button type='text' size='large' icon={<InternalStorage />} onClick={() => addShape(Shapes.TYPE_INTERNAL_STORAGE)} />
-    </Tooltip>
-    <Tooltip title="Cube">
-      <Button type='text' size='large' icon={<Cube />} onClick={() => addShape(Shapes.TYPE_CUBE)} />
-    </Tooltip>
-    <Tooltip title="Step">
-      <Button type='text' size='large' icon={<Step />} onClick={() => addShape(Shapes.TYPE_STEP)} />
-    </Tooltip>
-    <Tooltip title="Trapezoid">
-      <Button type='text' size='large' icon={<Trapezoid />} onClick={() => addShape(Shapes.TYPE_TRAPEZOID)} />
-    </Tooltip>
-    <Tooltip title="Tape">
-      <Button type='text' size='large' icon={<Tape />} onClick={() => addShape(Shapes.TYPE_TAPE)} />
-    </Tooltip>
-    <Tooltip title="Note">
-      <Button type='text' size='large' icon={<Note />} onClick={() => addShape(Shapes.TYPE_NOTE)} />
-    </Tooltip>
-    <Tooltip title="Card">
-      <Button type='text' size='large' icon={<Card />} onClick={() => addShape(Shapes.TYPE_CARD)} />
-    </Tooltip>
-    <Tooltip title="Callout">
-      <Button type='text' size='large' icon={<Callout />} onClick={() => addShape(Shapes.TYPE_CALLOUT)} />
-    </Tooltip>
-    <Tooltip title="Actor">
-      <Button type='text' size='large' icon={<Actor />} onClick={() => addShape(Shapes.TYPE_ACTOR)} />
-    </Tooltip>
-    <Tooltip title="Container">
-      <Button type='text' size='large' icon={<Container />} onClick={() => addContainer(Shapes.TYPE_RECTANGLE)} />
-    </Tooltip>
-  </Space>,
-  },
-  {
-    key: '2',
-    label: <FormattedMessage id='workspace.navigator.panel.advanced'/>,
-    children: <p></p>,
-  },
-  {
-    key: '3',
-    label: <FormattedMessage id='workspace.navigator.panel.arrows'/>,
-    children: <p></p>,
-  },
-];
+  //        <Image src='/shapes/Rectangle.png' width={20} height={20} />
+  const getPopoverContent = (name: string, width: number, height: number) => {
+    return <div style={{width: 154, display: 'table'}}>
+        <div style={{display: 'table-cell', textAlign: 'center', verticalAlign: 'middle', borderTop: '0px solid gray', padding: '2px'}}>
+          <img src={`/shapes-large/${name}.png`} />
+        </div>
+      </div>
+  }
+  const shapes =  ShapeTypes.map(shapeType => {
+    let width = 28
+    let height = 28
+    if(shapeType.width > shapeType.height) {
+      height = Math.round(28 * shapeType.height / shapeType.width)
+    } else {
+      width = 28
+    }
+    return <Popover title={shapeType.name} placement='right' content={getPopoverContent(shapeType.name, shapeType.width, shapeType.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 180, width: 180,}}>
+      <Button type='text' onClick={() => addShape(shapeType.name)} style={{padding: 2, display: 'table'}}>
+        <img src={`/shapes/${shapeType.name}.png`} width={width} height={height} style={{display: 'table-cell'}}/>
+      </Button>
+    </Popover>
+    }
+    )
 
+  const items: CollapseProps['items'] = [
+    {
+      key: '1',
+      label: <FormattedMessage id='workspace.navigator.panel.general'/>,
+      children: <Space size={2} wrap>
+      {shapes}    
+    </Space>,
+    },
+    {
+      key: '2',
+      label: <FormattedMessage id='workspace.navigator.panel.advanced'/>,
+      children: <p></p>,
+    },
+    {
+      key: '3',
+      label: <FormattedMessage id='workspace.navigator.panel.arrows'/>,
+      children: <p></p>,
+    },
+  ]
 
   return (
-    <div {...props}>
+    <div style={{ position: 'absolute', top: '0px', bottom: '0px', left: '0px', width: navigatorWidth, backgroundColor: 'gray', }} >
       <Collapse items={items} defaultActiveKey={['1', '2',]} onChange={onChange} size='small'/>
     </div>
   )
 }
+
+export default Navigator
