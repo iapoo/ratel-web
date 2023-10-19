@@ -35,7 +35,7 @@ const Body: FC<BodyProps> = ({
     const timer = setInterval(async () => {
       setEnablePropertyEditor(Utils.enablePropertyEditor)
     }, 100)
-
+   
     return () => {
       clearInterval(timer)
     }
@@ -66,7 +66,7 @@ const Body: FC<BodyProps> = ({
   }
   return (
     <div style={{ position: 'absolute', top: `${Utils.HEADER_HEIGHT}px`, bottom: `${Utils.FOOTER_HEIGHT}px`, right: '0px', left: '0px', backgroundColor: 'gray', }} >
-      <Navigator style={{ position: 'absolute', top: '0px', bottom: '0px', left: '0px', width: `${navigatorWidth}px`, backgroundColor: 'gray', }} />
+      <Navigator navigatorWidth={navigatorWidth}/>
       <Draggable
         axis='x'
         handle='.handle'
