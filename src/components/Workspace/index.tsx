@@ -58,7 +58,7 @@ export default (props: any) => {
   return (
     <div style={{ width: '100%', height: '100%', }}>
       <Header previousEditor={previousEditor} currentEditor={currentEditor}/>
-      <Body onEditorChange={handleEditorChange}/>
+      <Body onEditorChange={handleEditorChange}  previousEditor={previousEditor} currentEditor={currentEditor}/>
       <Footer/>
     </div>
 

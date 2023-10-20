@@ -159,25 +159,25 @@ const Navigator: FC<NavigatorProps> = ({
   const items: CollapseProps['items'] = [
     {
       key: '1',
-      label: <FormattedMessage id='workspace.navigator.panel.general'/>,
+      label: <div style={{fontWeight: 'bolder'}}><FormattedMessage id='workspace.navigator.panel.general' /></div>,
       children: <Space size={2} wrap>
       {shapes}    
     </Space>,
     },
     {
       key: '2',
-      label: <FormattedMessage id='workspace.navigator.panel.advanced'/>,
+      label: <div style={{fontWeight: 'bolder'}}><FormattedMessage id='workspace.navigator.panel.advanced'/></div>,
       children: <p></p>,
     },
     {
       key: '3',
-      label: <FormattedMessage id='workspace.navigator.panel.arrows'/>,
+      label: <div style={{fontWeight: 'bolder'}}><FormattedMessage id='workspace.navigator.panel.arrows'/></div>,
       children: <p></p>,
     },
   ]
 
   return (
-    <div style={{ position: 'absolute', top: '0px', bottom: '0px', left: '0px', width: navigatorWidth, backgroundColor: 'gray', }} >
+    <div style={{ position: 'absolute', top: '0px', bottom: '0px', left: '0px', width: navigatorWidth, }} >
       <Collapse items={items} defaultActiveKey={['1', '2',]} onChange={onChange} size='small'/>
     </div>
   )

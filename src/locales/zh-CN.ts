@@ -32,4 +32,8 @@ export default {
   'workspace.navigator.panel.arrows': '箭头',
   'workspace.navigator.panel.advanced': '高级',
   'workspace.navigator.panel.general': '通用',
+  'workspace.property-editor.page-setting.title': '页面设置',
+  'workspace.property-editor.page-style.title': '页面风格',
+  'workspace.property-editor.item-setting.title': '图形设置',
+  'workspace.property-editor.item-style.title': '图形风格',
 }
