@@ -32,4 +32,8 @@ export default {
   'workspace.navigator.panel.arrows': 'Arrows',
   'workspace.navigator.panel.basic': 'Basic',
   'workspace.navigator.panel.general': 'General',
+  'workspace.property-editor.page-setting.title': 'Page Settings',
+  'workspace.property-editor.page-style.title': 'Page Style',
+  'workspace.property-editor.item-setting.title': 'Item Settings',
+  'workspace.property-editor.item-style.title': 'Item Style',
 }

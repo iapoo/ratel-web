@@ -14,11 +14,13 @@ import Content from '../Content'
 
 
 interface BodyProps {
+  previousEditor: Editor | undefined
+  currentEditor: Editor | undefined
   onEditorChange: (oldEditor: Editor | undefined, newEditor: Editor | undefined) => void
 }
 
 const Body: FC<BodyProps> = ({
-  onEditorChange
+  previousEditor, currentEditor, onEditorChange
 }) => {
   const [ initialized, setInitialized, ] = useState<boolean>(false)
   const [ navigatorWidth, setNavigatorWidth, ] = useState<number>(Utils.DEFAULT_NAVIGATOR_WIDTH)
@@ -65,7 +67,7 @@ const Body: FC<BodyProps> = ({
     onEditorChange(oldEditor, newEditor)
   }
   return (
-    <div style={{ position: 'absolute', top: `${Utils.HEADER_HEIGHT}px`, bottom: `${Utils.FOOTER_HEIGHT}px`, right: '0px', left: '0px', backgroundColor: 'gray', }} >
+    <div style={{ position: 'absolute', top: `${Utils.HEADER_HEIGHT}px`, bottom: `${Utils.FOOTER_HEIGHT}px`, right: '0px', left: '0px', }} >
       <Navigator navigatorWidth={navigatorWidth}/>
       <Draggable
         axis='x'
@@ -81,8 +83,8 @@ const Body: FC<BodyProps> = ({
         <div className='handle' style={{ position: 'absolute', top: '0px', bottom: '0px', left: `${navigatorWidth} + px`, width: `${Utils.DEFAULT_DIVIDER_WIDTH}px`, zIndex: 999, }} />
       </Draggable>
       <Content onEditorChange={handleEditorChange}  x={`${navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH}px`} y= {`${enablePropertyEditor ? '280px' : '0px'} `}/>
-      <Drawer placement='right' mask={false} closable={false}  open={enablePropertyEditor} getContainer={false}>
-        <PropertyEditor/>
+      <Drawer placement='right' mask={false} closable={false}  open={enablePropertyEditor} getContainer={false} bodyStyle={{padding: 8}} >
+        <PropertyEditor previousEditor={previousEditor} currentEditor={currentEditor}/>
       </Drawer>
 
     </div>
