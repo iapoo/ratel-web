@@ -2,7 +2,7 @@
 /* eslint-disable max-params */
 /* eslint-disable complexity */
 import { Painter, } from '@/components/Painter'
-import { Engine, Point2, Rectangle2D, Rotation, Shape, Line2D, Node, Container, Rectangle, Graphics, Colors, MouseEvent, MouseCode, PointerEvent as UniPointerEvent, Control, PointerEvent, Path, Scale, KeyEvent, } from '../../../Engine'
+import { Engine, Point2, Rectangle2D, Rotation, Shape, Line2D, Node, Container, Rectangle, Graphics, Colors, MouseEvent, MouseCode, PointerEvent as UniPointerEvent, Control, PointerEvent, Path, Scale, KeyEvent, Color, } from '../../../Engine'
 import { Action, } from '../../Actions'
 import { Holder, } from '../../Design'
 import { Connector, ContainerEntity, EditorItem, EditorItemInfo, Entity, Item, ShapeEntity, TableEntity, } from '../../Items'
@@ -70,6 +70,10 @@ export class Editor extends Painter {
   private _startEditorItemInfos: EditorItemInfo[] = []
   private _origWidth: number
   private _origHeight: number
+  private _showGrid: boolean = true
+  private _gridColor: Color = Colors.Gray
+  private _showBackground: boolean = false
+  private _backgroundColor: Color = Colors.White
 
   public constructor (canvasId: string | HTMLCanvasElement) {
     super(canvasId)
@@ -91,6 +95,7 @@ export class Editor extends Painter {
     this._operationService
     this._origWidth = this.width * this._zoom
     this._origHeight = this.height * this.zoom
+    this._showGrid = true
     this.root.addNode(this._backgroundLayer)
     this.root.addNode(this._contentLayer)
     this.root.addNode(this._controllerLayer)
@@ -195,6 +200,43 @@ export class Editor extends Painter {
     this._gridSize = value
     this._backgroundLayer.gridSize = value
   }
+
+  public get showGrid (): boolean {
+    return this._showGrid
+  }
+
+  public set showGrid(value: boolean) {
+    this._showGrid = value
+    this._backgroundLayer.invalidateLayer()
+  }
+
+  public get gridColor() {
+    return this._gridColor
+  }
+
+  public set gridColor(value: Color) {
+    this._gridColor = value
+    this._backgroundLayer.gridColor = value
+  }
+
+  public get showBackground() {
+    return this._showBackground
+  }
+
+  public set showBackground(value: boolean) {
+    this._showBackground = value
+    this._backgroundLayer.invalidateLayer()
+  }
+
+  public get backgroundColor() {
+    return this._backgroundColor
+  }
+
+  public set backgroundColor(value: Color) {
+    this._backgroundColor = value
+    this._backgroundLayer.backgroundColor = value
+  }
+  
 
   public get inMoving (): boolean {
     return this._inMoving
