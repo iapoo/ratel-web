@@ -306,6 +306,14 @@ export class Editor extends Painter {
     this._key = value
   }
 
+  public get origWidth() {
+    return this._origWidth
+  }
+
+  public get origHeight() {
+    return this._origHeight
+  }
+
   public isModified(): boolean {
     return this._modified
   }
