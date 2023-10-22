@@ -1,9 +1,6 @@
 import React, { FC, useEffect, useState, } from 'react'
 import styles from './index.css'
-import Workspace from '@/components/Workspace'
-import { Button, Drawer, } from 'antd'
-import { Engine, Rectangle2D, EngineUtils, Line2D, } from '../../Engine'
-import { Player, } from '../../Player'
+import { Drawer, } from 'antd'
 import { Editor, } from '../../Rockie/Editor'
 import { Utils, } from '../Utils'
 import Navigator from './../Navigator'
@@ -82,8 +79,8 @@ const Body: FC<BodyProps> = ({
         onStop={handleDragStop}>
         <div className='handle' style={{ position: 'absolute', top: '0px', bottom: '0px', left: `${navigatorWidth} + px`, width: `${Utils.DEFAULT_DIVIDER_WIDTH}px`, zIndex: 999, }} />
       </Draggable>
-      <Content onEditorChange={handleEditorChange}  x={`${navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH}px`} y= {`${enablePropertyEditor ? '280px' : '0px'} `}/>
-      <Drawer placement='right' mask={false} closable={false}  open={enablePropertyEditor} getContainer={false} bodyStyle={{padding: 8}} >
+      <Content onEditorChange={handleEditorChange}  x={`${navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH}px`} y= {`${enablePropertyEditor ? '220px' : '0px'} `}/>
+      <Drawer placement='right' mask={false} closable={false}  open={enablePropertyEditor} getContainer={false} bodyStyle={{padding: 16}} width={220} >
         <PropertyEditor previousEditor={previousEditor} currentEditor={currentEditor}/>
       </Drawer>
 

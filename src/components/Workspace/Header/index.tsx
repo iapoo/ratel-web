@@ -7,7 +7,7 @@ import { setInterval } from 'timers'
 import { UserInfo } from '../Utils/RequestUtils'
 import LoginFormWindow from './LoginFormWindow'
 import NewFileWindow from './NewFileWindow';
-import { CheckOutlined, DownloadOutlined, FileAddOutlined, FileOutlined, FileTextOutlined, FolderOpenOutlined, FormOutlined, RedoOutlined, SaveOutlined, SearchOutlined, SolutionOutlined, UndoOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons';
+import { CheckOutlined, DownloadOutlined, FileAddOutlined, FileOutlined, FileTextOutlined, FolderOpenOutlined, FormOutlined, RedoOutlined, SaveOutlined, SearchOutlined, SettingOutlined, SolutionOutlined, UndoOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons';
 import OpenFileWindow from './OpenFileWindow';
 import { StorageService } from '../Storage';
 import { Rectangle } from '@/components/Resource/LargeIcons';
@@ -123,7 +123,7 @@ const Header: FC<HeaderProps> = ({
       setFillColor(fillColorValue.substring(0, 7))
       let strokeColorValue = SystemUtils.generateColorString(editorItem.strokeColor)
       setStrokeColor(strokeColorValue.substring(0, 7))
-      console.log(`${fillColorValue.substring(0, 7)}   ${strokeColorValue.substring(0, 7)}`)
+      //console.log(`${fillColorValue.substring(0, 7)}   ${strokeColorValue.substring(0, 7)}`)
       let fontColorValue = SystemUtils.generateColorString(editorItem.fontColor)
       setFontColor(fontColorValue.substring(0, 7))
       //setFontColor(shape.fontPaint.getColor)
@@ -705,7 +705,7 @@ const Header: FC<HeaderProps> = ({
           <Space direction="horizontal" style={{ display: 'table-cell', verticalAlign: 'middle' }}>
             <Space wrap>
               <Tooltip title="Property Editor">
-                <Button shape="circle" type="text" icon={<Rectangle />} onClick={handlePropertyEditorChange} />
+                <Button shape="circle" type="text" icon={<SettingOutlined />} onClick={handlePropertyEditorChange} />
               </Tooltip>
             </Space>
           </Space>
