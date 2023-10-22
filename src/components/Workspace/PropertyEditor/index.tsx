@@ -1,8 +1,8 @@
 import React, { FC, useEffect, useState, useRef} from 'react'
 import styles from './index.css'
 import Workspace from '@/components/Workspace'
-import { Button, Checkbox, ColorPicker, Descriptions, DescriptionsProps, Divider, InputNumber, Radio, Tabs, TabsProps, } from 'antd'
-import { Consts, SystemUtils, Utils, } from '../Utils'
+import { Button, Checkbox, ColorPicker, Descriptions, DescriptionsProps, Divider, InputNumber, Radio, RadioChangeEvent, Select, Tabs, TabsProps, } from 'antd'
+import { Consts, PageTypes, SystemUtils, Utils, } from '../Utils'
 import { Editor, EditorEvent } from '@/components/Rockie/Editor'
 import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
 import { DescriptionsItemProps } from 'antd/es/descriptions/Item'
@@ -27,7 +27,11 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
   const [ backgroundColor, setBackgroundColor, ] = useState<string>(Consts.COLOR_BACKGROUND_DEFAULT)
   const [ showPageItems, setShowPageItems, ] = useState<boolean>(true)
   const [ showBackground, setShowBackground, ] = useState<boolean>(false)
-  
+  const [ pageSize, setPageSize, ] = useState<string>('1')
+  const [ pageWidth, setPageWidth, ] = useState<number>(Consts.PAGE_WIDTH_DEFAULT)
+  const [ pageHeight, setPageHeight, ] = useState<number>(Consts.PAGE_HEIGHT_DEFAULT)
+  const [ pageOrientation, setPageOrientation, ] = useState<string>(Consts.PAGE_ORIENTATION_PORTRAIT)
+
   useEffect(() => {
     if (!initialized) {
       initialize()
@@ -53,16 +57,55 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
         setShowPageItems(true)
         setGridSize(currentEditor.gridSize)
         setShowGrid(currentEditor.showGrid)
+        setPageWidth(currentEditor.origWidth)
+        setPageHeight(currentEditor.origHeight)
+        setPageSize(getPageTypeName(currentEditor))
+        setPageOrientation(getPageOrientation(currentEditor))
       }
     }
+  }
+
+  const getPageTypeName = (editor: Editor) => {
+    let pageTypeName = Consts.PAGE_SIZE_CUSTOM
+    PageTypes.forEach(pageType => {
+      if(editor.origWidth == pageType.width && editor.origHeight == pageType.height) {
+        pageTypeName = pageType.name        
+      }else if(editor.origWidth == pageType.height && editor.origHeight == pageType.width) {
+        pageTypeName = pageType.name
+      }
+    })
+    return pageTypeName
+  }
+
+
+  const getPageOrientation = (editor: Editor) => {
+    let pageOrientationName = Consts.PAGE_ORIENTATION_PORTRAIT
+    PageTypes.forEach(pageType => {
+      if(editor.origWidth == pageType.width && editor.origHeight == pageType.height) {
+        pageOrientationName = Consts.PAGE_ORIENTATION_LANDSCAPE
+      }else if(editor.origWidth == pageType.height && editor.origHeight == pageType.width) {
+        pageOrientationName = Consts.PAGE_ORIENTATION_PORTRAIT  
+      }
+    })
+    return pageOrientationName
+  }
+
+  const getPageType = (pageTypeName: string) => {
+    let thePageType = PageTypes[PageTypes.length - 1]
+    PageTypes.forEach(pageType => {
+      if(pageTypeName == pageType.name) {
+        thePageType = pageType
+      }
+    })
+    return thePageType
   }
 
   const handleSelectionChange = (e: EditorEvent) => {
     refresh()
   }
 
-  const handleGridSizeChange = (value: number)=> {
-    if(currentEditor) {
+  const handleGridSizeChange = (value: number | null)=> {
+    if(currentEditor && value) {
       currentEditor.gridSize = value
       setGridSize(value)
     }
@@ -103,37 +146,93 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
     }
   }
 
+  const handlePageSizeChange =  (value: string, option: any) => {
+    if(currentEditor) {
+      //console.log(`${value}    ${option}`)
+      setPageSize(value)
+      let pageType = getPageType(value)
+      if(pageType.name == Consts.PAGE_SIZE_CUSTOM) {
+        setPageWidth(currentEditor.origWidth)
+        setPageHeight(currentEditor.origHeight)
+      } else {
+        if(pageOrientation == Consts.PAGE_ORIENTATION_PORTRAIT) {
+          currentEditor.setup(currentEditor.zoom, pageType.height, pageType.width)
+        } else {
+          currentEditor.setup(currentEditor.zoom, pageType.width, pageType.height)
+        }
+      }
+    }
+  }
+
+  const handlePageWidthChange = (value: number | null) => {
+    if(currentEditor && value) {
+      currentEditor.setup(currentEditor.zoom, value, currentEditor.origHeight)
+      setPageWidth(value)
+    }
+  }
+
+  const handlePageHeightChange = (value: number | null) => {
+    if(currentEditor && value) {
+      currentEditor.setup(currentEditor.zoom, currentEditor.origWidth, value)
+      setPageHeight(value)
+    }
+  }
+
+  const handlePageOrientationChange = (e: RadioChangeEvent) => {
+    setPageOrientation(e.target.value)
+    let pageType = getPageType(pageSize)
+    if(currentEditor) {
+      if(e.target.value == Consts.PAGE_ORIENTATION_PORTRAIT) {
+        currentEditor.setup(currentEditor.zoom, pageType.height, pageType.width)
+      } else {
+        currentEditor.setup(currentEditor.zoom, pageType.width, pageType.height)
+      }
+    }
+  }
+
+  const pageSizeOptions = PageTypes.map(pageType=> {
+    return {value: pageType.name, label: intl.formatMessage({ id: pageType.label})}
+  })
+
   const pageSettings = <div>
-    <div style={{display: 'flex', justifyContent: 'space-between', fontWeight: 'bold', padding: 4, }}>
+    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontWeight: 'bold', padding: 4, }}>
       <Checkbox onChange={handleShowGridChange} checked={showGrid}><FormattedMessage id='workspace.property-editor.page-setting.show-grid'/></Checkbox>      
     </div>
-    <div style={{display: 'flex', justifyContent: 'space-between', padding: 4, }}>
+    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 4, }}>
       <div><FormattedMessage id='workspace.property-editor.page-setting.grid-size'/></div>
       <InputNumber min={Consts.GRID_SIZE_MIN} max={Consts.GRID_SIZE_MAX} value={gridSize} onChange={handleGridSizeChange} size='small' style={{ width: 70 }} /> 
     </div>
-    <div style={{display: 'flex', justifyContent: 'space-between', padding: 4, }}>
+    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 4, }}>
       <div><FormattedMessage id='workspace.property-editor.page-setting.grid-color'/></div>
       <ColorPicker size='small' value={gridColor} onChange={handleGridColorChange} />
     </div>
     <Divider style={{margin: 4}}/>
-    <div style={{display: 'flex', justifyContent: 'space-between', fontWeight: 'bold', padding: 8, }}>
+    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontWeight: 'bold', padding: 8, }}>
       <Checkbox onChange={handleShowBackgroundChange} checked={showBackground}><FormattedMessage id='workspace.property-editor.page-setting.show-background'/></Checkbox>      
     </div>
-    <div style={{display: 'flex', justifyContent: 'space-between'}}>
+    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
       <div><FormattedMessage id='workspace.property-editor.page-setting.background-color'/></div>
       <ColorPicker size='small' value={backgroundColor} onChange={handleBackgroundColorChange} />
     </div>
     <Divider style={{margin: 4}}/>
-    <div style={{display: 'flex', justifyContent: 'space-between', fontWeight: 'bold', padding: 8, }}>
-      <FormattedMessage id='workspace.property-editor.page-setting.page'/>
+    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontWeight: 'bold', padding: 8, }}>
+      <FormattedMessage id='workspace.property-editor.page-setting.page-size'/>
     </div>
-    <div style={{display: 'flex', justifyContent: 'space-between'}}>
-      <div><FormattedMessage id='workspace.property-editor.page-setting.page-size'/></div>
-      <ColorPicker size='small' value={backgroundColor} onChange={handleBackgroundColorChange} />
+    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 4}}>
+      <Select size='small' value={pageSize} onChange={handlePageSizeChange} style={{width: '100%'}}
+        options={pageSizeOptions}/>
     </div>
-    <div style={{display: 'flex', justifyContent: 'start'}}>
-      <Radio><FormattedMessage id='workspace.property-editor.page-setting.portrait'/></Radio>      
-      <Radio><FormattedMessage id='workspace.property-editor.page-setting.landscape'/></Radio>      
+    <div style={{display: pageSize == Consts.PAGE_SIZE_CUSTOM ? 'none' : 'flex', justifyContent: 'start', alignItems: 'center', padding: 4, }}>
+      <Radio.Group value={pageOrientation} onChange={handlePageOrientationChange}>
+        <Radio value={Consts.PAGE_ORIENTATION_PORTRAIT}><FormattedMessage id='workspace.property-editor.page-setting.portrait'/></Radio>      
+        <Radio value={Consts.PAGE_ORIENTATION_LANDSCAPE}><FormattedMessage id='workspace.property-editor.page-setting.landscape'/></Radio>      
+      </Radio.Group>
+    </div>
+    <div style={{display: pageSize == Consts.PAGE_SIZE_CUSTOM ? 'flex' : 'none', justifyContent: 'space-between', alignItems: 'center', padding: 4, }}>
+      <InputNumber size='small' style={{width: 70}} value={pageWidth} onChange={handlePageWidthChange} min={Consts.PAGE_SIZE_MIN} max={Consts.PAGE_SIZE_MAX}/>
+      <FormattedMessage id='workspace.property-editor.page-setting.width'/>
+      <InputNumber size='small' style={{width: 70}} value={pageHeight} onChange={handlePageHeightChange}  min={Consts.PAGE_SIZE_MIN} max={Consts.PAGE_SIZE_MAX}/>
+      <FormattedMessage id='workspace.property-editor.page-setting.height'/>
     </div>
   </div>
 
