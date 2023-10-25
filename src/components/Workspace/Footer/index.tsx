@@ -19,7 +19,7 @@ export default (props: any) => {
 
   return (
     <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: `${Utils.FOOTER_HEIGHT}px`, }}>
-      Footer{props.children}
+      {props.children}
     </div>
   )
 }
