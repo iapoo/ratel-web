@@ -27,6 +27,8 @@ export default {
   'workspace.header.title.stroke-color': 'Stroke Color',
   'workspace.header.title.undo': 'Undo',
   'workspace.header.title.zoom': 'Zoom',
+  'workspace.header.title.zoom-in': 'Zoom In',
+  'workspace.header.title.zoom-out': 'Zoom Out',
   'workspace.header.welcome': 'Welcome:',
   'workspace.navigator.panel.advanced': 'Advanced',
   'workspace.navigator.panel.arrows': 'Arrows',

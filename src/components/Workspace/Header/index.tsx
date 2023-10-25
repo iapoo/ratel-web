@@ -669,10 +669,10 @@ const Header: FC<HeaderProps> = ({
                   options={zoomOptions}
                 />
               </Tooltip>
-              <Tooltip title={<FormattedMessage id='workspace.header.title.undo'/>}>
+              <Tooltip title={<FormattedMessage id='workspace.header.title.zoom-out'/>}>
                 <Button shape="circle" type="text" size='small' icon={<ZoomInOutlined />} disabled={zoom >= zoomOptions[zoomOptions.length - 1].value}  onClick={handleZoomIn} />
               </Tooltip>
-              <Tooltip title={<FormattedMessage id='workspace.header.title.redo'/>}>
+              <Tooltip title={<FormattedMessage id='workspace.header.title.zoom-in'/>}>
                 <Button shape="circle" type="text" size='small' icon={<ZoomOutOutlined />} disabled={zoom <= zoomOptions[0].value } onClick={handleZoomOut} />
               </Tooltip>
               <Divider type='vertical' style={{ margin: 0 }} />
@@ -683,7 +683,7 @@ const Header: FC<HeaderProps> = ({
                 <Button shape="circle" type="text" size='small' icon={<RedoOutlined />} disabled={!editorRedoable} onClick={handleRedo} />
               </Tooltip>
               <Divider type='vertical' style={{ margin: 0 }} />
-              <Tooltip title={<FormattedMessage id='workspace.header.title.redo'/>}>
+              <Tooltip title={<FormattedMessage id='workspace.header.title.font-size'/>}>
                 <InputNumber min={Consts.FONT_SIZE_MIN} max={Consts.FONT_SIZE_MAX} value={fontSize} onChange={handleFontSizeChange} size='small' style={{ width: 60 }} disabled={!selectionValid} />
               </Tooltip>
               <Tooltip title={<FormattedMessage id='workspace.header.title.fill-color'/>}>

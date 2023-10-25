@@ -27,6 +27,8 @@ export default {
   'workspace.header.title.stroke-color': '边框颜色',
   'workspace.header.title.undo': '撤销',
   'workspace.header.title.zoom': '缩放',
+  'workspace.header.title.zoom-in': '放大',
+  'workspace.header.title.zoom-out': '缩小',
   'workspace.header.welcome': '欢迎：',
   'workspace.navigator.panel.basic': '基础',
   'workspace.navigator.panel.arrows': '箭头',
