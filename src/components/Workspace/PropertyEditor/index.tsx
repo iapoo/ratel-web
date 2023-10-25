@@ -345,7 +345,8 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
   }
 
   const strokeDashStyles = StrokeDashStyles.map(strokeDashStyle=> {
-    return {value: strokeDashStyle.name, label: intl.formatMessage({ id: strokeDashStyle.label})}
+    //return {value: strokeDashStyle.name, label: intl.formatMessage({ id: strokeDashStyle.label})}
+    return {value: strokeDashStyle.name, label: <img alt='intl.formatMessage({ id: strokeDashStyle.label})' src={'/images/line-' + strokeDashStyle.name + '.png'} width='64' height='12' />}
   })
 
   const shapeSettings = <div>

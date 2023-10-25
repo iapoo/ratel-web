@@ -1493,22 +1493,22 @@ export class Paint {
     this._strokeDashStyle = value
     switch(value) {
       case StrokeDashStyle.DASH: {
-        let pathEffect = Engine.canvasKit.PathEffect.MakeDash([5,5,2,8])
+        let pathEffect = Engine.canvasKit.PathEffect.MakeDash([10,2,10,2])
         this._source.setPathEffect(pathEffect)
         break;
       }
       case StrokeDashStyle.DOT:{
-        let pathEffect = Engine.canvasKit.PathEffect.MakeDash([5,5,2,8])
+        let pathEffect = Engine.canvasKit.PathEffect.MakeDash([2,2,2,2])
         this._source.setPathEffect(pathEffect)
         break;
       }
       case StrokeDashStyle.DASH_DOT:{
-        let pathEffect = Engine.canvasKit.PathEffect.MakeDash([5,5,2,8])
+        let pathEffect = Engine.canvasKit.PathEffect.MakeDash([10,2,2,2])
         this._source.setPathEffect(pathEffect)
         break;
       }
       case StrokeDashStyle.DASH_DOT_DOT:{
-        let pathEffect = Engine.canvasKit.PathEffect.MakeDash([5,5,2,8])
+        let pathEffect = Engine.canvasKit.PathEffect.MakeDash([10,2,2,2,2,2])
         this._source.setPathEffect(pathEffect)
         break;
       }
