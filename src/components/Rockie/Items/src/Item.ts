@@ -1,5 +1,5 @@
 /* eslint-disable max-params */
-import { Color, Colors, FontWeight, FontWidth, FontSlant, Paint, PaintStyle, Rectangle, Rotation, } from './../../../Engine'
+import { Color, Colors, FontWeight, FontWidth, FontSlant, Paint, PaintStyle, Rectangle, Rotation, StrokeDashStyle, } from './../../../Engine'
 import { Connector, } from './Connector'
 import { EntityShape, } from '../../Shapes'
 import { Editor, } from '../../Editor'
@@ -80,6 +80,12 @@ export abstract class Item implements EditorItem {
   private _textWrap: boolean = true
 
   private _multipleLines: boolean = true
+
+  private _filled: boolean = true
+
+  private _stroked: boolean = true
+
+  private _strokeDashStyle: StrokeDashStyle = StrokeDashStyle.SOLID
 
   public constructor (left: number, top: number, width: number, height: number) {
     this._boundary = Rectangle.makeLTWH(left, top, width, height)
@@ -203,6 +209,23 @@ export abstract class Item implements EditorItem {
     this.updateTheme()
   }
 
+  public get filled() {
+    return this._filled
+  }
+
+  public set filled(value: boolean) {
+    this._filled = value
+    this.updateTheme()
+  }
+
+  public get stroked() {
+    return this._stroked
+  }
+
+  public set stroked(value: boolean) {
+    this._stroked = value
+    this.updateTheme
+  }
   public get lineWidth() {
     return this._lineWidth
   }
@@ -302,22 +325,37 @@ export abstract class Item implements EditorItem {
     this.updateTheme()
   }
 
+  public get strokeDashStyle() {
+    return this._strokeDashStyle
+  }
+
+  public set strokeDashStyle(value: StrokeDashStyle) {
+    this._strokeDashStyle = value
+    this.updateTheme()
+  }
+
   public updateTheme() {
     if(this._useTheme) {
       this._shape.stroke.setColor(ThemeUtils.strokeColor)
       this._shape.fill.setColor(ThemeUtils.fillColor)
       this._shape.stroke.setStrokeWidth(ThemeUtils.lineWidth)
+      this._shape.stroke.setStrokeDashStyle(ThemeUtils.strokeDashStyle)
       //this._shape.font.fontSize = ThemeUtils.fontSize
       //this._shape.fontPaint.setColor(ThemeUtils.fontColor)
       this._shape.fontColor = ThemeUtils.fontColor
       this._shape.fontSize = ThemeUtils.fontSize
+      this._shape.filled = ThemeUtils.filled
+      this._shape.stroked = ThemeUtils.stroked
     } else {
       this._shape.stroke.setColor(this._strokeColor)
       this._shape.fill.setColor(this._fillColor)    
       this._shape.stroke.setStrokeWidth(this._lineWidth)
+      this._shape.stroke.setStrokeDashStyle(this._strokeDashStyle)
       //this._shape.font.fontSize = this._fontSize
       this._shape.fontColor = this._fontColor
       this._shape.fontSize = this._fontSize
+      this._shape.filled = this._filled
+      this._shape.stroked = this._stroked
       //this._shape.fontPaint.setColor(this._fontColor)
     }
   }
@@ -328,6 +366,7 @@ export abstract class Item implements EditorItem {
     this.lineWidth = ThemeUtils.lineWidth
     this.fontSize = ThemeUtils.fontSize
     this.fontColor = ThemeUtils.fontColor
+    this.strokeDashStyle = ThemeUtils.strokeDashStyle
     this.updateTheme()
 }
 

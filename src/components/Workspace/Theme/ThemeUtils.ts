@@ -1,4 +1,4 @@
-import {  Colors, Color, FontWeight, FontWidth, FontSlant, TextAlignment, TextDirection, } from '@/components/Engine'
+import {  Colors, Color, FontWeight, FontWidth, FontSlant, TextAlignment, TextDirection, StrokeDashStyle, } from '@/components/Engine'
 import { ClassicTheme } from './ClassicTheme'
 import { DarkTheme } from './DarkTheme'
 import { ThemeConstants } from './Theme'
@@ -14,6 +14,10 @@ export class ThemeUtils {
 
   public static get lineWidth(): number {
     return 2
+  }
+
+  public static get strokeDashStyle(): StrokeDashStyle {
+    return StrokeDashStyle.SOLID
   }
 
   public static get fontName(): string {
@@ -62,5 +66,12 @@ export class ThemeUtils {
     return false
   }
 
+  public static get stroked(): boolean {
+    return true
+  }
+
+  public static get filled(): boolean {
+    return true
+  }
 
 }

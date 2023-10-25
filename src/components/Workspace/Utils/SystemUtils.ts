@@ -2,7 +2,8 @@
  * 定义一些全局方法和状态信息
  */
 
-import { Color, Colors, Point2 } from "@/components/Engine";
+import { Color, Colors, Point2, StrokeDashStyle } from "@/components/Engine";
+import { Consts } from "./Consts";
 
 export class SystemUtils {
 
@@ -20,7 +21,7 @@ export class SystemUtils {
     public static generateID(): string {
         let d = new Date().getTime()
         if (window.performance && typeof window.performance.now === "function") {
-            d += performance.now() 
+            d += performance.now()
         }
         let id = 'xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
             const r = (d + Math.random() * 16) % 16 | 0;
@@ -40,14 +41,14 @@ export class SystemUtils {
      * @returns 
      */
     public static isPointString(point: string): boolean {
-        if(point && point.length >=3) {
+        if (point && point.length >= 3) {
             let index = point.indexOf(',')
-            if(index >= 1 && index < point.length - 1) {
+            if (index >= 1 && index < point.length - 1) {
                 let x = point.substring(0, index)
                 let y = point.substring(index + 1)
                 return this.isNumeric(x) && this.isNumeric(y)
             }
-        } 
+        }
         return false
     }
 
@@ -56,14 +57,14 @@ export class SystemUtils {
     }
 
     public static parsePointString(point: string): Point2 {
-        if(point && point.length >=3) {
+        if (point && point.length >= 3) {
             let index = point.indexOf(',')
-            if(index >= 1 && index < point.length - 1) {
+            if (index >= 1 && index < point.length - 1) {
                 let x = point.substring(0, index)
                 let y = point.substring(index + 1)
-                return new Point2(parseFloat(x),parseFloat(y))
+                return new Point2(parseFloat(x), parseFloat(y))
             }
-        } 
+        }
         return new Point2()
     }
 
@@ -82,26 +83,26 @@ export class SystemUtils {
      * @returns 
      */
     public static parseColorString(rgba: string | null): Color | null {
-        if(rgba  == null) {
+        if (rgba == null) {
             return null
         }
-        if(rgba && rgba.length == 9 && rgba[0] == '#') {
+        if (rgba && rgba.length == 9 && rgba[0] == '#') {
             let r = parseInt(rgba.slice(1, 3), 16)
             let g = parseInt(rgba.slice(3, 5), 16)
             let b = parseInt(rgba.slice(5, 7), 16)
-            let a = parseInt(rgba.slice(7, 9), 16)  
+            let a = parseInt(rgba.slice(7, 9), 16)
             return new Color(r, g, b, a);
-        } else if(rgba && rgba.length == 7 && rgba[0] == '#') {
+        } else if (rgba && rgba.length == 7 && rgba[0] == '#') {
             let r = parseInt(rgba.slice(1, 3), 16)
             let g = parseInt(rgba.slice(3, 5), 16)
             let b = parseInt(rgba.slice(5, 7), 16)
             let a = 255
             return new Color(r, g, b, a);
-        } 
+        }
 
         return Colors.White
     }
-    
+
     /**
      * REF: https://www.jb51.net/javascript/2915111pf.htm
      * REF: https://www.php.cn/faq/526256.html
@@ -119,6 +120,51 @@ export class SystemUtils {
         document.body.appendChild(alink);
         alink.click();
         document.body.removeChild(alink);
+    }
+
+    public static parseStrokeDashStyle(strokeDashStyle: string): StrokeDashStyle {
+        switch (strokeDashStyle) {
+            case Consts.STROKE_DASH_STYLE_DASH:
+                return StrokeDashStyle.DASH
+                break;
+            case Consts.STROKE_DASH_STYLE_DOT:
+                return StrokeDashStyle.DOT
+                break;
+            case Consts.STROKE_DASH_STYLE_DASH_DOT:
+                return StrokeDashStyle.DASH_DOT
+                break;
+            case Consts.STROKE_DASH_STYLE_DASH_DOT_DOT:
+                return StrokeDashStyle.DASH_DOT_DOT
+                break;
+            case Consts.STROKE_DASH_STYLE_SOLID:
+            default:
+                return StrokeDashStyle.SOLID
+                break;
+        }
+    }
+
+    public static generateStrokeDashStyle(strokeDashStyle: StrokeDashStyle): string {
+        switch(strokeDashStyle) {
+            case StrokeDashStyle.DASH: {
+              return  Consts.STROKE_DASH_STYLE_DASH
+              break;
+            }
+            case StrokeDashStyle.DOT:{
+                return  Consts.STROKE_DASH_STYLE_DOT
+            }
+            case StrokeDashStyle.DASH_DOT:{
+                return  Consts.STROKE_DASH_STYLE_DASH_DOT
+              break;
+            }
+            case StrokeDashStyle.DASH_DOT_DOT:{
+                return  Consts.STROKE_DASH_STYLE_DASH_DOT_DOT
+              break;
+            }
+            case StrokeDashStyle.SOLID:
+            default:
+                return  Consts.STROKE_DASH_STYLE_SOLID
+              break;
+        }
     }
 }
 

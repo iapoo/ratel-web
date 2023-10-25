@@ -67,6 +67,7 @@ export class Editor extends Painter {
   private _selectionChangeListeners = new Array<(e: EditorEvent) => void>(0) 
   private _operationService: OperationService = new OperationService()
   private _operationChangeListeners = new Array<(e: EditorEvent) => void>(0)
+  private _sizeChangeListeners = new Array<(e: EditorEvent) => void>(0)
   private _startEditorItemInfos: EditorItemInfo[] = []
   private _origWidth: number
   private _origHeight: number
@@ -192,6 +193,32 @@ export class Editor extends Painter {
     return index >= 0
   }
 
+
+  public get sizeChangeListeners() {
+    return this._sizeChangeListeners
+  }
+
+  public onsizeChange(callback: (e: EditorEvent) => void) {
+    const index = this._sizeChangeListeners.indexOf(callback)
+    if (index < 0) {
+      this._sizeChangeListeners.push(callback)
+    }
+  }  
+
+  public removesizeChange(callback: (e: EditorEvent) => void) {
+    const index = this._sizeChangeListeners.indexOf(callback)
+    if (index >= 0) {
+      this._sizeChangeListeners.splice(index, 1)
+    }
+  }
+  
+  public hassizeChange(callback: (e: EditorEvent) => void) {
+    const index = this._sizeChangeListeners.indexOf(callback)
+    return index >= 0
+  }
+
+  
+
   public get gridSize (): number {
     return this._gridSize
   }
@@ -237,7 +264,6 @@ export class Editor extends Painter {
     this._backgroundLayer.backgroundColor = value
   }
   
-
   public get inMoving (): boolean {
     return this._inMoving
   }
@@ -280,6 +306,7 @@ export class Editor extends Painter {
     this._origHeight = origHeight
     this._zoom = zoom
     this.resize(this._origWidth, this._origHeight)
+    this.triggerSizeChange()
   }
 
   public get action (): Action | undefined {
@@ -1245,6 +1272,13 @@ export class Editor extends Painter {
 
   private triggerSelectionChange() {
     this._selectionChangeListeners.forEach(callback => {
+      const event = new EditorEvent(this)
+      callback(event)
+    })
+  }
+
+  private triggerSizeChange() {
+    this._sizeChangeListeners.forEach(callback => {
       const event = new EditorEvent(this)
       callback(event)
     })
