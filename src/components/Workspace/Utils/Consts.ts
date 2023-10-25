@@ -47,7 +47,22 @@ export class Consts {
     public static PAGE_ORIENTATION_PORTRAIT = 'portrait'
     public static PAGE_ORIENTATION_LANDSCAPE = 'landscape'
 
+    public static STROKE_DASH_STYLE_SOLID = 'solid'
+    public static STROKE_DASH_STYLE_DASH = 'dash'
+    public static STROKE_DASH_STYLE_DOT = 'dot'
+    public static STROKE_DASH_STYLE_DASH_DOT = 'dash-dot'
+    public static STROKE_DASH_STYLE_DASH_DOT_DOT = 'dash-dot-dot'
+    public static STROKE_DASH_STYLE_CUSTOM = 'custom'
+
 }
+
+export const StrokeDashStyles =  [
+    {name: Consts.STROKE_DASH_STYLE_SOLID, label: 'workspace.property-editor.item-setting.stroke-dash-style.solid'},
+    {name: Consts.STROKE_DASH_STYLE_DASH, label: 'workspace.property-editor.item-setting.stroke-dash-style.dash'},
+    {name: Consts.STROKE_DASH_STYLE_DOT, label: 'workspace.property-editor.item-setting.stroke-dash-style.dot'},
+    {name: Consts.STROKE_DASH_STYLE_DASH_DOT, label: 'workspace.property-editor.item-setting.stroke-dash-style.dash-dot'},
+    {name: Consts.STROKE_DASH_STYLE_DASH_DOT_DOT, label: 'workspace.property-editor.item-setting.stroke-dash-style.dash-dot-dot'},
+]
 
 export const PageTypes = [
     {name: Consts.PAGE_SIZE_A0, label: 'workspace.property-editor.page-setting.page-size.a0', width: 4493.9, height: 3178.6},

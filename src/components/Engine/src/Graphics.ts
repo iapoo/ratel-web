@@ -1382,6 +1382,7 @@ export class ParagraphBuilder {
 
 export class Paint {
   private _source;
+  private _strokeDashStyle: StrokeDashStyle
 
   public static makeColorPaint (color: Color): Paint {
     const paint: Paint = new Paint()
@@ -1394,6 +1395,7 @@ export class Paint {
     } else {
       this._source = Engine.makePaint()
     }
+    this._strokeDashStyle = StrokeDashStyle.SOLID
   }
 
   public get source () {
@@ -1483,6 +1485,38 @@ export class Paint {
   public setStrokeMiter (strokeMiter: number) {}
   public setStrokeWidth (stokeWidth: number) {
     this._source.setStrokeWidth(stokeWidth)
+  }
+  public getStrokeDashStyle() {
+    return this._strokeDashStyle
+  }
+  public setStrokeDashStyle(value: StrokeDashStyle) {
+    this._strokeDashStyle = value
+    switch(value) {
+      case StrokeDashStyle.DASH: {
+        let pathEffect = Engine.canvasKit.PathEffect.MakeDash([5,5,2,8])
+        this._source.setPathEffect(pathEffect)
+        break;
+      }
+      case StrokeDashStyle.DOT:{
+        let pathEffect = Engine.canvasKit.PathEffect.MakeDash([5,5,2,8])
+        this._source.setPathEffect(pathEffect)
+        break;
+      }
+      case StrokeDashStyle.DASH_DOT:{
+        let pathEffect = Engine.canvasKit.PathEffect.MakeDash([5,5,2,8])
+        this._source.setPathEffect(pathEffect)
+        break;
+      }
+      case StrokeDashStyle.DASH_DOT_DOT:{
+        let pathEffect = Engine.canvasKit.PathEffect.MakeDash([5,5,2,8])
+        this._source.setPathEffect(pathEffect)
+        break;
+      }
+      case StrokeDashStyle.SOLID:
+      default:
+        this._source.setPathEffect(null)
+        break;
+      }
   }
 }
 
