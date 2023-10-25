@@ -140,6 +140,19 @@ const Navigator: FC<NavigatorProps> = ({
         </div>
       </div>
   }
+
+  const line = <Popover title={'Line'} placement='right' content={getPopoverContent('Line', 128, 128)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 180, width: 180,}}>
+    <Button type='text' onClick={() => addLine()} style={{padding: 2, display: 'table'}}>
+      <img src={`/shapes/Line.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+    </Button>
+  </Popover>
+
+  const table = <Popover title={'Table'} placement='right' content={getPopoverContent('Table', 128, 128)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 180, width: 180,}}>
+  <Button type='text' onClick={() => addTable()} style={{padding: 2, display: 'table'}}>
+    <img src={`/shapes/Table.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+  </Button>
+  </Popover>
+
   const shapes =  ShapeTypes.map(shapeType => {
     let width = 28
     let height = 28
@@ -162,6 +175,8 @@ const Navigator: FC<NavigatorProps> = ({
       label: <div style={{fontWeight: 'bolder'}}><FormattedMessage id='workspace.navigator.panel.general' /></div>,
       children: <Space size={2} wrap>
       {shapes}    
+      {line}
+      {table}
     </Space>,
     },
     {
