@@ -2,7 +2,7 @@
  * 定义一些全局方法和状态信息
  */
 
-import { Color, Colors, PlaceholderAlignment, Point2, StrokeDashStyle, TextAlignment } from "@/components/Engine";
+import { Color, Colors, TextVerticalAlignment, Point2, StrokeDashStyle, TextAlignment } from "@/components/Engine";
 import { Consts } from "./Consts";
 
 export class SystemUtils {
@@ -215,48 +215,30 @@ export class SystemUtils {
         }
     }
 
-    public static parsePlaceholderAligment(placeholderAlignment: string): PlaceholderAlignment {
-        switch (placeholderAlignment) {
-            case Consts.PLACE_HOLDER_ALIGNMENT_ABOVE_BASELINE:
-                return PlaceholderAlignment.ABOVE_BASELINE
-                break
-            case Consts.PLACE_HOLDER_ALIGNMENT_BASELINE:
-                return PlaceholderAlignment.BASELINE
-                break
-            case Consts.PLACE_HOLDER_ALIGNMENT_BELOW_BASELINE:
-                return PlaceholderAlignment.BELOW_BASELINE
-                break
+    public static parseTextVerticalAligment(textVerticalAlignment: string): TextVerticalAlignment {
+        switch (textVerticalAlignment) {
             case Consts.PLACE_HOLDER_ALIGNMENT_BOTTOM:
-                return PlaceholderAlignment.BOTTOM
+                return TextVerticalAlignment.BOTTOM
                 break
             case Consts.PLACE_HOLDER_ALIGNMENT_TOP:
-                return PlaceholderAlignment.TOP
+                return TextVerticalAlignment.TOP
                 break
             case Consts.PLACE_HOLDER_ALIGNMENT_MIDDLE:
             default:
-                return PlaceholderAlignment.MIDDLE
+                return TextVerticalAlignment.MIDDLE
                 break
         }
     }
 
-    public static generatePlaceholderAligment(placeholderAlignment: PlaceholderAlignment): string {
-        switch (placeholderAlignment) {
-            case PlaceholderAlignment.ABOVE_BASELINE:
-                return Consts.PLACE_HOLDER_ALIGNMENT_ABOVE_BASELINE
-                break
-            case PlaceholderAlignment.BASELINE:
-                return Consts.PLACE_HOLDER_ALIGNMENT_BASELINE
-                break
-            case PlaceholderAlignment.BELOW_BASELINE:
-                return Consts.PLACE_HOLDER_ALIGNMENT_BELOW_BASELINE
-                break
-            case PlaceholderAlignment.BOTTOM:
+    public static generateTextVerticalAligment(textVerticalAlignment: TextVerticalAlignment): string {
+        switch (textVerticalAlignment) {
+            case TextVerticalAlignment.BOTTOM:
                 return Consts.PLACE_HOLDER_ALIGNMENT_BOTTOM
                 break
-            case PlaceholderAlignment.TOP:
+            case TextVerticalAlignment.TOP:
                 return Consts.PLACE_HOLDER_ALIGNMENT_TOP
                 break
-            case PlaceholderAlignment.MIDDLE:
+            case TextVerticalAlignment.MIDDLE:
             default:
                 return Consts.PLACE_HOLDER_ALIGNMENT_MIDDLE
                 break

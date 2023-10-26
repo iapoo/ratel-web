@@ -1,4 +1,4 @@
-import {  Colors, Color, FontWeight, FontWidth, FontSlant, TextAlignment, TextDirection, StrokeDashStyle, TextDecoration, PlaceholderAlignment, } from '@/components/Engine'
+import {  Colors, Color, FontWeight, FontWidth, FontSlant, TextAlignment, TextDirection, StrokeDashStyle, TextDecoration, PlaceholderAlignment, TextVerticalAlignment, } from '@/components/Engine'
 import { ClassicTheme } from './ClassicTheme'
 import { DarkTheme } from './DarkTheme'
 import { ThemeConstants } from './Theme'
@@ -55,10 +55,10 @@ export class ThemeUtils {
     return TextDecoration.NONE
   }
 
-  public static get placeholderAlignment(): PlaceholderAlignment {
-    return PlaceholderAlignment.MIDDLE
+  public static get textVerticalAlignment(): TextVerticalAlignment {
+    return TextVerticalAlignment.MIDDLE
   }
-  
+
   public static get textDirection(): TextDirection {
     return TextDirection.LTR
   }

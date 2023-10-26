@@ -2,7 +2,7 @@
 /* eslint-disable max-params */
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
 
-import { Color, Colors, Font, FontSlant, FontWeight, GlyphRun, Graphics, Paint, Paragraph, ParagraphBuilder, ParagraphStyle, Path, PlaceholderAlignment, Point2, Rectangle, Rotation, RoundRectangle, Shape, ShapedLine, TextAlignment, TextBaseline, TextDecoration, TextDirection, TextStyle, } from '@/components/Engine'
+import { Color, Colors, Font, FontSlant, FontWeight, GlyphRun, Graphics, Paint, Paragraph, ParagraphBuilder, ParagraphStyle, Path, PlaceholderAlignment, Point2, Rectangle, Rotation, RoundRectangle, Shape, ShapedLine, TextAlignment, TextBaseline, TextDecoration, TextDirection, TextStyle, TextVerticalAlignment, } from '@/components/Engine'
 import { Block, CursorMaker, Style, } from './EntityUtils'
 
 export abstract class AbstractTextShape extends Shape {
@@ -22,7 +22,7 @@ export abstract class AbstractTextShape extends Shape {
     private _paragraph: Paragraph
     private _focused = false
     private _textPadding
-    private _placeholderAlignment
+    private _textVerticalAlignment: TextVerticalAlignment
 
     constructor (text = '', left = 0, top = 0, width = 100, height = 100) {
       super(left, top, width, height)
@@ -33,7 +33,7 @@ export abstract class AbstractTextShape extends Shape {
       this._fontPaint.setColor(Colors.Blue)
       // this.path.addRectangle(Rectangle.makeLTWH(0, 0, width, height))
       this.buildShape()
-      this._placeholderAlignment  = PlaceholderAlignment.MIDDLE
+      this._textVerticalAlignment  = TextVerticalAlignment.MIDDLE
       this._styles.push(new Style(this._text.length))
       this._paragraphStyle = new ParagraphStyle()
       this._paragraphBuilder = new ParagraphBuilder(this._paragraphStyle)
@@ -121,15 +121,14 @@ export abstract class AbstractTextShape extends Shape {
       this.buildLines()
     }
 
-    public get placeholderAlignment() {
-      return this._placeholderAlignment
+    public get textVerticalAlignment() {
+      return this._textVerticalAlignment
     }
 
-    public set placeholderAlignment(value: PlaceholderAlignment) {
-      this._placeholderAlignment = value
+    public set textVerticalAlignment(value: TextVerticalAlignment) {
+      this._textVerticalAlignment = value
       this.buildLines()
     }
-
 
     public get textPadding () {
       return this._textPadding
@@ -442,15 +441,15 @@ export abstract class AbstractTextShape extends Shape {
         let startX = this._textPadding
         let startY = this._textPadding
         let paragraphHeight = this._paragraph.getHeight()
-        switch(this._placeholderAlignment) {
-          case PlaceholderAlignment.TOP:
+        switch(this._textVerticalAlignment) {
+          case TextVerticalAlignment.TOP:
             break;
-          case PlaceholderAlignment.BOTTOM:
+          case TextVerticalAlignment.BOTTOM:
             startY = this.height - this._textPadding - paragraphHeight
             break;
-          case PlaceholderAlignment.MIDDLE:
+          case TextVerticalAlignment.MIDDLE:
+          default:            
             startY = this._textPadding + (this.height - this._textPadding * 2  - paragraphHeight) / 2
-            default:
             break;
         }
         graphics.drawGlyphs(gly, pos, startX, startY, f, p)

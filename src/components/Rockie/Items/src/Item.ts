@@ -1,5 +1,5 @@
 /* eslint-disable max-params */
-import { Color, Colors, FontWeight, FontWidth, FontSlant, Paint, PaintStyle, Rectangle, Rotation, StrokeDashStyle, TextDecoration, TextAlignment, TextDirection, PlaceholderAlignment, } from './../../../Engine'
+import { Color, Colors, FontWeight, FontWidth, FontSlant, Paint, PaintStyle, Rectangle, Rotation, StrokeDashStyle, TextDecoration, TextAlignment, TextDirection, TextVerticalAlignment, } from './../../../Engine'
 import { Connector, } from './Connector'
 import { EntityShape, } from '../../Shapes'
 import { Editor, } from '../../Editor'
@@ -79,7 +79,7 @@ export abstract class Item implements EditorItem {
 
   private _textDecoration: TextDecoration = TextDecoration.NONE
 
-  private _placeholderAlignment: PlaceholderAlignment = PlaceholderAlignment.MIDDLE
+  private _textVerticalAlignment: TextVerticalAlignment = TextVerticalAlignment.MIDDLE
 
   private _textWrap: boolean = true
 
@@ -320,12 +320,12 @@ export abstract class Item implements EditorItem {
     this.updateTheme()
   }
 
-  public get placeholderAlignment() {
-    return this._placeholderAlignment
+  public get textVerticalAlignment() {
+    return this._textVerticalAlignment
   }
 
-  public set placeholderAlignment(value: PlaceholderAlignment) {
-    this._placeholderAlignment = value
+  public set textVerticalAlignment(value: TextVerticalAlignment) {
+    this._textVerticalAlignment = value
     this.updateTheme()
   }
 
@@ -372,7 +372,7 @@ export abstract class Item implements EditorItem {
       this._shape.fontSlant = ThemeUtils.fontSlant
       this._shape.textDecoration = ThemeUtils.textDecoration
       this._shape.textAlignment = ThemeUtils.textAlignment
-      this._shape.placeholderAlignment = ThemeUtils.placeholderAlignment
+      this._shape.textVerticalAlignment = ThemeUtils.textVerticalAlignment
     } else {
       this._shape.stroke.setColor(this._strokeColor)
       this._shape.fill.setColor(this._fillColor)    
@@ -387,7 +387,7 @@ export abstract class Item implements EditorItem {
       this._shape.fontSlant = this._fontSlant
       this._shape.textDecoration = this._textDecoration
       this._shape.textAlignment = this._textAlignment
-      this._shape.placeholderAlignment = this._placeholderAlignment
+      this._shape.textVerticalAlignment = this._textVerticalAlignment
       //this._shape.fontPaint.setColor(this._fontColor)
     }
   }
@@ -403,7 +403,7 @@ export abstract class Item implements EditorItem {
     this.fontSlant = ThemeUtils.fontSlant
     this.textDecoration = ThemeUtils.textDecoration
     this.textAlignment = ThemeUtils.textAlignment
-    this.placeholderAlignment = ThemeUtils.placeholderAlignment
+    this.textVerticalAlignment = ThemeUtils.textVerticalAlignment
     this.updateTheme()
 }
 
