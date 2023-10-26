@@ -749,6 +749,7 @@ export class TextStyle {
       color: Colors.Black,
       fontSize: 14,
       fontFamilies: [ EngineUtils.FONT_NAME_SANS, ],
+      
     }
   ) {
     this._backgroundColor = textStyle.backgroundColor ? textStyle.backgroundColor : undefined

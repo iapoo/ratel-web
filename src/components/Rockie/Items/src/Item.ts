@@ -368,6 +368,11 @@ export abstract class Item implements EditorItem {
       this._shape.fontSize = ThemeUtils.fontSize
       this._shape.filled = ThemeUtils.filled
       this._shape.stroked = ThemeUtils.stroked
+      this._shape.fontWeight = ThemeUtils.fontWeight
+      this._shape.fontSlant = ThemeUtils.fontSlant
+      this._shape.textDecoration = ThemeUtils.textDecoration
+      this._shape.textAlignment = ThemeUtils.textAlignment
+      this._shape.placeholderAlignment = ThemeUtils.placeholderAlignment
     } else {
       this._shape.stroke.setColor(this._strokeColor)
       this._shape.fill.setColor(this._fillColor)    
@@ -378,6 +383,11 @@ export abstract class Item implements EditorItem {
       this._shape.fontSize = this._fontSize
       this._shape.filled = this._filled
       this._shape.stroked = this._stroked
+      this._shape.fontWeight = this._fontWeight
+      this._shape.fontSlant = this._fontSlant
+      this._shape.textDecoration = this._textDecoration
+      this._shape.textAlignment = this._textAlignment
+      this._shape.placeholderAlignment = this._placeholderAlignment
       //this._shape.fontPaint.setColor(this._fontColor)
     }
   }
@@ -389,6 +399,11 @@ export abstract class Item implements EditorItem {
     this.fontSize = ThemeUtils.fontSize
     this.fontColor = ThemeUtils.fontColor
     this.strokeDashStyle = ThemeUtils.strokeDashStyle
+    this.fontWeight = ThemeUtils.fontWeight
+    this.fontSlant = ThemeUtils.fontSlant
+    this.textDecoration = ThemeUtils.textDecoration
+    this.textAlignment = ThemeUtils.textAlignment
+    this.placeholderAlignment = ThemeUtils.placeholderAlignment
     this.updateTheme()
 }
 

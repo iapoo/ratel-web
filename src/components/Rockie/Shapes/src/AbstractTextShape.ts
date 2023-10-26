@@ -2,11 +2,11 @@
 /* eslint-disable max-params */
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
 
-import { Color, Colors, Font, GlyphRun, Graphics, Paint, Paragraph, ParagraphBuilder, ParagraphStyle, Path, Point2, Rectangle, Rotation, RoundRectangle, Shape, ShapedLine, } from '@/components/Engine'
+import { Color, Colors, Font, FontSlant, FontWeight, GlyphRun, Graphics, Paint, Paragraph, ParagraphBuilder, ParagraphStyle, Path, PlaceholderAlignment, Point2, Rectangle, Rotation, RoundRectangle, Shape, ShapedLine, TextAlignment, TextBaseline, TextDecoration, TextDirection, TextStyle, } from '@/components/Engine'
 import { Block, CursorMaker, Style, } from './EntityUtils'
 
 export abstract class AbstractTextShape extends Shape {
-    public static DEFAULT_TEXT_PADDING = 6
+    public static DEFAULT_TEXT_PADDING = 4
 
     private _text: string
     private _fontPaint: Paint
@@ -22,6 +22,7 @@ export abstract class AbstractTextShape extends Shape {
     private _paragraph: Paragraph
     private _focused = false
     private _textPadding
+    private _placeholderAlignment
 
     constructor (text = '', left = 0, top = 0, width = 100, height = 100) {
       super(left, top, width, height)
@@ -32,6 +33,7 @@ export abstract class AbstractTextShape extends Shape {
       this._fontPaint.setColor(Colors.Blue)
       // this.path.addRectangle(Rectangle.makeLTWH(0, 0, width, height))
       this.buildShape()
+      this._placeholderAlignment  = PlaceholderAlignment.MIDDLE
       this._styles.push(new Style(this._text.length))
       this._paragraphStyle = new ParagraphStyle()
       this._paragraphBuilder = new ParagraphBuilder(this._paragraphStyle)
@@ -79,29 +81,29 @@ export abstract class AbstractTextShape extends Shape {
     }
 
     public get fontWeight() {
-      return this._styles[0].size
+      return this._styles[0].bold ? FontWeight.BOLD : FontWeight.NORMAL
     }
 
-    public set fontWeight(value: number) {
-      this._styles[0].size = value
+    public set fontWeight(value: FontWeight) {
+      this._styles[0].bold = value == FontWeight.BOLD
       this.buildLines()
     }
 
     public get fontSlant() {
-      return this._styles[0].size
+      return this._styles[0].italic ? FontSlant.ITALIC : FontSlant.UP_RIGHT
     }
 
-    public set fontSlant(value: number) {
-      this._styles[0].size = value
+    public set fontSlant(value: FontSlant) {
+      this._styles[0].italic = value == FontSlant.ITALIC
       this.buildLines()
     }
 
     public get textDecoration() {
-      return this._styles[0].size
+      return this._styles[0].underline ? TextDecoration.UNDERLINE : TextDecoration.NONE
     }
 
-    public set textDecoration(value: number) {
-      this._styles[0].size = value
+    public set textDecoration(value: TextDecoration) {
+      this._styles[0].underline = value == TextDecoration.UNDERLINE
       this.buildLines()
     }
 
@@ -109,17 +111,22 @@ export abstract class AbstractTextShape extends Shape {
       return this._styles[0].size
     }
 
-    public set textAlignment(value: number) {
-      this._styles[0].size = value
+    public set textAlignment(value: TextAlignment) {
+      this._paragraphStyle = new ParagraphStyle({
+        maxLines: 0,
+        textAlignment: value,
+        textDirection: TextDirection.LTR,
+        textStyle: new TextStyle(),
+        })
       this.buildLines()
     }
 
     public get placeholderAlignment() {
-      return this._styles[0].size
+      return this._placeholderAlignment
     }
 
-    public set placeholderAlignment(value: number) {
-      this._styles[0].size = value
+    public set placeholderAlignment(value: PlaceholderAlignment) {
+      this._placeholderAlignment = value
       this.buildLines()
     }
 
@@ -432,7 +439,21 @@ export abstract class AbstractTextShape extends Shape {
           // LOG('    use entire glyph run')
         }
         // canvas.drawGlyphs(gly, pos, 0, 0, f, p)
-        graphics.drawGlyphs(gly, pos, this._textPadding, this._textPadding, f, p)
+        let startX = this._textPadding
+        let startY = this._textPadding
+        let paragraphHeight = this._paragraph.getHeight()
+        switch(this._placeholderAlignment) {
+          case PlaceholderAlignment.TOP:
+            break;
+          case PlaceholderAlignment.BOTTOM:
+            startY = this.height - this._textPadding - paragraphHeight
+            break;
+          case PlaceholderAlignment.MIDDLE:
+            startY = this._textPadding + (this.height - this._textPadding * 2  - paragraphHeight) / 2
+            default:
+            break;
+        }
+        graphics.drawGlyphs(gly, pos, startX, startY, f, p)
 
         if (s.underline) {
           const gap = 2
@@ -519,6 +540,8 @@ export abstract class AbstractTextShape extends Shape {
       // this.rebuildSelection()
 
       this._paragraphBuilder.reset()
+      this._paragraphBuilder = new ParagraphBuilder(this._paragraphStyle)
+      //this._paragraphBuilder.addPlaceholder(100, 100, this.placeholderAlignment, TextBaseline.ALPHABETIC, 1)
       let index = 0
       blocks.forEach(block => {
         this._paragraphBuilder.pushStyle(block.textStyle)
