@@ -139,7 +139,10 @@ const Header: FC<HeaderProps> = ({
       setFontBold(editorItem.fontWeight == FontWeight.BOLD)
       setFontItalic(editorItem.fontSlant == FontSlant.ITALIC)
       setFontUnderline(editorItem.textDecoration == TextDecoration.UNDERLINE)
-      //setTextAlignment(editorItem.textAlignment ==)
+      let textAlignmentValue = SystemUtils.generateTextAlignment(editorItem.textAlignment)
+      setTextAlignment(textAlignmentValue)
+      let placeholderAlignmentValue = SystemUtils.generatePlaceholderAligment(editorItem.placeholderAlignment)
+      setPlaceholderAlignment(placeholderAlignmentValue)
     } else {
       initializeSelectionInfo()
     }
@@ -538,22 +541,52 @@ const Header: FC<HeaderProps> = ({
 
   const handleBoldChanged = () => {
     setFontBold(!fontBold)
+    if(currentEditor) {
+      let editorItems = currentEditor.selectionLayer.getAllEditorItems()
+      editorItems.forEach(editorItem => {
+        editorItem.fontWeight = fontBold ? FontWeight.NORMAL : FontWeight.BOLD
+      })
+    }
   }
 
   const handleItalicChanged = () => {
     setFontItalic(!fontItalic)
+    if(currentEditor) {
+      let editorItems = currentEditor.selectionLayer.getAllEditorItems()
+      editorItems.forEach(editorItem => {
+        editorItem.fontSlant = fontItalic ? FontSlant.UP_RIGHT : FontSlant.ITALIC
+      })
+    }
   }
 
   const handleUnderlineChanged = () => {
     setFontUnderline(!fontUnderline)
+    if(currentEditor) {
+      let editorItems = currentEditor.selectionLayer.getAllEditorItems()
+      editorItems.forEach(editorItem => {
+        editorItem.textDecoration = fontUnderline ? TextDecoration.NONE : TextDecoration.UNDERLINE
+      })
+    }
   }
 
   const handleTextAlignmentChanged = (textAlignment: string) => {
     setTextAlignment(textAlignment)
+    if(currentEditor) {
+      let editorItems = currentEditor.selectionLayer.getAllEditorItems()
+      editorItems.forEach(editorItem => {
+        editorItem.textAlignment = SystemUtils.parseTextAlignment(textAlignment)
+      })
+    }
   }
 
   const handlePlaceholderAlignmentChanged = (placeholderAlignment: string) => {
     setPlaceholderAlignment(placeholderAlignment)
+    if(currentEditor) {
+      let editorItems = currentEditor.selectionLayer.getAllEditorItems()
+      editorItems.forEach(editorItem => {
+        editorItem.placeholderAlignment = SystemUtils.parsePlaceholderAligment(placeholderAlignment)
+      })
+    }
   }
 
   const handleLocale = (locale: string) => {
