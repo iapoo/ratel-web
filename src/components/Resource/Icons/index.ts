@@ -1,1 +1,1 @@
-export { PlaceHolder } from "./src/PlaceHolder"
+export { Placeholder } from "./src/Placeholder"
