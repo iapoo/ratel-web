@@ -215,8 +215,52 @@ export class SystemUtils {
         }
     }
 
-    public static parsePlaceholderAligment(placeholderAlignment: PlaceholderAlignment) {
+    public static parsePlaceholderAligment(placeholderAlignment: string): PlaceholderAlignment {
+        switch (placeholderAlignment) {
+            case Consts.PLACE_HOLDER_ALIGNMENT_ABOVE_BASELINE:
+                return PlaceholderAlignment.ABOVE_BASELINE
+                break
+            case Consts.PLACE_HOLDER_ALIGNMENT_BASELINE:
+                return PlaceholderAlignment.BASELINE
+                break
+            case Consts.PLACE_HOLDER_ALIGNMENT_BELOW_BASELINE:
+                return PlaceholderAlignment.BELOW_BASELINE
+                break
+            case Consts.PLACE_HOLDER_ALIGNMENT_BOTTOM:
+                return PlaceholderAlignment.BOTTOM
+                break
+            case Consts.PLACE_HOLDER_ALIGNMENT_TOP:
+                return PlaceholderAlignment.TOP
+                break
+            case Consts.PLACE_HOLDER_ALIGNMENT_MIDDLE:
+            default:
+                return PlaceholderAlignment.MIDDLE
+                break
+        }
+    }
 
+    public static generatePlaceholderAligment(placeholderAlignment: PlaceholderAlignment): string {
+        switch (placeholderAlignment) {
+            case PlaceholderAlignment.ABOVE_BASELINE:
+                return Consts.PLACE_HOLDER_ALIGNMENT_ABOVE_BASELINE
+                break
+            case PlaceholderAlignment.BASELINE:
+                return Consts.PLACE_HOLDER_ALIGNMENT_BASELINE
+                break
+            case PlaceholderAlignment.BELOW_BASELINE:
+                return Consts.PLACE_HOLDER_ALIGNMENT_BELOW_BASELINE
+                break
+            case PlaceholderAlignment.BOTTOM:
+                return Consts.PLACE_HOLDER_ALIGNMENT_BOTTOM
+                break
+            case PlaceholderAlignment.TOP:
+                return Consts.PLACE_HOLDER_ALIGNMENT_TOP
+                break
+            case PlaceholderAlignment.MIDDLE:
+            default:
+                return Consts.PLACE_HOLDER_ALIGNMENT_MIDDLE
+                break
+        }
     }
 }
 

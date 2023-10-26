@@ -78,6 +78,52 @@ export abstract class AbstractTextShape extends Shape {
       this.buildLines()
     }
 
+    public get fontWeight() {
+      return this._styles[0].size
+    }
+
+    public set fontWeight(value: number) {
+      this._styles[0].size = value
+      this.buildLines()
+    }
+
+    public get fontSlant() {
+      return this._styles[0].size
+    }
+
+    public set fontSlant(value: number) {
+      this._styles[0].size = value
+      this.buildLines()
+    }
+
+    public get textDecoration() {
+      return this._styles[0].size
+    }
+
+    public set textDecoration(value: number) {
+      this._styles[0].size = value
+      this.buildLines()
+    }
+
+    public get textAlignment() {
+      return this._styles[0].size
+    }
+
+    public set textAlignment(value: number) {
+      this._styles[0].size = value
+      this.buildLines()
+    }
+
+    public get placeholderAlignment() {
+      return this._styles[0].size
+    }
+
+    public set placeholderAlignment(value: number) {
+      this._styles[0].size = value
+      this.buildLines()
+    }
+
+
     public get textPadding () {
       return this._textPadding
     }

@@ -79,7 +79,7 @@ export abstract class Item implements EditorItem {
 
   private _textDecoration: TextDecoration = TextDecoration.NONE
 
-  private _placeHolderAlignment: PlaceholderAlignment = PlaceholderAlignment.MIDDLE
+  private _placeholderAlignment: PlaceholderAlignment = PlaceholderAlignment.MIDDLE
 
   private _textWrap: boolean = true
 
@@ -320,12 +320,12 @@ export abstract class Item implements EditorItem {
     this.updateTheme()
   }
 
-  public get placeHolderAlignment() {
-    return this._placeHolderAlignment
+  public get placeholderAlignment() {
+    return this._placeholderAlignment
   }
 
-  public set placeHolderAlignment(value: PlaceholderAlignment) {
-    this._placeHolderAlignment = value
+  public set placeholderAlignment(value: PlaceholderAlignment) {
+    this._placeholderAlignment = value
     this.updateTheme()
   }
 
