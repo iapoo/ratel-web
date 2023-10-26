@@ -63,7 +63,7 @@ const Header: FC<HeaderProps> = ({
   const [fontWidth, setFontWidth, ] = useState<string>(Consts.FONT_WIDTH_NORMAL)
   const [textAlignment, setTextAlignment, ] = useState<string>(Consts.TEXT_ALIGNMENT_LEFT)
   const [textDecoration, setTextDecoration, ] = useState<string>(Consts.TEXT_DECORATION_NONE)
-  const [placeholderAlignment, setPlaceholderAlignment, ] = useState<string>(Consts.PLACE_HOLDER_ALIGNMENT_MIDDLE)
+  const [textVerticalAlignment, setTextVerticalAlignment, ] = useState<string>(Consts.PLACE_HOLDER_ALIGNMENT_MIDDLE)
   const [fontBold, setFontBold, ] = useState<boolean>(false)
   const [fontItalic, setFontItalic,] = useState<boolean>(false)
   const [fontUnderline, setFontUnderline, ] = useState<boolean>(false)
@@ -141,8 +141,8 @@ const Header: FC<HeaderProps> = ({
       setFontUnderline(editorItem.textDecoration == TextDecoration.UNDERLINE)
       let textAlignmentValue = SystemUtils.generateTextAlignment(editorItem.textAlignment)
       setTextAlignment(textAlignmentValue)
-      let placeholderAlignmentValue = SystemUtils.generatePlaceholderAligment(editorItem.placeholderAlignment)
-      setPlaceholderAlignment(placeholderAlignmentValue)
+      let textVerticalAlignmentValue = SystemUtils.generateTextVerticalAligment(editorItem.textVerticalAlignment)
+      setTextVerticalAlignment(textVerticalAlignmentValue)
     } else {
       initializeSelectionInfo()
     }
@@ -579,12 +579,12 @@ const Header: FC<HeaderProps> = ({
     }
   }
 
-  const handlePlaceholderAlignmentChanged = (placeholderAlignment: string) => {
-    setPlaceholderAlignment(placeholderAlignment)
+  const handleTextVerticalAlignmentChanged = (textVerticalAlignment: string) => {
+    setTextVerticalAlignment(textVerticalAlignment)
     if(currentEditor) {
       let editorItems = currentEditor.selectionLayer.getAllEditorItems()
       editorItems.forEach(editorItem => {
-        editorItem.placeholderAlignment = SystemUtils.parsePlaceholderAligment(placeholderAlignment)
+        editorItem.textVerticalAlignment = SystemUtils.parseTextVerticalAligment(textVerticalAlignment)
       })
     }
   }
@@ -770,13 +770,13 @@ const Header: FC<HeaderProps> = ({
               </Tooltip>
               <Divider type='vertical' style={{ margin: 0 }} />
               <Tooltip title={<FormattedMessage id='workspace.header.title.text-top'/>}>
-                <Button type={placeholderAlignment == Consts.PLACE_HOLDER_ALIGNMENT_TOP ? 'primary' : 'text'} size='small' icon={<VerticalAlignTopOutlined/>} disabled={!selectionValid} onClick={() => handlePlaceholderAlignmentChanged(Consts.PLACE_HOLDER_ALIGNMENT_TOP)} />
+                <Button type={textVerticalAlignment == Consts.PLACE_HOLDER_ALIGNMENT_TOP ? 'primary' : 'text'} size='small' icon={<VerticalAlignTopOutlined/>} disabled={!selectionValid} onClick={() => handleTextVerticalAlignmentChanged(Consts.PLACE_HOLDER_ALIGNMENT_TOP)} />
               </Tooltip>
               <Tooltip title={<FormattedMessage id='workspace.header.title.text-middle'/>}>
-                <Button type={placeholderAlignment == Consts.PLACE_HOLDER_ALIGNMENT_MIDDLE ? 'primary' : 'text'} size='small' icon={<VerticalAlignMiddleOutlined/>} disabled={!selectionValid} onClick={() => handlePlaceholderAlignmentChanged(Consts.PLACE_HOLDER_ALIGNMENT_MIDDLE)} />
+                <Button type={textVerticalAlignment == Consts.PLACE_HOLDER_ALIGNMENT_MIDDLE ? 'primary' : 'text'} size='small' icon={<VerticalAlignMiddleOutlined/>} disabled={!selectionValid} onClick={() => handleTextVerticalAlignmentChanged(Consts.PLACE_HOLDER_ALIGNMENT_MIDDLE)} />
               </Tooltip>
               <Tooltip title={<FormattedMessage id='workspace.header.title.text-bottom'/>}>
-                <Button type={placeholderAlignment == Consts.PLACE_HOLDER_ALIGNMENT_BOTTOM ? 'primary' : 'text'} size='small' icon={<VerticalAlignBottomOutlined/>} disabled={!selectionValid} onClick={() => handlePlaceholderAlignmentChanged(Consts.PLACE_HOLDER_ALIGNMENT_BOTTOM)} />
+                <Button type={textVerticalAlignment == Consts.PLACE_HOLDER_ALIGNMENT_BOTTOM ? 'primary' : 'text'} size='small' icon={<VerticalAlignBottomOutlined/>} disabled={!selectionValid} onClick={() => handleTextVerticalAlignmentChanged(Consts.PLACE_HOLDER_ALIGNMENT_BOTTOM)} />
               </Tooltip>
               <Divider type='vertical' style={{ margin: 0 }} />
               <Tooltip title={<FormattedMessage id='workspace.header.title.font-size'/>}>

@@ -426,6 +426,12 @@ export enum TextAlignment {
   END = 5,
 }
 
+export enum TextVerticalAlignment {
+  TOP = 0,
+  BOTTOM = 1,
+  MIDDLE = 2,
+}
+
 export enum PlaceholderAlignment {
   BASELINE = 0,
   ABOVE_BASELINE = 1,
