@@ -1,4 +1,4 @@
-import { Color, FontSlant, FontWeight, FontWidth, Rectangle, Rotation, StrokeDashStyle, TextAlignment, TextDirection, } from '@/components/Engine'
+import { Color, FontSlant, FontWeight, FontWidth, Rectangle, Rotation, StrokeDashStyle, TextAlignment, TextDecoration, TextDirection, } from '@/components/Engine'
 import { EntityShape, } from '../../Shapes'
 import { EditorItemInfo } from '../../Items';
 import { Editor } from '../../Editor';
@@ -31,6 +31,7 @@ export interface EditorItem {
   fontSlant: FontSlant
   textAlignment: TextAlignment
   textDirection: TextDirection
+  textDecoration: TextDecoration
   textWrap: boolean
   multipleLines: boolean
   filled: boolean

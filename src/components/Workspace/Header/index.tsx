@@ -7,14 +7,14 @@ import { setInterval } from 'timers'
 import { UserInfo } from '../Utils/RequestUtils'
 import LoginFormWindow from './LoginFormWindow'
 import NewFileWindow from './NewFileWindow';
-import { CheckOutlined, DownloadOutlined, FileAddOutlined, FileOutlined, FileTextOutlined, FolderOpenOutlined, FormOutlined, RedoOutlined, SaveOutlined, SearchOutlined, SettingOutlined, SolutionOutlined, UndoOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons';
+import { AlignCenterOutlined, AlignLeftOutlined, AlignRightOutlined, BoldOutlined, CheckOutlined, DownloadOutlined, FileAddOutlined, FileOutlined, FileTextOutlined, FolderOpenOutlined, FormOutlined, ItalicOutlined, RedoOutlined, SaveOutlined, SearchOutlined, SettingOutlined, SolutionOutlined, UnderlineOutlined, UndoOutlined, VerticalAlignBottomOutlined, VerticalAlignMiddleOutlined, VerticalAlignTopOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons';
 import OpenFileWindow from './OpenFileWindow';
 import { StorageService } from '../Storage';
 import { Rectangle } from '@/components/Resource/LargeIcons';
-import { EngineUtils, Font, GraphicsUtils, Point2, TextShape } from '@/components/Engine';
+import { EngineUtils, Font, FontSlant, FontWeight, GraphicsUtils, Point2, TextDecoration, TextShape } from '@/components/Engine';
 import { Editor, EditorEvent } from '@/components/Rockie/Editor';
 import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
-import { PlaceHolder, } from '@/components/Resource/Icons'
+import { Placeholder, } from '@/components/Resource/Icons'
 import { OperationType } from '@/components/Rockie/Operations';
 import { Item, ShapeEntity, ShapeTypes } from '@/components/Rockie/Items';
 import { ShapeAction } from '@/components/Rockie/Actions';
@@ -58,6 +58,15 @@ const Header: FC<HeaderProps> = ({
   const [zoom, setZoom,] = useState<number>(currentEditor? currentEditor.zoom : Consts.ZOOM_DEFAULT)
   const [fontSize, setFontSize,] = useState<number>(Consts.FONT_SIZE_DEFAULT)
   const [fontColor, setFontColor, ] = useState<string>(Consts.COLOR_FONT_DEFAULT)
+  const [fontWeight, setFontWeight, ] = useState<string>(Consts.FONT_WEIGHT_NORMAL)
+  const [fontSlant, setFontSlant, ] = useState<string>(Consts.FONT_SLANT_UP_RIGHT)
+  const [fontWidth, setFontWidth, ] = useState<string>(Consts.FONT_WIDTH_NORMAL)
+  const [textAlignment, setTextAlignment, ] = useState<string>(Consts.TEXT_ALIGNMENT_LEFT)
+  const [textDecoration, setTextDecoration, ] = useState<string>(Consts.TEXT_DECORATION_NONE)
+  const [placeholderAlignment, setPlaceholderAlignment, ] = useState<string>(Consts.PLACE_HOLDER_ALIGNMENT_MIDDLE)
+  const [fontBold, setFontBold, ] = useState<boolean>(false)
+  const [fontItalic, setFontItalic,] = useState<boolean>(false)
+  const [fontUnderline, setFontUnderline, ] = useState<boolean>(false)
   const [selectionValid, setSelectionValid,] = useState<boolean>(false)
   const [editorUndoable, setEditorUndoable,] = useState<boolean>(false)
   const [editorRedoable, setEditorRedoable,] = useState<boolean>(false)
@@ -127,6 +136,10 @@ const Header: FC<HeaderProps> = ({
       let fontColorValue = SystemUtils.generateColorString(editorItem.fontColor)
       setFontColor(fontColorValue.substring(0, 7))
       //setFontColor(shape.fontPaint.getColor)
+      setFontBold(editorItem.fontWeight == FontWeight.BOLD)
+      setFontItalic(editorItem.fontSlant == FontSlant.ITALIC)
+      setFontUnderline(editorItem.textDecoration == TextDecoration.UNDERLINE)
+      //setTextAlignment(editorItem.textAlignment ==)
     } else {
       initializeSelectionInfo()
     }
@@ -523,6 +536,26 @@ const Header: FC<HeaderProps> = ({
     }
   }
 
+  const handleBoldChanged = () => {
+    setFontBold(!fontBold)
+  }
+
+  const handleItalicChanged = () => {
+    setFontItalic(!fontItalic)
+  }
+
+  const handleUnderlineChanged = () => {
+    setFontUnderline(!fontUnderline)
+  }
+
+  const handleTextAlignmentChanged = (textAlignment: string) => {
+    setTextAlignment(textAlignment)
+  }
+
+  const handlePlaceholderAlignmentChanged = (placeholderAlignment: string) => {
+    setPlaceholderAlignment(placeholderAlignment)
+  }
+
   const handleLocale = (locale: string) => {
     setLocale(locale, false)
     messageApi.info(intl.formatMessage({ id: 'workspace.header.message-apply-locale' }))
@@ -599,8 +632,8 @@ const Header: FC<HeaderProps> = ({
   const optionItems: MenuProps['items'] = [
     {
       key: 'Language', label: 'Language', children: [
-        { key: 'zh-CN', label: '中文', onClick: () => handleLocale('zh-CN'), icon: getLocale() == 'zh-CN' ? <CheckOutlined /> : <PlaceHolder />, },
-        { key: 'en-US', label: 'English(US)', onClick: () => handleLocale('en-US'), icon: getLocale() == 'en-US' ? <CheckOutlined /> : <PlaceHolder />, },
+        { key: 'zh-CN', label: '中文', onClick: () => handleLocale('zh-CN'), icon: getLocale() == 'zh-CN' ? <CheckOutlined /> : <Placeholder />, },
+        { key: 'en-US', label: 'English(US)', onClick: () => handleLocale('en-US'), icon: getLocale() == 'en-US' ? <CheckOutlined /> : <Placeholder />, },
       ]
     },
     { key: 'OpenFrom', label: 'OpenFrom', },
@@ -670,17 +703,47 @@ const Header: FC<HeaderProps> = ({
                 />
               </Tooltip>
               <Tooltip title={<FormattedMessage id='workspace.header.title.zoom-out'/>}>
-                <Button shape="circle" type="text" size='small' icon={<ZoomInOutlined />} disabled={zoom >= zoomOptions[zoomOptions.length - 1].value}  onClick={handleZoomIn} />
+                <Button type="text" size='small' icon={<ZoomInOutlined />} disabled={zoom >= zoomOptions[zoomOptions.length - 1].value}  onClick={handleZoomIn} />
               </Tooltip>
               <Tooltip title={<FormattedMessage id='workspace.header.title.zoom-in'/>}>
-                <Button shape="circle" type="text" size='small' icon={<ZoomOutOutlined />} disabled={zoom <= zoomOptions[0].value } onClick={handleZoomOut} />
+                <Button type="text" size='small' icon={<ZoomOutOutlined />} disabled={zoom <= zoomOptions[0].value } onClick={handleZoomOut} />
               </Tooltip>
               <Divider type='vertical' style={{ margin: 0 }} />
               <Tooltip title={<FormattedMessage id='workspace.header.title.undo'/>}>
-                <Button shape="circle" type="text" size='small' icon={<UndoOutlined />} disabled={!editorUndoable} onClick={handleUndo} />
+                <Button type="text" size='small' icon={<UndoOutlined />} disabled={!editorUndoable} onClick={handleUndo} />
               </Tooltip>
               <Tooltip title={<FormattedMessage id='workspace.header.title.redo'/>}>
-                <Button shape="circle" type="text" size='small' icon={<RedoOutlined />} disabled={!editorRedoable} onClick={handleRedo} />
+                <Button type="text" size='small' icon={<RedoOutlined />} disabled={!editorRedoable} onClick={handleRedo} />
+              </Tooltip>
+              <Divider type='vertical' style={{ margin: 0 }} />
+              <Tooltip title={<FormattedMessage id='workspace.header.title.font-bold'/>}>
+                <Button type={fontBold ? 'primary' : 'text'} size='small' icon={<BoldOutlined/>} disabled={!selectionValid} onClick={handleBoldChanged} />
+                </Tooltip>
+              <Tooltip title={<FormattedMessage id='workspace.header.title.font-italic'/>}>
+                <Button type={fontItalic ? 'primary' : 'text'} size='small' icon={<ItalicOutlined/>} disabled={!selectionValid} onClick={handleItalicChanged} />
+                </Tooltip>
+              <Tooltip title={<FormattedMessage id='workspace.header.title.font-underline'/>}>
+                <Button type={fontUnderline ? 'primary' : 'text'} size='small' icon={<UnderlineOutlined/>} disabled={!selectionValid} onClick={handleUnderlineChanged} />
+              </Tooltip>
+              <Divider type='vertical' style={{ margin: 0 }} />
+              <Tooltip title={<FormattedMessage id='workspace.header.title.text-left'/>}>
+                <Button type={textAlignment == Consts.TEXT_ALIGNMENT_LEFT ? 'primary' : 'text'} size='small' icon={<AlignLeftOutlined/>} disabled={!selectionValid} onClick={() => handleTextAlignmentChanged(Consts.TEXT_ALIGNMENT_LEFT)} />
+              </Tooltip>
+              <Tooltip title={<FormattedMessage id='workspace.header.title.text-center'/>}>
+                <Button type={textAlignment == Consts.TEXT_ALIGNMENT_CENTER ? 'primary' : 'text'} size='small' icon={<AlignCenterOutlined/>} disabled={!selectionValid} onClick={() => handleTextAlignmentChanged(Consts.TEXT_ALIGNMENT_CENTER)} />
+              </Tooltip>
+              <Tooltip title={<FormattedMessage id='workspace.header.title.text-right'/>}>
+                <Button type={textAlignment == Consts.TEXT_ALIGNMENT_RIGHT ? 'primary' : 'text'} size='small' icon={<AlignRightOutlined/>} disabled={!selectionValid} onClick={() => handleTextAlignmentChanged(Consts.TEXT_ALIGNMENT_RIGHT)} />
+              </Tooltip>
+              <Divider type='vertical' style={{ margin: 0 }} />
+              <Tooltip title={<FormattedMessage id='workspace.header.title.text-top'/>}>
+                <Button type={placeholderAlignment == Consts.PLACE_HOLDER_ALIGNMENT_TOP ? 'primary' : 'text'} size='small' icon={<VerticalAlignTopOutlined/>} disabled={!selectionValid} onClick={() => handlePlaceholderAlignmentChanged(Consts.PLACE_HOLDER_ALIGNMENT_TOP)} />
+              </Tooltip>
+              <Tooltip title={<FormattedMessage id='workspace.header.title.text-middle'/>}>
+                <Button type={placeholderAlignment == Consts.PLACE_HOLDER_ALIGNMENT_MIDDLE ? 'primary' : 'text'} size='small' icon={<VerticalAlignMiddleOutlined/>} disabled={!selectionValid} onClick={() => handlePlaceholderAlignmentChanged(Consts.PLACE_HOLDER_ALIGNMENT_MIDDLE)} />
+              </Tooltip>
+              <Tooltip title={<FormattedMessage id='workspace.header.title.text-bottom'/>}>
+                <Button type={placeholderAlignment == Consts.PLACE_HOLDER_ALIGNMENT_BOTTOM ? 'primary' : 'text'} size='small' icon={<VerticalAlignBottomOutlined/>} disabled={!selectionValid} onClick={() => handlePlaceholderAlignmentChanged(Consts.PLACE_HOLDER_ALIGNMENT_BOTTOM)} />
               </Tooltip>
               <Divider type='vertical' style={{ margin: 0 }} />
               <Tooltip title={<FormattedMessage id='workspace.header.title.font-size'/>}>

@@ -392,7 +392,7 @@ export enum FontWidth {
   ULTRA_CONDENSED = 0,
   EXTRA_CONDENSED = 1,
   CONDENSED = 2,
-  SEMI_CONDESED = 3,
+  SEMI_CONDENSED = 3,
   NORMAL = 4,
   SEMI_EXPANDED = 5,
   EXPANDED = 6,
@@ -1058,7 +1058,7 @@ export class GraphicsUtils {
     case FontWidth.CONDENSED:
       fontWidth = Engine.canvasKit.FontWidth.Condensed
       break
-    case FontWidth.SEMI_CONDESED:
+    case FontWidth.SEMI_CONDENSED:
       fontWidth = Engine.canvasKit.FontWidth.SemiCondensed
       break
     case FontWidth.NORMAL:

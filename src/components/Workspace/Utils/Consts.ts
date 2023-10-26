@@ -54,6 +54,50 @@ export class Consts {
     public static STROKE_DASH_STYLE_DASH_DOT_DOT = 'dash-dot-dot'
     public static STROKE_DASH_STYLE_CUSTOM = 'custom'
 
+    public static FONT_WEIGHT_INVISIBLE = 'invisible'
+    public static FONT_WEIGHT_THIN = 'thin'
+    public static FONT_WEIGHT_EXTRA_LIGNT = 'extra-thin'
+    public static FONT_WEIGHT_LIGHT = 'light'
+    public static FONT_WEIGHT_NORMAL = 'normal'
+    public static FONT_WEIGHT_MEDIUM = 'medium'
+    public static FONT_WEIGHT_SEMI_BOLD = 'semi-bold'
+    public static FONT_WEIGHT_BOLD = 'bold'
+    public static FONT_WEIGHT_EXTRA_BOLD = 'extra-bold'
+    public static FONT_WEIGHT_BLACK = 'black'
+    public static FONT_WEIGHT_EXTRA_BLACK = 'extra-black'
+
+    public static FONT_WIDTH_ULTRA_CONDENSED = 'ultra-condensed'
+    public static FONT_WIDTH_EXTRA_CONDENSED = 'extra-condested'
+    public static FONT_WIDTH_CONDENSED = 'condensed'
+    public static FONT_WIDTH_SEMI_CONDENSED = 'semi-condensed'
+    public static FONT_WIDTH_NORMAL = 'normal'
+    public static FONT_WIDTH_SEMI_EXPANDED = 'semi-expanded'
+    public static FONT_WIDTH_EXPANDED = 'expanded'
+    public static FONT_WIDTH_EXTRA_EXPANDED = 'extra-expanded'
+    public static FONT_WIDTH_ULTRA_EXPANDED = 'ultra-expanded'
+
+    public static FONT_SLANT_UP_RIGHT = 'up-right'
+    public static FONT_SLANT_ITALIC = 'italic'
+    public static FONT_SLANT_OBLIQUE = 'oblique'
+
+    public static TEXT_DECORATION_NONE = 'none'
+    public static TEXT_DECORATION_UNDERLINE = 'underline'
+    public static TEXT_DECORATION_OVERLINE = 'overline'
+    public static TEXT_DECORATION_LINETHROUGH = 'linethrough'
+
+    public static TEXT_ALIGNMENT_LEFT = 'left'
+    public static TEXT_ALIGNMENT_RIGHT = 'right'
+    public static TEXT_ALIGNMENT_CENTER = 'center'
+    public static TEXT_ALIGNMENT_JUSTIFY = 'justify'
+    public static TEXT_ALIGNMENT_START = 'start'
+    public static TEXT_ALIGNMENT_END = 'end'
+
+    public static PLACE_HOLDER_ALIGNMENT_BASELINE = 'baseline'
+    public static PLACE_HOLDER_ALIGNMENT_ABOVE_BASELINE = 'above-baseline'
+    public static PLACE_HOLDER_ALIGNMENT_BELOW_BASELINE = 'below-baseline'
+    public static PLACE_HOLDER_ALIGNMENT_TOP = 'top'
+    public static PLACE_HOLDER_ALIGNMENT_BOTTOM = 'bottom'
+    public static PLACE_HOLDER_ALIGNMENT_MIDDLE = 'middle'
 }
 
 export const StrokeDashStyles =  [

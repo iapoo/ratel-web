@@ -1,5 +1,5 @@
 /* eslint-disable max-params */
-import { Color, Colors, FontWeight, FontWidth, FontSlant, Paint, PaintStyle, Rectangle, Rotation, StrokeDashStyle, } from './../../../Engine'
+import { Color, Colors, FontWeight, FontWidth, FontSlant, Paint, PaintStyle, Rectangle, Rotation, StrokeDashStyle, TextDecoration, TextAlignment, TextDirection, PlaceholderAlignment, } from './../../../Engine'
 import { Connector, } from './Connector'
 import { EntityShape, } from '../../Shapes'
 import { Editor, } from '../../Editor'
@@ -73,9 +73,13 @@ export abstract class Item implements EditorItem {
 
   private _fontSlant: FontSlant = FontSlant.UP_RIGHT
 
-  private _textAlignment: number = 1
+  private _textAlignment: TextAlignment = TextAlignment.LEFT
 
-  private _textDirection: number = 1
+  private _textDirection: TextDirection = TextDirection.LTR
+
+  private _textDecoration: TextDecoration = TextDecoration.NONE
+
+  private _placeHolderAlignment: PlaceholderAlignment = PlaceholderAlignment.MIDDLE
 
   private _textWrap: boolean = true
 
@@ -293,7 +297,7 @@ export abstract class Item implements EditorItem {
     return this._textAlignment
   }
 
-  public set textAlignment(value: number) {
+  public set textAlignment(value: TextAlignment) {
     this._textAlignment = value
     this.updateTheme()
   }
@@ -302,8 +306,26 @@ export abstract class Item implements EditorItem {
     return this._textDirection
   }
 
-  public set textDirection(value: number) {
+  public set textDirection(value: TextDirection) {
     this._textDirection = value
+    this.updateTheme()
+  }
+
+  public get textDecoration() {
+    return this._textDecoration
+  }
+
+  public set textDecoration(value: TextDecoration) {
+    this._textDecoration = value
+    this.updateTheme()
+  }
+
+  public get placeHolderAlignment() {
+    return this._placeHolderAlignment
+  }
+
+  public set placeHolderAlignment(value: PlaceholderAlignment) {
+    this._placeHolderAlignment = value
     this.updateTheme()
   }
 

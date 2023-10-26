@@ -2,7 +2,7 @@
  * 定义一些全局方法和状态信息
  */
 
-import { Color, Colors, Point2, StrokeDashStyle } from "@/components/Engine";
+import { Color, Colors, PlaceholderAlignment, Point2, StrokeDashStyle, TextAlignment } from "@/components/Engine";
 import { Consts } from "./Consts";
 
 export class SystemUtils {
@@ -144,27 +144,79 @@ export class SystemUtils {
     }
 
     public static generateStrokeDashStyle(strokeDashStyle: StrokeDashStyle): string {
-        switch(strokeDashStyle) {
+        switch (strokeDashStyle) {
             case StrokeDashStyle.DASH: {
-              return  Consts.STROKE_DASH_STYLE_DASH
-              break;
+                return Consts.STROKE_DASH_STYLE_DASH
+                break;
             }
-            case StrokeDashStyle.DOT:{
-                return  Consts.STROKE_DASH_STYLE_DOT
+            case StrokeDashStyle.DOT: {
+                return Consts.STROKE_DASH_STYLE_DOT
             }
-            case StrokeDashStyle.DASH_DOT:{
-                return  Consts.STROKE_DASH_STYLE_DASH_DOT
-              break;
+            case StrokeDashStyle.DASH_DOT: {
+                return Consts.STROKE_DASH_STYLE_DASH_DOT
+                break;
             }
-            case StrokeDashStyle.DASH_DOT_DOT:{
-                return  Consts.STROKE_DASH_STYLE_DASH_DOT_DOT
-              break;
+            case StrokeDashStyle.DASH_DOT_DOT: {
+                return Consts.STROKE_DASH_STYLE_DASH_DOT_DOT
+                break;
             }
             case StrokeDashStyle.SOLID:
             default:
-                return  Consts.STROKE_DASH_STYLE_SOLID
-              break;
+                return Consts.STROKE_DASH_STYLE_SOLID
+                break;
         }
+    }
+
+    public static parseTextAlignment(textAlignment: string): TextAlignment {
+        switch (textAlignment) {
+            case Consts.TEXT_ALIGNMENT_CENTER:
+                return TextAlignment.CENTER
+                break;
+            case Consts.TEXT_ALIGNMENT_END:
+                return TextAlignment.END
+                break;
+            case Consts.TEXT_ALIGNMENT_JUSTIFY:
+                return TextAlignment.JUSTIFY
+                break;
+            case Consts.TEXT_ALIGNMENT_RIGHT:
+                return TextAlignment.RIGHT
+                break;
+            case Consts.TEXT_ALIGNMENT_START:
+                return TextAlignment.START
+                break;
+            case Consts.TEXT_ALIGNMENT_LEFT:
+            default:
+                return TextAlignment.LEFT
+                break;
+        }
+    }
+
+    public static generateTextAlignment(textAlignment: TextAlignment): string {
+        switch (textAlignment) {
+            case TextAlignment.CENTER:
+                return Consts.TEXT_ALIGNMENT_CENTER
+                break;
+            case TextAlignment.END:
+                return Consts.TEXT_ALIGNMENT_END
+                break;
+            case TextAlignment.JUSTIFY:
+                return Consts.TEXT_ALIGNMENT_JUSTIFY
+                break;
+            case TextAlignment.RIGHT:
+                return Consts.TEXT_ALIGNMENT_RIGHT
+                break;
+            case TextAlignment.START:
+                return Consts.TEXT_ALIGNMENT_START
+                break;
+            case TextAlignment.LEFT:
+            default:
+                return Consts.TEXT_ALIGNMENT_LEFT
+                break;
+        }
+    }
+
+    public static parsePlaceholderAligment(placeholderAlignment: PlaceholderAlignment) {
+
     }
 }
 
