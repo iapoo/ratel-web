@@ -45,7 +45,7 @@
     "axios": "^0.19.2",
     "bizcharts": "^4.0.14",
     "braft-editor": "^2.3.9",
-    "canvaskit-wasm": "0.37.0",
+    "canvaskit-wasm": "0.39.1",
     "crypto-js": "^4.0.0",
     "dva": "^2.6.0-beta.6",
     "flv.js": "^1.5.0",
