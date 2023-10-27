@@ -40,7 +40,6 @@ export abstract class AbstractTextShape extends Shape {
       this._paragraphBuilder.addText(this._text)
       this._paragraph = this._paragraphBuilder.build()
       this._paragraph.layout(width - this._textPadding * 2)
-
       this.insert(text)
       // const style = new Style(2, EngineUtils.FONT_NAME_SERIF, 36)
       // this.applyStyleToRange(style, 1, 3)
@@ -188,7 +187,7 @@ export abstract class AbstractTextShape extends Shape {
      * Skia will fail if no space here
      */
     public handleReturn () {
-      this.insert('\r\n ')
+      this.insert('\r\n')
     }
 
     public selectAll () {
@@ -511,34 +510,26 @@ export abstract class AbstractTextShape extends Shape {
     }
 
     private buildLines () {
-      // console.log('hello2')
-      const build_sparse = true
       const blocks = new Array<Block>(0)
       let block = null
       for (const s of this._styles) {
-        if (build_sparse) {
-          if (!block || (block.typefaceName === s.typeFaceName && block.size === s.size)) {
-            if (!block) {
-              block = new Block(s.typeFaceName, 0, s.size)
-            }
-            block.length += s.length
-          } else {
-            blocks.push(block)
-            block = new Block(s.typeFaceName, s.length, s.size)
+        if (!block || (block.typefaceName === s.typeFaceName && block.size === s.size)) {
+          if (!block) {
+            block = new Block(s.typeFaceName, 0, s.size)
           }
+          block.length += s.length
         } else {
-          // force a block on every style boundary for now
-          blocks.push(new Block(s.typeFaceName, s.length, s.size))
+          blocks.push(block)
+          block = new Block(s.typeFaceName, s.length, s.size)
         }
       }
-      if (build_sparse && block) {
+      if (block) {
         blocks.push(block)
       }
 
       // this._lines = Graphics.shapeText(this._text, blocks, this.width)
       // this.rebuildSelection()
 
-      this._paragraphBuilder.reset()
       this._paragraphBuilder = new ParagraphBuilder(this._paragraphStyle)
       //this._paragraphBuilder.addPlaceholder(100, 100, this.placeholderAlignment, TextBaseline.ALPHABETIC, 1)
       let index = 0
@@ -551,24 +542,20 @@ export abstract class AbstractTextShape extends Shape {
       this._paragraph.layout(this.width - this._textPadding * 2)
       this._lines = this._paragraph.getShapedLines()
 
-      // add textRange to each run, to aid in drawing
       this._runs.length = 0
       let startIndex = 0
-      for (const l of this._lines) {
-        for (const r of l.runs) {
-          // offset can't support chinese set and so we replace with indices
-          r.indices = []
-          r.offsets.forEach(offset => {
-            r.indices.push(startIndex)
+      for (const line of this._lines) {
+        for (const run of line.runs) {
+          run.indices = []
+          run.offsets.forEach(offset => {
+            run.indices.push(startIndex)
             startIndex++
           })
           startIndex--
-          // r.textRange = { start: r.offsets[0], end: r.offsets[r.offsets.length - 1], }
-          r.textRange = { start: r.indices[0], end: r.indices[r.indices.length - 1], }
-          this._runs.push(r)
+          run.textRange = { start: run.indices[0], end: run.indices[run.indices.length - 1], }
+          this._runs.push(run)
         }
       }
-      // console.log(22)
     }
 
     private deleteRange (start: number, end: number) {
@@ -580,18 +567,10 @@ export abstract class AbstractTextShape extends Shape {
       // Do this after shrink styles (we use text.length in an assert)
       this._text = this._text.slice(0, start) + this._text.slice(end, this._text.length)
       // this._text = string_del(this._text, start, end);
+      return true
     }
 
     private deleteStyleRange (start: number, end: number) {
-      // shrink/remove styles
-      //
-      // [.....][....][....][.....]  styles
-      //    [..................]     start...end
-      //
-      // - trim the first style
-      // - remove the middle styles
-      // - trim the last style
-
       let N = end - start
       let [ i, prev_len, ] = this.findStyleIndexAndPrevLength(start)
       let s = this._styles[i]
