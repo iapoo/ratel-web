@@ -202,10 +202,10 @@ export abstract class AbstractTextShape extends Shape {
 
     public enter (x: number, y: number) {
       for (const line of this._lines) {
-        if (line.bottom > y - this._textPadding) {
+        if (line.bottom > y - this.getTextPaddingY()) {
           for (const run of line.runs) {
             for (let index = 0; index < run.indices.length - 1; index++) {
-              if (x - this._textPadding >= run.positions[index * 2] && x - this._textPadding <= run.positions[index * 2 + 2]) {
+              if (x - this.getTextPaddingX() >= run.positions[index * 2] && x - this.getTextPaddingX() <= run.positions[index * 2 + 2]) {
                 console.log(`Enter index = ${run.indices[index]}`)
                 this.select(run.indices[index], run.indices[index])
                 return
@@ -396,10 +396,6 @@ export abstract class AbstractTextShape extends Shape {
         }
         end = Math.min(r.textRange.end, s_end)
 
-        // LOG('New range: ', start, end,
-        //  'from run', r.textRange.start, r.textRange.end,
-        //  'style', s_start, s_end)
-
         // check that we have anything to draw
         if (r.textRange.start >= end) {
           start = end
@@ -437,20 +433,9 @@ export abstract class AbstractTextShape extends Shape {
           // LOG('    use entire glyph run')
         }
         // canvas.drawGlyphs(gly, pos, 0, 0, f, p)
-        let startX = this._textPadding
-        let startY = this._textPadding
-        let paragraphHeight = this._paragraph.getHeight()
-        switch(this._textVerticalAlignment) {
-          case TextVerticalAlignment.TOP:
-            break;
-          case TextVerticalAlignment.BOTTOM:
-            startY = this.height - this._textPadding - paragraphHeight
-            break;
-          case TextVerticalAlignment.MIDDLE:
-          default:            
-            startY = this._textPadding + (this.height - this._textPadding * 2  - paragraphHeight) / 2
-            break;
-        }
+        let startX = this.getTextPaddingX()
+        let startY = this.getTextPaddingY()
+        
         graphics.drawGlyphs(gly, pos, startX, startY, f, p)
 
         if (s.underline) {
@@ -463,12 +448,12 @@ export abstract class AbstractTextShape extends Shape {
           for (let i = 0; i < sects.length; i += 2) {
             const end = sects[i] - gap
             if (x < end) {
-              graphics.drawRect4f(x + this._textPadding, Y + 2 + this._textPadding, end + this._textPadding, Y + 4 + this._textPadding, p)
+              graphics.drawRect4f(x + startX, Y + 2 + startY, end + startX, Y + 4 + startY, p)
             }
             x = sects[i + 1] + gap
           }
           if (x < lastX) {
-            graphics.drawRect4f(x + this._textPadding, Y + 2 + this._textPadding, lastX + this._textPadding, Y + 4 + this._textPadding, p)
+            graphics.drawRect4f(x + startX, Y + 2 + startY, lastX + startX, Y + 4 + startY, p)
           }
         }
 
@@ -502,7 +487,7 @@ export abstract class AbstractTextShape extends Shape {
             top = line.baseline - run.size
           }
         }
-        this._cursor.place(x + this._textPadding, top + this._textPadding, line.baseline + this._textPadding)
+        this._cursor.place(x + this.getTextPaddingX(), top + this.getTextPaddingY(), line.baseline + this.getTextPaddingY())
       } else {
         const path = this.getLinesIndicesToPath(startIndex, endIndex)
         this._cursor.path = path
@@ -539,7 +524,7 @@ export abstract class AbstractTextShape extends Shape {
         index += block.length
       })
       this._paragraph = this._paragraphBuilder.build()
-      this._paragraph.layout(this.width - this._textPadding * 2)
+      this._paragraph.layout(this.width - this.getTextPaddingX() * 2)
       this._lines = this._paragraph.getShapedLines()
 
       this._runs.length = 0
@@ -674,6 +659,27 @@ export abstract class AbstractTextShape extends Shape {
       const run = line.runs[line.runs.length - 1]
       return run.indices[run.indices.length - 1]
     }
+
+    private getTextPaddingX() {
+      return this._textPadding
+    }
+
+    private getTextPaddingY() {
+      let startY = this._textPadding
+      let paragraphHeight = this._paragraph.getHeight()
+      switch(this._textVerticalAlignment) {
+        case TextVerticalAlignment.TOP:
+          break;
+        case TextVerticalAlignment.BOTTOM:
+          startY = this.height - this._textPadding - paragraphHeight
+          break;
+        case TextVerticalAlignment.MIDDLE:
+        default:            
+          startY = this._textPadding + (this.height - this._textPadding * 2  - paragraphHeight) / 2
+          break;
+      }
+      return startY
+  }
 
     protected abstract buildShape (): void;
 }
