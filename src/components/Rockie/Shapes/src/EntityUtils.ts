@@ -54,7 +54,7 @@ export class CursorMaker {
     }
 
     public renderAfter (graphics: Graphics) {
-      if (!this._path && (Math.floor(Date.now() / this._interval) & 1)) {
+      if ((Math.floor(Date.now() / this._interval) & 1)) {
         graphics.drawLine(this._x, this._top, this._x, this._bottom, this._linePaint)
       }
     }

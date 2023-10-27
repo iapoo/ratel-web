@@ -46,13 +46,13 @@ export abstract class AbstractTextShape extends Shape {
       // this.select(7, 7)
     }
 
-    public get font() {
-      return this._font
-    }
+    //public get font() {
+    //  return this._font
+    //}
 
-    public set font(value: Font) {
-      this._font = value
-    }
+    //public set font(value: Font) {
+    //  this._font = value
+    //}
 
     public get fontPaint() {
       return this._fontPaint
@@ -127,6 +127,7 @@ export abstract class AbstractTextShape extends Shape {
     public set textVerticalAlignment(value: TextVerticalAlignment) {
       this._textVerticalAlignment = value
       this.buildLines()
+      this.rebuildSelection()
     }
 
     public get textPadding () {
@@ -201,8 +202,13 @@ export abstract class AbstractTextShape extends Shape {
     }
 
     public enter (x: number, y: number) {
+      if(this.lines.length == 0) {
+        //Empty text and so we assume height is font size x 140%
+        this._cursor.place(this.getTextPaddingX(), this.getTextPaddingY() , this.getTextPaddingY() + this.fontSize * 1.4)
+        return
+      }
       for (const line of this._lines) {
-        if (line.bottom > y - this.getTextPaddingY()) {
+        //if (line.bottom > y - this.getTextPaddingY()) {
           for (const run of line.runs) {
             for (let index = 0; index < run.indices.length - 1; index++) {
               if (x - this.getTextPaddingX() >= run.positions[index * 2] && x - this.getTextPaddingX() <= run.positions[index * 2 + 2]) {
@@ -213,7 +219,7 @@ export abstract class AbstractTextShape extends Shape {
             }
           }
           return
-        }
+        //}
       }
     }
 
@@ -358,9 +364,9 @@ export abstract class AbstractTextShape extends Shape {
 
     public render (graphics: Graphics): void {
       super.render(graphics)
-      if (!this._text) {
-        return
-      }
+      //if (!this._text) {
+      //  return
+      //}
       if (this._focused) {
         this._cursor.renderBefore(graphics)
       }
@@ -474,6 +480,11 @@ export abstract class AbstractTextShape extends Shape {
     }
 
     private rebuildSelection () {
+      if(this._lines.length == 0) {
+          //Empty text and so we assume height is font size x 140%
+          this._cursor.place(this.getTextPaddingX(), this.getTextPaddingY() , this.getTextPaddingY() + this.fontSize * 1.4)
+          return
+      }
       const startIndex = this._startIndex
       const endIndex = this._endIndex
       if (startIndex == endIndex) {
@@ -487,7 +498,7 @@ export abstract class AbstractTextShape extends Shape {
             top = line.baseline - run.size
           }
         }
-        this._cursor.place(x + this.getTextPaddingX(), top + this.getTextPaddingY(), line.baseline + this.getTextPaddingY())
+        this._cursor.place(x + this.getTextPaddingX(), top + this.getTextPaddingY(), line.bottom + this.getTextPaddingY())
       } else {
         const path = this.getLinesIndicesToPath(startIndex, endIndex)
         this._cursor.path = path
@@ -631,12 +642,12 @@ export abstract class AbstractTextShape extends Shape {
       const startX = this.getRunsIndexToX(startLine, startIndex)
       const endX = this.getRunsIndexToX(endLine, endIndex)
       if (startLine == endLine) {
-        path.addRectangle(new Rectangle(startX, startLine.top, endX, startLine.bottom))
+        path.addRectangle(new Rectangle(startX + this.getTextPaddingX(), startLine.top + this.getTextPaddingY(), endX + this.getTextPaddingX(), startLine.bottom + this.getTextPaddingY()))
       } else {
-        path.addRectangle(new Rectangle(startX, startLine.top, this.width, startLine.bottom))
-        path.addRectangle(new Rectangle(0, endLine.top, endX, endLine.bottom))
+        path.addRectangle(new Rectangle(startX + this.getTextPaddingX(), startLine.top + this.getTextPaddingY(), this.width + this.getTextPaddingX(), startLine.bottom + this.getTextPaddingY()))
+        path.addRectangle(new Rectangle(0 + this.getTextPaddingX(), endLine.top + this.getTextPaddingY(), endX + this.getTextPaddingX(), endLine.bottom + this.getTextPaddingY()))
         if (startLine.bottom < endLine.top) {
-          path.addRectangle(new Rectangle(0, startLine.bottom, this.width, endLine.top))
+          path.addRectangle(new Rectangle(0 + this.getTextPaddingX(), startLine.bottom + this.getTextPaddingY(), this.width + this.getTextPaddingX(), endLine.top + this.getTextPaddingY()))
         }
       }
 
@@ -667,6 +678,10 @@ export abstract class AbstractTextShape extends Shape {
     private getTextPaddingY() {
       let startY = this._textPadding
       let paragraphHeight = this._paragraph.getHeight()
+      if(paragraphHeight == 0) {
+        //Empty text and so we assume height is font size x 140%
+        paragraphHeight = this.fontSize * 1.4
+      }
       switch(this._textVerticalAlignment) {
         case TextVerticalAlignment.TOP:
           break;

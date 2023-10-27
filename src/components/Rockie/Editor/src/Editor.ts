@@ -268,10 +268,6 @@ export class Editor extends Painter {
     return this._inMoving
   }
 
-  public set inMoving (value: boolean) {
-    this._inMoving = value
-  }
-
   public get contentLayer (): EditorLayer {
     return this._contentLayer
   }
@@ -642,46 +638,55 @@ export class Editor extends Painter {
           this.triggerSelectionChange()
           this._targetColumnResizing = false
           this._targetRowResizing = false
-        } else {
-          if (clickedEditorItem instanceof TableEntity) {
-            const targetPoint = this.findEditorItemPoint(clickedEditorItem, e.x, e.y)
-            const [ targetRow, targetRowIndex, ] = this.isTableRowtResizable(clickedEditorItem, targetPoint.x, targetPoint.y)
-            const [ targetColumn, targetColumnIndex, ] = this.isTableColumnResizable(clickedEditorItem, targetPoint.x, targetPoint.y)
-            if (targetRow) {
-              // console.log('========1')
-              this._targetRowResizing = true
-              this._targetRowIndex = targetRowIndex
-              this._target = clickedEditorItem
-              if (this._targetItem) {
-                this._targetItem.shape.focused = false
-              }
-              this._targetItem = undefined
-              this._targetItemIndex = 0
-            } else if (targetColumn) {
-              // console.log('========0')
-              this._targetColumnResizing = targetColumn
-              this._targetColumnIndex = targetColumnIndex
-              this._target = clickedEditorItem
-              if (this._targetItem) {
-                this._targetItem.shape.focused = false
-              }
-              this._targetItem = undefined
-              this._targetItemIndex = 0
-            } else {
-              const itemIndex = this.findTableItemIndex(clickedEditorItem, targetPoint.x, targetPoint.y)
-              this._targetItemIndex = itemIndex
-              if (this._targetItem) {
-                this._targetItem.shape.focused = false
-              }
-              this._targetItem = clickedEditorItem.items[itemIndex]
-              this._targetItem.shape.focused = true
+          this._startEditorItemInfos.length = 0
+          let editorItemInfo = OperationHelper.saveEditorItem(clickedEditorItem)
+          this._startEditorItemInfos.push(editorItemInfo)
+          this._inMoving = true
+        } else if (clickedEditorItem instanceof TableEntity) {
+          const targetPoint = this.findEditorItemPoint(clickedEditorItem, e.x, e.y)
+          const [ targetRow, targetRowIndex, ] = this.isTableRowtResizable(clickedEditorItem, targetPoint.x, targetPoint.y)
+          const [ targetColumn, targetColumnIndex, ] = this.isTableColumnResizable(clickedEditorItem, targetPoint.x, targetPoint.y)
+          if (targetRow) {
+            // console.log('========1')
+            this._targetRowResizing = true
+            this._targetRowIndex = targetRowIndex
+            this._target = clickedEditorItem
+            if (this._targetItem) {
+              this._targetItem.shape.focused = false
             }
+            this._targetItem = undefined
+            this._targetItemIndex = 0
+          } else if (targetColumn) {
+            // console.log('========0')
+            this._targetColumnResizing = targetColumn
+            this._targetColumnIndex = targetColumnIndex
+            this._target = clickedEditorItem
+            if (this._targetItem) {
+              this._targetItem.shape.focused = false
+            }
+            this._targetItem = undefined
+            this._targetItemIndex = 0
+          } else {
+            const itemIndex = this.findTableItemIndex(clickedEditorItem, targetPoint.x, targetPoint.y)
+            this._targetItemIndex = itemIndex
+            if (this._targetItem) {
+              this._targetItem.shape.focused = false
+            }
+            this._targetItem = clickedEditorItem.items[itemIndex]
+            this._targetItem.shape.focused = true
           }
+          this._startEditorItemInfos.length = 0
+          let editorItemInfo = OperationHelper.saveEditorItem(clickedEditorItem)
+          this._startEditorItemInfos.push(editorItemInfo)
+          this._inMoving = true
+        } else if(this._textFocused) {
+          
+        } else {
+          this._startEditorItemInfos.length = 0
+          let editorItemInfo = OperationHelper.saveEditorItem(clickedEditorItem)
+          this._startEditorItemInfos.push(editorItemInfo)
+          this._inMoving = true
         }
-        this._startEditorItemInfos.length = 0
-        let editorItemInfo = OperationHelper.saveEditorItem(clickedEditorItem)
-        this._startEditorItemInfos.push(editorItemInfo)
-        this.inMoving = true
       } else {
         theSelectionLayer.removeAllEditorItems()
         this.triggerSelectionChange()
@@ -778,7 +783,7 @@ export class Editor extends Painter {
                 // this.handleDoubleClick(e)
                 this._textArea.focus()
                 this._target.shape.enter(targetPoint.x, targetPoint.y)
-                this._textFocused = true
+                this._textFocused = true                
                 if (this._target) {
                   this._target.shape.focused = true
                 }
@@ -798,7 +803,7 @@ export class Editor extends Painter {
       this._operationService.addOperation(operation)
       this.triggerOperationChange()
     }
-    this.inMoving = false
+    this._inMoving = false
     this._inCreatingConnector = false
     this._targetRowResizing = false
     this._targetColumnResizing = false
