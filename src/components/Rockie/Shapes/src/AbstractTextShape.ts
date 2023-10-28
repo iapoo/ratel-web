@@ -201,6 +201,10 @@ export abstract class AbstractTextShape extends Shape {
       this.rebuildSelection()
     }
 
+    public selectTo (end: number) {
+      this.select(this._startIndex, end)
+    }
+
     public enter (x: number, y: number) {
       if(this.lines.length == 0) {
         //Empty text and so we assume height is font size x 140%
@@ -214,6 +218,28 @@ export abstract class AbstractTextShape extends Shape {
               if (x - this.getTextPaddingX() >= run.positions[index * 2] && x - this.getTextPaddingX() <= run.positions[index * 2 + 2]) {
                 console.log(`Enter index = ${run.indices[index]}`)
                 this.select(run.indices[index], run.indices[index])
+                return
+              }
+            }
+          }
+          return
+        //}
+      }
+    }
+
+    public enterTo (x: number, y: number) {
+      if(this.lines.length == 0) {
+        //Empty text and so we assume height is font size x 140%
+        this._cursor.place(this.getTextPaddingX(), this.getTextPaddingY() , this.getTextPaddingY() + this.fontSize * 1.4)
+        return
+      }
+      for (const line of this._lines) {
+        //if (line.bottom > y - this.getTextPaddingY()) {
+          for (const run of line.runs) {
+            for (let index = 0; index < run.indices.length - 1; index++) {
+              if (x - this.getTextPaddingX() >= run.positions[index * 2] && x - this.getTextPaddingX() <= run.positions[index * 2 + 2]) {
+                console.log(`Enter to index = ${run.indices[index]}`)
+                this.selectTo(run.indices[index])
                 return
               }
             }

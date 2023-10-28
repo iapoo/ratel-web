@@ -75,6 +75,7 @@ export class Editor extends Painter {
   private _gridColor: Color = Colors.Gray
   private _showBackground: boolean = false
   private _backgroundColor: Color = Colors.White
+  private _textSelecting: boolean = false
 
   public constructor (canvasId: string | HTMLCanvasElement) {
     super(canvasId)
@@ -517,6 +518,9 @@ export class Editor extends Painter {
               // this._targetColumn = targetColumn
               // this._targetColumnIndex = targetColumnIndex
             }
+          } else if(this._textFocused && this._textSelecting) {
+            const targetPoint = this.findEditorItemPoint(editorItem, e.x, e.y)
+            editorItem.shape.enterTo(targetPoint.x, targetPoint.y)
           }
         }
       } else {
@@ -680,7 +684,10 @@ export class Editor extends Painter {
           this._startEditorItemInfos.push(editorItemInfo)
           this._inMoving = true
         } else if(this._textFocused) {
-          
+          const targetPoint = this.findEditorItemPoint(clickedEditorItem, e.x, e.y)
+          this.updateTextCursorLocation(clickedEditorItem, targetPoint.x, targetPoint.y)
+          clickedEditorItem.shape.enter(targetPoint.x, targetPoint.y)
+          this._textSelecting = true
         } else {
           this._startEditorItemInfos.length = 0
           let editorItemInfo = OperationHelper.saveEditorItem(clickedEditorItem)
@@ -775,7 +782,8 @@ export class Editor extends Painter {
             if (this._target.shape.focused) {
               this._textArea.focus()
               this.updateTextCursorLocation(clickedEditorItem, targetPoint.x, targetPoint.y)
-              this._target.shape.enter(targetPoint.x, targetPoint.y)
+              this._target.shape.enterTo(targetPoint.x, targetPoint.y)
+              this._textSelecting = false              
             } else {
               // Check double click
               if (nowTime - this._targetTime < Editor.DOUBLE_CLICK_TIME) {
