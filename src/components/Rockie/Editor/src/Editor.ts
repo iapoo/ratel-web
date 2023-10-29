@@ -68,6 +68,8 @@ export class Editor extends Painter {
   private _operationService: OperationService = new OperationService()
   private _operationChangeListeners = new Array<(e: EditorEvent) => void>(0)
   private _sizeChangeListeners = new Array<(e: EditorEvent) => void>(0)
+  private _textEditStartListeners = new Array<(e: EditorEvent) => void>(0)
+  private _textEditEndListeners = new Array<(e: EditorEvent) => void>(0)
   private _startEditorItemInfos: EditorItemInfo[] = []
   private _origWidth: number
   private _origHeight: number
@@ -194,6 +196,51 @@ export class Editor extends Painter {
     return index >= 0
   }
 
+  public get textEditStartListeners() {
+    return this._textEditStartListeners
+  }
+
+  public onTextEditStart(callback: (e: EditorEvent) => void) {
+    const index = this._textEditStartListeners.indexOf(callback)
+    if (index < 0) {
+      this._textEditStartListeners.push(callback)
+    }
+  }  
+
+  public removeTextEditStart(callback: (e: EditorEvent) => void) {
+    const index = this._textEditStartListeners.indexOf(callback)
+    if (index >= 0) {
+      this._textEditStartListeners.splice(index, 1)
+    }
+  }
+  
+  public hasTextEditStart(callback: (e: EditorEvent) => void) {
+    const index = this._textEditStartListeners.indexOf(callback)
+    return index >= 0
+  }
+
+  public get textEditEndListeners() {
+    return this._textEditEndListeners
+  }
+
+  public onTextEditEnd(callback: (e: EditorEvent) => void) {
+    const index = this._textEditEndListeners.indexOf(callback)
+    if (index < 0) {
+      this._textEditEndListeners.push(callback)
+    }
+  }  
+
+  public removeTextEditEnd(callback: (e: EditorEvent) => void) {
+    const index = this._textEditEndListeners.indexOf(callback)
+    if (index >= 0) {
+      this._textEditEndListeners.splice(index, 1)
+    }
+  }
+  
+  public hasTextEditEnd(callback: (e: EditorEvent) => void) {
+    const index = this._textEditEndListeners.indexOf(callback)
+    return index >= 0
+  }
 
   public get sizeChangeListeners() {
     return this._sizeChangeListeners
@@ -218,7 +265,9 @@ export class Editor extends Painter {
     return index >= 0
   }
 
-  
+  public get textArea() {
+    return this._textArea
+  }
 
   public get gridSize (): number {
     return this._gridSize
@@ -267,6 +316,10 @@ export class Editor extends Painter {
   
   public get inMoving (): boolean {
     return this._inMoving
+  }
+
+  public get isTextEditting(): boolean {
+    return this._textFocused
   }
 
   public get contentLayer (): EditorLayer {
@@ -462,7 +515,7 @@ export class Editor extends Painter {
   }
 
   public handlePointerMove (e: PointerEvent) {
-    // console.log(`Moving... x = ${e.x} action=${this._action}`)
+    //console.log(`Moving... x = ${e.x} action=${this._action}`)
     if (this._action) {
       //  in creating action
       this.handlePointMoveinAction(e, this._action)
@@ -562,7 +615,7 @@ export class Editor extends Painter {
   public handlePointerClick (e: PointerEvent) { }
 
   public handlePointerDown (e: PointerEvent) {
-    // console.log(`handle Mouse Down ... x = ${e.x}`)
+    //console.log(`handle Mouse Down ... x = ${e.x}`)
     this._startPointX = e.x
     this._startPointY = e.y
     this._modified = true
@@ -583,7 +636,7 @@ export class Editor extends Painter {
       if (this._target) {
         this._target.shape.focused = false
       }
-      this._textFocused = false
+      this.checkAndEndTextEdit()
       if (this._target) {
         this._target.shape.focused = false
       }
@@ -617,7 +670,7 @@ export class Editor extends Painter {
         if (this._target) {
           this._target.shape.focused = false
         }
-        this._textFocused = false
+        this.checkAndEndTextEdit()
         if (this._target) {
           this._target.shape.focused = false
         }
@@ -646,6 +699,7 @@ export class Editor extends Painter {
           let editorItemInfo = OperationHelper.saveEditorItem(clickedEditorItem)
           this._startEditorItemInfos.push(editorItemInfo)
           this._inMoving = true
+          this.checkAndEndTextEdit()
         } else if (clickedEditorItem instanceof TableEntity) {
           const targetPoint = this.findEditorItemPoint(clickedEditorItem, e.x, e.y)
           const [ targetRow, targetRowIndex, ] = this.isTableRowtResizable(clickedEditorItem, targetPoint.x, targetPoint.y)
@@ -683,6 +737,7 @@ export class Editor extends Painter {
           let editorItemInfo = OperationHelper.saveEditorItem(clickedEditorItem)
           this._startEditorItemInfos.push(editorItemInfo)
           this._inMoving = true
+          this.checkAndEndTextEdit()
         } else if(this._textFocused) {
           const targetPoint = this.findEditorItemPoint(clickedEditorItem, e.x, e.y)
           this.updateTextCursorLocation(clickedEditorItem, targetPoint.x, targetPoint.y)
@@ -710,6 +765,7 @@ export class Editor extends Painter {
         this._targetRowResizing = false
         this._targetItem = undefined
         this._targetItemIndex = 0
+        this.checkAndEndTextEdit()
       }
     }
   }
@@ -729,7 +785,6 @@ export class Editor extends Painter {
       const connector = theControllerLayer.getEditorItem(0)
       this.controllerLayer.removeAllEditorItems()
       this.contentLayer.addEditorItem(connector)
-      this._textFocused = false
       let editorItemInfo = OperationHelper.saveEditorItem(connector)
       let operation = new Operation(this, OperationType.ADD_ITEMS, [editorItemInfo], [])
       this._operationService.addOperation(operation)
@@ -747,7 +802,7 @@ export class Editor extends Painter {
         if (this._target !== clickedEditorItem) {
           if (this._target) {
             this._target.shape.focused = false
-            this._textFocused = false
+            this.checkAndEndTextEdit()
           }
           this._target = clickedEditorItem
           this._targetTime = Date.now()
@@ -767,7 +822,7 @@ export class Editor extends Painter {
                   // this.handleDoubleClick(e)
                   this._textArea.focus()
                   this._targetItem.shape.enter(targetPoint.x, targetPoint.y)
-                  this._textFocused = true
+                  this.checkAndStartTextEdit()
                   if (this._targetItem) {
                     this._targetItem.shape.focused = true
                   }
@@ -791,7 +846,7 @@ export class Editor extends Painter {
                 // this.handleDoubleClick(e)
                 this._textArea.focus()
                 this._target.shape.enter(targetPoint.x, targetPoint.y)
-                this._textFocused = true                
+                this.checkAndStartTextEdit()              
                 if (this._target) {
                   this._target.shape.focused = true
                 }
@@ -1304,6 +1359,20 @@ export class Editor extends Painter {
     })
   }
 
+  private triggerTextEditStart() {
+    this._textEditStartListeners.forEach(callback => {
+      const event = new EditorEvent(this)
+      callback(event)
+    })
+  }
+
+  private triggerTextEditEnd() {
+    this._textEditEndListeners.forEach(callback => {
+      const event = new EditorEvent(this)
+      callback(event)
+    })
+  }
+
   private handleRemoveEditorItem(id: string) {
     let itemCount = this._contentLayer.getEditorItemCount()
     for(let i = itemCount - 1; i >= 0; i --) {
@@ -1434,4 +1503,17 @@ export class Editor extends Painter {
     })
   }
 
+  private checkAndStartTextEdit() {
+    if(!this._textFocused) {
+      this._textFocused = true
+      this.triggerTextEditStart()
+    }
+  }
+
+  private checkAndEndTextEdit() {
+    if(this._textFocused) {
+      this._textFocused = false
+      this.triggerTextEditEnd()
+    }
+  }
 }
