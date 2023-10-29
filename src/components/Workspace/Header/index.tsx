@@ -426,8 +426,8 @@ const Header: FC<HeaderProps> = ({
     if (Utils.currentEditor) {
       Utils.currentEditor.zoom = value
     }
-    if (Utils.onEditorSizeChanged) {
-      Utils.onEditorSizeChanged()
+    if (Utils.updateEditorSize) {
+      Utils.updateEditorSize()
     }
   }
 
@@ -463,8 +463,8 @@ const Header: FC<HeaderProps> = ({
       if(update) {
         setZoom(zoomOptions[zoomIndex].value)
         Utils.currentEditor.zoom = zoomOptions[zoomIndex].value
-        if (Utils.onEditorSizeChanged) {
-          Utils.onEditorSizeChanged()
+        if (Utils.updateEditorSize) {
+          Utils.updateEditorSize()
         }
       }
     }

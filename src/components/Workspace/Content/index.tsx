@@ -103,6 +103,7 @@ const Content: FC<ContentProps> = ({
   const [fontBold, setFontBold, ] = useState<boolean>(false)
   const [fontItalic, setFontItalic,] = useState<boolean>(false)
   const [fontUnderline, setFontUnderline, ] = useState<boolean>(false)
+  const [currentEditor, setCurrentEditor, ] = useState<Editor | null  >(null)
 
   const newTabIndex = useRef(4)
 
@@ -205,9 +206,10 @@ const Content: FC<ContentProps> = ({
     editor?.activate()
     let oldEditor = Utils.currentEditor
     Utils.currentEditor = editor!
+    setCurrentEditor(editor!)
     onEditorChange(oldEditor, Utils.currentEditor)
     updateEditors(panes)
-    Utils.onEditorSizeChanged = updateEditorSize
+    Utils.updateEditorSize = updateEditorSize
     Utils.loadData = loadData
     Utils.checkIfModified = checkIfDocumentModified
     updateEditorSize()
@@ -284,6 +286,7 @@ const Content: FC<ContentProps> = ({
 
     let oldEditor = Utils.currentEditor
     Utils.currentEditor = activeEditor!
+    setCurrentEditor(activeEditor!)
     onEditorChange(oldEditor, Utils.currentEditor)
     updateEditors(panes)
     checkIfDocumentModified(false)
@@ -310,6 +313,7 @@ const Content: FC<ContentProps> = ({
         editor?.activate()
         let oldEditor = Utils.currentEditor
         Utils.currentEditor = editor!
+        setCurrentEditor(editor!)
         onEditorChange(oldEditor, Utils.currentEditor)
         if(oldEditor) {
           let operation = new Operation(oldEditor, OperationType.SELECT_EDITOR, [])
@@ -412,6 +416,7 @@ const Content: FC<ContentProps> = ({
 
     let oldEditor = Utils.currentEditor
     Utils.currentEditor = editor!
+    setCurrentEditor(editor!)
     onEditorChange(oldEditor, Utils.currentEditor)
     updateEditors(panes)
     oldEditor?.removeSelectionChange(handleSelectionChange)

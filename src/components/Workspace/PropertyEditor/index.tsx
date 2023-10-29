@@ -204,8 +204,8 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
           setPageCustomized(false)
         }
       }
-      if (Utils.onEditorSizeChanged) {
-        Utils.onEditorSizeChanged()
+      if (Utils.updateEditorSize) {
+        Utils.updateEditorSize()
       }
     }
   }
@@ -214,8 +214,8 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
     if(currentEditor && value) {
       currentEditor.setup(currentEditor.zoom, value, currentEditor.origHeight)
       setPageWidth(value)
-      if (Utils.onEditorSizeChanged) {
-        Utils.onEditorSizeChanged()
+      if (Utils.updateEditorSize) {
+        Utils.updateEditorSize()
       }
     }
   }
@@ -224,8 +224,8 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
     if(currentEditor && value) {
       currentEditor.setup(currentEditor.zoom, currentEditor.origWidth, value)
       setPageHeight(value)
-      if (Utils.onEditorSizeChanged) {
-        Utils.onEditorSizeChanged()
+      if (Utils.updateEditorSize) {
+        Utils.updateEditorSize()
       }
     }
   }
@@ -239,8 +239,8 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
       } else {
         currentEditor.setup(currentEditor.zoom, pageType.width, pageType.height)
       }
-      if (Utils.onEditorSizeChanged) {
-        Utils.onEditorSizeChanged()
+      if (Utils.updateEditorSize) {
+        Utils.updateEditorSize()
       }
     }
   }
