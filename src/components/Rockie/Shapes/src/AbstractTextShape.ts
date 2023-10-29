@@ -181,7 +181,7 @@ export abstract class AbstractTextShape extends Shape {
     }
 
     public handleBackspace () {
-
+      this.deleteSelection()
     }
 
     /**
@@ -206,24 +206,60 @@ export abstract class AbstractTextShape extends Shape {
     }
 
     public enter (x: number, y: number) {
+      console.log(`Enter ${x} ${y}`)
       if(this.lines.length == 0) {
         //Empty text and so we assume height is font size x 140%
         this._cursor.place(this.getTextPaddingX(), this.getTextPaddingY() , this.getTextPaddingY() + this.fontSize * 1.4)
         return
       }
-      for (const line of this._lines) {
-        //if (line.bottom > y - this.getTextPaddingY()) {
+      const firstLine = this._lines[0]
+      const lastLine = this._lines[this._lines.length - 1]
+      if(firstLine.top > y - this.getTextPaddingY()) {
+        const firstRun = firstLine.runs[0]
+        const lastRun = firstLine.runs[firstLine.runs.length - 1]
+        if(x - this.getTextPaddingX() < firstRun.positions[0] ) {
+          this.select(firstRun.indices[0], firstRun.indices[0])
+        } else if(x - this.getTextPaddingX() >= lastRun.positions[lastRun.indices.length * 2 - 2 ]) {
+          this.select(lastRun.indices[lastRun.indices.length - 1],lastRun.indices[lastRun.indices.length - 1])
+        } else {
+          for (const run of firstLine.runs) {
+            for (let index = 0; index < run.indices.length - 1; index++) {
+              if (x - this.getTextPaddingX() >= run.positions[index * 2] && x - this.getTextPaddingX() <= run.positions[index * 2 + 2]) {
+                console.log(`Enter index = ${run.indices[index]}`)
+                this.select(run.indices[index], run.indices[index])
+              }
+            }
+          }
+        }        
+      } else if(lastLine.bottom < y -this.getTextPaddingY()) {
+        const firstRun = lastLine.runs[0]
+        const lastRun = lastLine.runs[lastLine.runs.length - 1]
+        if(x - this.getTextPaddingX() < firstRun.positions[0] ) {
+          this.select(firstRun.indices[0], firstRun.indices[0])
+        } else if(x - this.getTextPaddingX() >= lastRun.positions[lastRun.indices.length * 2 - 2 ]) {
+          this.select(lastRun.indices[lastRun.indices.length - 1],lastRun.indices[lastRun.indices.length - 1])
+        } else {
+          for (const run of lastLine.runs) {
+            for (let index = 0; index < run.indices.length - 1; index++) {
+              if (x - this.getTextPaddingX() >= run.positions[index * 2] && x - this.getTextPaddingX() <= run.positions[index * 2 + 2]) {
+                console.log(`Enter index = ${run.indices[index]}`)
+                this.select(run.indices[index], run.indices[index])
+              }
+            }
+          }
+        }        
+      } else {
+        for (let lineIndex = 1; lineIndex < this._lines.length - 1; lineIndex++) {
+          const line = this._lines[lineIndex]
           for (const run of line.runs) {
             for (let index = 0; index < run.indices.length - 1; index++) {
               if (x - this.getTextPaddingX() >= run.positions[index * 2] && x - this.getTextPaddingX() <= run.positions[index * 2 + 2]) {
                 console.log(`Enter index = ${run.indices[index]}`)
                 this.select(run.indices[index], run.indices[index])
-                return
               }
             }
           }
-          return
-        //}
+      }
       }
     }
 
@@ -238,7 +274,7 @@ export abstract class AbstractTextShape extends Shape {
           for (const run of line.runs) {
             for (let index = 0; index < run.indices.length - 1; index++) {
               if (x - this.getTextPaddingX() >= run.positions[index * 2] && x - this.getTextPaddingX() <= run.positions[index * 2 + 2]) {
-                console.log(`Enter to index = ${run.indices[index]}`)
+                //console.log(`Enter to index = ${run.indices[index]}`)
                 this.selectTo(run.indices[index])
                 return
               }
@@ -284,8 +320,10 @@ export abstract class AbstractTextShape extends Shape {
       } else {
         this.deleteRange(start, this._endIndex)
       }
-      this._startIndex = this._endIndex = start
+
+      this._startIndex = this._endIndex = start            
       this.buildLines()
+      this.rebuildSelection()
     }
 
     public insert (text: string) {

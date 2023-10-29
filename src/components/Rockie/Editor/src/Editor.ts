@@ -842,7 +842,7 @@ export class Editor extends Painter {
             } else {
               // Check double click
               if (nowTime - this._targetTime < Editor.DOUBLE_CLICK_TIME) {
-                console.log('Double click is detected')
+                //console.log('Double click is detected')
                 // this.handleDoubleClick(e)
                 this._textArea.focus()
                 this._target.shape.enter(targetPoint.x, targetPoint.y)
@@ -984,11 +984,11 @@ export class Editor extends Painter {
   }
 
   private handleTextAreaKeyUp (e: KeyboardEvent) {
-    // console.log(`Key Up ${e.code} ${this._textContent} `)
+    //console.log(`Key Up ${e.code}  ${e.altKey}  ${e.ctrlKey} ${e.key}`)
     if (e.key === 'Meta' || e.key === 'Control') {
       this._textCommandKey = true
     }
-    if (this._textCommandKey && e.key === 'a') {
+    if (e.ctrlKey && e.key === 'a') {
       if (this._targetItem) {
         this._targetItem.shape.selectAll()
       } else if (this._target) {
