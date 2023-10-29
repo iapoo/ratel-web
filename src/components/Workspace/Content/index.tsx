@@ -2,17 +2,16 @@
 /* eslint-disable @typescript-eslint/prefer-for-of */
 import React, { useEffect, useState, useRef, FC, } from 'react'
 import styles from './index.css'
-import Workspace from '@/components/Workspace'
-import { Button, Tabs, } from 'antd'
-import { Utils, } from '../Utils'
-import { Editor, } from '../../Rockie/Editor'
-import { ShapeAction, } from '../../Rockie/Actions'
-import View from '../View'
+import { Button, ColorPicker, Divider, FloatButton, InputNumber, Space, Tabs, Tooltip, theme, } from 'antd'
+import { Consts, SystemUtils, Utils, } from '../Utils'
+import { Editor, EditorEvent, } from '../../Rockie/Editor'
 
-import { Engine, Rectangle2D, EngineUtils, Line2D, } from '../../Engine'
-import { Util, } from '@antv/g-math'
+import { Engine, Rectangle2D, EngineUtils, Line2D, FontWeight, FontSlant, TextDecoration, } from '../../Engine'
 import { StorageService, } from '../Storage'
 import { Operation, OperationType } from '@/components/Rockie/Operations'
+import { AlignCenterOutlined, AlignLeftOutlined, AlignRightOutlined, BoldOutlined, ItalicOutlined, QuestionCircleOutlined, UnderlineOutlined, VerticalAlignBottomOutlined, VerticalAlignMiddleOutlined, VerticalAlignTopOutlined } from '@ant-design/icons'
+import { Item } from '@/components/Rockie/Items'
+import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
 
 interface Pane {
   title: string,
@@ -40,9 +39,12 @@ const initialPanes: Pane[] = [
   { title: DOCUMENT_PREFIX + '3', content: DOCUMENT_CONTENT, key: '3', editor: null, },
 ]
 
+//const {  useToken, } = theme
+
 const Content: FC<ContentProps> = ({
   onEditorChange, x, y
 }) => {
+  //const { token, } =  useToken()
 
   const getDefaultContentWidth = () => {
     if (Utils.currentEditor) {
@@ -84,6 +86,20 @@ const Content: FC<ContentProps> = ({
   const [ editorWidth, setEditorWidth, ] = useState<string>(getDefaultEditorWidth())
   const [ editorHeight, setEditorHeight, ] = useState<string>(getDefaultEditorHeight())
   const [ documentModified, setdocumentModified, ] = useState<boolean>(false)
+  const [ toolbarLeft, setToolbarLeft, ] = useState<number>(0)
+  const [ toolbarTop, setToolbarTop, ] = useState<number>(0)
+  const [ toolbarVisible, setToolbarVisible,  ] = useState<boolean>(false)
+  const [fontSize, setFontSize,] = useState<number>(Consts.FONT_SIZE_DEFAULT)
+  const [fontColor, setFontColor, ] = useState<string>(Consts.COLOR_FONT_DEFAULT)
+  const [fontWeight, setFontWeight, ] = useState<string>(Consts.FONT_WEIGHT_NORMAL)
+  const [fontSlant, setFontSlant, ] = useState<string>(Consts.FONT_SLANT_UP_RIGHT)
+  const [fontWidth, setFontWidth, ] = useState<string>(Consts.FONT_WIDTH_NORMAL)
+  const [textAlignment, setTextAlignment, ] = useState<string>(Consts.TEXT_ALIGNMENT_LEFT)
+  const [textDecoration, setTextDecoration, ] = useState<string>(Consts.TEXT_DECORATION_NONE)
+  const [textVerticalAlignment, setTextVerticalAlignment, ] = useState<string>(Consts.PLACE_HOLDER_ALIGNMENT_MIDDLE)
+  const [fontBold, setFontBold, ] = useState<boolean>(false)
+  const [fontItalic, setFontItalic,] = useState<boolean>(false)
+  const [fontUnderline, setFontUnderline, ] = useState<boolean>(false)
 
   const newTabIndex = useRef(4)
 
@@ -193,6 +209,12 @@ const Content: FC<ContentProps> = ({
     Utils.checkIfModified = checkIfDocumentModified
     updateEditorSize()
     checkIfDocumentModified(false)
+    oldEditor?.removeSelectionChange(handleSelectionChange)
+    Utils.currentEditor.onSelectionChange(handleSelectionChange)
+    oldEditor?.removeTextEditStart(handleTextEditStart)
+    Utils.currentEditor.onTextEditStart(handleTextEditStart)
+    oldEditor?.removeTextEditEnd(handleTextEditEnd)
+    Utils.currentEditor.onTextEditEnd(handleTextEditEnd)
   }
 
   const updateEditors = (panes: Pane[]) => {
@@ -262,6 +284,12 @@ const Content: FC<ContentProps> = ({
     onEditorChange(oldEditor, Utils.currentEditor)
     updateEditors(panes)
     checkIfDocumentModified(false)
+    oldEditor?.removeSelectionChange(handleSelectionChange)
+    Utils.currentEditor.onSelectionChange(handleSelectionChange)
+    oldEditor?.removeTextEditStart(handleTextEditStart)
+    Utils.currentEditor.onTextEditStart(handleTextEditStart)
+    oldEditor?.removeTextEditEnd(handleTextEditEnd)
+    Utils.currentEditor.onTextEditEnd(handleTextEditEnd)
   }
 
   const onChange = (newActiveKey: string) => {
@@ -284,9 +312,62 @@ const Content: FC<ContentProps> = ({
           let operation = new Operation(oldEditor, OperationType.SELECT_EDITOR, [])
           Utils.currentEditor.operationService.addOperation(operation)
         }
+        oldEditor?.removeSelectionChange(handleSelectionChange)
+        Utils.currentEditor.onSelectionChange(handleSelectionChange)
+        oldEditor?.removeTextEditStart(handleTextEditStart)
+        Utils.currentEditor.onTextEditStart(handleTextEditStart)
+        oldEditor?.removeTextEditEnd(handleTextEditEnd)
+        Utils.currentEditor.onTextEditEnd(handleTextEditEnd)
       }
     }
     updateEditors(panes)
+  }
+
+  const handleSelectionChange = (e: EditorEvent) => {
+  }
+
+  const handleTextEditStart = (e: EditorEvent) => {
+    console.log(`handle text start`)
+    if(Utils.currentEditor && e.source.selectionLayer.getEditorItemCount() == 1 ) {
+      let item = e.source.selectionLayer.getEditorItem(0) as Item
+      let container = document.getElementById('editor-container')
+      let postion = getElementAbsolutePosition(container)
+      let left = item.left
+      let top = item.top
+      let right = item.right
+      let bottom = item.bottom
+      setToolbarLeft(left + postion.left)
+      setToolbarTop(top + postion.top)
+      setToolbarVisible(true)
+
+    }
+  }
+
+  const getElementAbsolutePosition = (element: HTMLElement | null) => {
+    if(element) {
+      let acturalLeft = element.offsetLeft
+      let acturalTop = element.offsetTop
+      let curElement = element.offsetParent as HTMLElement
+      while (curElement) {
+        acturalLeft += curElement.offsetLeft
+        acturalTop += curElement.offsetTop
+        curElement = curElement.offsetParent as HTMLElement
+      }
+      return {
+        left: acturalLeft - element.scrollLeft,
+        top: acturalTop - element.scrollTop,
+      }
+    } else {
+      return {
+        left: 0,
+        top: 0
+      }
+    }
+  }
+
+  const handleTextEditEnd = (e: EditorEvent) => {
+    console.log(`handle text end`)
+    setToolbarVisible(false)
   }
 
   const add = () => {
@@ -316,6 +397,12 @@ const Content: FC<ContentProps> = ({
     Utils.currentEditor = editor!
     onEditorChange(oldEditor, Utils.currentEditor)
     updateEditors(panes)
+    oldEditor?.removeSelectionChange(handleSelectionChange)
+    Utils.currentEditor.onSelectionChange(handleSelectionChange)
+    oldEditor?.removeTextEditStart(handleTextEditStart)
+    Utils.currentEditor.onTextEditStart(handleTextEditStart)
+    oldEditor?.removeTextEditEnd(handleTextEditEnd)
+    Utils.currentEditor.onTextEditEnd(handleTextEditEnd)
     let operation = new Operation(Utils.currentEditor, OperationType.ADD_EDITOR, [])
     Utils.currentEditor.operationService.addOperation(operation)
 }
@@ -342,7 +429,12 @@ const Content: FC<ContentProps> = ({
     if(Utils.currentEditor) {
       let operation = new Operation(Utils.currentEditor, OperationType.REMOVE_EDITOR, [])
       Utils.currentEditor.operationService.addOperation(operation)
-    }
+      //oldEditor?.removeSelectionChange(handleSelectionChange)
+      Utils.currentEditor.onSelectionChange(handleSelectionChange)
+      Utils.currentEditor.onTextEditStart(handleTextEditStart)
+      Utils.currentEditor.onTextEditEnd(handleTextEditEnd)
+      Utils.currentEditor.onTextEditEnd(handleTextEditEnd)
+      }
   }
 
   const onEdit = (targetKey: string, action: 'add' | 'remove') => {
@@ -371,6 +463,84 @@ const Content: FC<ContentProps> = ({
 
   }
 
+
+  const handleFontSizeChange = (value: any) => {
+    setFontSize(value)
+    if (Utils.currentEditor) {
+      let editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
+      editorItems.forEach(editorItem => {
+        //let shape = editorItem.shape
+        //shape.font = new Font(EngineUtils.FONT_NAME_DEFAULT, value)
+        //shape.markDirty()
+        editorItem.fontSize = value
+      })
+    }
+  }
+
+  const handleFontColorChange = (value: any) => {
+    setFontColor(value)
+    if (Utils.currentEditor) {
+      let editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
+      editorItems.forEach(editorItem => {
+        let color = SystemUtils.parseColorString(value.toHexString())
+        if(color) {
+          editorItem.fontColor = color
+        }
+      })
+    }
+  }
+
+  const handleBoldChanged = () => {
+    setFontBold(!fontBold)
+    if(Utils.currentEditor) {
+      let editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
+      editorItems.forEach(editorItem => {
+        editorItem.fontWeight = fontBold ? FontWeight.NORMAL : FontWeight.BOLD
+      })
+    }
+  }
+
+  const handleItalicChanged = () => {
+    setFontItalic(!fontItalic)
+    if(Utils.currentEditor) {
+      let editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
+      editorItems.forEach(editorItem => {
+        editorItem.fontSlant = fontItalic ? FontSlant.UP_RIGHT : FontSlant.ITALIC
+      })
+    }
+  }
+
+  const handleUnderlineChanged = () => {
+    setFontUnderline(!fontUnderline)
+    if(Utils.currentEditor) {
+      let editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
+      editorItems.forEach(editorItem => {
+        editorItem.textDecoration = fontUnderline ? TextDecoration.NONE : TextDecoration.UNDERLINE
+      })
+    }
+  }
+
+  const handleTextAlignmentChanged = (textAlignment: string) => {
+    setTextAlignment(textAlignment)
+    if(Utils.currentEditor) {
+      let editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
+      editorItems.forEach(editorItem => {
+        editorItem.textAlignment = SystemUtils.parseTextAlignment(textAlignment)
+      })
+    }
+  }
+
+  const handleTextVerticalAlignmentChanged = (textVerticalAlignment: string) => {
+    setTextVerticalAlignment(textVerticalAlignment)
+    if(Utils.currentEditor) {
+      let editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
+      editorItems.forEach(editorItem => {
+        editorItem.textVerticalAlignment = SystemUtils.parseTextVerticalAligment(textVerticalAlignment)
+      })
+    }
+  }
+
+
   return (
     <div  style={{ position: 'absolute', top: '0px', bottom: '0px', left: x, right: y, backgroundColor: 'lightgray', }}>
       <div style={{ position: 'absolute', width: '100%', height: `calc(100% - ${Utils.TITLE_HEIGHT}px + 16px) `, zIndex: 2, }} >
@@ -379,7 +549,48 @@ const Content: FC<ContentProps> = ({
             <div style={{ width: '100%', height: Editor.SHADOW_SIZE, backgroundColor: 'lightgray', }} />
             <div style={{ width: '100%', height: editorHeight, boxSizing: 'border-box', }}>
               <div style={{ width: Editor.SHADOW_SIZE, height: '100%', float: 'left', backgroundColor: 'lightgray', }} />
-              <div id='editor-container' style={{ width: editorWidth, height: '100%', float: 'left', backgroundColor: 'darkgray', }} />
+              <div id='editor-container' style={{ width: editorWidth, height: '100%', float: 'left', backgroundColor: 'darkgray', }} >                
+                <FloatButton.Group style={{left: toolbarLeft, top: toolbarTop - 32, height: 32, display: toolbarVisible ? 'block' : 'none', zIndex: 99999 }}>                  
+                  <Space direction='horizontal' style={{backgroundColor: 'white', borderColor: 'silver', borderWidth: 1, borderStyle: 'solid', padding: 2}}>
+                    <Tooltip title={<FormattedMessage id='workspace.header.title.font-bold'/>}>
+                      <Button type={fontBold ? 'primary' : 'text'} size='small' icon={<BoldOutlined/>}  onClick={handleBoldChanged} />
+                      </Tooltip>
+                    <Tooltip title={<FormattedMessage id='workspace.header.title.font-italic'/>}>
+                      <Button type={fontItalic ? 'primary' : 'text'} size='small' icon={<ItalicOutlined/>} onClick={handleItalicChanged} />
+                      </Tooltip>
+                    <Tooltip title={<FormattedMessage id='workspace.header.title.font-underline'/>}>
+                      <Button type={fontUnderline ? 'primary' : 'text'} size='small' icon={<UnderlineOutlined/>} onClick={handleUnderlineChanged} />
+                    </Tooltip>
+                    <Divider type='vertical' style={{ margin: 0 }} />
+                    <Tooltip title={<FormattedMessage id='workspace.header.title.text-left'/>}>
+                      <Button type={textAlignment == Consts.TEXT_ALIGNMENT_LEFT ? 'primary' : 'text'} size='small' icon={<AlignLeftOutlined/>} onClick={() => handleTextAlignmentChanged(Consts.TEXT_ALIGNMENT_LEFT)} />
+                    </Tooltip>
+                    <Tooltip title={<FormattedMessage id='workspace.header.title.text-center'/>}>
+                      <Button type={textAlignment == Consts.TEXT_ALIGNMENT_CENTER ? 'primary' : 'text'} size='small' icon={<AlignCenterOutlined/>} onClick={() => handleTextAlignmentChanged(Consts.TEXT_ALIGNMENT_CENTER)} />
+                    </Tooltip>
+                    <Tooltip title={<FormattedMessage id='workspace.header.title.text-right'/>}>
+                      <Button type={textAlignment == Consts.TEXT_ALIGNMENT_RIGHT ? 'primary' : 'text'} size='small' icon={<AlignRightOutlined/>} onClick={() => handleTextAlignmentChanged(Consts.TEXT_ALIGNMENT_RIGHT)} />
+                    </Tooltip>
+                    <Divider type='vertical' style={{ margin: 0 }} />
+                    <Tooltip title={<FormattedMessage id='workspace.header.title.text-top'/>}>
+                      <Button type={textVerticalAlignment == Consts.PLACE_HOLDER_ALIGNMENT_TOP ? 'primary' : 'text'} size='small' icon={<VerticalAlignTopOutlined/>} onClick={() => handleTextVerticalAlignmentChanged(Consts.PLACE_HOLDER_ALIGNMENT_TOP)} />
+                    </Tooltip>
+                    <Tooltip title={<FormattedMessage id='workspace.header.title.text-middle'/>}>
+                      <Button type={textVerticalAlignment == Consts.PLACE_HOLDER_ALIGNMENT_MIDDLE ? 'primary' : 'text'} size='small' icon={<VerticalAlignMiddleOutlined/>}  onClick={() => handleTextVerticalAlignmentChanged(Consts.PLACE_HOLDER_ALIGNMENT_MIDDLE)} />
+                    </Tooltip>
+                    <Tooltip title={<FormattedMessage id='workspace.header.title.text-bottom'/>}>
+                      <Button type={textVerticalAlignment == Consts.PLACE_HOLDER_ALIGNMENT_BOTTOM ? 'primary' : 'text'} size='small' icon={<VerticalAlignBottomOutlined/>} onClick={() => handleTextVerticalAlignmentChanged(Consts.PLACE_HOLDER_ALIGNMENT_BOTTOM)} />
+                    </Tooltip>
+                    <Divider type='vertical' style={{ margin: 0 }} />
+                    <Tooltip title={<FormattedMessage id='workspace.header.title.font-size'/>}>
+                      <InputNumber min={Consts.FONT_SIZE_MIN} max={Consts.FONT_SIZE_MAX} value={fontSize} onChange={handleFontSizeChange} size='small' style={{ width: 60 }} />
+                    </Tooltip>
+                    <Tooltip title={<FormattedMessage id='workspace.header.title.font-color'/>}>
+                      <ColorPicker size='small' value={fontColor} onChange={handleFontColorChange} />
+                    </Tooltip>
+                  </Space>
+                </FloatButton.Group>
+              </div>
               <div style={{ width: Editor.SHADOW_SIZE, height: '100%', float: 'left', backgroundColor: 'lightgray', }} />
             </div>
             <div style={{ width: '100%', height: Editor.SHADOW_SIZE, backgroundColor: 'lightgray', }} />
