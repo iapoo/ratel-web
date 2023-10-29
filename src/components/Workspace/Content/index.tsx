@@ -9,8 +9,8 @@ import { Editor, EditorEvent, } from '../../Rockie/Editor'
 import { Engine, Rectangle2D, EngineUtils, Line2D, FontWeight, FontSlant, TextDecoration, } from '../../Engine'
 import { StorageService, } from '../Storage'
 import { Operation, OperationType } from '@/components/Rockie/Operations'
-import { AlignCenterOutlined, AlignLeftOutlined, AlignRightOutlined, BoldOutlined, ItalicOutlined, QuestionCircleOutlined, UnderlineOutlined, VerticalAlignBottomOutlined, VerticalAlignMiddleOutlined, VerticalAlignTopOutlined } from '@ant-design/icons'
-import { Item } from '@/components/Rockie/Items'
+import { AlignCenterOutlined, AlignLeftOutlined, AlignRightOutlined, BoldOutlined, DeleteColumnOutlined, DeleteRowOutlined, InsertRowAboveOutlined, InsertRowBelowOutlined, InsertRowLeftOutlined, InsertRowRightOutlined, ItalicOutlined, QuestionCircleOutlined, UnderlineOutlined, VerticalAlignBottomOutlined, VerticalAlignMiddleOutlined, VerticalAlignTopOutlined } from '@ant-design/icons'
+import { Item, TableEntity } from '@/components/Rockie/Items'
 import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
 
 interface Pane {
@@ -86,9 +86,12 @@ const Content: FC<ContentProps> = ({
   const [ editorWidth, setEditorWidth, ] = useState<string>(getDefaultEditorWidth())
   const [ editorHeight, setEditorHeight, ] = useState<string>(getDefaultEditorHeight())
   const [ documentModified, setdocumentModified, ] = useState<boolean>(false)
-  const [ toolbarLeft, setToolbarLeft, ] = useState<number>(0)
-  const [ toolbarTop, setToolbarTop, ] = useState<number>(0)
-  const [ toolbarVisible, setToolbarVisible,  ] = useState<boolean>(false)
+  const [ textToolbarLeft, setTextToolbarLeft, ] = useState<number>(0)
+  const [ textToolbarTop, setTextToolbarTop, ] = useState<number>(0)
+  const [ textToolbarVisible, setTextToolbarVisible,  ] = useState<boolean>(false)
+  const [ tableToolbarLeft, setTableToolbarLeft, ] = useState<number>(0)
+  const [ tableToolbarTop, setTableToolbarTop, ] = useState<number>(0)
+  const [ tableToolbarVisible, setTableToolbarVisible,  ] = useState<boolean>(false)
   const [fontSize, setFontSize,] = useState<number>(Consts.FONT_SIZE_DEFAULT)
   const [fontColor, setFontColor, ] = useState<string>(Consts.COLOR_FONT_DEFAULT)
   const [fontWeight, setFontWeight, ] = useState<string>(Consts.FONT_WEIGHT_NORMAL)
@@ -324,22 +327,36 @@ const Content: FC<ContentProps> = ({
   }
 
   const handleSelectionChange = (e: EditorEvent) => {
+    let tableSelected = false
+    if(Utils.currentEditor && e.source.selectionLayer.getEditorItemCount() == 1 ) {
+      let item = e.source.selectionLayer.getEditorItem(0) as Item
+      if(item instanceof TableEntity) {
+        let container = document.getElementById('editor-container')
+        let postion = getElementAbsolutePosition(container)
+        let left = item.left
+        let top = item.top
+        setTableToolbarLeft(left + postion.left)
+        setTableToolbarTop(top + postion.top)
+        setTableToolbarVisible(true)
+        tableSelected = true
+      }
+    }
+    if(!tableSelected) {
+      setTableToolbarVisible(false)
+    }
   }
 
   const handleTextEditStart = (e: EditorEvent) => {
-    console.log(`handle text start`)
+    //console.log(`handle text start`)
     if(Utils.currentEditor && e.source.selectionLayer.getEditorItemCount() == 1 ) {
       let item = e.source.selectionLayer.getEditorItem(0) as Item
       let container = document.getElementById('editor-container')
       let postion = getElementAbsolutePosition(container)
       let left = item.left
       let top = item.top
-      let right = item.right
-      let bottom = item.bottom
-      setToolbarLeft(left + postion.left)
-      setToolbarTop(top + postion.top)
-      setToolbarVisible(true)
-
+      setTextToolbarLeft(left + postion.left)
+      setTextToolbarTop(top + postion.top)
+      setTextToolbarVisible(true)
     }
   }
 
@@ -367,7 +384,7 @@ const Content: FC<ContentProps> = ({
 
   const handleTextEditEnd = (e: EditorEvent) => {
     console.log(`handle text end`)
-    setToolbarVisible(false)
+    setTextToolbarVisible(false)
   }
 
   const add = () => {
@@ -550,7 +567,7 @@ const Content: FC<ContentProps> = ({
             <div style={{ width: '100%', height: editorHeight, boxSizing: 'border-box', }}>
               <div style={{ width: Editor.SHADOW_SIZE, height: '100%', float: 'left', backgroundColor: 'lightgray', }} />
               <div id='editor-container' style={{ width: editorWidth, height: '100%', float: 'left', backgroundColor: 'darkgray', }} >                
-                <FloatButton.Group style={{left: toolbarLeft, top: toolbarTop - 32, height: 32, display: toolbarVisible ? 'block' : 'none', zIndex: 99999 }}>                  
+                <FloatButton.Group style={{left: textToolbarLeft, top: textToolbarTop - 32, height: 32, display: textToolbarVisible ? 'block' : 'none', zIndex: 99999 }}>                  
                   <Space direction='horizontal' style={{backgroundColor: 'white', borderColor: 'silver', borderWidth: 1, borderStyle: 'solid', padding: 2}}>
                     <Tooltip title={<FormattedMessage id='workspace.header.title.font-bold'/>}>
                       <Button type={fontBold ? 'primary' : 'text'} size='small' icon={<BoldOutlined/>}  onClick={handleBoldChanged} />
@@ -587,6 +604,29 @@ const Content: FC<ContentProps> = ({
                     </Tooltip>
                     <Tooltip title={<FormattedMessage id='workspace.header.title.font-color'/>}>
                       <ColorPicker size='small' value={fontColor} onChange={handleFontColorChange} />
+                    </Tooltip>
+                  </Space>
+                </FloatButton.Group>
+                <FloatButton.Group style={{left: tableToolbarLeft, top: tableToolbarTop - 32, height: 32, display: tableToolbarVisible ? 'block' : 'none', zIndex: 99999 }}>                  
+                  <Space direction='horizontal' style={{backgroundColor: 'white', borderColor: 'silver', borderWidth: 1, borderStyle: 'solid', padding: 2}}>
+                    <Tooltip title={<FormattedMessage id='workspace.header.title.font-bold'/>}>
+                      <Button type='text' size='small' icon={<InsertRowAboveOutlined/>}  onClick={handleBoldChanged} />
+                      </Tooltip>
+                    <Tooltip title={<FormattedMessage id='workspace.header.title.font-italic'/>}>
+                      <Button type='text' size='small' icon={<InsertRowBelowOutlined/>} onClick={handleItalicChanged} />
+                      </Tooltip>
+                    <Tooltip title={<FormattedMessage id='workspace.header.title.font-underline'/>}>
+                      <Button type='text' size='small' icon={<InsertRowLeftOutlined/>} onClick={handleUnderlineChanged} />
+                    </Tooltip>
+                    <Tooltip title={<FormattedMessage id='workspace.header.title.font-underline'/>}>
+                      <Button type='text' size='small' icon={<InsertRowRightOutlined/>} onClick={handleUnderlineChanged} />
+                    </Tooltip>
+                    <Divider type='vertical' style={{ margin: 0 }} />
+                    <Tooltip title={<FormattedMessage id='workspace.header.title.text-left'/>}>
+                      <Button type='text' size='small' icon={<DeleteRowOutlined/>} onClick={() => handleTextAlignmentChanged(Consts.TEXT_ALIGNMENT_LEFT)} />
+                    </Tooltip>
+                    <Tooltip title={<FormattedMessage id='workspace.header.title.text-center'/>}>
+                      <Button type='text' size='small' icon={<DeleteColumnOutlined/>} onClick={() => handleTextAlignmentChanged(Consts.TEXT_ALIGNMENT_CENTER)} />
                     </Tooltip>
                   </Space>
                 </FloatButton.Group>
