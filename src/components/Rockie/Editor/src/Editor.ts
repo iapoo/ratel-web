@@ -70,6 +70,7 @@ export class Editor extends Painter {
   private _sizeChangeListeners = new Array<(e: EditorEvent) => void>(0)
   private _textEditStartListeners = new Array<(e: EditorEvent) => void>(0)
   private _textEditEndListeners = new Array<(e: EditorEvent) => void>(0)
+  private _selectionResizedListeners = new Array<(e: EditorEvent) => void>(0)
   private _startEditorItemInfos: EditorItemInfo[] = []
   private _origWidth: number
   private _origHeight: number
@@ -242,6 +243,29 @@ export class Editor extends Painter {
     return index >= 0
   }
 
+  public get selectionResizedListeners() {
+    return this._selectionResizedListeners
+  }
+
+  public onSelectionResized(callback: (e: EditorEvent) => void) {
+    const index = this._selectionResizedListeners.indexOf(callback)
+    if (index < 0) {
+      this._selectionResizedListeners.push(callback)
+    }
+  }  
+
+  public removeSelectionResized(callback: (e: EditorEvent) => void) {
+    const index = this._selectionResizedListeners.indexOf(callback)
+    if (index >= 0) {
+      this._selectionResizedListeners.splice(index, 1)
+    }
+  }
+  
+  public hasSelectionResize(callback: (e: EditorEvent) => void) {
+    const index = this._selectionResizedListeners.indexOf(callback)
+    return index >= 0
+  }
+  
   public get sizeChangeListeners() {
     return this._sizeChangeListeners
   }
@@ -1227,7 +1251,7 @@ export class Editor extends Painter {
   }
 
   private handlePointMoveInMoving (e: PointerEvent) {
-    // console.log('5==========')
+    //console.log('5==========')
     const theSelectionLayer = this.selectionLayer as SelectionLayer
     const theHoverLayer = this.hoverLayer as HoverLayer
     const count = theSelectionLayer.getEditorItemCount()
@@ -1262,6 +1286,8 @@ export class Editor extends Painter {
     this._moved = true
     theSelectionLayer.invalidateLayer()
     theHoverLayer.removeAllEditorItems()
+    //Need this to update toolbar in time
+    this.triggerSelectionResized()
   }
 
   private handlePointMoveInCreatingConnector (e: PointerEvent) {
@@ -1338,36 +1364,43 @@ export class Editor extends Painter {
     this._startPointY = e.y
   }
 
-  private triggerSelectionChange() {
+  public triggerSelectionChange() {
     this._selectionChangeListeners.forEach(callback => {
       const event = new EditorEvent(this)
       callback(event)
     })
   }
 
-  private triggerSizeChange() {
+  public triggerSizeChange() {
     this._sizeChangeListeners.forEach(callback => {
       const event = new EditorEvent(this)
       callback(event)
     })
   }
 
-  private triggerOperationChange() {
+  public triggerOperationChange() {
     this._operationChangeListeners.forEach(callback => {
       const event = new EditorEvent(this)
       callback(event)
     })
   }
 
-  private triggerTextEditStart() {
+  public triggerTextEditStart() {
     this._textEditStartListeners.forEach(callback => {
       const event = new EditorEvent(this)
       callback(event)
     })
   }
 
-  private triggerTextEditEnd() {
+  public triggerTextEditEnd() {
     this._textEditEndListeners.forEach(callback => {
+      const event = new EditorEvent(this)
+      callback(event)
+    })
+  }
+
+  public triggerSelectionResized() {
+    this._selectionResizedListeners.forEach(callback => {
       const event = new EditorEvent(this)
       callback(event)
     })

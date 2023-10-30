@@ -345,6 +345,7 @@ export class ResizeAnchor extends Anchor {
 
         this.holder.layoutAnchors()
         this.lastMovingTime = nowTime
+        this.editor.triggerSelectionResized()
         // this.editor.hoverLayer.invalidateLayer()
         // this.editor.selectionLayer.invalidateLayer()
       }
