@@ -10,7 +10,7 @@ import { Engine, Rectangle2D, EngineUtils, Line2D, FontWeight, FontSlant, TextDe
 import { StorageService, } from '../Storage'
 import { Operation, OperationType } from '@/components/Rockie/Operations'
 import { AlignCenterOutlined, AlignLeftOutlined, AlignRightOutlined, BoldOutlined, DeleteColumnOutlined, DeleteRowOutlined, InsertRowAboveOutlined, InsertRowBelowOutlined, InsertRowLeftOutlined, InsertRowRightOutlined, ItalicOutlined, QuestionCircleOutlined, UnderlineOutlined, VerticalAlignBottomOutlined, VerticalAlignMiddleOutlined, VerticalAlignTopOutlined } from '@ant-design/icons'
-import { Item, TableEntity } from '@/components/Rockie/Items'
+import { Item, ShapeEntity, TableEntity } from '@/components/Rockie/Items'
 import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
 
 interface Pane {
@@ -220,6 +220,8 @@ const Content: FC<ContentProps> = ({
     Utils.currentEditor.onTextEditStart(handleTextEditStart)
     oldEditor?.removeTextEditEnd(handleTextEditEnd)
     Utils.currentEditor.onTextEditEnd(handleTextEditEnd)
+    oldEditor?.removeSelectionResized(handleSelectionResided)
+    Utils.currentEditor.onSelectionResized(handleSelectionResided)
   }
 
   const updateEditors = (panes: Pane[]) => {
@@ -296,6 +298,8 @@ const Content: FC<ContentProps> = ({
     Utils.currentEditor.onTextEditStart(handleTextEditStart)
     oldEditor?.removeTextEditEnd(handleTextEditEnd)
     Utils.currentEditor.onTextEditEnd(handleTextEditEnd)
+    oldEditor?.removeSelectionResized(handleSelectionResided)
+    Utils.currentEditor.onSelectionResized(handleSelectionResided)
   }
 
   const onChange = (newActiveKey: string) => {
@@ -325,6 +329,8 @@ const Content: FC<ContentProps> = ({
         Utils.currentEditor.onTextEditStart(handleTextEditStart)
         oldEditor?.removeTextEditEnd(handleTextEditEnd)
         Utils.currentEditor.onTextEditEnd(handleTextEditEnd)
+        oldEditor?.removeSelectionResized(handleSelectionResided)
+        Utils.currentEditor.onSelectionResized(handleSelectionResided)
       }
     }
     updateEditors(panes)
@@ -347,6 +353,27 @@ const Content: FC<ContentProps> = ({
     }
     if(!tableSelected) {
       setTableToolbarVisible(false)
+    }
+  }
+
+
+  const handleSelectionResided = (e: EditorEvent) => {
+    console.log(`handle selection resized`)
+    if(Utils.currentEditor && e.source.selectionLayer.getEditorItemCount() == 1 ) {
+      let item = e.source.selectionLayer.getEditorItem(0) as Item
+      let container = document.getElementById('editor-container')
+      let postion = getElementAbsolutePosition(container)
+      let left = item.left
+      let top = item.top
+      if(item instanceof TableEntity) {
+        setTableToolbarLeft(left + postion.left)
+        setTableToolbarTop(top + postion.top)
+        setTableToolbarVisible(true)
+      } else if(item instanceof ShapeEntity && e.source.isTextEditting) {
+        setTextToolbarLeft(left + postion.left)
+        setTextToolbarTop(top + postion.top)
+        setTextToolbarVisible(true)
+      }
     }
   }
 
@@ -425,6 +452,8 @@ const Content: FC<ContentProps> = ({
     Utils.currentEditor.onTextEditStart(handleTextEditStart)
     oldEditor?.removeTextEditEnd(handleTextEditEnd)
     Utils.currentEditor.onTextEditEnd(handleTextEditEnd)
+    oldEditor?.removeSelectionResized(handleSelectionResided)
+    Utils.currentEditor.onSelectionResized(handleSelectionResided)
     let operation = new Operation(Utils.currentEditor, OperationType.ADD_EDITOR, [])
     Utils.currentEditor.operationService.addOperation(operation)
 }
@@ -456,7 +485,8 @@ const Content: FC<ContentProps> = ({
       Utils.currentEditor.onTextEditStart(handleTextEditStart)
       Utils.currentEditor.onTextEditEnd(handleTextEditEnd)
       Utils.currentEditor.onTextEditEnd(handleTextEditEnd)
-      }
+      Utils.currentEditor.onSelectionResized(handleSelectionResided)
+    }
   }
 
   const onEdit = (targetKey: string, action: 'add' | 'remove') => {
@@ -572,7 +602,7 @@ const Content: FC<ContentProps> = ({
             <div style={{ width: '100%', height: editorHeight, boxSizing: 'border-box', }}>
               <div style={{ width: Editor.SHADOW_SIZE, height: '100%', float: 'left', backgroundColor: 'lightgray', }} />
               <div id='editor-container' style={{ width: editorWidth, height: '100%', float: 'left', backgroundColor: 'darkgray', }} >                
-                <FloatButton.Group style={{left: textToolbarLeft, top: textToolbarTop - 32, height: 32, display: textToolbarVisible ? 'block' : 'none', zIndex: 99999 }}>                  
+                <FloatButton.Group style={{left: textToolbarLeft, top: textToolbarTop - 40, height: 32, display: textToolbarVisible ? 'block' : 'none' }}>                  
                   <Space direction='horizontal' style={{backgroundColor: 'white', borderColor: 'silver', borderWidth: 1, borderStyle: 'solid', padding: 2}}>
                     <Tooltip title={<FormattedMessage id='workspace.header.title.font-bold'/>}>
                       <Button type={fontBold ? 'primary' : 'text'} size='small' icon={<BoldOutlined/>}  onClick={handleBoldChanged} />
@@ -612,7 +642,7 @@ const Content: FC<ContentProps> = ({
                     </Tooltip>
                   </Space>
                 </FloatButton.Group>
-                <FloatButton.Group style={{left: tableToolbarLeft, top: tableToolbarTop - 32, height: 32, display: tableToolbarVisible ? 'block' : 'none', zIndex: 99999 }}>                  
+                <FloatButton.Group style={{left: tableToolbarLeft, top: tableToolbarTop - 40, height: 32, display: tableToolbarVisible ? 'block' : 'none'}}>                  
                   <Space direction='horizontal' style={{backgroundColor: 'white', borderColor: 'silver', borderWidth: 1, borderStyle: 'solid', padding: 2}}>
                     <Tooltip title={<FormattedMessage id='workspace.header.title.font-bold'/>}>
                       <Button type='text' size='small' icon={<InsertRowAboveOutlined/>}  onClick={handleBoldChanged} />
