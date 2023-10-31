@@ -14,6 +14,7 @@ export abstract class AbstractTextShape extends Shape {
     private _cursor: CursorMaker = new CursorMaker(Colors.Black, Colors.Blue, 0, 0, 0, 750)
     private _startIndex = 0
     private _endIndex = 0
+    private _selectStartIndex = 0
     private _styles = new Array<Style>(0)
     private _font = new Font()
     private _runs = new Array<GlyphRun>(0)
@@ -196,13 +197,16 @@ export abstract class AbstractTextShape extends Shape {
     }
 
     public select (start: number, end: number) {
+      if(start == end) {
+        this._selectStartIndex = start
+      }
       this._startIndex = Math.min(start, end)
       this._endIndex = Math.max(start, end)
       this.rebuildSelection()
     }
 
     public selectTo (end: number) {
-      this.select(this._startIndex, end)
+      this.select(this._selectStartIndex, end)
     }
 
     public enter (x: number, y: number) {
@@ -249,17 +253,25 @@ export abstract class AbstractTextShape extends Shape {
           }
         }        
       } else {
-        for (let lineIndex = 1; lineIndex < this._lines.length - 1; lineIndex++) {
+        for (let lineIndex = 0; lineIndex < this._lines.length; lineIndex++) {
           const line = this._lines[lineIndex]
-          for (const run of line.runs) {
-            for (let index = 0; index < run.indices.length - 1; index++) {
-              if (x - this.getTextPaddingX() >= run.positions[index * 2] && x - this.getTextPaddingX() <= run.positions[index * 2 + 2]) {
-                console.log(`Enter index = ${run.indices[index]}`)
-                this.select(run.indices[index], run.indices[index])
+          let selected = false
+          if(line.top <= y - this.getTextPaddingY() && line.bottom >= y - this.getTextPaddingY()) {
+            for (const run of line.runs) {
+              for (let index = 0; index < run.indices.length - 1; index++) {
+                if (x - this.getTextPaddingX() >= run.positions[index * 2] && x - this.getTextPaddingX() <= run.positions[index * 2 + 2]) {
+                  console.log(`Enter index = ${run.indices[index]}`)
+                  this.select(run.indices[index], run.indices[index])
+                  selected = true
+                  break;
+                }
               }
             }
           }
-      }
+          if(selected) {
+            break;
+          }
+        }
       }
     }
 
@@ -269,20 +281,63 @@ export abstract class AbstractTextShape extends Shape {
         this._cursor.place(this.getTextPaddingX(), this.getTextPaddingY() , this.getTextPaddingY() + this.fontSize * 1.4)
         return
       }
-      for (const line of this._lines) {
-        //if (line.bottom > y - this.getTextPaddingY()) {
-          for (const run of line.runs) {
+      const firstLine = this._lines[0]
+      const lastLine = this._lines[this._lines.length - 1]
+      if(firstLine.top > y - this.getTextPaddingY()) {
+        const firstRun = firstLine.runs[0]
+        const lastRun = firstLine.runs[firstLine.runs.length - 1]
+        if(x - this.getTextPaddingX() < firstRun.positions[0] ) {
+          this.selectTo(firstRun.indices[0])
+        } else if(x - this.getTextPaddingX() >= lastRun.positions[lastRun.indices.length * 2 - 2 ]) {
+          this.selectTo(lastRun.indices[lastRun.indices.length - 1])
+        } else {
+          for (const run of firstLine.runs) {
             for (let index = 0; index < run.indices.length - 1; index++) {
               if (x - this.getTextPaddingX() >= run.positions[index * 2] && x - this.getTextPaddingX() <= run.positions[index * 2 + 2]) {
-                //console.log(`Enter to index = ${run.indices[index]}`)
+                console.log(`Enter index = ${run.indices[index]}`)
                 this.selectTo(run.indices[index])
-                return
               }
             }
           }
-          return
-        //}
-      }
+        }        
+      } else if(lastLine.bottom < y -this.getTextPaddingY()) {
+        const firstRun = lastLine.runs[0]
+        const lastRun = lastLine.runs[lastLine.runs.length - 1]
+        if(x - this.getTextPaddingX() < firstRun.positions[0] ) {
+          this.selectTo(firstRun.indices[0])
+        } else if(x - this.getTextPaddingX() >= lastRun.positions[lastRun.indices.length * 2 - 2 ]) {
+          this.selectTo(lastRun.indices[lastRun.indices.length - 1])
+        } else {
+          for (const run of lastLine.runs) {
+            for (let index = 0; index < run.indices.length - 1; index++) {
+              if (x - this.getTextPaddingX() >= run.positions[index * 2] && x - this.getTextPaddingX() <= run.positions[index * 2 + 2]) {
+                console.log(`Enter index = ${run.indices[index]}`)
+                this.selectTo(run.indices[index])
+              }
+            }
+          }
+        }        
+      } else {
+        for (let lineIndex = 0; lineIndex < this._lines.length; lineIndex++) {
+          const line = this._lines[lineIndex]
+          let selected = false
+          if(line.top <= y - this.getTextPaddingY() && line.bottom >= y - this.getTextPaddingY()) {
+            for (const run of line.runs) {
+              for (let index = 0; index < run.indices.length - 1; index++) {
+                if (x - this.getTextPaddingX() >= run.positions[index * 2] && x - this.getTextPaddingX() <= run.positions[index * 2 + 2]) {
+                  console.log(`Enter index = ${run.indices[index]}`)
+                  this.selectTo(run.indices[index])
+                  selected = true
+                  break;
+                }
+              }
+            }
+          }
+          if(selected) {
+            break;
+          }
+        }
+      }    
     }
 
     public moveColumns (columnCount: number) {
@@ -437,60 +492,60 @@ export abstract class AbstractTextShape extends Shape {
 
       const runs = this._runs
       const styles = this._styles
-      const f = this._font
-      const p = this._fontPaint
+      const font = this._font
+      const fontPaint = this._fontPaint
 
-      let s = styles[0]
-      let sindex = 0
-      let s_start = 0
-      let s_end = s.length
+      let style = styles[0]
+      let styleIndex = 0
+      let styleStart = 0
+      let styleEnd = style.length
 
-      let r = runs[0]
-      let rindex = 0
+      let run = runs[0]
+      let runIndex = 0
 
       let start = 0
       let end = 0
       while (start < this._text.length) {
-        while (r.textRange.end <= start) {
-          r = runs[++rindex]
-          if (!r) {
+        while (run.textRange.end <= start) {
+          run = runs[++runIndex]
+          if (!run) {
             // ran out of runs, so the remaining text must just be WS
             break
           }
         }
-        if (!r) { break }
-        while (s_end <= start) {
-          s = styles[++sindex]
-          s_start = s_end
-          s_end += s.length
+        if (!run) { break }
+        while (styleEnd <= start) {
+          style = styles[++styleIndex]
+          styleStart = styleEnd
+          styleEnd += style.length
         }
-        end = Math.min(r.textRange.end, s_end)
+        end = Math.min(run.textRange.end, styleEnd)
 
         // check that we have anything to draw
-        if (r.textRange.start >= end) {
+        if (run.textRange.start >= end) {
           start = end
           continue // could be a span of WS with no glyphs
         }
 
         //              f.setTypeface(r.typeface); // r.typeface is always null (for now)
-        f.fontSize = r.size
-        f.embolden = s.bold
-        f.skewX = s.italic ? -0.2 : 0
-        p.setColor(s.color)
+        font.fontSize = run.size
+        font.embolden = style.bold
+        font.skewX = style.italic ? -0.2 : 0
+        fontPaint.setColor(style.color)
 
-        let gly = r.glyphs
-        let pos = r.positions
-        if (start > r.textRange.start || end < r.textRange.end) {
+        let gly = run.glyphs
+        let pos = run.positions
+        if (start > run.textRange.start || end < run.textRange.end) {
           // search for the subset of glyphs to draw
           let glyph_start = 0; let glyph_end = 0
-          for (let i = 0; i < r.offsets.length; ++i) {
-            if (r.offsets[i] >= start) {
+          for (let i = 0; i < run.offsets.length; ++i) {
+            if (run.offsets[i] >= start) {
               glyph_start = i
               break
             }
           }
-          for (let i = glyph_start + 1; i < r.offsets.length; ++i) {
-            if (r.offsets[i] >= end) {
+          for (let i = glyph_start + 1; i < run.offsets.length; ++i) {
+            if (run.offsets[i] >= end) {
               glyph_end = i
               break
             }
@@ -506,24 +561,24 @@ export abstract class AbstractTextShape extends Shape {
         let startX = this.getTextPaddingX()
         let startY = this.getTextPaddingY()
         
-        graphics.drawGlyphs(gly, pos, startX, startY, f, p)
+        graphics.drawGlyphs(gly, pos, startX, startY, font, fontPaint)
 
-        if (s.underline) {
+        if (style.underline) {
           const gap = 2
           const Y = pos[1] // first Y
           const lastX = pos[gly.length * 2]
-          const sects = f.getGlyphIntercepts(gly, pos, Y + 2, Y + 4)
+          const sects = font.getGlyphIntercepts(gly, pos, Y + 2, Y + 4)
 
           let x = pos[0]
           for (let i = 0; i < sects.length; i += 2) {
             const end = sects[i] - gap
             if (x < end) {
-              graphics.drawRect4f(x + startX, Y + 2 + startY, end + startX, Y + 4 + startY, p)
+              graphics.drawRect4f(x + startX, Y + 2 + startY, end + startX, Y + 4 + startY, fontPaint)
             }
             x = sects[i + 1] + gap
           }
           if (x < lastX) {
-            graphics.drawRect4f(x + startX, Y + 2 + startY, lastX + startX, Y + 4 + startY, p)
+            graphics.drawRect4f(x + startX, Y + 2 + startY, lastX + startX, Y + 4 + startY, fontPaint)
           }
         }
 
@@ -661,13 +716,18 @@ export abstract class AbstractTextShape extends Shape {
     }
 
     private getLinesIndexToLineIndex (index: number) {
-      let i = 0
-      for (const l of this._lines) {
-        // console.log(l)
-        if (index <= l.textRange.last) {
-          return i
+      let lineIndex = 0
+      for (const line of this._lines) {
+        //Currently there is a bug which seems not support chinese or unicode 16 and so we need to switch to use textrange in Runs
+        //if (index <= line.textRange.last) {
+        //  return i
+        //}
+        for(const run of line.runs) {
+          if(index <= run.textRange.end) {
+            return lineIndex
+          }
         }
-        i += 1
+        lineIndex += 1
       }
       return this._lines.length - 1
     }
@@ -697,25 +757,45 @@ export abstract class AbstractTextShape extends Shape {
     }
 
     private getLinesIndicesToPath (startIndex: number, endIndex: number) {
+      console.log(`getLinesIndicesToPath=> ${startIndex}  ${endIndex}`)
       if (startIndex == endIndex) {
         return undefined
       }
       const path = new Path()
+      const startLineIndex = this.getLinesIndexToLineIndex(startIndex)
+      const endLineIndex = this.getLinesIndexToLineIndex(endIndex)
       const startLine = this.getLinesIndexToLine(startIndex)
       const endLine = this.getLinesIndexToLine(endIndex)
-      const startX = this.getRunsIndexToX(startLine, startIndex)
-      const endX = this.getRunsIndexToX(endLine, endIndex)
-      if (startLine == endLine) {
-        path.addRectangle(new Rectangle(startX + this.getTextPaddingX(), startLine.top + this.getTextPaddingY(), endX + this.getTextPaddingX(), startLine.bottom + this.getTextPaddingY()))
+      const startLineStartX = this.getRunsIndexToX(startLine, startIndex)
+      const endLineEndX = this.getRunsIndexToX(endLine, endIndex)
+      //if (startLine == endLine) {
+      //  path.addRectangle(new Rectangle(startLineStartX + this.getTextPaddingX(), startLine.top + this.getTextPaddingY(), endLineEndX + this.getTextPaddingX(), startLine.bottom + this.getTextPaddingY()))
+      //} else {
+      //  path.addRectangle(new Rectangle(startLineStartX + this.getTextPaddingX(), startLine.top + this.getTextPaddingY(), startLine.right + this.getTextPaddingX(), startLine.bottom + this.getTextPaddingY()))
+      //  path.addRectangle(new Rectangle(0 + this.getTextPaddingX(), endLine.top + this.getTextPaddingY(), endLineEndX + this.getTextPaddingX(), endLine.bottom + this.getTextPaddingY()))
+      //  if (startLine.bottom < endLine.top) {          
+      //    path.addRectangle(new Rectangle(0 + this.getTextPaddingX(), startLine.bottom + this.getTextPaddingY(), this.width + this.getTextPaddingX(), endLine.top + this.getTextPaddingY()))
+      //  }
+      //}
+      if(startLineIndex == endLineIndex) {
+        path.addRectangle(new Rectangle(startLineStartX + this.getTextPaddingX(), startLine.top + this.getTextPaddingY(), endLineEndX + this.getTextPaddingX(), startLine.bottom + this.getTextPaddingY()))
       } else {
-        path.addRectangle(new Rectangle(startX + this.getTextPaddingX(), startLine.top + this.getTextPaddingY(), this.width + this.getTextPaddingX(), startLine.bottom + this.getTextPaddingY()))
-        path.addRectangle(new Rectangle(0 + this.getTextPaddingX(), endLine.top + this.getTextPaddingY(), endX + this.getTextPaddingX(), endLine.bottom + this.getTextPaddingY()))
-        if (startLine.bottom < endLine.top) {
-          path.addRectangle(new Rectangle(0 + this.getTextPaddingX(), startLine.bottom + this.getTextPaddingY(), this.width + this.getTextPaddingX(), endLine.top + this.getTextPaddingY()))
+        const startLineEndX = this.getLineToX(startLine)
+        path.addRectangle(new Rectangle(startLineStartX + this.getTextPaddingX(), startLine.top + this.getTextPaddingY(), startLineEndX + this.getTextPaddingX(), startLine.bottom + this.getTextPaddingY()))
+        path.addRectangle(new Rectangle(0 + this.getTextPaddingX(), endLine.top + this.getTextPaddingY(), endLineEndX + this.getTextPaddingX(), endLine.bottom + this.getTextPaddingY()))
+        for(let index = startLineIndex + 1; index <= endLineIndex - 1; index ++) {
+          const line = this._lines[index]
+          const lineEndX  = this.getLineToX(line)
+          path.addRectangle(new Rectangle(0 + this.getTextPaddingX(), line.top + this.getTextPaddingY(), lineEndX + this.getTextPaddingX(), line.bottom + this.getTextPaddingY()))
         }
       }
-
       return path
+    }
+
+    private getLineToX(line: ShapedLine): number {
+      let run = line.runs[line.runs.length - 1]
+      let x = run.positions[run.positions.length - 2]
+      return x
     }
 
     private getRunsXToIndex (line: ShapedLine, x: number) {
