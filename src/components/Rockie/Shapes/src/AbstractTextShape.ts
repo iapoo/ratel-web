@@ -14,6 +14,8 @@ export abstract class AbstractTextShape extends Shape {
     private _cursor: CursorMaker = new CursorMaker(Colors.Black, Colors.Blue, 0, 0, 0, 750)
     private _startIndex = 0
     private _endIndex = 0
+    private _startLineIndex = 0
+    private _endLineIndex = 0
     private _selectStartIndex = 0
     private _styles = new Array<Style>(0)
     private _font = new Font()
@@ -655,7 +657,7 @@ export abstract class AbstractTextShape extends Shape {
       })
       this._paragraph = this._paragraphBuilder.build()
       this._paragraph.layout(this.width - this.getTextPaddingX() * 2)
-      this._lines = this._paragraph.getShapedLines()
+      this._lines = this._paragraph.getShapedLines()      
 
       this._runs.length = 0
       let startIndex = 0
@@ -667,6 +669,11 @@ export abstract class AbstractTextShape extends Shape {
             startIndex++
           })
           startIndex--
+          //Repair invisible characters because they are removed after built in shape line.
+          console.log(`${this._text.length}    ${startIndex + 2} ${this._text[startIndex]} ${this._text[startIndex] == '\r'}  ` )
+          if(this._text.length >= startIndex + 2 && this._text[startIndex] == '\r' && this._text[startIndex + 1] == '\n'){
+            startIndex = startIndex + 2
+          }
           run.textRange = { start: run.indices[0], end: run.indices[run.indices.length - 1], }
           this._runs.push(run)
         }
