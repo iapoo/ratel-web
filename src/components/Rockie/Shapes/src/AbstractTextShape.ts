@@ -259,13 +259,21 @@ export abstract class AbstractTextShape extends Shape {
           const line = this._lines[lineIndex]
           let selected = false
           if(line.top <= y - this.getTextPaddingY() && line.bottom >= y - this.getTextPaddingY()) {
-            for (const run of line.runs) {
-              for (let index = 0; index < run.indices.length - 1; index++) {
-                if (x - this.getTextPaddingX() >= run.positions[index * 2] && x - this.getTextPaddingX() <= run.positions[index * 2 + 2]) {
-                  console.log(`Enter index = ${run.indices[index]}`)
-                  this.select(run.indices[index], run.indices[index])
-                  selected = true
-                  break;
+            const firstRun = line.runs[0]
+            const lastRun = line.runs[line.runs.length - 1]
+            if(x - this.getTextPaddingX() < firstRun.positions[0] ) {
+              this.select(firstRun.indices[0], firstRun.indices[0])
+            } else if(x - this.getTextPaddingX() >= lastRun.positions[lastRun.indices.length * 2 - 2 ]) {
+              this.select(lastRun.indices[lastRun.indices.length - 1],lastRun.indices[lastRun.indices.length - 1])
+            } else {
+              for (const run of line.runs) {
+                for (let index = 0; index < run.indices.length - 1; index++) {
+                  if (x - this.getTextPaddingX() >= run.positions[index * 2] && x - this.getTextPaddingX() <= run.positions[index * 2 + 2]) {
+                    console.log(`Enter index = ${run.indices[index]}`)
+                    this.select(run.indices[index], run.indices[index])
+                    selected = true
+                    break;
+                  }
                 }
               }
             }
@@ -324,13 +332,21 @@ export abstract class AbstractTextShape extends Shape {
           const line = this._lines[lineIndex]
           let selected = false
           if(line.top <= y - this.getTextPaddingY() && line.bottom >= y - this.getTextPaddingY()) {
-            for (const run of line.runs) {
-              for (let index = 0; index < run.indices.length - 1; index++) {
-                if (x - this.getTextPaddingX() >= run.positions[index * 2] && x - this.getTextPaddingX() <= run.positions[index * 2 + 2]) {
-                  console.log(`Enter index = ${run.indices[index]}`)
-                  this.selectTo(run.indices[index])
-                  selected = true
-                  break;
+            const firstRun = line.runs[0]
+            const lastRun = line.runs[line.runs.length - 1]
+            if(x - this.getTextPaddingX() < firstRun.positions[0] ) {
+              this.selectTo(firstRun.indices[0])
+            } else if(x - this.getTextPaddingX() >= lastRun.positions[lastRun.indices.length * 2 - 2 ]) {
+              this.selectTo(lastRun.indices[lastRun.indices.length - 1])
+            } else {
+              for (const run of line.runs) {
+                for (let index = 0; index < run.indices.length - 1; index++) {
+                  if (x - this.getTextPaddingX() >= run.positions[index * 2] && x - this.getTextPaddingX() <= run.positions[index * 2 + 2]) {
+                    console.log(`Enter index = ${run.indices[index]}`)
+                    this.selectTo(run.indices[index])
+                    selected = true
+                    break;
+                  }
                 }
               }
             }
@@ -788,12 +804,14 @@ export abstract class AbstractTextShape extends Shape {
         path.addRectangle(new Rectangle(startLineStartX + this.getTextPaddingX(), startLine.top + this.getTextPaddingY(), endLineEndX + this.getTextPaddingX(), startLine.bottom + this.getTextPaddingY()))
       } else {
         const startLineEndX = this.getLineToX(startLine)
+        const endLineStartX = this.getLineFromX(endLine)
         path.addRectangle(new Rectangle(startLineStartX + this.getTextPaddingX(), startLine.top + this.getTextPaddingY(), startLineEndX + this.getTextPaddingX(), startLine.bottom + this.getTextPaddingY()))
-        path.addRectangle(new Rectangle(0 + this.getTextPaddingX(), endLine.top + this.getTextPaddingY(), endLineEndX + this.getTextPaddingX(), endLine.bottom + this.getTextPaddingY()))
+        path.addRectangle(new Rectangle(endLineStartX + this.getTextPaddingX(), endLine.top + this.getTextPaddingY(), endLineEndX + this.getTextPaddingX(), endLine.bottom + this.getTextPaddingY()))
         for(let index = startLineIndex + 1; index <= endLineIndex - 1; index ++) {
           const line = this._lines[index]
           const lineEndX  = this.getLineToX(line)
-          path.addRectangle(new Rectangle(0 + this.getTextPaddingX(), line.top + this.getTextPaddingY(), lineEndX + this.getTextPaddingX(), line.bottom + this.getTextPaddingY()))
+          const lineStartX = this.getLineFromX(line)
+          path.addRectangle(new Rectangle(lineStartX + this.getTextPaddingX(), line.top + this.getTextPaddingY(), lineEndX + this.getTextPaddingX(), line.bottom + this.getTextPaddingY()))
         }
       }
       return path
@@ -802,6 +820,12 @@ export abstract class AbstractTextShape extends Shape {
     private getLineToX(line: ShapedLine): number {
       let run = line.runs[line.runs.length - 1]
       let x = run.positions[run.positions.length - 2]
+      return x
+    }
+
+    private getLineFromX(line: ShapedLine): number {
+      let run = line.runs[line.runs.length - 1]
+      let x = run.positions[0]
       return x
     }
 
