@@ -14,9 +14,10 @@ export abstract class AbstractTextShape extends Shape {
     private _cursor: CursorMaker = new CursorMaker(Colors.Black, Colors.Blue, 0, 0, 0, 750)
     private _startIndex = 0
     private _endIndex = 0
-    private _startLineIndex = 0
-    private _endLineIndex = 0
     private _selectStartIndex = 0
+    private _startStyleIndex = 0
+    private _endStyleIndex = 0
+    private _selectStyle = new Style()
     private _styles = new Array<Style>(0)
     private _font = new Font()
     private _runs = new Array<GlyphRun>(0)
@@ -57,60 +58,71 @@ export abstract class AbstractTextShape extends Shape {
     //  this._font = value
     //}
 
-    public get fontPaint() {
-      return this._fontPaint
-    }
+    //public get fontPaint() {
+    //  return this._fontPaint
+    //}
 
-    public set fontPaint(value: Paint) {
-      this._fontPaint = value
-    }
+    //public set fontPaint(value: Paint) {
+    //  this._fontPaint = value
+    //}
     
     public get fontColor() {
-      return this._styles[0].color
+      //return this._styles[this._startStyleIndex].color
+      return this._selectStyle.color
     }
 
     public set fontColor(value: Color) {
-      this._styles[0].color = value
+      //this._styles[this._startStyleIndex].color = value
+      this._selectStyle.color = value
+      this.buildLines()
     }
 
     public get fontSize() {
-      return this._styles[0].size
+      //return this._styles[this._startStyleIndex].size
+      return this._selectStyle.size
     }
 
     public set fontSize(value: number) {
-      this._styles[0].size = value
+      //this._styles[this._startStyleIndex].size = value
+      this._selectStyle.size = value
       this.buildLines()
     }
 
     public get fontWeight() {
-      return this._styles[0].bold ? FontWeight.BOLD : FontWeight.NORMAL
+      //return this._styles[this._startStyleIndex].bold ? FontWeight.BOLD : FontWeight.NORMAL
+      return this._selectStyle.bold ? FontWeight.BOLD : FontWeight.NORMAL
     }
 
     public set fontWeight(value: FontWeight) {
-      this._styles[0].bold = value == FontWeight.BOLD
+      //this._styles[this._startStyleIndex].bold = value == FontWeight.BOLD
+      this._selectStyle.bold = value == FontWeight.BOLD
       this.buildLines()
     }
 
     public get fontSlant() {
-      return this._styles[0].italic ? FontSlant.ITALIC : FontSlant.UP_RIGHT
+      //return this._styles[this._startStyleIndex].italic ? FontSlant.ITALIC : FontSlant.UP_RIGHT
+      return this._selectStyle.italic ? FontSlant.ITALIC : FontSlant.UP_RIGHT
     }
 
     public set fontSlant(value: FontSlant) {
-      this._styles[0].italic = value == FontSlant.ITALIC
+      //this._styles[this._startStyleIndex].italic = value == FontSlant.ITALIC
+      this._selectStyle.italic = value == FontSlant.ITALIC
       this.buildLines()
     }
 
     public get textDecoration() {
-      return this._styles[0].underline ? TextDecoration.UNDERLINE : TextDecoration.NONE
+      //return this._styles[this._startStyleIndex].underline ? TextDecoration.UNDERLINE : TextDecoration.NONE
+      return this._selectStyle.underline ? TextDecoration.UNDERLINE : TextDecoration.NONE
     }
 
     public set textDecoration(value: TextDecoration) {
-      this._styles[0].underline = value == TextDecoration.UNDERLINE
+      //this._styles[this._startStyleIndex].underline = value == TextDecoration.UNDERLINE
+      this._selectStyle.underline = value == TextDecoration.UNDERLINE
       this.buildLines()
     }
 
     public get textAlignment() {
-      return this._styles[0].size
+      return this._paragraphStyle.textAlignment
     }
 
     public set textAlignment(value: TextAlignment) {
@@ -119,7 +131,7 @@ export abstract class AbstractTextShape extends Shape {
         textAlignment: value,
         textDirection: TextDirection.LTR,
         textStyle: new TextStyle(),
-        })
+      })
       this.buildLines()
     }
 
@@ -199,11 +211,19 @@ export abstract class AbstractTextShape extends Shape {
     }
 
     public select (start: number, end: number) {
+      if(start == this._startIndex && end == this._endIndex) {
+        return
+      }
       if(start == end) {
         this._selectStartIndex = start
       }
       this._startIndex = Math.min(start, end)
       this._endIndex = Math.max(start, end)
+      const [startStyleIndex, preStartLen, ] = this.findStyleIndexAndPrevLength(this._startIndex)
+      const [endStyleIndex, preEndLen, ] = this.findStyleIndexAndPrevLength(this._endIndex)
+      this._startStyleIndex = startStyleIndex
+      this._endStyleIndex = endStyleIndex
+      this._selectStyle = this._styles[startStyleIndex].clone()
       this.rebuildSelection()
     }
 
@@ -400,6 +420,10 @@ export abstract class AbstractTextShape extends Shape {
     }
 
     public insert (text: string) {
+      //if(text == 'e') {
+      //
+      //  console.log('1')
+      //}
       if (!text || text.length <= 0) {
         return
       }
@@ -409,29 +433,66 @@ export abstract class AbstractTextShape extends Shape {
 
       // do this before edit the text (we use text.length in an assert)
       const index = this._startIndex
-      const [ i, preLen, ] = this.findStyleIndexAndPrevLength(index)
-      this._styles[i].length += text.length
+      const [ styleIndex, preLen, ] = this.findStyleIndexAndPrevLength(index)
+      const style = this._styles[styleIndex]
+      if(style.length == 0) { //Empty yet
+        this._styles[styleIndex] = this._selectStyle.clone()         
+        this._styles[styleIndex].length += text.length
+        this._text = this._text.slice(0, index) + text + this._text.slice(index)
+        this._startIndex = this._endIndex = index + text.length
+      } else if(!style.isSameStyle(this._selectStyle)){
+        let totalLength = 0
+        for (let i = 0; i < this._styles.length; ++i) {
+          const styleLength = style.length
+          totalLength += styleLength
+          if (index < totalLength) {
+            let rightStyle = style.clone()
+            let leftStyle = style.clone()
+            let newStyle = this._selectStyle.clone()
+            rightStyle.length = totalLength - index
+            leftStyle.length = style.length - rightStyle.length
+            newStyle.length = text.length
+            this._styles[i] = leftStyle
+            if(i == this._styles.length - 1) {
+              this._styles.push(newStyle, rightStyle)
+            } else {
+              this._styles.splice(i + 1, 0, newStyle, rightStyle)
+            }
+            i = i + 2
+            this._text = this._text.slice(0, index) + text + this._text.slice(index)
+            this._startIndex = this._endIndex = index + text.length
+            break
+          } else if(index  == totalLength) {
+            let newStyle = this._selectStyle.clone()         
+            newStyle.length = text.length
+            this._styles.splice(i + 1, 0, newStyle)
+            this._text = this._text.slice(0, index) + text + this._text.slice(index)
+            this._startIndex = this._endIndex = index + text.length
+            i ++
+          }
+        }
+      } else {
+        this._styles[styleIndex].length += text.length
+        this._text = this._text.slice(0, index) + text + this._text.slice(index)
+        this._startIndex = this._endIndex = index + text.length
+        // this.select(this._startIndex, this._endIndex)      
+      }
 
-      // now grow the text
-      this._text = this._text.slice(0, index) + text + this._text.slice(index)
-
-      this._startIndex = this._endIndex = index + text.length
-      // this.select(this._startIndex, this._endIndex)
       this.buildLines()
       this.rebuildSelection()
     }
 
     public findStyleIndexAndPrevLength (index: number) {
-      let len = 0
+      let length = 0
       for (let i = 0; i < this._styles.length; ++i) {
         const l = this._styles[i].length
-        len += l
+        length += l
         // < favors the latter style if index is between two styles
-        if (index < len) {
-          return [ i, len - l, ]
+        if (index <= length) {
+          return [ i, length - l, ]
         }
       }
-      return [ this._styles.length - 1, len, ]
+      return [ this._styles.length - 1, length, ]
     }
 
     public applyStyleToRange (style: Style, startIndex: number, endIndex: number) {
@@ -666,17 +727,22 @@ export abstract class AbstractTextShape extends Shape {
       this._paragraphBuilder = new ParagraphBuilder(this._paragraphStyle)
       //this._paragraphBuilder.addPlaceholder(100, 100, this.placeholderAlignment, TextBaseline.ALPHABETIC, 1)
       let index = 0
-      blocks.forEach(block => {
-        this._paragraphBuilder.pushStyle(block.textStyle)
-        this._paragraphBuilder.addText(this._text.substring(index, index + block.length))
-        index += block.length
+      //blocks.forEach(block => {
+      //  this._paragraphBuilder.pushStyle(block.textStyle)
+      //  this._paragraphBuilder.addText(this._text.substring(index, index + block.length))
+      //  index += block.length
+      //})
+      this._styles.forEach(style => {
+        this._paragraphBuilder.pushStyle(style.makeTextStyle())
+        this._paragraphBuilder.addText(this._text.substring(index, index + style.length))
+        index += style.length
       })
       this._paragraph = this._paragraphBuilder.build()
       this._paragraph.layout(this.width - this.getTextPaddingX() * 2)
-      this._lines = this._paragraph.getShapedLines()      
-
+      this._lines = this._paragraph.getShapedLines()
       this._runs.length = 0
       let startIndex = 0
+      let _this = this
       for (const line of this._lines) {
         for (const run of line.runs) {
           run.indices = []
@@ -686,12 +752,12 @@ export abstract class AbstractTextShape extends Shape {
           })
           startIndex--
           //Repair invisible characters because they are removed after built in shape line.
-          console.log(`${this._text.length}    ${startIndex + 2} ${this._text[startIndex]} ${this._text[startIndex] == '\r'}  ` )
-          if(this._text.length >= startIndex + 2 && this._text[startIndex] == '\r' && this._text[startIndex + 1] == '\n'){
+          console.log(`${_this._text.length}    ${startIndex + 2} ${_this._text[startIndex]} ${_this._text[startIndex] == '\r'}  ` )
+          if(_this._text.length >= startIndex + 2 && _this._text[startIndex] == '\r' && _this._text[startIndex + 1] == '\n'){
             startIndex = startIndex + 2
           }
           run.textRange = { start: run.indices[0], end: run.indices[run.indices.length - 1], }
-          this._runs.push(run)
+          _this._runs.push(run)
         }
       }
     }

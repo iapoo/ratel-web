@@ -526,6 +526,7 @@ const Content: FC<ContentProps> = ({
         //shape.markDirty()
         editorItem.fontSize = value
       })
+      Utils.currentEditor.focus()    
     }
   }
 
@@ -539,6 +540,7 @@ const Content: FC<ContentProps> = ({
           editorItem.fontColor = color
         }
       })
+      Utils.currentEditor.focus()    
     }
   }
 
@@ -549,6 +551,7 @@ const Content: FC<ContentProps> = ({
       editorItems.forEach(editorItem => {
         editorItem.fontWeight = fontBold ? FontWeight.NORMAL : FontWeight.BOLD
       })
+      Utils.currentEditor.focus()    
     }
   }
 
@@ -559,6 +562,7 @@ const Content: FC<ContentProps> = ({
       editorItems.forEach(editorItem => {
         editorItem.fontSlant = fontItalic ? FontSlant.UP_RIGHT : FontSlant.ITALIC
       })
+      Utils.currentEditor.focus()    
     }
   }
 
@@ -569,6 +573,7 @@ const Content: FC<ContentProps> = ({
       editorItems.forEach(editorItem => {
         editorItem.textDecoration = fontUnderline ? TextDecoration.NONE : TextDecoration.UNDERLINE
       })
+      Utils.currentEditor.focus()    
     }
   }
 
@@ -579,6 +584,7 @@ const Content: FC<ContentProps> = ({
       editorItems.forEach(editorItem => {
         editorItem.textAlignment = SystemUtils.parseTextAlignment(textAlignment)
       })
+      Utils.currentEditor.focus()    
     }
   }
 
@@ -589,6 +595,7 @@ const Content: FC<ContentProps> = ({
       editorItems.forEach(editorItem => {
         editorItem.textVerticalAlignment = SystemUtils.parseTextVerticalAligment(textVerticalAlignment)
       })
+      Utils.currentEditor.focus()    
     }
   }
 
