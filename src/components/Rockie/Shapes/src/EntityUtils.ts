@@ -1,5 +1,5 @@
 /* eslint-disable max-params */
-import { Color, Colors, Engine, EngineUtils, Graphics, Paint, Path, TextStyle, } from '@/components/Engine'
+import { Color, Colors, Engine, EngineUtils, FontSlant, FontStyle, FontWeight, FontWidth, Graphics, Paint, Path, TextStyle, } from '@/components/Engine'
 
 export class CursorMaker {
     private _linePaint: Paint
@@ -120,6 +120,26 @@ export class Style {
 
   public get typeface () {
     return Engine.getTypeFace(this.typeFaceName)
+  }
+
+  public isSameStyle(style: Style): boolean {
+    if(this.typeFaceName == style.typeFaceName && this.size == style.size && this.color.equals(style.color) && this.bold == style.bold ) {
+      return true
+    }
+    return false
+  }
+
+  public makeTextStyle() {
+    let textStyle = new TextStyle({
+      fontFamilies: [this.typeFaceName],
+      fontSize: this.size,
+      fontStyle: new FontStyle({
+        weight: this.bold ? FontWeight.BOLD : FontWeight.NORMAL,
+        width: FontWidth.NORMAL,
+        slant: this.italic ? FontSlant.ITALIC : FontSlant.UP_RIGHT
+      })      
+    })
+    return textStyle
   }
 
   public mergeFrom (src: Style) {

@@ -896,6 +896,12 @@ export class Editor extends Painter {
     this._targetColumnResizing = false
   }
 
+  public focus() {
+    if(this._textFocused) {
+      this._textArea.focus()
+    }
+  }
+
   public handleKeyDown (e: KeyEvent) {
     console.log(`key down event: ${e.code}   ${e.key}`)
   }

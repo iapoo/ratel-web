@@ -249,7 +249,8 @@ export abstract class Item implements EditorItem {
   }
 
   public get fontColor() {
-    return this._fontColor
+    return this._shape.fontColor
+    //return this._fontColor
   }
 
   public set fontColor(value: Color) {
@@ -258,7 +259,8 @@ export abstract class Item implements EditorItem {
   }
 
   public get fontWeight() {
-    return this._fontWeight
+    return this._shape.fontWeight
+    //return this._fontWeight
   }
 
   public set fontWeight(value: FontWeight) {

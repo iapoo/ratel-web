@@ -274,6 +274,7 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
         //shape.markDirty()
         editorItem.fontSize = value
       })
+      currentEditor.focus()    
     }
   }
 
@@ -330,6 +331,7 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
           editorItem.fontColor = color
         }
       })
+      currentEditor.focus()    
     }
   }
 

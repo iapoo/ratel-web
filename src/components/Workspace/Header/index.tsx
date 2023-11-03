@@ -480,6 +480,7 @@ const Header: FC<HeaderProps> = ({
         //shape.markDirty()
         editorItem.fontSize = value
       })
+      Utils.currentEditor.focus()
     }
   }
 
@@ -536,6 +537,7 @@ const Header: FC<HeaderProps> = ({
           editorItem.fontColor = color
         }
       })
+      Utils.currentEditor.focus()
     }
   }
 
@@ -546,7 +548,9 @@ const Header: FC<HeaderProps> = ({
       editorItems.forEach(editorItem => {
         editorItem.fontWeight = fontBold ? FontWeight.NORMAL : FontWeight.BOLD
       })
+      currentEditor.focus()
     }
+    
   }
 
   const handleItalicChanged = () => {
@@ -556,6 +560,7 @@ const Header: FC<HeaderProps> = ({
       editorItems.forEach(editorItem => {
         editorItem.fontSlant = fontItalic ? FontSlant.UP_RIGHT : FontSlant.ITALIC
       })
+      currentEditor.focus()
     }
   }
 
@@ -566,6 +571,7 @@ const Header: FC<HeaderProps> = ({
       editorItems.forEach(editorItem => {
         editorItem.textDecoration = fontUnderline ? TextDecoration.NONE : TextDecoration.UNDERLINE
       })
+      currentEditor.focus()
     }
   }
 
@@ -576,6 +582,7 @@ const Header: FC<HeaderProps> = ({
       editorItems.forEach(editorItem => {
         editorItem.textAlignment = SystemUtils.parseTextAlignment(textAlignment)
       })
+      currentEditor.focus()
     }
   }
 
@@ -586,6 +593,7 @@ const Header: FC<HeaderProps> = ({
       editorItems.forEach(editorItem => {
         editorItem.textVerticalAlignment = SystemUtils.parseTextVerticalAligment(textVerticalAlignment)
       })
+      currentEditor.focus()
     }
   }
 
@@ -780,7 +788,7 @@ const Header: FC<HeaderProps> = ({
               </Tooltip>
               <Divider type='vertical' style={{ margin: 0 }} />
               <Tooltip title={<FormattedMessage id='workspace.header.title.font-size'/>}>
-                <InputNumber min={Consts.FONT_SIZE_MIN} max={Consts.FONT_SIZE_MAX} value={fontSize} onChange={handleFontSizeChange} size='small' style={{ width: 60 }} disabled={!selectionValid} />
+                <InputNumber min={Consts.FONT_SIZE_MIN} max={Consts.FONT_SIZE_MAX} value={fontSize} onChange={handleFontSizeChange} size='small' style={{ width: 60 }} readOnly disabled={!selectionValid} />
               </Tooltip>
               <Tooltip title={<FormattedMessage id='workspace.header.title.fill-color'/>}>
                 <ColorPicker size='small' value={fillColor} onChange={handleFillColorChange} disabled={!selectionValid} />
