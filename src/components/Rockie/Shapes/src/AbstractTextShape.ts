@@ -420,10 +420,9 @@ export abstract class AbstractTextShape extends Shape {
     }
 
     public insert (text: string) {
-      //if(text == 'e') {
-      //
-      //  console.log('1')
-      //}
+      if(text == '方式') {
+        console.log('1')
+      }
       if (!text || text.length <= 0) {
         return
       }
@@ -550,7 +549,7 @@ export abstract class AbstractTextShape extends Shape {
 
       // this._validateStyles()
       // LOG('after applying styles', this._styles)
-
+      
       if (layoutChanged) {
         this.buildLines()
       }
@@ -562,9 +561,6 @@ export abstract class AbstractTextShape extends Shape {
 
     public render (graphics: Graphics): void {
       super.render(graphics)
-      //if (!this._text) {
-      //  return
-      //}
       if (this._focused) {
         this._cursor.renderBefore(graphics)
       }
@@ -617,14 +613,14 @@ export abstract class AbstractTextShape extends Shape {
         if (start > run.textRange.start || end < run.textRange.end) {
           // search for the subset of glyphs to draw
           let glyph_start = 0; let glyph_end = 0
-          for (let i = 0; i < run.offsets.length; ++i) {
-            if (run.offsets[i] >= start) {
+          for (let i = 0; i < run.indices.length; ++i) {
+            if (run.indices[i] >= start) {
               glyph_start = i
               break
             }
           }
-          for (let i = glyph_start + 1; i < run.offsets.length; ++i) {
-            if (run.offsets[i] >= end) {
+          for (let i = glyph_start + 1; i < run.indices.length; ++i) {
+            if (run.indices[i] >= end) {
               glyph_end = i
               break
             }

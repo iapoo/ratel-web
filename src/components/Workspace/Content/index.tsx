@@ -220,8 +220,10 @@ const Content: FC<ContentProps> = ({
     Utils.currentEditor.onTextEditStart(handleTextEditStart)
     oldEditor?.removeTextEditEnd(handleTextEditEnd)
     Utils.currentEditor.onTextEditEnd(handleTextEditEnd)
-    oldEditor?.removeSelectionResized(handleSelectionResided)
-    Utils.currentEditor.onSelectionResized(handleSelectionResided)
+    oldEditor?.removeSelectionResized(handleSelectionResized)
+    Utils.currentEditor.onSelectionResized(handleSelectionResized)
+    oldEditor?.removeTextEditStyleChange(handleTextEditStyleChange)
+    Utils.currentEditor.onTextEditStyleChange(handleTextEditStyleChange)
   }
 
   const updateEditors = (panes: Pane[]) => {
@@ -298,8 +300,8 @@ const Content: FC<ContentProps> = ({
     Utils.currentEditor.onTextEditStart(handleTextEditStart)
     oldEditor?.removeTextEditEnd(handleTextEditEnd)
     Utils.currentEditor.onTextEditEnd(handleTextEditEnd)
-    oldEditor?.removeSelectionResized(handleSelectionResided)
-    Utils.currentEditor.onSelectionResized(handleSelectionResided)
+    oldEditor?.removeSelectionResized(handleSelectionResized)
+    Utils.currentEditor.onSelectionResized(handleSelectionResized)
   }
 
   const onChange = (newActiveKey: string) => {
@@ -329,11 +331,29 @@ const Content: FC<ContentProps> = ({
         Utils.currentEditor.onTextEditStart(handleTextEditStart)
         oldEditor?.removeTextEditEnd(handleTextEditEnd)
         Utils.currentEditor.onTextEditEnd(handleTextEditEnd)
-        oldEditor?.removeSelectionResized(handleSelectionResided)
-        Utils.currentEditor.onSelectionResized(handleSelectionResided)
+        oldEditor?.removeSelectionResized(handleSelectionResized)
+        Utils.currentEditor.onSelectionResized(handleSelectionResized)
       }
     }
     updateEditors(panes)
+  }
+
+
+  const refreshSelectionInfo = (editor: Editor) => {
+    if (editor.selectionLayer.getEditorItemCount() > 0) {
+      let editorItem = editor.selectionLayer.getEditorItem(0)
+      setFontSize(editorItem.fontSize)
+      let fontColorValue = SystemUtils.generateColorString(editorItem.fontColor)
+      setFontColor(fontColorValue.substring(0, 7))
+      //setFontColor(shape.fontPaint.getColor)
+      setFontBold(editorItem.fontWeight == FontWeight.BOLD)
+      setFontItalic(editorItem.fontSlant == FontSlant.ITALIC)
+      setFontUnderline(editorItem.textDecoration == TextDecoration.UNDERLINE)
+      let textAlignmentValue = SystemUtils.generateTextAlignment(editorItem.textAlignment)
+      setTextAlignment(textAlignmentValue)
+      let textVerticalAlignmentValue = SystemUtils.generateTextVerticalAligment(editorItem.textVerticalAlignment)
+      setTextVerticalAlignment(textVerticalAlignmentValue)
+    }
   }
 
   const handleSelectionChange = (e: EditorEvent) => {
@@ -350,6 +370,7 @@ const Content: FC<ContentProps> = ({
         setTableToolbarVisible(true)
         tableSelected = true
       }
+      refreshSelectionInfo(Utils.currentEditor)
     }
     if(!tableSelected) {
       setTableToolbarVisible(false)
@@ -357,7 +378,7 @@ const Content: FC<ContentProps> = ({
   }
 
 
-  const handleSelectionResided = (e: EditorEvent) => {
+  const handleSelectionResized = (e: EditorEvent) => {
     console.log(`handle selection resized`)
     if(Utils.currentEditor && e.source.selectionLayer.getEditorItemCount() == 1 ) {
       let item = e.source.selectionLayer.getEditorItem(0) as Item
@@ -377,6 +398,12 @@ const Content: FC<ContentProps> = ({
     }
   }
 
+  const handleTextEditStyleChange = (e: EditorEvent) => {
+    if(Utils.currentEditor && e.source.selectionLayer.getEditorItemCount() == 1 ) {
+      refreshSelectionInfo(Utils.currentEditor)
+    }
+  }
+
   const handleTextEditStart = (e: EditorEvent) => {
     //console.log(`handle text start`)
     if(Utils.currentEditor && e.source.selectionLayer.getEditorItemCount() == 1 ) {
@@ -388,6 +415,7 @@ const Content: FC<ContentProps> = ({
       setTextToolbarLeft(left + postion.left)
       setTextToolbarTop(top + postion.top)
       setTextToolbarVisible(true)
+      refreshSelectionInfo(Utils.currentEditor)
     }
   }
 
@@ -417,6 +445,7 @@ const Content: FC<ContentProps> = ({
     console.log(`handle text end`)
     setTextToolbarVisible(false)
   }
+
 
   const add = () => {
     const newActiveKey = `${newTabIndex.current++}`
@@ -452,8 +481,8 @@ const Content: FC<ContentProps> = ({
     Utils.currentEditor.onTextEditStart(handleTextEditStart)
     oldEditor?.removeTextEditEnd(handleTextEditEnd)
     Utils.currentEditor.onTextEditEnd(handleTextEditEnd)
-    oldEditor?.removeSelectionResized(handleSelectionResided)
-    Utils.currentEditor.onSelectionResized(handleSelectionResided)
+    oldEditor?.removeSelectionResized(handleSelectionResized)
+    Utils.currentEditor.onSelectionResized(handleSelectionResized)
     let operation = new Operation(Utils.currentEditor, OperationType.ADD_EDITOR, [])
     Utils.currentEditor.operationService.addOperation(operation)
 }
@@ -485,7 +514,7 @@ const Content: FC<ContentProps> = ({
       Utils.currentEditor.onTextEditStart(handleTextEditStart)
       Utils.currentEditor.onTextEditEnd(handleTextEditEnd)
       Utils.currentEditor.onTextEditEnd(handleTextEditEnd)
-      Utils.currentEditor.onSelectionResized(handleSelectionResided)
+      Utils.currentEditor.onSelectionResized(handleSelectionResized)
     }
   }
 

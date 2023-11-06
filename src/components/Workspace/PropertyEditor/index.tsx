@@ -58,9 +58,11 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
     //console.log('refreshing')
     if(previousEditor?.hasSelectionChange(handleSelectionChange)) {
       previousEditor.removeSelectionChange(handleSelectionChange)
+      previousEditor.removeTextEditStyleChange(handleTextEditStyleChange)
     }
     if(currentEditor) {
       currentEditor.onSelectionChange(handleSelectionChange)
+      currentEditor.onTextEditStyleChange(handleSelectionChange)
       if(currentEditor.selectionLayer.getEditorItemCount() > 0) {
         setShowPageItems(false)
         refreshSelectionInfo(currentEditor)
@@ -137,6 +139,12 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
 
   const handleSelectionChange = (e: EditorEvent) => {
     refresh()
+  }
+
+  const handleTextEditStyleChange = (e: EditorEvent) => {
+    if(currentEditor) {
+      refreshSelectionInfo(currentEditor)
+    }
   }
 
   const handleGridSizeChange = (value: number | null)=> {

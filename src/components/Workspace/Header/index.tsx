@@ -104,12 +104,14 @@ const Header: FC<HeaderProps> = ({
     if (previousEditor) {
       previousEditor.removeSelectionChange(handleSelectionChange)
       previousEditor.removeOperationChange(handleOperationChange)
+      previousEditor.removeTextEditStyleChange(handleTextEditStyleChange)
     }
     if (currentEditor) {
       refreshSelectionInfo(currentEditor)
       refreshOperationInfos()
       currentEditor.onSelectionChange(handleSelectionChange)
       currentEditor.onOperationChange(handleOperationChange)
+      currentEditor.onTextEditStyleChange(handleTextEditStyleChange)
       if (currentEditor.selectionLayer.getEditorItemCount() > 0) {
         setSelectionValid(true)
       } else {
@@ -124,7 +126,7 @@ const Header: FC<HeaderProps> = ({
   const refreshSelectionInfo = (editor: Editor) => {
     if (editor.selectionLayer.getEditorItemCount() > 0) {
       let editorItem = editor.selectionLayer.getEditorItem(0)
-      let shape = editorItem.shape
+      //let shape = editorItem.shape
       setZoom(editor.zoom)
       setFontSize(editorItem.fontSize)
       setLineWidth(editorItem.lineWidth)
@@ -173,6 +175,10 @@ const Header: FC<HeaderProps> = ({
 
   const handleOperationChange = (e: EditorEvent) => {
     refreshOperationInfos()
+  }
+
+  const handleTextEditStyleChange  = (e: EditorEvent) => {
+    refreshSelectionInfo(e.source)
   }
 
   const refreshOperationInfos = () => {
@@ -483,6 +489,13 @@ const Header: FC<HeaderProps> = ({
       Utils.currentEditor.focus()
     }
   }
+  
+  const handleFontSizeStepChange = (value: number, info : any) => {
+    console.log('font size changed')
+    if(Utils.currentEditor) {
+      Utils.currentEditor.focus()
+    }
+  }
 
   const handleLineWidthChange = (value: number | null) => {
     if (value != null) {
@@ -788,7 +801,7 @@ const Header: FC<HeaderProps> = ({
               </Tooltip>
               <Divider type='vertical' style={{ margin: 0 }} />
               <Tooltip title={<FormattedMessage id='workspace.header.title.font-size'/>}>
-                <InputNumber min={Consts.FONT_SIZE_MIN} max={Consts.FONT_SIZE_MAX} value={fontSize} onChange={handleFontSizeChange} size='small' style={{ width: 60 }} readOnly disabled={!selectionValid} />
+                <InputNumber min={Consts.FONT_SIZE_MIN} max={Consts.FONT_SIZE_MAX} value={fontSize} onChange={handleFontSizeChange}  onStep={handleFontSizeStepChange}  size='small' style={{ width: 60 }} disabled={!selectionValid} />
               </Tooltip>
               <Tooltip title={<FormattedMessage id='workspace.header.title.fill-color'/>}>
                 <ColorPicker size='small' value={fillColor} onChange={handleFillColorChange} disabled={!selectionValid} />

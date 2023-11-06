@@ -123,7 +123,7 @@ export class Style {
   }
 
   public isSameStyle(style: Style): boolean {
-    if(this.typeFaceName == style.typeFaceName && this.size == style.size && this.color.equals(style.color) && this.bold == style.bold ) {
+    if(this.typeFaceName == style.typeFaceName && this.size == style.size && this.color.equals(style.color) && this.bold == style.bold && this.italic == style.italic && this.underline == style.underline) {
       return true
     }
     return false
@@ -137,7 +137,8 @@ export class Style {
         weight: this.bold ? FontWeight.BOLD : FontWeight.NORMAL,
         width: FontWidth.NORMAL,
         slant: this.italic ? FontSlant.ITALIC : FontSlant.UP_RIGHT
-      })      
+      }),
+      //decoration: this.underline ? 2 : 3
     })
     return textStyle
   }
