@@ -71,6 +71,7 @@ export class Editor extends Painter {
   private _textEditStartListeners = new Array<(e: EditorEvent) => void>(0)
   private _textEditEndListeners = new Array<(e: EditorEvent) => void>(0)
   private _selectionResizedListeners = new Array<(e: EditorEvent) => void>(0)
+  private _textEditStyleChangeListeners = new Array<(e: EditorEvent) => void>(0)
   private _startEditorItemInfos: EditorItemInfo[] = []
   private _origWidth: number
   private _origHeight: number
@@ -261,8 +262,31 @@ export class Editor extends Painter {
     }
   }
   
-  public hasSelectionResize(callback: (e: EditorEvent) => void) {
+  public hasSelectionResized(callback: (e: EditorEvent) => void) {
     const index = this._selectionResizedListeners.indexOf(callback)
+    return index >= 0
+  }  
+
+  public get textEditStyleChangeListeners() {
+    return this._textEditStyleChangeListeners
+  }
+
+  public onTextEditStyleChange(callback: (e: EditorEvent) => void) {
+    const index = this._textEditStyleChangeListeners.indexOf(callback)
+    if (index < 0) {
+      this._textEditStyleChangeListeners.push(callback)
+    }
+  }  
+
+  public removeTextEditStyleChange(callback: (e: EditorEvent) => void) {
+    const index = this._textEditStyleChangeListeners.indexOf(callback)
+    if (index >= 0) {
+      this._textEditStyleChangeListeners.splice(index, 1)
+    }
+  }
+  
+  public hasTextEditStyleChange(callback: (e: EditorEvent) => void) {
+    const index = this._textEditStyleChangeListeners.indexOf(callback)
     return index >= 0
   }
   
@@ -839,6 +863,7 @@ export class Editor extends Painter {
                 this._textArea.focus()
                 this.updateTextCursorLocation(this._targetItem, targetPoint.x, targetPoint.y)
                 this._targetItem.shape.enter(targetPoint.x, targetPoint.y)
+                this.triggerTextEditStyleChange()
               } else {
                 // Check double click
                 if (nowTime - this._targetTime < Editor.DOUBLE_CLICK_TIME) {
@@ -852,6 +877,7 @@ export class Editor extends Painter {
                   }
                   this._textArea.textContent = ''
                   this.updateTextCursorLocation(this._targetItem, targetPoint.x, targetPoint.y)
+                  this.triggerTextEditStyleChange()
                 }
               }
               this._targetTime = nowTime
@@ -863,6 +889,7 @@ export class Editor extends Painter {
               this.updateTextCursorLocation(clickedEditorItem, targetPoint.x, targetPoint.y)
               this._target.shape.enterTo(targetPoint.x, targetPoint.y)
               this._textSelecting = false              
+              this.triggerTextEditStyleChange()
             } else {
               // Check double click
               if (nowTime - this._targetTime < Editor.DOUBLE_CLICK_TIME) {
@@ -876,6 +903,7 @@ export class Editor extends Painter {
                 }
                 this._textArea.textContent = ''
                 this.updateTextCursorLocation(clickedEditorItem, targetPoint.x, targetPoint.y)
+                this.triggerTextEditStyleChange()
               }
             }
             this._targetTime = nowTime
@@ -1407,6 +1435,13 @@ export class Editor extends Painter {
 
   public triggerSelectionResized() {
     this._selectionResizedListeners.forEach(callback => {
+      const event = new EditorEvent(this)
+      callback(event)
+    })
+  }
+
+  public triggerTextEditStyleChange() {
+    this._textEditStyleChangeListeners.forEach(callback => {
       const event = new EditorEvent(this)
       callback(event)
     })

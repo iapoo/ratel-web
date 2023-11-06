@@ -278,7 +278,8 @@ export abstract class Item implements EditorItem {
   }
 
   public get fontSlant() {
-    return this._fontSlant
+    return this._shape.fontSlant
+    //return this._fontSlant
   }
 
   public set fontSlant(value: FontSlant) {
@@ -287,7 +288,8 @@ export abstract class Item implements EditorItem {
   }
 
   public get fontSize() {
-    return this._fontSize
+    return this._shape.fontSize
+    //return this._fontSize
   }
 
   public set fontSize(value: number) {
@@ -296,7 +298,8 @@ export abstract class Item implements EditorItem {
   }
 
   public get textAlignment() {
-    return this._textAlignment
+    return this._shape.textAlignment
+    //return this._textAlignment
   }
 
   public set textAlignment(value: TextAlignment) {
@@ -314,7 +317,8 @@ export abstract class Item implements EditorItem {
   }
 
   public get textDecoration() {
-    return this._textDecoration
+    return this._shape.textDecoration
+    //return this._textDecoration
   }
 
   public set textDecoration(value: TextDecoration) {
