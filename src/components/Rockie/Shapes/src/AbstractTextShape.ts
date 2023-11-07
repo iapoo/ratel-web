@@ -67,57 +67,97 @@ export abstract class AbstractTextShape extends Shape {
     //}
     
     public get fontColor() {
-      //return this._styles[this._startStyleIndex].color
-      return this._selectStyle.color
+      if(this._focused) {
+        return this._selectStyle.color
+      } else {
+      return this._styles[0].color
+    }
     }
 
     public set fontColor(value: Color) {
       //this._styles[this._startStyleIndex].color = value
       this._selectStyle.color = value
+      if(!this._focused) {
+        this._styles.forEach(style => {
+          style.color = value
+        })
+      }
       this.buildLines()
     }
 
     public get fontSize() {
-      //return this._styles[this._startStyleIndex].size
-      return this._selectStyle.size
+      if(this._focused) {
+        return this._selectStyle.size
+      } else {
+        return this._styles[0].size
+      }
     }
 
     public set fontSize(value: number) {
       //this._styles[this._startStyleIndex].size = value
       this._selectStyle.size = value
+      if(!this._focused) {
+        this._styles.forEach(style => {
+          style.size = value
+        })
+      }
       this.buildLines()
     }
 
     public get fontWeight() {
-      //return this._styles[this._startStyleIndex].bold ? FontWeight.BOLD : FontWeight.NORMAL
-      return this._selectStyle.bold ? FontWeight.BOLD : FontWeight.NORMAL
+      if(this._focused) {
+        return this._selectStyle.bold ? FontWeight.BOLD : FontWeight.NORMAL
+      } else {
+        return this._styles[0].bold ? FontWeight.BOLD : FontWeight.NORMAL
+      }
     }
 
     public set fontWeight(value: FontWeight) {
       //this._styles[this._startStyleIndex].bold = value == FontWeight.BOLD
       this._selectStyle.bold = value == FontWeight.BOLD
+      if(!this._focused) {
+        this._styles.forEach(style => {
+          style.bold = value == FontWeight.BOLD
+        })
+      }
       this.buildLines()
     }
 
     public get fontSlant() {
-      //return this._styles[this._startStyleIndex].italic ? FontSlant.ITALIC : FontSlant.UP_RIGHT
-      return this._selectStyle.italic ? FontSlant.ITALIC : FontSlant.UP_RIGHT
+      if(this._focused) {
+        return this._selectStyle.italic ? FontSlant.ITALIC : FontSlant.UP_RIGHT
+      } else {
+        return this._styles[0].italic ? FontSlant.ITALIC : FontSlant.UP_RIGHT
+      }
     }
 
     public set fontSlant(value: FontSlant) {
       //this._styles[this._startStyleIndex].italic = value == FontSlant.ITALIC
       this._selectStyle.italic = value == FontSlant.ITALIC
+      if(!this._focused) {
+        this._styles.forEach(style => {
+          style.italic = value == FontSlant.ITALIC
+        })
+      }
       this.buildLines()
     }
 
     public get textDecoration() {
-      //return this._styles[this._startStyleIndex].underline ? TextDecoration.UNDERLINE : TextDecoration.NONE
-      return this._selectStyle.underline ? TextDecoration.UNDERLINE : TextDecoration.NONE
+      if(this._focused) {
+        return this._selectStyle.underline ? TextDecoration.UNDERLINE : TextDecoration.NONE
+      } else {
+        return this._styles[0].underline ? TextDecoration.UNDERLINE : TextDecoration.NONE
+    }
     }
 
     public set textDecoration(value: TextDecoration) {
       //this._styles[this._startStyleIndex].underline = value == TextDecoration.UNDERLINE
       this._selectStyle.underline = value == TextDecoration.UNDERLINE
+      if(!this._focused) {
+        this._styles.forEach(style => {
+          style.underline = value == TextDecoration.UNDERLINE
+        })
+      }
       this.buildLines()
     }
 
