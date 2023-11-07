@@ -748,7 +748,7 @@ export abstract class AbstractTextShape extends Shape {
           })
           startIndex--
           //Repair invisible characters because they are removed after built in shape line.
-          console.log(`${_this._text.length}    ${startIndex + 2} ${_this._text[startIndex]} ${_this._text[startIndex] == '\r'}  ` )
+          //console.log(`${_this._text.length}    ${startIndex + 2} ${_this._text[startIndex]} ${_this._text[startIndex] == '\r'}  ` )
           if(_this._text.length >= startIndex + 2 && _this._text[startIndex] == '\r' && _this._text[startIndex + 1] == '\n'){
             startIndex = startIndex + 2
           }

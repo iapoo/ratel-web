@@ -70,6 +70,7 @@ const Header: FC<HeaderProps> = ({
   const [selectionValid, setSelectionValid,] = useState<boolean>(false)
   const [editorUndoable, setEditorUndoable,] = useState<boolean>(false)
   const [editorRedoable, setEditorRedoable,] = useState<boolean>(false)
+  const [fontSizeNode, setFontSizeNode, ] = useState<any>(null)
 
   useEffect(() => {
     if (!initialized) {
@@ -477,6 +478,7 @@ const Header: FC<HeaderProps> = ({
   }
 
   const handleFontSizeChange = (value: any) => {
+    console.log('font size changed')
     setFontSize(value)
     if (Utils.currentEditor) {
       let editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
@@ -488,13 +490,37 @@ const Header: FC<HeaderProps> = ({
       })
       Utils.currentEditor.focus()
     }
+    if(fontSizeNode) {
+      console.log('font size blue trigger on size change')
+      fontSizeNode.blur()
+    }
   }
   
   const handleFontSizeStepChange = (value: number, info : any) => {
-    console.log('font size changed')
+    console.log('font size step changed')
     if(Utils.currentEditor) {
       Utils.currentEditor.focus()
     }
+    if(fontSizeNode) {
+      console.log('font size blue trigger on size step change')
+      fontSizeNode.blur()
+    }
+  }
+
+  const handleFontSizeBlur = () => {
+    console.log('font size is blured')
+    if(Utils.currentEditor) {
+      Utils.currentEditor.focus()
+    }
+  }
+
+  const handleFontSizePressEnter = (e: KeyboardEvent) => {
+    console.log('font size is pressed Enter Key')       
+    if(fontSizeNode) {
+      console.log('font size blue trigger on size step change')
+      //fontSizeNode.blur()
+    }
+    //e.stopPropagation()
   }
 
   const handleLineWidthChange = (value: number | null) => {
@@ -801,7 +827,9 @@ const Header: FC<HeaderProps> = ({
               </Tooltip>
               <Divider type='vertical' style={{ margin: 0 }} />
               <Tooltip title={<FormattedMessage id='workspace.header.title.font-size'/>}>
-                <InputNumber min={Consts.FONT_SIZE_MIN} max={Consts.FONT_SIZE_MAX} value={fontSize} onChange={handleFontSizeChange}  onStep={handleFontSizeStepChange}  size='small' style={{ width: 60 }} disabled={!selectionValid} />
+                <InputNumber min={Consts.FONT_SIZE_MIN} max={Consts.FONT_SIZE_MAX} value={fontSize} 
+                  ref={(node) => {setFontSizeNode(node)}} 
+                  onChange={handleFontSizeChange}  onStep={handleFontSizeStepChange} onBlur={handleFontSizeBlur} onPressEnter={handleFontSizePressEnter} size='small' style={{ width: 60 }} disabled={!selectionValid} />
               </Tooltip>
               <Tooltip title={<FormattedMessage id='workspace.header.title.fill-color'/>}>
                 <ColorPicker size='small' value={fillColor} onChange={handleFillColorChange} disabled={!selectionValid} />
