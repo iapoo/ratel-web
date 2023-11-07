@@ -249,23 +249,25 @@ export abstract class Item implements EditorItem {
   }
 
   public get fontColor() {
+    this._fontColor = this._shape.fontColor
     return this._shape.fontColor
-    //return this._fontColor
   }
 
   public set fontColor(value: Color) {
     this._fontColor = value
-    this.updateTheme()
+    //this.updateTheme()
+    this._shape.fontColor = value
   }
 
   public get fontWeight() {
+    this._fontWeight = this._shape.fontWeight
     return this._shape.fontWeight
-    //return this._fontWeight
   }
 
   public set fontWeight(value: FontWeight) {
     this._fontWeight = value
-    this.updateTheme()
+    //this.updateTheme()
+    this._shape.fontWeight = value
   }
 
   public get fontWidth() {
@@ -278,33 +280,36 @@ export abstract class Item implements EditorItem {
   }
 
   public get fontSlant() {
+    this._fontSlant = this._shape.fontSlant
     return this._shape.fontSlant
-    //return this._fontSlant
   }
 
   public set fontSlant(value: FontSlant) {
     this._fontSlant = value
-    this.updateTheme()
+    //this.updateTheme()
+    this._shape.fontSlant = value
   }
 
   public get fontSize() {
+    this._fontSize = this._shape.fontSize
     return this._shape.fontSize
-    //return this._fontSize
   }
 
   public set fontSize(value: number) {
     this._fontSize = value
-    this.updateTheme()
+    //this.updateTheme()
+    this._shape.fontSize = value
   }
 
   public get textAlignment() {
+    this._textAlignment = this._shape.textAlignment
     return this._shape.textAlignment
-    //return this._textAlignment
   }
 
   public set textAlignment(value: TextAlignment) {
     this._textAlignment = value
-    this.updateTheme()
+    //this.updateTheme()
+    this._shape.textAlignment = value
   }
 
   public get textDirection() {
@@ -317,13 +322,14 @@ export abstract class Item implements EditorItem {
   }
 
   public get textDecoration() {
+    this._textDecoration = this._shape.textDecoration
     return this._shape.textDecoration
-    //return this._textDecoration
   }
 
   public set textDecoration(value: TextDecoration) {
     this._textDecoration = value
-    this.updateTheme()
+    //this.updateTheme()
+    this._shape.textDecoration = value
   }
 
   public get textVerticalAlignment() {
@@ -332,7 +338,8 @@ export abstract class Item implements EditorItem {
 
   public set textVerticalAlignment(value: TextVerticalAlignment) {
     this._textVerticalAlignment = value
-    this.updateTheme()
+    //this.updateTheme()
+    this._shape.textVerticalAlignment = value
   }
 
   public get textWrap() {
@@ -368,33 +375,29 @@ export abstract class Item implements EditorItem {
       this._shape.fill.setColor(ThemeUtils.fillColor)
       this._shape.stroke.setStrokeWidth(ThemeUtils.lineWidth)
       this._shape.stroke.setStrokeDashStyle(ThemeUtils.strokeDashStyle)
-      //this._shape.font.fontSize = ThemeUtils.fontSize
-      //this._shape.fontPaint.setColor(ThemeUtils.fontColor)
-      this._shape.fontColor = ThemeUtils.fontColor
-      this._shape.fontSize = ThemeUtils.fontSize
+      //this._shape.fontColor = ThemeUtils.fontColor
+      //this._shape.fontSize = ThemeUtils.fontSize
       this._shape.filled = ThemeUtils.filled
       this._shape.stroked = ThemeUtils.stroked
-      this._shape.fontWeight = ThemeUtils.fontWeight
-      this._shape.fontSlant = ThemeUtils.fontSlant
-      this._shape.textDecoration = ThemeUtils.textDecoration
-      this._shape.textAlignment = ThemeUtils.textAlignment
-      this._shape.textVerticalAlignment = ThemeUtils.textVerticalAlignment
+      //this._shape.fontWeight = ThemeUtils.fontWeight
+      //this._shape.fontSlant = ThemeUtils.fontSlant
+      //this._shape.textDecoration = ThemeUtils.textDecoration
+      //this._shape.textAlignment = ThemeUtils.textAlignment
+      //this._shape.textVerticalAlignment = ThemeUtils.textVerticalAlignment
     } else {
       this._shape.stroke.setColor(this._strokeColor)
       this._shape.fill.setColor(this._fillColor)    
       this._shape.stroke.setStrokeWidth(this._lineWidth)
       this._shape.stroke.setStrokeDashStyle(this._strokeDashStyle)
-      //this._shape.font.fontSize = this._fontSize
-      this._shape.fontColor = this._fontColor
-      this._shape.fontSize = this._fontSize
+      //this._shape.fontColor = this._fontColor
+      //this._shape.fontSize = this._fontSize
       this._shape.filled = this._filled
       this._shape.stroked = this._stroked
-      this._shape.fontWeight = this._fontWeight
-      this._shape.fontSlant = this._fontSlant
-      this._shape.textDecoration = this._textDecoration
-      this._shape.textAlignment = this._textAlignment
-      this._shape.textVerticalAlignment = this._textVerticalAlignment
-      //this._shape.fontPaint.setColor(this._fontColor)
+      //this._shape.fontWeight = this._fontWeight
+      //this._shape.fontSlant = this._fontSlant
+      //this._shape.textDecoration = this._textDecoration
+      //this._shape.textAlignment = this._textAlignment
+      //this._shape.textVerticalAlignment = this._textVerticalAlignment
     }
   }
 
