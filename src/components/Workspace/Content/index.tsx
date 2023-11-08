@@ -1,8 +1,8 @@
 /* eslint-disable radix */
 /* eslint-disable @typescript-eslint/prefer-for-of */
-import React, { useEffect, useState, useRef, FC, } from 'react'
+import React, { useEffect, useState, useRef, FC, MouseEventHandler, SyntheticEvent, } from 'react'
 import styles from './index.css'
-import { Button, ColorPicker, Divider, FloatButton, InputNumber, Space, Tabs, Tooltip, theme, } from 'antd'
+import { Button, ColorPicker, Divider, Dropdown, FloatButton, InputNumber, MenuProps, Space, Tabs, Tooltip, theme, } from 'antd'
 import { Consts, SystemUtils, Utils, } from '../Utils'
 import { Editor, EditorEvent, } from '../../Rockie/Editor'
 
@@ -105,7 +105,7 @@ const Content: FC<ContentProps> = ({
   const [fontUnderline, setFontUnderline, ] = useState<boolean>(false)
   const [currentEditor, setCurrentEditor, ] = useState<Editor | null  >(null)
   const [fontSizeNode, setFontSizeNode, ] = useState<any>(null)
-
+  const [popupMenuVisible, setPopupMenuVisible] = useState<boolean>(false)
   const newTabIndex = useRef(4)
 
   useEffect(() => {
@@ -662,6 +662,11 @@ const Content: FC<ContentProps> = ({
     }
   }
 
+  const popupItems: MenuProps['items'] = [
+    {label: 'a', key: '1'},
+    {label: 'b', key: '2'},
+    {label: 'c', key: '3'},
+  ]
 
   return (
     <div  style={{ position: 'absolute', top: '0px', bottom: '0px', left: x, right: y, backgroundColor: 'lightgray', }}>
@@ -671,73 +676,75 @@ const Content: FC<ContentProps> = ({
             <div style={{ width: '100%', height: Editor.SHADOW_SIZE, backgroundColor: 'lightgray', }} />
             <div style={{ width: '100%', height: editorHeight, boxSizing: 'border-box', }}>
               <div style={{ width: Editor.SHADOW_SIZE, height: '100%', float: 'left', backgroundColor: 'lightgray', }} />
-              <div id='editor-container' style={{ width: editorWidth, height: '100%', float: 'left', backgroundColor: 'darkgray', }} >                
-                <FloatButton.Group style={{left: textToolbarLeft, top: textToolbarTop - 40, height: 32, display: textToolbarVisible ? 'block' : 'none' }}>                  
-                  <Space direction='horizontal' style={{backgroundColor: 'white', borderColor: 'silver', borderWidth: 1, borderStyle: 'solid', padding: 2}}>
-                    <Tooltip title={<FormattedMessage id='workspace.header.title.font-bold'/>}>
-                      <Button type={fontBold ? 'primary' : 'text'} size='small' icon={<BoldOutlined/>}  onClick={handleBoldChanged} />
+              <Dropdown menu={{items: popupItems}} trigger={['contextMenu']}>
+                <div id='editor-container' style={{ width: editorWidth, height: '100%', float: 'left', backgroundColor: 'darkgray', }} >
+                  <FloatButton.Group style={{left: textToolbarLeft, top: textToolbarTop - 40, height: 32, display: textToolbarVisible ? 'block' : 'none' }}>                  
+                    <Space direction='horizontal' style={{backgroundColor: 'white', borderColor: 'silver', borderWidth: 1, borderStyle: 'solid', padding: 2}}>
+                      <Tooltip title={<FormattedMessage id='workspace.header.title.font-bold'/>}>
+                        <Button type={fontBold ? 'primary' : 'text'} size='small' icon={<BoldOutlined/>}  onClick={handleBoldChanged} />
+                        </Tooltip>
+                      <Tooltip title={<FormattedMessage id='workspace.header.title.font-italic'/>}>
+                        <Button type={fontItalic ? 'primary' : 'text'} size='small' icon={<ItalicOutlined/>} onClick={handleItalicChanged} />
                       </Tooltip>
-                    <Tooltip title={<FormattedMessage id='workspace.header.title.font-italic'/>}>
-                      <Button type={fontItalic ? 'primary' : 'text'} size='small' icon={<ItalicOutlined/>} onClick={handleItalicChanged} />
+                      <Tooltip title={<FormattedMessage id='workspace.header.title.font-underline'/>}>
+                        <Button type={fontUnderline ? 'primary' : 'text'} size='small' icon={<UnderlineOutlined/>} onClick={handleUnderlineChanged} />
                       </Tooltip>
-                    <Tooltip title={<FormattedMessage id='workspace.header.title.font-underline'/>}>
-                      <Button type={fontUnderline ? 'primary' : 'text'} size='small' icon={<UnderlineOutlined/>} onClick={handleUnderlineChanged} />
-                    </Tooltip>
-                    <Divider type='vertical' style={{ margin: 0 }} />
-                    <Tooltip title={<FormattedMessage id='workspace.header.title.text-left'/>}>
-                      <Button type={textAlignment == Consts.TEXT_ALIGNMENT_LEFT ? 'primary' : 'text'} size='small' icon={<AlignLeftOutlined/>} onClick={() => handleTextAlignmentChanged(Consts.TEXT_ALIGNMENT_LEFT)} />
-                    </Tooltip>
-                    <Tooltip title={<FormattedMessage id='workspace.header.title.text-center'/>}>
-                      <Button type={textAlignment == Consts.TEXT_ALIGNMENT_CENTER ? 'primary' : 'text'} size='small' icon={<AlignCenterOutlined/>} onClick={() => handleTextAlignmentChanged(Consts.TEXT_ALIGNMENT_CENTER)} />
-                    </Tooltip>
-                    <Tooltip title={<FormattedMessage id='workspace.header.title.text-right'/>}>
-                      <Button type={textAlignment == Consts.TEXT_ALIGNMENT_RIGHT ? 'primary' : 'text'} size='small' icon={<AlignRightOutlined/>} onClick={() => handleTextAlignmentChanged(Consts.TEXT_ALIGNMENT_RIGHT)} />
-                    </Tooltip>
-                    <Divider type='vertical' style={{ margin: 0 }} />
-                    <Tooltip title={<FormattedMessage id='workspace.header.title.text-top'/>}>
-                      <Button type={textVerticalAlignment == Consts.PLACE_HOLDER_ALIGNMENT_TOP ? 'primary' : 'text'} size='small' icon={<VerticalAlignTopOutlined/>} onClick={() => handleTextVerticalAlignmentChanged(Consts.PLACE_HOLDER_ALIGNMENT_TOP)} />
-                    </Tooltip>
-                    <Tooltip title={<FormattedMessage id='workspace.header.title.text-middle'/>}>
-                      <Button type={textVerticalAlignment == Consts.PLACE_HOLDER_ALIGNMENT_MIDDLE ? 'primary' : 'text'} size='small' icon={<VerticalAlignMiddleOutlined/>}  onClick={() => handleTextVerticalAlignmentChanged(Consts.PLACE_HOLDER_ALIGNMENT_MIDDLE)} />
-                    </Tooltip>
-                    <Tooltip title={<FormattedMessage id='workspace.header.title.text-bottom'/>}>
-                      <Button type={textVerticalAlignment == Consts.PLACE_HOLDER_ALIGNMENT_BOTTOM ? 'primary' : 'text'} size='small' icon={<VerticalAlignBottomOutlined/>} onClick={() => handleTextVerticalAlignmentChanged(Consts.PLACE_HOLDER_ALIGNMENT_BOTTOM)} />
-                    </Tooltip>
-                    <Divider type='vertical' style={{ margin: 0 }} />
-                    <Tooltip title={<FormattedMessage id='workspace.header.title.font-size'/>}>
-                      <InputNumber min={Consts.FONT_SIZE_MIN} max={Consts.FONT_SIZE_MAX} value={fontSize} 
-                        ref={(node) => {setFontSizeNode(node)}} 
-                        onChange={handleFontSizeChange}  onStep={handleFontSizeStepChange} onBlur={handleFontSizeBlur} onPressEnter={handleFontSizePressEnter} size='small' style={{ width: 60 }} />
-                    </Tooltip>
-                    <Tooltip title={<FormattedMessage id='workspace.header.title.font-color'/>}>
-                      <ColorPicker size='small' value={fontColor} onChange={handleFontColorChange} />
-                    </Tooltip>
-                  </Space>
-                </FloatButton.Group>
-                <FloatButton.Group style={{left: tableToolbarLeft, top: tableToolbarTop - 40, height: 32, display: tableToolbarVisible ? 'block' : 'none'}}>                  
-                  <Space direction='horizontal' style={{backgroundColor: 'white', borderColor: 'silver', borderWidth: 1, borderStyle: 'solid', padding: 2}}>
-                    <Tooltip title={<FormattedMessage id='workspace.header.title.font-bold'/>}>
-                      <Button type='text' size='small' icon={<InsertRowAboveOutlined/>}  onClick={handleBoldChanged} />
+                      <Divider type='vertical' style={{ margin: 0 }} />
+                      <Tooltip title={<FormattedMessage id='workspace.header.title.text-left'/>}>
+                        <Button type={textAlignment == Consts.TEXT_ALIGNMENT_LEFT ? 'primary' : 'text'} size='small' icon={<AlignLeftOutlined/>} onClick={() => handleTextAlignmentChanged(Consts.TEXT_ALIGNMENT_LEFT)} />
                       </Tooltip>
-                    <Tooltip title={<FormattedMessage id='workspace.header.title.font-italic'/>}>
-                      <Button type='text' size='small' icon={<InsertRowBelowOutlined/>} onClick={handleItalicChanged} />
+                      <Tooltip title={<FormattedMessage id='workspace.header.title.text-center'/>}>
+                        <Button type={textAlignment == Consts.TEXT_ALIGNMENT_CENTER ? 'primary' : 'text'} size='small' icon={<AlignCenterOutlined/>} onClick={() => handleTextAlignmentChanged(Consts.TEXT_ALIGNMENT_CENTER)} />
                       </Tooltip>
-                    <Tooltip title={<FormattedMessage id='workspace.header.title.font-underline'/>}>
-                      <Button type='text' size='small' icon={<InsertRowLeftOutlined/>} onClick={handleUnderlineChanged} />
-                    </Tooltip>
-                    <Tooltip title={<FormattedMessage id='workspace.header.title.font-underline'/>}>
-                      <Button type='text' size='small' icon={<InsertRowRightOutlined/>} onClick={handleUnderlineChanged} />
-                    </Tooltip>
-                    <Divider type='vertical' style={{ margin: 0 }} />
-                    <Tooltip title={<FormattedMessage id='workspace.header.title.text-left'/>}>
-                      <Button type='text' size='small' icon={<DeleteRowOutlined/>} onClick={() => handleTextAlignmentChanged(Consts.TEXT_ALIGNMENT_LEFT)} />
-                    </Tooltip>
-                    <Tooltip title={<FormattedMessage id='workspace.header.title.text-center'/>}>
-                      <Button type='text' size='small' icon={<DeleteColumnOutlined/>} onClick={() => handleTextAlignmentChanged(Consts.TEXT_ALIGNMENT_CENTER)} />
-                    </Tooltip>
-                  </Space>
-                </FloatButton.Group>
-              </div>
+                      <Tooltip title={<FormattedMessage id='workspace.header.title.text-right'/>}>
+                        <Button type={textAlignment == Consts.TEXT_ALIGNMENT_RIGHT ? 'primary' : 'text'} size='small' icon={<AlignRightOutlined/>} onClick={() => handleTextAlignmentChanged(Consts.TEXT_ALIGNMENT_RIGHT)} />
+                      </Tooltip>
+                      <Divider type='vertical' style={{ margin: 0 }} />
+                      <Tooltip title={<FormattedMessage id='workspace.header.title.text-top'/>}>
+                        <Button type={textVerticalAlignment == Consts.PLACE_HOLDER_ALIGNMENT_TOP ? 'primary' : 'text'} size='small' icon={<VerticalAlignTopOutlined/>} onClick={() => handleTextVerticalAlignmentChanged(Consts.PLACE_HOLDER_ALIGNMENT_TOP)} />
+                      </Tooltip>
+                      <Tooltip title={<FormattedMessage id='workspace.header.title.text-middle'/>}>
+                        <Button type={textVerticalAlignment == Consts.PLACE_HOLDER_ALIGNMENT_MIDDLE ? 'primary' : 'text'} size='small' icon={<VerticalAlignMiddleOutlined/>}  onClick={() => handleTextVerticalAlignmentChanged(Consts.PLACE_HOLDER_ALIGNMENT_MIDDLE)} />
+                      </Tooltip>
+                      <Tooltip title={<FormattedMessage id='workspace.header.title.text-bottom'/>}>
+                        <Button type={textVerticalAlignment == Consts.PLACE_HOLDER_ALIGNMENT_BOTTOM ? 'primary' : 'text'} size='small' icon={<VerticalAlignBottomOutlined/>} onClick={() => handleTextVerticalAlignmentChanged(Consts.PLACE_HOLDER_ALIGNMENT_BOTTOM)} />
+                      </Tooltip>
+                      <Divider type='vertical' style={{ margin: 0 }} />
+                      <Tooltip title={<FormattedMessage id='workspace.header.title.font-size'/>}>
+                        <InputNumber min={Consts.FONT_SIZE_MIN} max={Consts.FONT_SIZE_MAX} value={fontSize} 
+                          ref={(node) => {setFontSizeNode(node)}} 
+                          onChange={handleFontSizeChange}  onStep={handleFontSizeStepChange} onBlur={handleFontSizeBlur} onPressEnter={handleFontSizePressEnter} size='small' style={{ width: 60 }} />
+                      </Tooltip>
+                      <Tooltip title={<FormattedMessage id='workspace.header.title.font-color'/>}>
+                        <ColorPicker size='small' value={fontColor} onChange={handleFontColorChange} />
+                      </Tooltip>
+                    </Space>
+                  </FloatButton.Group>
+                  <FloatButton.Group style={{left: tableToolbarLeft, top: tableToolbarTop - 40, height: 32, display: tableToolbarVisible ? 'block' : 'none'}}>                  
+                    <Space direction='horizontal' style={{backgroundColor: 'white', borderColor: 'silver', borderWidth: 1, borderStyle: 'solid', padding: 2}}>
+                      <Tooltip title={<FormattedMessage id='workspace.header.title.font-bold'/>}>
+                        <Button type='text' size='small' icon={<InsertRowAboveOutlined/>}  onClick={handleBoldChanged} />
+                        </Tooltip>
+                      <Tooltip title={<FormattedMessage id='workspace.header.title.font-italic'/>}>
+                        <Button type='text' size='small' icon={<InsertRowBelowOutlined/>} onClick={handleItalicChanged} />
+                        </Tooltip>
+                      <Tooltip title={<FormattedMessage id='workspace.header.title.font-underline'/>}>
+                        <Button type='text' size='small' icon={<InsertRowLeftOutlined/>} onClick={handleUnderlineChanged} />
+                      </Tooltip>
+                      <Tooltip title={<FormattedMessage id='workspace.header.title.font-underline'/>}>
+                        <Button type='text' size='small' icon={<InsertRowRightOutlined/>} onClick={handleUnderlineChanged} />
+                      </Tooltip>
+                      <Divider type='vertical' style={{ margin: 0 }} />
+                      <Tooltip title={<FormattedMessage id='workspace.header.title.text-left'/>}>
+                        <Button type='text' size='small' icon={<DeleteRowOutlined/>} onClick={() => handleTextAlignmentChanged(Consts.TEXT_ALIGNMENT_LEFT)} />
+                      </Tooltip>
+                      <Tooltip title={<FormattedMessage id='workspace.header.title.text-center'/>}>
+                        <Button type='text' size='small' icon={<DeleteColumnOutlined/>} onClick={() => handleTextAlignmentChanged(Consts.TEXT_ALIGNMENT_CENTER)} />
+                      </Tooltip>
+                    </Space>
+                  </FloatButton.Group>
+                </div>
+              </Dropdown>
               <div style={{ width: Editor.SHADOW_SIZE, height: '100%', float: 'left', backgroundColor: 'lightgray', }} />
             </div>
             <div style={{ width: '100%', height: Editor.SHADOW_SIZE, backgroundColor: 'lightgray', }} />
@@ -753,6 +760,7 @@ const Content: FC<ContentProps> = ({
           }
         </Tabs>
       </div>
+  
     </div>
   )
 }
