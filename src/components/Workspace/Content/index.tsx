@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/prefer-for-of */
 import React, { useEffect, useState, useRef, FC, MouseEventHandler, SyntheticEvent, } from 'react'
 import styles from './index.css'
-import { Button, ColorPicker, Divider, Dropdown, FloatButton, InputNumber, MenuProps, Space, Tabs, Tooltip, theme, } from 'antd'
+import { Button, ColorPicker, Divider, Dropdown, FloatButton, Input, InputNumber, MenuProps, Space, Tabs, Tooltip, theme, } from 'antd'
 import { Consts, SystemUtils, Utils, } from '../Utils'
 import { Editor, EditorEvent, } from '../../Rockie/Editor'
 
@@ -12,6 +12,8 @@ import { Operation, OperationType } from '@/components/Rockie/Operations'
 import { AlignCenterOutlined, AlignLeftOutlined, AlignRightOutlined, BoldOutlined, DeleteColumnOutlined, DeleteRowOutlined, InsertRowAboveOutlined, InsertRowBelowOutlined, InsertRowLeftOutlined, InsertRowRightOutlined, ItalicOutlined, QuestionCircleOutlined, UnderlineOutlined, VerticalAlignBottomOutlined, VerticalAlignMiddleOutlined, VerticalAlignTopOutlined } from '@ant-design/icons'
 import { Item, ShapeEntity, TableEntity } from '@/components/Rockie/Items'
 import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
+import ClipboardJS from 'clipboard'
+import { EditorHelper } from '@/components/Rockie/Utils'
 
 interface Pane {
   title: string,
@@ -106,6 +108,8 @@ const Content: FC<ContentProps> = ({
   const [currentEditor, setCurrentEditor, ] = useState<Editor | null  >(null)
   const [fontSizeNode, setFontSizeNode, ] = useState<any>(null)
   const [popupMenuVisible, setPopupMenuVisible] = useState<boolean>(false)
+  const [shapeSelected, setShapeSelected, ] = useState<boolean>(false)
+
   const newTabIndex = useRef(4)
 
   useEffect(() => {
@@ -115,13 +119,18 @@ const Content: FC<ContentProps> = ({
 
     // 根据浏览器窗口大小来调整各子div的滚动范围
     window.addEventListener('resize', calculateViewSize)
+    window.addEventListener('copy', handleCopyDetail)
+    window.addEventListener('cut', handleCutDetail)
+    window.addEventListener('paste', handlePasteDetail)
     // const timer = setInterval(() => {
-
     // }, 100)
 
     return () => {
       window.removeEventListener('resize', calculateViewSize)
-      // clearInterval(timer)
+      window.removeEventListener('copy', handleCopyDetail)
+      window.removeEventListener('cut', handleCutDetail)
+      window.removeEventListener('paste', handlePasteDetail)
+        // clearInterval(timer)
     }
   })
 
@@ -375,6 +384,11 @@ const Content: FC<ContentProps> = ({
     }
     if(!tableSelected) {
       setTableToolbarVisible(false)
+    }
+    if(Utils.currentEditor && e.source.selectionLayer.getEditorItemCount() > 0 ) {
+      setShapeSelected(true)
+    } else {
+      setShapeSelected(false)
     }
   }
 
@@ -662,11 +676,262 @@ const Content: FC<ContentProps> = ({
     }
   }
 
-  const popupItems: MenuProps['items'] = [
-    {label: 'a', key: '1'},
-    {label: 'b', key: '2'},
-    {label: 'c', key: '3'},
+  /**
+   * Handle copy command from system or application.
+   * @param e 
+   */
+  const handleCopyDetail = (e: ClipboardEvent) => {
+    if(e.clipboardData && Utils.currentEditor) {
+      let data = EditorHelper.exportEditorSelections(Utils.currentEditor)
+      //data = `a${data}a`
+      e.clipboardData.clearData()
+      e.clipboardData.setData('text/plain', data)
+      //e.clipboardData.setData('text/retel', data)
+      console.log(`copy data = ${data}`)
+ 
+      e.preventDefault()
+    }
+  }
+
+  // Handle copy command only for application by menu
+  const handleCopy = async () => {
+    if(Utils.currentEditor) {
+      console.log(`copy is triggered`)
+      const data = EditorHelper.exportEditorSelections(Utils.currentEditor)
+      //let dataTransfer = new DataTransfer()
+      //dataTransfer.dropEffect = 'none'
+      //dataTransfer.effectAllowed = "uninitialized"
+      //data = `a${data}a`
+      //dataTransfer.setData('text/plain', data)
+      //dataTransfer.setData('text/retel', data)
+    //window.dispatchEvent(new ClipboardEvent('copy', {
+    //    bubbles: true,
+    //    cancelable: true,
+    //    composed: true,
+    //    clipboardData: dataTransfer
+    //  }))
+
+    //  document.dispatchEvent(new KeyboardEvent('keydown', {
+    //    key: 'c',
+    //    which: 67,
+    //    ctrlKey: true,
+    //    metaKey: true,
+    //    bubbles:true,
+    //  }))
+    
+    //  let sandbox = document.getElementById('sandbox')
+    //  if(sandbox) {
+    //    sandbox.focus()    
+    //    let result = document.execCommand('copy', false, 'a')
+    //    console.log(`Copy execution result is ${result}`)
+    //  }
+      
+      //document.execCommand('copy')
+
+      let clipboard = navigator.clipboard
+      if(!clipboard) {
+        SystemUtils.handleInternalError('This require permission first')
+        return
+      }
+      await clipboard.writeText(data)
+      //clipboard.writeText('dummy')
+      //let clipboardItems: ClipboardItem[] = []
+      //let blob1 = new Blob([data], {type: 'text/plain'})
+      //let blob2 = new Blob([data], {type: 'application/json'})
+      //let clipboardItem1: ClipboardItem = new ClipboardItem({['text/plain']: blob1}) //, 'application/json': blob2})
+      //let clipboardItem2: ClipboardItem = new ClipboardItem({'text/retel': data})
+      //clipboard.
+      //clipboardItems.push(clipboardItem1)
+      //clipboardItems.push(clipboardItem2)
+      //console.log(`begin write ${clipboardItems.length}`)
+      //await clipboard.write(clipboardItems).then((value)=> {
+      //  console.log(`finish good write ${clipboardItems.length}`)
+      //}, (reason) => {
+      //  console.log(`finish failed write ${reason}`)
+      //})    
+      //console.log(`finish write ${clipboardItems.length}`)
+      //let text = await clipboard.readText()
+      //console.log(`read written text: ${text}`)
+      //document.execCommand('copy') 
+    }
+  }
+
+  const handleCutDetail = (e: ClipboardEvent) => {
+    if(e.clipboardData) {
+      e.clipboardData.setData('text/plain', 'hello')
+      e.clipboardData.setData('text/retel', 'helloa')
+
+      //deleteCurrentDocumentSelection()
+      e.preventDefault()
+
+    }
+  }
+
+  const handleCut = () => {
+    console.log(`cut is triggered`)
+    //window.dispatchEvent(new ClipboardEvent('cut'))
+    document.execCommand('cut')
+  }
+
+  /**
+   * Handle paste for system & application. It can be triggered by system paste or by application:HandlePaste
+   * @param e 
+   */
+  const handlePasteDetail = (e: ClipboardEvent) => {
+    if(e.clipboardData) {
+      if(e.clipboardData.types.indexOf('text/plain') > -1) {
+        let oldData = e.clipboardData.getData('text/plain')
+        let newData = 'ffff'
+        console.log(`oldData = ${oldData}`)
+        //pasteClipboardData(newData)
+        e.preventDefault()
+      }
+    }
+  }
+  /**
+   * Handle paste for application internally, it will trigger handlePasteDetail
+   * @param e 
+   */
+  const handlePaste = async () => {
+    console.log(`paste is triggered`)
+
+    const clipboard = navigator.clipboard
+    if(!clipboard) {
+      SystemUtils.handleInternalError('This require permission first')
+      return
+    }
+    const clipboardItems = await clipboard.read()
+    let textBlob: Blob
+    let text = ''
+    for(const clipboardItem of clipboardItems) {
+      for(const type of clipboardItem.types) {
+        if(type === 'text/html') {
+          textBlob = await clipboardItem.getType(type)
+          text = await textBlob.text()
+          console.log(`html: ${text}`)
+        }
+        if(type === 'text/plain') {
+          textBlob = await clipboardItem.getType(type)
+          text = await textBlob.text()
+          console.log(`text: ${text}`)
+        }
+        if(type === 'text/retel') {
+          textBlob = await clipboardItem.getType(type)
+          text = await textBlob.text()
+          console.log(`retel: ${text}`)
+        }
+      }
+    } 
+
+    let dataTransfer = new DataTransfer()
+    dataTransfer.dropEffect = 'none'
+    dataTransfer.effectAllowed = "uninitialized"
+    let data = EditorHelper.exportEditorSelections(Utils.currentEditor!)
+    //data = `a${data}a`
+    dataTransfer.setData('text/plain', data)
+    dataTransfer.setData('text/retel', text)
+    window.dispatchEvent(new ClipboardEvent('paste', {
+      bubbles: true,
+      cancelable: true,
+      composed: true,
+      clipboardData: dataTransfer
+    }))
+    //let sandbox = document.getElementById('sandbox')
+    //if(sandbox) {
+    //  sandbox.focus()    
+    //  let result = document.execCommand('paste', false, 'a')
+    //  console.log(`Paste execution result is ${result}`)
+    //}
+
+
+  }
+
+  const handleSelectAll = () => {
+
+  }
+
+  const handleDelete = () => {
+
+  }
+
+  const handleDuplicate = () => {
+
+  }
+
+  const handleLock = () => {
+
+  }
+
+  const handleToFront = () => {
+
+  }
+
+  const handleToBack = () => {
+
+  }
+
+  const handleBringForeward = () => {
+
+  }
+
+  const handleSendBackward = () => {
+
+  }
+
+  const handleUndo = () => {
+    if (currentEditor) {
+      let operationService = currentEditor.operationService
+      let operation = operationService.getUndoOperation()
+      if (operation) {
+        switch (operation.type) {
+          case OperationType.ADD_EDITOR:
+            removeEditor(operation.editor)
+            break;
+          case OperationType.REMOVE_EDITOR:
+            break;
+          case OperationType.RENAME_EDITOR:
+            break;
+          case OperationType.SELECT_EDITOR:
+            break;
+          case OperationType.MOVE_EDITOR:
+            break;
+          default:
+            break;
+        }
+        currentEditor.undo()
+      }
+    }
+  }
+
+  const removeEditor = (editor: Editor) => {
+
+  }
+
+  const popupShapeItems: MenuProps['items'] = [
+    {label: 'Delete', key: '3', onClick: handleDelete, },
+    {type: 'divider' },
+    {label: 'Copy', key: '1', onClick: handleCopy, },
+    {label: 'Cut', key: '2', onClick: handleCut, },
+    {label: 'Paste', key: '3', onClick: handlePaste, },
+    {label: 'Duplicate', key: '3', onClick: handleDuplicate, },
+    {type: 'divider' },
+    {label: 'Lock', key: '3', onClick: handleLock, },
+    {type: 'divider' },
+    {label: 'To Front', key: '3', onClick: handleToFront, },
+    {label: 'To Back', key: '3', onClick: handleToBack, },
+    {label: 'Bring Foreward', key: '3', onClick: handleBringForeward, },
+    {label: 'Send Backward', key: '3', onClick: handleSendBackward, },
   ]
+
+  const popupEditorItems: MenuProps['items'] = [
+    {label: 'Undo', key: '1', onClick: handleUndo, },
+    {type: 'divider' },
+    {label: 'Paste', key: '1', onClick: handlePaste, },
+    {label: 'Paste', key: '1', onClick: handlePaste, },
+    {type: 'divider' },
+    {label: 'Select All', key: '5', onClick: handleSelectAll, },
+  ]
+
 
   return (
     <div  style={{ position: 'absolute', top: '0px', bottom: '0px', left: x, right: y, backgroundColor: 'lightgray', }}>
@@ -676,7 +941,7 @@ const Content: FC<ContentProps> = ({
             <div style={{ width: '100%', height: Editor.SHADOW_SIZE, backgroundColor: 'lightgray', }} />
             <div style={{ width: '100%', height: editorHeight, boxSizing: 'border-box', }}>
               <div style={{ width: Editor.SHADOW_SIZE, height: '100%', float: 'left', backgroundColor: 'lightgray', }} />
-              <Dropdown menu={{items: popupItems}} trigger={['contextMenu']}>
+              <Dropdown menu={{items: shapeSelected ? popupShapeItems : popupEditorItems }} trigger={['contextMenu']} >
                 <div id='editor-container' style={{ width: editorWidth, height: '100%', float: 'left', backgroundColor: 'darkgray', }} >
                   <FloatButton.Group style={{left: textToolbarLeft, top: textToolbarTop - 40, height: 32, display: textToolbarVisible ? 'block' : 'none' }}>                  
                     <Space direction='horizontal' style={{backgroundColor: 'white', borderColor: 'silver', borderWidth: 1, borderStyle: 'solid', padding: 2}}>
@@ -760,7 +1025,9 @@ const Content: FC<ContentProps> = ({
           }
         </Tabs>
       </div>
-  
+      <div >
+          <Input id='sandbox'/>
+      </div>
     </div>
   )
 }
