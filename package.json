@@ -46,6 +46,7 @@
     "bizcharts": "^4.0.14",
     "braft-editor": "^2.3.9",
     "canvaskit-wasm": "0.39.1",
+    "clipboard": "^2.0.11",
     "crypto-js": "^4.0.0",
     "dva": "^2.6.0-beta.6",
     "flv.js": "^1.5.0",
