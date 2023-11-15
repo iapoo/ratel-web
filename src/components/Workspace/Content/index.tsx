@@ -6,9 +6,9 @@ import { Button, ColorPicker, Divider, Dropdown, FloatButton, Input, InputNumber
 import { Consts, SystemUtils, Utils, } from '../Utils'
 import { Editor, EditorEvent, } from '../../Rockie/Editor'
 
-import { Engine, Rectangle2D, EngineUtils, Line2D, FontWeight, FontSlant, TextDecoration, } from '../../Engine'
+import { Engine, Rectangle2D, EngineUtils, Line2D, FontWeight, FontSlant, TextDecoration, Point2, } from '../../Engine'
 import { StorageService, } from '../Storage'
-import { Operation, OperationType } from '@/components/Rockie/Operations'
+import { Operation, OperationHelper, OperationType } from '@/components/Rockie/Operations'
 import { AlignCenterOutlined, AlignLeftOutlined, AlignRightOutlined, BoldOutlined, DeleteColumnOutlined, DeleteRowOutlined, InsertRowAboveOutlined, InsertRowBelowOutlined, InsertRowLeftOutlined, InsertRowRightOutlined, ItalicOutlined, QuestionCircleOutlined, UnderlineOutlined, VerticalAlignBottomOutlined, VerticalAlignMiddleOutlined, VerticalAlignTopOutlined } from '@ant-design/icons'
 import { Item, ShapeEntity, TableEntity } from '@/components/Rockie/Items'
 import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
@@ -47,6 +47,7 @@ const Content: FC<ContentProps> = ({
   onEditorChange, x, y
 }) => {
   //const { token, } =  useToken()
+  const intl = useIntl();
 
   const getDefaultContentWidth = () => {
     if (Utils.currentEditor) {
@@ -109,6 +110,8 @@ const Content: FC<ContentProps> = ({
   const [fontSizeNode, setFontSizeNode, ] = useState<any>(null)
   const [popupMenuVisible, setPopupMenuVisible] = useState<boolean>(false)
   const [shapeSelected, setShapeSelected, ] = useState<boolean>(false)
+  const [pasteLocation, setPasteLocation, ] = useState<Point2>(new Point2())
+  const [pasteFromSystem, setPasteFromSystem, ] = useState<boolean>(true)
 
   const newTabIndex = useRef(4)
 
@@ -394,7 +397,7 @@ const Content: FC<ContentProps> = ({
 
 
   const handleSelectionResized = (e: EditorEvent) => {
-    console.log(`handle selection resized`)
+    //console.log(`handle selection resized`)
     if(Utils.currentEditor && e.source.selectionLayer.getEditorItemCount() == 1 ) {
       let item = e.source.selectionLayer.getEditorItem(0) as Item
       let container = document.getElementById('editor-container')
@@ -687,8 +690,7 @@ const Content: FC<ContentProps> = ({
       e.clipboardData.clearData()
       e.clipboardData.setData('text/plain', data)
       //e.clipboardData.setData('text/retel', data)
-      console.log(`copy data = ${data}`)
- 
+      console.log(`copy data = ${data}`) 
       e.preventDefault()
     }
   }
@@ -730,7 +732,7 @@ const Content: FC<ContentProps> = ({
 
       let clipboard = navigator.clipboard
       if(!clipboard) {
-        SystemUtils.handleInternalError('This require permission first')
+        SystemUtils.handleInternalError(intl.formatMessage({ id: 'workspace.content.message-clipboard-not-supported' }))
         return
       }
       await clipboard.writeText(data)
@@ -757,20 +759,29 @@ const Content: FC<ContentProps> = ({
   }
 
   const handleCutDetail = (e: ClipboardEvent) => {
-    if(e.clipboardData) {
-      e.clipboardData.setData('text/plain', 'hello')
-      e.clipboardData.setData('text/retel', 'helloa')
-
+    if(e.clipboardData && Utils.currentEditor) {
+      let data = EditorHelper.exportEditorSelections(Utils.currentEditor)
+      //data = `a${data}a`
+      e.clipboardData.clearData()
+      e.clipboardData.setData('text/plain', data)
+      //e.clipboardData.setData('text/retel', data)
+      console.log(`cube data = ${data}`) 
       //deleteCurrentDocumentSelection()
       e.preventDefault()
-
     }
   }
 
-  const handleCut = () => {
-    console.log(`cut is triggered`)
-    //window.dispatchEvent(new ClipboardEvent('cut'))
-    document.execCommand('cut')
+  const handleCut = async () => {
+    if(Utils.currentEditor) {
+      console.log(`cut is triggered`)
+      let clipboard = navigator.clipboard
+      if(!clipboard) {
+        SystemUtils.handleInternalError(intl.formatMessage({ id: 'workspace.content.message-clipboard-not-supported' }))
+        return
+      }
+      const data = EditorHelper.exportEditorSelections(Utils.currentEditor)
+      await clipboard.writeText(data)
+    }
   }
 
   /**
@@ -778,57 +789,58 @@ const Content: FC<ContentProps> = ({
    * @param e 
    */
   const handlePasteDetail = (e: ClipboardEvent) => {
-    if(e.clipboardData) {
-      if(e.clipboardData.types.indexOf('text/plain') > -1) {
-        let oldData = e.clipboardData.getData('text/plain')
-        let newData = 'ffff'
-        console.log(`oldData = ${oldData}`)
-        //pasteClipboardData(newData)
-        e.preventDefault()
-      }
+    if(Utils.currentEditor && e.clipboardData && e.clipboardData.types.indexOf('text/plain') > -1) {
+      let data = e.clipboardData.getData('text/plain')
+      console.log(`oldData = ${data}`)
+      let selections = EditorHelper.readSelections(data)
+      console.log(`paste selections = ${selections}`)
+      EditorHelper.pasteSelections(selections, Utils.currentEditor, pasteFromSystem, pasteLocation)
+      e.preventDefault()
     }
+    setPasteFromSystem(true)
   }
+
   /**
    * Handle paste for application internally, it will trigger handlePasteDetail
    * @param e 
    */
   const handlePaste = async () => {
     console.log(`paste is triggered`)
-
+    setPasteFromSystem(false)
     const clipboard = navigator.clipboard
     if(!clipboard) {
-      SystemUtils.handleInternalError('This require permission first')
+      SystemUtils.handleInternalError(intl.formatMessage({ id: 'workspace.content.message-clipboard-not-supported' }))
       return
     }
-    const clipboardItems = await clipboard.read()
-    let textBlob: Blob
-    let text = ''
-    for(const clipboardItem of clipboardItems) {
-      for(const type of clipboardItem.types) {
-        if(type === 'text/html') {
-          textBlob = await clipboardItem.getType(type)
-          text = await textBlob.text()
-          console.log(`html: ${text}`)
-        }
-        if(type === 'text/plain') {
-          textBlob = await clipboardItem.getType(type)
-          text = await textBlob.text()
-          console.log(`text: ${text}`)
-        }
-        if(type === 'text/retel') {
-          textBlob = await clipboardItem.getType(type)
-          text = await textBlob.text()
-          console.log(`retel: ${text}`)
-        }
-      }
-    } 
+    const text = await clipboard.readText()
+    //const clipboardItems = await clipboard.readText()
+    //let textBlob: Blob
+    //let text = ''
+    // for(const clipboardItem of clipboardItems) {
+    //   for(const type of clipboardItem.types) {
+    //     if(type === 'text/html') {
+    //       textBlob = await clipboardItem.getType(type)
+    //       text = await textBlob.text()
+    //       console.log(`html: ${text}`)
+    //     }
+    //     if(type === 'text/plain') {
+    //       textBlob = await clipboardItem.getType(type)
+    //       text = await textBlob.text()
+    //       console.log(`text: ${text}`)
+    //     }
+    //     if(type === 'text/retel') {
+    //       textBlob = await clipboardItem.getType(type)
+    //       text = await textBlob.text()
+    //       console.log(`retel: ${text}`)
+    //     }
+    //   }
+    // } 
 
     let dataTransfer = new DataTransfer()
     dataTransfer.dropEffect = 'none'
     dataTransfer.effectAllowed = "uninitialized"
-    let data = EditorHelper.exportEditorSelections(Utils.currentEditor!)
-    //data = `a${data}a`
-    dataTransfer.setData('text/plain', data)
+    //let data = EditorHelper.exportEditorSelections(Utils.currentEditor!)
+    dataTransfer.setData('text/plain', text)
     dataTransfer.setData('text/retel', text)
     window.dispatchEvent(new ClipboardEvent('paste', {
       bubbles: true,
@@ -844,6 +856,10 @@ const Content: FC<ContentProps> = ({
     //}
 
 
+  }
+
+  const handleContextTrigger = (e: any) => {
+    setPasteLocation(new Point2(e.nativeEvent.offsetX, e.nativeEvent.offsetY))
   }
 
   const handleSelectAll = () => {
@@ -942,7 +958,7 @@ const Content: FC<ContentProps> = ({
             <div style={{ width: '100%', height: editorHeight, boxSizing: 'border-box', }}>
               <div style={{ width: Editor.SHADOW_SIZE, height: '100%', float: 'left', backgroundColor: 'lightgray', }} />
               <Dropdown menu={{items: shapeSelected ? popupShapeItems : popupEditorItems }} trigger={['contextMenu']} >
-                <div id='editor-container' style={{ width: editorWidth, height: '100%', float: 'left', backgroundColor: 'darkgray', }} >
+                <div id='editor-container' style={{ width: editorWidth, height: '100%', float: 'left', backgroundColor: 'darkgray', }} onContextMenu={handleContextTrigger} >
                   <FloatButton.Group style={{left: textToolbarLeft, top: textToolbarTop - 40, height: 32, display: textToolbarVisible ? 'block' : 'none' }}>                  
                     <Space direction='horizontal' style={{backgroundColor: 'white', borderColor: 'silver', borderWidth: 1, borderStyle: 'solid', padding: 2}}>
                       <Tooltip title={<FormattedMessage id='workspace.header.title.font-bold'/>}>

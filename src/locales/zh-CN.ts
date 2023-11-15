@@ -1,4 +1,5 @@
 export default {
+  'workspace.content.message-clipboard-not-supported': '当前浏览器的剪贴板功能支持不完善',
   'workspace.header.alert-failed-save-document': '文件保存失败, 消息: ',
   'workspace.header.button-login-title': '登录',
   'workspace.header.button-logout-title': '退出',
