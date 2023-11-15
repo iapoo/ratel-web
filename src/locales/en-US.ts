@@ -1,4 +1,5 @@
 export default {
+  'workspace.content.message-clipboard-not-supported': 'Clipboard functionality cannot work on current browser',
   'workspace.header.alert-failed-ave-document': 'Failed to save document, message: ',
   'workspace.header.button-login-title': 'Login',
   'workspace.header.button-logout-title': 'Logout',

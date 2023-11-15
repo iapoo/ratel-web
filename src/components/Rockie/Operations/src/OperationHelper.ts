@@ -1,7 +1,7 @@
 /* eslint-disable max-params */
 
 import { SystemUtils } from "@/components/Workspace/Utils"
-import { Categories, Connector, EditorItem, EditorItemInfo, Entity, LineEntity, ShapeEntity, TableEntity } from "../../Items"
+import { Categories, Connector, EditorItem, EditorItemInfo, Entity, Item, LineEntity, ShapeEntity, TableEntity } from "../../Items"
 import { ConnectorInfo } from "../../Items/src/ConnectorInfo"
 import { LineInfo } from "../../Items/src/LineInfo"
 import { Rotation } from "@/components/Engine"
@@ -10,17 +10,27 @@ import { ShapeInfo } from "../../Items/src/ShapeInfo"
 
 export class OperationHelper {
   public static loadItem(itemInfo: EditorItemInfo): EditorItem {
+    let editorItem: Item
     switch (itemInfo.category) {
       case Categories.LINE:
-        return this.loadLine(itemInfo)
+        editorItem = this.loadLine(itemInfo)
+        break
       case Categories.CONNECTOR:
-        return this.loadConnector(itemInfo)
+        editorItem = this.loadConnector(itemInfo)
+        break
       case Categories.TABLE:
-        return this.loadTableEntity(itemInfo)
+        editorItem = this.loadTableEntity(itemInfo)
+        break
       case Categories.SHAPE:
       default:
-        return this.loadShapeEntity(itemInfo)
+        editorItem = this.loadShapeEntity(itemInfo)
+        break
     }
+    itemInfo.items.forEach(childItemInfo => {
+      let childItem = OperationHelper.loadItem(childItemInfo)
+      editorItem.addItem(childItem)
+    })
+    return editorItem
   }
 
   public static refreshItem(itemInfo: EditorItemInfo, items: EditorItem[]) {
@@ -48,7 +58,7 @@ export class OperationHelper {
     }
   }
 
-  public static loadLine(itemInfo: EditorItemInfo): EditorItem {
+  public static loadLine(itemInfo: EditorItemInfo): LineEntity {
     let lineInfo = itemInfo as LineInfo
     let start = SystemUtils.parsePointString(lineInfo.start)
     let end = SystemUtils.parsePointString(lineInfo.end)
@@ -61,7 +71,7 @@ export class OperationHelper {
     return lineEntity
   }
 
-  public static loadConnector(itemInfo: EditorItemInfo): EditorItem {
+  public static loadConnector(itemInfo: EditorItemInfo): Connector {
     let connectorInfo = itemInfo as ConnectorInfo
     let start = SystemUtils.parsePointString(connectorInfo.start)
     let end = SystemUtils.parsePointString(connectorInfo.end)
@@ -71,7 +81,7 @@ export class OperationHelper {
     return connector
   }
 
-  public static loadShapeEntity(itemInfo: EditorItemInfo): EditorItem {
+  public static loadShapeEntity(itemInfo: EditorItemInfo): ShapeEntity {
     let shapeInfo = itemInfo as ShapeInfo
     const shapeEntity = new ShapeEntity(shapeInfo.left, shapeInfo.top, shapeInfo.width, shapeInfo.height, {shapeType: shapeInfo.type})
     shapeEntity.type = shapeInfo.type
@@ -86,7 +96,7 @@ export class OperationHelper {
     return shapeEntity
   }
 
-  public static loadTableEntity(itemInfo: EditorItemInfo): EditorItem {
+  public static loadTableEntity(itemInfo: EditorItemInfo): TableEntity {
     const tableEntity = new TableEntity(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height)
 
     return tableEntity
