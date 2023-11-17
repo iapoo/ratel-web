@@ -1041,7 +1041,7 @@ const Content: FC<ContentProps> = ({
           }
         </Tabs>
       </div>
-      <div >
+      <div style={{display: 'none'}}>
           <Input id='sandbox'/>
       </div>
     </div>
