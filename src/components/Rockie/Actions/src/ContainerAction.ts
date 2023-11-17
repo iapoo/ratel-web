@@ -1,5 +1,5 @@
 import { Theme, Themes, } from '@/components/Workspace/Theme'
-import { ContainerEntity, Item, Shapes, } from '../../Items'
+import { ContainerEntity, ContainerTypes, Containers, Item, Shapes, } from '../../Items'
 import { Action, } from './Action'
 import { ShapeTypes } from '../../Items/src/ShapeEntity'
 
@@ -10,16 +10,16 @@ export class ContainerAction extends Action {
     let top = 0
     let width = 100
     let height = 100
-    ShapeTypes.forEach(shapeType => {
-      if(shapeType.name == this.type) {
-        left = shapeType.left
-        top = shapeType.top
-        width = shapeType.width
-        height = shapeType.height
+    ContainerTypes.forEach(containerType => {
+      if(containerType.name == this.type) {
+        left = containerType.left
+        top = containerType.top
+        width = containerType.width
+        height = containerType.height
       }
     })
     const shapeEntity = new ContainerEntity(left, top, width, height, {
-      shapeType: this.type ? this.type : Shapes.TYPE_RECTANGLE
+      shapeType: this.type ? this.type : Containers.TYPE_CONTAINER
     })
     //shapeEntity.shape.stroke.setColor(Themes.strokeColor)
 

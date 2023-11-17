@@ -9,7 +9,7 @@ import {
   Rectangle, RoundRectangle, Text, Ellipse, Square, Circle, Process, Diamond, Parallelogram, Hexagon, Triangle,
   Cylinder, Cloud, Document, InternalStorage, Cube, Step, Trapezoid, Tape, Note, Card, Callout, Actor, Container
 } from '@/components/Resource/LargeIcons'
-import { ShapeTypes, Shapes } from '@/components/Rockie/Items'
+import { ContainerTypes, Containers, ShapeTypes, Shapes } from '@/components/Rockie/Items'
 
 interface NavigatorProps {
   navigatorWidth: number
@@ -167,7 +167,23 @@ const Navigator: FC<NavigatorProps> = ({
       </Button>
     </Popover>
     }
-    )
+  )
+
+  const containers2 = <Popover title={'Container'} placement='right' content={getPopoverContent('Rectangle', 128, 128)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 180, width: 180,}}>
+  <Button type='text' onClick={() => addContainer(Containers.TYPE_CONTAINER)} style={{padding: 2, display: 'table'}}>
+    <img src={`/shapes/Rectangle.png`} width={28} height={19} style={{display: 'table-cell'}}/>
+  </Button>
+  </Popover>
+
+  const containers = ContainerTypes.map(containerType => {
+    return <Popover title={containerType.name} placement='right' content={getPopoverContent(containerType.name, containerType.width, containerType.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 180, width: 180,}}>
+      <Button type='text' onClick={() => addContainer(containerType.name)} style={{padding: 2, display: 'table'}}>
+        <img src={`/shapes/${containerType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+      </Button>
+    </Popover>
+    }
+  )
+
 
   const items: CollapseProps['items'] = [
     {
@@ -177,12 +193,14 @@ const Navigator: FC<NavigatorProps> = ({
       {shapes}    
       {line}
       {table}
+      {containers}
     </Space>,
     },
     {
       key: '2',
       label: <div style={{fontWeight: 'bolder'}}><FormattedMessage id='workspace.navigator.panel.advanced'/></div>,
-      children: <p></p>,
+      children: <Space size={2} wrap>
+      </Space>,
     },
     {
       key: '3',

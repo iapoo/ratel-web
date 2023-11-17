@@ -17,6 +17,7 @@ export class Categories {
   public static CONNECTOR = 'Connector'
   public static LINE = 'Line'
   public static SHAPE = 'Shape'
+  public static CONTAINER = 'Container'
   public static TABLE = 'Table'
 }
 

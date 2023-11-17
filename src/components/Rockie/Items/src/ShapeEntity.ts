@@ -179,9 +179,12 @@ export interface ShapeOptions {
 
 export class ShapeEntity extends Entity {
   private _shapeType: ShapeType
+  private _shapeTypes: ShapeType[]
 
-  public constructor(left: number, top: number, width: number, height: number, shapeOptions: ShapeOptions = { shapeType: Shapes.TYPE_RECTANGLE }) {
+  public constructor(left: number, top: number, width: number, height: number, shapeOptions: ShapeOptions = { shapeType: Shapes.TYPE_RECTANGLE }, 
+      shapeTypes: ShapeType[] = ShapeTypes) {
     super(left, top, width, height)
+    this._shapeTypes = shapeTypes
     this.type = shapeOptions.shapeType
     this._shapeType = this.getShapeType()
     let text = this.parseEntityShapeText(this.type)
@@ -191,7 +194,7 @@ export class ShapeEntity extends Entity {
   }
 
   public get types(): Type[] {
-    return ShapeTypes
+    return this._shapeTypes
   }
 
   public get category(): string {
@@ -230,9 +233,9 @@ export class ShapeEntity extends Entity {
     this.shape.adapter = SystemUtils.parsePointString(shapeInfo.adapter)
   }
 
-  private getShapeType(): ShapeType {
-    let theShapeType = ShapeTypes[0]
-    ShapeTypes.forEach(shapeType => {
+  protected getShapeType(): ShapeType {
+    let theShapeType = this._shapeTypes[0]
+    this._shapeTypes.forEach(shapeType => {
       if(shapeType.name == this.type) {
         theShapeType = shapeType
       }
@@ -242,7 +245,7 @@ export class ShapeEntity extends Entity {
 
   private parseEntityShapeText(type: string): string {
     let text = ''
-    ShapeTypes.forEach(shapeType => {
+    this._shapeTypes.forEach(shapeType => {
       if(shapeType.name == type) {
         text = shapeType.text
       }
@@ -288,8 +291,8 @@ export class ShapeEntity extends Entity {
   }
 
   private parseTypeInfo(shapeOptions: ShapeOptions): ShapeTypeInfo{
-    let theShapeType = ShapeTypes[0]
-    ShapeTypes.forEach(shapeType => {
+    let theShapeType = this._shapeTypes[0]
+    this._shapeTypes.forEach(shapeType => {
       if(shapeType.name == shapeOptions.shapeType) {
         theShapeType = shapeType
       }
@@ -320,7 +323,7 @@ export class ShapeEntity extends Entity {
     }
   }
 
-  private parseEntityShapeType(type: string): EntityShapeType {
+  protected parseEntityShapeType(type: string): EntityShapeType {
     let shapeType = EntityShapeType.Rectangle
     switch (type) {
       case Shapes.TYPE_RECTANGLE:

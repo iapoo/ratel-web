@@ -29,7 +29,10 @@ export enum EntityShapeType {
   Note,
   Card,
   Callout,
-  Actor
+  Actor,
+  Container,
+  HorizontalContainer,
+  VerticalContainer,
 }
 
 export enum EntityShapeFreezeType {
@@ -353,6 +356,19 @@ export class EntityShape extends AbstractTextShape {
       this.path.lineTo(this.width, this.height)
       this.path.lineTo(this.width * 0.5, this.height * 2 / 3)
       this.path.lineTo(0, this.height)
+      break
+    case EntityShapeType.Container:
+      this.path.addRectangle(Rectangle.makeLTWH(0, 0, this.width, this.height))
+      break
+    case EntityShapeType.HorizontalContainer:
+      this.path.addRectangle(Rectangle.makeLTWH(0, 0, this.width, this.height))
+      this.path.moveTo(modifierWidth + 1, 0)
+      this.path.lineTo(modifierWidth + 1, this.height)
+      break
+    case EntityShapeType.VerticalContainer:
+      this.path.addRectangle(Rectangle.makeLTWH(0, 0, this.width, this.height))
+      this.path.moveTo(0, modifierHeight + 1)
+      this.path.lineTo(this.width, modifierHeight + 1)
       break
     case EntityShapeType.Rectangle:
     default:
