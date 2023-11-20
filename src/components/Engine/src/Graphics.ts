@@ -552,6 +552,12 @@ export enum PathOp {
   REVERSE_DIFFERENCE = 4,
 }
 
+export enum ParagraphDirection {
+  LeftRight = 0,
+  BottomTop = 1,
+  TopBottom = 2
+}
+
 export class TextFontFeature {
   public readonly name: string;
   public readonly value: number;
@@ -579,6 +585,7 @@ export interface ParagraphStyleOptions {
   textDirection?: TextDirection;
   textHeightBehavior?: TextHeightBehavior;
   textStyle: TextStyle;
+  paragraphDirection?: ParagraphDirection
 }
 
 export class ParagraphStyle {
@@ -592,6 +599,7 @@ export class ParagraphStyle {
   private _textDirection: TextDirection;
   private _textHeightBehavior: TextHeightBehavior;
   private _textStyle: TextStyle;
+  private _paragraphDirection: ParagraphDirection
 
   constructor (
     options: ParagraphStyleOptions = {
@@ -599,6 +607,7 @@ export class ParagraphStyle {
       textAlignment: TextAlignment.LEFT,
       textDirection: TextDirection.LTR,
       textStyle: new TextStyle(),
+      paragraphDirection: ParagraphDirection.LeftRight
     }
   ) {
     this._textStyle = options.textStyle
@@ -612,6 +621,7 @@ export class ParagraphStyle {
     this._ellipsis = options.ellipsis
     this._heightMultiplier = options.heightMultiplier ? options.heightMultiplier : 0
     this._maxLines = options.maxLines ? options.maxLines : 0
+    this._paragraphDirection = options.paragraphDirection ? options.paragraphDirection : ParagraphDirection.LeftRight
     this._source = new Engine.canvasKit.ParagraphStyle({
       textStyle: this._textStyle.source,
       strutStyle: this._strutStyle?.source,
@@ -635,6 +645,10 @@ export class ParagraphStyle {
 
   public get textDirection () {
     return this._textDirection
+  }
+
+  public get textAngle () {
+    return this._textAngle
   }
 
   public get maxLines () {

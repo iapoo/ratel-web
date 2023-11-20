@@ -2,7 +2,7 @@
 /* eslint-disable max-params */
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
 
-import { Color, Colors, Font, FontSlant, FontWeight, GlyphRun, Graphics, Paint, Paragraph, ParagraphBuilder, ParagraphStyle, Path, PlaceholderAlignment, Point2, Rectangle, Rotation, RoundRectangle, Shape, ShapedLine, TextAlignment, TextBaseline, TextDecoration, TextDirection, TextStyle, TextVerticalAlignment, } from '@/components/Engine'
+import { Color, Colors, Font, FontSlant, FontWeight, GlyphRun, Graphics, Paint, Paragraph, ParagraphBuilder, ParagraphDirection, ParagraphStyle, Path, PlaceholderAlignment, Point2, Rectangle, Rotation, RoundRectangle, Shape, ShapedLine, TextAlignment, TextBaseline, TextDecoration, TextDirection, TextStyle, TextVerticalAlignment, } from '@/components/Engine'
 import { Block, CursorMaker, Style, } from './EntityUtils'
 
 export abstract class AbstractTextShape extends Shape {
@@ -25,25 +25,39 @@ export abstract class AbstractTextShape extends Shape {
     private _paragraphStyle: ParagraphStyle
     private _paragraph: Paragraph
     private _focused = false
-    private _textPadding
+    private _textMargin: number
     private _textVerticalAlignment: TextVerticalAlignment
+    private _textWidth: number
+    private _textHeight: number
+    //private _textPaddingLeft: number
+    //private _textPaddingTop: number
+    //private _textPaddingRight: number
+    //private _textPaddingBottom: number
+    private _paragraphDirection: ParagraphDirection
 
     constructor (text = '', left = 0, top = 0, width = 100, height = 100) {
       super(left, top, width, height)
       // this.filled = false
-      this._textPadding = AbstractTextShape.DEFAULT_TEXT_PADDING
+      //this._textPaddingLeft = 0
+      //this._textPaddingTop = 0
+      //this._textPaddingRight = 0
+      //this._textPaddingBottom = 0
+      this._textWidth = width
+      this._textHeight = height
+      this._textMargin = AbstractTextShape.DEFAULT_TEXT_PADDING
       this._text = ''
       this._fontPaint = new Paint()
       this._fontPaint.setColor(Colors.Blue)
       // this.path.addRectangle(Rectangle.makeLTWH(0, 0, width, height))
       this.buildShape()
       this._textVerticalAlignment  = TextVerticalAlignment.MIDDLE
+      this._paragraphDirection = ParagraphDirection.LeftRight
       this._styles.push(new Style(this._text.length))
       this._paragraphStyle = new ParagraphStyle()
       this._paragraphBuilder = new ParagraphBuilder(this._paragraphStyle)
       this._paragraphBuilder.addText(this._text)
       this._paragraph = this._paragraphBuilder.build()
-      this._paragraph.layout(width - this._textPadding * 2)
+      this._paragraph.layout(width - this._textMargin * 2 - this._textPaddingLeft - this._textPaddingRight)
       this.insert(text)
       // const style = new Style(2, EngineUtils.FONT_NAME_SERIF, 36)
       // this.applyStyleToRange(style, 1, 3)
@@ -65,7 +79,28 @@ export abstract class AbstractTextShape extends Shape {
     //public set fontPaint(value: Paint) {
     //  this._fontPaint = value
     //}
+
+    public get textPadding() {
+      return [this._textPaddingLeft, this._textPaddingTop, this._textPaddingRight, this._textPaddingBottom]
+    }
+
+    public set textPadding(value: number[]) {
+      this._textPaddingLeft = value.length > 0 ? value[0] : 0
+      this._textPaddingTop = value.length > 1 ? value[1] : 0
+      this._textPaddingRight = value.length > 2 ? value[2] : 0
+      this._textPaddingBottom = value.length > 3 ? value[3] : 0
+      this.buildLines()
+    }
     
+    public get paragraphDirection() {
+      return this._paragraphDirection
+    }
+
+    public set paragraphDirection(value: ParagraphDirection) {
+      this._paragraphDirection = value
+      this.buildLines()
+    }
+
     public get fontColor() {
       if(this._focused) {
         return this._selectStyle.color
@@ -185,12 +220,12 @@ export abstract class AbstractTextShape extends Shape {
       this.rebuildSelection()
     }
 
-    public get textPadding () {
-      return this._textPadding
+    public get textMargin () {
+      return this._textMargin
     }
 
-    public set textPadding (value: number) {
-      this._textPadding = value
+    public set textMargin (value: number) {
+      this._textMargin = value
     }
 
     public get focused () {
@@ -601,6 +636,22 @@ export abstract class AbstractTextShape extends Shape {
 
     public render (graphics: Graphics): void {
       super.render(graphics)
+
+      switch(this._paragraphDirection) {
+        case ParagraphDirection.BottomTop:
+          graphics.translate(0, this.height)
+          graphics.rotate(270, 0, 0)
+          break
+        case ParagraphDirection.TopBottom:
+          graphics.translate(50, -50)
+          graphics.rotate(10, 0, 0)
+          break
+        default:
+        case ParagraphDirection.LeftRight:
+          //Do nothing for default case
+          break;
+      }
+
       if (this._focused) {
         this._cursor.renderBefore(graphics)
       }
@@ -675,7 +726,7 @@ export abstract class AbstractTextShape extends Shape {
         // canvas.drawGlyphs(gly, pos, 0, 0, f, p)
         let startX = this.getTextPaddingX()
         let startY = this.getTextPaddingY()
-        
+        //graphics.
         graphics.drawGlyphs(gly, pos, startX, startY, font, fontPaint)
 
         if (style.underline) {
@@ -949,11 +1000,19 @@ export abstract class AbstractTextShape extends Shape {
     }
 
     private getTextPaddingX() {
-      return this._textPadding
+      switch(this._paragraphDirection) {
+        case ParagraphDirection.BottomTop:
+        //  return this._textMargin + this._textPaddingBottom
+        case ParagraphDirection.TopBottom:
+        //  return this._textMargin + this._textPaddingTop
+        default:
+        case ParagraphDirection.LeftRight:
+          return this._textMargin + this._textPaddingLeft
+      }
     }
 
     private getTextPaddingY() {
-      let startY = this._textPadding
+      let startY = this._textMargin + this._textPaddingTop
       let paragraphHeight = this._paragraph.getHeight()
       if(paragraphHeight == 0) {
         //Empty text and so we assume height is font size x 140%
@@ -961,13 +1020,47 @@ export abstract class AbstractTextShape extends Shape {
       }
       switch(this._textVerticalAlignment) {
         case TextVerticalAlignment.TOP:
+          switch(this._paragraphDirection) {
+            case ParagraphDirection.BottomTop:
+            //  startY = this._textMargin + this._textPaddingLeft
+            //  break
+            case ParagraphDirection.TopBottom:
+            //  startY = this._textMargin + this._textPaddingRight
+            //  break
+            default:
+            case ParagraphDirection.LeftRight:
+              startY = this._textMargin + this._textPaddingTop
+              break
+          }
           break;
         case TextVerticalAlignment.BOTTOM:
-          startY = this.height - this._textPadding - paragraphHeight
+          switch(this._paragraphDirection) {
+            case ParagraphDirection.BottomTop:
+              startY = this.width - this._textMargin - paragraphHeight - this._textPaddingRight
+              break
+            case ParagraphDirection.TopBottom:
+              startY = this.width - this._textMargin - paragraphHeight - this._textPaddingLeft
+              break
+            default:
+            case ParagraphDirection.LeftRight:
+              startY = this.height - this._textMargin - paragraphHeight - this._textPaddingBottom
+              break
+          }
           break;
         case TextVerticalAlignment.MIDDLE:
         default:            
-          startY = this._textPadding + (this.height - this._textPadding * 2  - paragraphHeight) / 2
+          switch(this._paragraphDirection) {
+            case ParagraphDirection.BottomTop:
+              startY = this._textMargin + this._textPaddingLeft + (this.width - this._textMargin * 2  - paragraphHeight - this._textPaddingLeft - this._textPaddingRight) / 2
+              break
+            case ParagraphDirection.TopBottom:
+              startY = this._textMargin + this._textPaddingRight + (this.width - this._textMargin * 2  - paragraphHeight - this._textPaddingRight - this._textPaddingLeft) / 2
+              break
+            default:
+            case ParagraphDirection.LeftRight:
+              startY = this._textMargin + this._textPaddingTop + (this.height - this._textMargin * 2  - paragraphHeight - this._textPaddingTop - this._textPaddingBottom) / 2
+              break
+          }
           break;
       }
       return startY
