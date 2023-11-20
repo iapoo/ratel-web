@@ -16,7 +16,7 @@ import { Editor, EditorEvent } from '@/components/Rockie/Editor';
 import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
 import { Placeholder, } from '@/components/Resource/Icons'
 import { OperationType } from '@/components/Rockie/Operations';
-import { Item, ShapeEntity, ShapeTypes } from '@/components/Rockie/Items';
+import { ContainerEntity, ContainerTypes, Item, ShapeEntity, ShapeTypes } from '@/components/Rockie/Items';
 import { ShapeAction } from '@/components/Rockie/Actions';
 
 interface HeaderProps {
@@ -642,6 +642,40 @@ const Header: FC<HeaderProps> = ({
   }
 
   const handleTest = () => {
+    if(currentEditor) {
+      let count = ContainerTypes.length
+      for(let i = 0; i < count; i ++) {
+        let shapeType = ContainerTypes[i]
+        let margin = 5 //2
+        let lineFactor = 1 //1
+        let fontFactor = 1 //0.5
+        let sizeFactor = 1 //0.25
+        let modifierFactor = 1 //0.25
+        currentEditor.contentLayer.removeAllEditorItems()
+        let left = shapeType.left + margin
+        if(shapeType.width < shapeType.height) {
+          left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
+        }
+        let shapeEntity = new ContainerEntity(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, {shapeType: shapeType.name})
+        shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
+        shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
+        if(!shapeType.modifyInPercent) {
+          shapeEntity.shape.modifier = new Point2(Math.round(shapeEntity.shape.modifier.x * modifierFactor), Math.round(shapeEntity.shape.modifier.y * modifierFactor))
+        }
+        if(shapeType.width < shapeType.height) {
+          currentEditor.resize(shapeType.height * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+        } else {
+          currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+        }
+        currentEditor.contentLayer.addEditorItem(shapeEntity)
+        const data = currentEditor.export()
+        SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
+      }
+    }
+  }
+
+
+  const handleTest2 = () => {
     if(currentEditor) {
       let count = ShapeTypes.length
       for(let i = 0; i < count; i ++) {

@@ -1,3 +1,4 @@
+import { ParagraphDirection } from '@/components/Engine'
 import { EntityShapeType } from '../../Shapes/src/EntityShape'
 import { Categories, Type } from './Item'
 import { ShapeEntity, ShapeOptions, ShapeType, Shapes, } from './ShapeEntity'
@@ -37,6 +38,16 @@ export class ContainerEntity extends ShapeEntity {
 
     public constructor(left: number, top: number, width: number, height: number, shapeOptions: ShapeOptions = { shapeType: Containers.TYPE_CONTAINER }) {
       super(left, top, width, height, shapeOptions, ContainerTypes)
+      switch (shapeOptions.shapeType) {
+        case Containers.TYPE_HORIZONTAL_CONTAINER:
+          this.shape.paragraphDirection = ParagraphDirection.BottomTop
+          break;
+        case Containers.TYPE_VERTICAL_CONTAINER:
+          break;
+        default:
+        case Containers.TYPE_CONTAINER:
+          break;
+      } 
     }
 
     public get types(): Type[] {
