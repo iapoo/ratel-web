@@ -364,13 +364,15 @@ export class EntityShape extends AbstractTextShape {
       this.path.addRectangle(Rectangle.makeLTWH(0, 0, this.width, this.height))
       this.path.moveTo(modifierWidth + 1, 0)
       this.path.lineTo(modifierWidth + 1, this.height)
-      this.textPadding = [0, 0, this.width - modifierWidth, 0]
+      this.textWidth = this.height
+      this.textHeight = modifierWidth
       break
     case EntityShapeType.VerticalContainer:
       this.path.addRectangle(Rectangle.makeLTWH(0, 0, this.width, this.height))
       this.path.moveTo(0, modifierHeight + 1)
       this.path.lineTo(this.width, modifierHeight + 1)
-      this.textPadding = [0, 0, 0, this.height - modifierHeight]
+      this.textWidth = this.width
+      this.textHeight = modifierHeight
       break
     case EntityShapeType.Rectangle:
     default:
