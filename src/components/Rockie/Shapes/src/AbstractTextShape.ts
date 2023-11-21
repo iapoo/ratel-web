@@ -2,7 +2,7 @@
 /* eslint-disable max-params */
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
 
-import { Color, Colors, Font, FontSlant, FontWeight, GlyphRun, Graphics, Paint, Paragraph, ParagraphBuilder, ParagraphDirection, ParagraphStyle, Path, PlaceholderAlignment, Point2, Rectangle, Rotation, RoundRectangle, Shape, ShapedLine, TextAlignment, TextBaseline, TextDecoration, TextDirection, TextStyle, TextVerticalAlignment, } from '@/components/Engine'
+import { Color, Colors, Font, FontSlant, FontWeight, GlyphRun, Graphics, Matrix, Paint, Paragraph, ParagraphBuilder, ParagraphDirection, ParagraphStyle, Path, PlaceholderAlignment, Point2, Rectangle, Rotation, RoundRectangle, Shape, ShapedLine, TextAlignment, TextBaseline, TextDecoration, TextDirection, TextStyle, TextVerticalAlignment, } from '@/components/Engine'
 import { Block, CursorMaker, Style, } from './EntityUtils'
 
 export abstract class AbstractTextShape extends Shape {
@@ -304,8 +304,11 @@ export abstract class AbstractTextShape extends Shape {
       this.select(this._selectStartIndex, end)
     }
 
-    public enter (x: number, y: number) {
-      console.log(`Enter ${x} ${y}`)
+    public enter (x2: number, y2: number) {
+      let point = this.applyParagraphReverseMatrix(x2, y2)
+      let newX = point.x 
+      let newY = point.y
+      //console.log(`Enter ${newX} ${newY}`)
       if(this.lines.length == 0) {
         //Empty text and so we assume height is font size x 140%
         this._cursor.place(this.getTextPaddingX(), this.getTextPaddingY() , this.getTextPaddingY() + this.fontSize * 1.4)
@@ -313,34 +316,34 @@ export abstract class AbstractTextShape extends Shape {
       }
       const firstLine = this._lines[0]
       const lastLine = this._lines[this._lines.length - 1]
-      if(firstLine.top > y - this.getTextPaddingY()) {
+      if(firstLine.top > newY - this.getTextPaddingY()) {
         const firstRun = firstLine.runs[0]
         const lastRun = firstLine.runs[firstLine.runs.length - 1]
-        if(x - this.getTextPaddingX() < firstRun.positions[0] ) {
+        if(newX - this.getTextPaddingX() < firstRun.positions[0] ) {
           this.select(firstRun.indices[0], firstRun.indices[0])
-        } else if(x - this.getTextPaddingX() >= lastRun.positions[lastRun.indices.length * 2 - 2 ]) {
+        } else if(newX - this.getTextPaddingX() >= lastRun.positions[lastRun.indices.length * 2 - 2 ]) {
           this.select(lastRun.indices[lastRun.indices.length - 1],lastRun.indices[lastRun.indices.length - 1])
         } else {
           for (const run of firstLine.runs) {
             for (let index = 0; index < run.indices.length - 1; index++) {
-              if (x - this.getTextPaddingX() >= run.positions[index * 2] && x - this.getTextPaddingX() <= run.positions[index * 2 + 2]) {
+              if (newX - this.getTextPaddingX() >= run.positions[index * 2] && newX - this.getTextPaddingX() <= run.positions[index * 2 + 2]) {
                 console.log(`Enter index = ${run.indices[index]}`)
                 this.select(run.indices[index], run.indices[index])
               }
             }
           }
         }        
-      } else if(lastLine.bottom < y -this.getTextPaddingY()) {
+      } else if(lastLine.bottom < newY -this.getTextPaddingY()) {
         const firstRun = lastLine.runs[0]
         const lastRun = lastLine.runs[lastLine.runs.length - 1]
-        if(x - this.getTextPaddingX() < firstRun.positions[0] ) {
+        if(newX - this.getTextPaddingX() < firstRun.positions[0] ) {
           this.select(firstRun.indices[0], firstRun.indices[0])
-        } else if(x - this.getTextPaddingX() >= lastRun.positions[lastRun.indices.length * 2 - 2 ]) {
+        } else if(newX - this.getTextPaddingX() >= lastRun.positions[lastRun.indices.length * 2 - 2 ]) {
           this.select(lastRun.indices[lastRun.indices.length - 1],lastRun.indices[lastRun.indices.length - 1])
         } else {
           for (const run of lastLine.runs) {
             for (let index = 0; index < run.indices.length - 1; index++) {
-              if (x - this.getTextPaddingX() >= run.positions[index * 2] && x - this.getTextPaddingX() <= run.positions[index * 2 + 2]) {
+              if (newX - this.getTextPaddingX() >= run.positions[index * 2] && newX - this.getTextPaddingX() <= run.positions[index * 2 + 2]) {
                 console.log(`Enter index = ${run.indices[index]}`)
                 this.select(run.indices[index], run.indices[index])
               }
@@ -351,17 +354,17 @@ export abstract class AbstractTextShape extends Shape {
         for (let lineIndex = 0; lineIndex < this._lines.length; lineIndex++) {
           const line = this._lines[lineIndex]
           let selected = false
-          if(line.top <= y - this.getTextPaddingY() && line.bottom >= y - this.getTextPaddingY()) {
+          if(line.top <= newY - this.getTextPaddingY() && line.bottom >= newY - this.getTextPaddingY()) {
             const firstRun = line.runs[0]
             const lastRun = line.runs[line.runs.length - 1]
-            if(x - this.getTextPaddingX() < firstRun.positions[0] ) {
+            if(newX - this.getTextPaddingX() < firstRun.positions[0] ) {
               this.select(firstRun.indices[0], firstRun.indices[0])
-            } else if(x - this.getTextPaddingX() >= lastRun.positions[lastRun.indices.length * 2 - 2 ]) {
+            } else if(newX - this.getTextPaddingX() >= lastRun.positions[lastRun.indices.length * 2 - 2 ]) {
               this.select(lastRun.indices[lastRun.indices.length - 1],lastRun.indices[lastRun.indices.length - 1])
             } else {
               for (const run of line.runs) {
                 for (let index = 0; index < run.indices.length - 1; index++) {
-                  if (x - this.getTextPaddingX() >= run.positions[index * 2] && x - this.getTextPaddingX() <= run.positions[index * 2 + 2]) {
+                  if (newX - this.getTextPaddingX() >= run.positions[index * 2] && newX - this.getTextPaddingX() <= run.positions[index * 2 + 2]) {
                     console.log(`Enter index = ${run.indices[index]}`)
                     this.select(run.indices[index], run.indices[index])
                     selected = true
@@ -378,7 +381,11 @@ export abstract class AbstractTextShape extends Shape {
       }
     }
 
-    public enterTo (x: number, y: number) {
+    public enterTo (x2: number, y2: number) {
+      let point = this.applyParagraphReverseMatrix(x2, y2)
+      let newX = point.x 
+      let newY = point.y
+      //console.log(`Enter ${newX} ${newY}`)
       if(this.lines.length == 0) {
         //Empty text and so we assume height is font size x 140%
         this._cursor.place(this.getTextPaddingX(), this.getTextPaddingY() , this.getTextPaddingY() + this.fontSize * 1.4)
@@ -386,34 +393,34 @@ export abstract class AbstractTextShape extends Shape {
       }
       const firstLine = this._lines[0]
       const lastLine = this._lines[this._lines.length - 1]
-      if(firstLine.top > y - this.getTextPaddingY()) {
+      if(firstLine.top > newY - this.getTextPaddingY()) {
         const firstRun = firstLine.runs[0]
         const lastRun = firstLine.runs[firstLine.runs.length - 1]
-        if(x - this.getTextPaddingX() < firstRun.positions[0] ) {
+        if(newX - this.getTextPaddingX() < firstRun.positions[0] ) {
           this.selectTo(firstRun.indices[0])
-        } else if(x - this.getTextPaddingX() >= lastRun.positions[lastRun.indices.length * 2 - 2 ]) {
+        } else if(newX - this.getTextPaddingX() >= lastRun.positions[lastRun.indices.length * 2 - 2 ]) {
           this.selectTo(lastRun.indices[lastRun.indices.length - 1])
         } else {
           for (const run of firstLine.runs) {
             for (let index = 0; index < run.indices.length - 1; index++) {
-              if (x - this.getTextPaddingX() >= run.positions[index * 2] && x - this.getTextPaddingX() <= run.positions[index * 2 + 2]) {
+              if (newX - this.getTextPaddingX() >= run.positions[index * 2] && newX - this.getTextPaddingX() <= run.positions[index * 2 + 2]) {
                 console.log(`Enter index = ${run.indices[index]}`)
                 this.selectTo(run.indices[index])
               }
             }
           }
         }        
-      } else if(lastLine.bottom < y -this.getTextPaddingY()) {
+      } else if(lastLine.bottom < newY -this.getTextPaddingY()) {
         const firstRun = lastLine.runs[0]
         const lastRun = lastLine.runs[lastLine.runs.length - 1]
-        if(x - this.getTextPaddingX() < firstRun.positions[0] ) {
+        if(newX - this.getTextPaddingX() < firstRun.positions[0] ) {
           this.selectTo(firstRun.indices[0])
-        } else if(x - this.getTextPaddingX() >= lastRun.positions[lastRun.indices.length * 2 - 2 ]) {
+        } else if(newX - this.getTextPaddingX() >= lastRun.positions[lastRun.indices.length * 2 - 2 ]) {
           this.selectTo(lastRun.indices[lastRun.indices.length - 1])
         } else {
           for (const run of lastLine.runs) {
             for (let index = 0; index < run.indices.length - 1; index++) {
-              if (x - this.getTextPaddingX() >= run.positions[index * 2] && x - this.getTextPaddingX() <= run.positions[index * 2 + 2]) {
+              if (newX - this.getTextPaddingX() >= run.positions[index * 2] && newX - this.getTextPaddingX() <= run.positions[index * 2 + 2]) {
                 console.log(`Enter index = ${run.indices[index]}`)
                 this.selectTo(run.indices[index])
               }
@@ -424,17 +431,17 @@ export abstract class AbstractTextShape extends Shape {
         for (let lineIndex = 0; lineIndex < this._lines.length; lineIndex++) {
           const line = this._lines[lineIndex]
           let selected = false
-          if(line.top <= y - this.getTextPaddingY() && line.bottom >= y - this.getTextPaddingY()) {
+          if(line.top <= newY - this.getTextPaddingY() && line.bottom >= newY - this.getTextPaddingY()) {
             const firstRun = line.runs[0]
             const lastRun = line.runs[line.runs.length - 1]
-            if(x - this.getTextPaddingX() < firstRun.positions[0] ) {
+            if(newX - this.getTextPaddingX() < firstRun.positions[0] ) {
               this.selectTo(firstRun.indices[0])
-            } else if(x - this.getTextPaddingX() >= lastRun.positions[lastRun.indices.length * 2 - 2 ]) {
+            } else if(newX - this.getTextPaddingX() >= lastRun.positions[lastRun.indices.length * 2 - 2 ]) {
               this.selectTo(lastRun.indices[lastRun.indices.length - 1])
             } else {
               for (const run of line.runs) {
                 for (let index = 0; index < run.indices.length - 1; index++) {
-                  if (x - this.getTextPaddingX() >= run.positions[index * 2] && x - this.getTextPaddingX() <= run.positions[index * 2 + 2]) {
+                  if (newX - this.getTextPaddingX() >= run.positions[index * 2] && newX - this.getTextPaddingX() <= run.positions[index * 2 + 2]) {
                     console.log(`Enter index = ${run.indices[index]}`)
                     this.selectTo(run.indices[index])
                     selected = true
@@ -635,20 +642,23 @@ export abstract class AbstractTextShape extends Shape {
     public render (graphics: Graphics): void {
       super.render(graphics)
 
-      switch(this._paragraphDirection) {
-        case ParagraphDirection.BottomTop:
-          graphics.translate(0, this.textWidth)
-          graphics.rotate(270, 0, 0)
-          break
-        case ParagraphDirection.TopBottom:
-          graphics.translate(this.textHeight, 0)
-          graphics.rotate(90, 0, 0)
-          break
-        default:
-        case ParagraphDirection.LeftRight:
-          //Do nothing for default case
-          break;
-      }
+        // switch(this._paragraphDirection) {
+        //   case ParagraphDirection.BottomTop:
+        //     graphics.translate(0, this.textWidth)
+        //     graphics.rotate(270, 0, 0)
+        //     break
+        //   case ParagraphDirection.TopBottom:
+        //     graphics.translate(this.textHeight, 0)
+        //     graphics.rotate(90, 0, 0)
+        //     break
+        //   default:
+        //   case ParagraphDirection.LeftRight:
+        //     //Do nothing for default case
+        //     break;
+        // }
+      //Apply paragraph direction matrix here
+      const matrix = this.getParagraphMatrix()      
+      graphics.concat(matrix)
 
       if (this._focused) {
         this._cursor.renderBefore(graphics)
@@ -1021,6 +1031,44 @@ export abstract class AbstractTextShape extends Shape {
           break;
       }
       return startY
+  }
+
+  private getParagraphMatrix() {
+    let matrix = new Matrix()
+    switch(this._paragraphDirection) {
+      case ParagraphDirection.BottomTop:
+        matrix.translate(0, this.textWidth)
+        matrix.rotate(270 * Math.PI / 180, 0, 0)
+        break;
+      case ParagraphDirection.TopBottom:
+        matrix.translate(this.textHeight, 0)
+        matrix.rotate(90 * Math.PI / 180, 0, 0)
+        break;
+      default:
+      case ParagraphDirection.LeftRight:
+        break;  
+    }
+    return matrix
+  }
+
+  private getParagraphReverseMatrix() {
+    let matrix = this.getParagraphMatrix()
+    let reverseMatrix = matrix.invert()
+    return reverseMatrix
+  }
+
+  private applyParagraphMatrix(x: number, y: number) {
+    let matrix = this.getParagraphMatrix()
+    return matrix.makePoint(new Point2(x, y))
+  }
+
+  private applyParagraphReverseMatrix(x: number, y: number) {
+    let matrix = this.getParagraphReverseMatrix()
+    if(matrix) {
+      return matrix.makePoint(new Point2(x, y))
+    } else {
+      return new Point2(x, y)
+    }
   }
 
   protected abstract buildShape (): void;

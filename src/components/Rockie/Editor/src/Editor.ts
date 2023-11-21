@@ -662,8 +662,11 @@ export class Editor extends Painter {
 
   public handlePointerClick (e: PointerEvent) { }
 
-  public handlePointerDown (e: PointerEvent) {
+  public handlePointerDown (e: PointerEvent) {    
     //console.log(`handle Mouse Down ... x = ${e.x}`)
+    if(e.mouseCode == MouseCode.RIGHT_MOUSE_DOWN) {
+      return
+    }
     this._startPointX = e.x
     this._startPointY = e.y
     this._modified = true
@@ -822,6 +825,9 @@ export class Editor extends Painter {
   }
 
   public handlePointerUp (e: MouseEvent) {
+    if(e.mouseCode == MouseCode.RIGHT_MOUSE_UP) {
+      return
+    }
     if(this._action) {
       let editorItemInfo = OperationHelper.saveEditorItem(this._action.item)
       let operation = new Operation(this, OperationType.ADD_ITEMS, [editorItemInfo], [])
