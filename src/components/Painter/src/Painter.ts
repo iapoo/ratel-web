@@ -227,10 +227,14 @@ export class Painter {
 
   private handlePointerDownType (e: PointerEvent) {
     const target = this.findTarget(this._root, e.offsetX, e.offsetY)
+    let mouseCode = MouseCode.LEFT_MOUSE_DOWN
+    if(e.button == 2) {
+      mouseCode = MouseCode.RIGHT_MOUSE_DOWN
+    }      
     if (target?.worldInverseTransform) {
       const point = target.worldInverseTransform.makePoints([ e.offsetX, e.offsetY, ])
       target.pointerDownListeners.forEach(callback => {
-        const event = new UniPointerEvent(target, point[0], point[1], MouseCode.LEFT_MOUSE_DOWN, e.shiftKey, e.ctrlKey, e.altKey, e.height, e.isPrimary, e.pointerId, e.pointerType, e.pressure, e.tangentialPressure, e.tiltX, e.tiltY, e.twist, e.width)
+        const event = new UniPointerEvent(target, point[0], point[1], mouseCode, e.shiftKey, e.ctrlKey, e.altKey, e.height, e.isPrimary, e.pointerId, e.pointerType, e.pressure, e.tangentialPressure, e.tiltX, e.tiltY, e.twist, e.width)
         callback(event)
       })
     }
@@ -249,15 +253,19 @@ export class Painter {
   }
 
   private handlePointerUpType (e: PointerEvent) {
+    let mouseCode = MouseCode.LEFT_MOUSE_UP
+    if(e.button == 2) {
+      mouseCode = MouseCode.RIGHT_MOUSE_UP
+    } 
     if (this._pointerDownTarget) {
       if (this._pointerDownTarget?.worldInverseTransform) {
         const point = this._pointerDownTarget.worldInverseTransform.makePoints([ e.offsetX, e.offsetY, ])
         this._pointerDownTarget.pointerUpListeners.forEach(callback => {
-          const event = new UniPointerEvent(this._pointerDownTarget!, point[0], point[1], MouseCode.LEFT_MOUSE_DOWN, e.shiftKey, e.ctrlKey, e.altKey, e.height, e.isPrimary, e.pointerId, e.pointerType, e.pressure, e.tangentialPressure, e.tiltX, e.tiltY, e.twist, e.width)
+          const event = new UniPointerEvent(this._pointerDownTarget!, point[0], point[1], mouseCode, e.shiftKey, e.ctrlKey, e.altKey, e.height, e.isPrimary, e.pointerId, e.pointerType, e.pressure, e.tangentialPressure, e.tiltX, e.tiltY, e.twist, e.width)
           callback(event)
         })
         this._pointerDownTarget.pointerClickListeners.forEach(callback => {
-          const event = new UniPointerEvent(this._pointerDownTarget!, point[0], point[1], MouseCode.LEFT_MOUSE_DOWN, e.shiftKey, e.ctrlKey, e.altKey, e.height, e.isPrimary, e.pointerId, e.pointerType, e.pressure, e.tangentialPressure, e.tiltX, e.tiltY, e.twist, e.width)
+          const event = new UniPointerEvent(this._pointerDownTarget!, point[0], point[1], mouseCode, e.shiftKey, e.ctrlKey, e.altKey, e.height, e.isPrimary, e.pointerId, e.pointerType, e.pressure, e.tangentialPressure, e.tiltX, e.tiltY, e.twist, e.width)
           callback(event)
         })
       }
