@@ -469,7 +469,7 @@ const Content: FC<ContentProps> = ({
   const handleTextEditEnd = (e: EditorEvent) => {
     console.log(`handle text end`)
     setTextToolbarVisible(false)
-    
+
   }
 
 
@@ -693,12 +693,21 @@ const Content: FC<ContentProps> = ({
    */
   const handleCopyDetail = (e: ClipboardEvent) => {
     if(e.clipboardData && Utils.currentEditor) {
-      let data = EditorHelper.exportEditorSelections(Utils.currentEditor)
-      //data = `a${data}a`
-      e.clipboardData.clearData()
-      e.clipboardData.setData('text/plain', data)
-      //e.clipboardData.setData('text/retel', data)
-      console.log(`copy data = ${data}`) 
+      if(textToolbarVisible) {
+        let item = Utils.currentEditor.selectionLayer.getEditorItem(0) as Item
+        let data = item.shape.selection
+        if(data.length > 0) {
+          e.clipboardData.clearData()
+          e.clipboardData.setData('text/plain', data)
+        }
+      } else {
+        let data = EditorHelper.exportEditorSelections(Utils.currentEditor)
+        //data = `a${data}a`
+        e.clipboardData.clearData()
+        e.clipboardData.setData('text/plain', data)
+        //e.clipboardData.setData('text/retel', data)
+        console.log(`copy data = ${data}`) 
+      }
       e.preventDefault()
     }
   }
@@ -768,13 +777,23 @@ const Content: FC<ContentProps> = ({
 
   const handleCutDetail = (e: ClipboardEvent) => {
     if(e.clipboardData && Utils.currentEditor) {
-      let data = EditorHelper.exportEditorSelections(Utils.currentEditor)
-      //data = `a${data}a`
-      e.clipboardData.clearData()
-      e.clipboardData.setData('text/plain', data)
-      //e.clipboardData.setData('text/retel', data)
-      console.log(`cube data = ${data}`) 
-      //deleteCurrentDocumentSelection()
+      if(textToolbarVisible) {
+        let item = Utils.currentEditor.selectionLayer.getEditorItem(0) as Item
+        let data = item.shape.selection
+        if(data.length > 0) {
+          e.clipboardData.clearData()
+          e.clipboardData.setData('text/plain', data)
+          item.shape.deleteSelection()
+        }
+      } else {
+        let data = EditorHelper.exportEditorSelections(Utils.currentEditor)
+        //data = `a${data}a`
+        e.clipboardData.clearData()
+        e.clipboardData.setData('text/plain', data)
+        //e.clipboardData.setData('text/retel', data)
+        console.log(`cube data = ${data}`) 
+        //deleteCurrentDocumentSelection()
+      }
       e.preventDefault()
     }
   }
@@ -800,9 +819,14 @@ const Content: FC<ContentProps> = ({
     if(Utils.currentEditor && e.clipboardData && e.clipboardData.types.indexOf('text/plain') > -1) {
       let data = e.clipboardData.getData('text/plain')
       console.log(`oldData = ${data}`)
-      let selections = EditorHelper.readSelections(data)
-      console.log(`paste selections = ${selections}`)
-      EditorHelper.pasteSelections(selections, Utils.currentEditor, pasteFromSystem, pasteLocation)
+      if(textToolbarVisible) {
+        let item = Utils.currentEditor.selectionLayer.getEditorItem(0) as Item
+        item.shape.insert(data)
+      } else {
+        let selections = EditorHelper.readSelections(data)
+        console.log(`paste selections = ${selections}`)
+        EditorHelper.pasteSelections(selections, Utils.currentEditor, pasteFromSystem, pasteLocation)
+      }
       e.preventDefault()
     }
     setPasteFromSystem(true)
@@ -864,6 +888,68 @@ const Content: FC<ContentProps> = ({
     //}
 
 
+  }
+
+  // Handle copy command only for application by menu
+  const handleTextCopy = async () => {
+    if(Utils.currentEditor && Utils.currentEditor.selectionLayer.getEditorItemCount() == 1 ) {
+      console.log(`text copy is triggered`)
+      let item = Utils.currentEditor.selectionLayer.getEditorItem(0) as Item
+      let data = item.shape.selection
+      if(data.length <= 0) {
+        return
+      }
+      let clipboard = navigator.clipboard
+      if(!clipboard) {
+        SystemUtils.handleInternalError(intl.formatMessage({ id: 'workspace.content.message-clipboard-not-supported' }))
+        return
+      }
+      await clipboard.writeText(data)
+    }
+  }
+
+  const handleTextCut = async () => {
+    if(Utils.currentEditor && Utils.currentEditor.selectionLayer.getEditorItemCount() == 1 ) {
+      console.log(`text cute is triggered`)
+      let item = Utils.currentEditor.selectionLayer.getEditorItem(0) as Item
+      let data = item.shape.selection
+      if(data.length <= 0) {
+        return
+      }
+      let clipboard = navigator.clipboard
+      if(!clipboard) {
+        SystemUtils.handleInternalError(intl.formatMessage({ id: 'workspace.content.message-clipboard-not-supported' }))
+        return
+      }
+      await clipboard.writeText(data)
+    }
+  }
+
+  /**
+   * Handle paste for application internally, it will trigger handlePasteDetail
+   * @param e 
+   */
+  const handleTextPaste = async () => {
+    console.log(`text paste is triggered`)
+    setPasteFromSystem(false)
+    const clipboard = navigator.clipboard
+    if(!clipboard) {
+      SystemUtils.handleInternalError(intl.formatMessage({ id: 'workspace.content.message-clipboard-not-supported' }))
+      return
+    }
+    const text = await clipboard.readText()
+    let dataTransfer = new DataTransfer()
+    dataTransfer.dropEffect = 'none'
+    dataTransfer.effectAllowed = "uninitialized"
+    //let data = EditorHelper.exportEditorSelections(Utils.currentEditor!)
+    dataTransfer.setData('text/plain', text)
+    dataTransfer.setData('text/retel', text)
+    window.dispatchEvent(new ClipboardEvent('paste', {
+      bubbles: true,
+      cancelable: true,
+      composed: true,
+      clipboardData: dataTransfer
+    }))
   }
 
   const handleContextTrigger = (e: any) => {
@@ -932,36 +1018,36 @@ const Content: FC<ContentProps> = ({
   }
 
   const popupShapeItems: MenuProps['items'] = [
-    {label: 'Delete', key: '3', onClick: handleDelete, },
+    {label: 'Delete', key: '1', onClick: handleDelete, },
     {type: 'divider' },
-    {label: 'Copy', key: '1', onClick: handleCopy, },
-    {label: 'Cut', key: '2', onClick: handleCut, },
-    {label: 'Paste', key: '3', onClick: handlePaste, },
-    {label: 'Duplicate', key: '3', onClick: handleDuplicate, },
+    {label: 'Copy', key: '2', onClick: handleCopy, },
+    {label: 'Cut', key: '3', onClick: handleCut, },
+    {label: 'Paste', key: '4', onClick: handlePaste, },
+    {label: 'Duplicate', key: '5', onClick: handleDuplicate, },
     {type: 'divider' },
-    {label: 'Lock', key: '3', onClick: handleLock, },
+    {label: 'Lock', key: '6', onClick: handleLock, },
     {type: 'divider' },
-    {label: 'To Front', key: '3', onClick: handleToFront, },
-    {label: 'To Back', key: '3', onClick: handleToBack, },
-    {label: 'Bring Foreward', key: '3', onClick: handleBringForeward, },
-    {label: 'Send Backward', key: '3', onClick: handleSendBackward, },
+    {label: 'To Front', key: '7', onClick: handleToFront, },
+    {label: 'To Back', key: '8', onClick: handleToBack, },
+    {label: 'Bring Foreward', key: '9', onClick: handleBringForeward, },
+    {label: 'Send Backward', key: '10', onClick: handleSendBackward, },
   ]
 
   const popupEditorItems: MenuProps['items'] = [
     {label: 'Undo', key: '1', onClick: handleUndo, },
     {type: 'divider' },
-    {label: 'Paste', key: '1', onClick: handlePaste, },
-    {label: 'Paste', key: '1', onClick: handlePaste, },
+    {label: 'Paste', key: '2', onClick: handlePaste, },
+    {label: 'Paste', key: '3', onClick: handlePaste, },
     {type: 'divider' },
-    {label: 'Select All', key: '5', onClick: handleSelectAll, },
+    {label: 'Select All', key: '4', onClick: handleSelectAll, },
   ]
 
 
   const popupText: MenuProps['items'] = [
-    {label: 'Cut', key: '2', onClick: handleCut, },
-    {label: 'Copy', key: '1', onClick: handleCopy, },
-    {label: 'Paste', key: '1', onClick: handlePaste, },
-    {label: 'Select All', key: '5', onClick: handleSelectAll, },
+    {label: 'Cut', key: '1', onClick: handleTextCut, },
+    {label: 'Copy', key: '2', onClick: handleTextCopy, },
+    {label: 'Paste', key: '3', onClick: handleTextPaste, },
+    {label: 'Select All', key: '4', onClick: handleSelectAll, },
   ]
 
   const textToolbars = <FloatButton.Group style={{left: textToolbarLeft, top: textToolbarTop - 40, height: 32, display: textToolbarVisible ? 'block' : 'none' }}>                  

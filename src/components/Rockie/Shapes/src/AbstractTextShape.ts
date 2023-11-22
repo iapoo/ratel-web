@@ -238,6 +238,20 @@ export abstract class AbstractTextShape extends Shape {
       return this._text
     }
 
+    public get selection(): string {
+      return this._text.substring(this._startIndex, this._endIndex)
+    }
+
+    public get richText(): string {
+      let styles = this._styles
+      let text =this._text
+      return ''
+    }
+
+    public get richSelection(): string{
+      return ''
+    }
+
     public set text (value: string) {
       this.deleteRange(0, this._text.length - 1)
       this.insert(value)
