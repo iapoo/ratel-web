@@ -1,5 +1,6 @@
 /* eslint-disable max-params */
 import { Color, Colors, Engine, EngineUtils, FontSlant, FontStyle, FontWeight, FontWidth, Graphics, Paint, Path, TextStyle, } from '@/components/Engine'
+import { SystemUtils } from '@/components/Workspace/Utils'
 
 export class CursorMaker {
     private _linePaint: Paint
@@ -109,6 +110,20 @@ export class Block {
     }
 }
 
+export class StyleInfo {
+  public constructor (public length: number = 0, public typeFaceName: string = EngineUtils.FONT_NAME_DEFAULT, public size: number = EngineUtils.FONT_SIZE_DEFAULT, public color: string = '', public bold: boolean = false, public italic: boolean = false, public underline: boolean = false) {
+
+  }
+
+  public makeStyle() {
+    let color = SystemUtils.parseColorString(this.color)
+    if(!color) {
+      color = Colors.Black
+    }
+    return new Style(this.length, this.typeFaceName, this.size, color, this.bold, this.italic, this.underline)
+  }
+}
+
 export class Style {
   public constructor (public length: number = 0, public typeFaceName: string = EngineUtils.FONT_NAME_DEFAULT, public size: number = EngineUtils.FONT_SIZE_DEFAULT, public color: Color = Colors.Black, public bold: boolean = false, public italic: boolean = false, public underline: boolean = false) {
 
@@ -127,6 +142,11 @@ export class Style {
       return true
     }
     return false
+  }
+
+  public makeStyleInfo() {
+    let colorValue = SystemUtils.generateColorString(this.color)
+    return new StyleInfo(this.length, this.typeFaceName, this.size, colorValue, this.bold, this.italic, this.underline)
   }
 
   public makeTextStyle() {

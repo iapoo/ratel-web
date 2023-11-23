@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
 
 import { Color, Colors, Font, FontSlant, FontWeight, GlyphRun, Graphics, Matrix, Paint, Paragraph, ParagraphBuilder, ParagraphDirection, ParagraphStyle, Path, PlaceholderAlignment, Point2, Rectangle, Rotation, RoundRectangle, Shape, ShapedLine, TextAlignment, TextBaseline, TextDecoration, TextDirection, TextStyle, TextVerticalAlignment, } from '@/components/Engine'
-import { Block, CursorMaker, Style, } from './EntityUtils'
+import { Block, CursorMaker, Style, StyleInfo, } from './EntityUtils'
 
 export abstract class AbstractTextShape extends Shape {
     public static DEFAULT_TEXT_PADDING = 4
@@ -245,10 +245,15 @@ export abstract class AbstractTextShape extends Shape {
     public get richText(): string {
       let styles = this._styles
       let text =this._text
+      let styleInfos: StyleInfo[] = []
+      styles.forEach(style => {
+        let styleInfo = style.makeStyleInfo()
+        styleInfos.push(styleInfo)
+      })
       let data = {
         type: 'richtext',
         text: text,
-        styles: styles
+        styles: styleInfos
       }
       let result = JSON.stringify(data)
       return result
@@ -257,10 +262,15 @@ export abstract class AbstractTextShape extends Shape {
     public get richSelection(): string{
       let styles = this.rebuildRangeStyles(this._startIndex, this._endIndex)
       let text =this._text.substring(this._startIndex, this._endIndex)
+      let styleInfos: StyleInfo[] = []
+      styles.forEach(style => {
+        let styleInfo = style.makeStyleInfo()
+        styleInfos.push(styleInfo)
+      })
       let data = {
         type: 'richtext',
         text: text,
-        styles: styles
+        styles: styleInfos
       }
       let result = JSON.stringify(data)
       return result
@@ -533,17 +543,58 @@ export abstract class AbstractTextShape extends Shape {
         console.log(`unknow rich text detected: ${richText}`)
         return
       }
-      
-      let text: string = data.text
-      let styles: Style[] = data.styles
-      if (!text || text.length <= 0) {
+      let styleInfos: StyleInfo[] = data.styles
+      let insertText: string = data.text
+      let insertStyles: Style[] = []
+      styleInfos.forEach(styleInfo => {
+        let newStyleInfo = new StyleInfo(styleInfo.length, styleInfo.typeFaceName, styleInfo.size, styleInfo.color, styleInfo.bold, styleInfo.italic, styleInfo.underline)
+        let style = newStyleInfo.makeStyle()
+        insertStyles.push(style)
+      })
+      if (!insertText || insertText.length <= 0) {
         return
       }
       if (this._startIndex != this._endIndex) {
         this.deleteSelection()
       }
-      this.insert(text)
-
+      const index = this._startIndex
+      const [ styleIndex, preLength, ] = this.findStyleIndexAndPrevLength(index)
+      const style = this._styles[styleIndex]
+      const newStyles = []
+      if(preLength == index) {
+        for(let i = 0; i < styleIndex; i ++) {
+          newStyles.push(this._styles[i])
+        }
+        for(let i = 0; i < insertStyles.length; i ++) {
+          newStyles.push(insertStyles[i])
+        }
+        for(let i = styleIndex; i < this._styles.length; i ++) {
+          newStyles.push(this._styles[i])
+        }
+        this._styles = newStyles
+      } else if (preLength < index) {
+        for(let i = 0; i < styleIndex; i ++) {
+          newStyles.push(this._styles[i])
+        }
+        let newStyle = style.clone()
+        newStyle.length = index - preLength
+        newStyles.push(newStyle)
+        for(let i = 0; i < insertStyles.length; i ++) {
+          newStyles.push(insertStyles[i])
+        }
+        newStyle = style.clone()
+        newStyle.length = newStyle.length - index + preLength
+        newStyles.push(newStyle)
+        for(let i = styleIndex + 1; i < this._styles.length; i ++) {
+          newStyles.push(this._styles[i])
+        }
+        this._styles = newStyles
+      } else {
+        // It is impossible here
+      }
+      this._text = this._text.slice(0, index) + insertText + this._text.slice(index)
+      this.buildLines()
+      this.rebuildSelection()
     }
 
     public insert (text: string) {
@@ -559,7 +610,7 @@ export abstract class AbstractTextShape extends Shape {
 
       // do this before edit the text (we use text.length in an assert)
       const index = this._startIndex
-      const [ styleIndex, preLen, ] = this.findStyleIndexAndPrevLength(index)
+      const [ styleIndex, preLength, ] = this.findStyleIndexAndPrevLength(index)
       const style = this._styles[styleIndex]
       if(style.length == 0) { //Empty yet
         this._styles[styleIndex] = this._selectStyle.clone()         
