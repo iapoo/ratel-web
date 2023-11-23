@@ -134,7 +134,7 @@ const Navigator: FC<NavigatorProps> = ({
 
   //        <Image src='/shapes/Rectangle.png' width={20} height={20} />
   const getPopoverContent = (name: string, width: number, height: number) => {
-    return <div style={{width: 154, display: 'table'}}>
+    return <div style={{width: width * 1.25, display: 'table'}}>
         <div style={{display: 'table-cell', textAlign: 'center', verticalAlign: 'middle', borderTop: '0px solid gray', padding: '2px'}}>
           <img src={`/shapes-large/${name}.png`} />
         </div>
@@ -176,7 +176,7 @@ const Navigator: FC<NavigatorProps> = ({
   </Popover>
 
   const containers = ContainerTypes.map(containerType => {
-    return <Popover title={containerType.name} placement='right' content={getPopoverContent(containerType.name, containerType.width, containerType.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 180, width: 180,}}>
+    return <Popover title={containerType.name} placement='right' content={getPopoverContent(containerType.name, containerType.width, containerType.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 280, width: 280,}}>
       <Button type='text' onClick={() => addContainer(containerType.name)} style={{padding: 2, display: 'table'}}>
         <img src={`/shapes/${containerType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
       </Button>
