@@ -245,11 +245,25 @@ export abstract class AbstractTextShape extends Shape {
     public get richText(): string {
       let styles = this._styles
       let text =this._text
-      return ''
+      let data = {
+        type: 'richtext',
+        text: text,
+        styles: styles
+      }
+      let result = JSON.stringify(data)
+      return result
     }
 
     public get richSelection(): string{
-      return ''
+      let styles = this.rebuildRangeStyles(this._startIndex, this._endIndex)
+      let text =this._text.substring(this._startIndex, this._endIndex)
+      let data = {
+        type: 'richtext',
+        text: text,
+        styles: styles
+      }
+      let result = JSON.stringify(data)
+      return result
     }
 
     public set text (value: string) {
@@ -511,6 +525,25 @@ export abstract class AbstractTextShape extends Shape {
       this._startIndex = this._endIndex = start            
       this.buildLines()
       this.rebuildSelection()
+    }
+
+    public insertRichText(richText: string) {
+      let data = JSON.parse(richText)
+      if(data.type !== 'richtext') {
+        console.log(`unknow rich text detected: ${richText}`)
+        return
+      }
+      
+      let text: string = data.text
+      let styles: Style[] = data.styles
+      if (!text || text.length <= 0) {
+        return
+      }
+      if (this._startIndex != this._endIndex) {
+        this.deleteSelection()
+      }
+      this.insert(text)
+
     }
 
     public insert (text: string) {
@@ -884,33 +917,51 @@ export abstract class AbstractTextShape extends Shape {
     }
 
     private deleteStyleRange (start: number, end: number) {
-      let N = end - start
-      let [ i, prev_len, ] = this.findStyleIndexAndPrevLength(start)
+      let count = end - start
+      let [ i, prevLength, ] = this.findStyleIndexAndPrevLength(start)
       let s = this._styles[i]
-      if (start > prev_len) {
+      if (start > prevLength) {
         // we overlap the first style (but not entirely
-        const skip = start - prev_len
-        // ASSERT(skip < s._length);
-        const shrink = Math.min(N, s.length - skip)
-        // ASSERT(shrink > 0);
+        const skip = start - prevLength
+        const shrink = Math.min(count, s.length - skip)
         s.length -= shrink
-        N -= shrink
-        if (N === 0) {
+        count -= shrink
+        if (count === 0) {
           return
         }
         i += 1
-        // ASSERT(i < this._styles.length);
       }
-      while (N > 0) {
+      while (count > 0) {
         s = this._styles[i]
-        if (N >= s.length) {
-          N -= s.length
+        if (count >= s.length) {
+          count -= s.length
           this._styles.splice(i, 1)
         } else {
-          s.length -= N
+          s.length -= count
           break
         }
       }
+    }
+
+    private rebuildRangeStyles(start: number, end: number) {
+      let newStyles = []
+      let [startIndex, startLength, ] = this.findStyleIndexAndPrevLength(start)
+      let [endIndex, endLength, ] = this.findStyleIndexAndPrevLength(end)
+      let newStyle = this._styles[startIndex].clone()
+      newStyles.push(newStyle)
+      if(start > startLength) {
+        newStyle.length = newStyle.length - start + startLength
+      }
+      while(startIndex < endIndex) {
+        startIndex ++
+        newStyle = this._styles[startIndex].clone()
+        newStyles.push(newStyle)
+        if(startIndex == endIndex && end < endLength + newStyle.length) {
+          newStyle.length = end - endLength
+        }
+      }
+      return newStyles
+
     }
 
     private getLinesIndexToLineIndex (index: number) {
