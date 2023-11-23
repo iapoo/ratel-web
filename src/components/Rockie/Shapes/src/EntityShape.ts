@@ -167,6 +167,8 @@ export class EntityShape extends AbstractTextShape {
       adapterSizeX = this.adapterSize * (this.typeInfo.modifierEnd.x - this.typeInfo.modifierStart.x) * this.width
       adapterSizeY = this.adapterSize * (this.typeInfo.modifierEnd.y - this.typeInfo.modifierStart.y) * this.height
     }
+    this.textWidth = this.width
+    this.textHeight = this.height
     switch (this._typeInfo.type) {
     case EntityShapeType.RoundRectangle:
       this.path.addRRect(new RoundRectangle(0, 0, this.width, this.height, modifierWidth, modifierHeight))
