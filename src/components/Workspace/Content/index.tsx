@@ -695,7 +695,7 @@ const Content: FC<ContentProps> = ({
     if(e.clipboardData && Utils.currentEditor) {
       if(textToolbarVisible) {
         let item = Utils.currentEditor.selectionLayer.getEditorItem(0) as Item
-        let data = item.shape.selection
+        let data = item.shape.richSelection
         if(data.length > 0) {
           e.clipboardData.clearData()
           e.clipboardData.setData('text/plain', data)
@@ -779,7 +779,7 @@ const Content: FC<ContentProps> = ({
     if(e.clipboardData && Utils.currentEditor) {
       if(textToolbarVisible) {
         let item = Utils.currentEditor.selectionLayer.getEditorItem(0) as Item
-        let data = item.shape.selection
+        let data = item.shape.richSelection
         if(data.length > 0) {
           e.clipboardData.clearData()
           e.clipboardData.setData('text/plain', data)
@@ -821,7 +821,7 @@ const Content: FC<ContentProps> = ({
       console.log(`oldData = ${data}`)
       if(textToolbarVisible) {
         let item = Utils.currentEditor.selectionLayer.getEditorItem(0) as Item
-        item.shape.insert(data)
+        item.shape.insertRichText(data)
       } else {
         let selections = EditorHelper.readSelections(data)
         console.log(`paste selections = ${selections}`)
@@ -845,9 +845,9 @@ const Content: FC<ContentProps> = ({
       return
     }
     const text = await clipboard.readText()
-    //const clipboardItems = await clipboard.readText()
-    //let textBlob: Blob
-    //let text = ''
+    // const clipboardItems = await clipboard.read()
+    // let textBlob: Blob
+    // let text = ''
     // for(const clipboardItem of clipboardItems) {
     //   for(const type of clipboardItem.types) {
     //     if(type === 'text/html') {
@@ -895,7 +895,7 @@ const Content: FC<ContentProps> = ({
     if(Utils.currentEditor && Utils.currentEditor.selectionLayer.getEditorItemCount() == 1 ) {
       console.log(`text copy is triggered`)
       let item = Utils.currentEditor.selectionLayer.getEditorItem(0) as Item
-      let data = item.shape.selection
+      let data = item.shape.richSelection
       if(data.length <= 0) {
         return
       }
