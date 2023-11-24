@@ -335,6 +335,7 @@ export abstract class AbstractTextShape extends Shape {
       this._startStyleIndex = startStyleIndex
       this._endStyleIndex = endStyleIndex
       this._selectStyle = this._styles[startStyleIndex].clone()
+      //console.log(`${startStyleIndex}  ${endStyleIndex} ${this._startIndex} ${this._endIndex}`)
       this.rebuildSelection()
     }
 
@@ -598,7 +599,7 @@ export abstract class AbstractTextShape extends Shape {
     }
 
     public insert (text: string) {
-      //if(text == '方式') {
+      //if(text == 't') {
       //  console.log('1')
       //}
       if (!text || text.length <= 0) {
@@ -620,7 +621,7 @@ export abstract class AbstractTextShape extends Shape {
       } else if(!style.isSameStyle(this._selectStyle)){
         let totalLength = 0
         for (let i = 0; i < this._styles.length; ++i) {
-          const styleLength = style.length
+          const styleLength = this._styles[i].length
           totalLength += styleLength
           if (index < totalLength) {
             let rightStyle = style.clone()
@@ -1101,7 +1102,7 @@ export abstract class AbstractTextShape extends Shape {
     }
 
     private getLineFromX(line: ShapedLine): number {
-      let run = line.runs[line.runs.length - 1]
+      let run = line.runs[0]
       let x = run.positions[0]
       return x
     }
