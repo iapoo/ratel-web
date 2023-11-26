@@ -2,7 +2,7 @@
 /* eslint-disable max-params */
 /* eslint-disable complexity */
 import { Painter, } from '@/components/Painter'
-import { Engine, Point2, Rectangle2D, Rotation, Shape, Line2D, Node, Container, Rectangle, Graphics, Colors, MouseEvent, MouseCode, PointerEvent as UniPointerEvent, Control, PointerEvent, Path, Scale, KeyEvent, Color, } from '../../../Engine'
+import { Engine, Point2, Rectangle2D, Rotation, Shape, Line2D, Node, Container, Rectangle, Graphics, Colors, MouseEvent, MouseCode, PointerEvent as UniPointerEvent, Control, PointerEvent, Path, Scale, KeyEvent, Color, Paint, } from '../../../Engine'
 import { Action, } from '../../Actions'
 import { Holder, } from '../../Design'
 import { Connector, ContainerEntity, EditorItem, EditorItemInfo, Entity, Item, ShapeEntity, TableEntity, } from '../../Items'
@@ -80,6 +80,8 @@ export class Editor extends Painter {
   private _showBackground: boolean = false
   private _backgroundColor: Color = Colors.White
   private _textSelecting: boolean = false
+  private _inRangeSelecting: boolean = false
+  private _rangeSelectionShape: Rectangle2D = new Rectangle2D(0, 0, 0, 0)
 
   public constructor (canvasId: string | HTMLCanvasElement) {
     super(canvasId)
@@ -102,6 +104,7 @@ export class Editor extends Painter {
     this._origWidth = this.width * this._zoom
     this._origHeight = this.height * this.zoom
     this._showGrid = true
+    this._rangeSelectionShape.fill.setAlpha(0.3)
     this.root.addNode(this._backgroundLayer)
     this.root.addNode(this._contentLayer)
     this.root.addNode(this._controllerLayer)
@@ -577,6 +580,9 @@ export class Editor extends Painter {
     } else if (this._inCreatingConnector) {
       // in creating connector
       this.handlePointMoveInCreatingConnector(e)
+    } else if (this._inRangeSelecting) {
+      // in range selecting
+      this.handleRangeSelecting(e)
     } else {
       const theHoverLayer: HoverLayer = this.hoverLayer as HoverLayer
       const theSelectionLayer: SelectionLayer = this.selectionLayer as SelectionLayer
@@ -817,6 +823,7 @@ export class Editor extends Painter {
         this._targetItem = undefined
         this._targetItemIndex = 0
         this.checkAndEndTextEdit()
+        this.startRangeSelecting(e)
       }
     }
   }
@@ -824,7 +831,7 @@ export class Editor extends Painter {
   public handleDoubleClick (e: PointerEvent) {
   }
 
-  public handlePointerUp (e: MouseEvent) {
+  public handlePointerUp (e: PointerEvent) {
     if(e.mouseCode == MouseCode.RIGHT_MOUSE_UP) {
       return
     }
@@ -923,6 +930,9 @@ export class Editor extends Painter {
       let operation = new Operation(this, OperationType.MOVE_ITEMS, [editorItemInfo], [origItemInfo])
       this._operationService.addOperation(operation)
       this.triggerOperationChange()
+    }
+    if(this._inRangeSelecting) {
+      this.endRangeSelecting(e)
     }
     this._inMoving = false
     this._inCreatingConnector = false
@@ -1594,6 +1604,38 @@ export class Editor extends Painter {
     if(this._textFocused) {
       this._textFocused = false
       this.triggerTextEditEnd()
+    }
+  }
+
+  private startRangeSelecting(e: PointerEvent) {
+    this._inRangeSelecting = true
+  }
+
+  private endRangeSelecting(e: PointerEvent) {
+    this._inRangeSelecting = false
+    this.selectionLayer.removeNode(this._rangeSelectionShape)
+    let left = Math.min(this._startPointX, e.x)
+    let top = Math.min(this._startPointY, e.y)
+    let right = Math.max(this._startPointX, e.x)
+    let bottom = Math.max(this._startPointY, e.y)
+    let itemCount = this.contentLayer.getEditorItemCount()
+    for(let i = 0; i < itemCount; i ++) {
+      let item = this.contentLayer.getEditorItem(i)
+      if(item.left > left && item.top > top && item.right < right && item.bottom < bottom) {
+        this.selectionLayer.addEditorItem(item)
+      }
+    }
+  }
+
+  private handleRangeSelecting(e: PointerEvent) {
+    //console.log(`range selecting ${this._startPointX} ${this._startPointY} ${e.x} ${e.y}`)
+    let left = Math.min(this._startPointX, e.x)
+    let top = Math.min(this._startPointY, e.y)
+    let width = Math.abs(this._startPointX - e.x)
+    let height = Math.abs(this._startPointY - e.y)
+    this._rangeSelectionShape.boundary = Rectangle.makeLTWH(left, top, width, height)
+    if(!this.selectionLayer.hasNode(this._rangeSelectionShape)) {
+      this.selectionLayer.addNode(this._rangeSelectionShape)
     }
   }
 }
