@@ -122,6 +122,15 @@ export class StyleInfo {
     }
     return new Style(this.length, this.typeFaceName, this.size, color, this.bold, this.italic, this.underline)
   }
+
+  public static makeStyles(styleInfos: StyleInfo[]): Style[] {
+    let styles: Style[] = []
+    styleInfos.forEach(styleInfo => {
+      let style = styleInfo.makeStyle()
+      styles.push(style)
+    })
+    return styles
+  }
 }
 
 export class Style {
@@ -147,6 +156,15 @@ export class Style {
   public makeStyleInfo() {
     let colorValue = SystemUtils.generateColorString(this.color)
     return new StyleInfo(this.length, this.typeFaceName, this.size, colorValue, this.bold, this.italic, this.underline)
+  }
+
+  public static makeStyleInfos(styles: Style[]): StyleInfo[] {
+    let styleInfos: StyleInfo[] = []
+    styles.forEach(style => {
+      let styleInfo = style.makeStyleInfo()
+      styleInfos.push(styleInfo)
+    })
+    return styleInfos
   }
 
   public makeTextStyle() {

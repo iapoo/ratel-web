@@ -242,6 +242,16 @@ export abstract class AbstractTextShape extends Shape {
       return this._text.substring(this._startIndex, this._endIndex)
     }
 
+    public get styles() {
+      return this._styles
+    }
+
+    public set styles(value: Style[]) {
+      this._styles = value
+      this.buildLines()
+      this.rebuildSelection()
+    }
+ 
     public get richText(): string {
       let styles = this._styles
       let text =this._text
