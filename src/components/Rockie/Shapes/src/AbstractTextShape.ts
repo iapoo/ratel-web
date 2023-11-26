@@ -980,26 +980,31 @@ export abstract class AbstractTextShape extends Shape {
 
     private deleteStyleRange (start: number, end: number) {
       let count = end - start
-      let [ i, prevLength, ] = this.findStyleIndexAndPrevLength(start)
-      let s = this._styles[i]
+      let [ styleIndex, prevLength, ] = this.findStyleIndexAndPrevLength(start)
+      //Skip if it is last style
+      if(styleIndex == 0 && this._styles.length == 1) {
+        return
+      }
+
+      let style = this._styles[styleIndex]
       if (start > prevLength) {
         // we overlap the first style (but not entirely
         const skip = start - prevLength
-        const shrink = Math.min(count, s.length - skip)
-        s.length -= shrink
+        const shrink = Math.min(count, style.length - skip)
+        style.length -= shrink
         count -= shrink
         if (count === 0) {
           return
         }
-        i += 1
+        styleIndex += 1
       }
       while (count > 0) {
-        s = this._styles[i]
-        if (count >= s.length) {
-          count -= s.length
-          this._styles.splice(i, 1)
+        style = this._styles[styleIndex]
+        if (count >= style.length) {
+          count -= style.length
+          this._styles.splice(styleIndex, 1)
         } else {
-          s.length -= count
+          style.length -= count
           break
         }
       }
