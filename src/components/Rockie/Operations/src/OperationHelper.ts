@@ -7,6 +7,7 @@ import { LineInfo } from "../../Items/src/LineInfo"
 import { Rotation } from "@/components/Engine"
 import { CommonUtils } from "../../Utils"
 import { ShapeInfo } from "../../Items/src/ShapeInfo"
+import { Style, StyleInfo } from "../../Shapes/src/EntityUtils"
 
 export class OperationHelper {
   public static loadItem(itemInfo: EditorItemInfo): EditorItem {
@@ -26,6 +27,7 @@ export class OperationHelper {
         editorItem = this.loadShapeEntity(itemInfo)
         break
     }
+    editorItem.shape.styles = StyleInfo.makeStyles(itemInfo.styles)
     itemInfo.items.forEach(childItemInfo => {
       let childItem = OperationHelper.loadItem(childItemInfo)
       editorItem.addItem(childItem)
@@ -129,7 +131,8 @@ export class OperationHelper {
   }
 
   public static  saveShape(shapeEntity: ShapeEntity) : EditorItemInfo {
-    let shapeData = new ShapeInfo(shapeEntity.type, shapeEntity.category, shapeEntity.left, shapeEntity.top, shapeEntity.width, shapeEntity.height, shapeEntity.text,)
+    let styleInfos: StyleInfo[] = Style.makeStyleInfos(shapeEntity.shape.styles)
+    let shapeData = new ShapeInfo(shapeEntity.type, shapeEntity.category, shapeEntity.left, shapeEntity.top, shapeEntity.width, shapeEntity.height, shapeEntity.text, shapeEntity.rotation.radius, styleInfos)
     shapeData.rotation = shapeEntity.rotation.radius
     shapeData.modifier = shapeEntity.shape.modifier.x + ',' + shapeEntity.shape.modifier.y
     shapeData.adapter = shapeEntity.shape.adapter.x + ',' + shapeEntity.shape.adapter.y
@@ -139,14 +142,16 @@ export class OperationHelper {
   }
 
   public static  saveLine(lineEntity: LineEntity) : EditorItemInfo {
-    let lineData = new LineInfo(lineEntity.start.x, lineEntity.start.y, lineEntity.end.x, lineEntity.end.y, lineEntity.text, lineEntity.rotation.radius)
+    let styleInfos: StyleInfo[] = Style.makeStyleInfos(lineEntity.shape.styles)
+    let lineData = new LineInfo(lineEntity.start.x, lineEntity.start.y, lineEntity.end.x, lineEntity.end.y, lineEntity.text, lineEntity.rotation.radius, styleInfos)
 
     return lineData
   }
 
 
   public static  saveConnector(connector: Connector) : EditorItemInfo {
-    let connectorData = new ConnectorInfo(connector.start.x, connector.start.y, connector.end.x, connector.end.y, connector.text, connector.rotation.radius)
+    let styleInfos: StyleInfo[] = Style.makeStyleInfos(connector.shape.styles)
+    let connectorData = new ConnectorInfo(connector.start.x, connector.start.y, connector.end.x, connector.end.y, connector.text, connector.rotation.radius, styleInfos)
     if(connector.source) {
       connectorData.source = connector.source.id
     }
