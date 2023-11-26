@@ -250,6 +250,11 @@ export abstract class Node {
       }
     }
 
+    public hasNode (node: Node): boolean {
+      const index = this._nodes.indexOf(node)
+      return index >= 0
+    }
+
     public removeNode (node: Node): void {
       const index = this._nodes.indexOf(node)
       if (index >= 0) {
