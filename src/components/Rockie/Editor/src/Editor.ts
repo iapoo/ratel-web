@@ -2,7 +2,7 @@
 /* eslint-disable max-params */
 /* eslint-disable complexity */
 import { Painter, } from '@/components/Painter'
-import { Engine, Point2, Rectangle2D, Rotation, Shape, Line2D, Node, Container, Rectangle, Graphics, Colors, MouseEvent, MouseCode, PointerEvent as UniPointerEvent, Control, PointerEvent, Path, Scale, KeyEvent, Color, Paint, } from '../../../Engine'
+import { Engine, Point2, Rectangle2D, Rotation, Shape, Line2D, Node, Rectangle, Graphics, Colors, MouseEvent, MouseCode, PointerEvent as UniPointerEvent, Control, PointerEvent, Path, Scale, KeyEvent, Color, Paint, } from '../../../Engine'
 import { Action, } from '../../Actions'
 import { Holder, } from '../../Design'
 import { Connector, ContainerEntity, EditorItem, EditorItemInfo, Entity, Item, ShapeEntity, TableEntity, } from '../../Items'
@@ -82,6 +82,8 @@ export class Editor extends Painter {
   private _textSelecting: boolean = false
   private _inRangeSelecting: boolean = false
   private _rangeSelectionShape: Rectangle2D = new Rectangle2D(0, 0, 0, 0)
+  private _inContainerSelection: boolean = false
+  private _containerSelectionShape: Rectangle2D = new Rectangle2D(0, 0, 0, 0)
 
   public constructor (canvasId: string | HTMLCanvasElement) {
     super(canvasId)
@@ -105,6 +107,8 @@ export class Editor extends Painter {
     this._origHeight = this.height * this.zoom
     this._showGrid = true
     this._rangeSelectionShape.fill.setAlpha(0.3)
+    this._containerSelectionShape.fill.setAlpha(0.3)
+    this._containerSelectionShape.stroke.setStrokeWidth(5)
     this.root.addNode(this._backgroundLayer)
     this.root.addNode(this._contentLayer)
     this.root.addNode(this._controllerLayer)
@@ -584,81 +588,7 @@ export class Editor extends Painter {
       // in range selecting
       this.handleRangeSelecting(e)
     } else {
-      const theHoverLayer: HoverLayer = this.hoverLayer as HoverLayer
-      const theSelectionLayer: SelectionLayer = this.selectionLayer as SelectionLayer
-      const editorItem = this.findEditorItem(e.x, e.y)
-      // console.log(`Finding ...... ${editorItem}`)
-      const isEdge = editorItem ? this.hasEditorItemJoint(editorItem, e.x, e.y) : false
-      // console.log(` Find editor item edge = ${isEdge}`)
-      if (editorItem && isEdge) {
-        const inEditorItem = this.isInEditorItem(editorItem, e.x, e.y)
-        const targetPoint = this.findEditorItemJoint(editorItem, e.x, e.y, inEditorItem)
-        if (targetPoint) {
-          //  console.log(`Find editor item joint: x = ${targetPoint.x} y = ${targetPoint.y} `)
-        } else {
-          console.log(`It shouldn't be here`)
-        }
-      } else if (editorItem !== null && editorItem !== undefined) {
-        // DO hover but not include those selected
-        if (!theSelectionLayer.hasEditorItem(editorItem)) {
-          // don't remove if already exists
-          if (!theHoverLayer.hasEditorItem(editorItem)) {
-            // console.log('1==========')
-            theHoverLayer.removeAllEditorItems()
-            theHoverLayer.addEditorItem(editorItem)
-          } else if (!theHoverLayer.inHolder) {
-            // console.log('2==========')
-            theHoverLayer.inHolder = true
-            theHoverLayer.invalidateLayer()
-          }
-        } else {
-          if (editorItem instanceof TableEntity) {
-            const targetPoint = this.findEditorItemPoint(editorItem, e.x, e.y)
-            const [ targetRow, targetRowIndex, ] = this.isTableRowtResizable(editorItem, targetPoint.x, targetPoint.y)
-            const [ targetColumn, targetColumnIndex, ] = this.isTableColumnResizable(editorItem, targetPoint.x, targetPoint.y)
-            if (targetRow) {
-              // console.log('========2')
-              // this._targetRow = true
-              // this._targetRowIndex = targetRowIndex
-            } else if (targetColumn) {
-              // console.log('========3')
-              // this._targetColumn = targetColumn
-              // this._targetColumnIndex = targetColumnIndex
-            }
-          } else if(this._textFocused && this._textSelecting) {
-            const targetPoint = this.findEditorItemPoint(editorItem, e.x, e.y)
-            editorItem.shape.enterTo(targetPoint.x, targetPoint.y)
-          }
-        }
-      } else {
-        // console.log('test code here')
-        if (theHoverLayer.getEditorItemCount() > 0) {
-          const hoverEditorItem = theHoverLayer.getEditorItem(0)
-          if (hoverEditorItem instanceof Connector) {
-            // console.log('Connector is found')
-            const editorItem = this.findEditorItem(e.x, e.y)
-            if (editorItem !== null && editorItem !== undefined) {
-              theHoverLayer.inHolder = false
-              theHoverLayer.invalidateLayer()
-            } else {
-              theHoverLayer.inHolder = true
-              theHoverLayer.removeAllEditorItems()
-            }
-          } else {
-            // console.log('Connector is not found')
-            if (hoverEditorItem.left - Holder.PADDING < e.x / this._zoom && hoverEditorItem.right + Holder.PADDING > e.x / this._zoom &&
-              hoverEditorItem.top - Holder.PADDING < e.y / this._zoom && hoverEditorItem.bottom + Holder.PADDING > e.y / this._zoom) {
-              // console.log('inHolder = false')
-              theHoverLayer.inHolder = false
-              theHoverLayer.invalidateLayer()
-            } else {
-              // console.log('inHolder = true')
-              theHoverLayer.inHolder = true
-              theHoverLayer.removeAllEditorItems()
-            }
-          }
-        }
-      }
+      this.handleDefaultPointMove(e)
     }
   }
 
@@ -677,35 +607,7 @@ export class Editor extends Painter {
     this._startPointY = e.y
     this._modified = true
     if (this._action) {
-      // console.log(`handlePointerClick... x = ${e.x}  start=${this.action_.item.start.x} end=${this.action_.item.end.x} width=${this.action_.item.width}  height=${this.action_.item.height}`)
-      const clickedEditorItem = this.findEditorItem(e.x, e.y)
-      if(clickedEditorItem && clickedEditorItem instanceof ContainerEntity) {
-        let point = this.findEditorItemPoint(clickedEditorItem, e.x, e.y)
-        let x = Math.round(point.x / this._zoom - this._action.item.width / 2)
-        let y = Math.round(point.y / this._zoom - this._action.item.height / 2)
-        this._action.item.boundary = Rectangle.makeLTWH(x, y, this._action.item.width, this._action.item.height)
-        clickedEditorItem.addItem(this._action.item)
-      } else {
-        this.contentLayer.addEditorItem(this._action.item)
-      }
-      this.controllerLayer.removeAllEditorItems()
-      this.controllerLayer.clear()
-      if (this._target) {
-        this._target.shape.focused = false
-      }
-      this.checkAndEndTextEdit()
-      if (this._target) {
-        this._target.shape.focused = false
-      }
-      if (this._targetItem) {
-        this._targetItem.shape.focused = false
-      }
-      this._target = undefined
-      this._targetTime = 0
-      this._targetColumnResizing = false
-      this._targetRowResizing = false
-      this._targetItem = undefined
-      this._targetItemIndex = 0
+      this.handleCreationAction(e)
     } else {
       const clickedEditorItem = this.findEditorItem(e.x, e.y)
       const theSelectionLayer = this.selectionLayer as SelectionLayer
@@ -856,6 +758,8 @@ export class Editor extends Painter {
       //  const editorItem = theSelectionLayer.getEditorItem(0)
       //  this.selectionLayer.removeAllEditorItems()
       //  this.contentLayer.addEditorItem(editorItem)
+    } else if(this._inContainerSelection) {
+      this.finishContainerSelection(e)
     } else {
       const clickedEditorItem = this.findEditorItem(e.x, e.y)
       if (clickedEditorItem) {
@@ -1137,6 +1041,30 @@ export class Editor extends Painter {
     return result
   }
 
+  private findContainerEntity (x: number, y: number): ContainerEntity | undefined {
+    let result
+    const count = this.contentLayer.getEditorItemCount()
+    for (let i = 0; i < count; i ++) {
+      const editorItem = this.contentLayer.getEditorItem(i)
+      const shape = editorItem.shape      
+      // console.log(`Finding items ${x}    ${y}    ==== ${shape.position.x}    ${shape.position.y}`)
+      if (editorItem instanceof ContainerEntity && shape.intersects(x - Editor.TEST_RADIUS, y - Editor.TEST_RADIUS, Editor.TEST_SIZE, Editor.TEST_SIZE)) {
+        let inSelection = false
+        const selectionCount = this.selectionLayer.getEditorItemCount()
+        for(let j = 0; j < count; j ++) {
+          const selection = this.selectionLayer.getEditorItem(j)
+          if(editorItem == selection) {
+            inSelection = true
+          }
+        }
+        if(!inSelection) {
+          result = editorItem
+        }
+      }
+    }
+    return result
+  }
+
   private hasEditorItemJoint (editorItem: EditorItem, x: number, y: number): boolean {
     let result = false
     const shape = editorItem.shape
@@ -1301,43 +1229,15 @@ export class Editor extends Painter {
   }
 
   private handlePointMoveInMoving (e: PointerEvent) {
-    //console.log('5==========')
-    const theSelectionLayer = this.selectionLayer as SelectionLayer
-    const theHoverLayer = this.hoverLayer as HoverLayer
-    const count = theSelectionLayer.getEditorItemCount()
-    for (let i = 0; i < count; i++) {
-      const editorItem = theSelectionLayer.getEditorItem(i) as Item
-      const left = editorItem.left
-      const top = editorItem.top
-      const connectorCount = editorItem.getConnectorCount()
-      // console.log('left=' + (left + e.x - this._startPointX) + ', top = ' + (top + e.y - this._startPointY) + ', width = ' + editorItem.width + ', height = ' + editorItem.height)
-      const ex = Number(Math.round((left + e.x / this._zoom - this._startPointX / this._zoom) / 1))
-      const ey = Number(Math.round((top + e.y / this._zoom - this._startPointY / this._zoom) / 1))
-      editorItem.boundary = Rectangle.makeLTWH(ex, ey, editorItem.width, editorItem.height)
-      for (let j = 0; j < connectorCount; j++) {
-        const connector = editorItem.getConnector(j)
-        if (connector.source == editorItem) {
-          // connector.updateSourceJoint()
-          // if (connector.sourceJoint) {
-          //  connector.sourceJoint = new Point2(connector.sourceJoint.x + e.x / this._zoom - this._startPointX / this._zoom, connector.sourceJoint.y + e.y / this._zoom - this._startPointY / this._zoom)
-          // }
-          connector.start = new Point2(connector.start.x + (e.x - this._startPointX) / this._zoom, connector.start.y + (e.y - this._startPointY) / this._zoom)
-        }
-        if (connector.target == editorItem) {
-          // connector.updateTargetJoint()
-          // console.log(`end is connector.end.x = ${connector.end.x} connector.end.y = ${connector.end.y}`)
-          // connector.end = new Point2(connector.end.x + e.x - this._startPointX, connector.end.y + e.y - this._startPointY)
-          connector.end = new Point2(connector.end.x + (e.x - this._startPointX) / this._zoom, connector.end.y + (e.y - this._startPointY) / this._zoom)
-        }
-      }
+    const containerEntity = this.findContainerEntity(e.x, e.y)
+    if(containerEntity && this.checkIfSelectionInContainer(containerEntity)) {
+      this.startContainerSelection()
+      this.handleContainerSelection(containerEntity)
+      this.handleDefaultMoveInMoving(e)
+    } else {
+      this.endContainerSelection()
+      this.handleDefaultMoveInMoving(e)
     }
-    this._startPointX = e.x
-    this._startPointY = e.y
-    this._moved = true
-    theSelectionLayer.invalidateLayer()
-    theHoverLayer.removeAllEditorItems()
-    //Need this to update toolbar in time
-    this.triggerSelectionResized()
   }
 
   private handlePointMoveInCreatingConnector (e: PointerEvent) {
@@ -1613,7 +1513,7 @@ export class Editor extends Painter {
 
   private endRangeSelecting(e: PointerEvent) {
     this._inRangeSelecting = false
-    this.selectionLayer.removeNode(this._rangeSelectionShape)
+    this.maskLayer.removeNode(this._rangeSelectionShape)
     let left = Math.min(this._startPointX, e.x)
     let top = Math.min(this._startPointY, e.y)
     let right = Math.max(this._startPointX, e.x)
@@ -1634,8 +1534,228 @@ export class Editor extends Painter {
     let width = Math.abs(this._startPointX - e.x)
     let height = Math.abs(this._startPointY - e.y)
     this._rangeSelectionShape.boundary = Rectangle.makeLTWH(left, top, width, height)
-    if(!this.selectionLayer.hasNode(this._rangeSelectionShape)) {
-      this.selectionLayer.addNode(this._rangeSelectionShape)
+    if(!this.maskLayer.hasNode(this._rangeSelectionShape)) {
+      this.maskLayer.addNode(this._rangeSelectionShape)
     }
+  }
+
+  private startContainerSelection() {
+    this._inContainerSelection = true
+    this.maskLayer.addNode(this._containerSelectionShape)
+  }
+
+  private endContainerSelection() {
+    this._inContainerSelection = false
+    this.maskLayer.removeNode(this._containerSelectionShape)
+  }
+
+  private handleContainerSelection(container: ContainerEntity) {
+    //console.log(`Container 1... `)
+    if(this._inContainerSelection) {
+      //console.log(`Container 2 ... `)
+      this._containerSelectionShape.boundary = container.boundary            
+    } else {
+      //console.log(`Container 3 ... `)
+      this._containerSelectionShape.boundary = Rectangle.makeLTWH(0, 0, 0, 0)
+    }
+  }
+
+  private finishContainerSelection(e: PointerEvent) {
+    const containerEntity = this.findContainerEntity(e.x, e.y)
+    if(this._inContainerSelection && containerEntity) {
+      let selectionCount = this.selectionLayer.getEditorItemCount()
+      for(let i = 0; i < selectionCount; i ++) {
+        const selection = this.selectionLayer.getEditorItem(i)
+        containerEntity.addItem(selection)
+        this.contentLayer.removeEditorItem(selection)
+      }
+      this._inContainerSelection = false
+      this.maskLayer.removeNode(this._containerSelectionShape)      
+      this.selectionLayer.removeAllEditorItems()
+    }
+  }
+
+  private getSelectionBoundary():[number, number, number, number] {
+    let left = 0
+    let top = 0
+    let right = 0
+    let bottom = 0
+    let selectionCount = this.selectionLayer.getEditorItemCount()
+    for(let i = 0; i < selectionCount; i ++) {      
+      let selection = this.selectionLayer.getEditorItem(i)
+      if(i == 0) {
+        left = selection.left
+        top = selection.top
+        right = selection.right
+        bottom = selection.bottom
+      } else {
+        left = selection.left < left ? selection.left : left
+        top = selection.top < top ? selection.top : top
+        right = selection.right > right ? selection.right : right
+        bottom = selection.bottom > bottom ? selection.left : bottom
+      }
+    }
+    return [left, top, right, bottom]
+  }
+
+  private checkIfSelectionInContainer(containerEntity: ContainerEntity): boolean {
+    const [left, top, right, bottom] = this.getSelectionBoundary()
+    //console.log(`check selection in container 3... ${containerEntity.left} ${containerEntity.top} ${containerEntity.right} ${containerEntity.bottom} ${left} ${top} ${right} ${bottom}`)
+    if(containerEntity.left <= left && containerEntity.top <= top && containerEntity.right >= right && containerEntity.bottom >= bottom) {
+      //console.log(`check selection in container 4... ${containerEntity}`)
+      return true
+    }
+  return false
+  }
+
+  private handleDefaultPointMove(e: PointerEvent) {
+    const theHoverLayer: HoverLayer = this.hoverLayer as HoverLayer
+    const theSelectionLayer: SelectionLayer = this.selectionLayer as SelectionLayer
+    const editorItem = this.findEditorItem(e.x, e.y)
+    // console.log(`Finding ...... ${editorItem}`)
+    const isEdge = editorItem ? this.hasEditorItemJoint(editorItem, e.x, e.y) : false
+    // console.log(` Find editor item edge = ${isEdge}`)
+    if (editorItem && isEdge) {
+      const inEditorItem = this.isInEditorItem(editorItem, e.x, e.y)
+      const targetPoint = this.findEditorItemJoint(editorItem, e.x, e.y, inEditorItem)
+      if (targetPoint) {
+        //  console.log(`Find editor item joint: x = ${targetPoint.x} y = ${targetPoint.y} `)
+      } else {
+        console.log(`It shouldn't be here`)
+      }
+    } else if (editorItem !== null && editorItem !== undefined) {
+      // DO hover but not include those selected
+      if (!theSelectionLayer.hasEditorItem(editorItem)) {
+        // don't remove if already exists
+        if (!theHoverLayer.hasEditorItem(editorItem)) {
+          // console.log('1==========')
+          theHoverLayer.removeAllEditorItems()
+          theHoverLayer.addEditorItem(editorItem)
+        } else if (!theHoverLayer.inHolder) {
+          // console.log('2==========')
+          theHoverLayer.inHolder = true
+          theHoverLayer.invalidateLayer()
+        }
+      } else {
+        if (editorItem instanceof TableEntity) {
+          const targetPoint = this.findEditorItemPoint(editorItem, e.x, e.y)
+          const [ targetRow, targetRowIndex, ] = this.isTableRowtResizable(editorItem, targetPoint.x, targetPoint.y)
+          const [ targetColumn, targetColumnIndex, ] = this.isTableColumnResizable(editorItem, targetPoint.x, targetPoint.y)
+          if (targetRow) {
+            // console.log('========2')
+            // this._targetRow = true
+            // this._targetRowIndex = targetRowIndex
+          } else if (targetColumn) {
+            // console.log('========3')
+            // this._targetColumn = targetColumn
+            // this._targetColumnIndex = targetColumnIndex
+          }
+        } else if(this._textFocused && this._textSelecting) {
+          const targetPoint = this.findEditorItemPoint(editorItem, e.x, e.y)
+          editorItem.shape.enterTo(targetPoint.x, targetPoint.y)
+        }
+      }
+    } else {
+      // console.log('test code here')
+      if (theHoverLayer.getEditorItemCount() > 0) {
+        const hoverEditorItem = theHoverLayer.getEditorItem(0)
+        if (hoverEditorItem instanceof Connector) {
+          // console.log('Connector is found')
+          const editorItem = this.findEditorItem(e.x, e.y)
+          if (editorItem !== null && editorItem !== undefined) {
+            theHoverLayer.inHolder = false
+            theHoverLayer.invalidateLayer()
+          } else {
+            theHoverLayer.inHolder = true
+            theHoverLayer.removeAllEditorItems()
+          }
+        } else {
+          // console.log('Connector is not found')
+          if (hoverEditorItem.left - Holder.PADDING < e.x / this._zoom && hoverEditorItem.right + Holder.PADDING > e.x / this._zoom &&
+            hoverEditorItem.top - Holder.PADDING < e.y / this._zoom && hoverEditorItem.bottom + Holder.PADDING > e.y / this._zoom) {
+            // console.log('inHolder = false')
+            theHoverLayer.inHolder = false
+            theHoverLayer.invalidateLayer()
+          } else {
+            // console.log('inHolder = true')
+            theHoverLayer.inHolder = true
+            theHoverLayer.removeAllEditorItems()
+          }
+        }
+      }
+    }
+  }
+
+  private handleCreationAction(e: PointerEvent) {
+    if (this._action) {
+      // console.log(`handlePointerClick... x = ${e.x}  start=${this.action_.item.start.x} end=${this.action_.item.end.x} width=${this.action_.item.width}  height=${this.action_.item.height}`)
+      const clickedEditorItem = this.findEditorItem(e.x, e.y)
+      if(clickedEditorItem && clickedEditorItem instanceof ContainerEntity) {
+        let point = this.findEditorItemPoint(clickedEditorItem, e.x, e.y)
+        let x = Math.round(point.x / this._zoom - this._action.item.width / 2)
+        let y = Math.round(point.y / this._zoom - this._action.item.height / 2)
+        this._action.item.boundary = Rectangle.makeLTWH(x, y, this._action.item.width, this._action.item.height)
+        clickedEditorItem.addItem(this._action.item)
+      } else {
+        this.contentLayer.addEditorItem(this._action.item)
+      }
+      this.controllerLayer.removeAllEditorItems()
+      this.controllerLayer.clear()
+      if (this._target) {
+        this._target.shape.focused = false
+      }
+      this.checkAndEndTextEdit()
+      if (this._target) {
+        this._target.shape.focused = false
+      }
+      if (this._targetItem) {
+        this._targetItem.shape.focused = false
+      }
+      this._target = undefined
+      this._targetTime = 0
+      this._targetColumnResizing = false
+      this._targetRowResizing = false
+      this._targetItem = undefined
+      this._targetItemIndex = 0
+    }
+  }
+
+  private handleDefaultMoveInMoving(e: PointerEvent) {
+    const theSelectionLayer = this.selectionLayer as SelectionLayer
+    const theHoverLayer = this.hoverLayer as HoverLayer
+    const count = theSelectionLayer.getEditorItemCount()
+    for (let i = 0; i < count; i++) {
+      const editorItem = theSelectionLayer.getEditorItem(i) as Item
+      const left = editorItem.left
+      const top = editorItem.top
+      const connectorCount = editorItem.getConnectorCount()
+      // console.log('left=' + (left + e.x - this._startPointX) + ', top = ' + (top + e.y - this._startPointY) + ', width = ' + editorItem.width + ', height = ' + editorItem.height)
+      const ex = Number(Math.round((left + e.x / this._zoom - this._startPointX / this._zoom) / 1))
+      const ey = Number(Math.round((top + e.y / this._zoom - this._startPointY / this._zoom) / 1))
+      editorItem.boundary = Rectangle.makeLTWH(ex, ey, editorItem.width, editorItem.height)
+      for (let j = 0; j < connectorCount; j++) {
+        const connector = editorItem.getConnector(j)
+        if (connector.source == editorItem) {
+          // connector.updateSourceJoint()
+          // if (connector.sourceJoint) {
+          //  connector.sourceJoint = new Point2(connector.sourceJoint.x + e.x / this._zoom - this._startPointX / this._zoom, connector.sourceJoint.y + e.y / this._zoom - this._startPointY / this._zoom)
+          // }
+          connector.start = new Point2(connector.start.x + (e.x - this._startPointX) / this._zoom, connector.start.y + (e.y - this._startPointY) / this._zoom)
+        }
+        if (connector.target == editorItem) {
+          // connector.updateTargetJoint()
+          // console.log(`end is connector.end.x = ${connector.end.x} connector.end.y = ${connector.end.y}`)
+          // connector.end = new Point2(connector.end.x + e.x - this._startPointX, connector.end.y + e.y - this._startPointY)
+          connector.end = new Point2(connector.end.x + (e.x - this._startPointX) / this._zoom, connector.end.y + (e.y - this._startPointY) / this._zoom)
+        }
+      }
+    }
+    this._startPointX = e.x
+    this._startPointY = e.y
+    this._moved = true
+    theSelectionLayer.invalidateLayer()
+    theHoverLayer.removeAllEditorItems()
+    //Need this to update toolbar in time
+    this.triggerSelectionResized()
   }
 }
