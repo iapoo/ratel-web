@@ -2,7 +2,7 @@
 /* eslint-disable max-params */
 /* eslint-disable complexity */
 import { Painter, } from '@/components/Painter'
-import { Engine, Point2, Rectangle2D, Rotation, Shape, Line2D, Node, Rectangle, Graphics, Colors, MouseEvent, MouseCode, PointerEvent as UniPointerEvent, Control, PointerEvent, Path, Scale, KeyEvent, Color, Paint, } from '../../../Engine'
+import { Engine, Point2, Rectangle2D, Rotation, Shape, Line2D, Node, Rectangle, Graphics, Colors, MouseEvent, MouseCode, PointerEvent as UniPointerEvent, Control, PointerEvent, Path, Scale, KeyEvent, Color, Paint, StrokeDashStyle, } from '../../../Engine'
 import { Action, } from '../../Actions'
 import { Holder, } from '../../Design'
 import { Connector, ContainerEntity, EditorItem, EditorItemInfo, Entity, Item, ShapeEntity, TableEntity, } from '../../Items'
@@ -17,6 +17,7 @@ import { BackgroundLayer, } from './BackgroundLayer'
 import { EditorEvent } from './EditorEvent'
 import { SystemUtils } from '@/components/Workspace/Utils'
 import { Operation, OperationHelper, OperationService, OperationType } from '../../Operations'
+import { ContainerLayer } from './ContainerLayer'
 
 export class Editor extends Painter {
   /**
@@ -40,6 +41,9 @@ export class Editor extends Painter {
   private _hoverLayer: EditorLayer;
   private _selectionLayer: EditorLayer;
   private _maskLayer: EditorLayer;
+  private _rangeLayer: EditorLayer
+  private _moveLayer: EditorLayer
+  private _containerLayer: EditorLayer
   private _zoom = 1.00;
   private _inMoving = false;
   private _moved = false;
@@ -84,6 +88,7 @@ export class Editor extends Painter {
   private _rangeSelectionShape: Rectangle2D = new Rectangle2D(0, 0, 0, 0)
   private _inContainerSelection: boolean = false
   private _containerSelectionShape: Rectangle2D = new Rectangle2D(0, 0, 0, 0)
+  private _selectionOutlineShape: Rectangle2D = new Rectangle2D(0, 0, 0, 0)
 
   public constructor (canvasId: string | HTMLCanvasElement) {
     super(canvasId)
@@ -93,11 +98,17 @@ export class Editor extends Painter {
     this._hoverLayer = new HoverLayer(0, 0, this.width, this.height)
     this._selectionLayer = new SelectionLayer(0, 0, this.width, this.height)
     this._maskLayer = new MaskLayer(0, 0, this.width, this.height)
+    this._rangeLayer = new MaskLayer(0, 0, this.width, this.height)
+    this._moveLayer = new MaskLayer(0, 0, this.width, this.height)
+    this._containerLayer = new ContainerLayer(0, 0, this.width, this.height)
     this._contentLayer.editor = this
     this._controllerLayer.editor = this
     this._hoverLayer.editor = this
     this._selectionLayer.editor = this
     this._maskLayer.editor = this
+    this._moveLayer.editor = this
+    this._rangeLayer.editor = this
+    this._containerLayer.editor = this
     this._title = ''
     this._key = ''
     this._id = SystemUtils.generateID()
@@ -109,9 +120,14 @@ export class Editor extends Painter {
     this._rangeSelectionShape.fill.setAlpha(0.3)
     this._containerSelectionShape.fill.setAlpha(0.3)
     this._containerSelectionShape.stroke.setStrokeWidth(5)
+    this._selectionOutlineShape.stroke.setStrokeDashStyle(StrokeDashStyle.DASH)
+    this._selectionOutlineShape.filled = false
     this.root.addNode(this._backgroundLayer)
     this.root.addNode(this._contentLayer)
     this.root.addNode(this._controllerLayer)
+    this.root.addNode(this._rangeLayer)
+    this.root.addNode(this._containerLayer)
+    this.root.addNode(this._moveLayer)
     this.root.addNode(this._maskLayer)
     this.root.addNode(this._hoverLayer)
     this.root.addNode(this._selectionLayer)
@@ -467,6 +483,9 @@ export class Editor extends Painter {
     this._hoverLayer.boundary = newBoundary
     this._selectionLayer.boundary = newBoundary
     this._maskLayer.boundary = newBoundary
+    this._rangeLayer.boundary = newBoundary
+    this._moveLayer.boundary = newBoundary
+    this._containerLayer.boundary = newBoundary
     this._backgroundLayer.invalidateLayer()
   }
 
@@ -659,6 +678,7 @@ export class Editor extends Painter {
           this._startEditorItemInfos.push(editorItemInfo)
           this._inMoving = true
           this.checkAndEndTextEdit()
+          this.startMoveOutline(e)
         } else if (clickedEditorItem instanceof TableEntity) {
           const targetPoint = this.findEditorItemPoint(clickedEditorItem, e.x, e.y)
           const [ targetRow, targetRowIndex, ] = this.isTableRowtResizable(clickedEditorItem, targetPoint.x, targetPoint.y)
@@ -697,6 +717,7 @@ export class Editor extends Painter {
           this._startEditorItemInfos.push(editorItemInfo)
           this._inMoving = true
           this.checkAndEndTextEdit()
+          this.startMoveOutline(e)
         } else if(this._textFocused) {
           const targetPoint = this.findEditorItemPoint(clickedEditorItem, e.x, e.y)
           this.updateTextCursorLocation(clickedEditorItem, targetPoint.x, targetPoint.y)
@@ -707,6 +728,7 @@ export class Editor extends Painter {
           let editorItemInfo = OperationHelper.saveEditorItem(clickedEditorItem)
           this._startEditorItemInfos.push(editorItemInfo)
           this._inMoving = true
+          this.startMoveOutline(e)
         }
       } else {
         theSelectionLayer.removeAllEditorItems()
@@ -838,7 +860,10 @@ export class Editor extends Painter {
     if(this._inRangeSelecting) {
       this.endRangeSelecting(e)
     }
-    this._inMoving = false
+    if(this._inMoving) {
+      this.endMoveOutline(e)
+      this._inMoving = false
+    }
     this._inCreatingConnector = false
     this._targetRowResizing = false
     this._targetColumnResizing = false
@@ -1051,8 +1076,15 @@ export class Editor extends Painter {
       if (editorItem instanceof ContainerEntity && shape.intersects(x - Editor.TEST_RADIUS, y - Editor.TEST_RADIUS, Editor.TEST_SIZE, Editor.TEST_SIZE)) {
         let inSelection = false
         const selectionCount = this.selectionLayer.getEditorItemCount()
-        for(let j = 0; j < count; j ++) {
+        for(let j = 0; j < selectionCount; j ++) {
           const selection = this.selectionLayer.getEditorItem(j)
+          if(editorItem == selection) {
+            inSelection = true
+          }
+        }
+        const controlCount = this.controllerLayer.getEditorItemCount()
+        for(let j = 0; j < controlCount; j ++) {
+          const selection = this.controllerLayer.getEditorItem(j)
           if(editorItem == selection) {
             inSelection = true
           }
@@ -1226,6 +1258,13 @@ export class Editor extends Painter {
     // }
 
     // console.log(`Moving... x = ${e.x}  start=${controllerItem.left} end=${controllerItem.top} width=${controllerItem.width}  height=${controllerItem.height}`)
+    const containerEntity = this.findContainerEntity(e.x, e.y)
+    if(containerEntity && this.checkIfCreationInContainer(controllerItem, containerEntity)) {
+      this.startContainerSelection()
+      this.handleContainerSelection(containerEntity)
+    } else {
+      this.endContainerSelection()
+    }
   }
 
   private handlePointMoveInMoving (e: PointerEvent) {
@@ -1234,9 +1273,11 @@ export class Editor extends Painter {
       this.startContainerSelection()
       this.handleContainerSelection(containerEntity)
       this.handleDefaultMoveInMoving(e)
+      this.handleMoveOutline(e)
     } else {
       this.endContainerSelection()
       this.handleDefaultMoveInMoving(e)
+      this.handleMoveOutline(e)
     }
   }
 
@@ -1513,7 +1554,7 @@ export class Editor extends Painter {
 
   private endRangeSelecting(e: PointerEvent) {
     this._inRangeSelecting = false
-    this.maskLayer.removeNode(this._rangeSelectionShape)
+    this._rangeLayer.removeNode(this._rangeSelectionShape)
     let left = Math.min(this._startPointX, e.x)
     let top = Math.min(this._startPointY, e.y)
     let right = Math.max(this._startPointX, e.x)
@@ -1534,19 +1575,19 @@ export class Editor extends Painter {
     let width = Math.abs(this._startPointX - e.x)
     let height = Math.abs(this._startPointY - e.y)
     this._rangeSelectionShape.boundary = Rectangle.makeLTWH(left, top, width, height)
-    if(!this.maskLayer.hasNode(this._rangeSelectionShape)) {
-      this.maskLayer.addNode(this._rangeSelectionShape)
+    if(!this._rangeLayer.hasNode(this._rangeSelectionShape)) {
+      this._rangeLayer.addNode(this._rangeSelectionShape)
     }
   }
 
   private startContainerSelection() {
     this._inContainerSelection = true
-    this.maskLayer.addNode(this._containerSelectionShape)
+    this._containerLayer.addNode(this._containerSelectionShape)
   }
 
   private endContainerSelection() {
     this._inContainerSelection = false
-    this.maskLayer.removeNode(this._containerSelectionShape)
+    this._containerLayer.removeNode(this._containerSelectionShape)
   }
 
   private handleContainerSelection(container: ContainerEntity) {
@@ -1563,9 +1604,13 @@ export class Editor extends Painter {
   private finishContainerSelection(e: PointerEvent) {
     const containerEntity = this.findContainerEntity(e.x, e.y)
     if(this._inContainerSelection && containerEntity) {
+      let point = this.findEditorItemPoint(containerEntity, e.x, e.y)
       let selectionCount = this.selectionLayer.getEditorItemCount()
       for(let i = 0; i < selectionCount; i ++) {
         const selection = this.selectionLayer.getEditorItem(i)
+        const x = Math.round(point.x / this._zoom - selection.width / 2)
+        const y = Math.round(point.y / this._zoom - selection.height / 2)
+        selection.boundary = Rectangle.makeLTWH(x, y, selection.width, selection.height)
         containerEntity.addItem(selection)
         this.contentLayer.removeEditorItem(selection)
       }
@@ -1592,7 +1637,7 @@ export class Editor extends Painter {
         left = selection.left < left ? selection.left : left
         top = selection.top < top ? selection.top : top
         right = selection.right > right ? selection.right : right
-        bottom = selection.bottom > bottom ? selection.left : bottom
+        bottom = selection.bottom > bottom ? selection.bottom : bottom
       }
     }
     return [left, top, right, bottom]
@@ -1600,6 +1645,19 @@ export class Editor extends Painter {
 
   private checkIfSelectionInContainer(containerEntity: ContainerEntity): boolean {
     const [left, top, right, bottom] = this.getSelectionBoundary()
+    //console.log(`check selection in container 3... ${containerEntity.left} ${containerEntity.top} ${containerEntity.right} ${containerEntity.bottom} ${left} ${top} ${right} ${bottom}`)
+    if(containerEntity.left <= left && containerEntity.top <= top && containerEntity.right >= right && containerEntity.bottom >= bottom) {
+      //console.log(`check selection in container 4... ${containerEntity}`)
+      return true
+    }
+  return false
+  }
+
+  private checkIfCreationInContainer(editorItem: EditorItem, containerEntity: ContainerEntity): boolean {
+    const left = editorItem.left
+    const top = editorItem.top
+    const right = editorItem.right
+    const bottom = editorItem.bottom
     //console.log(`check selection in container 3... ${containerEntity.left} ${containerEntity.top} ${containerEntity.right} ${containerEntity.bottom} ${left} ${top} ${right} ${bottom}`)
     if(containerEntity.left <= left && containerEntity.top <= top && containerEntity.right >= right && containerEntity.bottom >= bottom) {
       //console.log(`check selection in container 4... ${containerEntity}`)
@@ -1757,5 +1815,18 @@ export class Editor extends Painter {
     theHoverLayer.removeAllEditorItems()
     //Need this to update toolbar in time
     this.triggerSelectionResized()
+  }
+
+  private startMoveOutline(e: PointerEvent) {
+    this._moveLayer.addNode(this._selectionOutlineShape)
+  }
+
+  private endMoveOutline(e: PointerEvent) {
+    this._moveLayer.removeNode(this._selectionOutlineShape)
+  }
+
+  private handleMoveOutline(e: PointerEvent) {
+    const [left, top, right, bottom] = this.getSelectionBoundary()
+    this._selectionOutlineShape.boundary = Rectangle.makeLTWH(left, top, right - left, bottom - top)
   }
 }

@@ -5,7 +5,7 @@ import { ConnectionAnchor, } from './ConnectionAnchor'
 import { ResizeAnchor, ResizeType, } from './ResizeAnchor'
 import { RotationAnchor, } from './RotationAnchor'
 import { ReshapeAnchor, } from './ReshapeAnchor'
-import { Control, Rectangle, Scale, } from '@/components/Engine'
+import { Colors, Control, Rectangle, Scale, StrokeDashStyle, } from '@/components/Engine'
 import { Connector, Item, LineEntity, LineType, Shapes, } from '../../Items'
 import { Editor, } from '../../Editor/src/Editor'
 import { PointAnchor, } from './PointAnchor'
@@ -42,6 +42,7 @@ export class Holder extends Control {
   private _inHolder: boolean;
   private _editor: Editor;
   private _inSelection: boolean
+  //private _outline: Rectangle2D
 
   public constructor (editor: Editor, target: Item, inHolder: boolean, inSelection: boolean) {
     super()
@@ -66,7 +67,9 @@ export class Holder extends Control {
     this._endAnchor = new PointAnchor(editor, this, false)
     this._startAdapterAnchor = new AdapterAnchor(editor, this, AdapterType.BEGIN)
     this._endAdapterAnchor = new AdapterAnchor(editor, this, AdapterType.END)
-    this.stroked = false
+    this.stroked = true
+    this.stroke.setStrokeDashStyle(StrokeDashStyle.DASH)
+    this.stroke.setColor(Colors.Blue)
     this.filled = false
     this.clipped = false
     this._target = target
