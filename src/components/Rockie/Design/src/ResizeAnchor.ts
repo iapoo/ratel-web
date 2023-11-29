@@ -6,6 +6,7 @@ import { SelectionLayer, } from '../../Editor/src/SelectionLayer'
 import { Anchor, } from './Anchor'
 import { Holder, } from './Holder'
 import { EntityShapeFreezeType } from '../../Shapes/src/EntityShape'
+import { EditorItem } from '../../Items'
 
 export enum ResizeType {
   Left,
@@ -338,7 +339,7 @@ export class ResizeAnchor extends Anchor {
             connector.targetJoint = targetJoint
           }
         })
-        this.target.boundary = Rectangle.makeLTWH(newLeft, newTop, newWidth, newHeight)
+        this.updateItemBoundary(this.target, newLeft, newTop, newWidth, newHeight)
 
         //Recalculate rotation because it depends on width and height
         this.target.rotation = new Rotation(this.target.rotation.radius, this.target.width / 2, this.target.height / 2)
@@ -355,5 +356,14 @@ export class ResizeAnchor extends Anchor {
   protected buildAnchor () {
     this.path.reset()
     this.path.addOval(Rectangle.makeLTWH(0, 0, this.width, this.height))
+  }
+
+  private updateItemBoundary(item: EditorItem, newLeft: number, newTop: number, newWidth: number, newHeight: number) {
+    item.boundary = Rectangle.makeLTWH(newLeft, newTop, newWidth, newHeight)
+    const count = item.items.length
+    for(let i = 0; i < count; i ++) {
+      const child = item.items[i]
+      //this.updateItemBoundary(child, )
+    }
   }
 }
