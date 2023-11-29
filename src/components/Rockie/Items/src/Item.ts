@@ -159,7 +159,7 @@ export abstract class Item implements EditorItem {
     const oldBoundary = this._boundary
     this._boundary = value
     this._shape.boundary = value
-    this.updateItemsBoundary(oldBoundary, value)
+    //this.updateItemsBoundary(oldBoundary, value)
   }
 
   public get text (): string {
@@ -524,13 +524,13 @@ export abstract class Item implements EditorItem {
   }
 
   
-  private updateItemsBoundary (oldBoundary: Rectangle, newBoundary: Rectangle) {
-    const widthZoom = newBoundary.width / oldBoundary.width
-    const heightZoom = newBoundary.height / oldBoundary.height
-    this.items.forEach(item => {
-      item.boundary = Rectangle.makeLTWH(item.left * widthZoom, item.top * heightZoom, item.width * widthZoom, item.height * heightZoom)
-    })
-  }
+  // private updateItemsBoundary (oldBoundary: Rectangle, newBoundary: Rectangle) {
+  //   const widthZoom = newBoundary.width / oldBoundary.width
+  //   const heightZoom = newBoundary.height / oldBoundary.height
+  //   this.items.forEach(item => {
+  //     item.boundary = Rectangle.makeLTWH(item.left * widthZoom, item.top * heightZoom, item.width * widthZoom, item.height * heightZoom)
+  //   })
+  // }
 
   //public abstract clone(): EditorItem
 

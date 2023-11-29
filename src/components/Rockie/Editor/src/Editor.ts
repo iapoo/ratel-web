@@ -1604,18 +1604,20 @@ export class Editor extends Painter {
   private finishContainerSelection(e: PointerEvent) {
     const containerEntity = this.findContainerEntity(e.x, e.y)
     if(this._inContainerSelection && containerEntity) {
-      let point = this.findEditorItemPoint(containerEntity, e.x, e.y)
       let selectionCount = this.selectionLayer.getEditorItemCount()
       for(let i = 0; i < selectionCount; i ++) {
-        const selection = this.selectionLayer.getEditorItem(i)
-        const x = Math.round(point.x / this._zoom - selection.width / 2)
-        const y = Math.round(point.y / this._zoom - selection.height / 2)
-        selection.boundary = Rectangle.makeLTWH(x, y, selection.width, selection.height)
+        const selection = this.selectionLayer.getEditorItem(i) as Item
+        const left = selection.left - containerEntity.left
+        const top = selection.top - containerEntity.top
+        const rotation = selection.rotation.radius - containerEntity.rotation.radius
+
+        selection.boundary = Rectangle.makeLTWH(left, top, selection.width, selection.height)
+        selection.rotation = new Rotation(rotation)
         containerEntity.addItem(selection)
         this.contentLayer.removeEditorItem(selection)
       }
       this._inContainerSelection = false
-      this.maskLayer.removeNode(this._containerSelectionShape)      
+      this._containerLayer.removeNode(this._containerSelectionShape)      
       this.selectionLayer.removeAllEditorItems()
     }
   }
