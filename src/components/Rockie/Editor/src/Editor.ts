@@ -46,7 +46,7 @@ export class Editor extends Painter {
   private _containerLayer: EditorLayer
   private _zoom = 1.00;
   private _inMoving = false;
-  private _moved = false;
+  private _moved = false; //Check if movement already started
   private _gridSize = 16;
   private _action: Action | undefined;
   private _startPointX = 0;
@@ -861,8 +861,11 @@ export class Editor extends Painter {
       this.endRangeSelecting(e)
     }
     if(this._inMoving) {
+      // Shape is moved out of container here
+      this.removeItemsFromContainer(e)
       this.endMoveOutline(e)
       this._inMoving = false
+      this._moved = false
     }
     this._inCreatingConnector = false
     this._targetRowResizing = false
@@ -1872,4 +1875,31 @@ export class Editor extends Painter {
     const [left, top, right, bottom] = this.getSelectionBoundary()
     this._selectionOutlineShape.boundary = Rectangle.makeLTWH(left, top, right - left, bottom - top)
   }
+
+  private removeItemsFromContainer(e: PointerEvent) {
+    let requireRemove = false
+    const [left, top, right, bottom] = this.getSelectionBoundary()
+    if(this.selectionLayer.getEditorItemCount() > 0) {
+      const firstSelection = this.selectionLayer.getEditorItem(0) as Item
+      if(firstSelection.parent && !firstSelection.parent.shape.intersects(left, top, right, bottom)) {
+        requireRemove = true
+      }
+    }
+    if(requireRemove) {
+      const count = this.selectionLayer.getEditorItemCount()
+      for(let i = 0; i < count; i ++) {
+        const selection = this.selectionLayer.getEditorItem(i) as Item
+        if(selection.parent) {
+          const left = selection.left + selection.parent.left
+          const top = selection.top + selection.parent.top
+          const rotation = selection.rotation.radius + selection.parent.rotation.radius
+          selection.boundary = Rectangle.makeLTWH(left, top, selection.width, selection.height)
+          selection.rotation = new Rotation(rotation)
+          selection.parent.removeItem(selection)
+          this.contentLayer.addEditorItem(selection)
+        }
+      }
+    }
+}
+
 }
