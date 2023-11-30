@@ -282,6 +282,11 @@ export abstract class Node {
     }
 
     public clear (): void {
+      const count = this._nodes.length
+      for(let i = 0; i < count; i ++) {
+        const child= this._nodes[i]
+        child._parent = undefined
+      }
       this._nodes.length = 0
       this.markDirty()
     }

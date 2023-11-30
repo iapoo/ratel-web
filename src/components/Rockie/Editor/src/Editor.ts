@@ -1055,12 +1055,35 @@ export class Editor extends Painter {
     const count = this.contentLayer.getEditorItemCount()
     for (let i = count - 1; i >= 0; i--) {
       const editorItem = this.contentLayer.getEditorItem(i)
-      const shape = editorItem.shape
+      result = this.findEditorItemDetail(editorItem, x, y)
+      if(result) {
+        break;
+      }
+    }
+    return result
+  }
 
-      // console.log(`Finding items ${x}    ${y}    ==== ${shape.position.x}    ${shape.position.y}`)
-      if (shape.intersects(x - Editor.TEST_RADIUS, y - Editor.TEST_RADIUS, Editor.TEST_SIZE, Editor.TEST_SIZE)) {
-        result = editorItem
-        break
+  private findEditorItemDetail(editorItem: EditorItem, x: number, y: number): EditorItem | undefined {
+    let result = undefined
+    const count = editorItem.items.length
+    const shape = editorItem.shape
+    //const worldTransform = shape.worldInverseTransform
+    //let newX = x
+    //let newY = y
+    //if(worldTransform) {
+    //  const newPoint = worldTransform.makePoint(new Point2(x, y))
+    //  newX = newPoint.x
+    //  newY = newPoint.y
+    //}
+    if (shape.intersects(x - Editor.TEST_RADIUS, y - Editor.TEST_RADIUS, Editor.TEST_SIZE, Editor.TEST_SIZE)) {
+      result = editorItem
+    }
+    for (let i = count - 1; i >= 0; i--) {
+      const child = editorItem.items[i]
+      let childResult = this.findEditorItemDetail(child, x, y)
+      if(childResult) {
+        result = childResult
+        break;
       }
     }
     return result
@@ -1607,14 +1630,23 @@ export class Editor extends Painter {
       let selectionCount = this.selectionLayer.getEditorItemCount()
       for(let i = 0; i < selectionCount; i ++) {
         const selection = this.selectionLayer.getEditorItem(i) as Item
-        const left = selection.left - containerEntity.left
-        const top = selection.top - containerEntity.top
-        const rotation = selection.rotation.radius - containerEntity.rotation.radius
-
-        selection.boundary = Rectangle.makeLTWH(left, top, selection.width, selection.height)
-        selection.rotation = new Rotation(rotation)
-        containerEntity.addItem(selection)
-        this.contentLayer.removeEditorItem(selection)
+        if(selection.parent == containerEntity) {
+          //Do nothing here
+        } else{
+          const left = selection.left - containerEntity.left
+          const top = selection.top - containerEntity.top
+          const rotation = selection.rotation.radius - containerEntity.rotation.radius
+  
+          selection.boundary = Rectangle.makeLTWH(left, top, selection.width, selection.height)
+          selection.rotation = new Rotation(rotation)
+          if(selection.parent) {
+            selection.parent.removeItem(selection)
+            containerEntity.addItem(selection)
+          } else {
+            this.contentLayer.removeEditorItem(selection)
+            containerEntity.addItem(selection)
+          }
+        }
       }
       this._inContainerSelection = false
       this._containerLayer.removeNode(this._containerSelectionShape)      
@@ -1629,17 +1661,26 @@ export class Editor extends Painter {
     let bottom = 0
     let selectionCount = this.selectionLayer.getEditorItemCount()
     for(let i = 0; i < selectionCount; i ++) {      
-      let selection = this.selectionLayer.getEditorItem(i)
-      if(i == 0) {
-        left = selection.left
-        top = selection.top
-        right = selection.right
-        bottom = selection.bottom
+      const selection = this.selectionLayer.getEditorItem(i)
+      const worldTransform = selection.shape.worldTransform
+      const leftTopPoint = worldTransform.makePoint(new Point2(0, 0))
+      const rightTopPoint = worldTransform.makePoint(new Point2(selection.width, 0))
+      const rightBottomPoint = worldTransform.makePoint(new Point2(selection.width, selection.height))
+      const leftBottomPoint = worldTransform.makePoint(new Point2(0, selection.height))
+      const selectionLeft = Math.min(leftTopPoint.x, rightTopPoint.x, rightBottomPoint.x, leftBottomPoint.x)
+      const selectionTop = Math.min(leftTopPoint.y, rightTopPoint.y, rightBottomPoint.y, leftBottomPoint.y)
+      const selectionRight = Math.max(leftTopPoint.x, rightTopPoint.x, rightBottomPoint.x, leftBottomPoint.x)
+      const selectionBottom = Math.max(leftTopPoint.y, rightTopPoint.y, rightBottomPoint.y, leftBottomPoint.y)
+    if(i == 0) {
+        left = selectionLeft
+        top = selectionTop
+        right = selectionRight
+        bottom = selectionBottom
       } else {
-        left = selection.left < left ? selection.left : left
-        top = selection.top < top ? selection.top : top
-        right = selection.right > right ? selection.right : right
-        bottom = selection.bottom > bottom ? selection.bottom : bottom
+        left = selectionLeft < left ? selectionLeft : left
+        top = selectionTop < top ? selectionTop : top
+        right = selectionRight > right ? selectionRight : right
+        bottom = selectionBottom > bottom ? selectionBottom : bottom
       }
     }
     return [left, top, right, bottom]

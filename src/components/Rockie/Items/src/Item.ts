@@ -92,10 +92,16 @@ export abstract class Item implements EditorItem {
 
   private _strokeDashStyle: StrokeDashStyle = StrokeDashStyle.SOLID
 
+  private _parent: Item | undefined = undefined
+
   public constructor (left: number, top: number, width: number, height: number) {
     this._boundary = Rectangle.makeLTWH(left, top, width, height)
     this._shape = new EntityShape('', left, top, width, height)
     this.initializeTheme()
+  }
+
+  public get parent() {
+    return this._parent
   }
 
   public get id(): string {
@@ -422,17 +428,22 @@ export abstract class Item implements EditorItem {
   }
 
   public addItem (item: EditorItem) {
-    // console.log(item)
-
-    if (item && this._items.indexOf(item) < 0) {
-      this._items.push(item)
-      this.shape.addNode(item.shape)
+    const editorItem = item as Item
+    if (editorItem && this._items.indexOf(editorItem) < 0) {
+      if(editorItem.parent) {
+        editorItem.parent.removeItem(editorItem)
+      }
+      editorItem._parent = this
+      this._items.push(editorItem)
+      this.shape.addNode(editorItem.shape)
     }
   }
 
   public removeItem (item: EditorItem) {
+    const editorItem = item as Item
     const index = this._items.indexOf(item)
     if (index >= 0) {
+      editorItem._parent = undefined
       this._items.splice(index, 1)
       this.shape.removeNode(item.shape)
     }
@@ -440,12 +451,19 @@ export abstract class Item implements EditorItem {
 
   public removeItemAt (index : number) {
     if (index >= 0 && index < this._items.length) {
+      const editorItem = this._items[index] as Item
+      editorItem._parent = undefined
       this._items.splice(index, 1)
       this.shape.removeNodeAt(index)
     }
   }
 
   public removeAllItems () {
+    const count = this._items.length
+    for(let i = 0; i <  count; i ++) {
+      const item = this._items[i] as Item
+      item._parent = undefined
+    }
     this.items.length = 0
     this.shape.clear()
   }
