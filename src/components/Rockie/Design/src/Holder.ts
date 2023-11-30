@@ -42,7 +42,6 @@ export class Holder extends Control {
   private _inHolder: boolean;
   private _editor: Editor;
   private _inSelection: boolean
-  //private _outline: Rectangle2D
 
   public constructor (editor: Editor, target: Item, inHolder: boolean, inSelection: boolean) {
     super()
@@ -75,14 +74,18 @@ export class Holder extends Control {
     this._target = target
     this._inHolder = inHolder
     this._inSelection = inSelection
+    this.hittable = false
+    //this.transform = target.shape.transform
     this.boundary = Rectangle.makeLTWH(
-      target.boundary.left,
-      target.boundary.top,
+      0,
+      0,
+      //target.boundary.left,
+      //target.boundary.top,
       target.boundary.width,
       target.boundary.height
     )
-    this.hittable = false
-    this.rotation = target.rotation
+    this.transform = target.shape.worldTransform
+    //this.rotation = target.rotation
 
     this._rotationAnchor.target = target
     this._reshapeAnchor.target = target

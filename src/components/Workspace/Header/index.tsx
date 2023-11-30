@@ -11,7 +11,7 @@ import { AlignCenterOutlined, AlignLeftOutlined, AlignRightOutlined, BoldOutline
 import OpenFileWindow from './OpenFileWindow';
 import { StorageService } from '../Storage';
 import { Rectangle } from '@/components/Resource/LargeIcons';
-import { EngineUtils, Font, FontSlant, FontWeight, GraphicsUtils, Point2, TextDecoration, TextShape } from '@/components/Engine';
+import { EngineUtils, Font, FontSlant, FontWeight, GraphicsUtils, Matrix, Point2, TextDecoration, TextShape } from '@/components/Engine';
 import { Editor, EditorEvent } from '@/components/Rockie/Editor';
 import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
 import { Placeholder, } from '@/components/Resource/Icons'
@@ -641,6 +641,21 @@ const Header: FC<HeaderProps> = ({
     messageApi.info(intl.formatMessage({ id: 'workspace.header.message-apply-locale' }))
   }
 
+  const handleTestCode = () => {
+    let matrix1 = new Matrix()
+    let matrix2 = new Matrix()
+    matrix1.translate(26, 29)
+    matrix1.rotate(29, 26, 29)
+    matrix1.translate(79,111)
+    matrix1.rotate(19, 105, 140)
+    matrix1.translate(59,131)
+    matrix1.rotate(79, 164, 271)
+    matrix2.translate(164,271)
+    matrix2.rotate(127, 164, 271)
+    console.log(`aa ${matrix1} ${matrix2}`)
+
+  }
+
   const handleTest = () => {
     if(currentEditor) {
       let count = ContainerTypes.length
@@ -753,7 +768,7 @@ const Header: FC<HeaderProps> = ({
     { key: 'OpenFrom', label: 'OpenFrom', },
     { key: 'Open', label: 'Open', },
     { key: 'Save', label: 'Save', },
-    { key: 'SaveAs', label: 'SaveAs', },
+    { key: 'SaveAs', label: 'SaveAs', onClick: handleTestCode },
     { key: 'Test', label: 'Test', onClick: handleTest, },
   ];
 
