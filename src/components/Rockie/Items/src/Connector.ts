@@ -107,6 +107,7 @@ export class Connector extends Item {
     this._targetJoint = value
     if (value && this._target && this._targetJoint) {
       this._end = this._target.shape.worldTransform.makePoint(value)
+      this._connectorShape.end = this._end
       this.boundary = Rectangle.makeLTWH(Math.min(this._start.x, this._end.x), Math.min(this._start.y, this._end.y), Math.abs(this._start.x - this._end.x), Math.abs(this._start.y - this._end.y))
     }
   }

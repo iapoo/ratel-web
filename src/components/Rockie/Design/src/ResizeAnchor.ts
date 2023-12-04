@@ -324,7 +324,9 @@ export class ResizeAnchor extends Anchor {
       // TODO: 鼠标移动会导致Anchor重定位，结果导致鼠标位置突变而引起图形突变。这里延缓变化频率以修复问题
       const nowTime = new Date().getTime()
       if (nowTime - this.lastMovingTime > Anchor.MIN_MOVING_INTERVAL) {
-        this.holder.boundary = Rectangle.makeLTWH(newLeft, newTop, newWidth, newHeight)
+        //this.holder.boundary = Rectangle.makeLTWH(newLeft, newTop, newWidth, newHeight)
+        this.holder.width = newWidth
+        this.holder.height = newHeight
         // Seems following code have internal dependence
         this.target.getAllConnectors().forEach(connector => {
           if (connector.source === this.target && connector.sourceJoint && this.target) {

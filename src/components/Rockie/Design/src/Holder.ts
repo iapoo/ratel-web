@@ -68,7 +68,7 @@ export class Holder extends Control {
     this._endAdapterAnchor = new AdapterAnchor(editor, this, AdapterType.END)
     this.stroked = true
     this.stroke.setStrokeDashStyle(StrokeDashStyle.DASH)
-    this.stroke.setColor(Colors.Blue)
+    this.stroke.setColor(Colors.Red)
     this.filled = false
     this.clipped = false
     this._target = target
