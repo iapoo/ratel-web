@@ -1877,6 +1877,10 @@ export class Editor extends Painter {
   }
 
   private handleMoveOutline(e: PointerEvent) {
+    //Dont show outline if only connector selected
+    if(this.selectionLayer.getEditorItemCount() == 1 && this.selectionLayer.getEditorItem(0) instanceof Connector) {
+      return
+    }
     const [left, top, right, bottom] = this.getSelectionBoundary()
     this._selectionOutlineShape.boundary = Rectangle.makeLTWH(left, top, right - left, bottom - top)
     //this._selectionOutlineShape.boundary = Rectangle.makeLTWH(left * this._zoom, top * this._zoom, (right - left) * this._zoom, (bottom - top) * this._zoom)

@@ -293,6 +293,12 @@ export class Holder extends Control {
     } else {
       this.removeAnchors()
     }
+    //Hide for Connectors
+    if(this._target instanceof Connector) {
+      this.stroked = false
+    } else {
+      this.stroked = true
+    }
   }
 
   private addAnchors () {
