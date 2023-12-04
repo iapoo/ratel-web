@@ -241,6 +241,9 @@ export abstract class Node {
 
     public addNode (node: Node): void {
       if (this._nodes.indexOf(node) < 0) {
+        if(node.parent) {
+          node.parent.removeNode(node)
+        }
         this._nodes.push(node)
         node._parent = this
         node.updateAlpha()

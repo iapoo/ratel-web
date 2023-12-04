@@ -501,10 +501,12 @@ export class Editor extends Painter {
   // render
   public render () {
     this._contentLayer.scale = new Scale(this._zoom, this._zoom)
-    this._contentLayer.scale = new Scale(this._zoom, this._zoom)
-    this._selectionLayer.scale = new Scale(this._zoom, this._zoom)
+    //this._selectionLayer.scale = new Scale(this._zoom, this._zoom)
     this._controllerLayer.scale = new Scale(this._zoom, this._zoom)
-    this._hoverLayer.scale = new Scale(this._zoom, this._zoom)
+    //this._hoverLayer.scale = new Scale(this._zoom, this._zoom)
+    //this._rangeLayer.scale = new Scale(this._zoom, this._zoom)
+    //this._moveLayer.scale = new Scale(this._zoom, this._zoom)
+    //this._containerLayer.scale = new Scale(this._zoom, this._zoom)
     super.render()
   }
 
@@ -1313,7 +1315,9 @@ export class Editor extends Painter {
     const connector = theControllerLayer.getEditorItem(0) as Connector
     const editorItem = this.findEditorItem(e.x, e.y)
     const isEdge = editorItem ? this.hasEditorItemJoint(editorItem, e.x, e.y) : false
+    //console.log(`create connector ...1 ${editorItem !== connector.source} ${isEdge}`)
     if (editorItem && isEdge && editorItem !== connector.source) {
+      //console.log(`create connector ...2`)
       const inEditorItem = this.isInEditorItem(editorItem, e.x, e.y)
       const targetPoint = this.findEditorItemJoint(editorItem, e.x, e.y, inEditorItem)
       // const targetJoint = new Point2(targetPoint.x - editorItem.left, targetPoint.y - editorItem.top)
@@ -1321,6 +1325,7 @@ export class Editor extends Painter {
       connector.targetJoint = targetPoint
       connector.target.addConnector(connector)
     } else {
+      //console.log(`create connector ...3`)
       if (connector.target) {
         connector.target.removeConnector(connector)
       }
@@ -1874,6 +1879,7 @@ export class Editor extends Painter {
   private handleMoveOutline(e: PointerEvent) {
     const [left, top, right, bottom] = this.getSelectionBoundary()
     this._selectionOutlineShape.boundary = Rectangle.makeLTWH(left, top, right - left, bottom - top)
+    //this._selectionOutlineShape.boundary = Rectangle.makeLTWH(left * this._zoom, top * this._zoom, (right - left) * this._zoom, (bottom - top) * this._zoom)
   }
 
   private removeItemsFromContainer(e: PointerEvent) {
