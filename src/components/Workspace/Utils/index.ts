@@ -2,7 +2,7 @@
 export { SystemUtils } from './SystemUtils'
 export { RequestUtils } from './RequestUtils'
 export { Utils, } from './Utils'
-export { Consts, PageTypes, StrokeDashStyles } from './Consts'
+export { Consts, PageTypes, StrokeDashStyles, ConnectorLineModes, ConnectorLineTypes } from './Consts'
 
 //declare const LineTypes: readonly['LeftTop', 'RightTop', 'LeftBottom', 'RightButtom'];
 

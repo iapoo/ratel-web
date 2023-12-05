@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef, FC } from 'react'
 import styles from './index.css'
 import { Form, Input, Checkbox, Row, Col, Button, Modal, Menu, Space, Tooltip, Dropdown, Divider, Select, InputNumber, ColorPicker, message, } from 'antd'
 import type { MenuProps } from 'antd';
-import { Consts, RequestUtils, SystemUtils, Utils, } from '../Utils'
+import { ConnectorLineModes, ConnectorLineTypes, Consts, RequestUtils, StrokeDashStyles, SystemUtils, Utils, } from '../Utils'
 import { setInterval } from 'timers'
 import { UserInfo } from '../Utils/RequestUtils'
 import LoginFormWindow from './LoginFormWindow'
@@ -71,6 +71,9 @@ const Header: FC<HeaderProps> = ({
   const [editorUndoable, setEditorUndoable,] = useState<boolean>(false)
   const [editorRedoable, setEditorRedoable,] = useState<boolean>(false)
   const [fontSizeNode, setFontSizeNode, ] = useState<any>(null)
+  const [ strokeDashStyle, setStrokeDashStyle, ] = useState<string>(Consts.STROKE_DASH_STYLE_SOLID)
+  const [ connectorLineType, setConnectorLineType, ] = useState<string>(Consts.CONNECTOR_LINE_TYPE_STRAIGHT)
+  const [ connectorLineMode, setConnectorLineMode, ] = useState<string>(Consts.CONNECTOR_LINE_MODE_SIGNLE)
 
   useEffect(() => {
     if (!initialized) {
@@ -146,6 +149,10 @@ const Header: FC<HeaderProps> = ({
       setTextAlignment(textAlignmentValue)
       let textVerticalAlignmentValue = SystemUtils.generateTextVerticalAligment(editorItem.textVerticalAlignment)
       setTextVerticalAlignment(textVerticalAlignmentValue)
+      let strokeDashStyleValue = SystemUtils.generateStrokeDashStyle(editorItem.strokeDashStyle)
+      setStrokeDashStyle(strokeDashStyleValue)
+      //let connectorLineTypeValue = SystemUtils.generateStrokeDashStyle(editorItem.strokeDashStyle)
+      //setStrokeDashStyle(strokeDashStyleValue)
     } else {
       initializeSelectionInfo()
     }
@@ -163,6 +170,7 @@ const Header: FC<HeaderProps> = ({
     setFillColor(Consts.COLOR_FILL_DEFAULT)
     setStrokeColor(Consts.COLOR_STROKE_DEFAULT)
     setFontColor(Consts.COLOR_FONT_DEFAULT)
+    setStrokeDashStyle(Consts.STROKE_DASH_STYLE_SOLID)
   }
 
   const handleSelectionChange = (e: EditorEvent) => {
@@ -641,6 +649,45 @@ const Header: FC<HeaderProps> = ({
     messageApi.info(intl.formatMessage({ id: 'workspace.header.message-apply-locale' }))
   }
 
+  const handleStrokeDashStyleChange = (value: string) => {
+    setStrokeDashStyle(value)
+    if(currentEditor) {
+      let editorItems = currentEditor.selectionLayer.getAllEditorItems()
+      editorItems.forEach(editorItem => {
+        let strokeDashStyle = SystemUtils.parseStrokeDashStyle(value)
+        editorItem.strokeDashStyle = strokeDashStyle
+      })
+    }
+  }
+
+  const handleConnectorLineTypeChange = () => {
+    
+  }
+
+  const handleConnectorLineModeChange = () => {
+    
+  }
+
+  const handleConnectorArrowStartTypeChange = () => {
+    
+  }
+
+  const handleConnectorArrowEndTypeChange = () => {
+    
+  }
+
+  const strokeDashStyles = StrokeDashStyles.map(strokeDashStyle=> {
+    return {value: strokeDashStyle.name, label: <img alt='intl.formatMessage({ id: strokeDashStyle.label})' src={'/images/line-' + strokeDashStyle.name.toLowerCase() + '.png'} width='64' height='12' />}
+  })
+
+  const connectorLineTypes = ConnectorLineTypes.map(connectorLineType=> {
+    return {value: connectorLineType.name, label: <img alt='intl.formatMessage({ id: connectorLineType.label})' src={'/images/connector-line-type-' + connectorLineType.name.toLowerCase() + '.png'} width='12' height='12' />}
+  })
+ 
+  const connectorLineModes = ConnectorLineModes.map(connectorLineMode=> {
+    return {value: connectorLineMode.name, label: <img alt='intl.formatMessage({ id: connectorLineMode.label})' src={'/images/connector-line-mode-' + connectorLineMode.name.toLowerCase() + '.png'} width='12' height='12' />}
+  })
+
   const handleTestCode = () => {
     let matrix1 = new Matrix()
     let matrix2 = new Matrix()
@@ -827,7 +874,7 @@ const Header: FC<HeaderProps> = ({
           <Space direction="horizontal" style={{ display: 'table-cell', verticalAlign: 'middle' }}>
             <Space wrap>
             <Tooltip title={<FormattedMessage id='workspace.header.title.zoom'/>}>
-              <Select style={{ width: 100 }} value={zoom} size='small' onChange={handleZoom}
+              <Select style={{ width: 100 }} value={zoom} size='small' onChange={handleZoom} bordered={false}
                   options={zoomOptions}
                 />
               </Tooltip>
@@ -891,6 +938,21 @@ const Header: FC<HeaderProps> = ({
               </Tooltip>
               <Tooltip title={<FormattedMessage id='workspace.header.title.line-width'/>}>
                 <InputNumber min={Consts.LINE_WIDTH_MIN} max={Consts.LINE_WIDTH_MAX} value={lineWidth} onChange={handleLineWidthChange} size='small' style={{ width: 50 }} disabled={!selectionValid} />
+              </Tooltip>
+              <Tooltip title={<FormattedMessage id='workspace.header.title.stroke-type'/>}>
+                <Select size='small' value={strokeDashStyle} onChange={handleStrokeDashStyleChange} style={{width: 110 }} dropdownStyle={{width: 110}} options={strokeDashStyles} bordered={false}/>
+              </Tooltip>
+              <Tooltip title={<FormattedMessage id='workspace.header.title.connector-line-type'/>}>
+                <Select size='small' value={connectorLineType} onChange={handleConnectorLineTypeChange} style={{width: 56 }} options={connectorLineTypes} bordered={false}/>
+              </Tooltip>
+              <Tooltip title={<FormattedMessage id='workspace.header.title.connector-line-mode'/>}>
+                <Select size='small' value={connectorLineMode} onChange={handleConnectorLineModeChange} style={{width: 56 }} options={connectorLineModes} bordered={false}/>
+              </Tooltip>
+              <Tooltip title={<FormattedMessage id='workspace.header.title.connector-arrow-start-type'/>}>
+                <Select style={{ width: 100 }} value={zoom} size='small' onChange={handleConnectorArrowStartTypeChange} options={zoomOptions}/>
+              </Tooltip>
+              <Tooltip title={<FormattedMessage id='workspace.header.title.connector-arrow-end-type'/>}>
+                <Select style={{ width: 100 }} value={zoom} size='small' onChange={handleConnectorArrowEndTypeChange} options={zoomOptions}/>
               </Tooltip>
             </Space>
           </Space>

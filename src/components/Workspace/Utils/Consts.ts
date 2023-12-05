@@ -98,6 +98,30 @@ export class Consts {
     public static PLACE_HOLDER_ALIGNMENT_TOP = 'top'
     public static PLACE_HOLDER_ALIGNMENT_BOTTOM = 'bottom'
     public static PLACE_HOLDER_ALIGNMENT_MIDDLE = 'middle'
+
+    public static CONNECTOR_LINE_TYPE_STRAIGHT = 'straight'
+    public static CONNECTOR_LINE_TYPE_CURVED = 'curved'
+    public static CONNECTOR_LINE_TYPE_ORTHOGONAL = 'orthogonal'
+
+    public static CONNECTOR_LINE_MODE_SIGNLE = 'single'
+    public static CONNECTOR_LINE_MODE_DOUBLE = 'double'
+
+    public static CONNECTOR_LINE_START_ARROW_NONE = 'none'
+    public static CONNECTOR_LINE_START_ARROW_1 = '1'
+    public static CONNECTOR_LINE_START_ARROW_2 = '2'
+    public static CONNECTOR_LINE_START_ARROW_3 = '3'
+    public static CONNECTOR_LINE_START_ARROW_4 = '4'
+    public static CONNECTOR_LINE_START_ARROW_5 = '5'
+    public static CONNECTOR_LINE_START_ARROW_6 = '6'
+
+    public static CONNECTOR_LINE_END_ARROW_NONE = 'none'
+    public static CONNECTOR_LINE_END_ARROW_1 = '1'
+    public static CONNECTOR_LINE_END_ARROW_2 = '2'
+    public static CONNECTOR_LINE_END_ARROW_3 = '3'
+    public static CONNECTOR_LINE_END_ARROW_4 = '4'
+    public static CONNECTOR_LINE_END_ARROW_5 = '5'
+    public static CONNECTOR_LINE_END_ARROW_6 = '6'
+
 }
 
 export const StrokeDashStyles =  [
@@ -106,6 +130,37 @@ export const StrokeDashStyles =  [
     {name: Consts.STROKE_DASH_STYLE_DOT, label: 'workspace.property-editor.item-setting.stroke-dash-style.dot'},
     {name: Consts.STROKE_DASH_STYLE_DASH_DOT, label: 'workspace.property-editor.item-setting.stroke-dash-style.dash-dot'},
     {name: Consts.STROKE_DASH_STYLE_DASH_DOT_DOT, label: 'workspace.property-editor.item-setting.stroke-dash-style.dash-dot-dot'},
+]
+
+export const ConnectorLineTypes = [
+    {name: Consts.CONNECTOR_LINE_TYPE_STRAIGHT, label: 'workspace.header.text.connector-type-straight'},
+    {name: Consts.CONNECTOR_LINE_TYPE_ORTHOGONAL, label: 'workspace.header.text.connector-type-orthogonal'},
+    {name: Consts.CONNECTOR_LINE_TYPE_CURVED, label: 'workspace.header.text.connector-type-curved'},
+]
+
+export const ConnectorLineModes = [
+    {name: Consts.CONNECTOR_LINE_MODE_SIGNLE, label: 'workspace.header.text.connector-mode-single'},
+    {name: Consts.CONNECTOR_LINE_MODE_DOUBLE, label: 'workspace.header.text.connector-mode-double'},
+]
+
+export const ConnectorLineStartArrows = [
+    {name: Consts.CONNECTOR_LINE_START_ARROW_NONE, label: 'workspace.header.text.connector-line-start-arrow-none'},
+    {name: Consts.CONNECTOR_LINE_START_ARROW_1, label: 'workspace.header.text.connector-line-start-arrow-1'},
+    {name: Consts.CONNECTOR_LINE_START_ARROW_2, label: 'workspace.header.text.connector-line-start-arrow-2'},
+    {name: Consts.CONNECTOR_LINE_START_ARROW_3, label: 'workspace.header.text.connector-line-start-arrow-3'},
+    {name: Consts.CONNECTOR_LINE_START_ARROW_4, label: 'workspace.header.text.connector-line-start-arrow-4'},
+    {name: Consts.CONNECTOR_LINE_START_ARROW_5, label: 'workspace.header.text.connector-line-start-arrow-5'},
+    {name: Consts.CONNECTOR_LINE_START_ARROW_6, label: 'workspace.header.text.connector-line-start-arrow-6'},
+]
+
+export const ConnectorLineEndArrows = [
+    {name: Consts.CONNECTOR_LINE_END_ARROW_NONE, label: 'workspace.header.text.connector-line-end-arrow-none'},
+    {name: Consts.CONNECTOR_LINE_END_ARROW_1, label: 'workspace.header.text.connector-line-end-arrow-1'},
+    {name: Consts.CONNECTOR_LINE_END_ARROW_2, label: 'workspace.header.text.connector-line-end-arrow-2'},
+    {name: Consts.CONNECTOR_LINE_END_ARROW_3, label: 'workspace.header.text.connector-line-end-arrow-3'},
+    {name: Consts.CONNECTOR_LINE_END_ARROW_4, label: 'workspace.header.text.connector-line-end-arrow-4'},
+    {name: Consts.CONNECTOR_LINE_END_ARROW_5, label: 'workspace.header.text.connector-line-end-arrow-5'},
+    {name: Consts.CONNECTOR_LINE_END_ARROW_6, label: 'workspace.header.text.connector-line-end-arrow-6'},
 ]
 
 export const PageTypes = [
