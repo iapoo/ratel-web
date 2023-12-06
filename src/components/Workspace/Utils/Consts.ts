@@ -113,6 +113,10 @@ export class Consts {
     public static CONNECTOR_LINE_START_ARROW_4 = '4'
     public static CONNECTOR_LINE_START_ARROW_5 = '5'
     public static CONNECTOR_LINE_START_ARROW_6 = '6'
+    public static CONNECTOR_LINE_START_ARROW_7 = '7'
+    public static CONNECTOR_LINE_START_ARROW_8 = '8'
+    public static CONNECTOR_LINE_START_ARROW_9 = '9'
+    public static CONNECTOR_LINE_START_ARROW_10 = '10'
 
     public static CONNECTOR_LINE_END_ARROW_NONE = 'none'
     public static CONNECTOR_LINE_END_ARROW_1 = '1'
@@ -121,6 +125,10 @@ export class Consts {
     public static CONNECTOR_LINE_END_ARROW_4 = '4'
     public static CONNECTOR_LINE_END_ARROW_5 = '5'
     public static CONNECTOR_LINE_END_ARROW_6 = '6'
+    public static CONNECTOR_LINE_END_ARROW_7 = '7'
+    public static CONNECTOR_LINE_END_ARROW_8 = '8'
+    public static CONNECTOR_LINE_END_ARROW_9 = '9'
+    public static CONNECTOR_LINE_END_ARROW_10 = '10'
 
 }
 
@@ -151,6 +159,10 @@ export const ConnectorLineStartArrows = [
     {name: Consts.CONNECTOR_LINE_START_ARROW_4, label: 'workspace.header.text.connector-line-start-arrow-4'},
     {name: Consts.CONNECTOR_LINE_START_ARROW_5, label: 'workspace.header.text.connector-line-start-arrow-5'},
     {name: Consts.CONNECTOR_LINE_START_ARROW_6, label: 'workspace.header.text.connector-line-start-arrow-6'},
+    {name: Consts.CONNECTOR_LINE_START_ARROW_7, label: 'workspace.header.text.connector-line-start-arrow-7'},
+    {name: Consts.CONNECTOR_LINE_START_ARROW_8, label: 'workspace.header.text.connector-line-start-arrow-8'},
+    {name: Consts.CONNECTOR_LINE_START_ARROW_9, label: 'workspace.header.text.connector-line-start-arrow-9'},
+    {name: Consts.CONNECTOR_LINE_START_ARROW_10, label: 'workspace.header.text.connector-line-start-arrow-10'},
 ]
 
 export const ConnectorLineEndArrows = [
@@ -161,6 +173,10 @@ export const ConnectorLineEndArrows = [
     {name: Consts.CONNECTOR_LINE_END_ARROW_4, label: 'workspace.header.text.connector-line-end-arrow-4'},
     {name: Consts.CONNECTOR_LINE_END_ARROW_5, label: 'workspace.header.text.connector-line-end-arrow-5'},
     {name: Consts.CONNECTOR_LINE_END_ARROW_6, label: 'workspace.header.text.connector-line-end-arrow-6'},
+    {name: Consts.CONNECTOR_LINE_END_ARROW_7, label: 'workspace.header.text.connector-line-end-arrow-7'},
+    {name: Consts.CONNECTOR_LINE_END_ARROW_8, label: 'workspace.header.text.connector-line-end-arrow-8'},
+    {name: Consts.CONNECTOR_LINE_END_ARROW_9, label: 'workspace.header.text.connector-line-end-arrow-9'},
+    {name: Consts.CONNECTOR_LINE_END_ARROW_10, label: 'workspace.header.text.connector-line-end-arrow-10'},
 ]
 
 export const PageTypes = [
