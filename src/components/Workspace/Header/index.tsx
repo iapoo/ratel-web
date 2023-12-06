@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef, FC } from 'react'
 import styles from './index.css'
 import { Form, Input, Checkbox, Row, Col, Button, Modal, Menu, Space, Tooltip, Dropdown, Divider, Select, InputNumber, ColorPicker, message, } from 'antd'
 import type { MenuProps } from 'antd';
-import { ConnectorLineModes, ConnectorLineTypes, Consts, RequestUtils, StrokeDashStyles, SystemUtils, Utils, } from '../Utils'
+import { ConnectorLineEndArrows, ConnectorLineModes, ConnectorLineStartArrows, ConnectorLineTypes, Consts, RequestUtils, StrokeDashStyles, SystemUtils, Utils, } from '../Utils'
 import { setInterval } from 'timers'
 import { UserInfo } from '../Utils/RequestUtils'
 import LoginFormWindow from './LoginFormWindow'
@@ -74,6 +74,8 @@ const Header: FC<HeaderProps> = ({
   const [ strokeDashStyle, setStrokeDashStyle, ] = useState<string>(Consts.STROKE_DASH_STYLE_SOLID)
   const [ connectorLineType, setConnectorLineType, ] = useState<string>(Consts.CONNECTOR_LINE_TYPE_STRAIGHT)
   const [ connectorLineMode, setConnectorLineMode, ] = useState<string>(Consts.CONNECTOR_LINE_MODE_SIGNLE)
+  const [ connectorLineStartArrow, setConnectorLineStartArrow, ] = useState<string>(Consts.CONNECTOR_LINE_START_ARROW_NONE)
+  const [ connectorLineEndArrow, setConnectorLineEndArrow, ] = useState<string>(Consts.CONNECTOR_LINE_END_ARROW_NONE)
 
   useEffect(() => {
     if (!initialized) {
@@ -660,32 +662,40 @@ const Header: FC<HeaderProps> = ({
     }
   }
 
-  const handleConnectorLineTypeChange = () => {
-    
+  const handleConnectorLineTypeChange = (value: string) => {
+    setConnectorLineType(value)
   }
 
-  const handleConnectorLineModeChange = () => {
-    
+  const handleConnectorLineModeChange = (value: string) => {
+    setConnectorLineMode(value)
   }
 
-  const handleConnectorArrowStartTypeChange = () => {
-    
+  const handleConnectorArrowStartTypeChange = (value: string) => {
+    setConnectorLineStartArrow(value)
   }
 
-  const handleConnectorArrowEndTypeChange = () => {
-    
+  const handleConnectorArrowEndTypeChange = (value: string) => {
+    setConnectorLineEndArrow(value)
   }
 
   const strokeDashStyles = StrokeDashStyles.map(strokeDashStyle=> {
-    return {value: strokeDashStyle.name, label: <img alt='intl.formatMessage({ id: strokeDashStyle.label})' src={'/images/line-' + strokeDashStyle.name.toLowerCase() + '.png'} width='64' height='12' />}
+    return {value: strokeDashStyle.name, label: <img alt='intl.formatMessage({ id: strokeDashStyle.label})' src={'/images/line-' + strokeDashStyle.name.toLowerCase() + '.png'} width='64' height='24' />}
   })
 
   const connectorLineTypes = ConnectorLineTypes.map(connectorLineType=> {
-    return {value: connectorLineType.name, label: <img alt='intl.formatMessage({ id: connectorLineType.label})' src={'/images/connector-line-type-' + connectorLineType.name.toLowerCase() + '.png'} width='12' height='12' />}
+    return {value: connectorLineType.name, label: <img alt='intl.formatMessage({ id: connectorLineType.label})' src={'/images/connector-line-type-' + connectorLineType.name.toLowerCase() + '.png'} width='16' height='16' />}
   })
  
   const connectorLineModes = ConnectorLineModes.map(connectorLineMode=> {
-    return {value: connectorLineMode.name, label: <img alt='intl.formatMessage({ id: connectorLineMode.label})' src={'/images/connector-line-mode-' + connectorLineMode.name.toLowerCase() + '.png'} width='12' height='12' />}
+    return {value: connectorLineMode.name, label: <img alt='intl.formatMessage({ id: connectorLineMode.label})' src={'/images/connector-line-mode-' + connectorLineMode.name.toLowerCase() + '.png'} width='16' height='16' />}
+  })
+ 
+  const connectorLineStartArrows = ConnectorLineStartArrows.map(connectorLineStartArrow=> {
+    return {value: connectorLineStartArrow.name, label: <img alt='intl.formatMessage({ id: connectorLineMode.label})' src={'/images/connector-line-start-arrow-' + connectorLineStartArrow.name.toLowerCase() + '.png'} width='16' height='16' />}
+  })
+
+  const connectorLineEndArrows = ConnectorLineEndArrows.map(connectorLineEndArrow=> {
+    return {value: connectorLineEndArrow.name, label: <img alt='intl.formatMessage({ id: connectorLineMode.label})' src={'/images/connector-line-end-arrow-' + connectorLineEndArrow.name.toLowerCase() + '.png'} width='16' height='16' />}
   })
 
   const handleTestCode = () => {
@@ -949,10 +959,10 @@ const Header: FC<HeaderProps> = ({
                 <Select size='small' value={connectorLineMode} onChange={handleConnectorLineModeChange} style={{width: 56 }} options={connectorLineModes} bordered={false}/>
               </Tooltip>
               <Tooltip title={<FormattedMessage id='workspace.header.title.connector-arrow-start-type'/>}>
-                <Select style={{ width: 100 }} value={zoom} size='small' onChange={handleConnectorArrowStartTypeChange} options={zoomOptions}/>
+                <Select size='small' value={connectorLineStartArrow} onChange={handleConnectorArrowStartTypeChange} style={{width: 56 }} options={connectorLineStartArrows} bordered={false}/>
               </Tooltip>
               <Tooltip title={<FormattedMessage id='workspace.header.title.connector-arrow-end-type'/>}>
-                <Select style={{ width: 100 }} value={zoom} size='small' onChange={handleConnectorArrowEndTypeChange} options={zoomOptions}/>
+              <Select size='small' value={connectorLineEndArrow} onChange={handleConnectorArrowEndTypeChange} style={{width: 56 }} options={connectorLineEndArrows} bordered={false}/>
               </Tooltip>
             </Space>
           </Space>
