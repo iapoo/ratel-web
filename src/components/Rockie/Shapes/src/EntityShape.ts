@@ -5,6 +5,7 @@
 import { Colors, Font, GlyphRun, Graphics, Paint, Paragraph, ParagraphBuilder, ParagraphStyle, Path, Point2, Rectangle, Rotation, RoundRectangle, Shape, ShapedLine, } from '@/components/Engine'
 import { Block, CursorMaker, Style, } from './EntityUtils'
 import { AbstractTextShape, } from './AbstractTextShape'
+import { ConnectorShape } from './ConnectorShape'
 
 export enum EntityShapeType {
   Rectangle,
@@ -148,6 +149,9 @@ export class EntityShape extends AbstractTextShape {
 
 
   protected buildShape () {    
+    if(this instanceof ConnectorShape) {
+      return
+    }
     if(!this._typeInfo) {
       return
     }

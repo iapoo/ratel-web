@@ -1,7 +1,7 @@
-import { ConnectorType } from "../../Items";
+import { ConnectorType } from "../../Shapes";
 
 export class CommonUtils {
-    public static CONNECTOR_TYPE_LINE = 'Line'
+    public static CONNECTOR_TYPE_STRAIGHT_LINE = 'StraightLine'
     public static CONNECTOR_TYPE_CURVE = 'Curve'
     public static CONNECTOR_TYPE_CROSS_LINE = 'CrossLine'
 
@@ -13,9 +13,9 @@ export class CommonUtils {
             case ConnectorType.CrossLine:
                 return this.CONNECTOR_TYPE_CROSS_LINE
                 break;
-            case ConnectorType.Line:
+            case ConnectorType.StraightLine:
             default:
-                return this.CONNECTOR_TYPE_LINE
+                return this.CONNECTOR_TYPE_STRAIGHT_LINE
                 break;
         }
     }
@@ -28,9 +28,9 @@ export class CommonUtils {
             case this.CONNECTOR_TYPE_CROSS_LINE:
                 return ConnectorType.CrossLine
                 break;
-            case this.CONNECTOR_TYPE_LINE:
+            case this.CONNECTOR_TYPE_STRAIGHT_LINE:
             default:
-                return ConnectorType.Line
+                return ConnectorType.StraightLine
                 break;
         }
     }
