@@ -1,4 +1,4 @@
-export { Connector, ConnectorType } from './src/Connector'
+export { Connector } from './src/Connector'
 export { ConnectorInfo, } from './src/ConnectorInfo'
 export { Entity } from './src/Entity'
 export { EditorItem } from './src/EditorItem'

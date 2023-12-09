@@ -6,22 +6,98 @@ import { Line, } from '@antv/g-math'
 import { EntityShape, } from './EntityShape'
 
 export enum ConnectorType {
-  LINE,
-  POLYLINE,
-  BEZIER,
-  QUADRATIC
+  Curve,
+  CrossLine,
+  StraightLine,
+}
+
+export enum ConnectorArrowDisplayType {
+  None,
+  Triangle,
+  Diamond,
+  Ellipse,
+  LeftParenthesis,
+  RightParenthesis,
+  CrossLine,
+  ForewardSlash,
+  Backslashe,
+  VerticalLine,
+  LeftAngleBracket,
+  VerticaleLineAndLeftAngleBacket,
+  CircleAndVerticalLine,
+  CircleAndLeftBacket
+}
+
+export enum ConnectorArrowDisplayMode {
+  Full,
+  Top,
+  Bottom,
+}
+
+export enum ConnectorMode {
+  Single,
+  Double,
+}
+
+export interface ConnectorArrowTypeInfo {
+  name: string
+  description: string
+  type: ConnectorArrowDisplayType
+  height: number
+  width: number
+  modifier: number
+  count: number
+  outline: boolean
+  displayMode: ConnectorArrowDisplayMode
 }
 
 export class ConnectorShape extends EntityShape {
   private static DETECTION_DISTANCE = 16
   private _start: Point2
   private _end: Point2
+  private _connectorType: ConnectorType;
+  private _startArrow: ConnectorArrowTypeInfo
+  private _endArrow: ConnectorArrowTypeInfo
+  private _connectorMode: ConnectorMode
+  private _doubleLineStrokeWidth: number
+  private _curveStartModifier: Point2
+  private _curveEndModifier: Point2
+  private _crossLines: number[]
 
-  public constructor (startX: number, startY: number, endX: number, endY: number) {
+
+  public constructor (startX: number, startY: number, endX: number, endY: number, startArrowInfo: ConnectorArrowTypeInfo = {
+    name: '',
+    description: '',
+    type: ConnectorArrowDisplayType.None,
+    height: 6,
+    width: 6,
+    modifier: 0,
+    count: 1,
+    outline: true,
+    displayMode: ConnectorArrowDisplayMode.Full
+  }, endArrowInfo: ConnectorArrowTypeInfo = {
+    name: '',
+    description: '',
+    type: ConnectorArrowDisplayType.None,
+    height: 6,
+    width: 6,
+    modifier: 0,
+    count: 1,
+    outline: true,
+    displayMode: ConnectorArrowDisplayMode.Full
+  }) {
     super('', Math.min(startX, endX), Math.min(startY, endY), Math.abs(startX - endX), Math.abs(startY - endY))
     this._start = new Point2(startX, startY)
     this._end = new Point2(endX, endY)
     this.filled = false
+    this._startArrow = startArrowInfo
+    this._endArrow = endArrowInfo
+    this._connectorMode = ConnectorMode.Single
+    this._doubleLineStrokeWidth = 1
+    this._connectorType = ConnectorType.StraightLine
+    this._curveStartModifier = new Point2()
+    this._curveEndModifier = new Point2()
+    this._crossLines = []
   }
 
   public get start (): Point2 {
@@ -43,6 +119,78 @@ export class ConnectorShape extends EntityShape {
   public set end (value: Point2) {
     this._end = new Point2(value.x, value.y)
     this.boundary = Rectangle.makeLTWH(Math.min(this._start.x, this._end.x), Math.min(this._start.y, this._end.y), Math.abs(this._start.x - this._end.x), Math.abs(this._start.y - this._end.y))
+    this.markDirty()
+  }
+
+  public get curveStartModifier() {
+    return this._curveStartModifier
+  }
+
+  public set curveStartModifier(value: Point2) {
+    this._curveStartModifier = value
+    this.markDirty()
+  }
+
+  public get curveEndModifier() {
+    return this._curveEndModifier
+  }
+
+  public set curveEndModifier(value: Point2) {
+    this._curveEndModifier = value
+    this.markDirty()
+  }
+  
+  public get crossLines() {
+    return this._crossLines
+  }
+
+  public set crossLines(value: number[]) {
+    this._crossLines = value
+    this.markDirty
+  }
+  
+  public get startArrow() {
+    return this._startArrow
+  }
+
+  public set startArrow(value: ConnectorArrowTypeInfo) {
+    this._startArrow = value
+    this.markDirty()
+  }
+
+  public get endArrow() {
+    return this._endArrow
+  }
+
+  public set endArrow(value: ConnectorArrowTypeInfo) {
+    this._endArrow = value
+    this.markDirty()
+  }
+
+  public get connectorMode() {
+    return this._connectorMode
+  }
+
+  public set connectorMode(value: ConnectorMode) {
+    this._connectorMode = value
+    this.markDirty()
+  }
+
+  public get doubleLineStrokeWidth() {
+    return this._doubleLineStrokeWidth
+  }
+
+  public set doubleLineStrokeWidth(value: number) {
+    this._doubleLineStrokeWidth = value
+    this.markDirty()
+  }
+
+  public get connectorType (): ConnectorType {
+    return this._connectorType
+  }
+
+  public set connectorType (value: ConnectorType) {
+    this._connectorType = value
     this.markDirty()
   }
 
@@ -123,7 +271,77 @@ export class ConnectorShape extends EntityShape {
       this.path.moveTo(this.start.x - this.left, this.start.y - this.top)
       this.path.lineTo(this.end.x - this.left, this.end.y - this.top)
       this.path.close()
+      switch(this.connectorType) {
+        case ConnectorType.CrossLine:
+          this.updateCrossLinePath()
+          break;
+        case ConnectorType.Curve:
+          this.updateCurvePath()
+          break;
+        case ConnectorType.StraightLine:
+        default:
+          this.updateStraightLinePath()
+          break;
+
+      }
       // console.log(`left = ${this.left} top =${this.top} startx = ${this.start.x} starty = ${this.start.y}  endx = ${this.end.x} end.y = ${this.end.y}`)
+      
     }
+  }
+
+  private updateCurvePath() {
+    switch(this._startArrow.type) {
+      case ConnectorArrowDisplayType.Triangle: {
+        break;
+      }
+      case ConnectorArrowDisplayType.Diamond: {
+        break;
+      }
+      case ConnectorArrowDisplayType.Ellipse: {
+        break;
+      }
+      case ConnectorArrowDisplayType.LeftParenthesis: {
+        break;
+      }
+      case ConnectorArrowDisplayType.RightParenthesis: {
+        break;
+      }
+      case ConnectorArrowDisplayType.CrossLine: {
+        break;
+      }
+      case ConnectorArrowDisplayType.ForewardSlash: {
+        break;
+      }
+      case ConnectorArrowDisplayType.Backslashe: {
+        break;
+      }
+      case ConnectorArrowDisplayType.VerticalLine: {
+        break;
+      }
+      case ConnectorArrowDisplayType.LeftAngleBracket: {
+        break;
+      }
+      case ConnectorArrowDisplayType.VerticaleLineAndLeftAngleBacket: {
+        break;
+      }
+      case ConnectorArrowDisplayType.CircleAndVerticalLine: {
+        break;
+      }
+      case ConnectorArrowDisplayType.CircleAndLeftBacket: {
+        break;
+      }
+      default:
+      case ConnectorArrowDisplayType.None: {
+        break;
+      }
+    }
+  }
+
+  private updateStraightLinePath() {
+
+  }
+
+  private updateCrossLinePath() {
+
   }
 }
