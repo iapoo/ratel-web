@@ -91,6 +91,9 @@ export class Connector extends Item {
     this._endArrow = ConnectorArrowTypes[0]
     this._connectorMode = ConnectorMode.Single
     this._doubleLineStrokeWidth = 1
+    this._curveStartModifier = new Point2()
+    this._curveEndModifier = new Point2()
+    this._crossLines = []
   }
 
   public get source (): Entity | undefined {
