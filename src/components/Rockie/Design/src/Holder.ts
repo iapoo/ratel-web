@@ -5,13 +5,15 @@ import { ConnectionAnchor, } from './ConnectionAnchor'
 import { ResizeAnchor, ResizeType, } from './ResizeAnchor'
 import { RotationAnchor, } from './RotationAnchor'
 import { ReshapeAnchor, } from './ReshapeAnchor'
-import { Colors, Control, Rectangle, Scale, StrokeDashStyle, } from '@/components/Engine'
+import { Colors, Control, Line2D, Point2, Rectangle, Scale, StrokeDashStyle, } from '@/components/Engine'
 import { Connector, Item, LineEntity, LineType, Shapes, } from '../../Items'
 import { Editor, } from '../../Editor/src/Editor'
 import { PointAnchor, } from './PointAnchor'
 import { ShapeEntity, ShapeTypes } from '../../Items/src/ShapeEntity'
 import { AdapterAnchor, AdapterType } from './AdapterAnchor'
 import { AdapterDirection } from '../../Shapes/src/EntityShape'
+import { CubicControllerAnchor } from './CubicCotrollerAnchor'
+import { ConnectorType } from '../../Shapes'
 
 export class Holder extends Control {
   public static readonly PADDING = 32;
@@ -38,6 +40,10 @@ export class Holder extends Control {
   private _endAnchor: PointAnchor
   private _startAdapterAnchor: AdapterAnchor
   private _endAdapterAnchor: AdapterAnchor
+  private _startCubicControllerAnchor: CubicControllerAnchor
+  private _endCubicControllerAnchor: CubicControllerAnchor
+  private _startCubicControllerLine: Line2D
+  private _endCubicControllerLine: Line2D
   private _target: Item;
   private _inHolder: boolean;
   private _editor: Editor;
@@ -64,8 +70,14 @@ export class Holder extends Control {
     this._targetConnectionAnchor = new ConnectionAnchor(editor, this)
     this._startAnchor = new PointAnchor(editor, this, true)
     this._endAnchor = new PointAnchor(editor, this, false)
+    this._startCubicControllerAnchor = new CubicControllerAnchor(editor, this, true)
+    this._endCubicControllerAnchor = new CubicControllerAnchor(editor, this, false)
     this._startAdapterAnchor = new AdapterAnchor(editor, this, AdapterType.BEGIN)
     this._endAdapterAnchor = new AdapterAnchor(editor, this, AdapterType.END)
+    this._startCubicControllerLine = new Line2D(0, 0, 0, 0)
+    this._endCubicControllerLine = new Line2D(0, 0, 0, 0)
+    this._startCubicControllerLine.stroke.setStrokeWidth(3)
+    this._startCubicControllerLine.stroke.setColor(Colors.Green)
     this.stroked = true
     this.stroke.setStrokeDashStyle(StrokeDashStyle.DASH)
     this.stroke.setColor(Colors.Red)
@@ -105,6 +117,8 @@ export class Holder extends Control {
     this._endAnchor.target = target
     this._startAdapterAnchor.target = target
     this._endAdapterAnchor.target = target
+    this._startCubicControllerAnchor.target = target
+    this._endCubicControllerAnchor.target = target
     this.layoutAnchors()
     if (this._inHolder) {
       this.addAnchors()
@@ -192,6 +206,8 @@ export class Holder extends Control {
     this._leftBottomResizeAnchor.scale = new Scale(1 / this.editor.zoom, 1 / this.editor.zoom)
     this._sourceConnectionAnchor.scale = new Scale(1 / this.editor.zoom, 1 / this.editor.zoom)
     this._targetConnectionAnchor.scale = new Scale(1 / this.editor.zoom, 1 / this.editor.zoom)
+    this._startCubicControllerAnchor.scale = new Scale(1 / this.editor.zoom, 1 / this.editor.zoom)
+    this._endCubicControllerAnchor.scale = new Scale(1 / this.editor.zoom, 1 / this.editor.zoom)
 
     this._rotationAnchor.left = this._target.width - Holder.ANCHOR_RADIUS
     this._rotationAnchor.top = -Holder.ANCHOR_DISTANCE
@@ -254,11 +270,21 @@ export class Holder extends Control {
       this._endAdapterAnchor.top = adapterEndY - Holder.ANCHOR_RADIUS
     }
 
-    if (this._target instanceof Connector) {
+    if (this._target instanceof Connector) {      
       this._sourceConnectionAnchor.left = (this._target.start.x > this._target.end.x) ? (this._target.start.x - this._target.end.x) - Holder.ANCHOR_RADIUS : -Holder.ANCHOR_RADIUS
       this._sourceConnectionAnchor.top = (this._target.start.y > this._target.end.y) ? (this._target.start.y - this._target.end.y) - Holder.ANCHOR_RADIUS : -Holder.ANCHOR_RADIUS
       this._targetConnectionAnchor.left = (this._target.start.x > this._target.end.x) ? -Holder.ANCHOR_RADIUS : Math.abs(this._target.start.x - this._target.end.x) - Holder.ANCHOR_RADIUS
       this._targetConnectionAnchor.top = (this._target.start.y > this._target.end.y) ? -Holder.ANCHOR_RADIUS : Math.abs(this._target.start.y - this._target.end.y) - Holder.ANCHOR_RADIUS
+      this._startCubicControllerLine.start = new Point2(this._sourceConnectionAnchor.left + Holder.ANCHOR_RADIUS, this._sourceConnectionAnchor.top + Holder.ANCHOR_RADIUS)
+      this._startCubicControllerLine.end = new Point2(this._sourceConnectionAnchor.left + Holder.ANCHOR_RADIUS + this._target.curveStartModifier.x * this._target.width, this._sourceConnectionAnchor.top + Holder.ANCHOR_RADIUS + this._target.curveStartModifier.y * this._target.height)
+      //console.log(`${this._startCubicControllerLine.start.x}  ${this._startCubicControllerLine.start.y}  ${this._startCubicControllerLine.end.x}  ${this._startCubicControllerLine.end.y}`)
+      this._endCubicControllerLine.start = new Point2(this._targetConnectionAnchor.left + Holder.ANCHOR_RADIUS, this._targetConnectionAnchor.top + Holder.ANCHOR_RADIUS)
+      this._endCubicControllerLine.end = new Point2(this._targetConnectionAnchor.left + Holder.ANCHOR_RADIUS + this._target.curveEndModifier.x * this._target.width, this._targetConnectionAnchor.top + Holder.ANCHOR_RADIUS + this._target.curveEndModifier.y * this._target.height)
+      //console.log(`${this._endCubicControllerLine.start.x}  ${this._endCubicControllerLine.start.y}  ${this._endCubicControllerLine.end.x}  ${this._endCubicControllerLine.end.y}`)      
+      this._startCubicControllerAnchor.left = this._startCubicControllerLine.end.x - Holder.ANCHOR_RADIUS
+      this._startCubicControllerAnchor.top = this._startCubicControllerLine.end.y - Holder.ANCHOR_RADIUS
+      this._endCubicControllerAnchor.left = this._endCubicControllerLine.end.x - Holder.ANCHOR_RADIUS
+      this._endCubicControllerAnchor.top = this._endCubicControllerLine.end.y - Holder.ANCHOR_RADIUS
     }
     if (this._target instanceof LineEntity) {
       switch (this._target.lineType) {
@@ -306,6 +332,12 @@ export class Holder extends Control {
       this.addNode(this._startAnchor)
       this.addNode(this._endAnchor)
     } else if (this._target instanceof Connector) {
+      if(this._target.connectorType == ConnectorType.Curve) {
+        this.addNode(this._startCubicControllerLine)
+        this.addNode(this._endCubicControllerLine)
+        this.addNode(this._startCubicControllerAnchor)
+        this.addNode(this._endCubicControllerAnchor)
+      }
       this.addNode(this._sourceConnectionAnchor)
       this.addNode(this._targetConnectionAnchor)
     } else {
@@ -341,6 +373,12 @@ export class Holder extends Control {
       this.removeNode(this._startAnchor)
       this.removeNode(this._endAnchor)
     } else if (this._target instanceof Connector) {
+      if(this._target.connectorType == ConnectorType.Curve) {
+        this.removeNode(this._startCubicControllerLine)
+        this.removeNode(this._endCubicControllerLine)
+        this.removeNode(this._startCubicControllerAnchor)
+        this.removeNode(this._endCubicControllerAnchor)
+      }
       this.removeNode(this._sourceConnectionAnchor)
       this.removeNode(this._targetConnectionAnchor)
     } else {

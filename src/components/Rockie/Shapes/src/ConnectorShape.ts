@@ -95,8 +95,8 @@ export class ConnectorShape extends EntityShape {
     this._connectorMode = ConnectorMode.Single
     this._doubleLineStrokeWidth = 1
     this._connectorType = ConnectorType.Curve
-    this._curveStartModifier = new Point2(startX + (endX - startX) * 0.5, startY)
-    this._curveEndModifier = new Point2(endX - (endX - startX) * 0.5, endY)
+    this._curveStartModifier = new Point2(0.4, 0)
+    this._curveEndModifier = new Point2(-0.4, 0)
     this._crossLines = []
   }
 
@@ -292,13 +292,15 @@ export class ConnectorShape extends EntityShape {
   private updateCurvePath() {
     const start = new Point2(this.start.x - this.left, this.start.y - this.top)
     const end = new Point2(this.end.x - this.left, this.end.y - this.top)
-    const startModifier = new Point2(this._curveStartModifier.x - this.left, this.curveStartModifier.y - this.top)
-    const endModifier = new Point2(this.curveEndModifier.x - this.left, this.curveEndModifier.y - this.top)
+    const startModifier = new Point2(start.x + this._curveStartModifier.x * this.width, start.y + this.curveStartModifier.y * this.height )
+    const endModifier = new Point2(end.x + this.curveEndModifier.x * this.width, end.y + this.curveEndModifier.y * this.height)
+
     this.path.reset()
     //this.path.moveTo(this.start.x - this.left, this.start.y - this.top)
     //this.path.cubicTo(this._curveStartModifier.x, this.curveStartModifier.y, this.curveEndModifier.x, this.curveEndModifier.y, this.end.x - this.left, this.end.y - this.top)
     this.path.moveTo(start.x, start.y)
-    this.path.cubicTo((start.x + end.x) * 0.5, start.y, (start.x + end.x) * 0.5, end.y,  end.x, end.y)
+    //this.path.cubicTo((start.x + end.x) * 0.5, start.y, (start.x + end.x) * 0.5, end.y,  end.x, end.y)
+    this.path.cubicTo(startModifier.x, startModifier.y, endModifier.x, endModifier.y, end.x, end.y)
     switch(this._startArrow.type) {
       case ConnectorArrowDisplayType.Triangle: {
         break;
