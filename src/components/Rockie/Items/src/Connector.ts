@@ -87,12 +87,13 @@ export class Connector extends Item {
     this._shape = new ConnectorShape(start.x, start.y, end.x, end.y)
     this._connectorShape = this._shape as ConnectorShape
     this.type = Connector.CONNECTOR_TYPE_CONNECTOR
+    this._connectorType = ConnectorType.Curve
     this._startArrow = ConnectorArrowTypes[0]
     this._endArrow = ConnectorArrowTypes[0]
     this._connectorMode = ConnectorMode.Single
     this._doubleLineStrokeWidth = 1
-    this._curveStartModifier = new Point2()
-    this._curveEndModifier = new Point2()
+    this._curveStartModifier = new Point2(0.4, 0)
+    this._curveEndModifier = new Point2(-0.4, 0)
     this._crossLines = []
   }
 
@@ -146,6 +147,7 @@ export class Connector extends Item {
 
   public set curveStartModifier(value: Point2) {
     this._curveStartModifier = value
+    this._connectorShape.curveStartModifier = value
     this.updateTheme()
   }
 
@@ -155,6 +157,7 @@ export class Connector extends Item {
 
   public set curveEndModifier(value: Point2) {
     this._curveEndModifier = value
+    this._connectorShape.curveEndModifier = value
     this.updateTheme()
   }
   

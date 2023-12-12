@@ -35,6 +35,8 @@ export class Line2D extends Shape {
   public update () {
     super.update()
     if (this.dirty) {
+      this.boundary = Rectangle.makeLTWH(Math.min(this.start.x, this.end.x), Math.min(this.start.y, this.end.y), Math.abs(this.start.x - this.end.x), Math.abs(this.start.y - this.end.y))
+
       this.position = new Point2(this.left, this.top)
       this.clip.reset()
       this.clip.addRectangle(Rectangle.makeLTWH(-1, -1, this.width + 2, this.height + 2))
