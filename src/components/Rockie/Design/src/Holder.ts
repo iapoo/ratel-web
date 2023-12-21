@@ -14,6 +14,8 @@ import { AdapterAnchor, AdapterType } from './AdapterAnchor'
 import { AdapterDirection } from '../../Shapes/src/EntityShape'
 import { CubicControllerAnchor } from './CubicCotrollerAnchor'
 import { ConnectorType } from '../../Shapes'
+import { CrossDivideAnchor } from './CrossDivideAnchor'
+import { CrossMovementAnchor } from './CrossMovementAnchor'
 
 export class Holder extends Control {
   public static readonly PADDING = 32;
@@ -42,6 +44,8 @@ export class Holder extends Control {
   private _endAdapterAnchor: AdapterAnchor
   private _startCubicControllerAnchor: CubicControllerAnchor
   private _endCubicControllerAnchor: CubicControllerAnchor
+  private _crossDivideAnchors: CrossDivideAnchor[] = []
+  private _crossMovementAnchors: CrossMovementAnchor[] = []
   private _startCubicControllerLine: Line2D
   private _endCubicControllerLine: Line2D
   private _target: Item;
@@ -327,6 +331,54 @@ export class Holder extends Control {
     }
   }
 
+  private addCrossAnchors() {
+    //Remove first
+    this.removeAnchors()
+    if(this._target instanceof Connector && this._target.connectorType == ConnectorType.CrossLine){
+      const count = this._target.crossLines.length / 2 + 1
+      for(let i = 0; i < count; i ++) {
+        const crossLine = this._target.crossLines[i]
+      }
+      const crossPointCount = this._target.crossPoints.length
+      const crossPoints = this._target.crossPoints
+      for(let i = 1; i < crossPointCount - 2; i ++) {
+        const crossPoint = crossPoints[i]
+        const nextCrossPoint = crossPoints[i + 1]
+        const crossDivideAnchor1 = new CrossDivideAnchor(this._editor, this)
+        const crossDivideAnchor2 = new CrossDivideAnchor(this._editor, this)
+        const crossMovementAnchor = new CrossMovementAnchor(this._editor, this, i)
+        crossMovementAnchor.target = this._target
+        crossMovementAnchor.left = (crossPoint.x + nextCrossPoint.x) / 2 - Holder.ANCHOR_RADIUS
+        crossMovementAnchor.top = (crossPoint.y + nextCrossPoint.y) / 2 - Holder.ANCHOR_RADIUS
+        crossDivideAnchor1.target = this._target
+        crossDivideAnchor1.left = crossPoint.x * 0.75 + nextCrossPoint.x * 0.25 - Holder.ANCHOR_RADIUS
+        crossDivideAnchor1.top = crossPoint.y  * 0.75 + nextCrossPoint.y * 0.25 - Holder.ANCHOR_RADIUS
+        crossDivideAnchor2.target = this._target
+        crossDivideAnchor2.left = crossPoint.x * 0.25 + nextCrossPoint.x * 0.75 - Holder.ANCHOR_RADIUS
+        crossDivideAnchor2.top = crossPoint.y  * 0.25 + nextCrossPoint.y * 0.75 - Holder.ANCHOR_RADIUS
+        this._crossDivideAnchors.push(crossDivideAnchor1)
+        this._crossDivideAnchors.push(crossDivideAnchor2)
+        this._crossMovementAnchors.push(crossMovementAnchor)
+        this.addNode(crossMovementAnchor)
+        this.addNode(crossDivideAnchor1)
+        this.addNode(crossDivideAnchor2)
+      }
+    }
+  }
+  
+  private removeCrossAnchors() {
+    if(this._target instanceof Connector && this._target.connectorType == ConnectorType.CrossLine){
+      this._crossDivideAnchors.forEach(crossDivideAnchor => {
+        this.removeNode(crossDivideAnchor)
+      })      
+      this._crossMovementAnchors.forEach(crossMovementAnchor => {
+        this.removeNode(crossMovementAnchor)
+      })
+      this._crossDivideAnchors.length = 0
+      this._crossMovementAnchors.length = 0
+    }
+  }
+
   private addAnchors () {
     if (this._target instanceof LineEntity) {
       this.addNode(this._startAnchor)
@@ -338,6 +390,7 @@ export class Holder extends Control {
         this.addNode(this._startCubicControllerAnchor)
         this.addNode(this._endCubicControllerAnchor)
       }
+      this.addCrossAnchors()
       this.addNode(this._sourceConnectionAnchor)
       this.addNode(this._targetConnectionAnchor)
     } else {
@@ -379,6 +432,7 @@ export class Holder extends Control {
         this.removeNode(this._startCubicControllerAnchor)
         this.removeNode(this._endCubicControllerAnchor)
       }
+      this.removeCrossAnchors()
       this.removeNode(this._sourceConnectionAnchor)
       this.removeNode(this._targetConnectionAnchor)
     } else {
