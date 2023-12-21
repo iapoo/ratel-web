@@ -76,8 +76,11 @@ export class Connector extends Item {
   private _endArrow: ConnectorArrowType
   private _connectorMode: ConnectorMode
   private _doubleLineStrokeWidth: number
+  //Percent value
   private _curveStartModifier: Point2
+  //Percent value
   private _curveEndModifier: Point2
+  //Percent values with x, y. At least 1 segments, additional 2 segments are first and last and  invisible for arrows and can't be modified.
   private _crossLines: number[]
 
   public constructor (start: Point2, end: Point2) {
@@ -87,14 +90,14 @@ export class Connector extends Item {
     this._shape = new ConnectorShape(start.x, start.y, end.x, end.y)
     this._connectorShape = this._shape as ConnectorShape
     this.type = Connector.CONNECTOR_TYPE_CONNECTOR
-    this._connectorType = ConnectorType.Curve
+    this._connectorType = ConnectorType.CrossLine
     this._startArrow = ConnectorArrowTypes[0]
     this._endArrow = ConnectorArrowTypes[0]
     this._connectorMode = ConnectorMode.Single
     this._doubleLineStrokeWidth = 1
     this._curveStartModifier = new Point2(0.4, 0)
     this._curveEndModifier = new Point2(-0.4, 0)
-    this._crossLines = []
+    this._crossLines = [0.5, 0, 0.5, 1]
   }
 
   public get source (): Entity | undefined {
@@ -104,6 +107,14 @@ export class Connector extends Item {
   public set source (value: Entity | undefined) {
     this._source = value
   }
+
+  public get connectorShape() {
+    return this._connectorShape
+  }
+
+  public get crossPoints() {
+    return this._connectorShape.crossPoints
+  }  
 
   public get startArrow() {
     return this._startArrow
@@ -167,7 +178,8 @@ export class Connector extends Item {
 
   public set crossLines(value: number[]) {
     this._crossLines = value
-    this.updateTheme
+    this._connectorShape.crossLines = value
+    this.updateTheme()
   }
 
   public get start (): Point2 {
