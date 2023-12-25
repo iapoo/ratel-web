@@ -84,9 +84,9 @@ export class CrossDivideAnchor extends Anchor {
         const nextCrossPoint = crossPoints[this._index + 1]
         let crossLines: number[] = []
         crossLines = crossLines.concat(this._crossLines)
-        let lineIndex = this._index - 1
+        let lineIndex = (this._index - 1) * 2
         if(this._left) {
-          if(this.target.horizontal) {
+          if(crossPoint.y == nextCrossPoint.y) {
             const leftPoint = new Point2(crossPoint.x, crossPoint.y)
             const currentPoint = new Point2(crossPoint.x, crossPoint.y + moveY)
             const nextPoint = new Point2((crossPoint.x + nextCrossPoint.x ) / 2, crossPoint.y + moveY)
@@ -97,20 +97,42 @@ export class CrossDivideAnchor extends Anchor {
               this.target.crossLines = crossLines
               //console.log(`length = ${crossLines.length}`)
           } else {
-  
+            const leftPoint = new Point2(crossPoint.x, crossPoint.y)
+            const currentPoint = new Point2(crossPoint.x + moveX, crossPoint.y)
+            const nextPoint = new Point2(crossPoint.x + moveX, (crossPoint.y + nextCrossPoint.y) / 2)
+            const rightPoint = new Point2(crossPoint.x, (crossPoint.y + nextCrossPoint.y) / 2)
+            console.log(` index = ${lineIndex} length = ${crossLines.length}`)
+            crossLines.forEach(crossLine=> {
+              console.log(`crossLine= ${crossLine}`)
+            })
+            crossLines.splice(lineIndex, 0, currentPoint.x / this.target.width, currentPoint.y / this.target.height,
+              nextPoint.x / this.target.width, nextPoint.y / this.target.height,
+              rightPoint.x / this.target.width, rightPoint.y / this.target.height) 
+              this.target.crossLines = crossLines
+            console.log(` index = ${lineIndex} length = ${crossLines.length}`)
+            crossLines.forEach(crossLine=> {
+              console.log(`crossLine= ${crossLine}`)
+            })
           }
         } else {
-          if(this.target.horizontal) {
-            const leftPoint = new Point2(crossPoint.x, crossPoint.y)
-            const currentPoint = new Point2(crossPoint.x, crossPoint.y + moveY)
-            const nextPoint = new Point2((crossPoint.x + nextCrossPoint.x ) / 2, crossPoint.y + moveY)
-            const rightPoint = new Point2((crossPoint.x + nextCrossPoint.x ) / 2, crossPoint.y)
+          if(crossPoint.y == nextCrossPoint.y) {
+            const leftPoint = new Point2((crossPoint.x + nextCrossPoint.x ) / 2, crossPoint.y)
+            const currentPoint = new Point2((crossPoint.x + nextCrossPoint.x ) / 2, crossPoint.y + moveY)
+            const nextPoint = new Point2(nextCrossPoint.x, crossPoint.y + moveY)
+            const rightPoint = new Point2(nextCrossPoint.x, crossPoint.y)
             crossLines.splice(lineIndex, 0, leftPoint.x / this.target.width, leftPoint.y / this.target.height,
               currentPoint.x / this.target.width, currentPoint.y / this.target.height,
               nextPoint.x / this.target.width, nextPoint.y / this.target.height) 
             this.target.crossLines = crossLines
           } else {
-            
+            const leftPoint = new Point2(crossPoint.x, (crossPoint.y + nextCrossPoint.y) / 2)
+            const currentPoint = new Point2(crossPoint.x + moveX, (crossPoint.y + nextCrossPoint.y) / 2)
+            const nextPoint = new Point2(nextCrossPoint.x + moveX, nextCrossPoint.y)
+            const rightPoint = new Point2(nextCrossPoint.x, nextCrossPoint.y)
+            crossLines.splice(lineIndex, 0, leftPoint.x / this.target.width, leftPoint.y / this.target.height,
+              currentPoint.x / this.target.width, currentPoint.y / this.target.height,
+              nextPoint.x / this.target.width, nextPoint.y / this.target.height) 
+            this.target.crossLines = crossLines
           }
         }
         

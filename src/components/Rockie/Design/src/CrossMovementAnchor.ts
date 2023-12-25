@@ -90,26 +90,26 @@ export class CrossMovementAnchor extends Anchor {
         if(crossPoint.x == nextCrossPoint.x) {
           if(lineIndex >= 0) {
             const crossLines = this.target.crossLines
-            if(this.target.horizontal) {
+            //if(this.target.horizontal) {
               crossLines[lineIndex] = crossLines[lineIndex] +  moveX / this.target.width
               crossLines[lineIndex + 2] = crossLines[lineIndex + 2] +  moveX / this.target.width
-            } else {
-                crossLines[lineIndex + 1] = crossLines[lineIndex + 1] +  moveY / this.target.height
-                crossLines[lineIndex + 3] = crossLines[lineIndex + 3] +  moveY / this.target.height    
-            }
+            //} else {
+            //    crossLines[lineIndex + 1] = crossLines[lineIndex + 1] +  moveY / this.target.height
+            //    crossLines[lineIndex + 3] = crossLines[lineIndex + 3] +  moveY / this.target.height    
+            //}
             this.target.crossLines = crossLines
             //console.log(`count= ${this.holder.count} x = ${x} moveX = ${moveX} startX = ${this._startX} crossLineValue= ${crossLines[lineIndex]} width=${this.target.width} crossLines= ${crossLines}`)
           }
         } else {
           if(lineIndex >= 0) {
             const crossLines = this.target.crossLines
-            if(this.target.horizontal) {
-              crossLines[lineIndex] = crossLines[lineIndex] +  moveX / this.target.width
-              crossLines[lineIndex + 2] = crossLines[lineIndex + 2] +  moveX / this.target.width
-            } else {
-                crossLines[lineIndex + 1] = crossLines[lineIndex + 1] +  moveY / this.target.height
-                crossLines[lineIndex + 3] = crossLines[lineIndex + 3] +  moveY / this.target.height    
-            }
+            //if(this.target.horizontal) {
+              crossLines[lineIndex + 1] = crossLines[lineIndex + 1] +  moveY / this.target.height
+              crossLines[lineIndex + 3] = crossLines[lineIndex + 3] +  moveY / this.target.height
+            //} else {
+            //    crossLines[lineIndex + 1] = crossLines[lineIndex + 1] +  moveX / this.target.width
+            //    crossLines[lineIndex + 3] = crossLines[lineIndex + 3] +  moveX / this.target.width    
+            //}
             this.target.crossLines = crossLines
             //console.log(`count= ${this.holder.count} x = ${x} moveX = ${moveX} startX = ${this._startX} crossLineValue= ${crossLines[lineIndex]} width=${this.target.width} crossLines= ${crossLines}`)
         
