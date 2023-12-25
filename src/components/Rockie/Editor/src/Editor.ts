@@ -636,11 +636,13 @@ export class Editor extends Painter {
       const inClickEditorItem = clickedEditorItem ? this.isInEditorItem(clickedEditorItem, e.x, e.y) : false      
       if (clickedEditorItem && isEdge && !inClickEditorItem) { //Create connector
         const targetPoint = this.findEditorItemJoint(clickedEditorItem, e.x, e.y, false)
+        const horizontal = this.checkIfConnectorHorizontal(clickedEditorItem, e.x, e.y)
+        //console.log(`Check horizontal : ${horizontal}`)
         const targetEntity = clickedEditorItem as Entity
         const theControllerLayer = this.controllerLayer as ControllerLayer
         this._inCreatingConnector = true
         const worldTargetPoint = clickedEditorItem.shape.worldTransform.makePoint(targetPoint)
-        const connector = new Connector(worldTargetPoint, new Point2(worldTargetPoint.x + 10, worldTargetPoint.y + 10))
+        const connector = new Connector(worldTargetPoint, new Point2(worldTargetPoint.x + 10, worldTargetPoint.y + 10), horizontal)
         // const sourceJoint = new Point2(targetPoint.x - targetEntity.left, targetPoint.y - targetEntity.top)
         connector.source = targetEntity
         connector.sourceJoint = targetPoint
@@ -1910,6 +1912,27 @@ export class Editor extends Painter {
         }
       }
     }
-}
+  }
 
+  /**
+   * Check and decide how to draw connector cross line
+   * @param editorItem 
+   * @param x 
+   * @param y 
+   * @returns 
+   */
+  private checkIfConnectorHorizontal(editorItem: EditorItem, x: number, y: number): boolean {
+    let result = true
+    const shape = editorItem.shape
+    const matrix = shape.worldInverseTransform
+    if(matrix) {
+      const position = matrix.makePoint(new Point2(x, y))
+      if(Math.abs(position.y - shape.height / 2) < Math.abs(position.x - shape.width / 2)) {
+        result = true
+      } else {
+        result = false
+      }
+    }
+    return result
+  }
 }
