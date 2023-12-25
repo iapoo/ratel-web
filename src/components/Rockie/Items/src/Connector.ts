@@ -82,12 +82,13 @@ export class Connector extends Item {
   private _curveEndModifier: Point2
   //Percent values with x, y. At least 1 segments, additional 2 segments are first and last and  invisible for arrows and can't be modified.
   private _crossLines: number[]
+  private _horizontal: boolean
 
-  public constructor (start: Point2, end: Point2) {
+  public constructor (start: Point2, end: Point2, horizontal: boolean = true) {
     super(Math.min(start.x, end.x), Math.min(start.y, end.y), Math.abs(start.x - end.x), Math.abs(start.y - end.y))
     this._start = start
     this._end = end
-    this._shape = new ConnectorShape(start.x, start.y, end.x, end.y)
+    this._shape = new ConnectorShape(start.x, start.y, end.x, end.y, horizontal)
     this._connectorShape = this._shape as ConnectorShape
     this.type = Connector.CONNECTOR_TYPE_CONNECTOR
     this._connectorType = ConnectorType.CrossLine
@@ -97,7 +98,12 @@ export class Connector extends Item {
     this._doubleLineStrokeWidth = 1
     this._curveStartModifier = new Point2(0.4, 0)
     this._curveEndModifier = new Point2(-0.4, 0)
-    this._crossLines = [0.5, 0, 0.5, 1]
+    this._horizontal = horizontal
+    if(this._horizontal) {
+      this._crossLines = [0.5, 0, 0.5, 1]
+    } else {
+      this._crossLines = [0, 0.5, 1, 0.5]
+    }
   }
 
   public get source (): Entity | undefined {
@@ -106,6 +112,21 @@ export class Connector extends Item {
 
   public set source (value: Entity | undefined) {
     this._source = value
+  }
+
+  public get horizontal() {
+    return this._horizontal
+  }
+
+  public set horizontal(value: boolean) {
+    this._horizontal = value
+    this._connectorShape.horizontal = value
+    if(this._horizontal) {
+      this._crossLines = [0.5, 0, 0.5, 1]
+    } else {
+      this._crossLines = [0, 0.5, 1, 0.5]
+    }
+    this.updateTheme()
   }
 
   public get connectorShape() {

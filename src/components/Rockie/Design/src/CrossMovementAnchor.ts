@@ -12,6 +12,8 @@ export class CrossMovementAnchor extends Anchor {
   private _startX = 0
   private _startY = 0
   private _index = 0
+  private _crossPoints: Point2[] = []
+
   public constructor(editor: Editor, holder: Holder, index: number) {
     super(editor, holder)
     this.width = 12
@@ -19,6 +21,14 @@ export class CrossMovementAnchor extends Anchor {
     this._index = index
     this.fill = Paint.makeColorPaint(Colors.Green)
     this.buildAnchor()
+  }
+
+  public get index() {
+    return this._index
+  }
+
+  public get crossPoints() {
+    return this._crossPoints
   }
 
   public handlePointerClick (x: number, y: number) {
@@ -31,53 +41,86 @@ export class CrossMovementAnchor extends Anchor {
     this._moving = true
     this._startX = x;
     this._startY = y;
+    //this.makeReady()
+    if(this.target instanceof Connector) {
+      this._crossPoints.length = 0
+      this._crossPoints = this._crossPoints.concat(this.target.crossPoints)
+    }
 
   }
+  
   public handlePointerUp (x: number, y: number) {
     if (!this.target) {
       return;
     }
     this._moving = false
   }
+
   public handlePointerMove (x: number, y: number) {
     if (!this.target) {
       console.log(`'anchor Pointer moving bad target' x=${x} y =${y}`)
       return
     }
-    if(this._moving && this.target instanceof Connector) {
-      const moveX = x - this._startX
-      const moveY = y - this._startY
-      const crossPointCount = this.target.crossPoints.length
-      const crossPoints = this.target.crossPoints
-      const crossPoint = crossPoints[this._index]
-      const nextCrossPoint = crossPoints[this._index + 1]
-      let lineIndex = -1 //Means to skip
-      //Skip first 2 and last 2 points 
-      if(this._index > 1 && this._index < crossPointCount - 3) {
-        lineIndex = (this._index - 2) * 2
-      } 
-      if(crossPoint.x == nextCrossPoint.x) {
-        if(lineIndex >= 0) {
-          const crossLines = this.target.crossLines
-          crossLines[lineIndex] = crossLines[lineIndex] +  moveX / this.target.width
-          crossLines[lineIndex + 2] = crossLines[lineIndex + 2] +  moveX / this.target.width
-          this.target.crossLines = crossLines
-          console.log(`count= ${this.holder.count} x = ${x} moveX = ${moveX} startX = ${this._startX} crossLineValue= ${crossLines[lineIndex]} width=${this.target.width} crossLines= ${crossLines}`)
-        }
-      } else {
-        if(lineIndex >= 0) {
-          this.target.crossLines[lineIndex] = 0
-          this.target.crossLines[lineIndex + 2] = 0
-        }
-      }
-      for(let i = 1; i < crossPointCount - 2; i ++) {
-
-      }      
-      this._startX = x
-      this._startY = y
+    if(!this._moving) {
+      return
     }
-
-    this.holder.layoutAnchors()
+    //console.log(`x = ${x} y = ${y} startx = ${this._startX} starty = ${this._startY}`)
+    //if(!this.ready) {
+    //  this._startX = x
+    //  this._startY = y
+    //  this.makeReady()
+    //  return
+    //}
+    // TODO: 鼠标移动会导致Anchor重定位，结果导致鼠标位置突变而引起图形突变。这里延缓变化频率以修复问题
+    const nowTime = new Date().getTime()
+    if (nowTime - this.lastMovingTime > Anchor.MIN_MOVING_INTERVAL) {
+      if(this._moving && this.target instanceof Connector) {
+        //console.log(`a= ${this._crossPoints}   b= ${this.target.crossPoints}`)
+        const moveX = x - this._startX
+        const moveY = y - this._startY
+        const crossPointCount = this._crossPoints.length
+        const crossPoints = this._crossPoints
+        const crossPoint = crossPoints[this._index]
+        const nextCrossPoint = crossPoints[this._index + 1]
+        let lineIndex = -1 //Means to skip
+        //Skip first 2 and last 2 points 
+        if(this._index > 1 && this._index < crossPointCount - 3) {
+          lineIndex = (this._index - 2) * 2
+        } 
+        if(crossPoint.x == nextCrossPoint.x) {
+          if(lineIndex >= 0) {
+            const crossLines = this.target.crossLines
+            if(this.target.horizontal) {
+              crossLines[lineIndex] = crossLines[lineIndex] +  moveX / this.target.width
+              crossLines[lineIndex + 2] = crossLines[lineIndex + 2] +  moveX / this.target.width
+            } else {
+                crossLines[lineIndex + 1] = crossLines[lineIndex + 1] +  moveY / this.target.height
+                crossLines[lineIndex + 3] = crossLines[lineIndex + 3] +  moveY / this.target.height    
+            }
+            this.target.crossLines = crossLines
+            //console.log(`count= ${this.holder.count} x = ${x} moveX = ${moveX} startX = ${this._startX} crossLineValue= ${crossLines[lineIndex]} width=${this.target.width} crossLines= ${crossLines}`)
+          }
+        } else {
+          if(lineIndex >= 0) {
+            const crossLines = this.target.crossLines
+            if(this.target.horizontal) {
+              crossLines[lineIndex] = crossLines[lineIndex] +  moveX / this.target.width
+              crossLines[lineIndex + 2] = crossLines[lineIndex + 2] +  moveX / this.target.width
+            } else {
+                crossLines[lineIndex + 1] = crossLines[lineIndex + 1] +  moveY / this.target.height
+                crossLines[lineIndex + 3] = crossLines[lineIndex + 3] +  moveY / this.target.height    
+            }
+            this.target.crossLines = crossLines
+            //console.log(`count= ${this.holder.count} x = ${x} moveX = ${moveX} startX = ${this._startX} crossLineValue= ${crossLines[lineIndex]} width=${this.target.width} crossLines= ${crossLines}`)
+        
+          }
+        }    
+        //this._startX = x
+        //this._startY = y
+        this.holder.layoutAnchors()
+        this.lastMovingTime = nowTime
+      }
+    }
   }
 
   protected buildAnchor () {

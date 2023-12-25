@@ -123,6 +123,7 @@ export class Holder extends Control {
     this._endAdapterAnchor.target = target
     this._startCubicControllerAnchor.target = target
     this._endCubicControllerAnchor.target = target
+    this.createCrossAnchors()
     this.layoutAnchors()
     if (this._inHolder) {
       this.addAnchors()
@@ -318,6 +319,7 @@ export class Holder extends Control {
         break
       }
     }
+    this.layoutCrossAnchors()
     if (this._inHolder) {
       this.addAnchors()
     } else {
@@ -331,21 +333,54 @@ export class Holder extends Control {
     }
   }
 
-  private addCrossAnchors() {
-    //Remove first
-    this.removeAnchors()
+  public refreshCrossAnchors() {
     if(this._target instanceof Connector && this._target.connectorType == ConnectorType.CrossLine){
-      const count = this._target.crossLines.length / 2 + 1
-      for(let i = 0; i < count; i ++) {
-        const crossLine = this._target.crossLines[i]
+      //Try to refresh cross anchors while necessary
+      if(this._crossDivideAnchors.length != (this._target.crossPoints.length - 3) * 2) {
+        this.removeCrossAnchors()
+        this.createCrossAnchors()
+        this.addCrossAnchors()
       }
+    }
+  }
+
+  private layoutCrossAnchors() {
+    if(this._target instanceof Connector && this._target.connectorType == ConnectorType.CrossLine){
+      const crossPoints = this._target.crossPoints
+      //console.log(`length == ${crossPoints.length}`)
+      this._crossDivideAnchors.forEach(crossDivideAnchor => {
+        const crossPoint = crossPoints[crossDivideAnchor.index]
+        const nextCrossPoint = crossPoints[crossDivideAnchor.index + 1]
+        if(crossDivideAnchor.isLeft) {
+          crossDivideAnchor.left = crossPoint.x * 0.75 + nextCrossPoint.x * 0.25 - Holder.ANCHOR_RADIUS
+          crossDivideAnchor.top = crossPoint.y  * 0.75 + nextCrossPoint.y * 0.25 - Holder.ANCHOR_RADIUS
+        } else {
+          crossDivideAnchor.left = crossPoint.x * 0.25 + nextCrossPoint.x * 0.75 - Holder.ANCHOR_RADIUS
+          crossDivideAnchor.top = crossPoint.y  * 0.25 + nextCrossPoint.y * 0.75 - Holder.ANCHOR_RADIUS
+        }
+      })      
+      this._crossMovementAnchors.forEach(crossMovementAnchor => {        
+        //const crossPoints = crossMovementAnchor.crossPoints
+        const crossPoint = crossPoints[crossMovementAnchor.index]
+        const nextCrossPoint = crossPoints[crossMovementAnchor.index + 1]
+        crossMovementAnchor.left = (crossPoint.x + nextCrossPoint.x) / 2 - Holder.ANCHOR_RADIUS
+        crossMovementAnchor.top = (crossPoint.y + nextCrossPoint.y) / 2 - Holder.ANCHOR_RADIUS
+        //crossMovementAnchor.resetReady()
+      })
+    }
+  }
+
+  private createCrossAnchors() {
+    if(this._target instanceof Connector && this._target.connectorType == ConnectorType.CrossLine){
       const crossPointCount = this._target.crossPoints.length
       const crossPoints = this._target.crossPoints
+      this._crossDivideAnchors.length = 0
+      this._crossMovementAnchors.length = 0
       for(let i = 1; i < crossPointCount - 2; i ++) {
         const crossPoint = crossPoints[i]
         const nextCrossPoint = crossPoints[i + 1]
-        const crossDivideAnchor1 = new CrossDivideAnchor(this._editor, this)
-        const crossDivideAnchor2 = new CrossDivideAnchor(this._editor, this)
+        const crossDivideAnchor1 = new CrossDivideAnchor(this._editor, this, i, true)
+        const crossDivideAnchor2 = new CrossDivideAnchor(this._editor, this, i, false)
         const crossMovementAnchor = new CrossMovementAnchor(this._editor, this, i)
         crossMovementAnchor.target = this._target
         crossMovementAnchor.left = (crossPoint.x + nextCrossPoint.x) / 2 - Holder.ANCHOR_RADIUS
@@ -359,10 +394,20 @@ export class Holder extends Control {
         this._crossDivideAnchors.push(crossDivideAnchor1)
         this._crossDivideAnchors.push(crossDivideAnchor2)
         this._crossMovementAnchors.push(crossMovementAnchor)
-        this.addNode(crossMovementAnchor)
-        this.addNode(crossDivideAnchor1)
-        this.addNode(crossDivideAnchor2)
       }
+    }
+  }
+
+  private addCrossAnchors() {    
+    if(this._target instanceof Connector && this._target.connectorType == ConnectorType.CrossLine){
+      this._crossDivideAnchors.forEach(crossDivideAnchor => {
+        this.addNode(crossDivideAnchor)
+      })      
+      this._crossMovementAnchors.forEach(crossMovementAnchor => {
+        this.addNode(crossMovementAnchor)
+      })
+      //this._crossDivideAnchors.length = 0
+      //this._crossMovementAnchors.length = 0
     }
   }
   
@@ -374,8 +419,8 @@ export class Holder extends Control {
       this._crossMovementAnchors.forEach(crossMovementAnchor => {
         this.removeNode(crossMovementAnchor)
       })
-      this._crossDivideAnchors.length = 0
-      this._crossMovementAnchors.length = 0
+      //this._crossDivideAnchors.length = 0
+      //this._crossMovementAnchors.length = 0
     }
   }
 
