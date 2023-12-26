@@ -84,7 +84,7 @@ export class CrossDivideAnchor extends Anchor {
         const crossPoint = crossPoints[this._index]
         const nextCrossPoint = crossPoints[this._index + 1]
         const crossWidth = this.target.horizontal ? this.target.width - ConnectorShape.DEFAULT_SEGMENT * 2 : this.target.width
-        const crossHeight = this.target.horizontal ? this.target.height : this.target.height - ConnectorShape.DEFAULT_SEGMENT
+        const crossHeight = this.target.horizontal ? this.target.height : this.target.height - ConnectorShape.DEFAULT_SEGMENT * 2
         const crossSegmentX = this.target.horizontal ? ConnectorShape.DEFAULT_SEGMENT : 0
         const crossSegmentY = this.target.horizontal ? 0 : ConnectorShape.DEFAULT_SEGMENT
         let crossLines: number[] = []
@@ -99,36 +99,43 @@ export class CrossDivideAnchor extends Anchor {
             crossLines.splice(lineIndex, 0, currentPoint.x / crossWidth, currentPoint.y / crossHeight,
               nextPoint.x / crossWidth, nextPoint.y / crossHeight,
               rightPoint.x / crossWidth, rightPoint.y / crossHeight) 
-              this.target.crossLines = crossLines
-              //console.log(`length = ${crossLines.length}`)
+            this.cleanupLines(crossLines)
+            this.target.crossLines = crossLines
+            //console.log(`length = ${crossLines.length}`)
           } else {
             const leftPoint = new Point2(crossPoint.x - crossSegmentX, crossPoint.y - crossSegmentY)
             const currentPoint = new Point2(crossPoint.x + moveX - crossSegmentX, crossPoint.y - crossSegmentY)
             const nextPoint = new Point2(crossPoint.x + moveX - crossSegmentX, (crossPoint.y + nextCrossPoint.y) / 2 - crossSegmentY)
             const rightPoint = new Point2(crossPoint.x - crossSegmentX, (crossPoint.y + nextCrossPoint.y) / 2 - crossSegmentY)
-            console.log(` index = ${lineIndex} length = ${crossLines.length}`)
-            crossLines.forEach(crossLine=> {
-              console.log(`crossLine= ${crossLine}`)
-            })
+            //console.log(` index = ${lineIndex} length = ${crossLines.length}`)
+            //crossLines.forEach(crossLine=> {
+            //  console.log(`crossLine= ${crossLine}`)
+            //})
             crossLines.splice(lineIndex, 0, currentPoint.x / crossWidth, currentPoint.y / crossHeight,
               nextPoint.x / crossWidth, nextPoint.y / crossHeight,
               rightPoint.x / crossWidth, rightPoint.y / crossHeight) 
-              this.target.crossLines = crossLines
-            console.log(` index = ${lineIndex} length = ${crossLines.length}`)
-            crossLines.forEach(crossLine=> {
-              console.log(`crossLine= ${crossLine}`)
-            })
+            this.cleanupLines(crossLines)
+            this.target.crossLines = crossLines
+            //console.log(` index = ${lineIndex} length = ${crossLines.length}`)
+            //crossLines.forEach(crossLine=> {
+            //  console.log(`crossLine= ${crossLine}`)
+            //})
           }
         } else {
           if(crossPoint.y == nextCrossPoint.y) {
             const leftPoint = new Point2((crossPoint.x + nextCrossPoint.x ) / 2 - crossSegmentX, crossPoint.y - crossSegmentY)
             const currentPoint = new Point2((crossPoint.x + nextCrossPoint.x ) / 2 - crossSegmentX, crossPoint.y + moveY - crossSegmentY)
-            const nextPoint = new Point2(nextCrossPoint.x - crossSegmentX, crossPoint.y + moveY - crossSegmentY)
-            const rightPoint = new Point2(nextCrossPoint.x - crossSegmentX, crossPoint.y - crossSegmentY)
+            const nextPoint = new Point2(nextCrossPoint.x - crossSegmentX, nextCrossPoint.y + moveY - crossSegmentY)
+            const rightPoint = new Point2(nextCrossPoint.x - crossSegmentX, nextCrossPoint.y - crossSegmentY)
             crossLines.splice(lineIndex, 0, leftPoint.x / crossWidth, leftPoint.y / crossHeight,
               currentPoint.x / crossWidth, currentPoint.y / crossHeight,
               nextPoint.x / crossWidth, nextPoint.y / crossHeight) 
+            this.cleanupLines(crossLines)
             this.target.crossLines = crossLines
+            console.log(` index = ${lineIndex} length = ${crossLines.length}`)
+            crossLines.forEach(crossLine=> {
+              console.log(`crossLine= ${crossLine}`)
+            })
           } else {
             const leftPoint = new Point2(crossPoint.x - crossSegmentX, (crossPoint.y + nextCrossPoint.y) / 2 - crossSegmentY)
             const currentPoint = new Point2(crossPoint.x + moveX - crossSegmentX, (crossPoint.y + nextCrossPoint.y) / 2 - crossSegmentY)
@@ -137,7 +144,12 @@ export class CrossDivideAnchor extends Anchor {
             crossLines.splice(lineIndex, 0, leftPoint.x / crossWidth, leftPoint.y / crossHeight,
               currentPoint.x / crossWidth, currentPoint.y / crossHeight,
               nextPoint.x / crossWidth, nextPoint.y / crossHeight) 
+            this.cleanupLines(crossLines)
             this.target.crossLines = crossLines
+            console.log(` index = ${lineIndex} length = ${crossLines.length}`)
+            crossLines.forEach(crossLine=> {
+              console.log(`crossLine= ${crossLine}`)
+            })
           }
         }
         
@@ -150,6 +162,27 @@ export class CrossDivideAnchor extends Anchor {
       }
     }
 
+  }
+
+  private cleanupLines(crossLines: number[]) {
+    const count = crossLines.length / 2
+    let index = count - 1
+    while(index > 0) {
+      if(index >= 2 && crossLines[index * 2] == crossLines[ index * 2 - 4] && crossLines[index * 2] == crossLines[index * 2 - 2] ) {
+        crossLines.splice(index * 2 - 2, 2)
+      } else if(index >= 2 && crossLines[index * 2 + 1] == crossLines[ index * 2 - 3] && crossLines[index * 2 + 1] == crossLines[index * 2 - 1] ) {
+        crossLines.splice(index * 2 - 2, 2)
+      } else if(index == count - 1 && count > 1 && crossLines[index * 2 + 1] == 1 && crossLines[index * 2 - 1] == 1) {
+        crossLines.splice(index * 2 , 2)
+      } else if(index == count - 1 && count > 1 && crossLines[index * 2 + 1] == 0 && crossLines[index * 2 - 1] == 0) {
+        crossLines.splice(index * 2, 2)
+      } else if(index == 1 && count > 1 && crossLines[index * 2 + 1] == 0 && crossLines[index * 2 - 1] == 0) {
+        crossLines.splice(index * 2 - 2, 2)
+      } else if(index == 1 && count > 1 && crossLines[index * 2 + 1] == 1 && crossLines[index * 2 - 1] == 1) {
+        crossLines.splice(index * 2 - 2, 2)
+      }
+      index = index - 1
+    }
   }
 
   protected buildAnchor () {

@@ -100,6 +100,7 @@ export class CrossMovementAnchor extends Anchor {
             //    crossLines[lineIndex + 1] = crossLines[lineIndex + 1] +  moveY / this.target.height
             //    crossLines[lineIndex + 3] = crossLines[lineIndex + 3] +  moveY / this.target.height    
             //}
+            this.cleanupLines(crossLines)
             this.target.crossLines = crossLines
             //console.log(`count= ${this.holder.count} x = ${x} moveX = ${moveX} startX = ${this._startX} crossLineValue= ${crossLines[lineIndex]} width=${this.target.width} crossLines= ${crossLines}`)
           }
@@ -113,6 +114,7 @@ export class CrossMovementAnchor extends Anchor {
             //    crossLines[lineIndex + 1] = crossLines[lineIndex + 1] +  moveX / this.target.width
             //    crossLines[lineIndex + 3] = crossLines[lineIndex + 3] +  moveX / this.target.width    
             //}
+            this.cleanupLines(crossLines)
             this.target.crossLines = crossLines
             //console.log(`count= ${this.holder.count} x = ${x} moveX = ${moveX} startX = ${this._startX} crossLineValue= ${crossLines[lineIndex]} width=${this.target.width} crossLines= ${crossLines}`)
         
@@ -123,6 +125,27 @@ export class CrossMovementAnchor extends Anchor {
         this.holder.layoutAnchors()
         this.lastMovingTime = nowTime
       }
+    }
+  }
+
+  private cleanupLines(crossLines: number[]) {
+    const count = crossLines.length / 2
+    let index = count - 1
+    while(index > 0) {
+      if(index >= 2 && crossLines[index * 2] == crossLines[ index * 2 - 4] && crossLines[index * 2] == crossLines[index * 2 - 2] ) {
+        crossLines.splice(index * 2 - 2, 2)
+      } else if(index >= 2 && crossLines[index * 2 + 1] == crossLines[ index * 2 - 3] && crossLines[index * 2 + 1] == crossLines[index * 2 - 1] ) {
+        crossLines.splice(index * 2 - 2, 2)
+      } else if(index == count - 1 && count > 1 && crossLines[index * 2 + 1] == 1 && crossLines[index * 2 - 1] == 1) {
+        crossLines.splice(index * 2, 2)
+      } else if(index == count - 1 && count > 1 && crossLines[index * 2 + 1] == 0 && crossLines[index * 2 - 1] == 0) {
+        crossLines.splice(index * 2, 2)
+      } else if(index == 1 && count > 1 && crossLines[index * 2 + 1] == 0 && crossLines[index * 2 - 1] == 0) {
+        crossLines.splice(index * 2 - 2, 2)
+      } else if(index == 1 && count > 1 && crossLines[index * 2 + 1] == 1 && crossLines[index * 2 - 1] == 1) {
+        crossLines.splice(index * 2 - 2, 2)
+      }
+      index = index - 1
     }
   }
 

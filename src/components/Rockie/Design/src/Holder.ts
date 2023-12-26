@@ -349,23 +349,25 @@ export class Holder extends Control {
       const crossPoints = this._target.crossPoints
       //console.log(`length == ${crossPoints.length}`)
       this._crossDivideAnchors.forEach(crossDivideAnchor => {
-        const crossPoint = crossPoints[crossDivideAnchor.index]
-        const nextCrossPoint = crossPoints[crossDivideAnchor.index + 1]
-        if(crossDivideAnchor.isLeft) {
-          crossDivideAnchor.left = crossPoint.x * 0.75 + nextCrossPoint.x * 0.25 - Holder.ANCHOR_RADIUS
-          crossDivideAnchor.top = crossPoint.y  * 0.75 + nextCrossPoint.y * 0.25 - Holder.ANCHOR_RADIUS
-        } else {
-          crossDivideAnchor.left = crossPoint.x * 0.25 + nextCrossPoint.x * 0.75 - Holder.ANCHOR_RADIUS
-          crossDivideAnchor.top = crossPoint.y  * 0.25 + nextCrossPoint.y * 0.75 - Holder.ANCHOR_RADIUS
+        if(crossPoints.length > crossDivideAnchor.index + 1) {
+          const crossPoint = crossPoints[crossDivideAnchor.index]
+          const nextCrossPoint = crossPoints[crossDivideAnchor.index + 1]
+          if(crossDivideAnchor.isLeft) {
+            crossDivideAnchor.left = crossPoint.x * 0.75 + nextCrossPoint.x * 0.25 - Holder.ANCHOR_RADIUS
+            crossDivideAnchor.top = crossPoint.y  * 0.75 + nextCrossPoint.y * 0.25 - Holder.ANCHOR_RADIUS
+          } else {
+            crossDivideAnchor.left = crossPoint.x * 0.25 + nextCrossPoint.x * 0.75 - Holder.ANCHOR_RADIUS
+            crossDivideAnchor.top = crossPoint.y  * 0.25 + nextCrossPoint.y * 0.75 - Holder.ANCHOR_RADIUS
+          }
         }
       })      
       this._crossMovementAnchors.forEach(crossMovementAnchor => {        
-        //const crossPoints = crossMovementAnchor.crossPoints
-        const crossPoint = crossPoints[crossMovementAnchor.index]
-        const nextCrossPoint = crossPoints[crossMovementAnchor.index + 1]
-        crossMovementAnchor.left = (crossPoint.x + nextCrossPoint.x) / 2 - Holder.ANCHOR_RADIUS
-        crossMovementAnchor.top = (crossPoint.y + nextCrossPoint.y) / 2 - Holder.ANCHOR_RADIUS
-        //crossMovementAnchor.resetReady()
+        if(crossPoints.length > crossMovementAnchor.index + 1) {
+          const crossPoint = crossPoints[crossMovementAnchor.index]
+          const nextCrossPoint = crossPoints[crossMovementAnchor.index + 1]
+          crossMovementAnchor.left = (crossPoint.x + nextCrossPoint.x) / 2 - Holder.ANCHOR_RADIUS
+          crossMovementAnchor.top = (crossPoint.y + nextCrossPoint.y) / 2 - Holder.ANCHOR_RADIUS
+        }        
       })
     }
   }
