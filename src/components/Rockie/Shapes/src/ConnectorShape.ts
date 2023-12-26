@@ -52,8 +52,8 @@ export interface ConnectorArrowTypeInfo {
 }
 
 export class ConnectorShape extends EntityShape {
-  private static DETECTION_DISTANCE = 16
-  private static DEFAULT_SEGMENT = 16
+  public static DETECTION_DISTANCE = 16
+  public static DEFAULT_SEGMENT = 16
   private _start: Point2
   private _end: Point2
   private _connectorType: ConnectorType;
@@ -382,20 +382,22 @@ export class ConnectorShape extends EntityShape {
   private updateCrossLinePath() {
     const defaultSegment = this.width > ConnectorShape.DEFAULT_SEGMENT * 2 ? ConnectorShape.DEFAULT_SEGMENT : this.width / 2
     const start = new Point2(this.start.x - this.left, this.start.y - this.top)
-    const end = new Point2(this.end.x - this.left, this.end.y - this.top)    
+    const end = new Point2(this.end.x - this.left, this.end.y - this.top)
+    const width = this._horizontal ? this.width - ConnectorShape.DEFAULT_SEGMENT * 2 : this.width
+    const height = this._horizontal ? this.height : this.height - ConnectorShape.DEFAULT_SEGMENT * 2    
     this.path.reset()
     this.path.moveTo(start.x, start.y)
     this._crossPoints.length = 0
     this._crossPoints.push(new Point2(start.x, start.y))
-  if(this._horizontal) {
+    if(this._horizontal) {
       this.path.lineTo(start.x + defaultSegment, start.y)
       //console.log('Start lines')
       //console.log(`lineTo ${start.x + defaultSegment}  ${start.y}`)
       this._crossPoints.push(new Point2(start.x + defaultSegment, start.y))
       for(let i = 0; i < this._crossLines.length /2; i ++) {
-        this.path.lineTo(start.x + this._crossLines[i * 2] * this.width, start.y + this._crossLines[i * 2 + 1]* this.height)
+        this.path.lineTo(start.x + defaultSegment + this._crossLines[i * 2] * width, start.y + this._crossLines[i * 2 + 1]* height)
         //console.log(`line to ${start.x + i * 2 * this.width} ${start.y + (i * 2 + 1)* this.height}`)
-        this._crossPoints.push(new Point2(start.x + this._crossLines[i * 2] * this.width, start.y + this._crossLines[i * 2 + 1]* this.height))
+        this._crossPoints.push(new Point2(start.x + defaultSegment + this._crossLines[i * 2] * width, start.y + this._crossLines[i * 2 + 1]* height))
       }
       this.path.lineTo(end.x - defaultSegment, end.y)
       //console.log(`line to ${end.x - defaultSegment} ${end.y}`)
@@ -404,8 +406,8 @@ export class ConnectorShape extends EntityShape {
       this.path.lineTo(start.x, start.y + defaultSegment)
       this._crossPoints.push(new Point2(start.x, start.y + defaultSegment))
       for(let i = 0; i < this._crossLines.length /2; i ++) {
-        this.path.lineTo(start.x + this._crossLines[i * 2] * this.width, start.y + this._crossLines[i * 2 + 1]* this.height)
-        this._crossPoints.push(new Point2(start.x + this._crossLines[i * 2] * this.width, start.y + this._crossLines[i * 2 + 1]* this.height))
+        this.path.lineTo(start.x + this._crossLines[i * 2] * width, start.y + defaultSegment + this._crossLines[i * 2 + 1]* height)
+        this._crossPoints.push(new Point2(start.x + this._crossLines[i * 2] * width, start.y + defaultSegment + this._crossLines[i * 2 + 1]* height))
       }
       this.path.lineTo(end.x, end.y - defaultSegment)
       this._crossPoints.push(new Point2(end.x, end.y - defaultSegment))

@@ -3,6 +3,7 @@ import { Anchor, } from './Anchor'
 import { Connector } from '../../Items'
 import { Editor } from '../../Editor'
 import { Holder } from './Holder'
+import { ConnectorShape } from '../../Shapes'
 
 /**
  * 创建连接线
@@ -82,6 +83,8 @@ export class CrossMovementAnchor extends Anchor {
         const crossPoints = this._crossPoints
         const crossPoint = crossPoints[this._index]
         const nextCrossPoint = crossPoints[this._index + 1]
+        const crossWidth = this.target.horizontal ? this.target.width - ConnectorShape.DEFAULT_SEGMENT * 2 : this.target.width
+        const crossHeight = this.target.horizontal ? this.target.height : this.target.height - ConnectorShape.DEFAULT_SEGMENT
         let lineIndex = -1 //Means to skip
         //Skip first 2 and last 2 points 
         if(this._index > 1 && this._index < crossPointCount - 3) {
@@ -91,8 +94,8 @@ export class CrossMovementAnchor extends Anchor {
           if(lineIndex >= 0) {
             const crossLines = this.target.crossLines
             //if(this.target.horizontal) {
-              crossLines[lineIndex] = crossLines[lineIndex] +  moveX / this.target.width
-              crossLines[lineIndex + 2] = crossLines[lineIndex + 2] +  moveX / this.target.width
+              crossLines[lineIndex] = crossLines[lineIndex] +  moveX / crossWidth
+              crossLines[lineIndex + 2] = crossLines[lineIndex + 2] +  moveX / crossWidth
             //} else {
             //    crossLines[lineIndex + 1] = crossLines[lineIndex + 1] +  moveY / this.target.height
             //    crossLines[lineIndex + 3] = crossLines[lineIndex + 3] +  moveY / this.target.height    
@@ -104,8 +107,8 @@ export class CrossMovementAnchor extends Anchor {
           if(lineIndex >= 0) {
             const crossLines = this.target.crossLines
             //if(this.target.horizontal) {
-              crossLines[lineIndex + 1] = crossLines[lineIndex + 1] +  moveY / this.target.height
-              crossLines[lineIndex + 3] = crossLines[lineIndex + 3] +  moveY / this.target.height
+              crossLines[lineIndex + 1] = crossLines[lineIndex + 1] +  moveY / crossHeight
+              crossLines[lineIndex + 3] = crossLines[lineIndex + 3] +  moveY / crossHeight
             //} else {
             //    crossLines[lineIndex + 1] = crossLines[lineIndex + 1] +  moveX / this.target.width
             //    crossLines[lineIndex + 3] = crossLines[lineIndex + 3] +  moveX / this.target.width    
