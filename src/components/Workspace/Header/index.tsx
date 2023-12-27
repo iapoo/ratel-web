@@ -977,13 +977,14 @@ const Header: FC<HeaderProps> = ({
                 <InputNumber min={Consts.LINE_WIDTH_MIN} max={Consts.LINE_WIDTH_MAX} value={lineWidth} onChange={handleLineWidthChange} size='small' style={{ width: 50 }} disabled={!selectionValid} />
               </Tooltip>
               <Tooltip title={<FormattedMessage id='workspace.header.title.stroke-type'/>}>
-                <Select size='small' value={strokeDashStyle} onChange={handleStrokeDashStyleChange} style={{width: 110 }} dropdownStyle={{width: 110}} options={strokeDashStyles} bordered={false}/>
+                <Select size='small' value={strokeDashStyle} onChange={handleStrokeDashStyleChange} style={{width: 110 }} dropdownStyle={{width: 110}} options={strokeDashStyles} bordered={false} disabled={!selectionValid} />
               </Tooltip>
               <Tooltip title={<FormattedMessage id='workspace.header.title.connector-line-type'/>}>
                 <Select size='small' value={connectorLineType} onChange={handleConnectorLineTypeChange} style={{width: 56 }} disabled={!connectorSelected} options={connectorLineTypes} bordered={false}/>
               </Tooltip>
+              {/** TODO:  */}
               <Tooltip title={<FormattedMessage id='workspace.header.title.connector-line-mode'/>}>
-                <Select size='small' value={connectorLineMode} onChange={handleConnectorLineModeChange} style={{width: 56 }} options={connectorLineModes} bordered={false}/>
+                <Select size='small' value={connectorLineMode} onChange={handleConnectorLineModeChange} style={{width: 56, display:'none' }} options={connectorLineModes} bordered={false}/>
               </Tooltip>
               <Tooltip title={<FormattedMessage id='workspace.header.title.connector-arrow-start-type'/>}>
                 <Select size='small' value={connectorLineStartArrow} onChange={handleConnectorArrowStartTypeChange} style={{width: 56 }} options={connectorLineStartArrows} bordered={false}/>
