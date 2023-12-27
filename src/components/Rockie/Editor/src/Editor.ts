@@ -894,6 +894,11 @@ export class Editor extends Painter {
     console.log(`key press event: ${e.code}   ${e.key}`)
   }
 
+  public invalideHolder() {
+    this._selectionLayer.invalidateLayer()
+    //this._hoverLayer.invalidateLayer()
+  }
+
   private initializeTextArea () {
     if (this.engine.container?.parentElement) {
       this.engine.container.parentElement.append(this._textArea)

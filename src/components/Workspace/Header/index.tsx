@@ -689,6 +689,7 @@ const Header: FC<HeaderProps> = ({
         }
       })
       currentEditor.focus()
+      currentEditor.invalideHolder()
     }
   }
 
