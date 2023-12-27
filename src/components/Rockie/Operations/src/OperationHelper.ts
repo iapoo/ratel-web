@@ -8,6 +8,7 @@ import { Rotation } from "@/components/Engine"
 import { CommonUtils } from "../../Utils"
 import { ShapeInfo } from "../../Items/src/ShapeInfo"
 import { Style, StyleInfo } from "../../Shapes/src/EntityUtils"
+import { ConnectorType } from "../../Shapes"
 
 export class OperationHelper {
   public static loadItem(itemInfo: EditorItemInfo): EditorItem {
@@ -78,7 +79,7 @@ export class OperationHelper {
     let start = SystemUtils.parsePointString(connectorInfo.start)
     let end = SystemUtils.parsePointString(connectorInfo.end)
     let connector = new Connector(start, end)
-    connector.connectorType = connectorInfo.connectorType ? CommonUtils.parseConnectorTypeString(connectorInfo.connectorType) : undefined
+    connector.connectorType = connectorInfo.connectorType ? CommonUtils.parseConnectorTypeString(connectorInfo.connectorType) : ConnectorType.Orthogonal
     connector.id = connectorInfo.id
     return connector
   }

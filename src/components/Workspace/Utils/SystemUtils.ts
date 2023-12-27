@@ -4,6 +4,7 @@
 
 import { Color, Colors, TextVerticalAlignment, Point2, StrokeDashStyle, TextAlignment } from "@/components/Engine";
 import { Consts } from "./Consts";
+import { ConnectorType } from "@/components/Rockie/Shapes";
 
 export class SystemUtils {
 
@@ -241,6 +242,36 @@ export class SystemUtils {
             case TextVerticalAlignment.MIDDLE:
             default:
                 return Consts.PLACE_HOLDER_ALIGNMENT_MIDDLE
+                break
+        }
+    }
+
+    public static parseConnectorType(connectorType: string): ConnectorType {
+        switch (connectorType) {
+            case Consts.CONNECTOR_LINE_TYPE_CURVED:
+                return ConnectorType.Curve
+                break
+            case Consts.CONNECTOR_LINE_TYPE_STRAIGHT:
+                return ConnectorType.StraightLine
+                break
+            case Consts.CONNECTOR_LINE_TYPE_ORTHOGONAL:
+            default:
+                return ConnectorType.Orthogonal
+                break
+        }
+    }
+
+    public static generateConnectorType(connectorType: ConnectorType): string {
+        switch (connectorType) {
+            case ConnectorType.Curve:
+                return Consts.CONNECTOR_LINE_TYPE_CURVED
+                break
+            case ConnectorType.StraightLine:
+                return Consts.CONNECTOR_LINE_TYPE_STRAIGHT
+                break
+            case ConnectorType.Orthogonal:
+            default:
+                return Consts.CONNECTOR_LINE_TYPE_ORTHOGONAL
                 break
         }
     }

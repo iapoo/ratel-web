@@ -3,14 +3,14 @@ import { ConnectorType } from "../../Shapes";
 export class CommonUtils {
     public static CONNECTOR_TYPE_STRAIGHT_LINE = 'StraightLine'
     public static CONNECTOR_TYPE_CURVE = 'Curve'
-    public static CONNECTOR_TYPE_CROSS_LINE = 'CrossLine'
+    public static CONNECTOR_TYPE_CROSS_LINE = 'Orthogonal'
 
     public static parseConnectorType(connectorType: ConnectorType) : string {
         switch(connectorType) {
             case ConnectorType.Curve:
                 return this.CONNECTOR_TYPE_CURVE
                 break;
-            case ConnectorType.CrossLine:
+            case ConnectorType.Orthogonal:
                 return this.CONNECTOR_TYPE_CROSS_LINE
                 break;
             case ConnectorType.StraightLine:
@@ -26,7 +26,7 @@ export class CommonUtils {
                 return ConnectorType.Curve
                 break;
             case this.CONNECTOR_TYPE_CROSS_LINE:
-                return ConnectorType.CrossLine
+                return ConnectorType.Orthogonal
                 break;
             case this.CONNECTOR_TYPE_STRAIGHT_LINE:
             default:

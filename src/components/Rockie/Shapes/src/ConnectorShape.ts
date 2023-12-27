@@ -7,7 +7,7 @@ import { EntityShape, } from './EntityShape'
 
 export enum ConnectorType {
   Curve,
-  CrossLine,
+  Orthogonal,
   StraightLine,
 }
 
@@ -18,7 +18,7 @@ export enum ConnectorArrowDisplayType {
   Ellipse,
   LeftParenthesis,
   RightParenthesis,
-  CrossLine,
+  Orthogonal,
   ForewardSlash,
   Backslashe,
   VerticalLine,
@@ -63,7 +63,7 @@ export class ConnectorShape extends EntityShape {
   private _doubleLineStrokeWidth: number
   private _curveStartModifier: Point2
   private _curveEndModifier: Point2
-  private _crossLines: number[]
+  private _orthogonals: number[]
   private _crossPoints: Point2[]
   private _horizontal: boolean
 
@@ -96,15 +96,15 @@ export class ConnectorShape extends EntityShape {
     this._endArrow = endArrowInfo
     this._connectorMode = ConnectorMode.Single
     this._doubleLineStrokeWidth = 1
-    this._connectorType = ConnectorType.CrossLine
+    this._connectorType = ConnectorType.Orthogonal
     this._curveStartModifier = new Point2(0.4, 0)
     this._curveEndModifier = new Point2(-0.4, 0)
     this._crossPoints = []
     this._horizontal = horizontal
     if(this._horizontal) {
-      this._crossLines = [0.5, 0, 0.5, 1]
+      this._orthogonals = [0.5, 0, 0.5, 1]
     } else {
-      this._crossLines = [0, 0.5, 1, 0.5]
+      this._orthogonals = [0, 0.5, 1, 0.5]
     }
   }
 
@@ -148,14 +148,14 @@ export class ConnectorShape extends EntityShape {
     this.markDirty()
   }
   
-  public get crossLines() {
-    return this._crossLines
+  public get orthogonals() {
+    return this._orthogonals
   }
 
-  public set crossLines(value: number[]) {
-    this._crossLines = value
+  public set orthogonals(value: number[]) {
+    this._orthogonals = value
     this.markDirty()
-    this.updateCrossLinePath()
+    this.updateOrthogonalPath()
   }
 
   public get crossPoints() {
@@ -214,9 +214,9 @@ export class ConnectorShape extends EntityShape {
   public set horizontal(value: boolean) {
     this._horizontal = value
     if(this._horizontal) {
-      this._crossLines = [0.5, 0, 0.5, 1]
+      this._orthogonals = [0.5, 0, 0.5, 1]
     } else {
-      this._crossLines = [0, 0.5, 1, 0.5]
+      this._orthogonals = [0, 0.5, 1, 0.5]
     }
     this.markDirty()
   }
@@ -299,8 +299,8 @@ export class ConnectorShape extends EntityShape {
       this.path.lineTo(this.end.x - this.left, this.end.y - this.top)
       this.path.close()
       switch(this.connectorType) {
-        case ConnectorType.CrossLine:
-          this.updateCrossLinePath()
+        case ConnectorType.Orthogonal:
+          this.updateOrthogonalPath()
           break;
         case ConnectorType.Curve:
           this.updateCurvePath()
@@ -344,7 +344,7 @@ export class ConnectorShape extends EntityShape {
       case ConnectorArrowDisplayType.RightParenthesis: {
         break;
       }
-      case ConnectorArrowDisplayType.CrossLine: {
+      case ConnectorArrowDisplayType.Orthogonal: {
         break;
       }
       case ConnectorArrowDisplayType.ForewardSlash: {
@@ -379,7 +379,7 @@ export class ConnectorShape extends EntityShape {
 
   }
 
-  private updateCrossLinePath() {
+  private updateOrthogonalPath() {
     const defaultSegment = this.width > ConnectorShape.DEFAULT_SEGMENT * 2 ? ConnectorShape.DEFAULT_SEGMENT : this.width / 2
     const start = new Point2(this.start.x - this.left, this.start.y - this.top)
     const end = new Point2(this.end.x - this.left, this.end.y - this.top)
@@ -394,10 +394,10 @@ export class ConnectorShape extends EntityShape {
       //console.log('Start lines')
       //console.log(`lineTo ${start.x + defaultSegment}  ${start.y}`)
       this._crossPoints.push(new Point2(start.x + defaultSegment, start.y))
-      for(let i = 0; i < this._crossLines.length /2; i ++) {
-        this.path.lineTo(start.x + defaultSegment + this._crossLines[i * 2] * width, start.y + this._crossLines[i * 2 + 1]* height)
+      for(let i = 0; i < this._orthogonals.length /2; i ++) {
+        this.path.lineTo(start.x + defaultSegment + this._orthogonals[i * 2] * width, start.y + this._orthogonals[i * 2 + 1]* height)
         //console.log(`line to ${start.x + i * 2 * this.width} ${start.y + (i * 2 + 1)* this.height}`)
-        this._crossPoints.push(new Point2(start.x + defaultSegment + this._crossLines[i * 2] * width, start.y + this._crossLines[i * 2 + 1]* height))
+        this._crossPoints.push(new Point2(start.x + defaultSegment + this._orthogonals[i * 2] * width, start.y + this._orthogonals[i * 2 + 1]* height))
       }
       this.path.lineTo(end.x - defaultSegment, end.y)
       //console.log(`line to ${end.x - defaultSegment} ${end.y}`)
@@ -405,9 +405,9 @@ export class ConnectorShape extends EntityShape {
     } else {
       this.path.lineTo(start.x, start.y + defaultSegment)
       this._crossPoints.push(new Point2(start.x, start.y + defaultSegment))
-      for(let i = 0; i < this._crossLines.length /2; i ++) {
-        this.path.lineTo(start.x + this._crossLines[i * 2] * width, start.y + defaultSegment + this._crossLines[i * 2 + 1]* height)
-        this._crossPoints.push(new Point2(start.x + this._crossLines[i * 2] * width, start.y + defaultSegment + this._crossLines[i * 2 + 1]* height))
+      for(let i = 0; i < this._orthogonals.length /2; i ++) {
+        this.path.lineTo(start.x + this._orthogonals[i * 2] * width, start.y + defaultSegment + this._orthogonals[i * 2 + 1]* height)
+        this._crossPoints.push(new Point2(start.x + this._orthogonals[i * 2] * width, start.y + defaultSegment + this._orthogonals[i * 2 + 1]* height))
       }
       this.path.lineTo(end.x, end.y - defaultSegment)
       this._crossPoints.push(new Point2(end.x, end.y - defaultSegment))

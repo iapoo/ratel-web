@@ -92,31 +92,31 @@ export class CrossMovementAnchor extends Anchor {
         } 
         if(crossPoint.x == nextCrossPoint.x) {
           if(lineIndex >= 0) {
-            const crossLines = this.target.crossLines
+            const orthogonals = this.target.orthogonals
             //if(this.target.horizontal) {
-              crossLines[lineIndex] = crossLines[lineIndex] +  moveX / crossWidth
-              crossLines[lineIndex + 2] = crossLines[lineIndex + 2] +  moveX / crossWidth
+              orthogonals[lineIndex] = orthogonals[lineIndex] +  moveX / crossWidth
+              orthogonals[lineIndex + 2] = orthogonals[lineIndex + 2] +  moveX / crossWidth
             //} else {
-            //    crossLines[lineIndex + 1] = crossLines[lineIndex + 1] +  moveY / this.target.height
-            //    crossLines[lineIndex + 3] = crossLines[lineIndex + 3] +  moveY / this.target.height    
+            //    orthogonals[lineIndex + 1] = orthogonals[lineIndex + 1] +  moveY / this.target.height
+            //    orthogonals[lineIndex + 3] = orthogonals[lineIndex + 3] +  moveY / this.target.height    
             //}
-            this.cleanupLines(crossLines)
-            this.target.crossLines = crossLines
-            //console.log(`count= ${this.holder.count} x = ${x} moveX = ${moveX} startX = ${this._startX} crossLineValue= ${crossLines[lineIndex]} width=${this.target.width} crossLines= ${crossLines}`)
+            this.cleanupLines(orthogonals)
+            this.target.orthogonals = orthogonals
+            //console.log(`count= ${this.holder.count} x = ${x} moveX = ${moveX} startX = ${this._startX} orthogonalValue= ${orthogonals[lineIndex]} width=${this.target.width} orthogonals= ${orthogonals}`)
           }
         } else {
           if(lineIndex >= 0) {
-            const crossLines = this.target.crossLines
+            const orthogonals = this.target.orthogonals
             //if(this.target.horizontal) {
-              crossLines[lineIndex + 1] = crossLines[lineIndex + 1] +  moveY / crossHeight
-              crossLines[lineIndex + 3] = crossLines[lineIndex + 3] +  moveY / crossHeight
+              orthogonals[lineIndex + 1] = orthogonals[lineIndex + 1] +  moveY / crossHeight
+              orthogonals[lineIndex + 3] = orthogonals[lineIndex + 3] +  moveY / crossHeight
             //} else {
-            //    crossLines[lineIndex + 1] = crossLines[lineIndex + 1] +  moveX / this.target.width
-            //    crossLines[lineIndex + 3] = crossLines[lineIndex + 3] +  moveX / this.target.width    
+            //    orthogonals[lineIndex + 1] = orthogonals[lineIndex + 1] +  moveX / this.target.width
+            //    orthogonals[lineIndex + 3] = orthogonals[lineIndex + 3] +  moveX / this.target.width    
             //}
-            this.cleanupLines(crossLines)
-            this.target.crossLines = crossLines
-            //console.log(`count= ${this.holder.count} x = ${x} moveX = ${moveX} startX = ${this._startX} crossLineValue= ${crossLines[lineIndex]} width=${this.target.width} crossLines= ${crossLines}`)
+            this.cleanupLines(orthogonals)
+            this.target.orthogonals = orthogonals
+            //console.log(`count= ${this.holder.count} x = ${x} moveX = ${moveX} startX = ${this._startX} orthogonalValue= ${orthogonals[lineIndex]} width=${this.target.width} orthogonals= ${orthogonals}`)
         
           }
         }    
@@ -128,22 +128,22 @@ export class CrossMovementAnchor extends Anchor {
     }
   }
 
-  private cleanupLines(crossLines: number[]) {
-    const count = crossLines.length / 2
+  private cleanupLines(orthogonals: number[]) {
+    const count = orthogonals.length / 2
     let index = count - 1
     while(index > 0) {
-      if(index >= 2 && crossLines[index * 2] == crossLines[ index * 2 - 4] && crossLines[index * 2] == crossLines[index * 2 - 2] ) {
-        crossLines.splice(index * 2 - 2, 2)
-      } else if(index >= 2 && crossLines[index * 2 + 1] == crossLines[ index * 2 - 3] && crossLines[index * 2 + 1] == crossLines[index * 2 - 1] ) {
-        crossLines.splice(index * 2 - 2, 2)
-      } else if(index == count - 1 && count > 1 && crossLines[index * 2 + 1] == 1 && crossLines[index * 2 - 1] == 1) {
-        crossLines.splice(index * 2, 2)
-      } else if(index == count - 1 && count > 1 && crossLines[index * 2 + 1] == 0 && crossLines[index * 2 - 1] == 0) {
-        crossLines.splice(index * 2, 2)
-      } else if(index == 1 && count > 1 && crossLines[index * 2 + 1] == 0 && crossLines[index * 2 - 1] == 0) {
-        crossLines.splice(index * 2 - 2, 2)
-      } else if(index == 1 && count > 1 && crossLines[index * 2 + 1] == 1 && crossLines[index * 2 - 1] == 1) {
-        crossLines.splice(index * 2 - 2, 2)
+      if(index >= 2 && orthogonals[index * 2] == orthogonals[ index * 2 - 4] && orthogonals[index * 2] == orthogonals[index * 2 - 2] ) {
+        orthogonals.splice(index * 2 - 2, 2)
+      } else if(index >= 2 && orthogonals[index * 2 + 1] == orthogonals[ index * 2 - 3] && orthogonals[index * 2 + 1] == orthogonals[index * 2 - 1] ) {
+        orthogonals.splice(index * 2 - 2, 2)
+      } else if(index == count - 1 && count > 1 && orthogonals[index * 2 + 1] == 1 && orthogonals[index * 2 - 1] == 1) {
+        orthogonals.splice(index * 2, 2)
+      } else if(index == count - 1 && count > 1 && orthogonals[index * 2 + 1] == 0 && orthogonals[index * 2 - 1] == 0) {
+        orthogonals.splice(index * 2, 2)
+      } else if(index == 1 && count > 1 && orthogonals[index * 2 + 1] == 0 && orthogonals[index * 2 - 1] == 0) {
+        orthogonals.splice(index * 2 - 2, 2)
+      } else if(index == 1 && count > 1 && orthogonals[index * 2 + 1] == 1 && orthogonals[index * 2 - 1] == 1) {
+        orthogonals.splice(index * 2 - 2, 2)
       }
       index = index - 1
     }
