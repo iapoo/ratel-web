@@ -50,7 +50,7 @@ export const ConnectorArrowTypes = [
 
   {name: 'Other-(', description: '(', type: ConnectorArrowDisplayType.LeftParenthesis, height: 6, width: 6, modifier: 2, count: 1, outline: true, displayMode: ConnectorArrowDisplayMode.Full, },
   {name: 'Other-)', description: ')', type: ConnectorArrowDisplayType.RightParenthesis, height: 6, width: 6, modifier: 2, count: 1, outline: true, displayMode: ConnectorArrowDisplayMode.Full, },
-  {name: 'Other-X', description: 'X', type: ConnectorArrowDisplayType.CrossLine, height: 6, width: 6, modifier: 2, count: 1, outline: true, displayMode: ConnectorArrowDisplayMode.Full, },
+  {name: 'Other-X', description: 'X', type: ConnectorArrowDisplayType.Orthogonal, height: 6, width: 6, modifier: 2, count: 1, outline: true, displayMode: ConnectorArrowDisplayMode.Full, },
   {name: 'Other-/', description: '/', type: ConnectorArrowDisplayType.ForewardSlash, height: 6, width: 6, modifier: 2, count: 1, outline: true, displayMode: ConnectorArrowDisplayMode.Full, },
   {name: 'Other-\\', description: '\\', type: ConnectorArrowDisplayType.Backslashe, height: 6, width: 6, modifier: 2, count: 1, outline: true, displayMode: ConnectorArrowDisplayMode.Full, },
   {name: 'Other-|', description: '|', type: ConnectorArrowDisplayType.VerticalLine, height: 6, width: 6, modifier: 2, count: 1, outline: true, displayMode: ConnectorArrowDisplayMode.Full, },
@@ -68,7 +68,7 @@ export class Connector extends Item {
   private _target?: Entity;
   private _sourceJoint?: Point2;
   private _targetJoint?: Point2;
-  private _connectorType?: ConnectorType;
+  private _connectorType: ConnectorType;
   private _start: Point2;
   private _end: Point2
   private _connectorShape: ConnectorShape
@@ -81,7 +81,7 @@ export class Connector extends Item {
   //Percent value
   private _curveEndModifier: Point2
   //Percent values with x, y. At least 1 segments, additional 2 segments are first and last and  invisible for arrows and can't be modified.
-  private _crossLines: number[]
+  private _orthogonals: number[]
   private _horizontal: boolean
 
   public constructor (start: Point2, end: Point2, horizontal: boolean = true) {
@@ -91,7 +91,7 @@ export class Connector extends Item {
     this._shape = new ConnectorShape(start.x, start.y, end.x, end.y, horizontal)
     this._connectorShape = this._shape as ConnectorShape
     this.type = Connector.CONNECTOR_TYPE_CONNECTOR
-    this._connectorType = ConnectorType.CrossLine
+    this._connectorType = ConnectorType.Orthogonal
     this._startArrow = ConnectorArrowTypes[0]
     this._endArrow = ConnectorArrowTypes[0]
     this._connectorMode = ConnectorMode.Single
@@ -100,9 +100,9 @@ export class Connector extends Item {
     this._curveEndModifier = new Point2(-0.4, 0)
     this._horizontal = horizontal
     if(this._horizontal) {
-      this._crossLines = [0.5, 0, 0.5, 1]
+      this._orthogonals = [0.5, 0, 0.5, 1]
     } else {
-      this._crossLines = [0, 0.5, 1, 0.5]
+      this._orthogonals = [0, 0.5, 1, 0.5]
     }
   }
 
@@ -122,9 +122,9 @@ export class Connector extends Item {
     this._horizontal = value
     this._connectorShape.horizontal = value
     if(this._horizontal) {
-      this._crossLines = [0.5, 0, 0.5, 1]
+      this._orthogonals = [0.5, 0, 0.5, 1]
     } else {
-      this._crossLines = [0, 0.5, 1, 0.5]
+      this._orthogonals = [0, 0.5, 1, 0.5]
     }
     this.updateTheme()
   }
@@ -193,13 +193,13 @@ export class Connector extends Item {
     this.updateTheme()
   }
   
-  public get crossLines() {
-    return this._crossLines
+  public get orthogonals() {
+    return this._orthogonals
   }
 
-  public set crossLines(value: number[]) {
-    this._crossLines = value
-    this._connectorShape.crossLines = value
+  public set orthogonals(value: number[]) {
+    this._orthogonals = value
+    this._connectorShape.orthogonals = value
     this.updateTheme()
   }
 
@@ -281,12 +281,14 @@ export class Connector extends Item {
   //  this.markDirty()
   // }
 
-  public get connectorType (): ConnectorType | undefined {
+  public get connectorType (): ConnectorType {
     return this._connectorType
   }
 
-  public set connectorType (value: ConnectorType | undefined) {
+  public set connectorType (value: ConnectorType) {
     this._connectorType = value
+    this._connectorShape.connectorType = value
+    this.updateTheme()
   }
 
   public get types (): Type[] {

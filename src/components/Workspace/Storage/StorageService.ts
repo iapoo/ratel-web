@@ -1,12 +1,12 @@
 /* eslint-disable max-params */
 import { Point2, Rotation } from '@/components/Engine'
 import { Editor, } from '@/components/Rockie/Editor'
-import { Connector, ConnectorType, EditorItem, Entity, LineEntity, ShapeEntity, ShapeTypes, Shapes, TableEntity, } from '@/components/Rockie/Items'
+import { Connector, EditorItem, Entity, LineEntity, ShapeEntity, ShapeTypes, Shapes, TableEntity, } from '@/components/Rockie/Items'
 import { Categories, } from '@/components/Rockie/Items/src/Item'
 import { EditorData, } from './EditorData'
 import { EditorItemData, } from './EditorItemData'
 import { StorageData, } from './StorageData'
-import { EntityShape } from '@/components/Rockie/Shapes'
+import { ConnectorType, EntityShape } from '@/components/Rockie/Shapes'
 import { ShapeData } from './ShapeData'
 import { LineData } from './LineData'
 import { ConnectorData } from './ConnectorData'
@@ -72,7 +72,7 @@ export class StorageService {
     let start = SystemUtils.parsePointString(connectorData.start)
     let end = SystemUtils.parsePointString(connectorData.end)
     let connector = new Connector(start, end)
-    connector.connectorType = connectorData.connectorType ? CommonUtils.parseConnectorTypeString(connectorData.connectorType) : undefined
+    connector.connectorType = connectorData.connectorType ? CommonUtils.parseConnectorTypeString(connectorData.connectorType) : ConnectorType.Orthogonal
     connector.id = connectorData.id
     return connector
   }

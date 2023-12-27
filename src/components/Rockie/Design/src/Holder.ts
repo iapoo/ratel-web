@@ -334,7 +334,7 @@ export class Holder extends Control {
   }
 
   public refreshCrossAnchors() {
-    if(this._target instanceof Connector && this._target.connectorType == ConnectorType.CrossLine){
+    if(this._target instanceof Connector && this._target.connectorType == ConnectorType.Orthogonal){
       //Try to refresh cross anchors while necessary
       if(this._crossDivideAnchors.length != (this._target.crossPoints.length - 3) * 2) {
         this.removeCrossAnchors()
@@ -345,7 +345,7 @@ export class Holder extends Control {
   }
 
   private layoutCrossAnchors() {
-    if(this._target instanceof Connector && this._target.connectorType == ConnectorType.CrossLine){
+    if(this._target instanceof Connector && this._target.connectorType == ConnectorType.Orthogonal){
       const crossPoints = this._target.crossPoints
       //console.log(`length == ${crossPoints.length}`)
       this._crossDivideAnchors.forEach(crossDivideAnchor => {
@@ -373,7 +373,7 @@ export class Holder extends Control {
   }
 
   private createCrossAnchors() {
-    if(this._target instanceof Connector && this._target.connectorType == ConnectorType.CrossLine){
+    if(this._target instanceof Connector && this._target.connectorType == ConnectorType.Orthogonal){
       const crossPointCount = this._target.crossPoints.length
       const crossPoints = this._target.crossPoints
       this._crossDivideAnchors.length = 0
@@ -401,7 +401,7 @@ export class Holder extends Control {
   }
 
   private addCrossAnchors() {    
-    if(this._target instanceof Connector && this._target.connectorType == ConnectorType.CrossLine){
+    if(this._target instanceof Connector && this._target.connectorType == ConnectorType.Orthogonal){
       this._crossDivideAnchors.forEach(crossDivideAnchor => {
         this.addNode(crossDivideAnchor)
       })      
@@ -414,7 +414,7 @@ export class Holder extends Control {
   }
   
   private removeCrossAnchors() {
-    if(this._target instanceof Connector && this._target.connectorType == ConnectorType.CrossLine){
+    if(this._target instanceof Connector && this._target.connectorType == ConnectorType.Orthogonal){
       this._crossDivideAnchors.forEach(crossDivideAnchor => {
         this.removeNode(crossDivideAnchor)
       })      

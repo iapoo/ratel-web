@@ -16,7 +16,7 @@ import { Editor, EditorEvent } from '@/components/Rockie/Editor';
 import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
 import { Placeholder, } from '@/components/Resource/Icons'
 import { OperationType } from '@/components/Rockie/Operations';
-import { ContainerEntity, ContainerTypes, Item, ShapeEntity, ShapeTypes } from '@/components/Rockie/Items';
+import { Connector, ContainerEntity, ContainerTypes, Item, ShapeEntity, ShapeTypes } from '@/components/Rockie/Items';
 import { ShapeAction } from '@/components/Rockie/Actions';
 
 interface HeaderProps {
@@ -76,6 +76,7 @@ const Header: FC<HeaderProps> = ({
   const [ connectorLineMode, setConnectorLineMode, ] = useState<string>(Consts.CONNECTOR_LINE_MODE_SIGNLE)
   const [ connectorLineStartArrow, setConnectorLineStartArrow, ] = useState<string>(Consts.CONNECTOR_LINE_START_ARROW_NONE)
   const [ connectorLineEndArrow, setConnectorLineEndArrow, ] = useState<string>(Consts.CONNECTOR_LINE_END_ARROW_NONE)
+  const [ connectorSelected, setConnectorSelected, ] = useState<boolean>(false)
 
   useEffect(() => {
     if (!initialized) {
@@ -123,7 +124,17 @@ const Header: FC<HeaderProps> = ({
       } else {
         setSelectionValid(false)
       }
-
+      let connectorSelected = true
+      if (currentEditor.selectionLayer.getEditorItemCount() > 0) {
+        currentEditor.selectionLayer.getAllEditorItems().forEach(editorItem => {
+          if(!(editorItem instanceof Connector)) {
+            connectorSelected = false          
+          }
+        })
+      } else {
+        connectorSelected = false
+      }
+      setConnectorSelected(connectorSelected)
     } else {
       initializeSelectionInfo()
     }
@@ -153,6 +164,12 @@ const Header: FC<HeaderProps> = ({
       setTextVerticalAlignment(textVerticalAlignmentValue)
       let strokeDashStyleValue = SystemUtils.generateStrokeDashStyle(editorItem.strokeDashStyle)
       setStrokeDashStyle(strokeDashStyleValue)
+      if(editorItem instanceof Connector) {
+        let connectorTypeValue = SystemUtils.generateConnectorType(editorItem.connectorType)
+        setConnectorLineType(connectorTypeValue)        
+      } else {
+        setConnectorLineType(Consts.CONNECTOR_LINE_TYPE_ORTHOGONAL)
+      }
       //let connectorLineTypeValue = SystemUtils.generateStrokeDashStyle(editorItem.strokeDashStyle)
       //setStrokeDashStyle(strokeDashStyleValue)
     } else {
@@ -664,6 +681,15 @@ const Header: FC<HeaderProps> = ({
 
   const handleConnectorLineTypeChange = (value: string) => {
     setConnectorLineType(value)
+    if(currentEditor) {
+      let editorItems = currentEditor.selectionLayer.getAllEditorItems()
+      editorItems.forEach(editorItem => {
+        if(editorItem instanceof Connector) {
+          editorItem.connectorType = SystemUtils.parseConnectorType(value)
+        }
+      })
+      currentEditor.focus()
+    }
   }
 
   const handleConnectorLineModeChange = (value: string) => {
@@ -953,7 +979,7 @@ const Header: FC<HeaderProps> = ({
                 <Select size='small' value={strokeDashStyle} onChange={handleStrokeDashStyleChange} style={{width: 110 }} dropdownStyle={{width: 110}} options={strokeDashStyles} bordered={false}/>
               </Tooltip>
               <Tooltip title={<FormattedMessage id='workspace.header.title.connector-line-type'/>}>
-                <Select size='small' value={connectorLineType} onChange={handleConnectorLineTypeChange} style={{width: 56 }} options={connectorLineTypes} bordered={false}/>
+                <Select size='small' value={connectorLineType} onChange={handleConnectorLineTypeChange} style={{width: 56 }} disabled={!connectorSelected} options={connectorLineTypes} bordered={false}/>
               </Tooltip>
               <Tooltip title={<FormattedMessage id='workspace.header.title.connector-line-mode'/>}>
                 <Select size='small' value={connectorLineMode} onChange={handleConnectorLineModeChange} style={{width: 56 }} options={connectorLineModes} bordered={false}/>
