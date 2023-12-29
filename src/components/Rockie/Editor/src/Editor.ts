@@ -18,6 +18,7 @@ import { EditorEvent } from './EditorEvent'
 import { SystemUtils } from '@/components/Workspace/Utils'
 import { Operation, OperationHelper, OperationService, OperationType } from '../../Operations'
 import { ContainerLayer } from './ContainerLayer'
+import { ConnectorDirection } from '../../Shapes'
 
 export class Editor extends Painter {
   /**
@@ -637,12 +638,13 @@ export class Editor extends Painter {
       if (clickedEditorItem && isEdge && !inClickEditorItem) { //Create connector
         const targetPoint = this.findEditorItemJoint(clickedEditorItem, e.x, e.y, false)
         const horizontal = this.checkIfConnectorHorizontal(clickedEditorItem, e.x, e.y)
+        const startDirection = this.findConnectorDirection(clickedEditorItem, e.x, e.y)
         //console.log(`Check horizontal : ${horizontal}`)
         const targetEntity = clickedEditorItem as Entity
         const theControllerLayer = this.controllerLayer as ControllerLayer
         this._inCreatingConnector = true
         const worldTargetPoint = clickedEditorItem.shape.worldTransform.makePoint(targetPoint)
-        const connector = new Connector(worldTargetPoint, new Point2(worldTargetPoint.x + 10, worldTargetPoint.y + 10), horizontal)
+        const connector = new Connector(worldTargetPoint, new Point2(worldTargetPoint.x + 10, worldTargetPoint.y + 10), horizontal, startDirection)
         // const sourceJoint = new Point2(targetPoint.x - targetEntity.left, targetPoint.y - targetEntity.top)
         connector.source = targetEntity
         connector.sourceJoint = targetPoint
@@ -1327,10 +1329,13 @@ export class Editor extends Painter {
       //console.log(`create connector ...2`)
       const inEditorItem = this.isInEditorItem(editorItem, e.x, e.y)
       const targetPoint = this.findEditorItemJoint(editorItem, e.x, e.y, inEditorItem)
+      const endDirection = this.findConnectorDirection(editorItem, e.x, e.y)
       // const targetJoint = new Point2(targetPoint.x - editorItem.left, targetPoint.y - editorItem.top)
+      connector.endDirection = endDirection
       connector.target = editorItem as Entity
       connector.targetJoint = targetPoint
       connector.target.addConnector(connector)
+      
     } else {
       //console.log(`create connector ...3`)
       if (connector.target) {
@@ -1936,6 +1941,37 @@ export class Editor extends Painter {
         result = true
       } else {
         result = false
+      }
+    }
+    return result
+  }
+
+
+  /**
+   * Check and decide how to draw connector cross line
+   * @param editorItem 
+   * @param x 
+   * @param y 
+   * @returns 
+   */
+  private findConnectorDirection(editorItem: EditorItem, x: number, y: number): ConnectorDirection {
+    let result = ConnectorDirection.Right
+    const shape = editorItem.shape
+    const matrix = shape.worldInverseTransform
+    if(matrix) {
+      const position = matrix.makePoint(new Point2(x, y))
+      if(Math.abs(position.y - shape.height / 2) < Math.abs(position.x - shape.width / 2)) {
+        if(position.x > shape.width / 2) {
+          result = ConnectorDirection.Right
+        } else {
+          result = ConnectorDirection.Left
+        }
+      } else {
+        if(position.y < shape.height / 2) {
+          result = ConnectorDirection.Top
+        } else {
+          result = ConnectorDirection.Bottom
+        }
       }
     }
     return result

@@ -275,6 +275,16 @@ export class SystemUtils {
                 break
         }
     }
+
+    public static debugPoints(points: Point2[]) {
+        let count = points.length
+        let output = `Array data: length = ${count}, data = `
+        for(let i = 0; i < count; i ++) {
+            const point = points[i]
+            output = output + `${i}:[${point.x}, ${point.y}],`
+        }
+        console.log(output)
+    }
 }
 
 
