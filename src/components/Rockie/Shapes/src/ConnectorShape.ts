@@ -340,12 +340,12 @@ export class ConnectorShape extends EntityShape {
       // this.path.addRectangle(new Rectangle(0, -5, distance, 5))
 
       this.position = new Point2(this.left, this.top)
-      this.clip.reset()
-      this.clip.addRectangle(Rectangle.makeLTWH(-1, -1, this.width + 2, this.height + 2))
-      this.path.reset()
-      this.path.moveTo(this.start.x - this.left, this.start.y - this.top)
-      this.path.lineTo(this.end.x - this.left, this.end.y - this.top)
-      this.path.close()
+      //this.clip.reset()
+      //this.clip.addRectangle(Rectangle.makeLTWH(-1, -1, this.width + 2, this.height + 2))
+      //this.path.reset()
+      //this.path.moveTo(this.start.x - this.left, this.start.y - this.top)
+      //this.path.lineTo(this.end.x - this.left, this.end.y - this.top)
+     // this.path.close()
       switch(this.connectorType) {
         case ConnectorType.Orthogonal:
           this.updateOrthogonalPath()
