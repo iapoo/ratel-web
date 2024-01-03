@@ -792,28 +792,18 @@ export class Connector extends Item {
       case TargetPosition.Left: {
         switch(this.endDirection) {
           case ConnectorDirection.Left: {     
+            const startTop = start.y - Connector.DEFAULT_ARROW_SEGMENT
             const endTop = end.y - this._targetJoint!.y - Connector.DEFAULT_ARROW_SEGMENT
-            const endBottom = end.y + (this._target!.height - this._targetJoint!.y) + Connector.DEFAULT_ARROW_SEGMENT
-            const endRight = end.x + this._target!.width
-            const middleX = (start.x + endRight) * 0.5
-            if(start.y < endTop) {
-              points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
-              points.push(new Point2(minLeft, start.y))
-            } else if(start.y > endBottom) {
-              points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
-              points.push(new Point2(minLeft, start.y))
+            if(startTop < endTop) {
+              points.push(new Point2(start.x, start.y - Connector.DEFAULT_ARROW_SEGMENT))
+              points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, start.y - Connector.DEFAULT_ARROW_SEGMENT))
+              points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
             } else {
-              if(middleX < start.x - Connector.DEFAULT_ARROW_SEGMENT) {
-                points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
-                points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, minTop))
-              } else {
-                points.push(new Point2(middleX, start.y))
-                points.push(new Point2(middleX, minTop))
-              }
-              points.push(new Point2(minLeft, minTop))
+              points.push(new Point2(start.x, start.y - Connector.DEFAULT_ARROW_SEGMENT))
+              points.push(new Point2(start.x, endTop))
+              points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, endTop))
+              points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
             }
-            points.push(new Point2(minLeft, end.y))
-            points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
             break
           }
           case ConnectorDirection.Top:{
