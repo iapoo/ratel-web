@@ -190,6 +190,9 @@ export class ConnectorShape extends EntityShape {
     this._crossPoints = value
     this.markDirty()
     this.updateOrthogonalPath()
+    //if(value.length == 0) {
+    //  console.log(`Exception is here`)
+    //}
   }
 
   public get startArrow() {

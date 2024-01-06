@@ -241,6 +241,18 @@ export class Connector extends Item {
     this.updateTheme()
   }
 
+  public get orthogonalPoints() {
+    return this._orthogonalPoints
+  }
+
+  public set orthogonalPoints(value: Point2[]) {
+    let newValue: Point2[] = []
+    newValue = newValue.concat(value)
+    this._orthogonalPoints = newValue
+    this._connectorShape.orthogonalPoints = newValue
+    this.updateTheme()
+  }
+
   public get start (): Point2 {
     return this._start
   }
@@ -261,7 +273,7 @@ export class Connector extends Item {
     this._end = value
     this._connectorShape.end = value
     this._orthogonalPoints = this.initializeOrthogonalPoints()
-    this._connectorShape.orthogonalPoints = this._orthogonalPoints    
+    this._connectorShape.orthogonalPoints = this._orthogonalPoints   
     this.boundary = Rectangle.makeLTWH(Math.min(this._start.x, this._end.x), Math.min(this._start.y, this._end.y), Math.abs(this._start.x - this._end.x), Math.abs(this._start.y - this._end.y))
   }
 

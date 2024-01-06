@@ -378,6 +378,7 @@ export class Holder extends Control {
       const crossPoints = this._target.crossPoints
       this._crossDivideAnchors.length = 0
       this._crossMovementAnchors.length = 0
+      //console.log(`points = ${crossPointCount} ${crossPoints}`)
       for(let i = 1; i < crossPointCount - 2; i ++) {
         const crossPoint = crossPoints[i]
         const nextCrossPoint = crossPoints[i + 1]
