@@ -4,6 +4,7 @@ import { Connector } from '../../Items'
 import { Editor } from '../../Editor'
 import { Holder } from './Holder'
 import { ConnectorShape } from '../../Shapes'
+import { OrthogonalHelper } from './OrthogonalHelper'
 
 /**
  * 创建连接线
@@ -82,58 +83,42 @@ export class CrossMovementAnchor extends Anchor {
         //console.log(`a= ${this._crossPoints}   b= ${this.target.crossPoints}`)
         const moveX = x - this._startX
         const moveY = y - this._startY
-        const crossPointCount = this._crossPoints.length
-        const crossPoints = this._crossPoints
+        let crossPoints: Point2[] =  [] 
+        crossPoints = crossPoints.concat(this._crossPoints)
         const crossPoint = crossPoints[this._index]
         const nextCrossPoint = crossPoints[this._index + 1]
-        const crossWidth = this.target.horizontal ? this.target.width - ConnectorShape.DEFAULT_SEGMENT * 2 : this.target.width
-        const crossHeight = this.target.horizontal ? this.target.height : this.target.height - ConnectorShape.DEFAULT_SEGMENT
-        //let lineIndex = -1 //Means to skip
-        //Skip first 2 and last 2 points 
-        //if(this._index > 1 && this._index < crossPointCount - 3) {
-        //  lineIndex = (this._index - 2) * 2
-        //} 
-        //if(crossPoint == undefined || nextCrossPoint == undefined ) {
-        //  console.log(`exception is here`)
-        //}
         if(crossPoint.x == nextCrossPoint.x) {
-          //if(lineIndex >= 0) {
-            const orthogonals = this.target.orthogonals
-            //if(this.target.horizontal) {
-              //orthogonals[lineIndex] = orthogonals[lineIndex] +  moveX / crossWidth
-              //orthogonals[lineIndex + 2] = orthogonals[lineIndex + 2] +  moveX / crossWidth
-              crossPoints[this._index] = new Point2(crossPoint.x + moveX, crossPoint.y)
-              crossPoints[this._index + 1] = new Point2(nextCrossPoint.x + moveX, nextCrossPoint.y)
-            //} else {
-            //    orthogonals[lineIndex + 1] = orthogonals[lineIndex + 1] +  moveY / this.target.height
-            //    orthogonals[lineIndex + 3] = orthogonals[lineIndex + 3] +  moveY / this.target.height    
-            //}
-            this.cleanupLines(orthogonals)
-            this.target.orthogonals = orthogonals
-            this.target.orthogonalPoints = crossPoints
-            //console.log(`count= ${this.holder.count} x = ${x} moveX = ${moveX} startX = ${this._startX} orthogonalValue= ${orthogonals[lineIndex]} width=${this.target.width} orthogonals= ${orthogonals}`)
-          //}
+          if(this._index == 1) {
+            crossPoints.splice(this._index + 1, 0, new Point2(crossPoint.x + moveX, crossPoint.y))
+            crossPoints[this._index + 2] = new Point2(nextCrossPoint.x + moveX, nextCrossPoint.y)
+          } else if(this._index == crossPoints.length - 3) {
+            crossPoints[this._index] = new Point2(crossPoint.x + moveX, crossPoint.y)
+            crossPoints.splice(this._index + 1, 0, new Point2(nextCrossPoint.x + moveX, nextCrossPoint.y))
+          } else {
+            crossPoints[this._index] = new Point2(crossPoint.x + moveX, crossPoint.y)
+            crossPoints[this._index + 1] = new Point2(nextCrossPoint.x + moveX, nextCrossPoint.y)
+          }
+          OrthogonalHelper.cleanOrthogonalPoints(crossPoints)
+          this.target.orthogonalPoints = crossPoints
+          //console.log(`count= ${this.holder.count} x = ${x} moveX = ${moveX} startX = ${this._startX} orthogonalValue= ${orthogonals[lineIndex]} width=${this.target.width} orthogonals= ${orthogonals}`)
         } else {
-          //if(lineIndex >= 0) {
-            const orthogonals = this.target.orthogonals
-            //if(this.target.horizontal) {
-              //orthogonals[lineIndex + 1] = orthogonals[lineIndex + 1] +  moveY / crossHeight
-              //orthogonals[lineIndex + 3] = orthogonals[lineIndex + 3] +  moveY / crossHeight
-              crossPoints[this._index] = new Point2(crossPoint.x, crossPoint.y + moveY)
-              crossPoints[this._index + 1] = new Point2(nextCrossPoint.x, nextCrossPoint.y + moveY)
-            //} else {
-            //    orthogonals[lineIndex + 1] = orthogonals[lineIndex + 1] +  moveX / this.target.width
-            //    orthogonals[lineIndex + 3] = orthogonals[lineIndex + 3] +  moveX / this.target.width    
-            //}
-            this.cleanupLines(orthogonals)
-            this.target.orthogonals = orthogonals
-            this.target.orthogonalPoints = crossPoints
-            //console.log(`count= ${this.holder.count} x = ${x} moveX = ${moveX} startX = ${this._startX} orthogonalValue= ${orthogonals[lineIndex]} width=${this.target.width} orthogonals= ${orthogonals}`)
-        
-          //}
+          if(this._index == 1) {
+            crossPoints.splice(this._index + 1, 0, new Point2(crossPoint.x, crossPoint.y + moveY))
+            crossPoints[this._index + 2] = new Point2(nextCrossPoint.x, nextCrossPoint.y + moveY)
+          } else if(this._index == crossPoints.length - 3) {
+            crossPoints[this._index] = new Point2(crossPoint.x, crossPoint.y + moveY)
+            crossPoints.splice(this._index + 1, 0, new Point2(nextCrossPoint.x, nextCrossPoint.y + moveY))
+          } else {
+            crossPoints[this._index] = new Point2(crossPoint.x, crossPoint.y + moveY)
+            crossPoints[this._index + 1] = new Point2(nextCrossPoint.x, nextCrossPoint.y + moveY)
+          }
+          OrthogonalHelper.cleanOrthogonalPoints(crossPoints)
+          this.target.orthogonalPoints = crossPoints
+          //console.log(`count= ${this.holder.count} x = ${x} moveX = ${moveX} startX = ${this._startX} orthogonalValue= ${orthogonals[lineIndex]} width=${this.target.width} orthogonals= ${orthogonals}`)
         }    
         //this._startX = x
         //this._startY = y
+        this.holder.refreshCrossAnchors()
         this.holder.layoutAnchors()
         this.lastMovingTime = nowTime
       }
@@ -160,6 +145,8 @@ export class CrossMovementAnchor extends Anchor {
       index = index - 1
     }
   }
+
+
 
   protected buildAnchor () {
     this.path.reset()
