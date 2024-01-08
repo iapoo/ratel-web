@@ -1492,9 +1492,11 @@ export class Paint {
   public setColorComponents (r: number, g: number, b: number, a: number) {
     // this._paint.setColorComponents(r, g, b, a)
   }
-  public setColorFilter (colorFilter: any) {
+  public setColorFilter (color: Color) {
     // TODO
     // CanvasKitHelper.Paint.setColorFilter(colorFilter)
+    const colorFilter = Engine.canvasKit.ColorFilter.MakeBlend(color.source, Engine.canvasKit.BlendMode.Color)
+    this._source.setColorFilter(colorFilter)
   }
   // public setColorInt (color: number) {
   //  this._source.setColorInt(color)

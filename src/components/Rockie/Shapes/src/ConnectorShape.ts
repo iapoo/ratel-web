@@ -1,7 +1,7 @@
 /* eslint-disable max-params */
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
 
-import { Point2, Rectangle, Rotation, Shape, } from '@/components/Engine'
+import { FillType, Point2, Rectangle, Rotation, Shape, } from '@/components/Engine'
 import { Line, } from '@antv/g-math'
 import { EntityShape, } from './EntityShape'
 import { SystemUtils } from '@/components/Workspace/Utils'
@@ -401,6 +401,7 @@ export class ConnectorShape extends EntityShape {
     const end = new Point2(this.end.x - this.left, this.end.y - this.top)
     const count = this._orthogonalPoints.length
     this.path.reset()
+    //this.path.setFillType(FillType.Winding)
     for(let i = 0; i < count; i ++) {
       const point = this._orthogonalPoints[i]
       if(i == 0) {
@@ -409,6 +410,12 @@ export class ConnectorShape extends EntityShape {
         this.path.lineTo(point.x, point.y)
       }
     }
+    //TODO: FIX ME, unclose path casue white background, we duplicate points so make path close
+    for(let i = count - 1; i >= 0; i --) {
+      const point = this._orthogonalPoints[i]
+      this.path.lineTo(point.x, point.y)
+    }
+
     //SystemUtils.debugPoints(this._orthogonalPoints)
   }
 
