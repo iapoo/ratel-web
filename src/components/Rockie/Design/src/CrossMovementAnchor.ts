@@ -5,6 +5,7 @@ import { Editor } from '../../Editor'
 import { Holder } from './Holder'
 import { ConnectorShape } from '../../Shapes'
 import { OrthogonalHelper } from './OrthogonalHelper'
+import { SystemUtils } from '@/components/Workspace/Utils'
 
 /**
  * 创建连接线
@@ -100,7 +101,10 @@ export class CrossMovementAnchor extends Anchor {
           }
           OrthogonalHelper.cleanOrthogonalPoints(crossPoints)
           this.target.orthogonalPoints = crossPoints
-          //console.log(`count= ${this.holder.count} x = ${x} moveX = ${moveX} startX = ${this._startX} orthogonalValue= ${orthogonals[lineIndex]} width=${this.target.width} orthogonals= ${orthogonals}`)
+          // console.log(`Debug points`)
+          // SystemUtils.debugPoints(crossPoints)
+          // SystemUtils.debugPoints(this._crossPoints)
+          console.log(`count= ${this.holder.count} x = ${x} moveX = ${moveX} startX = ${this._startX} width=${this.target.width} `)
         } else {
           if(this._index == 1) {
             crossPoints.splice(this._index + 1, 0, new Point2(crossPoint.x, crossPoint.y + moveY))
@@ -114,7 +118,10 @@ export class CrossMovementAnchor extends Anchor {
           }
           OrthogonalHelper.cleanOrthogonalPoints(crossPoints)
           this.target.orthogonalPoints = crossPoints
-          //console.log(`count= ${this.holder.count} x = ${x} moveX = ${moveX} startX = ${this._startX} orthogonalValue= ${orthogonals[lineIndex]} width=${this.target.width} orthogonals= ${orthogonals}`)
+          // console.log(`Debug points`)
+          // SystemUtils.debugPoints(crossPoints)
+          // SystemUtils.debugPoints(this._crossPoints)
+          console.log(`count= ${this.holder.count} x = ${x} moveX = ${moveX} startX = ${this._startX} width=${this.target.width} `)
         }    
         //this._startX = x
         //this._startY = y
@@ -125,26 +132,26 @@ export class CrossMovementAnchor extends Anchor {
     }
   }
 
-  private cleanupLines(orthogonals: number[]) {
-    const count = orthogonals.length / 2
-    let index = count - 1
-    while(index > 0) {
-      if(index >= 2 && orthogonals[index * 2] == orthogonals[ index * 2 - 4] && orthogonals[index * 2] == orthogonals[index * 2 - 2] ) {
-        orthogonals.splice(index * 2 - 2, 2)
-      } else if(index >= 2 && orthogonals[index * 2 + 1] == orthogonals[ index * 2 - 3] && orthogonals[index * 2 + 1] == orthogonals[index * 2 - 1] ) {
-        orthogonals.splice(index * 2 - 2, 2)
-      } else if(index == count - 1 && count > 1 && orthogonals[index * 2 + 1] == 1 && orthogonals[index * 2 - 1] == 1) {
-        orthogonals.splice(index * 2, 2)
-      } else if(index == count - 1 && count > 1 && orthogonals[index * 2 + 1] == 0 && orthogonals[index * 2 - 1] == 0) {
-        orthogonals.splice(index * 2, 2)
-      } else if(index == 1 && count > 1 && orthogonals[index * 2 + 1] == 0 && orthogonals[index * 2 - 1] == 0) {
-        orthogonals.splice(index * 2 - 2, 2)
-      } else if(index == 1 && count > 1 && orthogonals[index * 2 + 1] == 1 && orthogonals[index * 2 - 1] == 1) {
-        orthogonals.splice(index * 2 - 2, 2)
-      }
-      index = index - 1
-    }
-  }
+  // private cleanupLines(orthogonals: number[]) {
+  //   const count = orthogonals.length / 2
+  //   let index = count - 1
+  //   while(index > 0) {
+  //     if(index >= 2 && orthogonals[index * 2] == orthogonals[ index * 2 - 4] && orthogonals[index * 2] == orthogonals[index * 2 - 2] ) {
+  //       orthogonals.splice(index * 2 - 2, 2)
+  //     } else if(index >= 2 && orthogonals[index * 2 + 1] == orthogonals[ index * 2 - 3] && orthogonals[index * 2 + 1] == orthogonals[index * 2 - 1] ) {
+  //       orthogonals.splice(index * 2 - 2, 2)
+  //     } else if(index == count - 1 && count > 1 && orthogonals[index * 2 + 1] == 1 && orthogonals[index * 2 - 1] == 1) {
+  //       orthogonals.splice(index * 2, 2)
+  //     } else if(index == count - 1 && count > 1 && orthogonals[index * 2 + 1] == 0 && orthogonals[index * 2 - 1] == 0) {
+  //       orthogonals.splice(index * 2, 2)
+  //     } else if(index == 1 && count > 1 && orthogonals[index * 2 + 1] == 0 && orthogonals[index * 2 - 1] == 0) {
+  //       orthogonals.splice(index * 2 - 2, 2)
+  //     } else if(index == 1 && count > 1 && orthogonals[index * 2 + 1] == 1 && orthogonals[index * 2 - 1] == 1) {
+  //       orthogonals.splice(index * 2 - 2, 2)
+  //     }
+  //     index = index - 1
+  //   }
+  // }
 
 
 
