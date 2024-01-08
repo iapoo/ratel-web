@@ -14,8 +14,8 @@ import { AdapterAnchor, AdapterType } from './AdapterAnchor'
 import { AdapterDirection } from '../../Shapes/src/EntityShape'
 import { CubicControllerAnchor } from './CubicCotrollerAnchor'
 import { ConnectorType } from '../../Shapes'
-import { CrossDivideAnchor } from './CrossDivideAnchor'
-import { CrossMovementAnchor } from './CrossMovementAnchor'
+import { OrthogonalDivideAnchor } from './OrthogonalDivideAnchor'
+import { OrthogonalMovementAnchor } from './OrthogonalMovementAnchor'
 
 export class Holder extends Control {
   public static readonly PADDING = 32;
@@ -44,8 +44,8 @@ export class Holder extends Control {
   private _endAdapterAnchor: AdapterAnchor
   private _startCubicControllerAnchor: CubicControllerAnchor
   private _endCubicControllerAnchor: CubicControllerAnchor
-  private _crossDivideAnchors: CrossDivideAnchor[] = []
-  private _crossMovementAnchors: CrossMovementAnchor[] = []
+  private _orthogonalDivideAnchors: OrthogonalDivideAnchor[] = []
+  private _orthogonalMovementAnchors: OrthogonalMovementAnchor[] = []
   private _startCubicControllerLine: Line2D
   private _endCubicControllerLine: Line2D
   private _target: Item;
@@ -123,7 +123,7 @@ export class Holder extends Control {
     this._endAdapterAnchor.target = target
     this._startCubicControllerAnchor.target = target
     this._endCubicControllerAnchor.target = target
-    this.createCrossAnchors()
+    this.createOrthogonalAnchors()
     this.layoutAnchors()
     if (this._inHolder) {
       this.addAnchors()
@@ -319,7 +319,7 @@ export class Holder extends Control {
         break
       }
     }
-    this.layoutCrossAnchors()
+    this.layoutOrthogonalAnchors()
     if (this._inHolder) {
       this.addAnchors()
     } else {
@@ -333,98 +333,98 @@ export class Holder extends Control {
     }
   }
 
-  public refreshCrossAnchors() {
+  public refreshOrthogonalAnchors() {
     if(this._target instanceof Connector && this._target.connectorType == ConnectorType.Orthogonal){
       //Need to refresh always
-      //if(this._crossDivideAnchors.length != (this._target.crossPoints.length - 3) * 2 || true) {
-        this.removeCrossAnchors()
-        this.createCrossAnchors()
-        this.addCrossAnchors()
+      //if(this._orthogonalDivideAnchors.length != (this._target.orthogonalPoints.length - 3) * 2 || true) {
+        this.removeOrthogonalAnchors()
+        this.createOrthogonalAnchors()
+        this.addOrthogonalAnchors()
       //}
     }
   }
 
-  private layoutCrossAnchors() {
+  private layoutOrthogonalAnchors() {
     if(this._target instanceof Connector && this._target.connectorType == ConnectorType.Orthogonal){
-      const crossPoints = this._target.crossPoints
-      //console.log(`length == ${crossPoints.length}`)
-      this._crossDivideAnchors.forEach(crossDivideAnchor => {
-        if(crossPoints.length > crossDivideAnchor.index + 1) {
-          const crossPoint = crossPoints[crossDivideAnchor.index]
-          const nextCrossPoint = crossPoints[crossDivideAnchor.index + 1]
-          if(crossDivideAnchor.isLeft) {
-            crossDivideAnchor.left = crossPoint.x * 0.75 + nextCrossPoint.x * 0.25 - Holder.ANCHOR_RADIUS
-            crossDivideAnchor.top = crossPoint.y  * 0.75 + nextCrossPoint.y * 0.25 - Holder.ANCHOR_RADIUS
+      const orthogonalPoints = this._target.orthogonalPoints
+      //console.log(`length == ${orthogonalPoints.length}`)
+      this._orthogonalDivideAnchors.forEach(orthogonalDivideAnchor => {
+        if(orthogonalPoints.length > orthogonalDivideAnchor.index + 1) {
+          const orthogonalPoint = orthogonalPoints[orthogonalDivideAnchor.index]
+          const nextOrthogonalPoint = orthogonalPoints[orthogonalDivideAnchor.index + 1]
+          if(orthogonalDivideAnchor.isLeft) {
+            orthogonalDivideAnchor.left = orthogonalPoint.x * 0.75 + nextOrthogonalPoint.x * 0.25 - Holder.ANCHOR_RADIUS
+            orthogonalDivideAnchor.top = orthogonalPoint.y  * 0.75 + nextOrthogonalPoint.y * 0.25 - Holder.ANCHOR_RADIUS
           } else {
-            crossDivideAnchor.left = crossPoint.x * 0.25 + nextCrossPoint.x * 0.75 - Holder.ANCHOR_RADIUS
-            crossDivideAnchor.top = crossPoint.y  * 0.25 + nextCrossPoint.y * 0.75 - Holder.ANCHOR_RADIUS
+            orthogonalDivideAnchor.left = orthogonalPoint.x * 0.25 + nextOrthogonalPoint.x * 0.75 - Holder.ANCHOR_RADIUS
+            orthogonalDivideAnchor.top = orthogonalPoint.y  * 0.25 + nextOrthogonalPoint.y * 0.75 - Holder.ANCHOR_RADIUS
           }
         }
       })      
-      this._crossMovementAnchors.forEach(crossMovementAnchor => {        
-        if(crossPoints.length > crossMovementAnchor.index + 1) {
-          const crossPoint = crossPoints[crossMovementAnchor.index]
-          const nextCrossPoint = crossPoints[crossMovementAnchor.index + 1]
-          crossMovementAnchor.left = (crossPoint.x + nextCrossPoint.x) / 2 - Holder.ANCHOR_RADIUS
-          crossMovementAnchor.top = (crossPoint.y + nextCrossPoint.y) / 2 - Holder.ANCHOR_RADIUS
-          console.log(`pos= ${crossMovementAnchor.left}, ${crossMovementAnchor.top}`)
+      this._orthogonalMovementAnchors.forEach(orthogonalMovementAnchor => {        
+        if(orthogonalPoints.length > orthogonalMovementAnchor.index + 1) {
+          const orthogonalPoint = orthogonalPoints[orthogonalMovementAnchor.index]
+          const nextOrthogonalPoint = orthogonalPoints[orthogonalMovementAnchor.index + 1]
+          orthogonalMovementAnchor.left = (orthogonalPoint.x + nextOrthogonalPoint.x) / 2 - Holder.ANCHOR_RADIUS
+          orthogonalMovementAnchor.top = (orthogonalPoint.y + nextOrthogonalPoint.y) / 2 - Holder.ANCHOR_RADIUS
+          console.log(`pos= ${orthogonalMovementAnchor.left}, ${orthogonalMovementAnchor.top}`)
         }        
       })
     }
   }
 
-  private createCrossAnchors() {
+  private createOrthogonalAnchors() {
     if(this._target instanceof Connector && this._target.connectorType == ConnectorType.Orthogonal){
-      const crossPointCount = this._target.crossPoints.length
-      const crossPoints = this._target.crossPoints
-      this._crossDivideAnchors.length = 0
-      this._crossMovementAnchors.length = 0
-      //console.log(`points = ${crossPointCount} ${crossPoints}`)
-      for(let i = 1; i < crossPointCount - 2; i ++) {
-        const crossPoint = crossPoints[i]
-        const nextCrossPoint = crossPoints[i + 1]
-        const crossDivideAnchor1 = new CrossDivideAnchor(this._editor, this, i, true)
-        const crossDivideAnchor2 = new CrossDivideAnchor(this._editor, this, i, false)
-        const crossMovementAnchor = new CrossMovementAnchor(this._editor, this, i)
-        crossMovementAnchor.target = this._target
-        crossMovementAnchor.left = (crossPoint.x + nextCrossPoint.x) / 2 - Holder.ANCHOR_RADIUS
-        crossMovementAnchor.top = (crossPoint.y + nextCrossPoint.y) / 2 - Holder.ANCHOR_RADIUS
-        crossDivideAnchor1.target = this._target
-        crossDivideAnchor1.left = crossPoint.x * 0.75 + nextCrossPoint.x * 0.25 - Holder.ANCHOR_RADIUS
-        crossDivideAnchor1.top = crossPoint.y  * 0.75 + nextCrossPoint.y * 0.25 - Holder.ANCHOR_RADIUS
-        crossDivideAnchor2.target = this._target
-        crossDivideAnchor2.left = crossPoint.x * 0.25 + nextCrossPoint.x * 0.75 - Holder.ANCHOR_RADIUS
-        crossDivideAnchor2.top = crossPoint.y  * 0.25 + nextCrossPoint.y * 0.75 - Holder.ANCHOR_RADIUS
-        this._crossDivideAnchors.push(crossDivideAnchor1)
-        this._crossDivideAnchors.push(crossDivideAnchor2)
-        this._crossMovementAnchors.push(crossMovementAnchor)
+      const orthogonalPointCount = this._target.orthogonalPoints.length
+      const orthogonalPoints = this._target.orthogonalPoints
+      this._orthogonalDivideAnchors.length = 0
+      this._orthogonalMovementAnchors.length = 0
+      //console.log(`points = ${orthogonalPointCount} ${orthogonalPoints}`)
+      for(let i = 1; i < orthogonalPointCount - 2; i ++) {
+        const orthogonalPoint = orthogonalPoints[i]
+        const nextOrthogonalPoint = orthogonalPoints[i + 1]
+        const orthogonalDivideAnchor1 = new OrthogonalDivideAnchor(this._editor, this, i, true)
+        const orthogonalDivideAnchor2 = new OrthogonalDivideAnchor(this._editor, this, i, false)
+        const orthogonalMovementAnchor = new OrthogonalMovementAnchor(this._editor, this, i)
+        orthogonalMovementAnchor.target = this._target
+        orthogonalMovementAnchor.left = (orthogonalPoint.x + nextOrthogonalPoint.x) / 2 - Holder.ANCHOR_RADIUS
+        orthogonalMovementAnchor.top = (orthogonalPoint.y + nextOrthogonalPoint.y) / 2 - Holder.ANCHOR_RADIUS
+        orthogonalDivideAnchor1.target = this._target
+        orthogonalDivideAnchor1.left = orthogonalPoint.x * 0.75 + nextOrthogonalPoint.x * 0.25 - Holder.ANCHOR_RADIUS
+        orthogonalDivideAnchor1.top = orthogonalPoint.y  * 0.75 + nextOrthogonalPoint.y * 0.25 - Holder.ANCHOR_RADIUS
+        orthogonalDivideAnchor2.target = this._target
+        orthogonalDivideAnchor2.left = orthogonalPoint.x * 0.25 + nextOrthogonalPoint.x * 0.75 - Holder.ANCHOR_RADIUS
+        orthogonalDivideAnchor2.top = orthogonalPoint.y  * 0.25 + nextOrthogonalPoint.y * 0.75 - Holder.ANCHOR_RADIUS
+        this._orthogonalDivideAnchors.push(orthogonalDivideAnchor1)
+        this._orthogonalDivideAnchors.push(orthogonalDivideAnchor2)
+        this._orthogonalMovementAnchors.push(orthogonalMovementAnchor)
       }
     }
   }
 
-  private addCrossAnchors() {    
+  private addOrthogonalAnchors() {    
     if(this._target instanceof Connector && this._target.connectorType == ConnectorType.Orthogonal){
-      this._crossDivideAnchors.forEach(crossDivideAnchor => {
-        this.addNode(crossDivideAnchor)
+      this._orthogonalDivideAnchors.forEach(orthogonalDivideAnchor => {
+        this.addNode(orthogonalDivideAnchor)
       })      
-      this._crossMovementAnchors.forEach(crossMovementAnchor => {
-        this.addNode(crossMovementAnchor)
+      this._orthogonalMovementAnchors.forEach(orthogonalMovementAnchor => {
+        this.addNode(orthogonalMovementAnchor)
       })
-      //this._crossDivideAnchors.length = 0
-      //this._crossMovementAnchors.length = 0
+      //this._orthogonalDivideAnchors.length = 0
+      //this._orthogonalMovementAnchors.length = 0
     }
   }
   
-  private removeCrossAnchors() {
+  private removeOrthogonalAnchors() {
     if(this._target instanceof Connector && this._target.connectorType == ConnectorType.Orthogonal){
-      this._crossDivideAnchors.forEach(crossDivideAnchor => {
-        this.removeNode(crossDivideAnchor)
+      this._orthogonalDivideAnchors.forEach(orthogonalDivideAnchor => {
+        this.removeNode(orthogonalDivideAnchor)
       })      
-      this._crossMovementAnchors.forEach(crossMovementAnchor => {
-        this.removeNode(crossMovementAnchor)
+      this._orthogonalMovementAnchors.forEach(orthogonalMovementAnchor => {
+        this.removeNode(orthogonalMovementAnchor)
       })
-      //this._crossDivideAnchors.length = 0
-      //this._crossMovementAnchors.length = 0
+      //this._orthogonalDivideAnchors.length = 0
+      //this._orthogonalMovementAnchors.length = 0
     }
   }
 
@@ -439,7 +439,7 @@ export class Holder extends Control {
         this.addNode(this._startCubicControllerAnchor)
         this.addNode(this._endCubicControllerAnchor)
       }
-      this.addCrossAnchors()
+      this.addOrthogonalAnchors()
       this.addNode(this._sourceConnectionAnchor)
       this.addNode(this._targetConnectionAnchor)
     } else {
@@ -481,7 +481,7 @@ export class Holder extends Control {
         this.removeNode(this._startCubicControllerAnchor)
         this.removeNode(this._endCubicControllerAnchor)
       }
-      this.removeCrossAnchors()
+      this.removeOrthogonalAnchors()
       this.removeNode(this._sourceConnectionAnchor)
       this.removeNode(this._targetConnectionAnchor)
     } else {

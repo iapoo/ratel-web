@@ -91,19 +91,18 @@ export class Connector extends Item {
   //Percent value
   private _curveEndModifier: Point2
   //Percent values with x, y. At least 1 segments, additional 2 segments are first and last and  invisible for arrows and can't be modified.
-  private _orthogonals: number[]
-  private _horizontal: boolean
+  //private _orthogonals: number[]
+  //private _horizontal: boolean
   private _startDirection: ConnectorDirection
   private _endDirection: ConnectorDirection
   private _orthogonalPoints: Point2[]
 
-  public constructor (start: Point2, end: Point2, horizontal: boolean = true,
-    startDirection: ConnectorDirection = ConnectorDirection.Right, endDirection: ConnectorDirection = ConnectorDirection.Left) {
+  public constructor (start: Point2, end: Point2, startDirection: ConnectorDirection = ConnectorDirection.Right, endDirection: ConnectorDirection = ConnectorDirection.Left) {
     super(Math.min(start.x, end.x), Math.min(start.y, end.y), Math.abs(start.x - end.x), Math.abs(start.y - end.y))
     this._start = start
     this._end = end
     this._orthogonalPoints = this.initializeOrthogonalPoints()
-    this._shape = new ConnectorShape(start.x, start.y, end.x, end.y, horizontal, startDirection, endDirection, this._orthogonalPoints)
+    this._shape = new ConnectorShape(start.x, start.y, end.x, end.y, startDirection, endDirection, this._orthogonalPoints)
     this._connectorShape = this._shape as ConnectorShape
     this.type = Connector.CONNECTOR_TYPE_CONNECTOR
     this._connectorType = ConnectorType.Orthogonal
@@ -113,12 +112,12 @@ export class Connector extends Item {
     this._doubleLineStrokeWidth = 1
     this._curveStartModifier = new Point2(0.4, 0)
     this._curveEndModifier = new Point2(-0.4, 0)
-    this._horizontal = horizontal
-    if(this._horizontal) {
-      this._orthogonals = [0.5, 0, 0.5, 1]
-    } else {
-      this._orthogonals = [0, 0.5, 1, 0.5]
-    }
+    //this._horizontal = horizontal
+    //if(this._horizontal) {
+    //  this._orthogonals = [0.5, 0, 0.5, 1]
+    //} else {
+    //  this._orthogonals = [0, 0.5, 1, 0.5]
+    //}
     this._startDirection = startDirection
     this._endDirection = endDirection
     this._connectorShape.orthogonalPoints = this._orthogonalPoints
@@ -132,20 +131,20 @@ export class Connector extends Item {
     this._source = value
   }
 
-  public get horizontal() {
-    return this._horizontal
-  }
+  // public get horizontal() {
+  //   return this._horizontal
+  // }
 
-  public set horizontal(value: boolean) {
-    this._horizontal = value
-    this._connectorShape.horizontal = value
-    if(this._horizontal) {
-      this._orthogonals = [0.5, 0, 0.5, 1]
-    } else {
-      this._orthogonals = [0, 0.5, 1, 0.5]
-    }
-    this.updateTheme()
-  }
+  // public set horizontal(value: boolean) {
+  //   this._horizontal = value
+  //   this._connectorShape.horizontal = value
+  //   if(this._horizontal) {
+  //     this._orthogonals = [0.5, 0, 0.5, 1]
+  //   } else {
+  //     this._orthogonals = [0, 0.5, 1, 0.5]
+  //   }
+  //   this.updateTheme()
+  // }
 
   public set startDirection(value: ConnectorDirection) {
     this._startDirection = value
@@ -171,9 +170,9 @@ export class Connector extends Item {
     return this._connectorShape
   }
 
-  public get crossPoints() {
-    return this._connectorShape.crossPoints
-  }  
+  // public get crossPoints() {
+  //   return this._connectorShape.crossPoints
+  // }  
 
   public get startArrow() {
     return this._startArrow
@@ -231,15 +230,15 @@ export class Connector extends Item {
     this.updateTheme()
   }
   
-  public get orthogonals() {
-    return this._orthogonals
-  }
+  // public get orthogonals() {
+  //   return this._orthogonals
+  // }
 
-  public set orthogonals(value: number[]) {
-    this._orthogonals = value
-    this._connectorShape.orthogonals = value
-    this.updateTheme()
-  }
+  // public set orthogonals(value: number[]) {
+  //   this._orthogonals = value
+  //   this._connectorShape.orthogonals = value
+  //   this.updateTheme()
+  // }
 
   public get orthogonalPoints() {
     return this._orthogonalPoints
