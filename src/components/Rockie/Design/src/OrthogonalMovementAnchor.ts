@@ -10,12 +10,12 @@ import { SystemUtils } from '@/components/Workspace/Utils'
 /**
  * 创建连接线
  */
-export class CrossMovementAnchor extends Anchor {
+export class OrthogonalMovementAnchor extends Anchor {
   private _moving = false
   private _startX = 0
   private _startY = 0
   private _index = 0
-  private _crossPoints: Point2[] = []
+  private _orthogonalPoints: Point2[] = []
 
   public constructor(editor: Editor, holder: Holder, index: number) {
     super(editor, holder)
@@ -30,8 +30,8 @@ export class CrossMovementAnchor extends Anchor {
     return this._index
   }
 
-  public get crossPoints() {
-    return this._crossPoints
+  public get orthogonalPoints() {
+    return this._orthogonalPoints
   }
 
   public handlePointerClick (x: number, y: number) {
@@ -46,9 +46,9 @@ export class CrossMovementAnchor extends Anchor {
     this._startY = y;
     //this.makeReady()
     if(this.target instanceof Connector) {
-      this._crossPoints.length = 0
-      this._crossPoints = this._crossPoints.concat(this.target.crossPoints)
-      //if(this._crossPoints.length == 0) {
+      this._orthogonalPoints.length = 0
+      this._orthogonalPoints = this._orthogonalPoints.concat(this.target.orthogonalPoints)
+      //if(this._orthogonalPoints.length == 0) {
       //  console.log(`Exception is here`)
       //}
     }
@@ -81,51 +81,51 @@ export class CrossMovementAnchor extends Anchor {
     const nowTime = new Date().getTime()
     if (nowTime - this.lastMovingTime > Anchor.MIN_MOVING_INTERVAL) {
       if(this._moving && this.target instanceof Connector) {
-        //console.log(`a= ${this._crossPoints}   b= ${this.target.crossPoints}`)
+        //console.log(`a= ${this._orthogonalPoints}   b= ${this.target.orthogonalPoints}`)
         const moveX = x - this._startX
         const moveY = y - this._startY
-        let crossPoints: Point2[] =  [] 
-        crossPoints = crossPoints.concat(this._crossPoints)
-        const crossPoint = crossPoints[this._index]
-        const nextCrossPoint = crossPoints[this._index + 1]
-        if(crossPoint.x == nextCrossPoint.x) {
+        let orthogonalPoints: Point2[] =  [] 
+        orthogonalPoints = orthogonalPoints.concat(this._orthogonalPoints)
+        const orthogonalPoint = orthogonalPoints[this._index]
+        const nextOrthogonalPoint = orthogonalPoints[this._index + 1]
+        if(orthogonalPoint.x == nextOrthogonalPoint.x) {
           if(this._index == 1) {
-            crossPoints.splice(this._index + 1, 0, new Point2(crossPoint.x + moveX, crossPoint.y))
-            crossPoints[this._index + 2] = new Point2(nextCrossPoint.x + moveX, nextCrossPoint.y)
-          } else if(this._index == crossPoints.length - 3) {
-            crossPoints[this._index] = new Point2(crossPoint.x + moveX, crossPoint.y)
-            crossPoints.splice(this._index + 1, 0, new Point2(nextCrossPoint.x + moveX, nextCrossPoint.y))
+            orthogonalPoints.splice(this._index + 1, 0, new Point2(orthogonalPoint.x + moveX, orthogonalPoint.y))
+            orthogonalPoints[this._index + 2] = new Point2(nextOrthogonalPoint.x + moveX, nextOrthogonalPoint.y)
+          } else if(this._index == orthogonalPoints.length - 3) {
+            orthogonalPoints[this._index] = new Point2(orthogonalPoint.x + moveX, orthogonalPoint.y)
+            orthogonalPoints.splice(this._index + 1, 0, new Point2(nextOrthogonalPoint.x + moveX, nextOrthogonalPoint.y))
           } else {
-            crossPoints[this._index] = new Point2(crossPoint.x + moveX, crossPoint.y)
-            crossPoints[this._index + 1] = new Point2(nextCrossPoint.x + moveX, nextCrossPoint.y)
+            orthogonalPoints[this._index] = new Point2(orthogonalPoint.x + moveX, orthogonalPoint.y)
+            orthogonalPoints[this._index + 1] = new Point2(nextOrthogonalPoint.x + moveX, nextOrthogonalPoint.y)
           }
-          OrthogonalHelper.cleanOrthogonalPoints(crossPoints)
-          this.target.orthogonalPoints = crossPoints
+          OrthogonalHelper.cleanOrthogonalPoints(orthogonalPoints)
+          this.target.orthogonalPoints = orthogonalPoints
           // console.log(`Debug points`)
-          // SystemUtils.debugPoints(crossPoints)
-          // SystemUtils.debugPoints(this._crossPoints)
+          // SystemUtils.debugPoints(orthogonalPoints)
+          // SystemUtils.debugPoints(this._orthogonalPoints)
           console.log(`count= ${this.holder.count} x = ${x} moveX = ${moveX} startX = ${this._startX} width=${this.target.width} `)
         } else {
           if(this._index == 1) {
-            crossPoints.splice(this._index + 1, 0, new Point2(crossPoint.x, crossPoint.y + moveY))
-            crossPoints[this._index + 2] = new Point2(nextCrossPoint.x, nextCrossPoint.y + moveY)
-          } else if(this._index == crossPoints.length - 3) {
-            crossPoints[this._index] = new Point2(crossPoint.x, crossPoint.y + moveY)
-            crossPoints.splice(this._index + 1, 0, new Point2(nextCrossPoint.x, nextCrossPoint.y + moveY))
+            orthogonalPoints.splice(this._index + 1, 0, new Point2(orthogonalPoint.x, orthogonalPoint.y + moveY))
+            orthogonalPoints[this._index + 2] = new Point2(nextOrthogonalPoint.x, nextOrthogonalPoint.y + moveY)
+          } else if(this._index == orthogonalPoints.length - 3) {
+            orthogonalPoints[this._index] = new Point2(orthogonalPoint.x, orthogonalPoint.y + moveY)
+            orthogonalPoints.splice(this._index + 1, 0, new Point2(nextOrthogonalPoint.x, nextOrthogonalPoint.y + moveY))
           } else {
-            crossPoints[this._index] = new Point2(crossPoint.x, crossPoint.y + moveY)
-            crossPoints[this._index + 1] = new Point2(nextCrossPoint.x, nextCrossPoint.y + moveY)
+            orthogonalPoints[this._index] = new Point2(orthogonalPoint.x, orthogonalPoint.y + moveY)
+            orthogonalPoints[this._index + 1] = new Point2(nextOrthogonalPoint.x, nextOrthogonalPoint.y + moveY)
           }
-          OrthogonalHelper.cleanOrthogonalPoints(crossPoints)
-          this.target.orthogonalPoints = crossPoints
+          OrthogonalHelper.cleanOrthogonalPoints(orthogonalPoints)
+          this.target.orthogonalPoints = orthogonalPoints
           // console.log(`Debug points`)
-          // SystemUtils.debugPoints(crossPoints)
-          // SystemUtils.debugPoints(this._crossPoints)
+          // SystemUtils.debugPoints(orthogonalPoints)
+          // SystemUtils.debugPoints(this._orthogonalPoints)
           console.log(`count= ${this.holder.count} x = ${x} moveX = ${moveX} startX = ${this._startX} width=${this.target.width} `)
         }    
         //this._startX = x
         //this._startY = y
-        this.holder.refreshCrossAnchors()
+        this.holder.refreshOrthogonalAnchors()
         this.holder.layoutAnchors()
         this.lastMovingTime = nowTime
       }

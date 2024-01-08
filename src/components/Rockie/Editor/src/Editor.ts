@@ -644,7 +644,7 @@ export class Editor extends Painter {
         const theControllerLayer = this.controllerLayer as ControllerLayer
         this._inCreatingConnector = true
         const worldTargetPoint = clickedEditorItem.shape.worldTransform.makePoint(targetPoint)
-        const connector = new Connector(worldTargetPoint, new Point2(worldTargetPoint.x + 10, worldTargetPoint.y + 10), horizontal, startDirection)
+        const connector = new Connector(worldTargetPoint, new Point2(worldTargetPoint.x + 10, worldTargetPoint.y + 10), startDirection)
         // const sourceJoint = new Point2(targetPoint.x - targetEntity.left, targetPoint.y - targetEntity.top)
         connector.source = targetEntity
         connector.sourceJoint = targetPoint
@@ -1925,7 +1925,7 @@ export class Editor extends Painter {
   }
 
   /**
-   * Check and decide how to draw connector cross line
+   * Check and decide how to draw connector orthogonal line
    * @param editorItem 
    * @param x 
    * @param y 
@@ -1948,7 +1948,7 @@ export class Editor extends Painter {
 
 
   /**
-   * Check and decide how to draw connector cross line
+   * Check and decide how to draw connector orthogonal line
    * @param editorItem 
    * @param x 
    * @param y 

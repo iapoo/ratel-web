@@ -9,13 +9,13 @@ import { OrthogonalHelper } from './OrthogonalHelper'
 /**
  * 创建连接线
  */
-export class CrossDivideAnchor extends Anchor {
+export class OrthogonalDivideAnchor extends Anchor {
   private _moving = false
   private _startX = 0
   private _startY = 0
   private _index = 0
   private _left = true
-  private _crossPoints: Point2[] = []
+  private _orthogonalPoints: Point2[] = []
   //private _orthogonals: number[] = []
   
   public constructor(editor: Editor, holder: Holder, index: number, left: boolean) {
@@ -48,9 +48,9 @@ export class CrossDivideAnchor extends Anchor {
     this._startY = y;
     //this.makeReady()
     if(this.target instanceof Connector) {
-      this._crossPoints.length = 0
+      this._orthogonalPoints.length = 0
       //this._orthogonals.length = 0
-      this._crossPoints = this._crossPoints.concat(this.target.crossPoints)
+      this._orthogonalPoints = this._orthogonalPoints.concat(this.target.orthogonalPoints)
       //this._orthogonals = this._orthogonals.concat(this.target.orthogonals)
     }
 
@@ -80,50 +80,50 @@ export class CrossDivideAnchor extends Anchor {
       if(this._moving && this.target instanceof Connector) {
         const moveX = x - this._startX
         const moveY = y - this._startY
-        const crossPointCount = this._crossPoints.length
-        let crossPoints: Point2[] =  [] 
-        crossPoints = crossPoints.concat(this._crossPoints)
-        const crossPoint = crossPoints[this._index]
-        const nextCrossPoint = crossPoints[this._index + 1]
-        //const crossWidth = this.target.horizontal ? this.target.width - ConnectorShape.DEFAULT_SEGMENT * 2 : this.target.width
-        //const crossHeight = this.target.horizontal ? this.target.height : this.target.height - ConnectorShape.DEFAULT_SEGMENT * 2
-        //const crossSegmentX = this.target.horizontal ? ConnectorShape.DEFAULT_SEGMENT : 0
-        //const crossSegmentY = this.target.horizontal ? 0 : ConnectorShape.DEFAULT_SEGMENT
+        const orthogonalPointCount = this._orthogonalPoints.length
+        let orthogonalPoints: Point2[] =  [] 
+        orthogonalPoints = orthogonalPoints.concat(this._orthogonalPoints)
+        const orthogonalPoint = orthogonalPoints[this._index]
+        const nextOrthogonalPoint = orthogonalPoints[this._index + 1]
+        //const orthogonalWidth = this.target.horizontal ? this.target.width - ConnectorShape.DEFAULT_SEGMENT * 2 : this.target.width
+        //const orthogonalHeight = this.target.horizontal ? this.target.height : this.target.height - ConnectorShape.DEFAULT_SEGMENT * 2
+        //const orthogonalSegmentX = this.target.horizontal ? ConnectorShape.DEFAULT_SEGMENT : 0
+        //const orthogonalSegmentY = this.target.horizontal ? 0 : ConnectorShape.DEFAULT_SEGMENT
         //let orthogonals: number[] = []
         //orthogonals = orthogonals.concat(this._orthogonals)
         //let lineIndex = (this._index - 1) * 2
         if(this._left) {
-          if(crossPoint.y == nextCrossPoint.y) {
-            const leftPoint = new Point2(crossPoint.x, crossPoint.y)
-            const currentPoint = new Point2(crossPoint.x, crossPoint.y + moveY)
-            const nextPoint = new Point2((crossPoint.x + nextCrossPoint.x ) / 2, crossPoint.y + moveY)
-            const rightPoint = new Point2((crossPoint.x + nextCrossPoint.x ) / 2, crossPoint.y)
-            //orthogonals.splice(lineIndex, 0, currentPoint.x / crossWidth, currentPoint.y / crossHeight,
-            //  nextPoint.x / crossWidth, nextPoint.y / crossHeight,
-            //  rightPoint.x / crossWidth, rightPoint.y / crossHeight) 
+          if(orthogonalPoint.y == nextOrthogonalPoint.y) {
+            const leftPoint = new Point2(orthogonalPoint.x, orthogonalPoint.y)
+            const currentPoint = new Point2(orthogonalPoint.x, orthogonalPoint.y + moveY)
+            const nextPoint = new Point2((orthogonalPoint.x + nextOrthogonalPoint.x ) / 2, orthogonalPoint.y + moveY)
+            const rightPoint = new Point2((orthogonalPoint.x + nextOrthogonalPoint.x ) / 2, orthogonalPoint.y)
+            //orthogonals.splice(lineIndex, 0, currentPoint.x / orthogonalWidth, currentPoint.y / orthogonalHeight,
+            //  nextPoint.x / orthogonalWidth, nextPoint.y / orthogonalHeight,
+            //  rightPoint.x / orthogonalWidth, rightPoint.y / orthogonalHeight) 
             //this.cleanupLines(orthogonals)
             //this.target.orthogonals = orthogonals
-            crossPoints.splice(this._index + 1, 0, currentPoint, nextPoint, rightPoint)
-            OrthogonalHelper.cleanOrthogonalPoints(crossPoints)
-            this.target.orthogonalPoints = crossPoints
+            orthogonalPoints.splice(this._index + 1, 0, currentPoint, nextPoint, rightPoint)
+            OrthogonalHelper.cleanOrthogonalPoints(orthogonalPoints)
+            this.target.orthogonalPoints = orthogonalPoints
             //console.log(`length = ${orthogonals.length}`)
           } else {
-            const leftPoint = new Point2(crossPoint.x, crossPoint.y)
-            const currentPoint = new Point2(crossPoint.x + moveX, crossPoint.y)
-            const nextPoint = new Point2(crossPoint.x + moveX, (crossPoint.y + nextCrossPoint.y) / 2)
-            const rightPoint = new Point2(crossPoint.x, (crossPoint.y + nextCrossPoint.y) / 2)
+            const leftPoint = new Point2(orthogonalPoint.x, orthogonalPoint.y)
+            const currentPoint = new Point2(orthogonalPoint.x + moveX, orthogonalPoint.y)
+            const nextPoint = new Point2(orthogonalPoint.x + moveX, (orthogonalPoint.y + nextOrthogonalPoint.y) / 2)
+            const rightPoint = new Point2(orthogonalPoint.x, (orthogonalPoint.y + nextOrthogonalPoint.y) / 2)
             //console.log(` index = ${lineIndex} length = ${orthogonals.length}`)
             //orthogonals.forEach(orthogonal=> {
             //  console.log(`orthogonal= ${orthogonal}`)
             //})
-            //orthogonals.splice(lineIndex, 0, currentPoint.x / crossWidth, currentPoint.y / crossHeight,
-            //  nextPoint.x / crossWidth, nextPoint.y / crossHeight,
-            //  rightPoint.x / crossWidth, rightPoint.y / crossHeight) 
+            //orthogonals.splice(lineIndex, 0, currentPoint.x / orthogonalWidth, currentPoint.y / orthogonalHeight,
+            //  nextPoint.x / orthogonalWidth, nextPoint.y / orthogonalHeight,
+            //  rightPoint.x / orthogonalWidth, rightPoint.y / orthogonalHeight) 
             //this.cleanupLines(orthogonals)
             //this.target.orthogonals = orthogonals
-            crossPoints.splice(this._index + 1, 0, currentPoint, nextPoint, rightPoint)
-            OrthogonalHelper.cleanOrthogonalPoints(crossPoints)
-            this.target.orthogonalPoints = crossPoints
+            orthogonalPoints.splice(this._index + 1, 0, currentPoint, nextPoint, rightPoint)
+            OrthogonalHelper.cleanOrthogonalPoints(orthogonalPoints)
+            this.target.orthogonalPoints = orthogonalPoints
 
             //console.log(` index = ${lineIndex} length = ${orthogonals.length}`)
             //orthogonals.forEach(orthogonal=> {
@@ -131,41 +131,41 @@ export class CrossDivideAnchor extends Anchor {
             //})
           }
         } else {
-          if(crossPoint.y == nextCrossPoint.y) {
-            const leftPoint = new Point2((crossPoint.x + nextCrossPoint.x ) / 2, crossPoint.y)
-            const currentPoint = new Point2((crossPoint.x + nextCrossPoint.x ) / 2, crossPoint.y + moveY)
-            const nextPoint = new Point2(nextCrossPoint.x, nextCrossPoint.y + moveY)
-            const rightPoint = new Point2(nextCrossPoint.x, nextCrossPoint.y)
-            // orthogonals.splice(lineIndex, 0, leftPoint.x / crossWidth, leftPoint.y / crossHeight,
-            //   currentPoint.x / crossWidth, currentPoint.y / crossHeight,
-            //   nextPoint.x / crossWidth, nextPoint.y / crossHeight) 
+          if(orthogonalPoint.y == nextOrthogonalPoint.y) {
+            const leftPoint = new Point2((orthogonalPoint.x + nextOrthogonalPoint.x ) / 2, orthogonalPoint.y)
+            const currentPoint = new Point2((orthogonalPoint.x + nextOrthogonalPoint.x ) / 2, orthogonalPoint.y + moveY)
+            const nextPoint = new Point2(nextOrthogonalPoint.x, nextOrthogonalPoint.y + moveY)
+            const rightPoint = new Point2(nextOrthogonalPoint.x, nextOrthogonalPoint.y)
+            // orthogonals.splice(lineIndex, 0, leftPoint.x / orthogonalWidth, leftPoint.y / orthogonalHeight,
+            //   currentPoint.x / orthogonalWidth, currentPoint.y / orthogonalHeight,
+            //   nextPoint.x / orthogonalWidth, nextPoint.y / orthogonalHeight) 
             // this.cleanupLines(orthogonals)
             // this.target.orthogonals = orthogonals
             // console.log(` index = ${lineIndex} length = ${orthogonals.length}`)
             // orthogonals.forEach(orthogonal=> {
             //   console.log(`orthogonal= ${orthogonal}`)
             // })
-            crossPoints.splice(this._index, 0, leftPoint, currentPoint, nextPoint)
-            OrthogonalHelper.cleanOrthogonalPoints(crossPoints)
-            this.target.orthogonalPoints = crossPoints
+            orthogonalPoints.splice(this._index + 1, 0, leftPoint, currentPoint, nextPoint)
+            OrthogonalHelper.cleanOrthogonalPoints(orthogonalPoints)
+            this.target.orthogonalPoints = orthogonalPoints
 
           } else {
-            const leftPoint = new Point2(crossPoint.x, (crossPoint.y + nextCrossPoint.y) / 2 )
-            const currentPoint = new Point2(crossPoint.x + moveX, (crossPoint.y + nextCrossPoint.y) / 2)
-            const nextPoint = new Point2(nextCrossPoint.x + moveX, nextCrossPoint.y)
-            const rightPoint = new Point2(nextCrossPoint.x, nextCrossPoint.y)
-            // orthogonals.splice(lineIndex, 0, leftPoint.x / crossWidth, leftPoint.y / crossHeight,
-            //   currentPoint.x / crossWidth, currentPoint.y / crossHeight,
-            //   nextPoint.x / crossWidth, nextPoint.y / crossHeight) 
+            const leftPoint = new Point2(orthogonalPoint.x, (orthogonalPoint.y + nextOrthogonalPoint.y) / 2 )
+            const currentPoint = new Point2(orthogonalPoint.x + moveX, (orthogonalPoint.y + nextOrthogonalPoint.y) / 2)
+            const nextPoint = new Point2(nextOrthogonalPoint.x + moveX, nextOrthogonalPoint.y)
+            const rightPoint = new Point2(nextOrthogonalPoint.x, nextOrthogonalPoint.y)
+            // orthogonals.splice(lineIndex, 0, leftPoint.x / orthogonalWidth, leftPoint.y / orthogonalHeight,
+            //   currentPoint.x / orthogonalWidth, currentPoint.y / orthogonalHeight,
+            //   nextPoint.x / orthogonalWidth, nextPoint.y / orthogonalHeight) 
             // this.cleanupLines(orthogonals)
             // this.target.orthogonals = orthogonals
             // console.log(` index = ${lineIndex} length = ${orthogonals.length}`)
             // orthogonals.forEach(orthogonal=> {
             //   console.log(`orthogonal= ${orthogonal}`)
             // })
-            crossPoints.splice(this._index, 0, leftPoint, currentPoint, nextPoint)
-            OrthogonalHelper.cleanOrthogonalPoints(crossPoints)
-            this.target.orthogonalPoints = crossPoints
+            orthogonalPoints.splice(this._index + 1, 0, leftPoint, currentPoint, nextPoint)
+            OrthogonalHelper.cleanOrthogonalPoints(orthogonalPoints)
+            this.target.orthogonalPoints = orthogonalPoints
 
           }
         }
@@ -173,7 +173,7 @@ export class CrossDivideAnchor extends Anchor {
 
         //this._startX = x
         //this._startY = y
-        this.holder.refreshCrossAnchors()
+        this.holder.refreshOrthogonalAnchors()
         this.holder.layoutAnchors()
         this.lastMovingTime = nowTime
       }
