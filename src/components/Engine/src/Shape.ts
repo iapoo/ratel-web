@@ -228,6 +228,7 @@ export abstract class Shape extends Node {
         graphics.drawPath(this._path, this._fill)
       }
       if (this._stroked) {
+        //this._stroke.setColorFilter(this._stroke.getColor())
         graphics.drawPath(this._path, this._stroke)
       }
     }
