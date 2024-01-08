@@ -449,7 +449,7 @@ export class ConnectorShape extends EntityShape {
         this.path.lineTo(point.x, point.y)
       }
     }
-    SystemUtils.debugPoints(this._orthogonalPoints)
+    //SystemUtils.debugPoints(this._orthogonalPoints)
   }
   private updateOrthogonalPath2() {
     const defaultSegment = this.width > ConnectorShape.DEFAULT_SEGMENT * 2 ? ConnectorShape.DEFAULT_SEGMENT : this.width / 2

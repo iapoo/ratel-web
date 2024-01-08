@@ -335,12 +335,12 @@ export class Holder extends Control {
 
   public refreshCrossAnchors() {
     if(this._target instanceof Connector && this._target.connectorType == ConnectorType.Orthogonal){
-      //Try to refresh cross anchors while necessary
-      if(this._crossDivideAnchors.length != (this._target.crossPoints.length - 3) * 2) {
+      //Need to refresh always
+      //if(this._crossDivideAnchors.length != (this._target.crossPoints.length - 3) * 2 || true) {
         this.removeCrossAnchors()
         this.createCrossAnchors()
         this.addCrossAnchors()
-      }
+      //}
     }
   }
 
@@ -367,6 +367,7 @@ export class Holder extends Control {
           const nextCrossPoint = crossPoints[crossMovementAnchor.index + 1]
           crossMovementAnchor.left = (crossPoint.x + nextCrossPoint.x) / 2 - Holder.ANCHOR_RADIUS
           crossMovementAnchor.top = (crossPoint.y + nextCrossPoint.y) / 2 - Holder.ANCHOR_RADIUS
+          console.log(`pos= ${crossMovementAnchor.left}, ${crossMovementAnchor.top}`)
         }        
       })
     }
