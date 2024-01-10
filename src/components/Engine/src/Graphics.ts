@@ -1928,6 +1928,11 @@ export class Path {
     return this._source.countPoints()
   }
 
+  public getPoint(index: number): number[] {
+    const point = this._source.getPoint(index)
+    return point
+  }
+
   public cubicTo (
     cpx1: number,
     cpy1: number,
