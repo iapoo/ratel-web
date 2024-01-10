@@ -367,7 +367,7 @@ export class Holder extends Control {
           const nextOrthogonalPoint = orthogonalPoints[orthogonalMovementAnchor.index + 1]
           orthogonalMovementAnchor.left = (orthogonalPoint.x + nextOrthogonalPoint.x) / 2 - Holder.ANCHOR_RADIUS
           orthogonalMovementAnchor.top = (orthogonalPoint.y + nextOrthogonalPoint.y) / 2 - Holder.ANCHOR_RADIUS
-          console.log(`pos= ${orthogonalMovementAnchor.left}, ${orthogonalMovementAnchor.top}`)
+          //console.log(`pos= ${orthogonalMovementAnchor.left}, ${orthogonalMovementAnchor.top}`)
         }        
       })
     }
