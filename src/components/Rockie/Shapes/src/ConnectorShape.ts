@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
 
 import { FillType, Point2, Rectangle, Rotation, Shape, } from '@/components/Engine'
-import { Line, } from '@antv/g-math'
+import { Line, Cubic, } from '@antv/g-math'
 import { EntityShape, } from './EntityShape'
 import { SystemUtils } from '@/components/Workspace/Utils'
 
@@ -60,7 +60,7 @@ export interface ConnectorArrowTypeInfo {
 }
 
 export class ConnectorShape extends EntityShape {
-  public static DETECTION_DISTANCE = 16
+  public static DETECTION_DISTANCE = 5
   public static DEFAULT_SEGMENT = 16
   private _start: Point2
   private _end: Point2
@@ -254,26 +254,24 @@ export class ConnectorShape extends EntityShape {
 
   public intersects (left: number, top: number, width: number, height: number) {
     if (this.worldInverseTransform) {
-      const p1 = [ left, top, ]
-      const p2 = [ left + width, top, ]
-      const p3 = [ left + width, top + height, ]
-      const p4 = [ left, top + height, ]
-      const startPoint = [ this._start.x, this._start.y, ]
-      const endPoint = [ this._end.x, this._end.y, ]
-      const inverseStart = this.worldInverseTransform.makePoints(startPoint)
-      const inverseEnd = this.worldInverseTransform.makePoints(endPoint)
-      const inverseP1 = this.worldInverseTransform.makePoints(p1)
-      const inverseP2 = this.worldInverseTransform.makePoints(p2)
-      const inverseP3 = this.worldInverseTransform.makePoints(p3)
-      const inverseP4 = this.worldInverseTransform.makePoints(p4)
-      const distance1 = Line.pointDistance(inverseStart[0], inverseStart[1], inverseEnd[0], inverseEnd[1], inverseP1[0], inverseP1[1])
-      const distance2 = Line.pointDistance(inverseStart[0], inverseStart[1], inverseEnd[0], inverseEnd[1], inverseP2[0], inverseP2[1])
-      const distance3 = Line.pointDistance(inverseStart[0], inverseStart[1], inverseEnd[0], inverseEnd[1], inverseP3[0], inverseP3[1])
-      const distance4 = Line.pointDistance(inverseStart[0], inverseStart[1], inverseEnd[0], inverseEnd[1], inverseP4[0], inverseP4[1])
-      // console.log(` checking startx= ${this.start.x}, starty= ${this.start.y}, endx=${this.end.x}, endy=${this.end.y}, 1 = ${distance1}, 2 = ${distance2}, 3 = ${distance3}, 4 = ${distance4} `)
-      // console.log(` inverse p1x= ${inverseP1[0]}, p1y= ${inverseP1[1]},p2x= ${inverseP2[0]}, p2y= ${inverseP2[1]}, p3x= ${inverseP3[0]}, p3y= ${inverseP3[1]}, p4x= ${inverseP4[0]}, p4y= ${inverseP4[1]},`)
-      return distance1 <= ConnectorShape.DETECTION_DISTANCE && distance2 <= ConnectorShape.DETECTION_DISTANCE && distance3 <= ConnectorShape.DETECTION_DISTANCE && distance4 <= ConnectorShape.DETECTION_DISTANCE
-    }
+      const point = new Point2(left + width * 0.5, top + height * 0.5)
+      const invesePoint = this.worldInverseTransform.makePoint(point)
+      let distance  = 0
+      switch(this.connectorType) {
+        case ConnectorType.Orthogonal:
+          distance = this.getOrthogonalNearstDistance(invesePoint.x, invesePoint.y)
+          break;
+        case ConnectorType.Curve:
+          distance = this.getCurveNearstDistance(invesePoint.x, invesePoint.y)
+          break;
+        case ConnectorType.StraightLine:
+        default:
+          distance = this.getStraightNearstDistance(invesePoint.x, invesePoint.y)
+          break;        
+      }
+      //console.log(`distance = ${distance} left=${left} y=${top} width=${width} height=${height} left2=${this.left} top2=${this.top}  x=${point.x} y=${point.y}  xx=${invesePoint.x}  yy= ${invesePoint.y}`)
+      return distance <= ConnectorShape.DETECTION_DISTANCE
+    }    
     return false
   }
 
@@ -383,16 +381,18 @@ export class ConnectorShape extends EntityShape {
     const endModifier = new Point2(end.x + this.curveEndModifier.x * this.width, end.y + this.curveEndModifier.y * this.height)
 
     this.path.reset()
-    //this.path.moveTo(this.start.x - this.left, this.start.y - this.top)
-    //this.path.cubicTo(this._curveStartModifier.x, this.curveStartModifier.y, this.curveEndModifier.x, this.curveEndModifier.y, this.end.x - this.left, this.end.y - this.top)
     this.path.moveTo(start.x, start.y)
-    //this.path.cubicTo((start.x + end.x) * 0.5, start.y, (start.x + end.x) * 0.5, end.y,  end.x, end.y)
     this.path.cubicTo(startModifier.x, startModifier.y, endModifier.x, endModifier.y, end.x, end.y)
     
+    //TODO: FIX ME, unclose path casue white background, we duplicate points so make path so close and them remove strznge white background
+    this.path.cubicTo(endModifier.x, endModifier.y, startModifier.x, startModifier.y, start.x, start.y)
   }
 
   private updateStraightLinePath() {
-
+      this.path.reset()
+      this.path.moveTo(this.start.x - this.left, this.start.y - this.top)
+      this.path.lineTo(this.end.x - this.left, this.end.y - this.top)
+      this.path.close()
   }
 
 
@@ -410,7 +410,7 @@ export class ConnectorShape extends EntityShape {
         this.path.lineTo(point.x, point.y)
       }
     }
-    //TODO: FIX ME, unclose path casue white background, we duplicate points so make path close
+    //TODO: FIX ME, unclose path casue white background, we duplicate points so make path so close and them remove strznge white background
     for(let i = count - 1; i >= 0; i --) {
       const point = this._orthogonalPoints[i]
       this.path.lineTo(point.x, point.y)
@@ -419,4 +419,33 @@ export class ConnectorShape extends EntityShape {
     //SystemUtils.debugPoints(this._orthogonalPoints)
   }
 
+  private getStraightNearstDistance(x: number, y: number) {
+    const distance = Line.pointDistance(this._start.x, this._start.y, this._end.x, this._end.y, x, y)
+    return distance
+  }
+
+
+  private getOrthogonalNearstDistance(x: number, y: number) {
+    let distance = 99999
+    const points = this._orthogonalPoints
+    const count = points.length
+    for(let i = 0; i < count - 1; i ++) {
+      const newDistance = Line.pointDistance(points[i].x, points[i].y, points[i + 1].x, points[i + 1].y, x, y)
+      if(newDistance < distance) {
+        distance = newDistance
+      }
+    }
+    return distance
+  }
+
+  private getCurveNearstDistance(x: number, y: number) {
+    const start = new Point2(this.start.x - this.left, this.start.y - this.top)
+    const end = new Point2(this.end.x - this.left, this.end.y - this.top)
+    const startModifier = new Point2(start.x + this._curveStartModifier.x * this.width, start.y + this.curveStartModifier.y * this.height )
+    const endModifier = new Point2(end.x + this.curveEndModifier.x * this.width, end.y + this.curveEndModifier.y * this.height)
+
+    const distance = Cubic.pointDistance(start.x, start.y,startModifier.x, startModifier.y, endModifier.x, endModifier.y, end.x, end.y, x,y)
+    return distance
+   
+  }
 }
