@@ -2692,7 +2692,25 @@ export class Connector extends Item {
 
 
   private initializeOrthogonalPointsWithoutSourceTarget(targetPosition: TargetPosition,points: Point2[], start: Point2, end: Point2) {
-
+    const middleX = (start.x + end.x) * 0.5
+    if(Math.abs(middleX - start.x) > Connector.DEFAULT_ARROW_SEGMENT) {
+      if(start.x < end.x) {
+        points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
+        points.push(new Point2(middleX, start.y))
+        points.push(new Point2(middleX, end.y))
+        points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+      } else {
+        points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
+        points.push(new Point2(middleX, start.y))
+        points.push(new Point2(middleX, end.y))
+        points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
+      }
+    } else {      
+      points.push(new Point2(start.x, start.y))//Dummy point here for Segment
+      points.push(new Point2(middleX, start.y))
+      points.push(new Point2(middleX, end.y))
+      points.push(new Point2(end.x, end.y))//Dummy point here for Segment
+    }
   }
 
 }
