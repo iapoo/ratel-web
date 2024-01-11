@@ -1609,6 +1609,7 @@ export class Editor extends Painter {
         this.selectionLayer.addEditorItem(item)
       }
     }
+    this.triggerSelectionChange()
   }
 
   private handleRangeSelecting(e: PointerEvent) {

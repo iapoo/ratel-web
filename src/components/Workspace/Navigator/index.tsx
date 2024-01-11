@@ -3,7 +3,7 @@ import styles from './index.css'
 import { Button, Collapse, CollapseProps, Divider, Image, Popover, Space, Tooltip, message, } from 'antd'
 import { Utils, RequestUtils, } from '../Utils'
 import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
-import { ContainerAction, LineAction, ShapeAction, TableAction, } from '../../Rockie/Actions'
+import { ConnectorAction, ContainerAction, LineAction, ShapeAction, TableAction, } from '../../Rockie/Actions'
 import { StorageService, } from '../Storage'
 import {
   Rectangle, RoundRectangle, Text, Ellipse, Square, Circle, Process, Diamond, Parallelogram, Hexagon, Triangle,
@@ -68,13 +68,13 @@ const Navigator: FC<NavigatorProps> = ({
 
   const addLine = () => {
     if (Utils.currentEditor) {
-      Utils.currentEditor.action = new LineAction(Utils.currentEditor)
+      Utils.currentEditor.action = new ConnectorAction(Utils.currentEditor)
     }
   }
 
   const addConnector = () => {
     if (Utils.currentEditor) {
-      Utils.currentEditor.action = new LineAction(Utils.currentEditor)
+      Utils.currentEditor.action = new ConnectorAction(Utils.currentEditor)
     }
   }
 
@@ -206,7 +206,6 @@ const Navigator: FC<NavigatorProps> = ({
       {line}
       {table}
       {containers}
-      {connector}
     </Space>,
     },
     {
