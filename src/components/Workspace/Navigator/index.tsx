@@ -72,6 +72,12 @@ const Navigator: FC<NavigatorProps> = ({
     }
   }
 
+  const addConnector = () => {
+    if (Utils.currentEditor) {
+      Utils.currentEditor.action = new LineAction(Utils.currentEditor)
+    }
+  }
+
   const save = () => {
     const storage = new StorageService()
     storage.editors = Utils.editors
@@ -153,6 +159,12 @@ const Navigator: FC<NavigatorProps> = ({
   </Button>
   </Popover>
 
+  const connector = <Popover title={'Connector'} placement='right' content={getPopoverContent('Connector', 128, 128)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 180, width: 180,}}>
+  <Button type='text' onClick={() => addConnector()} style={{padding: 2, display: 'table'}}>
+    <img src={`/shapes/Connector.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+  </Button>
+  </Popover>
+
   const shapes =  ShapeTypes.map(shapeType => {
     let width = 28
     let height = 28
@@ -194,6 +206,7 @@ const Navigator: FC<NavigatorProps> = ({
       {line}
       {table}
       {containers}
+      {connector}
     </Space>,
     },
     {
