@@ -121,6 +121,7 @@ export class Connector extends Item {
     this._startDirection = startDirection
     this._endDirection = endDirection
     this._connectorShape.orthogonalPoints = this._orthogonalPoints
+    this.updateTheme()
   }
 
   public get source (): Entity | undefined {
@@ -379,7 +380,7 @@ export class Connector extends Item {
     const points: Point2[] = []
     points.push(new Point2(start.x, start.y))
     //console.log(`${this.startDirection}`)
-    if(this._target) {
+    if(this.source && this._target) {
       switch(this.startDirection) {
         case ConnectorDirection.Left: {
           this.initializeOrthogonalPointsLeft(targetPosition, points, start, end, minLeft, minTop, minBottom, minRight, centerX, centerY)
@@ -399,26 +400,48 @@ export class Connector extends Item {
           break
         }
       } 
-    } else {
+    } else if (this._source) {
       switch(this.startDirection) {
         case ConnectorDirection.Left: {
-          this.initializeOrthogonalPointsLeftWithoutTarget(targetPosition, points, start, end, minLeft, minTop, minBottom, minRight, centerX, centerY)
+          this.initializeOrthogonalPointsLeftWithoutTarget(targetPosition, points, start, end)
           break
         }
         case ConnectorDirection.Top:{
-          this.initializeOrthogonalPointsTopWithoutTarget(targetPosition, points, start, end, minLeft, minTop, minBottom, minRight, centerX, centerY)
+          this.initializeOrthogonalPointsTopWithoutTarget(targetPosition, points, start, end)
           break
         }
         case ConnectorDirection.Bottom:{
-          this.initializeOrthogonalPointsBottomWithoutTarget(targetPosition, points, start, end, minLeft, minTop, minBottom, minRight, centerX, centerY)
+          this.initializeOrthogonalPointsBottomWithoutTarget(targetPosition, points, start, end)
           break
         }
         case ConnectorDirection.Right:
         default:{
-          this.initializeOrthogonalPointsRightWithoutTarget(targetPosition, points, start, end, minLeft, minTop, minBottom, minRight, centerX, centerY)
+          this.initializeOrthogonalPointsRightWithoutTarget(targetPosition, points, start, end)
           break
         }
       } 
+    } else if (this._target) {
+      switch(this.startDirection) {
+        case ConnectorDirection.Left: {
+          this.initializeOrthogonalPointsLeftWithoutSource(targetPosition, points, start, end)
+          break
+        }
+        case ConnectorDirection.Top:{
+          this.initializeOrthogonalPointsTopWithoutSource(targetPosition, points, start, end)
+          break
+        }
+        case ConnectorDirection.Bottom:{
+          this.initializeOrthogonalPointsBottomWithoutSource(targetPosition, points, start, end)
+          break
+        }
+        case ConnectorDirection.Right:
+        default:{
+          this.initializeOrthogonalPointsRightWithoutSource(targetPosition, points, start, end)
+          break
+        }
+      } 
+    } else {
+      this.initializeOrthogonalPointsWithoutSourceTarget(targetPosition, points, start, end)
     }
     points.push(new Point2(end.x, end.y))
     return points
@@ -446,6 +469,10 @@ export class Connector extends Item {
       } else if(this._end.y > this._source.top + this._source.height) {
         result = TargetPosition.Bottom
       }
+    } else if(this._target) {
+
+    } else {
+      result = TargetPosition.None
     }
     return result
   }
@@ -2158,7 +2185,8 @@ export class Connector extends Item {
       }
     }
   }
-  private initializeOrthogonalPointsLeftWithoutTarget(targetPosition: TargetPosition,points: Point2[], start: Point2, end: Point2, minLeft: number, minTop: number, minBottom: number, minRight: number, centerX: number, centerY: number ) {
+  
+  private initializeOrthogonalPointsLeftWithoutTarget(targetPosition: TargetPosition,points: Point2[], start: Point2, end: Point2) {
     switch(targetPosition) {
       case TargetPosition.Left: {
         const middleX = (start.x + end.x) * 0.5
@@ -2274,7 +2302,7 @@ export class Connector extends Item {
     }    
   }
 
-  private initializeOrthogonalPointsTopWithoutTarget(targetPosition: TargetPosition,points: Point2[], start: Point2, end: Point2, minLeft: number, minTop: number, minBottom: number, minRight: number, centerX: number, centerY: number ) {
+  private initializeOrthogonalPointsTopWithoutTarget(targetPosition: TargetPosition,points: Point2[], start: Point2, end: Point2) {
     switch(targetPosition) {
       case TargetPosition.Left: {
         const startLeft = start.x - this._sourceJoint!.x - Connector.DEFAULT_ARROW_SEGMENT
@@ -2405,7 +2433,7 @@ export class Connector extends Item {
     }    
   }
 
-  private initializeOrthogonalPointsRightWithoutTarget(targetPosition: TargetPosition,points: Point2[], start: Point2, end: Point2, minLeft: number, minTop: number, minBottom: number, minRight: number, centerX: number, centerY: number ) {
+  private initializeOrthogonalPointsRightWithoutTarget(targetPosition: TargetPosition,points: Point2[], start: Point2, end: Point2) {
     switch(targetPosition) {
       case TargetPosition.Left: {
         const startTop = start.y - this._sourceJoint!.y - Connector.DEFAULT_ARROW_SEGMENT
@@ -2516,7 +2544,7 @@ export class Connector extends Item {
     }    
   }
 
-  private initializeOrthogonalPointsBottomWithoutTarget(targetPosition: TargetPosition,points: Point2[], start: Point2, end: Point2, minLeft: number, minTop: number, minBottom: number, minRight: number, centerX: number, centerY: number ) {
+  private initializeOrthogonalPointsBottomWithoutTarget(targetPosition: TargetPosition,points: Point2[], start: Point2, end: Point2) {
     switch(targetPosition) {
       case TargetPosition.Left: {
         const startLeft = start.x - this._sourceJoint!.x - Connector.DEFAULT_ARROW_SEGMENT
@@ -2645,4 +2673,26 @@ export class Connector extends Item {
       }
     }    
   }
+
+  private initializeOrthogonalPointsLeftWithoutSource(targetPosition: TargetPosition,points: Point2[], start: Point2, end: Point2) {
+
+  }
+
+  private initializeOrthogonalPointsTopWithoutSource(targetPosition: TargetPosition,points: Point2[], start: Point2, end: Point2) {
+    
+  }
+
+  private initializeOrthogonalPointsRightWithoutSource(targetPosition: TargetPosition,points: Point2[], start: Point2, end: Point2) {
+    
+  }
+
+  private initializeOrthogonalPointsBottomWithoutSource(targetPosition: TargetPosition,points: Point2[], start: Point2, end: Point2) {
+    
+  }
+
+
+  private initializeOrthogonalPointsWithoutSourceTarget(targetPosition: TargetPosition,points: Point2[], start: Point2, end: Point2) {
+
+  }
+
 }

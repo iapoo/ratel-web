@@ -104,7 +104,7 @@ export class OrthogonalMovementAnchor extends Anchor {
           // console.log(`Debug points`)
           // SystemUtils.debugPoints(orthogonalPoints)
           // SystemUtils.debugPoints(this._orthogonalPoints)
-          console.log(`count= ${this.holder.count} x = ${x} moveX = ${moveX} startX = ${this._startX} width=${this.target.width} `)
+          //console.log(`count= ${this.holder.count} x = ${x} moveX = ${moveX} startX = ${this._startX} width=${this.target.width} `)
         } else {
           if(this._index == 1) {
             orthogonalPoints.splice(this._index + 1, 0, new Point2(orthogonalPoint.x, orthogonalPoint.y + moveY))
@@ -121,7 +121,7 @@ export class OrthogonalMovementAnchor extends Anchor {
           // console.log(`Debug points`)
           // SystemUtils.debugPoints(orthogonalPoints)
           // SystemUtils.debugPoints(this._orthogonalPoints)
-          console.log(`count= ${this.holder.count} x = ${x} moveX = ${moveX} startX = ${this._startX} width=${this.target.width} `)
+          //console.log(`count= ${this.holder.count} x = ${x} moveX = ${moveX} startX = ${this._startX} width=${this.target.width} `)
         }    
         //this._startX = x
         //this._startY = y
