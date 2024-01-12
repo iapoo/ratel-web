@@ -1287,14 +1287,14 @@ export class Editor extends Painter {
     const height = controllerItem.height
     const ex = Math.round(e.x / this._zoom / this.gridSize) * this.gridSize
     const ey = Math.round(e.y / this._zoom / this.gridSize) * this.gridSize
-    controllerItem.boundary = Rectangle.makeLTWH(Math.round(ex - controllerItem.width / 2), Math.round(ey - controllerItem.height / 2), width, height)
-    // if (controllerItem instanceof Connector) {
-    //  controllerItem.start = new Point2(Math.round(e.x / this._zoom - width / 2), Math.round(e.y / this._zoom - height / 2))
-    //  controllerItem.end = new Point2(Math.round(e.x / this._zoom + width / 2), Math.round(e.y / this._zoom + height / 2))
-    // } else if (controllerItem instanceof Entity) {
-    // }
+    controllerItem.boundary = Rectangle.makeLTWH(Math.round(ex - width / 2), Math.round(ey - height / 2), width, height)
+     if (controllerItem instanceof Connector) {
+       controllerItem.start = new Point2(Math.round(e.x / this._zoom - width / 2), Math.round(e.y / this._zoom - height / 2))
+       controllerItem.end = new Point2(Math.round(e.x / this._zoom + width / 2), Math.round(e.y / this._zoom + height / 2))
+    } else if (controllerItem instanceof Entity) {
+    }
 
-    // console.log(`Moving... x = ${e.x}  start=${controllerItem.left} end=${controllerItem.top} width=${controllerItem.width}  height=${controllerItem.height}`)
+    //console.log(`Moving... x = ${e.x}  start=${controllerItem.left} end=${controllerItem.top} width=${controllerItem.width}  height=${controllerItem.height}`)
     const containerEntity = this.findContainerEntity(e.x, e.y)
     if(containerEntity && this.checkIfCreationInContainer(controllerItem, containerEntity)) {
       this.startContainerSelection()
@@ -1855,6 +1855,17 @@ export class Editor extends Painter {
       const ex = Number(Math.round((left + e.x / this._zoom - this._startPointX / this._zoom) / 1))
       const ey = Number(Math.round((top + e.y / this._zoom - this._startPointY / this._zoom) / 1))
       editorItem.boundary = Rectangle.makeLTWH(ex, ey, editorItem.width, editorItem.height)
+      if (editorItem instanceof Connector) {
+        const startX = Number(Math.round((editorItem.start.x + e.x / this._zoom - this._startPointX / this._zoom) / 1))
+        const startY = Number(Math.round((editorItem.start.y + e.y / this._zoom - this._startPointY / this._zoom) / 1))
+        const endX = Number(Math.round((editorItem.end.x + e.x / this._zoom - this._startPointX / this._zoom) / 1))
+        const endY = Number(Math.round((editorItem.end.y + e.y / this._zoom - this._startPointY / this._zoom) / 1))
+        editorItem.start = new Point2(startX, startY)
+        editorItem.end = new Point2(endX, endY)
+        //console.log(`startx = ${startX} start.y=${startY} end.x = ${endX} end.y = ${endY}`)
+      } else if (editorItem instanceof Entity) {
+      }
+ 
       for (let j = 0; j < connectorCount; j++) {
         const connector = editorItem.getConnector(j)
         if (connector.source == editorItem) {
