@@ -260,9 +260,9 @@ export class Connector extends Item {
   public set start (value: Point2) {
     this._start = value
     this._connectorShape.start = value
+    this.boundary = Rectangle.makeLTWH(Math.min(this._start.x, this._end.x), Math.min(this._start.y, this._end.y), Math.abs(this._start.x - this._end.x), Math.abs(this._start.y - this._end.y))
     this._orthogonalPoints = this.initializeOrthogonalPoints()
     this._connectorShape.orthogonalPoints = this._orthogonalPoints    
-    this.boundary = Rectangle.makeLTWH(Math.min(this._start.x, this._end.x), Math.min(this._start.y, this._end.y), Math.abs(this._start.x - this._end.x), Math.abs(this._start.y - this._end.y))
   }
 
   public get end (): Point2 {
@@ -272,9 +272,9 @@ export class Connector extends Item {
   public set end (value: Point2) {
     this._end = value
     this._connectorShape.end = value
+    this.boundary = Rectangle.makeLTWH(Math.min(this._start.x, this._end.x), Math.min(this._start.y, this._end.y), Math.abs(this._start.x - this._end.x), Math.abs(this._start.y - this._end.y))
     this._orthogonalPoints = this.initializeOrthogonalPoints()
     this._connectorShape.orthogonalPoints = this._orthogonalPoints   
-    this.boundary = Rectangle.makeLTWH(Math.min(this._start.x, this._end.x), Math.min(this._start.y, this._end.y), Math.abs(this._start.x - this._end.x), Math.abs(this._start.y - this._end.y))
   }
 
   public get target (): Entity | undefined {
@@ -370,6 +370,7 @@ export class Connector extends Item {
   private initializeOrthogonalPoints(): Point2[] {   
     const start = new Point2(this.start.x - this.left, this.start.y - this.top)
     const end = new Point2(this.end.x - this.left, this.end.y - this.top)
+    //console.log(`init start x= ${start.x} y = ${start.y} end x = ${end.x} y = ${end.y}`)
     const minTop = (this._sourceJoint && this._targetJoint) ?  Math.min(start.y - this._sourceJoint.y, end.y - this._targetJoint.y) - Connector.DEFAULT_ARROW_SEGMENT : 0
     const minLeft = (this._source && this._target) ?  Math.min(this._source.left - this.left, this._target.left - this.left) - Connector.DEFAULT_ARROW_SEGMENT : 0
     const minBottom = (this._source && this._target && this._sourceJoint && this._targetJoint) ?  Math.max(start.y + this._source.height - this._sourceJoint.y, end.y + this._target.height -  this._targetJoint.y) + Connector.DEFAULT_ARROW_SEGMENT : 0

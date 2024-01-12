@@ -16,6 +16,7 @@ import { CubicControllerAnchor } from './CubicCotrollerAnchor'
 import { ConnectorType } from '../../Shapes'
 import { OrthogonalDivideAnchor } from './OrthogonalDivideAnchor'
 import { OrthogonalMovementAnchor } from './OrthogonalMovementAnchor'
+import { SystemUtils } from '@/components/Workspace/Utils'
 
 export class Holder extends Control {
   public static readonly PADDING = 32;
@@ -121,8 +122,10 @@ export class Holder extends Control {
     this._endAnchor.target = target
     this._startAdapterAnchor.target = target
     this._endAdapterAnchor.target = target
+    this._sourceConnectionAnchor.target = target
+    this._targetConnectionAnchor.target = target
     this._startCubicControllerAnchor.target = target
-    this._endCubicControllerAnchor.target = target
+    this._endCubicControllerAnchor.target = target    
     this.createOrthogonalAnchors()
     this.layoutAnchors()
     if (this._inHolder) {
@@ -195,6 +198,7 @@ export class Holder extends Control {
   }
 
   public layoutAnchors () {
+
     this._rotationAnchor.scale = new Scale(1 / this.editor.zoom, 1 / this.editor.zoom)
     this._reshapeAnchor.scale = new Scale(1 / this.editor.zoom, 1 / this.editor.zoom)
     this._leftCreationAnchor.scale = new Scale(1 / this.editor.zoom, 1 / this.editor.zoom)
@@ -276,10 +280,11 @@ export class Holder extends Control {
     }
 
     if (this._target instanceof Connector) {      
-      this._sourceConnectionAnchor.left = (this._target.start.x > this._target.end.x) ? (this._target.start.x - this._target.end.x) - Holder.ANCHOR_RADIUS : -Holder.ANCHOR_RADIUS
-      this._sourceConnectionAnchor.top = (this._target.start.y > this._target.end.y) ? (this._target.start.y - this._target.end.y) - Holder.ANCHOR_RADIUS : -Holder.ANCHOR_RADIUS
-      this._targetConnectionAnchor.left = (this._target.start.x > this._target.end.x) ? -Holder.ANCHOR_RADIUS : Math.abs(this._target.start.x - this._target.end.x) - Holder.ANCHOR_RADIUS
-      this._targetConnectionAnchor.top = (this._target.start.y > this._target.end.y) ? -Holder.ANCHOR_RADIUS : Math.abs(this._target.start.y - this._target.end.y) - Holder.ANCHOR_RADIUS
+      this._sourceConnectionAnchor.left = this._target.start.x - this._target.left - Holder.ANCHOR_RADIUS
+      this._sourceConnectionAnchor.top = this._target.start.y - this._target.top - Holder.ANCHOR_RADIUS
+      //console.log(`left = ${this._sourceConnectionAnchor.left}, top = ${this._sourceConnectionAnchor.top}`)
+      this._targetConnectionAnchor.left = this._target.end.x - this._target.left -Holder.ANCHOR_RADIUS
+      this._targetConnectionAnchor.top = this._target.end.y - this._target.top - Holder.ANCHOR_RADIUS
       this._startCubicControllerLine.start = new Point2(this._sourceConnectionAnchor.left + Holder.ANCHOR_RADIUS, this._sourceConnectionAnchor.top + Holder.ANCHOR_RADIUS)
       this._startCubicControllerLine.end = new Point2(this._sourceConnectionAnchor.left + Holder.ANCHOR_RADIUS + this._target.curveStartModifier.x * this._target.width, this._sourceConnectionAnchor.top + Holder.ANCHOR_RADIUS + this._target.curveStartModifier.y * this._target.height)
       //console.log(`${this._startCubicControllerLine.start.x}  ${this._startCubicControllerLine.start.y}  ${this._startCubicControllerLine.end.x}  ${this._startCubicControllerLine.end.y}`)
@@ -348,6 +353,8 @@ export class Holder extends Control {
     if(this._target instanceof Connector && this._target.connectorType == ConnectorType.Orthogonal){
       const orthogonalPoints = this._target.orthogonalPoints
       //console.log(`length == ${orthogonalPoints.length}`)
+      //console.log(` start x=${this._sourceConnectionAnchor.left} y = ${this._sourceConnectionAnchor.top} left =${this._target.left} top=${this.target.top} width = ${this.target.width} height=${this.target.height} start x = ${this._target.start.x} y = ${this._target.start.y} end x = ${this._target.end.x} y = ${this._target.end.y}`)
+      //SystemUtils.debugPoints(orthogonalPoints)
       this._orthogonalDivideAnchors.forEach(orthogonalDivideAnchor => {
         if(orthogonalPoints.length > orthogonalDivideAnchor.index + 1) {
           const orthogonalPoint = orthogonalPoints[orthogonalDivideAnchor.index]
@@ -511,4 +518,5 @@ export class Holder extends Control {
       }
     }
   }
+  
 }

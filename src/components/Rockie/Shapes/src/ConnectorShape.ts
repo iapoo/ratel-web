@@ -420,7 +420,9 @@ export class ConnectorShape extends EntityShape {
   }
 
   private getStraightNearstDistance(x: number, y: number) {
-    const distance = Line.pointDistance(this._start.x, this._start.y, this._end.x, this._end.y, x, y)
+    const start = new Point2(this.start.x - this.left, this.start.y - this.top)
+    const end = new Point2(this.end.x - this.left, this.end.y - this.top)
+    const distance = Line.pointDistance(start.x, start.y, end.x, end.y, x, y)
     return distance
   }
 

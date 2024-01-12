@@ -21,7 +21,7 @@ export class HoverLayer extends EditorLayer {
   }
 
   protected buildLayer () {
-    // console.log(`checking holder = ${this.inHolder_}`)
+    // console.log(`checking holder = ${this.inHolder}`)
     if (this.requireRebuild) {
       this.clear()
       if (this.getEditorItemCount() <= 0) {
