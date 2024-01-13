@@ -56,6 +56,7 @@ export class ConnectionAnchor extends Anchor {
       theSelectionLayer.removeAllEditorItems()
       theSelectionLayer.addEditorItem(this.target)
     }
+    this.editor.triggerSelectionChange()
   }
 
   public handlePointerMove (x: number, y: number) {
