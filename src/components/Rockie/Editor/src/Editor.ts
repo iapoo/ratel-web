@@ -1325,7 +1325,7 @@ export class Editor extends Painter {
     const editorItem = this.findEditorItem(e.x, e.y)
     const isEdge = editorItem ? this.hasEditorItemJoint(editorItem, e.x, e.y) : false
     //console.log(`create connector ...1 ${editorItem !== connector.source} ${isEdge}`)
-    if (editorItem && isEdge && editorItem !== connector.source) {
+    if (editorItem && isEdge) { // && editorItem !== connector.source) {
       //console.log(`create connector ...2`)
       const inEditorItem = this.isInEditorItem(editorItem, e.x, e.y)
       const targetPoint = this.findEditorItemJoint(editorItem, e.x, e.y, inEditorItem)
