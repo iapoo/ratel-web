@@ -49,12 +49,12 @@ export class OperationHelper {
         if(connectorInfo.source == item.id && connector) {
           let entity = item as Entity
           connector.source =  entity
-          entity.addConnector(connector)
+          entity.addSourceConnector(connector)
         }
         if(connectorInfo.target == item.id && connector) {
           let entity = item as Entity
           connector.target =  entity
-          entity.addConnector(connector)
+          entity.addTargetConnector(connector)
         }
       })
       console.log(connector)

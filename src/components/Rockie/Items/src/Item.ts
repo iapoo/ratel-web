@@ -46,7 +46,9 @@ export abstract class Item implements EditorItem {
 
   private _rotation: Rotation = new Rotation(0, 0, 0);
 
-  private _connectors: Connector[] = [];
+  private _sourceConnectors: Connector[] = [];
+
+  private _targetConnectors: Connector[] = [];
 
   private _type = ''
 
@@ -468,46 +470,88 @@ export abstract class Item implements EditorItem {
     this.shape.clear()
   }
 
-  public addConnector (connector: Connector) {
-    const index = this._connectors.indexOf(connector)
+  public addSourceConnector (connector: Connector) {
+    const index = this._sourceConnectors.indexOf(connector)
     if (index < 0) {
-      this._connectors.push(connector)
+      this._sourceConnectors.push(connector)
     }
   }
 
-  public removeConnector (connector: Connector) {
-    const index = this._connectors.indexOf(connector)
+  public removeSourceConnector (connector: Connector) {
+    const index = this._sourceConnectors.indexOf(connector)
     if (index >= 0) {
-      this._connectors.splice(index, 1)
+      this._sourceConnectors.splice(index, 1)
     }
   }
 
-  public getConnector (index: number): Connector {
-    return this._connectors[index]
+  public getSourceConnector (index: number): Connector {
+    return this._sourceConnectors[index]
   }
 
-  public removeConnectorAt (index: number) {
-    this._connectors.splice(index, 1)
+  public removeSourceConnectorAt (index: number) {
+    this._sourceConnectors.splice(index, 1)
   }
 
-  public removeAllConnectors () {
-    this._connectors.length = 0
+  public removeAllSourceConnectors () {
+    this._sourceConnectors.length = 0
   }
 
-  public getAllConnectors (): Connector[] {
-    return [ ...this._connectors, ]
+  public getAllSourceConnectors (): Connector[] {
+    return [ ...this._sourceConnectors, ]
   }
 
-  public getConnectorCount (): number {
-    return this._connectors.length
+  public getSourceConnectorCount (): number {
+    return this._sourceConnectors.length
   }
 
-  public hasConnector (connector: Connector): boolean {
-    return this._connectors.includes(connector)
+  public hasSourceConnector (connector: Connector): boolean {
+    return this._sourceConnectors.includes(connector)
   }
 
-  public getIndexOfConnector (connector: Connector): number {
-    return this._connectors.indexOf(connector)
+  public getIndexOfSourceConnector (connector: Connector): number {
+    return this._sourceConnectors.indexOf(connector)
+  }
+
+  public addTargetConnector (connector: Connector) {
+    const index = this._targetConnectors.indexOf(connector)
+    if (index < 0) {
+      this._targetConnectors.push(connector)
+    }
+  }
+
+  public removeTargetConnector (connector: Connector) {
+    const index = this._targetConnectors.indexOf(connector)
+    if (index >= 0) {
+      this._targetConnectors.splice(index, 1)
+    }
+  }
+
+  public getTargetConnector (index: number): Connector {
+    return this._targetConnectors[index]
+  }
+
+  public removeTargetConnectorAt (index: number) {
+    this._targetConnectors.splice(index, 1)
+  }
+
+  public removeAllTargetConnectors () {
+    this._targetConnectors.length = 0
+  }
+
+  public getAllTargetConnectors (): Connector[] {
+    return [ ...this._targetConnectors, ]
+  }
+
+  public getTargetConnectorCount (): number {
+    return this._targetConnectors.length
+  }
+
+  public hasTargetConnector (connector: Connector): boolean {
+    return this._targetConnectors.includes(connector)
+  }
+
+  public getIndexOfTargetConnector (connector: Connector): number {
+    return this._targetConnectors.indexOf(connector)
   }
 
   public saveData (): EditorItemInfo {

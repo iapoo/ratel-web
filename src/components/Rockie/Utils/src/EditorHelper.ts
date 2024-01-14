@@ -109,12 +109,12 @@ export class EditorHelper {
             if (connectorInfo.source == editorItem.id) {
                 let entity = editorItem as Entity
                 connector.source = entity
-                entity.addConnector(connector)
+                entity.addSourceConnector(connector)
             }
             if (connectorInfo.target == editorItem.id) {
                 let entity = editorItem as Entity
                 connector.target = entity
-                entity.addConnector(connector)
+                entity.addTargetConnector(connector)
             }
             if (editorItem.items.length > 0) {
                 this.refreshConnector(connectorInfo, connector, editorItem.items)

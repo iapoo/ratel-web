@@ -321,7 +321,7 @@ export class ConnectorShape extends EntityShape {
 
       }
       this.updateArrows()
-      // console.log(`left = ${this.left} top =${this.top} startx = ${this.start.x} starty = ${this.start.y}  endx = ${this.end.x} end.y = ${this.end.y}`)
+      //console.log(` connectionType = ${this.connectorType} left = ${this.left} top =${this.top} startx = ${this.start.x} starty = ${this.start.y}  endx = ${this.end.x} end.y = ${this.end.y}`)
       //this.resetDirty() 
     }
   }
@@ -416,7 +416,9 @@ export class ConnectorShape extends EntityShape {
       this.path.lineTo(point.x, point.y)
     }
 
-    //SystemUtils.debugPoints(this._orthogonalPoints)
+    //if(count == 2) {
+    //  SystemUtils.debugPoints(this._orthogonalPoints)
+    //}
   }
 
   private getStraightNearstDistance(x: number, y: number) {
