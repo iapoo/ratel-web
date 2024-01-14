@@ -650,7 +650,7 @@ export class Editor extends Painter {
         connector.sourceJoint = targetPoint
         theControllerLayer.removeAllEditorItems()
         theControllerLayer.addEditorItem(connector)
-        targetEntity.addConnector(connector)
+        targetEntity.addSourceConnector(connector)
         if (this._target) {
           this._target.shape.focused = false
         }
@@ -1058,13 +1058,13 @@ export class Editor extends Painter {
     }
   }
 
-  private isInEditorItem (editorItem: EditorItem, x: number, y: number): boolean {
+  public isInEditorItem (editorItem: EditorItem, x: number, y: number): boolean {
     const shape = editorItem.shape
     const inClickEditorItem = shape.contains(x, y)
     return inClickEditorItem
   }
 
-  private findEditorItem (x: number, y: number): EditorItem | undefined {
+  public  findEditorItem (x: number, y: number): EditorItem | undefined {
     let result
     const count = this.contentLayer.getEditorItemCount()
     for (let i = count - 1; i >= 0; i--) {
@@ -1134,7 +1134,7 @@ export class Editor extends Painter {
     return result
   }
 
-  private hasEditorItemJoint (editorItem: EditorItem, x: number, y: number): boolean {
+  public hasEditorItemJoint (editorItem: EditorItem, x: number, y: number): boolean {
     let result = false
     const shape = editorItem.shape
     let inEditorItem = false
@@ -1159,7 +1159,7 @@ export class Editor extends Painter {
     return result
   }
 
-  private findEditorItemJoint (editorItem: EditorItem, x: number, y: number, inEditorItem: boolean): Point2 {
+  public findEditorItemJoint (editorItem: EditorItem, x: number, y: number, inEditorItem: boolean): Point2 {
     const shape = editorItem.shape
     const centerX = x
     const centerY = y
@@ -1334,12 +1334,12 @@ export class Editor extends Painter {
       connector.endDirection = endDirection
       connector.target = editorItem as Entity
       connector.targetJoint = targetPoint
-      connector.target.addConnector(connector)
+      connector.target.addTargetConnector(connector)
       
     } else {
       //console.log(`create connector ...3`)
       if (connector.target) {
-        connector.target.removeConnector(connector)
+        connector.target.removeTargetConnector(connector)
       }
       connector.target = undefined
       connector.end = new Point2(e.x / this._zoom, e.y / this._zoom)
@@ -1850,7 +1850,8 @@ export class Editor extends Painter {
       const editorItem = theSelectionLayer.getEditorItem(i) as Item
       const left = editorItem.left
       const top = editorItem.top
-      const connectorCount = editorItem.getConnectorCount()
+      const sourceConnectorCount = editorItem.getSourceConnectorCount()
+      const targetConnectorCount = editorItem.getTargetConnectorCount()
       // console.log('left=' + (left + e.x - this._startPointX) + ', top = ' + (top + e.y - this._startPointY) + ', width = ' + editorItem.width + ', height = ' + editorItem.height)
       const ex = Number(Math.round((left + e.x / this._zoom - this._startPointX / this._zoom) / 1))
       const ey = Number(Math.round((top + e.y / this._zoom - this._startPointY / this._zoom) / 1))
@@ -1866,8 +1867,8 @@ export class Editor extends Painter {
       } else if (editorItem instanceof Entity) {
       }
  
-      for (let j = 0; j < connectorCount; j++) {
-        const connector = editorItem.getConnector(j)
+      for (let j = 0; j < sourceConnectorCount; j++) {
+        const connector = editorItem.getSourceConnector(j)
         if (connector.source == editorItem) {
           // connector.updateSourceJoint()
           // if (connector.sourceJoint) {
@@ -1875,6 +1876,9 @@ export class Editor extends Painter {
           // }
           connector.start = new Point2(connector.start.x + (e.x - this._startPointX) / this._zoom, connector.start.y + (e.y - this._startPointY) / this._zoom)
         }
+      }
+      for (let j = 0; j < targetConnectorCount; j++) {
+        const connector = editorItem.getTargetConnector(j)
         if (connector.target == editorItem) {
           // connector.updateTargetJoint()
           // console.log(`end is connector.end.x = ${connector.end.x} connector.end.y = ${connector.end.y}`)
@@ -1966,7 +1970,7 @@ export class Editor extends Painter {
    * @param y 
    * @returns 
    */
-  private findConnectorDirection(editorItem: EditorItem, x: number, y: number): ConnectorDirection {
+  public findConnectorDirection(editorItem: EditorItem, x: number, y: number): ConnectorDirection {
     let result = ConnectorDirection.Right
     const shape = editorItem.shape
     const matrix = shape.worldInverseTransform

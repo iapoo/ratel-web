@@ -143,13 +143,13 @@ export class PointAnchor extends Anchor {
       if (nowTime - this.lastMovingTime > Anchor.MIN_MOVING_INTERVAL) {
         this.holder.boundary = Rectangle.makeLTWH(newLeft, newTop, newWidth, newHeight)
         // Seems following code have internal dependence
-        this.target.getAllConnectors().forEach(connector => {
+        this.target.getAllSourceConnectors().forEach(connector => {
           if (connector.source === this.target && connector.sourceJoint && this.target) {
             const sourceJoint = new Point2(connector.sourceJoint.x * newWidth / this.target.width, connector.sourceJoint.y * newHeight / this.target.height)
             connector.sourceJoint = sourceJoint
           }
         })
-        this.target.getAllConnectors().forEach(connector => {
+        this.target.getAllTargetConnectors().forEach(connector => {
           if (connector.target === this.target && connector.targetJoint && this.target) {
             const targetJoint = new Point2(connector.targetJoint.x * newWidth / this.target.width, connector.targetJoint.y * newHeight / this.target.height)
             // console.log(`new target point is x = ${targetJoint.x}, y = ${targetJoint.y}, newWidth = ${newWidth}, width = ${this.target.width}, newHeight = ${newHeight}, height = ${this.target.height}`)

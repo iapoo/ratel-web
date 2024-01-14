@@ -2,7 +2,7 @@ import { Colors, Paint, Point2, Rectangle, Rotation } from '@/components/Engine'
 import { Anchor, } from './Anchor'
 import { Editor } from '../../Editor'
 import { Holder } from './Holder'
-import { Connector } from '../../Items'
+import { Connector, Item } from '../../Items'
 import { SelectionLayer } from '../../Editor/src/SelectionLayer'
 
 /**
@@ -94,19 +94,68 @@ export class ConnectionAnchor extends Anchor {
           this.target.end = new Point2(newEndX, newEndY)
         }
 
-        //Recalculate rotation because it depends on width and height
-        this.target.rotation = new Rotation(this.target.rotation.radius, this.target.width / 2, this.target.height / 2)
-        // this.holder.boundary = Rectangle.makeLTWH(
-        //   0,
-        //   0,
-        //   this.holder.target.boundary.width,
-        //   this.holder.target.boundary.height
-        // )
-        // this.holder.transform = this.holder.target.shape.worldTransform
-   
+        const item = this.editor.findEditorItem(point.x, point.y)
+        const editorItem = item as Item
+        const isEdge = editorItem ? this.editor.hasEditorItemJoint(editorItem, point.x, point.y) : false
+        if(this._fromSource) {
+          if(this.target.source) {
+            if(editorItem && isEdge) {
+              if(this.target.source != editorItem) {
+                const inEditorItem = this.editor.isInEditorItem(editorItem, point.x, point.y)
+                const sourceJoint = this.editor.findEditorItemJoint(editorItem, point.x, point.y, inEditorItem)
+                const startDirection = this.editor.findConnectorDirection(editorItem, point.x, point.y)
+                this.target.source.removeSourceConnector(this.target)
+                this.target.startDirection = startDirection
+                this.target.source = editorItem
+                this.target.sourceJoint = sourceJoint
+                editorItem.addSourceConnector(this.target)
+              }
+            } else {
+              this.target.source.removeSourceConnector(this.target)
+              this.target.source = undefined
+            }
+          } else {
+            if(editorItem && isEdge) {
+              const inEditorItem = this.editor.isInEditorItem(editorItem, point.x, point.y)
+              const sourceJoint = this.editor.findEditorItemJoint(editorItem, point.x, point.y, inEditorItem)
+              const startDirection = this.editor.findConnectorDirection(editorItem, point.x, point.y)
+              this.target.startDirection = startDirection
+              this.target.source = editorItem
+              this.target.sourceJoint = sourceJoint
+              editorItem.addSourceConnector(this.target)
+            }
+          }
+        } else {
+          if(this.target.target) {
+            if(editorItem && isEdge) {
+              if(this.target.target != editorItem) {
+                const inEditorItem = this.editor.isInEditorItem(editorItem, point.x, point.y)
+                const targetJoint = this.editor.findEditorItemJoint(editorItem, point.x, point.y, inEditorItem)
+                const endDirection = this.editor.findConnectorDirection(editorItem, point.x, point.y)
+                this.target.target.removeTargetConnector(this.target)
+                this.target.startDirection = endDirection
+                this.target.target = editorItem
+                this.target.targetJoint = targetJoint
+                editorItem.addTargetConnector(this.target)
+              }
+            } else {
+              this.target.target.removeTargetConnector(this.target)
+              this.target.target = undefined
+            }
+          } else {
+            if(editorItem && isEdge) {
+              const inEditorItem = this.editor.isInEditorItem(editorItem, point.x, point.y)
+              const targetJoint = this.editor.findEditorItemJoint(editorItem, point.x, point.y, inEditorItem)
+              const endDirection = this.editor.findConnectorDirection(editorItem, point.x, point.y)
+              this.target.startDirection = endDirection
+              this.target.target = editorItem
+              this.target.targetJoint = targetJoint
+              editorItem.addTargetConnector(this.target)
+            }
+          }
+        }
         //this._startX = x
         //this._startY = y
-        //this.holder.refreshConnectorAnchors()
         this.holder.layoutAnchors()
         this.lastMovingTime = nowTime
         this.editor.triggerSelectionResized()
