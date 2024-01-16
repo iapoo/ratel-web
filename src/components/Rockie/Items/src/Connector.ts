@@ -2414,7 +2414,6 @@ export class Connector extends Item {
           points.push(new Point2(startLeft, end.y - Connector.DEFAULT_ARROW_SEGMENT))
           points.push(new Point2(end.x, end.y - Connector.DEFAULT_ARROW_SEGMENT))
         }
-
         break
       }
       case TargetPosition.Right: {
@@ -2475,11 +2474,11 @@ export class Connector extends Item {
         if(end.y < startTop) {
           points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
           points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
-          points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+          points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
         } else if(end.y > startBottom) {
           points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
           points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
-          points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+          points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
         } else {
           points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
           points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, startTop))
@@ -2598,7 +2597,7 @@ export class Connector extends Item {
           if(end.y > startBottom) {
             points.push(new Point2(start.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(start.x, end.y))
-            points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+            points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
           } else if(end.y > startBottom2) {
             points.push(new Point2(start.x, start.y)) //Dummy point here for Segment
             points.push(new Point2(start.x, end.y))
@@ -2616,12 +2615,12 @@ export class Connector extends Item {
         const startRight = start.x + this._source!.width - this._sourceJoint!.x + Connector.DEFAULT_ARROW_SEGMENT
         if(end.x < startLeft) {
           points.push(new Point2(start.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
-          points.push(new Point2(end.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
-          points.push(new Point2(end.x, end.y + Connector.DEFAULT_ARROW_SEGMENT))
+          points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, start.y + Connector.DEFAULT_ARROW_SEGMENT))
+          points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
         } else if(end.x > startRight) {
           points.push(new Point2(start.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
-          points.push(new Point2(end.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
-          points.push(new Point2(end.x, end.y + Connector.DEFAULT_ARROW_SEGMENT))
+          points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, start.y + Connector.DEFAULT_ARROW_SEGMENT))
+          points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
         } else {
           points.push(new Point2(start.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
           points.push(new Point2(startLeft, start.y + Connector.DEFAULT_ARROW_SEGMENT))
@@ -2680,7 +2679,7 @@ export class Connector extends Item {
           } else if(end.y > startBottom2) {
             points.push(new Point2(start.x, start.y)) //Dummy point here for Segment
             points.push(new Point2(start.x, end.y))
-            points.push(new Point2(end.x, end.y)) //Dummy point here for Segment
+            points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
           } else {
             points.push(new Point2(start.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(end.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
@@ -2858,24 +2857,24 @@ export class Connector extends Item {
         break
       }
       case TargetPosition.Top: {
-        const startRight = start.x + this._source!.width - this._sourceJoint!.x
+        const endRight = end.x + this._target!.width - this._targetJoint!.x
         const middleY = (start.y + end.y) * 0.5
-        if(end.x > startRight) {
+        if(start.x > endRight) {
           if(Math.abs(middleY - start.y) > Connector.DEFAULT_ARROW_SEGMENT) {
-            points.push(new Point2(start.x, start.y - Connector.DEFAULT_ARROW_SEGMENT))
-            points.push(new Point2(start.x, end.y))
-            points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+            points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
+            points.push(new Point2(end.x, start.y))
+            points.push(new Point2(end.x, end.y - Connector.DEFAULT_ARROW_SEGMENT))
           } else {
-            points.push(new Point2(start.x, start.y)) //Dummy point here for Segment
-            points.push(new Point2(start.x, end.y))
-            points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+            points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y)) //Dummy point here for Segment
+            points.push(new Point2(end.x, start.y))
+            points.push(new Point2(end.x, end.y))
           }
         } else {
           if(Math.abs(middleY - start.y) > Connector.DEFAULT_ARROW_SEGMENT) {
-            points.push(new Point2(start.x, start.y - Connector.DEFAULT_ARROW_SEGMENT))
+            points.push(new Point2(start.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(start.x, middleY))
             points.push(new Point2(end.x, middleY))
-            points.push(new Point2(end.x, end.y + Connector.DEFAULT_ARROW_SEGMENT))
+            points.push(new Point2(end.x, end.y - Connector.DEFAULT_ARROW_SEGMENT))
           } else {
             points.push(new Point2(start.x, start.y)) //Dummy point here for Segment
             points.push(new Point2(start.x, middleY))
@@ -2886,51 +2885,50 @@ export class Connector extends Item {
         break
       }
       case TargetPosition.Bottom: {
-        const startLeft = start.x - this._sourceJoint!.x - Connector.DEFAULT_ARROW_SEGMENT
-        const startRight = start.x + this._source!.width - this._sourceJoint!.x + Connector.DEFAULT_ARROW_SEGMENT
-        if(end.x < startLeft) {
+        const endLeft = end.x - this._targetJoint!.x - Connector.DEFAULT_ARROW_SEGMENT
+        const endRight = end.x + this._target!.width - this._targetJoint!.x + Connector.DEFAULT_ARROW_SEGMENT
+        if(start.x < endLeft) {
           points.push(new Point2(start.x, start.y - Connector.DEFAULT_ARROW_SEGMENT))
-          points.push(new Point2(end.x, start.y - Connector.DEFAULT_ARROW_SEGMENT))
+          points.push(new Point2(start.x, end.y - Connector.DEFAULT_ARROW_SEGMENT))
           points.push(new Point2(end.x, end.y - Connector.DEFAULT_ARROW_SEGMENT))
-        } else if(end.x > startRight) {
+        } else if(start.x > endRight) {
           points.push(new Point2(start.x, start.y - Connector.DEFAULT_ARROW_SEGMENT))
-          points.push(new Point2(end.x, start.y - Connector.DEFAULT_ARROW_SEGMENT))
+          points.push(new Point2(start.x, end.y - Connector.DEFAULT_ARROW_SEGMENT))
           points.push(new Point2(end.x, end.y - Connector.DEFAULT_ARROW_SEGMENT))
         } else {
           points.push(new Point2(start.x, start.y - Connector.DEFAULT_ARROW_SEGMENT))
-          points.push(new Point2(startLeft, start.y - Connector.DEFAULT_ARROW_SEGMENT))
-          points.push(new Point2(startLeft, end.y - Connector.DEFAULT_ARROW_SEGMENT))
+          points.push(new Point2(endLeft, start.y - Connector.DEFAULT_ARROW_SEGMENT))
+          points.push(new Point2(endLeft, end.y - Connector.DEFAULT_ARROW_SEGMENT))
           points.push(new Point2(end.x, end.y - Connector.DEFAULT_ARROW_SEGMENT))
         }
-
         break
       }
       case TargetPosition.Right: {
-        const startTop = start.y - this._sourceJoint!.y - Connector.DEFAULT_ARROW_SEGMENT
-        const startTop2 = start.y - this._sourceJoint!.y
-        const startRight = start.x + this._source!.width  - this._sourceJoint!.x + Connector.DEFAULT_ARROW_SEGMENT
-        if(end.x > startRight) {
-          if(end.y < startTop) {
-            points.push(new Point2(start.x, start.y - Connector.DEFAULT_ARROW_SEGMENT))
-            points.push(new Point2(start.x, end.y))
-            points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
+        const endTop = end.y - this._targetJoint!.y - Connector.DEFAULT_ARROW_SEGMENT
+        const endTop2 = end.y - this._targetJoint!.y
+        const endRight = end.x + this._target!.width  - this._targetJoint!.x + Connector.DEFAULT_ARROW_SEGMENT
+        if(start.x > endRight) {
+          if(start.y < endTop) {
+            points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
+            points.push(new Point2(end.x, start.y))
+            points.push(new Point2(end.x , end.y - Connector.DEFAULT_ARROW_SEGMENT))
           } else {
-            points.push(new Point2(start.x, start.y - Connector.DEFAULT_ARROW_SEGMENT))
-            points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, start.y - Connector.DEFAULT_ARROW_SEGMENT))
-            points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+            points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
+            points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, end.y - Connector.DEFAULT_ARROW_SEGMENT))
+            points.push(new Point2(end.x, end.y - Connector.DEFAULT_ARROW_SEGMENT))
           }
         } else {
-          if(end.y < startTop) {
-            points.push(new Point2(start.x, start.y - Connector.DEFAULT_ARROW_SEGMENT))
-            points.push(new Point2(start.x, end.y))
-            points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
-          } else if(end.y < startTop2) {
+          if(start.y < endTop) {
+            points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
+            points.push(new Point2(end.x, start.y))
+            points.push(new Point2(end.x, end.y - Connector.DEFAULT_ARROW_SEGMENT))
+          } else if(end.y < endTop2) {
             points.push(new Point2(start.x, start.y)) //Dummy point here for Segment
             points.push(new Point2(start.x, end.y))
             points.push(new Point2(end.x, end.y)) //Dummy point here for Segment
           } else {
             points.push(new Point2(start.x, start.y - Connector.DEFAULT_ARROW_SEGMENT))
-            points.push(new Point2(end.x, start.y - Connector.DEFAULT_ARROW_SEGMENT))
+            points.push(new Point2(start.x, end.y - Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(end.x, end.y - Connector.DEFAULT_ARROW_SEGMENT))
           }
         }
@@ -2940,10 +2938,10 @@ export class Connector extends Item {
       default: {
         const middleY = (start.y + end.y) * 0.5
         if(Math.abs(middleY - start.y) > Connector.DEFAULT_ARROW_SEGMENT) {
-          points.push(new Point2(start.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
+          points.push(new Point2(start.x, start.y - Connector.DEFAULT_ARROW_SEGMENT))
           points.push(new Point2(start.x, middleY))
           points.push(new Point2(end.x, middleY))
-          points.push(new Point2(end.x, end.y - Connector.DEFAULT_ARROW_SEGMENT))
+          points.push(new Point2(end.x, end.y + Connector.DEFAULT_ARROW_SEGMENT))
         } else {
           points.push(new Point2(start.x, start.y))//Dummy point here for Segment
           points.push(new Point2(start.x, middleY))
@@ -2958,38 +2956,38 @@ export class Connector extends Item {
   private initializeOrthogonalPointsRightWithoutSource(targetPosition: TargetPosition,points: Point2[], start: Point2, end: Point2) {
     switch(targetPosition) {
       case TargetPosition.Left: {
-        const startTop = start.y - this._sourceJoint!.y - Connector.DEFAULT_ARROW_SEGMENT
-        const startBottom = start.y + this._source!.height - this._sourceJoint!.y + Connector.DEFAULT_ARROW_SEGMENT
-        if(end.y < startTop) {
+        const endTop = end.y - this._targetJoint!.y - Connector.DEFAULT_ARROW_SEGMENT
+        const endBottom = end.y + this._target!.height - this._targetJoint!.y + Connector.DEFAULT_ARROW_SEGMENT
+        if(start.y < endTop) {
           points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
-          points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
-          points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
-        } else if(end.y > startBottom) {
+          points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
+          points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
+        } else if(start.y > endBottom) {
           points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
-          points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
-          points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+          points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
+          points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
         } else {
           points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
-          points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, startTop))
-          points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, startTop))
+          points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, endTop))
+          points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, endTop))
           points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
         }
         break
       }
       case TargetPosition.Top: {
-        const startTop = start.y - this._sourceJoint!.y - Connector.DEFAULT_ARROW_SEGMENT
+        const endTop = end.y - this._targetJoint!.y - Connector.DEFAULT_ARROW_SEGMENT
         const middleX = (start.x + end.x) * 0.5
-        if(end.y < startTop) {
-          if(end.x < start.x) {
-            points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
-            points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, end.y + Connector.DEFAULT_ARROW_SEGMENT))
-            points.push(new Point2(end.x , end.y + Connector.DEFAULT_ARROW_SEGMENT))
+        if(start.y < endTop) {
+          if(start.x < end.x) {
+            points.push(new Point2(start.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
+            points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, start.y + Connector.DEFAULT_ARROW_SEGMENT))
+            points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT , end.y))
           } else {
-            if(middleX - start.x > Connector.DEFAULT_ARROW_SEGMENT) {
-              points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
+            if(middleX - end.x > Connector.DEFAULT_ARROW_SEGMENT) {
+              points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
               points.push(new Point2(middleX, start.y))
               points.push(new Point2(middleX, end.y))
-              points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+              points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
             } else {
               points.push(new Point2(start.x, start.y))//Dummy point here for Segment
               points.push(new Point2(middleX, start.y))
@@ -2999,25 +2997,25 @@ export class Connector extends Item {
           }
         } else {
           points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
-          points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
+          points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
           points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
         }
         break
       }
       case TargetPosition.Bottom: {
-        const startBottom = start.y + this._source!.height - this._sourceJoint!.y + Connector.DEFAULT_ARROW_SEGMENT
+        const endBottom = end.y + this._target!.height - this._targetJoint!.y + Connector.DEFAULT_ARROW_SEGMENT
         const middleX = (start.x + end.x) * 0.5
-        if(end.y > startBottom) {
-          if(end.x < start.x) {
-            points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
-            points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, end.y - Connector.DEFAULT_ARROW_SEGMENT))
-            points.push(new Point2(end.x , end.y - Connector.DEFAULT_ARROW_SEGMENT))
+        if(start.y > endBottom) {
+          if(start.x < end.x) {
+            points.push(new Point2(start.x, start.y - Connector.DEFAULT_ARROW_SEGMENT))
+            points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, start.y - Connector.DEFAULT_ARROW_SEGMENT))
+            points.push(new Point2(end.x+ Connector.DEFAULT_ARROW_SEGMENT , end.y))
           } else {
-            if(middleX - start.x > Connector.DEFAULT_ARROW_SEGMENT) {
-              points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
+            if(middleX - end.x > Connector.DEFAULT_ARROW_SEGMENT) {
+              points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
               points.push(new Point2(middleX, start.y))
               points.push(new Point2(middleX, end.y))
-              points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+              points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
             } else {
               points.push(new Point2(start.x, start.y))//Dummy point here for Segment
               points.push(new Point2(middleX, start.y))
@@ -3027,18 +3025,18 @@ export class Connector extends Item {
           }
         } else {
           points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
-          points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
+          points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
           points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
         }
         break
       }
       case TargetPosition.Right: {
         const middleX = (start.x + end.x) * 0.5
-        if(Math.abs(middleX - start.x) > Connector.DEFAULT_ARROW_SEGMENT) {
-          points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
+        if(Math.abs(middleX - end.x) > Connector.DEFAULT_ARROW_SEGMENT) {
+          points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
           points.push(new Point2(middleX, start.y))
           points.push(new Point2(middleX, end.y))
-          points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+          points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
         } else {
           points.push(new Point2(start.x, start.y))//Dummy point here for Segment
           points.push(new Point2(middleX, start.y))
@@ -3050,11 +3048,11 @@ export class Connector extends Item {
       case TargetPosition.None:
       default: {
         const middleX = (start.x + end.x) * 0.5
-        if(Math.abs(middleX - start.x) > Connector.DEFAULT_ARROW_SEGMENT) {
-          points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
+        if(Math.abs(middleX - end.x) > Connector.DEFAULT_ARROW_SEGMENT) {
+          points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
           points.push(new Point2(middleX, start.y))
           points.push(new Point2(middleX, end.y))
-          points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
+          points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
         } else {
           points.push(new Point2(start.x, start.y))//Dummy point here for Segment
           points.push(new Point2(middleX, start.y))
@@ -3069,74 +3067,74 @@ export class Connector extends Item {
   private initializeOrthogonalPointsBottomWithoutSource(targetPosition: TargetPosition,points: Point2[], start: Point2, end: Point2) {
     switch(targetPosition) {
       case TargetPosition.Left: {
-        const startLeft = start.x - this._sourceJoint!.x - Connector.DEFAULT_ARROW_SEGMENT
-        const startBottom = start.y + this._source!.height - this._sourceJoint!.y + Connector.DEFAULT_ARROW_SEGMENT
-        const startBottom2 = start.y + this._source!.height  - this._sourceJoint!.y
-        if(end.x < startLeft) {
-          if(end.y > startBottom) {
-            points.push(new Point2(start.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
-            points.push(new Point2(start.x, end.y))
-            points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
+        const endLeft = end.x - this._targetJoint!.x - Connector.DEFAULT_ARROW_SEGMENT
+        const endBottom = end.y + this._target!.height - this._targetJoint!.y + Connector.DEFAULT_ARROW_SEGMENT
+        const endBottom2 = end.y + this._target!.height  - this._targetJoint!.y
+        if(start.x < endLeft) {
+          if(start.y > endBottom) {
+            points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
+            points.push(new Point2(end.x, start.y))
+            points.push(new Point2(end.x, end.y + Connector.DEFAULT_ARROW_SEGMENT))
           } else {
-            points.push(new Point2(start.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
-            points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, start.y + Connector.DEFAULT_ARROW_SEGMENT))
-            points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
+            points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
+            points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, end.y + Connector.DEFAULT_ARROW_SEGMENT))
+            points.push(new Point2(end.x, end.y + Connector.DEFAULT_ARROW_SEGMENT))
           }
         } else {
-          if(end.y > startBottom) {
-            points.push(new Point2(start.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
-            points.push(new Point2(start.x, end.y))
-            points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
-          } else if(end.y > startBottom2) {
+          if(start.y > endBottom) {
+            points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
+            points.push(new Point2(end.x, start.y))
+            points.push(new Point2(end.x, end.y + Connector.DEFAULT_ARROW_SEGMENT))
+          } else if(start.y > endBottom2) {
             points.push(new Point2(start.x, start.y)) //Dummy point here for Segment
-            points.push(new Point2(start.x, end.y))
+            points.push(new Point2(end.x, start.y))
             points.push(new Point2(end.x, end.y)) //Dummy point here for Segment
           } else {
             points.push(new Point2(start.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
-            points.push(new Point2(end.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
+            points.push(new Point2(start.x, end.y + Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(end.x, end.y + Connector.DEFAULT_ARROW_SEGMENT))
           }
         }
         break
       }
       case TargetPosition.Top: {
-        const startLeft = start.x - this._sourceJoint!.x - Connector.DEFAULT_ARROW_SEGMENT
-        const startRight = start.x + this._source!.width - this._sourceJoint!.x + Connector.DEFAULT_ARROW_SEGMENT
-        if(end.x < startLeft) {
-          points.push(new Point2(start.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
-          points.push(new Point2(end.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
+        const endLeft = end.x - this._targetJoint!.x - Connector.DEFAULT_ARROW_SEGMENT
+        const endRight = end.x + this._target!.width - this._targetJoint!.x + Connector.DEFAULT_ARROW_SEGMENT
+        if(start.x < endLeft) {
+          points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
+          points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, end.y + Connector.DEFAULT_ARROW_SEGMENT))
           points.push(new Point2(end.x, end.y + Connector.DEFAULT_ARROW_SEGMENT))
-        } else if(end.x > startRight) {
-          points.push(new Point2(start.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
-          points.push(new Point2(end.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
+        } else if(start.x > endRight) {
+          points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
+          points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, end.y + Connector.DEFAULT_ARROW_SEGMENT))
           points.push(new Point2(end.x, end.y + Connector.DEFAULT_ARROW_SEGMENT))
         } else {
           points.push(new Point2(start.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
-          points.push(new Point2(startLeft, start.y + Connector.DEFAULT_ARROW_SEGMENT))
-          points.push(new Point2(startLeft, end.y + Connector.DEFAULT_ARROW_SEGMENT))
+          points.push(new Point2(endLeft, start.y + Connector.DEFAULT_ARROW_SEGMENT))
+          points.push(new Point2(endLeft, end.y + Connector.DEFAULT_ARROW_SEGMENT))
           points.push(new Point2(end.x, end.y + Connector.DEFAULT_ARROW_SEGMENT))
         }
         break
       }
       case TargetPosition.Bottom: {
-        const startRight = start.x + this._source!.width - this._sourceJoint!.x
+        const endRight = end.x + this._target!.width - this._targetJoint!.x
         const middleY = (start.y + end.y) * 0.5
-        if(end.x > startRight) {
+        if(start.x > endRight) {
           if(Math.abs(middleY - start.y) > Connector.DEFAULT_ARROW_SEGMENT) {
-            points.push(new Point2(start.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
-            points.push(new Point2(start.x, end.y))
-            points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+            points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
+            points.push(new Point2(end.x, start.y))
+            points.push(new Point2(end.x, end.y + Connector.DEFAULT_ARROW_SEGMENT))
           } else {
-            points.push(new Point2(start.x, start.y)) //Dummy point here for Segment
-            points.push(new Point2(start.x, end.y))
-            points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
+            points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y)) //Dummy point here for Segment
+            points.push(new Point2(end.x, start.y))
+            points.push(new Point2(end.x, end.y))
           }
         } else {
           if(Math.abs(middleY - start.y) > Connector.DEFAULT_ARROW_SEGMENT) {
-            points.push(new Point2(start.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
+            points.push(new Point2(start.x, start.y - Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(start.x, middleY))
             points.push(new Point2(end.x, middleY))
-            points.push(new Point2(end.x, end.y - Connector.DEFAULT_ARROW_SEGMENT))
+            points.push(new Point2(end.x, end.y + Connector.DEFAULT_ARROW_SEGMENT))
           } else {
             points.push(new Point2(start.x, start.y)) //Dummy point here for Segment
             points.push(new Point2(start.x, middleY))
@@ -3147,31 +3145,31 @@ export class Connector extends Item {
         break
       }
       case TargetPosition.Right: {
-        const startBottom = start.y + this._source!.height - this._sourceJoint!.y + Connector.DEFAULT_ARROW_SEGMENT
-        const startBottom2 = start.y + this._source!.height - this._sourceJoint!.y
-        const startRight = start.x + this._source!.width  - this._sourceJoint!.x + Connector.DEFAULT_ARROW_SEGMENT
-        if(end.x > startRight) {
-          if(end.y > startBottom) {
-            points.push(new Point2(start.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
-            points.push(new Point2(start.x, end.y))
-            points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+        const endBottom = end.y + this._target!.height - this._targetJoint!.y + Connector.DEFAULT_ARROW_SEGMENT
+        const endBottom2 = end.y + this._target!.height - this._targetJoint!.y
+        const endRight = end.x + this._target!.width  - this._targetJoint!.x + Connector.DEFAULT_ARROW_SEGMENT
+        if(start.x > endRight) {
+          if(start.y > endBottom) {
+            points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
+            points.push(new Point2(end.x, start.y))
+            points.push(new Point2(end.x, end.y + Connector.DEFAULT_ARROW_SEGMENT))
           } else {
-            points.push(new Point2(start.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
-            points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, start.y + Connector.DEFAULT_ARROW_SEGMENT))
-            points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+            points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
+            points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, end.y + Connector.DEFAULT_ARROW_SEGMENT))
+            points.push(new Point2(end.x, end.y + Connector.DEFAULT_ARROW_SEGMENT))
           }
         } else {
-          if(end.y > startBottom) {
-            points.push(new Point2(start.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
-            points.push(new Point2(start.x, end.y))
-            points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
-          } else if(end.y > startBottom2) {
-            points.push(new Point2(start.x, start.y)) //Dummy point here for Segment
-            points.push(new Point2(start.x, end.y))
+          if(start.y > endBottom) {
+            points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
+            points.push(new Point2(end.x, start.y))
+            points.push(new Point2(end.x, end.y + Connector.DEFAULT_ARROW_SEGMENT))
+          } else if(start.y > endBottom2) {
+            points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
+            points.push(new Point2(end.x, start.y))
             points.push(new Point2(end.x, end.y)) //Dummy point here for Segment
           } else {
             points.push(new Point2(start.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
-            points.push(new Point2(end.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
+            points.push(new Point2(start.x, end.y + Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(end.x, end.y + Connector.DEFAULT_ARROW_SEGMENT))
           }
         }
@@ -3181,10 +3179,10 @@ export class Connector extends Item {
       default: {
         const middleY = (start.y + end.y) * 0.5
         if(Math.abs(middleY - start.y) > Connector.DEFAULT_ARROW_SEGMENT) {
-          points.push(new Point2(start.x, start.y - Connector.DEFAULT_ARROW_SEGMENT))
+          points.push(new Point2(start.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
           points.push(new Point2(start.x, middleY))
           points.push(new Point2(end.x, middleY))
-          points.push(new Point2(end.x, end.y + Connector.DEFAULT_ARROW_SEGMENT))
+          points.push(new Point2(end.x, end.y - Connector.DEFAULT_ARROW_SEGMENT))
         } else {
           points.push(new Point2(start.x, start.y))//Dummy point here for Segment
           points.push(new Point2(start.x, middleY))
