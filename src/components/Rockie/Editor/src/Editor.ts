@@ -631,7 +631,7 @@ export class Editor extends Painter {
     if (this._action) {
       this.handleCreationAction(e)
     } else {
-      const clickedEditorItem = this.findEditorItem(e.x, e.y)
+      const clickedEditorItem = this.findEditorItem(e.x, e.y, false)
       const theSelectionLayer = this.selectionLayer as SelectionLayer
       const isEdge = clickedEditorItem ? this.hasEditorItemJoint(clickedEditorItem, e.x, e.y) : false
       const inClickEditorItem = clickedEditorItem ? this.isInEditorItem(clickedEditorItem, e.x, e.y) : false      
@@ -789,7 +789,7 @@ export class Editor extends Painter {
     } else if(this._inContainerSelection) {
       this.finishContainerSelection(e)
     } else {
-      const clickedEditorItem = this.findEditorItem(e.x, e.y)
+      const clickedEditorItem = this.findEditorItem(e.x, e.y, false)
       if (clickedEditorItem) {
         const targetPoint = this.findEditorItemPoint(clickedEditorItem, e.x, e.y)
         if (this._target !== clickedEditorItem) {
@@ -1064,12 +1064,12 @@ export class Editor extends Painter {
     return inClickEditorItem
   }
 
-  public  findEditorItem (x: number, y: number): EditorItem | undefined {
+  public  findEditorItem (x: number, y: number, excludeConnector: boolean = false): EditorItem | undefined {
     let result
     const count = this.contentLayer.getEditorItemCount()
     for (let i = count - 1; i >= 0; i--) {
       const editorItem = this.contentLayer.getEditorItem(i)
-      result = this.findEditorItemDetail(editorItem, x, y)
+      result = this.findEditorItemDetail(editorItem, x, y, excludeConnector)
       if(result) {
         break;
       }
@@ -1077,7 +1077,7 @@ export class Editor extends Painter {
     return result
   }
 
-  private findEditorItemDetail(editorItem: EditorItem, x: number, y: number): EditorItem | undefined {
+  private findEditorItemDetail(editorItem: EditorItem, x: number, y: number, excludeConnector: boolean = false): EditorItem | undefined {
     let result = undefined
     const count = editorItem.items.length
     const shape = editorItem.shape
@@ -1089,15 +1089,19 @@ export class Editor extends Painter {
     //  newX = newPoint.x
     //  newY = newPoint.y
     //}
-    if (shape.intersects(x - Editor.TEST_RADIUS, y - Editor.TEST_RADIUS, Editor.TEST_SIZE, Editor.TEST_SIZE)) {
-      result = editorItem
-    }
-    for (let i = count - 1; i >= 0; i--) {
-      const child = editorItem.items[i]
-      let childResult = this.findEditorItemDetail(child, x, y)
-      if(childResult) {
-        result = childResult
-        break;
+    if(editorItem instanceof Connector && excludeConnector) {
+      result = undefined
+    } else {
+      if (shape.intersects(x - Editor.TEST_RADIUS, y - Editor.TEST_RADIUS, Editor.TEST_SIZE, Editor.TEST_SIZE)) {
+        result = editorItem
+      }
+      for (let i = count - 1; i >= 0; i--) {
+        const child = editorItem.items[i]
+        let childResult = this.findEditorItemDetail(child, x, y, excludeConnector)
+        if(childResult) {
+          result = childResult
+          break;
+        }
       }
     }
     return result
@@ -1143,7 +1147,7 @@ export class Editor extends Painter {
     const startY = y - Editor.TEST_RADIUS
     const endX = x + Editor.TEST_RADIUS
     const endY = y + Editor.TEST_RADIUS
-    // console.log(`Finding items ${x}    ${y}    ==== ${shape.position.x}    ${shape.position.y}`)
+    //console.log(`Finding items ${x}    ${y}    ==== ${shape.position.x}    ${shape.position.y}  ${shape.width}`)
     for (let i = startX; i <= endX; i++) {
       for (let j = startY; j <= endY; j++) {
         if (shape.contains(i, j)) {
@@ -1322,7 +1326,7 @@ export class Editor extends Painter {
     // console.log('4========== x= ' + e.x + ',  y = ' + e.y)
     const theControllerLayer = this.controllerLayer as ControllerLayer
     const connector = theControllerLayer.getEditorItem(0) as Connector
-    const editorItem = this.findEditorItem(e.x, e.y)
+    const editorItem = this.findEditorItem(e.x, e.y, false)
     const isEdge = editorItem ? this.hasEditorItemJoint(editorItem, e.x, e.y) : false
     //console.log(`create connector ...1 ${editorItem !== connector.source} ${isEdge}`)
     if (editorItem && isEdge) { // && editorItem !== connector.source) {
@@ -1733,7 +1737,7 @@ export class Editor extends Painter {
   private handleDefaultPointMove(e: PointerEvent) {
     const theHoverLayer: HoverLayer = this.hoverLayer as HoverLayer
     const theSelectionLayer: SelectionLayer = this.selectionLayer as SelectionLayer
-    const editorItem = this.findEditorItem(e.x, e.y)
+    const editorItem = this.findEditorItem(e.x, e.y, false)
     // console.log(`Finding ...... ${editorItem}`)
     const isEdge = editorItem ? this.hasEditorItemJoint(editorItem, e.x, e.y) : false
     // console.log(` Find editor item edge = ${isEdge}`)
@@ -1783,7 +1787,7 @@ export class Editor extends Painter {
         const hoverEditorItem = theHoverLayer.getEditorItem(0)
         if (hoverEditorItem instanceof Connector) {
           // console.log('Connector is found')
-          const editorItem = this.findEditorItem(e.x, e.y)
+          const editorItem = this.findEditorItem(e.x, e.y, false)
           if (editorItem !== null && editorItem !== undefined) {
             theHoverLayer.inHolder = false
             theHoverLayer.invalidateLayer()
@@ -1811,7 +1815,7 @@ export class Editor extends Painter {
   private handleCreationAction(e: PointerEvent) {
     if (this._action) {
       // console.log(`handlePointerClick... x = ${e.x}  start=${this.action_.item.start.x} end=${this.action_.item.end.x} width=${this.action_.item.width}  height=${this.action_.item.height}`)
-      const clickedEditorItem = this.findEditorItem(e.x, e.y)
+      const clickedEditorItem = this.findEditorItem(e.x, e.y, false)
       if(clickedEditorItem && clickedEditorItem instanceof ContainerEntity) {
         let point = this.findEditorItemPoint(clickedEditorItem, e.x, e.y)
         let x = Math.round(point.x / this._zoom - this._action.item.width / 2)
