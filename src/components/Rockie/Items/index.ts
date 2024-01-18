@@ -1,3 +1,4 @@
+export { CellEntity } from './src/CellEntity'
 export { Connector } from './src/Connector'
 export { ConnectorInfo, } from './src/ConnectorInfo'
 export { Entity } from './src/Entity'

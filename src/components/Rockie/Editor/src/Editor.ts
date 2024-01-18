@@ -5,7 +5,7 @@ import { Painter, } from '@/components/Painter'
 import { Engine, Point2, Rectangle2D, Rotation, Shape, Line2D, Node, Rectangle, Graphics, Colors, MouseEvent, MouseCode, PointerEvent as UniPointerEvent, Control, PointerEvent, Path, Scale, KeyEvent, Color, Paint, StrokeDashStyle, } from '../../../Engine'
 import { Action, } from '../../Actions'
 import { Holder, } from '../../Design'
-import { Connector, ContainerEntity, EditorItem, EditorItemInfo, Entity, Item, ShapeEntity, TableEntity, } from '../../Items'
+import { CellEntity, Connector, ContainerEntity, EditorItem, EditorItemInfo, Entity, Item, ShapeEntity, TableEntity, } from '../../Items'
 import { ContentLayer, } from './ContentLayer'
 import { ControllerLayer, } from './ControllerLayer'
 import { EditorLayer, } from './EditorLayer'
@@ -672,6 +672,20 @@ export class Editor extends Painter {
         // const item: Item = clickedEditorItem as Item
         // item.saveData(data)
         // console.log(data)
+        // if(clickedEditorItem instanceof CellEntity) {
+        //   //theSelectionLayer.inHolder = true
+        //   theSelectionLayer.removeAllEditorItems()
+        //   //theSelectionLayer.addEditorItem(clickedEditorItem)
+        //   this.triggerSelectionChange()
+        //   this._targetColumnResizing = false
+        //   this._targetRowResizing = false
+        //   this._startEditorItemInfos.length = 0
+        //   let editorItemInfo = OperationHelper.saveEditorItem(clickedEditorItem)
+        //   this._startEditorItemInfos.push(editorItemInfo)
+        //   //this._inMoving = true
+        //   this.checkAndEndTextEdit()
+        //   //this.startMoveOutline(e)
+        // } else 
         if (!theSelectionLayer.hasEditorItem(clickedEditorItem)) {
           theSelectionLayer.inHolder = true
           theSelectionLayer.removeAllEditorItems()
@@ -1095,12 +1109,14 @@ export class Editor extends Painter {
       if (shape.intersects(x - Editor.TEST_RADIUS, y - Editor.TEST_RADIUS, Editor.TEST_SIZE, Editor.TEST_SIZE)) {
         result = editorItem
       }
-      for (let i = count - 1; i >= 0; i--) {
-        const child = editorItem.items[i]
-        let childResult = this.findEditorItemDetail(child, x, y, excludeConnector)
-        if(childResult) {
-          result = childResult
-          break;
+      if(!(editorItem instanceof TableEntity)) {
+        for (let i = count - 1; i >= 0; i--) {
+          const child = editorItem.items[i]
+          let childResult = this.findEditorItemDetail(child, x, y, excludeConnector)
+          if(childResult) {
+            result = childResult
+            break;
+          }
         }
       }
     }
@@ -1114,7 +1130,7 @@ export class Editor extends Painter {
       const editorItem = this.contentLayer.getEditorItem(i)
       const shape = editorItem.shape      
       // console.log(`Finding items ${x}    ${y}    ==== ${shape.position.x}    ${shape.position.y}`)
-      if (editorItem instanceof ContainerEntity && shape.intersects(x - Editor.TEST_RADIUS, y - Editor.TEST_RADIUS, Editor.TEST_SIZE, Editor.TEST_SIZE)) {
+      if (editorItem instanceof ContainerEntity && (!(editorItem instanceof TableEntity)) && shape.intersects(x - Editor.TEST_RADIUS, y - Editor.TEST_RADIUS, Editor.TEST_SIZE, Editor.TEST_SIZE)) {
         let inSelection = false
         const selectionCount = this.selectionLayer.getEditorItemCount()
         for(let j = 0; j < selectionCount; j ++) {
@@ -1816,7 +1832,7 @@ export class Editor extends Painter {
     if (this._action) {
       // console.log(`handlePointerClick... x = ${e.x}  start=${this.action_.item.start.x} end=${this.action_.item.end.x} width=${this.action_.item.width}  height=${this.action_.item.height}`)
       const clickedEditorItem = this.findEditorItem(e.x, e.y, false)
-      if(clickedEditorItem && clickedEditorItem instanceof ContainerEntity) {
+      if(clickedEditorItem && clickedEditorItem instanceof ContainerEntity && (!(clickedEditorItem instanceof TableEntity))) {
         let point = this.findEditorItemPoint(clickedEditorItem, e.x, e.y)
         let x = Math.round(point.x / this._zoom - this._action.item.width / 2)
         let y = Math.round(point.y / this._zoom - this._action.item.height / 2)
