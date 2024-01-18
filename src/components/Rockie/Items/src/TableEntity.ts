@@ -7,6 +7,7 @@ import { EditorItem } from './EditorItem'
 import { EditorItemInfo } from './EditorItemInfo'
 import { Editor } from '../../Editor'
 import { TableInfo } from './TableInfo'
+import { CellEntity } from './CellEntity'
 
 export class TableEntity extends ContainerEntity {
   public static TABLE_TYPE_TABLE = 'Table'
@@ -67,7 +68,7 @@ export class TableEntity extends ContainerEntity {
       const cellHeight = this.height / this.rowCount
       for (let rowIndex = 0; rowIndex < this._rowCount; rowIndex++) {
         for (let columnIndex = 0; columnIndex < this._columnCount; columnIndex++) {
-          const cell = new ShapeEntity(columnIndex * cellWidth, rowIndex * cellHeight, cellWidth, cellHeight)
+          const cell = new CellEntity(columnIndex * cellWidth, rowIndex * cellHeight, cellWidth, cellHeight)
           // console.log(cell)
           // const paint = new Paint()
           // if (rowIndex == 0) {
