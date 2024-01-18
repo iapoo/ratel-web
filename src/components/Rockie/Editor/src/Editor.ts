@@ -76,6 +76,7 @@ export class Editor extends Painter {
   private _textEditStartListeners = new Array<(e: EditorEvent) => void>(0)
   private _textEditEndListeners = new Array<(e: EditorEvent) => void>(0)
   private _selectionResizedListeners = new Array<(e: EditorEvent) => void>(0)
+  private _selectionResizingListeners = new Array<(e: EditorEvent) => void>(0)
   private _textEditStyleChangeListeners = new Array<(e: EditorEvent) => void>(0)
   private _startEditorItemInfos: EditorItemInfo[] = []
   private _origWidth: number
@@ -288,6 +289,29 @@ export class Editor extends Painter {
   
   public hasSelectionResized(callback: (e: EditorEvent) => void) {
     const index = this._selectionResizedListeners.indexOf(callback)
+    return index >= 0
+  }  
+
+  public get selectionResizingListeners() {
+    return this._selectionResizingListeners
+  }
+
+  public onSelectionResizing(callback: (e: EditorEvent) => void) {
+    const index = this._selectionResizingListeners.indexOf(callback)
+    if (index < 0) {
+      this._selectionResizingListeners.push(callback)
+    }
+  }  
+
+  public removeSelectionResizing(callback: (e: EditorEvent) => void) {
+    const index = this._selectionResizingListeners.indexOf(callback)
+    if (index >= 0) {
+      this._selectionResizingListeners.splice(index, 1)
+    }
+  }
+  
+  public hasSelectionResizing(callback: (e: EditorEvent) => void) {
+    const index = this._selectionResizingListeners.indexOf(callback)
     return index >= 0
   }  
 
@@ -806,6 +830,10 @@ export class Editor extends Painter {
       const clickedEditorItem = this.findEditorItem(e.x, e.y, false)
       if (clickedEditorItem) {
         const targetPoint = this.findEditorItemPoint(clickedEditorItem, e.x, e.y)
+        if (clickedEditorItem instanceof TableEntity) {
+          //Need this to update toolbar in time
+          this.triggerSelectionResized()
+        }
         if (this._target !== clickedEditorItem) {
           if (this._target) {
             this._target.shape.focused = false
@@ -1460,6 +1488,13 @@ export class Editor extends Painter {
     })
   }
 
+  public triggerSelectionResizing() {
+    this._selectionResizingListeners.forEach(callback => {
+      const event = new EditorEvent(this)
+      callback(event)
+    })
+  }
+
   public triggerTextEditStyleChange() {
     this._textEditStyleChangeListeners.forEach(callback => {
       const event = new EditorEvent(this)
@@ -1912,8 +1947,8 @@ export class Editor extends Painter {
     this._moved = true
     theSelectionLayer.invalidateLayer()
     theHoverLayer.removeAllEditorItems()
-    //Need this to update toolbar in time
-    this.triggerSelectionResized()
+    //Need this to update toolbar in time, Just hide here because of performance issue
+    this.triggerSelectionResizing()
   }
 
   private startMoveOutline(e: PointerEvent) {
