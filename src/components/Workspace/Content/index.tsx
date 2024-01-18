@@ -241,6 +241,8 @@ const Content: FC<ContentProps> = ({
     Utils.currentEditor.onTextEditEnd(handleTextEditEnd)
     oldEditor?.removeSelectionResized(handleSelectionResized)
     Utils.currentEditor.onSelectionResized(handleSelectionResized)
+    oldEditor?.removeSelectionResizing(handleSelectionResizing)
+    Utils.currentEditor.onSelectionResizing(handleSelectionResizing)
     oldEditor?.removeTextEditStyleChange(handleTextEditStyleChange)
     Utils.currentEditor.onTextEditStyleChange(handleTextEditStyleChange)
   }
@@ -321,6 +323,8 @@ const Content: FC<ContentProps> = ({
     Utils.currentEditor.onTextEditEnd(handleTextEditEnd)
     oldEditor?.removeSelectionResized(handleSelectionResized)
     Utils.currentEditor.onSelectionResized(handleSelectionResized)
+    oldEditor?.removeSelectionResizing(handleSelectionResizing)
+    Utils.currentEditor.onSelectionResizing(handleSelectionResizing)
   }
 
   const onChange = (newActiveKey: string) => {
@@ -352,6 +356,8 @@ const Content: FC<ContentProps> = ({
         Utils.currentEditor.onTextEditEnd(handleTextEditEnd)
         oldEditor?.removeSelectionResized(handleSelectionResized)
         Utils.currentEditor.onSelectionResized(handleSelectionResized)
+        oldEditor?.removeSelectionResizing(handleSelectionResizing)
+        Utils.currentEditor.onSelectionResizing(handleSelectionResizing)
       }
     }
     updateEditors(panes)
@@ -418,6 +424,19 @@ const Content: FC<ContentProps> = ({
         setTextToolbarLeft(left + postion.left)
         setTextToolbarTop(top + postion.top)
         setTextToolbarVisible(true)
+      }
+    }
+  }
+
+
+  const handleSelectionResizing = (e: EditorEvent) => {
+    //console.log(`handle selection resizing`)
+    if(Utils.currentEditor && e.source.selectionLayer.getEditorItemCount() == 1 ) {
+      let item = e.source.selectionLayer.getEditorItem(0) as Item
+      if(item instanceof TableEntity) {
+        setTableToolbarVisible(false)
+      } else if(item instanceof ShapeEntity && e.source.isTextEditting) {
+        setTextToolbarVisible(false)
       }
     }
   }
@@ -509,6 +528,8 @@ const Content: FC<ContentProps> = ({
     Utils.currentEditor.onTextEditEnd(handleTextEditEnd)
     oldEditor?.removeSelectionResized(handleSelectionResized)
     Utils.currentEditor.onSelectionResized(handleSelectionResized)
+    oldEditor?.removeSelectionResizing(handleSelectionResizing)
+    Utils.currentEditor.onSelectionResizing(handleSelectionResizing)
     let operation = new Operation(Utils.currentEditor, OperationType.ADD_EDITOR, [])
     Utils.currentEditor.operationService.addOperation(operation)
 }
@@ -541,6 +562,7 @@ const Content: FC<ContentProps> = ({
       Utils.currentEditor.onTextEditEnd(handleTextEditEnd)
       Utils.currentEditor.onTextEditEnd(handleTextEditEnd)
       Utils.currentEditor.onSelectionResized(handleSelectionResized)
+      Utils.currentEditor.onSelectionResizing(handleSelectionResizing)
     }
   }
 
