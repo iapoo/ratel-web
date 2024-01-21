@@ -16,7 +16,7 @@ import { Editor, EditorEvent } from '@/components/Rockie/Editor';
 import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
 import { Placeholder, } from '@/components/Resource/Icons'
 import { OperationType } from '@/components/Rockie/Operations';
-import { Connector, ContainerEntity, ContainerTypes, Item, ShapeEntity, ShapeTypes } from '@/components/Rockie/Items';
+import { Connector, ContainerEntity, ContainerTypes, Item, ShapeEntity, ShapeTypes, TableEntity } from '@/components/Rockie/Items';
 import { ShapeAction } from '@/components/Rockie/Actions';
 
 interface HeaderProps {
@@ -143,6 +143,9 @@ const Header: FC<HeaderProps> = ({
   const refreshSelectionInfo = (editor: Editor) => {
     if (editor.selectionLayer.getEditorItemCount() > 0) {
       let editorItem = editor.selectionLayer.getEditorItem(0)
+      if(editorItem instanceof TableEntity && editor.targetItem) {
+        editorItem = editor.targetItem
+      }
       //let shape = editorItem.shape
       setZoom(editor.zoom)
       setFontSize(editorItem.fontSize)
@@ -510,10 +513,13 @@ const Header: FC<HeaderProps> = ({
     if (Utils.currentEditor) {
       let editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
       editorItems.forEach(editorItem => {
-        //let shape = editorItem.shape
-        //shape.font = new Font(EngineUtils.FONT_NAME_DEFAULT, value)
-        //shape.markDirty()
-        editorItem.fontSize = value
+        if(editorItem instanceof TableEntity) {
+          if(Utils.currentEditor?.targetItem) {
+            Utils.currentEditor.targetItem.fontSize = value
+          }
+        } else {
+          editorItem.fontSize = value
+        }
       })
       Utils.currentEditor.focus()
     }
@@ -556,12 +562,13 @@ const Header: FC<HeaderProps> = ({
       if (Utils.currentEditor) {
         let editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
         editorItems.forEach(editorItem => {
-          editorItem.lineWidth = value
-          //let shape = editorItem.shape
-          //let stroke = shape.stroke
-          //stroke.setStrokeWidth(value)
-          //shape.font = new Font(EngineUtils.FONT_NAME_DEFAULT, value)
-          //shape.markDirty()        
+          if(editorItem instanceof TableEntity) {
+            if(Utils.currentEditor?.targetItem) {
+              Utils.currentEditor.targetItem.lineWidth = value
+            }
+          } else {
+            editorItem.lineWidth = value
+          }
         })
       }
     }
@@ -612,7 +619,13 @@ const Header: FC<HeaderProps> = ({
     if(currentEditor) {
       let editorItems = currentEditor.selectionLayer.getAllEditorItems()
       editorItems.forEach(editorItem => {
-        editorItem.fontWeight = fontBold ? FontWeight.NORMAL : FontWeight.BOLD
+        if(editorItem instanceof TableEntity) {
+          if(Utils.currentEditor?.targetItem) {
+            Utils.currentEditor.targetItem.fontWeight = fontBold ? FontWeight.NORMAL : FontWeight.BOLD
+          }
+        } else {
+          editorItem.fontWeight = fontBold ? FontWeight.NORMAL : FontWeight.BOLD
+        }
       })
       currentEditor.focus()
     }
@@ -624,7 +637,13 @@ const Header: FC<HeaderProps> = ({
     if(currentEditor) {
       let editorItems = currentEditor.selectionLayer.getAllEditorItems()
       editorItems.forEach(editorItem => {
-        editorItem.fontSlant = fontItalic ? FontSlant.UP_RIGHT : FontSlant.ITALIC
+        if(editorItem instanceof TableEntity) {
+          if(Utils.currentEditor?.targetItem) {
+            Utils.currentEditor.targetItem.fontSlant = fontItalic ? FontSlant.UP_RIGHT : FontSlant.ITALIC
+          }
+        } else {
+          editorItem.fontSlant = fontItalic ? FontSlant.UP_RIGHT : FontSlant.ITALIC
+        }
       })
       currentEditor.focus()
     }
@@ -635,7 +654,13 @@ const Header: FC<HeaderProps> = ({
     if(currentEditor) {
       let editorItems = currentEditor.selectionLayer.getAllEditorItems()
       editorItems.forEach(editorItem => {
-        editorItem.textDecoration = fontUnderline ? TextDecoration.NONE : TextDecoration.UNDERLINE
+        if(editorItem instanceof TableEntity) {
+          if(Utils.currentEditor?.targetItem) {
+            Utils.currentEditor.targetItem.textDecoration = fontUnderline ? TextDecoration.NONE : TextDecoration.UNDERLINE
+          }
+        } else {
+          editorItem.textDecoration = fontUnderline ? TextDecoration.NONE : TextDecoration.UNDERLINE
+        }
       })
       currentEditor.focus()
     }
@@ -646,7 +671,13 @@ const Header: FC<HeaderProps> = ({
     if(currentEditor) {
       let editorItems = currentEditor.selectionLayer.getAllEditorItems()
       editorItems.forEach(editorItem => {
-        editorItem.textAlignment = SystemUtils.parseTextAlignment(textAlignment)
+        if(editorItem instanceof TableEntity) {
+          if(Utils.currentEditor?.targetItem) {
+            Utils.currentEditor.targetItem.textAlignment = SystemUtils.parseTextAlignment(textAlignment)
+          }
+        } else {
+          editorItem.textAlignment = SystemUtils.parseTextAlignment(textAlignment)
+        }
       })
       currentEditor.focus()
     }
@@ -657,7 +688,13 @@ const Header: FC<HeaderProps> = ({
     if(currentEditor) {
       let editorItems = currentEditor.selectionLayer.getAllEditorItems()
       editorItems.forEach(editorItem => {
-        editorItem.textVerticalAlignment = SystemUtils.parseTextVerticalAligment(textVerticalAlignment)
+        if(editorItem instanceof TableEntity) {
+          if(Utils.currentEditor?.targetItem) {
+            Utils.currentEditor.targetItem.textVerticalAlignment = SystemUtils.parseTextVerticalAligment(textVerticalAlignment)
+          }
+        } else {
+          editorItem.textVerticalAlignment = SystemUtils.parseTextVerticalAligment(textVerticalAlignment)
+        }
       })
       currentEditor.focus()
     }
@@ -674,7 +711,13 @@ const Header: FC<HeaderProps> = ({
       let editorItems = currentEditor.selectionLayer.getAllEditorItems()
       editorItems.forEach(editorItem => {
         let strokeDashStyle = SystemUtils.parseStrokeDashStyle(value)
-        editorItem.strokeDashStyle = strokeDashStyle
+        if(editorItem instanceof TableEntity) {
+          if(Utils.currentEditor?.targetItem) {
+            Utils.currentEditor.targetItem.strokeDashStyle = strokeDashStyle
+          }
+        } else {
+          editorItem.strokeDashStyle = strokeDashStyle
+        }
       })
     }
   }
