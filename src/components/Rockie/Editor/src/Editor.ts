@@ -438,6 +438,10 @@ export class Editor extends Painter {
     return this._hoverLayer
   }
 
+  public get targetItem(): EditorItem | undefined {
+    return this._targetItem
+  }
+
   public get zoom (): number {
     return this._zoom
   }
@@ -661,7 +665,7 @@ export class Editor extends Painter {
       const inClickEditorItem = clickedEditorItem ? this.isInEditorItem(clickedEditorItem, e.x, e.y) : false      
       if (clickedEditorItem && isEdge && !inClickEditorItem) { //Create connector
         const targetPoint = this.findEditorItemJoint(clickedEditorItem, e.x, e.y, false)
-        const horizontal = this.checkIfConnectorHorizontal(clickedEditorItem, e.x, e.y)
+        //const horizontal = this.checkIfConnectorHorizontal(clickedEditorItem, e.x, e.y)
         const startDirection = this.findConnectorDirection(clickedEditorItem, e.x, e.y)
         //console.log(`Check horizontal : ${horizontal}`)
         const targetEntity = clickedEditorItem as Entity
@@ -737,6 +741,9 @@ export class Editor extends Painter {
             }
             this._targetItem = undefined
             this._targetItemIndex = 0
+            this._inMoving = true
+            this.checkAndEndTextEdit()
+            this.startMoveOutline(e)
           } else if (targetColumn) {
             // console.log('========0')
             this._targetColumnResizing = targetColumn
@@ -747,21 +754,34 @@ export class Editor extends Painter {
             }
             this._targetItem = undefined
             this._targetItemIndex = 0
+            this._inMoving = true
+            this.checkAndEndTextEdit()
+            this.startMoveOutline(e)
           } else {
             const itemIndex = this.findTableItemIndex(clickedEditorItem, targetPoint.x, targetPoint.y)
-            this._targetItemIndex = itemIndex
-            if (this._targetItem) {
-              this._targetItem.shape.focused = false
+            if(this._targetItemIndex != itemIndex) {
+              this._targetItemIndex = itemIndex
+              if (this._targetItem) {
+                this._targetItem.shape.focused = false
+              }
+              this._targetItem = clickedEditorItem.items[itemIndex]
+              this._targetItem.shape.focused = true
+              this._inMoving = true
+              this.checkAndStartTextEdit()
+              this.startMoveOutline(e)
+            } else {
+              if(this.isTextEditting) {
+                this._inMoving = false
+              } else {
+                this._inMoving = true
+                this.checkAndEndTextEdit()
+                this.startMoveOutline(e)
+              }
             }
-            this._targetItem = clickedEditorItem.items[itemIndex]
-            this._targetItem.shape.focused = true
           }
           this._startEditorItemInfos.length = 0
           let editorItemInfo = OperationHelper.saveEditorItem(clickedEditorItem)
           this._startEditorItemInfos.push(editorItemInfo)
-          this._inMoving = true
-          this.checkAndEndTextEdit()
-          this.startMoveOutline(e)
         } else if(this._textFocused) {
           const targetPoint = this.findEditorItemPoint(clickedEditorItem, e.x, e.y)
           this.updateTextCursorLocation(clickedEditorItem, targetPoint.x, targetPoint.y)
