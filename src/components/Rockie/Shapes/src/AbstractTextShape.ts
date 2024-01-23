@@ -345,7 +345,10 @@ export abstract class AbstractTextShape extends Shape {
       this._startStyleIndex = startStyleIndex
       this._endStyleIndex = endStyleIndex
       this._selectStyle = this._styles[startStyleIndex].clone()
-      //console.log(`${startStyleIndex}  ${endStyleIndex} ${this._startIndex} ${this._endIndex}`)
+      console.log(`text selectting =  ${startStyleIndex}  ${endStyleIndex} ${this._startIndex} ${this._endIndex}`)
+      if(this._startIndex == 3 && this._endIndex == 3) {
+        console.log(`Exception is here`)
+      }
       this.rebuildSelection()
     }
 
