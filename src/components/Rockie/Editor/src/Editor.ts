@@ -770,8 +770,13 @@ export class Editor extends Painter {
               this.checkAndStartTextEdit()
               this.startMoveOutline(e)
             } else {
-              if(this.isTextEditting) {
+              //In text Editting 
+              if(this.isTextEditting && this._targetItem) {
                 this._inMoving = false
+                const cellPoint = this.findEditorItemPoint(this._targetItem, e.x, e.y)
+                this.updateTextCursorLocation(this._targetItem, cellPoint.x, cellPoint.y)
+                this._targetItem.shape.enter(cellPoint.x, cellPoint.y)
+                this._textSelecting = true
               } else {
                 this._inMoving = true
                 this.checkAndEndTextEdit()
@@ -865,11 +870,13 @@ export class Editor extends Painter {
           if (clickedEditorItem instanceof TableEntity) {
             const itemIndex = this.findTableItemIndex(clickedEditorItem, targetPoint.x, targetPoint.y)
             if (itemIndex === this._targetItemIndex && this._targetItem) {
+              const cellPoint = this.findEditorItemPoint(this._targetItem, e.x, e.y)
               const nowTime = Date.now()
               if (this._targetItem.shape.focused) {
                 this._textArea.focus()
-                this.updateTextCursorLocation(this._targetItem, targetPoint.x, targetPoint.y)
-                this._targetItem.shape.enter(targetPoint.x, targetPoint.y)
+                this.updateTextCursorLocation(this._targetItem, cellPoint.x, cellPoint.y)
+                this._targetItem.shape.enterTo(cellPoint.x, cellPoint.y)
+                this._textSelecting = false
                 this.triggerTextEditStyleChange()
               } else {
                 // Check double click
@@ -877,13 +884,13 @@ export class Editor extends Painter {
                   // console.log('Double click is detected')
                   // this.handleDoubleClick(e)
                   this._textArea.focus()
-                  this._targetItem.shape.enter(targetPoint.x, targetPoint.y)
+                  this._targetItem.shape.enter(cellPoint.x, cellPoint.y)
                   this.checkAndStartTextEdit()
                   if (this._targetItem) {
                     this._targetItem.shape.focused = true
                   }
                   this._textArea.textContent = ''
-                  this.updateTextCursorLocation(this._targetItem, targetPoint.x, targetPoint.y)
+                  this.updateTextCursorLocation(this._targetItem, cellPoint.x, cellPoint.y)
                   this.triggerTextEditStyleChange()
                 }
               }
@@ -1343,6 +1350,21 @@ export class Editor extends Painter {
       }
     }
     return 0
+  }
+
+  /**
+   * Find pos in table
+   * @param tableEntity
+   * @param x
+   * @param y
+   * @returns
+   */
+  private findTableItemPoint (tableItem: EditorItem, x: number, y: number): Point2 {
+    if (tableItem.shape.worldInverseTransform) {
+      const point = tableItem.shape.worldInverseTransform.makePoint(new Point2(x, y))
+      return point
+    }
+    return new Point2(x / this._zoom, y / this._zoom)
   }
 
   private handlePointMoveinAction (e: PointerEvent, action: Action) {
@@ -1846,6 +1868,10 @@ export class Editor extends Painter {
             // console.log('========3')
             // this._targetColumn = targetColumn
             // this._targetColumnIndex = targetColumnIndex
+          }
+          if(this._targetItem && this._textFocused && this._textSelecting) {
+            const cellPoint = this.findEditorItemPoint(this._targetItem, e.x, e.y)
+            this._targetItem.shape.enterTo(cellPoint.x, cellPoint.y)
           }
         } else if(this._textFocused && this._textSelecting) {
           const targetPoint = this.findEditorItemPoint(editorItem, e.x, e.y)
