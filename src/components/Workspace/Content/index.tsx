@@ -718,6 +718,9 @@ const Content: FC<ContentProps> = ({
       if(textToolbarVisible) {
         let item = Utils.currentEditor.selectionLayer.getEditorItem(0) as Item
         let data = item.shape.richSelection
+        if(item instanceof TableEntity && Utils.currentEditor.targetItem) {
+          data = Utils.currentEditor.targetItem.shape.richSelection
+        }
         if(data.length > 0) {
           e.clipboardData.clearData()
           e.clipboardData.setData('text/plain', data)
@@ -802,10 +805,17 @@ const Content: FC<ContentProps> = ({
       if(textToolbarVisible) {
         let item = Utils.currentEditor.selectionLayer.getEditorItem(0) as Item
         let data = item.shape.richSelection
+        if(item instanceof TableEntity && Utils.currentEditor.targetItem) {
+          data = Utils.currentEditor.targetItem.shape.richSelection
+        }
         if(data.length > 0) {
           e.clipboardData.clearData()
           e.clipboardData.setData('text/plain', data)
-          item.shape.deleteSelection()
+          if(item instanceof TableEntity && Utils.currentEditor.targetItem) {
+            Utils.currentEditor.targetItem.shape.deleteSelection()
+          } else {
+            item.shape.deleteSelection()
+          }
         }
       } else {
         let data = EditorHelper.exportEditorSelections(Utils.currentEditor)
@@ -843,7 +853,11 @@ const Content: FC<ContentProps> = ({
       console.log(`oldData = ${data}`)
       if(textToolbarVisible) {
         let item = Utils.currentEditor.selectionLayer.getEditorItem(0) as Item
-        item.shape.insertRichText(data)
+        if(item instanceof TableEntity && Utils.currentEditor.targetItem) {
+          Utils.currentEditor.targetItem.shape.insertRichText(data)
+        } else {
+          item.shape.insertRichText(data)
+        }
       } else {
         let selections = EditorHelper.readSelections(data)
         console.log(`paste selections = ${selections}`)
