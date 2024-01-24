@@ -769,6 +769,10 @@ export class Editor extends Painter {
               this._inMoving = true
               this.checkAndStartTextEdit()
               this.startMoveOutline(e)
+              const cellPoint = this.findEditorItemPoint(this._targetItem, e.x, e.y)
+              this.updateTextCursorLocation(this._targetItem, cellPoint.x, cellPoint.y)
+              this._targetItem.shape.enter(cellPoint.x, cellPoint.y)
+              this._textSelecting = true
             } else {
               //In text Editting 
               if(this.isTextEditting && this._targetItem) {
@@ -1350,21 +1354,6 @@ export class Editor extends Painter {
       }
     }
     return 0
-  }
-
-  /**
-   * Find pos in table
-   * @param tableEntity
-   * @param x
-   * @param y
-   * @returns
-   */
-  private findTableItemPoint (tableItem: EditorItem, x: number, y: number): Point2 {
-    if (tableItem.shape.worldInverseTransform) {
-      const point = tableItem.shape.worldInverseTransform.makePoint(new Point2(x, y))
-      return point
-    }
-    return new Point2(x / this._zoom, y / this._zoom)
   }
 
   private handlePointMoveinAction (e: PointerEvent, action: Action) {
