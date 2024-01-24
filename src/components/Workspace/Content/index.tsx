@@ -367,6 +367,9 @@ const Content: FC<ContentProps> = ({
   const refreshSelectionInfo = (editor: Editor) => {
     if (editor.selectionLayer.getEditorItemCount() > 0) {
       let editorItem = editor.selectionLayer.getEditorItem(0)
+      if(editorItem instanceof TableEntity && editor.targetItem) {
+        editorItem = editor.targetItem
+      }
       setFontSize(editorItem.fontSize)
       let fontColorValue = SystemUtils.generateColorString(editorItem.fontColor)
       setFontColor(fontColorValue.substring(0, 7))
@@ -420,6 +423,11 @@ const Content: FC<ContentProps> = ({
         setTableToolbarLeft(left + postion.left)
         setTableToolbarTop(top + postion.top)
         setTableToolbarVisible(true)
+        if(Utils.currentEditor.targetItem) {
+          setTextToolbarLeft(left + postion.left)
+          setTextToolbarTop(top + postion.top)
+          setTextToolbarVisible(true)
+        }
       } else if(item instanceof ShapeEntity && e.source.isTextEditting) {
         setTextToolbarLeft(left + postion.left)
         setTextToolbarTop(top + postion.top)
@@ -435,6 +443,9 @@ const Content: FC<ContentProps> = ({
       let item = e.source.selectionLayer.getEditorItem(0) as Item
       if(item instanceof TableEntity) {
         setTableToolbarVisible(false)
+        if(Utils.currentEditor.targetItem) {
+          setTextToolbarVisible(false)
+        }
       } else if(item instanceof ShapeEntity && e.source.isTextEditting) {
         setTextToolbarVisible(false)
       }
@@ -599,10 +610,13 @@ const Content: FC<ContentProps> = ({
     if (Utils.currentEditor) {
       let editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
       editorItems.forEach(editorItem => {
-        //let shape = editorItem.shape
-        //shape.font = new Font(EngineUtils.FONT_NAME_DEFAULT, value)
-        //shape.markDirty()
-        editorItem.fontSize = value
+        if(editorItem instanceof TableEntity) {
+          if(Utils.currentEditor?.targetItem) {
+            Utils.currentEditor.targetItem.fontSize = value
+          }
+        } else {
+          editorItem.fontSize = value
+        }
       })
       Utils.currentEditor.focus()
     }
@@ -647,7 +661,13 @@ const Content: FC<ContentProps> = ({
       editorItems.forEach(editorItem => {
         let color = SystemUtils.parseColorString(value.toHexString())
         if(color) {
-          editorItem.fontColor = color
+          if(editorItem instanceof TableEntity) {
+            if(Utils.currentEditor?.targetItem) {
+              Utils.currentEditor.targetItem.fontColor = color
+            }
+          } else {
+            editorItem.fontColor = color
+          }
         }
       })
       Utils.currentEditor.focus()    
@@ -659,8 +679,14 @@ const Content: FC<ContentProps> = ({
     if(Utils.currentEditor) {
       let editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
       editorItems.forEach(editorItem => {
-        editorItem.fontWeight = fontBold ? FontWeight.NORMAL : FontWeight.BOLD
-      })
+        if(editorItem instanceof TableEntity) {
+          if(Utils.currentEditor?.targetItem) {
+            Utils.currentEditor.targetItem.fontWeight = fontBold ? FontWeight.NORMAL : FontWeight.BOLD
+          }
+        } else {
+          editorItem.fontWeight = fontBold ? FontWeight.NORMAL : FontWeight.BOLD
+        }
+    })
       Utils.currentEditor.focus()    
     }
   }
@@ -670,7 +696,13 @@ const Content: FC<ContentProps> = ({
     if(Utils.currentEditor) {
       let editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
       editorItems.forEach(editorItem => {
-        editorItem.fontSlant = fontItalic ? FontSlant.UP_RIGHT : FontSlant.ITALIC
+        if(editorItem instanceof TableEntity) {
+          if(Utils.currentEditor?.targetItem) {
+            Utils.currentEditor.targetItem.fontSlant = fontItalic ? FontSlant.UP_RIGHT : FontSlant.ITALIC
+          }
+        } else {
+          editorItem.fontSlant = fontItalic ? FontSlant.UP_RIGHT : FontSlant.ITALIC
+        }
       })
       Utils.currentEditor.focus()    
     }
@@ -681,7 +713,13 @@ const Content: FC<ContentProps> = ({
     if(Utils.currentEditor) {
       let editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
       editorItems.forEach(editorItem => {
-        editorItem.textDecoration = fontUnderline ? TextDecoration.NONE : TextDecoration.UNDERLINE
+        if(editorItem instanceof TableEntity) {
+          if(Utils.currentEditor?.targetItem) {
+            Utils.currentEditor.targetItem.textDecoration = fontUnderline ? TextDecoration.NONE : TextDecoration.UNDERLINE
+          }
+        } else {
+          editorItem.textDecoration = fontUnderline ? TextDecoration.NONE : TextDecoration.UNDERLINE
+        }
       })
       Utils.currentEditor.focus()    
     }
@@ -692,7 +730,13 @@ const Content: FC<ContentProps> = ({
     if(Utils.currentEditor) {
       let editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
       editorItems.forEach(editorItem => {
-        editorItem.textAlignment = SystemUtils.parseTextAlignment(textAlignment)
+        if(editorItem instanceof TableEntity) {
+          if(Utils.currentEditor?.targetItem) {
+            Utils.currentEditor.targetItem.textAlignment = SystemUtils.parseTextAlignment(textAlignment)
+          }
+        } else {
+          editorItem.textAlignment = SystemUtils.parseTextAlignment(textAlignment)
+        }
       })
       Utils.currentEditor.focus()    
     }
@@ -703,7 +747,13 @@ const Content: FC<ContentProps> = ({
     if(Utils.currentEditor) {
       let editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
       editorItems.forEach(editorItem => {
-        editorItem.textVerticalAlignment = SystemUtils.parseTextVerticalAligment(textVerticalAlignment)
+        if(editorItem instanceof TableEntity) {
+          if(Utils.currentEditor?.targetItem) {
+            Utils.currentEditor.targetItem.textVerticalAlignment = SystemUtils.parseTextVerticalAligment(textVerticalAlignment)
+          }
+        } else {
+          editorItem.textVerticalAlignment = SystemUtils.parseTextVerticalAligment(textVerticalAlignment)
+        }
       })
       Utils.currentEditor.focus()    
     }
@@ -1129,7 +1179,7 @@ const Content: FC<ContentProps> = ({
     </Space>
   </FloatButton.Group>
 
-  const tableToolbars = <FloatButton.Group style={{left: tableToolbarLeft, top: tableToolbarTop - 40, height: 32, display: tableToolbarVisible ? 'block' : 'none'}}>                  
+  const tableToolbars = <FloatButton.Group style={{left: tableToolbarLeft, top: tableToolbarTop - 40 - (textToolbarVisible ? 40 : 0), height: 32, display: tableToolbarVisible ? 'block' : 'none'}}>                  
     <Space direction='horizontal' style={{backgroundColor: 'white', borderColor: 'silver', borderWidth: 1, borderStyle: 'solid', padding: 2}}>
       <Tooltip title={<FormattedMessage id='workspace.header.title.font-bold'/>}>
         <Button type='text' size='small' icon={<InsertRowAboveOutlined/>}  onClick={handleBoldChanged} />
