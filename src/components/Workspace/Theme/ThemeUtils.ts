@@ -48,7 +48,7 @@ export class ThemeUtils {
 
 
   public static get textAlignment(): TextAlignment {
-    return TextAlignment.LEFT
+    return TextAlignment.CENTER
   }
 
   public static get textDecoration(): TextDecoration {
