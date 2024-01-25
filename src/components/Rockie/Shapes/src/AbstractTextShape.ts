@@ -206,6 +206,7 @@ export abstract class AbstractTextShape extends Shape {
         textStyle: new TextStyle(),
       })
       this.buildLines()
+      this.rebuildSelection()
     }
 
     public get textVerticalAlignment() {
@@ -362,8 +363,7 @@ export abstract class AbstractTextShape extends Shape {
       let newY = point.y
       //console.log(`Enter ${newX} ${newY}`)
       if(this.lines.length == 0) {
-        //Empty text and so we assume height is font size x 140%
-        this._cursor.place(this.getTextPaddingX(), this.getTextPaddingY() , this.getTextPaddingY() + this.fontSize * 1.4)
+        this.updateCursorWithEmptyText()
         return
       }
       const firstLine = this._lines[0]
@@ -439,8 +439,7 @@ export abstract class AbstractTextShape extends Shape {
       let newY = point.y
       //console.log(`Enter ${newX} ${newY}`)
       if(this.lines.length == 0) {
-        //Empty text and so we assume height is font size x 140%
-        this._cursor.place(this.getTextPaddingX(), this.getTextPaddingY() , this.getTextPaddingY() + this.fontSize * 1.4)
+        this.updateCursorWithEmptyText()
         return
       }
       const firstLine = this._lines[0]
@@ -886,8 +885,7 @@ export abstract class AbstractTextShape extends Shape {
 
     private rebuildSelection () {
       if(this._lines.length == 0) {
-          //Empty text and so we assume height is font size x 140%
-          this._cursor.place(this.getTextPaddingX(), this.getTextPaddingY() , this.getTextPaddingY() + this.fontSize * 1.4)
+          this.updateCursorWithEmptyText()
           return
       }
       const startIndex = this._startIndex
@@ -1204,6 +1202,24 @@ export abstract class AbstractTextShape extends Shape {
     } else {
       return new Point2(x, y)
     }
+  }
+
+  private updateCursorWithEmptyText() {
+    //Empty text and so we assume height is font size x 140%
+    let newLeft = this.getTextPaddingX()
+    switch(this.textAlignment){
+      case TextAlignment.RIGHT:
+        newLeft = this.width - this.getTextPaddingX()
+        break;
+      case TextAlignment.CENTER:
+        newLeft = this.width / 2
+        break;
+      case TextAlignment.LEFT:
+      default:
+        newLeft = this.getTextPaddingX()
+        break;
+    }
+    this._cursor.place(newLeft, this.getTextPaddingY() , this.getTextPaddingY() + this.fontSize * 1.4)
   }
 
   protected abstract buildShape (): void;
