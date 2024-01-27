@@ -108,12 +108,17 @@ export abstract class AbstractTextShape extends Shape {
     }
 
     public set fontColor(value: Color) {
-      //this._styles[this._startStyleIndex].color = value
       this._selectStyle.color = value
       if(!this._focused) {
         this._styles.forEach(style => {
           style.color = value
         })
+      }
+      if(this._endIndex != this._startIndex) {
+        const selectionStyles = this.findSelectionStyles()
+        selectionStyles.forEach(selectionStyle => {
+          selectionStyle.color = value
+        })        
       }
       this.buildLines()
     }
@@ -127,12 +132,17 @@ export abstract class AbstractTextShape extends Shape {
     }
 
     public set fontSize(value: number) {
-      //this._styles[this._startStyleIndex].size = value
       this._selectStyle.size = value
       if(!this._focused) {
         this._styles.forEach(style => {
           style.size = value
         })
+      }
+      if(this._endIndex != this._startIndex) {
+        const selectionStyles = this.findSelectionStyles()
+        selectionStyles.forEach(selectionStyle => {
+          selectionStyle.size = value
+        })        
       }
       this.buildLines()
     }
@@ -146,7 +156,6 @@ export abstract class AbstractTextShape extends Shape {
     }
 
     public set fontWeight(value: FontWeight) {
-      //this._styles[this._startStyleIndex].bold = value == FontWeight.BOLD
       this._selectStyle.bold = value == FontWeight.BOLD
       if(!this._focused) {
         this._styles.forEach(style => {
@@ -154,17 +163,12 @@ export abstract class AbstractTextShape extends Shape {
         })
       }
       if(this._endIndex != this._startIndex) {
-        this.splitRangeStyles(this._startIndex, this._endIndex)
-        const [startIndex, startLength, ] = this.findStyleIndexAndPrevLength(this._startIndex, true)
-        const [endIndex, endLength, ] = this.findStyleIndexAndPrevLength(this._endIndex, false)
-        //console.log(`set FontWeight: startIndex = ${startIndex}, ${startLength}  endIndex = ${endIndex}, ${endLength}`)
-        const selectionStyles = this._styles.slice(startIndex, endIndex + 1)
+        const selectionStyles = this.findSelectionStyles()
         selectionStyles.forEach(selectionStyle => {
           selectionStyle.bold = value == FontWeight.BOLD
         })        
       }
       this.buildLines()
-      //TODO HERE
     }
 
     public get fontSlant() {
@@ -176,12 +180,17 @@ export abstract class AbstractTextShape extends Shape {
     }
 
     public set fontSlant(value: FontSlant) {
-      //this._styles[this._startStyleIndex].italic = value == FontSlant.ITALIC
       this._selectStyle.italic = value == FontSlant.ITALIC
       if(!this._focused) {
         this._styles.forEach(style => {
           style.italic = value == FontSlant.ITALIC
         })
+      }
+      if(this._endIndex != this._startIndex) {
+        const selectionStyles = this.findSelectionStyles()
+        selectionStyles.forEach(selectionStyle => {
+          selectionStyle.italic = value == FontSlant.ITALIC
+        })        
       }
       this.buildLines()
     }
@@ -195,12 +204,17 @@ export abstract class AbstractTextShape extends Shape {
     }
 
     public set textDecoration(value: TextDecoration) {
-      //this._styles[this._startStyleIndex].underline = value == TextDecoration.UNDERLINE
       this._selectStyle.underline = value == TextDecoration.UNDERLINE
       if(!this._focused) {
         this._styles.forEach(style => {
           style.underline = value == TextDecoration.UNDERLINE
         })
+      }
+      if(this._endIndex != this._startIndex) {
+        const selectionStyles = this.findSelectionStyles()
+        selectionStyles.forEach(selectionStyle => {
+          selectionStyle.underline = value == TextDecoration.UNDERLINE
+        })        
       }
       this.buildLines()
     }
@@ -1267,6 +1281,14 @@ export abstract class AbstractTextShape extends Shape {
     const oldStart = this._styles.slice(0, startIndex + 1)
     const oldEnd = this._styles.slice(endIndex)
     this._styles = oldStart.concat(newStyle, oldEnd)
+  }
+
+  private findSelectionStyles() {
+    this.splitRangeStyles(this._startIndex, this._endIndex)
+    const [startIndex, startLength, ] = this.findStyleIndexAndPrevLength(this._startIndex, true)
+    const [endIndex, endLength, ] = this.findStyleIndexAndPrevLength(this._endIndex, false)
+    const selectionStyles = this._styles.slice(startIndex, endIndex + 1)
+    return selectionStyles
   }
 
   protected abstract buildShape (): void;
