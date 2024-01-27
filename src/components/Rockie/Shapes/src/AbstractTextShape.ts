@@ -153,7 +153,18 @@ export abstract class AbstractTextShape extends Shape {
           style.bold = value == FontWeight.BOLD
         })
       }
+      if(this._endIndex != this._startIndex) {
+        this.splitRangeStyles(this._startIndex, this._endIndex)
+        const [startIndex, startLength, ] = this.findStyleIndexAndPrevLength(this._startIndex, true)
+        const [endIndex, endLength, ] = this.findStyleIndexAndPrevLength(this._endIndex, false)
+        //console.log(`set FontWeight: startIndex = ${startIndex}, ${startLength}  endIndex = ${endIndex}, ${endLength}`)
+        const selectionStyles = this._styles.slice(startIndex, endIndex + 1)
+        selectionStyles.forEach(selectionStyle => {
+          selectionStyle.bold = value == FontWeight.BOLD
+        })        
+      }
       this.buildLines()
+      //TODO HERE
     }
 
     public get fontSlant() {
@@ -341,8 +352,8 @@ export abstract class AbstractTextShape extends Shape {
       }
       this._startIndex = Math.min(start, end)
       this._endIndex = Math.max(start, end)
-      const [startStyleIndex, preStartLen, ] = this.findStyleIndexAndPrevLength(this._startIndex)
-      const [endStyleIndex, preEndLen, ] = this.findStyleIndexAndPrevLength(this._endIndex)
+      const [startStyleIndex, preStartLen, ] = this.findStyleIndexAndPrevLength(this._startIndex, true)
+      const [endStyleIndex, preEndLen, ] = this.findStyleIndexAndPrevLength(this._endIndex, false)
       this._startStyleIndex = startStyleIndex
       this._endStyleIndex = endStyleIndex
       this._selectStyle = this._styles[startStyleIndex].clone()
@@ -571,7 +582,7 @@ export abstract class AbstractTextShape extends Shape {
         this.deleteSelection()
       }
       const index = this._startIndex
-      const [ styleIndex, preLength, ] = this.findStyleIndexAndPrevLength(index)
+      const [ styleIndex, preLength, ] = this.findStyleIndexAndPrevLength(index, false)
       const style = this._styles[styleIndex]
       const newStyles = []
       if(preLength == index) {
@@ -623,7 +634,7 @@ export abstract class AbstractTextShape extends Shape {
 
       // do this before edit the text (we use text.length in an assert)
       const index = this._startIndex
-      const [ styleIndex, preLength, ] = this.findStyleIndexAndPrevLength(index)
+      const [ styleIndex, preLength, ] = this.findStyleIndexAndPrevLength(index, false)
       const style = this._styles[styleIndex]
       if(style.length == 0) { //Empty yet
         this._styles[styleIndex] = this._selectStyle.clone()         
@@ -672,17 +683,24 @@ export abstract class AbstractTextShape extends Shape {
       this.rebuildSelection()
     }
 
-    public findStyleIndexAndPrevLength (index: number) {
-      let length = 0
+    public findStyleIndexAndPrevLength (index: number, forRight: boolean) {
+      let prevLength = 0
+      let currLength = 0
       for (let i = 0; i < this._styles.length; ++i) {
-        const l = this._styles[i].length
-        length += l
-        // < favors the latter style if index is between two styles
-        if (index <= length) {
-          return [ i, length - l, ]
+        const length = this._styles[i].length
+        currLength += length
+        if(forRight) {
+          if (index >= prevLength && index < currLength) {
+            return [ i, prevLength, ]
+          }
+        } else {
+          if(index <= currLength) {
+            return [i, prevLength]
+          }
         }
+        prevLength = currLength
       }
-      return [ this._styles.length - 1, length, ]
+      return [ this._styles.length - 1, prevLength, ]
     }
 
     public applyStyleToRange (style: Style, startIndex: number, endIndex: number) {
@@ -981,7 +999,7 @@ export abstract class AbstractTextShape extends Shape {
 
     private deleteStyleRange (start: number, end: number) {
       let count = end - start
-      let [ styleIndex, prevLength, ] = this.findStyleIndexAndPrevLength(start)
+      let [ styleIndex, prevLength, ] = this.findStyleIndexAndPrevLength(start, false)
       //Skip if it is last style
       if(styleIndex == 0 && this._styles.length == 1) {
         return
@@ -1013,8 +1031,8 @@ export abstract class AbstractTextShape extends Shape {
 
     private rebuildRangeStyles(start: number, end: number) {
       let newStyles = []
-      let [startIndex, startLength, ] = this.findStyleIndexAndPrevLength(start)
-      let [endIndex, endLength, ] = this.findStyleIndexAndPrevLength(end)
+      let [startIndex, startLength, ] = this.findStyleIndexAndPrevLength(start, true)
+      let [endIndex, endLength, ] = this.findStyleIndexAndPrevLength(end, false)
       let newStyle = this._styles[startIndex].clone()
       newStyles.push(newStyle)
       if(start > startLength) {
@@ -1220,6 +1238,35 @@ export abstract class AbstractTextShape extends Shape {
         break;
     }
     this._cursor.place(newLeft, this.getTextPaddingY() , this.getTextPaddingY() + this.fontSize * 1.4)
+  }
+
+  //Need to split one style into 2 same styles while selecting here.
+  private splitRangeStyles(start: number, end: number) {
+    if(start <= end) {
+      return
+    }
+    let newStyles = []
+    let [startIndex, startLength, ] = this.findStyleIndexAndPrevLength(start, true)
+    let [endIndex, endLength, ] = this.findStyleIndexAndPrevLength(end, false)
+
+    let newStyle = this._styles[startIndex].clone()
+    newStyles.push(newStyle)
+    if(start > startLength) {
+      newStyle.length = newStyle.length - start + startLength
+      this._styles[startIndex].length = start - startLength
+    }
+    while(startIndex < endIndex) {
+      startIndex ++
+      newStyle = this._styles[startIndex].clone()
+      newStyles.push(newStyle)
+      if(startIndex == endIndex && end < endLength + newStyle.length) {
+        this._styles[endIndex].length = newStyle.length - end + endLength
+        newStyle.length = end - endLength
+      }
+    }
+    const oldStart = this._styles.slice(0, startIndex + 1)
+    const oldEnd = this._styles.slice(endIndex)
+    this._styles = oldStart.concat(newStyle, oldEnd)
   }
 
   protected abstract buildShape (): void;
