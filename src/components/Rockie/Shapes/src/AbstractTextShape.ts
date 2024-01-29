@@ -830,9 +830,14 @@ export abstract class AbstractTextShape extends Shape {
             break
           }
         }
-        if (!run) { break }
+        if (!run) { 
+          break 
+        }
         while (styleEnd <= start) {
           style = styles[++styleIndex]
+          if(!style) {
+            break
+          }
           styleStart = styleEnd
           styleEnd += style.length
         }
