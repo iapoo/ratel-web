@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
 
 import { Color, Colors, Font, FontSlant, FontWeight, GlyphRun, Graphics, Matrix, Paint, Paragraph, ParagraphBuilder, ParagraphDirection, ParagraphStyle, Path, PlaceholderAlignment, Point2, Rectangle, Rotation, RoundRectangle, Shape, ShapedLine, TextAlignment, TextBaseline, TextDecoration, TextDirection, TextStyle, TextVerticalAlignment, } from '@/components/Engine'
-import { Block, CursorMaker, Style, StyleInfo, } from './EntityUtils'
+import { CursorMaker, Style, StyleInfo, } from './EntityUtils'
 
 export abstract class AbstractTextShape extends Shape {
     public static DEFAULT_TEXT_PADDING = 4
@@ -15,8 +15,6 @@ export abstract class AbstractTextShape extends Shape {
     private _startIndex = 0
     private _endIndex = 0
     private _selectStartIndex = 0
-    private _startStyleIndex = 0
-    private _endStyleIndex = 0
     private _selectStyle = new Style()
     private _styles = new Array<Style>(0)
     private _font = new Font()
@@ -373,8 +371,6 @@ export abstract class AbstractTextShape extends Shape {
       this._endIndex = Math.max(start, end)
       const [startStyleIndex, preStartLen, ] = this.findStyleIndexAndPrevLength(this._startIndex, true)
       const [endStyleIndex, preEndLen, ] = this.findStyleIndexAndPrevLength(this._endIndex, false)
-      this._startStyleIndex = startStyleIndex
-      this._endStyleIndex = endStyleIndex
       this._selectStyle = this._styles[startStyleIndex].clone()
       console.log(`text selectting =  ${startStyleIndex}  ${endStyleIndex} ${this._startIndex} ${this._endIndex}`)
       if(this._startIndex == 3 && this._endIndex == 3) {
@@ -551,14 +547,14 @@ export abstract class AbstractTextShape extends Shape {
 
     public moveRows (rowCount: number) {
       let index = (rowCount < 0) ? this._startIndex : this._endIndex
-      const i = this.getLinesIndexToLineIndex(index)
-      if (rowCount < 0 && i == 0) {
+      const lineIndex = this.getLinesIndexToLineIndex(index)
+      if (rowCount < 0 && lineIndex == 0) {
         index = 0
-      } else if (rowCount > 0 && i == this._lines.length - 1) {
+      } else if (rowCount > 0 && lineIndex == this._lines.length - 1) {
         index = this._text.length
       } else {
-        const x = this.getRunsIndexToX(this._lines[i], index)
-        index = this.getRunsXToIndex(this._lines[i + rowCount], x)
+        const x = this.getRunsIndexToX(this._lines[lineIndex], index)
+        index = this.getRunsXToIndex(this._lines[lineIndex + rowCount], x)
       }
       this.select(index, index)
     }
@@ -720,71 +716,6 @@ export abstract class AbstractTextShape extends Shape {
         prevLength = currLength
       }
       return [ this._styles.length - 1, prevLength, ]
-    }
-
-    public applyStyleToRange (style: Style, startIndex: number, endIndex: number) {
-      // if (start > end) { [ start, end, ] = [ end, start, ] }
-      // ASSERT(start >= 0 && end <= this._text.length)
-      let start = startIndex
-      let end = endIndex
-      if (start === end) {
-        return
-      }
-
-      // LOG('trying to apply', style, start, end)
-      let i
-      for (i = 0; i < this._styles.length; ++i) {
-        if (start <= this._styles[i].length) {
-          break
-        }
-        start -= this._styles[i].length
-        end -= this._styles[i].length
-      }
-
-      let s = this._styles[i]
-      // do we need to fission off a clean subset for the head of s?
-      if (start > 0) {
-        const ns = s.clone()
-        s.length = start
-        ns.length -= start
-        // LOG('initial splice', i, start, s._length, ns._length)
-        i += 1
-        this._styles.splice(i, 0, ns)
-        end -= start
-        // we don't use start any more
-      }
-      // merge into any/all whole styles we overlap
-      let layoutChanged = false
-      while (end >= this._styles[i].length) {
-        // LOG('whole run merging for style index', i)
-        layoutChanged = layoutChanged || this._styles[i].mergeFrom(style)
-        end -= this._styles[i].length
-        i += 1
-        if (end == 0) {
-          break
-        }
-      }
-      // do we partially cover the last run
-      if (end > 0) {
-        s = this._styles[i]
-        const ns = s.clone() // the new first half
-        ns.length = end
-        s.length -= end // trim the (unchanged) tail
-        // LOG('merging tail', i, ns._length, s._length)
-        layoutChanged = layoutChanged || ns.mergeFrom(style)
-        this._styles.splice(i, 0, ns)
-      }
-
-      // this._validateStyles()
-      // LOG('after applying styles', this._styles)
-      
-      if (layoutChanged) {
-        this.buildLines()
-      }
-    }
-
-    public applyStyleToSelection (style: Style) {
-      this.applyStyleToRange(style, this._startIndex, this._endIndex)
     }
 
     public render (graphics: Graphics): void {
@@ -951,22 +882,22 @@ export abstract class AbstractTextShape extends Shape {
     }
 
     private buildLines () {
-      const blocks = new Array<Block>(0)
-      let block = null
-      for (const s of this._styles) {
-        if (!block || (block.typefaceName === s.typeFaceName && block.size === s.size)) {
-          if (!block) {
-            block = new Block(s.typeFaceName, 0, s.size)
-          }
-          block.length += s.length
-        } else {
-          blocks.push(block)
-          block = new Block(s.typeFaceName, s.length, s.size)
-        }
-      }
-      if (block) {
-        blocks.push(block)
-      }
+      // const blocks = new Array<Block>(0)
+      // let block = null
+      // for (const s of this._styles) {
+      //   if (!block || (block.typefaceName === s.typeFaceName && block.size === s.size)) {
+      //     if (!block) {
+      //       block = new Block(s.typeFaceName, 0, s.size)
+      //     }
+      //     block.length += s.length
+      //   } else {
+      //     blocks.push(block)
+      //     block = new Block(s.typeFaceName, s.length, s.size)
+      //   }
+      // }
+      // if (block) {
+      //   blocks.push(block)
+      // }
 
       // this._lines = Graphics.shapeText(this._text, blocks, this.width)
       // this.rebuildSelection()
@@ -1015,9 +946,7 @@ export abstract class AbstractTextShape extends Shape {
       }
 
       this.deleteStyleRange(start, end)
-      // Do this after shrink styles (we use text.length in an assert)
       this._text = this._text.slice(0, start) + this._text.slice(end, this._text.length)
-      // this._text = string_del(this._text, start, end);
       return true
     }
 
