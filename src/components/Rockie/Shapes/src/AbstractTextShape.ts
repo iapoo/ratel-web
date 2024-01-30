@@ -108,17 +108,18 @@ export abstract class AbstractTextShape extends Shape {
     }
 
     public set fontColor(value: Color) {
-      this._selectStyle.color = value
-      if(!this._focused) {
-        this._styles.forEach(style => {
-          style.color = value
-        })
-      }
       if(this._endIndex != this._startIndex) {
         const selectionStyles = this.findSelectionStyles()
         selectionStyles.forEach(selectionStyle => {
           selectionStyle.color = value
         })        
+      } else {
+        this._selectStyle.color = value
+        if(!this._focused) {
+          this._styles.forEach(style => {
+            style.color = value
+          })
+        }
       }
       this.buildLines()
     }
@@ -132,17 +133,18 @@ export abstract class AbstractTextShape extends Shape {
     }
 
     public set fontSize(value: number) {
-      this._selectStyle.size = value
-      if(!this._focused) {
-        this._styles.forEach(style => {
-          style.size = value
-        })
-      }
       if(this._endIndex != this._startIndex) {
         const selectionStyles = this.findSelectionStyles()
         selectionStyles.forEach(selectionStyle => {
           selectionStyle.size = value
         })        
+      } else {
+        this._selectStyle.size = value
+        if(!this._focused) {
+          this._styles.forEach(style => {
+            style.size = value
+          })
+        }
       }
       this.buildLines()
     }
@@ -156,17 +158,18 @@ export abstract class AbstractTextShape extends Shape {
     }
 
     public set fontWeight(value: FontWeight) {
-      this._selectStyle.bold = value == FontWeight.BOLD
-      if(!this._focused) {
-        this._styles.forEach(style => {
-          style.bold = value == FontWeight.BOLD
-        })
-      }
       if(this._endIndex != this._startIndex) {
         const selectionStyles = this.findSelectionStyles()
         selectionStyles.forEach(selectionStyle => {
           selectionStyle.bold = value == FontWeight.BOLD
         })        
+      } else {
+        this._selectStyle.bold = value == FontWeight.BOLD
+        if(!this._focused) {
+          this._styles.forEach(style => {
+            style.bold = value == FontWeight.BOLD
+          })
+        }
       }
       this.buildLines()
     }
@@ -180,17 +183,18 @@ export abstract class AbstractTextShape extends Shape {
     }
 
     public set fontSlant(value: FontSlant) {
-      this._selectStyle.italic = value == FontSlant.ITALIC
-      if(!this._focused) {
-        this._styles.forEach(style => {
-          style.italic = value == FontSlant.ITALIC
-        })
-      }
       if(this._endIndex != this._startIndex) {
         const selectionStyles = this.findSelectionStyles()
         selectionStyles.forEach(selectionStyle => {
           selectionStyle.italic = value == FontSlant.ITALIC
         })        
+      } else {
+        this._selectStyle.italic = value == FontSlant.ITALIC
+        if(!this._focused) {
+          this._styles.forEach(style => {
+            style.italic = value == FontSlant.ITALIC
+          })
+        }
       }
       this.buildLines()
     }
@@ -204,17 +208,18 @@ export abstract class AbstractTextShape extends Shape {
     }
 
     public set textDecoration(value: TextDecoration) {
-      this._selectStyle.underline = value == TextDecoration.UNDERLINE
-      if(!this._focused) {
-        this._styles.forEach(style => {
-          style.underline = value == TextDecoration.UNDERLINE
-        })
-      }
       if(this._endIndex != this._startIndex) {
         const selectionStyles = this.findSelectionStyles()
         selectionStyles.forEach(selectionStyle => {
           selectionStyle.underline = value == TextDecoration.UNDERLINE
         })        
+      } else {
+        this._selectStyle.underline = value == TextDecoration.UNDERLINE
+        if(!this._focused) {
+          this._styles.forEach(style => {
+            style.underline = value == TextDecoration.UNDERLINE
+          })
+        }
       }
       this.buildLines()
     }
@@ -1259,37 +1264,21 @@ export abstract class AbstractTextShape extends Shape {
     this._cursor.place(newLeft, this.getTextPaddingY() , this.getTextPaddingY() + this.fontSize * 1.4)
   }
 
-  //Need to split one style into 2 same styles while selecting here.
-  private splitRangeStyles(start: number, end: number) {
-    if(start <= end) {
-      return
-    }
+  private splitStylesByIndex(start: number) {
     let newStyles = []
     let [startIndex, startLength, ] = this.findStyleIndexAndPrevLength(start, true)
-    let [endIndex, endLength, ] = this.findStyleIndexAndPrevLength(end, false)
-
     let newStyle = this._styles[startIndex].clone()
     newStyles.push(newStyle)
     if(start > startLength) {
       newStyle.length = newStyle.length - start + startLength
       this._styles[startIndex].length = start - startLength
+      this._styles.splice(startIndex + 1, 0, newStyle)
     }
-    while(startIndex < endIndex) {
-      startIndex ++
-      newStyle = this._styles[startIndex].clone()
-      newStyles.push(newStyle)
-      if(startIndex == endIndex && end < endLength + newStyle.length) {
-        this._styles[endIndex].length = newStyle.length - end + endLength
-        newStyle.length = end - endLength
-      }
-    }
-    const oldStart = this._styles.slice(0, startIndex + 1)
-    const oldEnd = this._styles.slice(endIndex)
-    this._styles = oldStart.concat(newStyle, oldEnd)
   }
 
   private findSelectionStyles() {
-    this.splitRangeStyles(this._startIndex, this._endIndex)
+    this.splitStylesByIndex(this._startIndex)
+    this.splitStylesByIndex(this._endIndex)
     const [startIndex, startLength, ] = this.findStyleIndexAndPrevLength(this._startIndex, true)
     const [endIndex, endLength, ] = this.findStyleIndexAndPrevLength(this._endIndex, false)
     const selectionStyles = this._styles.slice(startIndex, endIndex + 1)
