@@ -91,24 +91,24 @@ export class MouseMaker {
     }
 }
 
-export class Block {
-    private _textStyle : TextStyle
+// export class Block {
+//     private _textStyle : TextStyle
 
-    public constructor (public typefaceName: string, public length: number, public size: number, public fakeBold: boolean = false, public fakeItalic: boolean = false) {
-      this._textStyle = new TextStyle({
-        fontFamilies: [ typefaceName, ],
-        fontSize: size,
-      })
-    }
+//     public constructor (public typefaceName: string, public length: number, public size: number, public fakeBold: boolean = false, public fakeItalic: boolean = false) {
+//       this._textStyle = new TextStyle({
+//         fontFamilies: [ typefaceName, ],
+//         fontSize: size,
+//       })
+//     }
 
-    public get textStyle () {
-      return this._textStyle
-    }
+//     public get textStyle () {
+//       return this._textStyle
+//     }
 
-    public get typeface () {
-      return Engine.getTypeFace(this.typefaceName)!
-    }
-}
+//     public get typeface () {
+//       return Engine.getTypeFace(this.typefaceName)!
+//     }
+// }
 
 export class StyleInfo {
   public constructor (public length: number = 0, public typeFaceName: string = EngineUtils.FONT_NAME_DEFAULT, public size: number = EngineUtils.FONT_SIZE_DEFAULT, public color: string = '', public bold: boolean = false, public italic: boolean = false, public underline: boolean = false) {
