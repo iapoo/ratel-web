@@ -106,29 +106,35 @@ export class Consts {
     public static CONNECTOR_LINE_MODE_SIGNLE = 'single'
     public static CONNECTOR_LINE_MODE_DOUBLE = 'double'
 
-    public static CONNECTOR_LINE_START_ARROW_NONE = 'none'
-    public static CONNECTOR_LINE_START_ARROW_1 = '1'
-    public static CONNECTOR_LINE_START_ARROW_2 = '2'
-    public static CONNECTOR_LINE_START_ARROW_3 = '3'
-    public static CONNECTOR_LINE_START_ARROW_4 = '4'
-    public static CONNECTOR_LINE_START_ARROW_5 = '5'
-    public static CONNECTOR_LINE_START_ARROW_6 = '6'
-    public static CONNECTOR_LINE_START_ARROW_7 = '7'
-    public static CONNECTOR_LINE_START_ARROW_8 = '8'
-    public static CONNECTOR_LINE_START_ARROW_9 = '9'
-    public static CONNECTOR_LINE_START_ARROW_10 = '10'
+    public static CONNECTOR_LINE_START_ARROW_NONE = 'None'
+    public static CONNECTOR_LINE_START_ARROW_Triangle = '1'
+    public static CONNECTOR_LINE_START_ARROW_Diamond = '2'
+    public static CONNECTOR_LINE_START_ARROW_Ellipse = '3'
+    public static CONNECTOR_LINE_START_ARROW_LeftParenthesis = '4'
+    public static CONNECTOR_LINE_START_ARROW_RightParenthesis = '5'
+    public static CONNECTOR_LINE_START_ARROW_Orthogonal = '6'
+    public static CONNECTOR_LINE_START_ARROW_ForewardSlash = '7'
+    public static CONNECTOR_LINE_START_ARROW_Backslashe = '8'
+    public static CONNECTOR_LINE_START_ARROW_VerticalLine = '9'
+    public static CONNECTOR_LINE_START_ARROW_LeftAngleBracket = '10'
+    public static CONNECTOR_LINE_START_ARROW_VerticaleLineAndLeftAngleBacket = '1'
+    public static CONNECTOR_LINE_START_ARROW_CircleAndVerticalLine = '2'
+    public static CONNECTOR_LINE_START_ARROW_CircleAndLeftBacket = '3'
 
-    public static CONNECTOR_LINE_END_ARROW_NONE = 'none'
-    public static CONNECTOR_LINE_END_ARROW_1 = '1'
-    public static CONNECTOR_LINE_END_ARROW_2 = '2'
-    public static CONNECTOR_LINE_END_ARROW_3 = '3'
-    public static CONNECTOR_LINE_END_ARROW_4 = '4'
-    public static CONNECTOR_LINE_END_ARROW_5 = '5'
-    public static CONNECTOR_LINE_END_ARROW_6 = '6'
-    public static CONNECTOR_LINE_END_ARROW_7 = '7'
-    public static CONNECTOR_LINE_END_ARROW_8 = '8'
-    public static CONNECTOR_LINE_END_ARROW_9 = '9'
-    public static CONNECTOR_LINE_END_ARROW_10 = '10'
+    public static CONNECTOR_LINE_END_ARROW_NONE = 'None'
+    public static CONNECTOR_LINE_END_ARROW_Triangle = '1'
+    public static CONNECTOR_LINE_END_ARROW_Diamond = '2'
+    public static CONNECTOR_LINE_END_ARROW_Ellipse = '3'
+    public static CONNECTOR_LINE_END_ARROW_LeftParenthesis = '4'
+    public static CONNECTOR_LINE_END_ARROW_RightParenthesis = '5'
+    public static CONNECTOR_LINE_END_ARROW_Orthogonal = '6'
+    public static CONNECTOR_LINE_END_ARROW_ForewardSlash = '7'
+    public static CONNECTOR_LINE_END_ARROW_Backslashe = '8'
+    public static CONNECTOR_LINE_END_ARROW_VerticalLine = '9'
+    public static CONNECTOR_LINE_END_ARROW_LeftAngleBracket = '10'
+    public static CONNECTOR_LINE_END_ARROW_VerticaleLineAndLeftAngleBacket = '1'
+    public static CONNECTOR_LINE_END_ARROW_CircleAndVerticalLine = '2'
+    public static CONNECTOR_LINE_END_ARROW_CircleAndLeftBacket = '3'
 
 }
 
@@ -152,31 +158,37 @@ export const ConnectorLineModes = [
 ]
 
 export const ConnectorLineStartArrows = [
-    {name: Consts.CONNECTOR_LINE_START_ARROW_NONE, label: 'workspace.header.text.connector-line-start-arrow-none'},
-    {name: Consts.CONNECTOR_LINE_START_ARROW_1, label: 'workspace.header.text.connector-line-start-arrow-1'},
-    {name: Consts.CONNECTOR_LINE_START_ARROW_2, label: 'workspace.header.text.connector-line-start-arrow-2'},
-    {name: Consts.CONNECTOR_LINE_START_ARROW_3, label: 'workspace.header.text.connector-line-start-arrow-3'},
-    {name: Consts.CONNECTOR_LINE_START_ARROW_4, label: 'workspace.header.text.connector-line-start-arrow-4'},
-    {name: Consts.CONNECTOR_LINE_START_ARROW_5, label: 'workspace.header.text.connector-line-start-arrow-5'},
-    {name: Consts.CONNECTOR_LINE_START_ARROW_6, label: 'workspace.header.text.connector-line-start-arrow-6'},
-    {name: Consts.CONNECTOR_LINE_START_ARROW_7, label: 'workspace.header.text.connector-line-start-arrow-7'},
-    {name: Consts.CONNECTOR_LINE_START_ARROW_8, label: 'workspace.header.text.connector-line-start-arrow-8'},
-    {name: Consts.CONNECTOR_LINE_START_ARROW_9, label: 'workspace.header.text.connector-line-start-arrow-9'},
-    {name: Consts.CONNECTOR_LINE_START_ARROW_10, label: 'workspace.header.text.connector-line-start-arrow-10'},
+    {name: Consts.CONNECTOR_LINE_START_ARROW_NONE, label: 'workspace.header.text.connector-line-start-arrow-None'},
+    {name: Consts.CONNECTOR_LINE_START_ARROW_Triangle, label: 'workspace.header.text.connector-line-start-arrow-Triangle'},
+    {name: Consts.CONNECTOR_LINE_START_ARROW_Diamond, label: 'workspace.header.text.connector-line-start-arrow-Diamond'},
+    {name: Consts.CONNECTOR_LINE_START_ARROW_Ellipse, label: 'workspace.header.text.connector-line-start-arrow-Ellipse'},
+    {name: Consts.CONNECTOR_LINE_START_ARROW_LeftParenthesis, label: 'workspace.header.text.connector-line-start-arrow-LeftParenthesis'},
+    {name: Consts.CONNECTOR_LINE_START_ARROW_RightParenthesis, label: 'workspace.header.text.connector-line-start-arrow-RightParenthesis'},
+    {name: Consts.CONNECTOR_LINE_START_ARROW_Orthogonal, label: 'workspace.header.text.connector-line-start-arrow-Orthogonal'},
+    {name: Consts.CONNECTOR_LINE_START_ARROW_ForewardSlash, label: 'workspace.header.text.connector-line-start-arrow-ForewardSlash'},
+    {name: Consts.CONNECTOR_LINE_START_ARROW_Backslashe, label: 'workspace.header.text.connector-line-start-arrow-Backslashe'},
+    {name: Consts.CONNECTOR_LINE_START_ARROW_VerticalLine, label: 'workspace.header.text.connector-line-start-arrow-VerticalLine'},
+    {name: Consts.CONNECTOR_LINE_START_ARROW_LeftAngleBracket, label: 'workspace.header.text.connector-line-start-arrow-LeftAngleBracket'},
+    {name: Consts.CONNECTOR_LINE_START_ARROW_VerticaleLineAndLeftAngleBacket, label: 'workspace.header.text.connector-line-start-arrow-VerticaleLineAndLeftAngleBacket'},
+    {name: Consts.CONNECTOR_LINE_START_ARROW_CircleAndVerticalLine, label: 'workspace.header.text.connector-line-start-arrow-CircleAndVerticalLine'},
+    {name: Consts.CONNECTOR_LINE_START_ARROW_CircleAndLeftBacket, label: 'workspace.header.text.connector-line-start-arrow-CircleAndLeftBacket'},
 ]
 
 export const ConnectorLineEndArrows = [
-    {name: Consts.CONNECTOR_LINE_END_ARROW_NONE, label: 'workspace.header.text.connector-line-end-arrow-none'},
-    {name: Consts.CONNECTOR_LINE_END_ARROW_1, label: 'workspace.header.text.connector-line-end-arrow-1'},
-    {name: Consts.CONNECTOR_LINE_END_ARROW_2, label: 'workspace.header.text.connector-line-end-arrow-2'},
-    {name: Consts.CONNECTOR_LINE_END_ARROW_3, label: 'workspace.header.text.connector-line-end-arrow-3'},
-    {name: Consts.CONNECTOR_LINE_END_ARROW_4, label: 'workspace.header.text.connector-line-end-arrow-4'},
-    {name: Consts.CONNECTOR_LINE_END_ARROW_5, label: 'workspace.header.text.connector-line-end-arrow-5'},
-    {name: Consts.CONNECTOR_LINE_END_ARROW_6, label: 'workspace.header.text.connector-line-end-arrow-6'},
-    {name: Consts.CONNECTOR_LINE_END_ARROW_7, label: 'workspace.header.text.connector-line-end-arrow-7'},
-    {name: Consts.CONNECTOR_LINE_END_ARROW_8, label: 'workspace.header.text.connector-line-end-arrow-8'},
-    {name: Consts.CONNECTOR_LINE_END_ARROW_9, label: 'workspace.header.text.connector-line-end-arrow-9'},
-    {name: Consts.CONNECTOR_LINE_END_ARROW_10, label: 'workspace.header.text.connector-line-end-arrow-10'},
+    {name: Consts.CONNECTOR_LINE_END_ARROW_NONE, label: 'workspace.header.text.connector-line-end-arrow-None'},
+    {name: Consts.CONNECTOR_LINE_END_ARROW_Triangle, label: 'workspace.header.text.connector-line-end-arrow-Triangle'},
+    {name: Consts.CONNECTOR_LINE_END_ARROW_Diamond, label: 'workspace.header.text.connector-line-end-arrow-Diamond'},
+    {name: Consts.CONNECTOR_LINE_END_ARROW_Ellipse, label: 'workspace.header.text.connector-line-end-arrow-Ellipse'},
+    {name: Consts.CONNECTOR_LINE_END_ARROW_LeftParenthesis, label: 'workspace.header.text.connector-line-end-arrow-LeftParenthesis'},
+    {name: Consts.CONNECTOR_LINE_END_ARROW_RightParenthesis, label: 'workspace.header.text.connector-line-end-arrow-RightParenthesis'},
+    {name: Consts.CONNECTOR_LINE_END_ARROW_Orthogonal, label: 'workspace.header.text.connector-line-end-arrow-Orthogonal'},
+    {name: Consts.CONNECTOR_LINE_END_ARROW_ForewardSlash, label: 'workspace.header.text.connector-line-end-arrow-ForewardSlash'},
+    {name: Consts.CONNECTOR_LINE_END_ARROW_Backslashe, label: 'workspace.header.text.connector-line-end-arrow-Backslashe'},
+    {name: Consts.CONNECTOR_LINE_END_ARROW_VerticalLine, label: 'workspace.header.text.connector-line-end-arrow-VerticalLine'},
+    {name: Consts.CONNECTOR_LINE_END_ARROW_LeftAngleBracket, label: 'workspace.header.text.connector-line-end-arrow-LeftAngleBracket'},
+    {name: Consts.CONNECTOR_LINE_END_ARROW_VerticaleLineAndLeftAngleBacket, label: 'workspace.header.text.connector-line-end-arrow-VerticaleLineAndLeftAngleBacket'},
+    {name: Consts.CONNECTOR_LINE_END_ARROW_CircleAndVerticalLine, label: 'workspace.header.text.connector-line-end-arrow-CircleAndVerticalLine'},
+    {name: Consts.CONNECTOR_LINE_END_ARROW_CircleAndLeftBacket, label: 'workspace.header.text.connector-line-end-arrow-CircleAndLeftBacket'},
 ]
 
 export const PageTypes = [

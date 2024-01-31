@@ -4,7 +4,7 @@
 
 import { Color, Colors, TextVerticalAlignment, Point2, StrokeDashStyle, TextAlignment } from "@/components/Engine";
 import { Consts } from "./Consts";
-import { ConnectorType } from "@/components/Rockie/Shapes";
+import { ConnectorArrowDisplayType, ConnectorType } from "@/components/Rockie/Shapes";
 
 export class SystemUtils {
 
@@ -273,6 +273,74 @@ export class SystemUtils {
             default:
                 return Consts.CONNECTOR_LINE_TYPE_ORTHOGONAL
                 break
+        }
+    }
+
+    public static parseConnectorArrowType(connectorArrowType: string): ConnectorArrowDisplayType {
+        switch(connectorArrowType) {
+            case Consts.CONNECTOR_LINE_START_ARROW_NONE:
+                return ConnectorArrowDisplayType.None
+            case Consts.CONNECTOR_LINE_START_ARROW_Triangle:
+                return ConnectorArrowDisplayType.Triangle
+            case Consts.CONNECTOR_LINE_START_ARROW_Diamond:
+                return ConnectorArrowDisplayType.Diamond
+            case Consts.CONNECTOR_LINE_START_ARROW_Ellipse:
+                return ConnectorArrowDisplayType.Ellipse
+            case Consts.CONNECTOR_LINE_START_ARROW_LeftParenthesis:
+                return ConnectorArrowDisplayType.LeftParenthesis
+            case Consts.CONNECTOR_LINE_START_ARROW_RightParenthesis:
+                return ConnectorArrowDisplayType.RightParenthesis
+            case Consts.CONNECTOR_LINE_START_ARROW_Orthogonal:
+                return ConnectorArrowDisplayType.Orthogonal
+            case Consts.CONNECTOR_LINE_START_ARROW_ForewardSlash:
+                return ConnectorArrowDisplayType.ForewardSlash
+            case Consts.CONNECTOR_LINE_START_ARROW_Backslashe:
+                return ConnectorArrowDisplayType.Backslashe
+            case Consts.CONNECTOR_LINE_START_ARROW_VerticalLine:
+                return ConnectorArrowDisplayType.VerticalLine
+            case Consts.CONNECTOR_LINE_START_ARROW_LeftAngleBracket:
+                return ConnectorArrowDisplayType.LeftAngleBracket
+            case Consts.CONNECTOR_LINE_START_ARROW_VerticaleLineAndLeftAngleBacket:
+                return ConnectorArrowDisplayType.LeftAngleBracket
+            case Consts.CONNECTOR_LINE_START_ARROW_CircleAndVerticalLine:
+                return ConnectorArrowDisplayType.CircleAndVerticalLine
+            case Consts.CONNECTOR_LINE_START_ARROW_CircleAndLeftBacket:
+            default:
+                return ConnectorArrowDisplayType.CircleAndLeftBacket
+        }
+    }
+
+    public static generateConnectorArrowType(connectorArrowType: ConnectorArrowDisplayType): string {
+        switch (connectorArrowType) {
+            case ConnectorArrowDisplayType.None:
+                return Consts.CONNECTOR_LINE_START_ARROW_NONE
+            case ConnectorArrowDisplayType.Triangle:
+                return Consts.CONNECTOR_LINE_START_ARROW_Triangle
+            case ConnectorArrowDisplayType.Diamond:
+                return Consts.CONNECTOR_LINE_START_ARROW_Diamond
+            case ConnectorArrowDisplayType.Ellipse:
+                return Consts.CONNECTOR_LINE_START_ARROW_Ellipse
+            case ConnectorArrowDisplayType.LeftParenthesis:
+                return Consts.CONNECTOR_LINE_START_ARROW_LeftParenthesis
+            case ConnectorArrowDisplayType.RightParenthesis:
+                return Consts.CONNECTOR_LINE_START_ARROW_RightParenthesis
+            case ConnectorArrowDisplayType.Orthogonal:
+                return Consts.CONNECTOR_LINE_START_ARROW_Orthogonal
+            case ConnectorArrowDisplayType.ForewardSlash:
+                return Consts.CONNECTOR_LINE_START_ARROW_ForewardSlash
+            case ConnectorArrowDisplayType.Backslashe:
+                return Consts.CONNECTOR_LINE_START_ARROW_Backslashe
+            case ConnectorArrowDisplayType.VerticalLine:
+                return Consts.CONNECTOR_LINE_START_ARROW_VerticalLine
+            case ConnectorArrowDisplayType.LeftAngleBracket:
+                return Consts.CONNECTOR_LINE_START_ARROW_LeftAngleBracket
+            case ConnectorArrowDisplayType.LeftAngleBracket:
+                return Consts.CONNECTOR_LINE_START_ARROW_VerticaleLineAndLeftAngleBacket
+            case ConnectorArrowDisplayType.CircleAndVerticalLine:
+                return Consts.CONNECTOR_LINE_START_ARROW_CircleAndVerticalLine
+            case ConnectorArrowDisplayType.CircleAndLeftBacket:
+            default:
+                return Consts.CONNECTOR_LINE_START_ARROW_CircleAndLeftBacket
         }
     }
 

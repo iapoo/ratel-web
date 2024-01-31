@@ -18,6 +18,7 @@ import { Placeholder, } from '@/components/Resource/Icons'
 import { OperationType } from '@/components/Rockie/Operations';
 import { Connector, ContainerEntity, ContainerTypes, Item, ShapeEntity, ShapeTypes, TableEntity } from '@/components/Rockie/Items';
 import { ShapeAction } from '@/components/Rockie/Actions';
+import { ConnectorArrowTypes } from '@/components/Rockie/Items/src/Connector';
 
 interface HeaderProps {
   previousEditor: Editor | undefined
@@ -168,8 +169,13 @@ const Header: FC<HeaderProps> = ({
       let strokeDashStyleValue = SystemUtils.generateStrokeDashStyle(editorItem.strokeDashStyle)
       setStrokeDashStyle(strokeDashStyleValue)
       if(editorItem instanceof Connector) {
-        let connectorTypeValue = SystemUtils.generateConnectorType(editorItem.connectorType)
-        setConnectorLineType(connectorTypeValue)        
+        const connectorTypeValue = SystemUtils.generateConnectorType(editorItem.connectorType)
+        const connectorStartArrowType = SystemUtils.generateConnectorArrowType(editorItem.startArrow.type)
+        const connectorEndArrowType = SystemUtils.generateConnectorArrowType(editorItem.endArrow.type)
+        setConnectorLineType(connectorTypeValue)
+        setConnectorLineStartArrow(connectorStartArrowType)
+        setConnectorLineEndArrow(connectorEndArrowType)
+
       } else {
         setConnectorLineType(Consts.CONNECTOR_LINE_TYPE_ORTHOGONAL)
       }
@@ -193,6 +199,8 @@ const Header: FC<HeaderProps> = ({
     setStrokeColor(Consts.COLOR_STROKE_DEFAULT)
     setFontColor(Consts.COLOR_FONT_DEFAULT)
     setStrokeDashStyle(Consts.STROKE_DASH_STYLE_SOLID)
+    setConnectorLineStartArrow(Consts.CONNECTOR_LINE_START_ARROW_NONE)
+    setConnectorLineEndArrow(Consts.CONNECTOR_LINE_END_ARROW_NONE)
   }
 
   const handleSelectionChange = (e: EditorEvent) => {
@@ -742,10 +750,34 @@ const Header: FC<HeaderProps> = ({
 
   const handleConnectorArrowStartTypeChange = (value: string) => {
     setConnectorLineStartArrow(value)
+    if(currentEditor) {
+      let editorItems = currentEditor.selectionLayer.getAllEditorItems()
+      editorItems.forEach(editorItem => {
+        if(editorItem instanceof Connector) {
+          const startArrow = editorItem.startArrow
+          startArrow.type = SystemUtils.parseConnectorArrowType(value)
+          editorItem.startArrow = startArrow
+        }
+      })
+      currentEditor.focus()
+      currentEditor.invalideHolder()
+    }
   }
 
   const handleConnectorArrowEndTypeChange = (value: string) => {
     setConnectorLineEndArrow(value)
+    if(currentEditor) {
+      let editorItems = currentEditor.selectionLayer.getAllEditorItems()
+      editorItems.forEach(editorItem => {
+        if(editorItem instanceof Connector) {
+          const endArrow = editorItem.endArrow
+          endArrow.type = SystemUtils.parseConnectorArrowType(value)
+          editorItem.endArrow = endArrow
+        }
+      })
+      currentEditor.focus()
+      currentEditor.invalideHolder()
+    }
   }
 
   const strokeDashStyles = StrokeDashStyles.map(strokeDashStyle=> {
@@ -764,8 +796,16 @@ const Header: FC<HeaderProps> = ({
     return {value: connectorLineStartArrow.name, label: <img alt='intl.formatMessage({ id: connectorLineMode.label})' src={'/images/connector-line-start-arrow-' + connectorLineStartArrow.name.toLowerCase() + '.png'} width='16' height='16' />}
   })
 
+  const connectorLineStartArrows2 = ConnectorArrowTypes.map(connectorArrowType=> {
+    return {value: connectorArrowType.name, label: <img alt={connectorArrowType.description} src={'/images/connector-line-start-arrow-' + connectorArrowType.name.toLowerCase() + '.png'} width='16' height='16' />}
+  })
+
   const connectorLineEndArrows = ConnectorLineEndArrows.map(connectorLineEndArrow=> {
     return {value: connectorLineEndArrow.name, label: <img alt='intl.formatMessage({ id: connectorLineMode.label})' src={'/images/connector-line-end-arrow-' + connectorLineEndArrow.name.toLowerCase() + '.png'} width='16' height='16' />}
+  })
+
+  const connectorLineEndArrows2 = ConnectorArrowTypes.map(connectorArrowType=> {
+    return {value: connectorArrowType.name, label: <img alt={connectorArrowType.description} src={'/images/connector-line-end-arrow-' + connectorArrowType.name.toLowerCase() + '.png'} width='16' height='16' />}
   })
 
   const handleTestCode = () => {
