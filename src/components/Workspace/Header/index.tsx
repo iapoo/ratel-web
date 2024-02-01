@@ -19,6 +19,7 @@ import { OperationType } from '@/components/Rockie/Operations';
 import { Connector, ContainerEntity, ContainerTypes, Item, ShapeEntity, ShapeTypes, TableEntity } from '@/components/Rockie/Items';
 import { ShapeAction } from '@/components/Rockie/Actions';
 import { ConnectorArrowTypes } from '@/components/Rockie/Items/src/Connector';
+import { ConnectorDirection } from '@/components/Rockie/Shapes';
 
 interface HeaderProps {
   previousEditor: Editor | undefined
@@ -890,6 +891,28 @@ const Header: FC<HeaderProps> = ({
     }
   }
 
+  const handleTest3 = () => {
+    if(currentEditor) {
+      let count = ConnectorArrowTypes.length
+      let y = 16
+      let x = 0
+      currentEditor.contentLayer.removeAllEditorItems()
+      for(let i = 0; i < count; i ++) {
+        let connectorArrowType = ConnectorArrowTypes[i]
+        let connector = new Connector(new Point2(x, y), new Point2(x + 32, y), ConnectorDirection.Right)
+        connector.startArrow = connectorArrowType
+        currentEditor.contentLayer.addEditorItem(connector)
+        y += 32
+        if(i > 0 && i % 15 == 0) {
+          x += 64
+          y = 16
+        }
+        //const data = currentEditor.export()
+        //SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
+      }
+    }
+  }
+
   const fileItems: MenuProps['items'] = [
     { key: 'New', label: <FormattedMessage id='workspace.header.menu-file-new' />, icon: <FileAddOutlined />, onClick: handleFileNew },
     { key: 'OpenFrom', label: <FormattedMessage id='workspace.header.menu-file-open-from' />, disabled: true, icon: <FolderOpenOutlined />, },
@@ -937,6 +960,7 @@ const Header: FC<HeaderProps> = ({
     { key: 'Save', label: 'Save', },
     { key: 'SaveAs', label: 'SaveAs', onClick: handleTestCode },
     { key: 'Test', label: 'Test', onClick: handleTest, },
+    { key: 'Test3', label: 'Test', onClick: handleTest3, },
   ];
 
   const helpItems: MenuProps['items'] = [

@@ -1,7 +1,7 @@
 /* eslint-disable max-params */
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
 
-import { FillType, Graphics, Path, Point2, Rectangle, Rotation, Shape, } from '@/components/Engine'
+import { FillType, Graphics, Paint, PaintStyle, Path, Point2, Rectangle, Rotation, Shape, } from '@/components/Engine'
 import { Line, Cubic, } from '@antv/g-math'
 import { EntityShape, } from './EntityShape'
 import { SystemUtils } from '@/components/Workspace/Utils'
@@ -56,6 +56,7 @@ export interface ConnectorArrowTypeInfo {
   modifier: number
   count: number
   outline: boolean
+  close: boolean
   displayMode: ConnectorArrowDisplayMode
 }
 
@@ -76,6 +77,8 @@ export class ConnectorShape extends EntityShape {
   private _orthogonalPoints: Point2[]
   private _startArrowPath: Path
   private _endArrowPath: Path
+  private _arrowStroke: Paint
+  private _arrowFill: Paint
 
   public constructor (startX: number, startY: number, endX: number, endY: number, 
     startDirection: ConnectorDirection = ConnectorDirection.Right, endDirection: ConnectorDirection = ConnectorDirection.Left,
@@ -89,6 +92,7 @@ export class ConnectorShape extends EntityShape {
     modifier: 0,
     count: 1,
     outline: true,
+    close: true,
     displayMode: ConnectorArrowDisplayMode.Full
   }, endArrowInfo: ConnectorArrowTypeInfo = {
     name: '',
@@ -99,6 +103,7 @@ export class ConnectorShape extends EntityShape {
     modifier: 0,
     count: 1,
     outline: true,
+    close: true,
     displayMode: ConnectorArrowDisplayMode.Full
   }) {
     super('', Math.min(startX, endX), Math.min(startY, endY), Math.abs(startX - endX), Math.abs(startY - endY))
@@ -118,6 +123,8 @@ export class ConnectorShape extends EntityShape {
     this._orthogonalPoints = orthogonalPoints
     this._startArrowPath = new Path()
     this._endArrowPath = new Path()
+    this._arrowStroke = new Paint()
+    this._arrowFill = new Paint()
   }
 
   public get start (): Point2 {
@@ -282,18 +289,22 @@ export class ConnectorShape extends EntityShape {
   public render (graphics: Graphics): void {
     super.render(graphics)
     if(this._startArrow.type != ConnectorArrowDisplayType.None || true) {
-      if(this._startArrow.outline) {
-        graphics.drawPath(this._startArrowPath, this.fill)
-      } else {
-        graphics.drawPath(this._startArrowPath, this.stroke)
+      if(this._startArrow.close) {
+        if(this._startArrow.outline) {
+          graphics.drawPath(this._startArrowPath, this._arrowFill)
+        } else {
+          graphics.drawPath(this._startArrowPath, this._arrowStroke)
+        }
       }
       graphics.drawPath(this._startArrowPath, this.stroke)
     }
     if(this._endArrow.type != ConnectorArrowDisplayType.None || true) {
-      if(this._endArrow.outline) {
-        graphics.drawPath(this._endArrowPath, this.fill)
-      } else {
-        graphics.drawPath(this._endArrowPath, this.stroke)
+      if(this._endArrow.close) {
+        if(this._endArrow.outline) {
+          graphics.drawPath(this._endArrowPath, this._arrowFill)
+        } else {
+          graphics.drawPath(this._endArrowPath, this._arrowStroke)
+        }
       }
       graphics.drawPath(this._endArrowPath, this.stroke)
     }
@@ -347,6 +358,10 @@ export class ConnectorShape extends EntityShape {
       this.updateArrows()
       //console.log(` connectionType = ${this.connectorType} left = ${this.left} top =${this.top} startx = ${this.start.x} starty = ${this.start.y}  endx = ${this.end.x} end.y = ${this.end.y}`)
       //this.resetDirty() 
+      this._arrowFill.setPaintStyle(PaintStyle.FILL)
+      this._arrowFill.setColor(this.fill.getColor())
+      this._arrowStroke.setPaintStyle(PaintStyle.FILL)
+      this._arrowStroke.setColor(this.stroke.getColor())
     }
   }
 
@@ -406,8 +421,7 @@ export class ConnectorShape extends EntityShape {
       }
       default:
       case ConnectorArrowDisplayType.None: {
-        this.updateArrayTypeCircleAndLeftBacket(this._orthogonalPoints[0], this._startDirection, this._startArrow)
-        //this._startArrowPath.reset()
+        this._startArrowPath.reset()
         break;
       }
     }
@@ -417,33 +431,129 @@ export class ConnectorShape extends EntityShape {
     this._startArrowPath.reset()
     switch(direction) {
       case ConnectorDirection.Left:
-        this._startArrowPath.moveTo(start.x, start.y)
-        this._startArrowPath.lineTo(start.x - arrowTypeInfo.width, start.y - arrowTypeInfo.height / 2)
-        this._startArrowPath.lineTo(start.x - arrowTypeInfo.width + arrowTypeInfo.modifier * arrowTypeInfo.width, start.y)
-        this._startArrowPath.lineTo(start.x - arrowTypeInfo.width, start.y + arrowTypeInfo.height / 2)
-        this._startArrowPath.lineTo(start.x, start.y)
+        switch(arrowTypeInfo.displayMode){
+          case ConnectorArrowDisplayMode.Top:
+            this._startArrowPath.moveTo(start.x, start.y)
+            this._startArrowPath.lineTo(start.x - arrowTypeInfo.width, start.y - arrowTypeInfo.height / 2)
+            this._startArrowPath.lineTo(start.x - arrowTypeInfo.width + arrowTypeInfo.modifier * arrowTypeInfo.width, start.y)
+            this._startArrowPath.lineTo(start.x, start.y)
+            break;
+          case ConnectorArrowDisplayMode.Bottom:
+            this._startArrowPath.moveTo(start.x, start.y)
+            this._startArrowPath.lineTo(start.x - arrowTypeInfo.width + arrowTypeInfo.modifier * arrowTypeInfo.width, start.y)
+            this._startArrowPath.lineTo(start.x - arrowTypeInfo.width, start.y + arrowTypeInfo.height / 2)
+            this._startArrowPath.lineTo(start.x, start.y)
+            break;
+          case ConnectorArrowDisplayMode.Full:
+          default:
+            this._startArrowPath.moveTo(start.x, start.y)
+            this._startArrowPath.lineTo(start.x - arrowTypeInfo.width, start.y - arrowTypeInfo.height / 2)
+            this._startArrowPath.lineTo(start.x - arrowTypeInfo.width + arrowTypeInfo.modifier * arrowTypeInfo.width, start.y)
+            this._startArrowPath.lineTo(start.x - arrowTypeInfo.width, start.y + arrowTypeInfo.height / 2)
+            this._startArrowPath.lineTo(start.x, start.y)
+            if(arrowTypeInfo.count > 1) {
+              this._startArrowPath.moveTo(start.x - arrowTypeInfo.width, start.y)
+              this._startArrowPath.lineTo(start.x - arrowTypeInfo.width * 2, start.y - arrowTypeInfo.height / 2)
+              this._startArrowPath.lineTo(start.x - arrowTypeInfo.width * 2 + arrowTypeInfo.modifier * arrowTypeInfo.width, start.y)
+              this._startArrowPath.lineTo(start.x - arrowTypeInfo.width * 2, start.y + arrowTypeInfo.height / 2)
+              this._startArrowPath.lineTo(start.x - arrowTypeInfo.width, start.y)
+            }
+            break;
+        }
         break;
       case ConnectorDirection.Top:
-        this._startArrowPath.moveTo(start.x, start.y)
-        this._startArrowPath.lineTo(start.x - arrowTypeInfo.height / 2, start.y - arrowTypeInfo.width)
-        this._startArrowPath.lineTo(start.x, start.y - arrowTypeInfo.width + arrowTypeInfo.modifier * arrowTypeInfo.width)
-        this._startArrowPath.lineTo(start.x + arrowTypeInfo.height / 2, start.y - arrowTypeInfo.width)
-        this._startArrowPath.lineTo(start.x, start.y)
+        switch(arrowTypeInfo.displayMode) {
+          case ConnectorArrowDisplayMode.Top:
+            this._startArrowPath.moveTo(start.x, start.y)
+            this._startArrowPath.lineTo(start.x - arrowTypeInfo.height / 2, start.y - arrowTypeInfo.width)
+            this._startArrowPath.lineTo(start.x, start.y - arrowTypeInfo.width + arrowTypeInfo.modifier * arrowTypeInfo.width)
+            this._startArrowPath.lineTo(start.x, start.y)
+            break;
+          case ConnectorArrowDisplayMode.Bottom:
+            this._startArrowPath.moveTo(start.x, start.y)
+            this._startArrowPath.lineTo(start.x, start.y - arrowTypeInfo.width + arrowTypeInfo.modifier * arrowTypeInfo.width)
+            this._startArrowPath.lineTo(start.x + arrowTypeInfo.height / 2, start.y - arrowTypeInfo.width)
+            this._startArrowPath.lineTo(start.x, start.y)
+            break;
+          case ConnectorArrowDisplayMode.Full:
+          default:
+            this._startArrowPath.moveTo(start.x, start.y)
+            this._startArrowPath.lineTo(start.x - arrowTypeInfo.height / 2, start.y - arrowTypeInfo.width)
+            this._startArrowPath.lineTo(start.x, start.y - arrowTypeInfo.width + arrowTypeInfo.modifier * arrowTypeInfo.width)
+            this._startArrowPath.lineTo(start.x + arrowTypeInfo.height / 2, start.y - arrowTypeInfo.width)
+            this._startArrowPath.lineTo(start.x, start.y)
+            if(arrowTypeInfo.count > 1) {
+              this._startArrowPath.moveTo(start.x, start.y - arrowTypeInfo.width)
+              this._startArrowPath.lineTo(start.x - arrowTypeInfo.height / 2, start.y - arrowTypeInfo.width * 2)
+              this._startArrowPath.lineTo(start.x, start.y - arrowTypeInfo.width * 2 + arrowTypeInfo.modifier * arrowTypeInfo.width)
+              this._startArrowPath.lineTo(start.x + arrowTypeInfo.height / 2, start.y - arrowTypeInfo.width * 2)
+              this._startArrowPath.lineTo(start.x, start.y - arrowTypeInfo.width)
+            }
+            break;
+        }
         break;
       case ConnectorDirection.Right:
-        this._startArrowPath.moveTo(start.x, start.y)
-        this._startArrowPath.lineTo(start.x + arrowTypeInfo.width, start.y - arrowTypeInfo.height / 2)
-        this._startArrowPath.lineTo(start.x + arrowTypeInfo.width - arrowTypeInfo.modifier * arrowTypeInfo.width, start.y)
-        this._startArrowPath.lineTo(start.x + arrowTypeInfo.width, start.y + arrowTypeInfo.height / 2)
-        this._startArrowPath.lineTo(start.x, start.y)
+        switch(arrowTypeInfo.displayMode) {
+          case ConnectorArrowDisplayMode.Top:
+            this._startArrowPath.moveTo(start.x, start.y)
+            this._startArrowPath.lineTo(start.x + arrowTypeInfo.width, start.y - arrowTypeInfo.height / 2)
+            this._startArrowPath.lineTo(start.x + arrowTypeInfo.width - arrowTypeInfo.modifier * arrowTypeInfo.width, start.y)
+            this._startArrowPath.lineTo(start.x, start.y)
+            break;
+          case ConnectorArrowDisplayMode.Bottom:
+            this._startArrowPath.moveTo(start.x, start.y)
+            this._startArrowPath.lineTo(start.x + arrowTypeInfo.width - arrowTypeInfo.modifier * arrowTypeInfo.width, start.y)
+            this._startArrowPath.lineTo(start.x + arrowTypeInfo.width, start.y + arrowTypeInfo.height / 2)
+            this._startArrowPath.lineTo(start.x, start.y)
+            break;
+          case ConnectorArrowDisplayMode.Full:
+          default:
+            this._startArrowPath.moveTo(start.x, start.y)
+            this._startArrowPath.lineTo(start.x + arrowTypeInfo.width, start.y - arrowTypeInfo.height / 2)
+            this._startArrowPath.lineTo(start.x + arrowTypeInfo.width - arrowTypeInfo.modifier * arrowTypeInfo.width, start.y)
+            this._startArrowPath.lineTo(start.x + arrowTypeInfo.width, start.y + arrowTypeInfo.height / 2)
+            this._startArrowPath.lineTo(start.x, start.y)
+            if(arrowTypeInfo.count > 1) {
+              this._startArrowPath.moveTo(start.x + arrowTypeInfo.width, start.y)
+              this._startArrowPath.lineTo(start.x + arrowTypeInfo.width * 2, start.y - arrowTypeInfo.height / 2)
+              this._startArrowPath.lineTo(start.x + arrowTypeInfo.width * 2 - arrowTypeInfo.modifier * arrowTypeInfo.width, start.y)
+              this._startArrowPath.lineTo(start.x + arrowTypeInfo.width * 2, start.y + arrowTypeInfo.height / 2)
+              this._startArrowPath.lineTo(start.x + arrowTypeInfo.width, start.y)
+            }
+            break;
+        }
         break;
       case ConnectorDirection.Bottom:
       default:
-        this._startArrowPath.moveTo(start.x, start.y)
-        this._startArrowPath.lineTo(start.x - arrowTypeInfo.height / 2, start.y + arrowTypeInfo.width)
-        this._startArrowPath.lineTo(start.x, start.y + arrowTypeInfo.width - arrowTypeInfo.modifier * arrowTypeInfo.width)
-        this._startArrowPath.lineTo(start.x + arrowTypeInfo.height / 2, start.y + arrowTypeInfo.width)
-        this._startArrowPath.lineTo(start.x, start.y)
+        switch(arrowTypeInfo.displayMode) {
+          case ConnectorArrowDisplayMode.Top:
+            this._startArrowPath.moveTo(start.x, start.y)
+            this._startArrowPath.lineTo(start.x - arrowTypeInfo.height / 2, start.y + arrowTypeInfo.width)
+            this._startArrowPath.lineTo(start.x, start.y + arrowTypeInfo.width - arrowTypeInfo.modifier * arrowTypeInfo.width)
+            this._startArrowPath.lineTo(start.x, start.y)
+            break;
+          case ConnectorArrowDisplayMode.Bottom:
+            this._startArrowPath.moveTo(start.x, start.y)
+            this._startArrowPath.lineTo(start.x, start.y + arrowTypeInfo.width - arrowTypeInfo.modifier * arrowTypeInfo.width)
+            this._startArrowPath.lineTo(start.x + arrowTypeInfo.height / 2, start.y + arrowTypeInfo.width)
+            this._startArrowPath.lineTo(start.x, start.y)
+            break;
+          case ConnectorArrowDisplayMode.Full:
+          default:
+            this._startArrowPath.moveTo(start.x, start.y)
+            this._startArrowPath.lineTo(start.x - arrowTypeInfo.height / 2, start.y + arrowTypeInfo.width)
+            this._startArrowPath.lineTo(start.x, start.y + arrowTypeInfo.width - arrowTypeInfo.modifier * arrowTypeInfo.width)
+            this._startArrowPath.lineTo(start.x + arrowTypeInfo.height / 2, start.y + arrowTypeInfo.width)
+            this._startArrowPath.lineTo(start.x, start.y)
+            if(arrowTypeInfo.count > 1) {
+              this._startArrowPath.moveTo(start.x, start.y + arrowTypeInfo.width)
+              this._startArrowPath.lineTo(start.x - arrowTypeInfo.height / 2, start.y + arrowTypeInfo.width * 2)
+              this._startArrowPath.lineTo(start.x, start.y + arrowTypeInfo.width * 2 - arrowTypeInfo.modifier * arrowTypeInfo.width)
+              this._startArrowPath.lineTo(start.x + arrowTypeInfo.height / 2, start.y + arrowTypeInfo.width * 2)
+              this._startArrowPath.lineTo(start.x, start.y + arrowTypeInfo.width)
+            }
+            break;
+        }
         break;
     }
   }
@@ -457,6 +567,13 @@ export class ConnectorShape extends EntityShape {
         this._startArrowPath.lineTo(start.x - arrowTypeInfo.width, start.y)
         this._startArrowPath.lineTo(start.x - arrowTypeInfo.width / 2, start.y + arrowTypeInfo.height / 2)
         this._startArrowPath.lineTo(start.x, start.y)
+        if(arrowTypeInfo.count > 1) {
+          this._startArrowPath.moveTo(start.x - arrowTypeInfo.width, start.y)
+          this._startArrowPath.lineTo(start.x - arrowTypeInfo.width * 1.5, start.y - arrowTypeInfo.height / 2)
+          this._startArrowPath.lineTo(start.x - arrowTypeInfo.width * 2, start.y)
+          this._startArrowPath.lineTo(start.x - arrowTypeInfo.width * 1.5, start.y + arrowTypeInfo.height / 2)
+          this._startArrowPath.lineTo(start.x - arrowTypeInfo.width, start.y)
+        }
         break;
       case ConnectorDirection.Top:
         this._startArrowPath.moveTo(start.x, start.y)
@@ -464,6 +581,13 @@ export class ConnectorShape extends EntityShape {
         this._startArrowPath.lineTo(start.x, start.y - arrowTypeInfo.width)
         this._startArrowPath.lineTo(start.x + arrowTypeInfo.height / 2, start.y - arrowTypeInfo.width / 2)
         this._startArrowPath.lineTo(start.x, start.y)
+        if(arrowTypeInfo.count > 1) {
+          this._startArrowPath.moveTo(start.x, start.y - arrowTypeInfo.width)
+          this._startArrowPath.lineTo(start.x - arrowTypeInfo.height / 2, start.y - arrowTypeInfo.width * 1.5)
+          this._startArrowPath.lineTo(start.x, start.y - arrowTypeInfo.width * 2)
+          this._startArrowPath.lineTo(start.x + arrowTypeInfo.height / 2, start.y - arrowTypeInfo.width * 1.5)
+          this._startArrowPath.lineTo(start.x, start.y - arrowTypeInfo.width)
+        }
         break;
       case ConnectorDirection.Right:
         this._startArrowPath.moveTo(start.x, start.y)
@@ -471,6 +595,13 @@ export class ConnectorShape extends EntityShape {
         this._startArrowPath.lineTo(start.x + arrowTypeInfo.width, start.y)
         this._startArrowPath.lineTo(start.x + arrowTypeInfo.width / 2, start.y + arrowTypeInfo.height / 2)
         this._startArrowPath.lineTo(start.x, start.y)
+        if(arrowTypeInfo.count > 1) {
+          this._startArrowPath.moveTo(start.x + arrowTypeInfo.width, start.y)
+          this._startArrowPath.lineTo(start.x + arrowTypeInfo.width * 1.5, start.y - arrowTypeInfo.height / 2)
+          this._startArrowPath.lineTo(start.x + arrowTypeInfo.width * 2, start.y)
+          this._startArrowPath.lineTo(start.x + arrowTypeInfo.width * 1.5, start.y + arrowTypeInfo.height / 2)
+          this._startArrowPath.lineTo(start.x + arrowTypeInfo.width, start.y)
+        }
         break;
       case ConnectorDirection.Bottom:
       default:
@@ -479,6 +610,13 @@ export class ConnectorShape extends EntityShape {
         this._startArrowPath.lineTo(start.x, start.y + arrowTypeInfo.width)
         this._startArrowPath.lineTo(start.x + arrowTypeInfo.height / 2, start.y + arrowTypeInfo.width / 2)
         this._startArrowPath.lineTo(start.x, start.y)
+        if(arrowTypeInfo.count > 1) {
+          this._startArrowPath.moveTo(start.x, start.y + arrowTypeInfo.width)
+          this._startArrowPath.lineTo(start.x - arrowTypeInfo.height / 2, start.y + arrowTypeInfo.width * 1.5)
+          this._startArrowPath.lineTo(start.x, start.y + arrowTypeInfo.width * 2)
+          this._startArrowPath.lineTo(start.x + arrowTypeInfo.height / 2, start.y + arrowTypeInfo.width * 1.5)
+          this._startArrowPath.lineTo(start.x, start.y + arrowTypeInfo.width)
+        }
         break;
     }
   }
@@ -488,16 +626,28 @@ export class ConnectorShape extends EntityShape {
     switch(direction) {
       case ConnectorDirection.Left:
         this._startArrowPath.addOval(Rectangle.makeLTWH(start.x - arrowTypeInfo.width, start.y - arrowTypeInfo.height / 2, arrowTypeInfo.width, arrowTypeInfo.height))
+        if(arrowTypeInfo.count > 1) {
+          this._startArrowPath.addOval(Rectangle.makeLTWH(start.x - arrowTypeInfo.width * 2, start.y - arrowTypeInfo.height / 2, arrowTypeInfo.width, arrowTypeInfo.height))
+        }
         break;
       case ConnectorDirection.Top:
         this._startArrowPath.addOval(Rectangle.makeLTWH(start.x - arrowTypeInfo.height / 2, start.y - arrowTypeInfo.width, arrowTypeInfo.height, arrowTypeInfo.width))
+        if(arrowTypeInfo.count > 1) {
+          this._startArrowPath.addOval(Rectangle.makeLTWH(start.x - arrowTypeInfo.height / 2, start.y - arrowTypeInfo.width * 2, arrowTypeInfo.height, arrowTypeInfo.width))
+        }
         break;
       case ConnectorDirection.Right:
         this._startArrowPath.addOval(Rectangle.makeLTWH(start.x, start.y - arrowTypeInfo.height / 2, arrowTypeInfo.width, arrowTypeInfo.height))
+        if(arrowTypeInfo.count > 1) {
+          this._startArrowPath.addOval(Rectangle.makeLTWH(start.x + arrowTypeInfo.width, start.y - arrowTypeInfo.height / 2, arrowTypeInfo.width, arrowTypeInfo.height))
+        }
         break;
       case ConnectorDirection.Bottom:
       default:
         this._startArrowPath.addOval(Rectangle.makeLTWH(start.x - arrowTypeInfo.height / 2, start.y, arrowTypeInfo.height, arrowTypeInfo.width))
+        if(arrowTypeInfo.count > 1) {
+          this._startArrowPath.addOval(Rectangle.makeLTWH(start.x - arrowTypeInfo.height / 2, start.y + arrowTypeInfo.width, arrowTypeInfo.height, arrowTypeInfo.width))
+        }
         break;
     }
   }
