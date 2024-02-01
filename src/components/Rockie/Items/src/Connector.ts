@@ -28,7 +28,7 @@ export enum TargetPosition {
 }
 
 export const ConnectorArrowTypes = [
-  {name: 'None', description: 'None', type: ConnectorArrowDisplayType.None, height: 12, width: 12, modifier: 0, count: 1, outline: false, displayMode:  ConnectorArrowDisplayMode.Full, },
+  {name: 'None', description: 'None', type: ConnectorArrowDisplayType.None, height: 12, width: 12, modifier: 0.4, count: 1, outline: false, displayMode:  ConnectorArrowDisplayMode.Full, },
 
   {name: 'Triangle-1', description: 'Triangle', type: ConnectorArrowDisplayType.Triangle, height: 12, width: 12, modifier: 0, count: 1, outline: false, displayMode: ConnectorArrowDisplayMode.Full, },
   {name: 'Triangle-2', description: 'Triangle', type: ConnectorArrowDisplayType.Triangle, height: 12, width: 12, modifier: 0, count: 1, outline: false, displayMode: ConnectorArrowDisplayMode.Top, },
@@ -71,7 +71,7 @@ export const ConnectorArrowTypes = [
   {name: 'Other-X', description: 'X', type: ConnectorArrowDisplayType.Orthogonal, height: 12, width: 12, modifier: 0, count: 1, outline: true, displayMode: ConnectorArrowDisplayMode.Full, },
   {name: 'Other-/', description: '/', type: ConnectorArrowDisplayType.ForewardSlash, height: 12, width: 12, modifier: 0, count: 1, outline: true, displayMode: ConnectorArrowDisplayMode.Full, },
   {name: 'Other-\\', description: '\\', type: ConnectorArrowDisplayType.Backslashe, height: 12, width: 12, modifier: 0, count: 1, outline: true, displayMode: ConnectorArrowDisplayMode.Full, },
-  {name: 'Other-|', description: '|', type: ConnectorArrowDisplayType.VerticalLine, height: 12, width: 12, modifier: 0, count: 1, outline: true, displayMode: ConnectorArrowDisplayMode.Full, },
+  {name: 'Other-|', description: '|', type: ConnectorArrowDisplayType.VerticalLine, height: 12, width: 12, modifier: 0.4, count: 1, outline: true, displayMode: ConnectorArrowDisplayMode.Full, },
   {name: 'Other-<', description: '<', type: ConnectorArrowDisplayType.LeftAngleBracket, height: 12, width: 12, modifier: 0, count: 1, outline: true, displayMode: ConnectorArrowDisplayMode.Full, },
   {name: 'Other-|<', description: '|<', type: ConnectorArrowDisplayType.VerticaleLineAndLeftAngleBacket, height: 12, width: 12, modifier: 0, count: 1, outline: true, displayMode: ConnectorArrowDisplayMode.Full, },
   {name: 'Other-o|', description: 'o|', type: ConnectorArrowDisplayType.CircleAndVerticalLine, height: 12, width: 12, modifier: 0, count: 1, outline: true, displayMode: ConnectorArrowDisplayMode.Full, },
