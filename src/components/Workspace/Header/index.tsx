@@ -76,8 +76,8 @@ const Header: FC<HeaderProps> = ({
   const [ strokeDashStyle, setStrokeDashStyle, ] = useState<string>(Consts.STROKE_DASH_STYLE_SOLID)
   const [ connectorLineType, setConnectorLineType, ] = useState<string>(Consts.CONNECTOR_LINE_TYPE_STRAIGHT)
   const [ connectorLineMode, setConnectorLineMode, ] = useState<string>(Consts.CONNECTOR_LINE_MODE_SIGNLE)
-  const [ connectorLineStartArrow, setConnectorLineStartArrow, ] = useState<string>(Consts.CONNECTOR_LINE_START_ARROW_NONE)
-  const [ connectorLineEndArrow, setConnectorLineEndArrow, ] = useState<string>(Consts.CONNECTOR_LINE_END_ARROW_NONE)
+  const [ connectorLineStartArrow, setConnectorLineStartArrow, ] = useState<string>(ConnectorArrowTypes[0].name)
+  const [ connectorLineEndArrow, setConnectorLineEndArrow, ] = useState<string>(ConnectorArrowTypes[0].name)
   const [ connectorSelected, setConnectorSelected, ] = useState<boolean>(false)
 
   useEffect(() => {
@@ -171,8 +171,8 @@ const Header: FC<HeaderProps> = ({
       setStrokeDashStyle(strokeDashStyleValue)
       if(editorItem instanceof Connector) {
         const connectorTypeValue = SystemUtils.generateConnectorType(editorItem.connectorType)
-        const connectorStartArrowType = SystemUtils.generateConnectorArrowType(editorItem.startArrow.type)
-        const connectorEndArrowType = SystemUtils.generateConnectorArrowType(editorItem.endArrow.type)
+        const connectorStartArrowType = SystemUtils.findConnectorArrowType(editorItem.startArrow.name)
+        const connectorEndArrowType = SystemUtils.findConnectorArrowType(editorItem.endArrow.name)
         setConnectorLineType(connectorTypeValue)
         setConnectorLineStartArrow(connectorStartArrowType)
         setConnectorLineEndArrow(connectorEndArrowType)
@@ -200,8 +200,8 @@ const Header: FC<HeaderProps> = ({
     setStrokeColor(Consts.COLOR_STROKE_DEFAULT)
     setFontColor(Consts.COLOR_FONT_DEFAULT)
     setStrokeDashStyle(Consts.STROKE_DASH_STYLE_SOLID)
-    setConnectorLineStartArrow(Consts.CONNECTOR_LINE_START_ARROW_NONE)
-    setConnectorLineEndArrow(Consts.CONNECTOR_LINE_END_ARROW_NONE)
+    setConnectorLineStartArrow(ConnectorArrowTypes[0].name)
+    setConnectorLineEndArrow(ConnectorArrowTypes[0].name)
   }
 
   const handleSelectionChange = (e: EditorEvent) => {
@@ -750,6 +750,7 @@ const Header: FC<HeaderProps> = ({
   }
 
   const handleConnectorArrowStartTypeChange = (value: string) => {
+    console.log(`orig value = ${connectorLineStartArrow}`)
     setConnectorLineStartArrow(value)
     if(currentEditor) {
       let editorItems = currentEditor.selectionLayer.getAllEditorItems()
@@ -799,16 +800,8 @@ const Header: FC<HeaderProps> = ({
     return {value: connectorLineMode.name, label: <img alt='intl.formatMessage({ id: connectorLineMode.label})' src={'/images/connector-line-mode-' + connectorLineMode.name.toLowerCase() + '.png'} width='16' height='16' />}
   })
  
-  const connectorLineStartArrows3 = ConnectorLineStartArrows.map(connectorLineStartArrow=> {
-    return {value: connectorLineStartArrow.name, label: <img alt='intl.formatMessage({ id: connectorLineMode.label})' src={'/images/connector-line-start-arrow-' + connectorLineStartArrow.name.toLowerCase() + '.png'} width='16' height='16' />}
-  })
-
   const connectorLineStartArrows = ConnectorArrowTypes.map(connectorArrowType=> {
     return {value: connectorArrowType.name, label: <img alt={connectorArrowType.description} src={'/images/connector-line-start-arrow-' + connectorArrowType.name.toLowerCase() + '.png'} width='16' height='16' />}
-  })
-
-  const connectorLineEndArrows3 = ConnectorLineEndArrows.map(connectorLineEndArrow=> {
-    return {value: connectorLineEndArrow.name, label: <img alt='intl.formatMessage({ id: connectorLineMode.label})' src={'/images/connector-line-end-arrow-' + connectorLineEndArrow.name.toLowerCase() + '.png'} width='16' height='16' />}
   })
 
   const connectorLineEndArrows = ConnectorArrowTypes.map(connectorArrowType=> {
@@ -1124,13 +1117,13 @@ const Header: FC<HeaderProps> = ({
               </Tooltip>
               {/** TODO:  */}
               <Tooltip title={<FormattedMessage id='workspace.header.title.connector-line-mode'/>}>
-                <Select size='small' value={connectorLineMode} onChange={handleConnectorLineModeChange} style={{width: 56, display:'none' }} options={connectorLineModes} bordered={false}/>
+                <Select size='small' value={connectorLineMode} onChange={handleConnectorLineModeChange} style={{width: 56, display:'none' }} disabled={!connectorSelected} options={connectorLineModes} bordered={false}/>
               </Tooltip>
               <Tooltip title={<FormattedMessage id='workspace.header.title.connector-arrow-start-type'/>}>
-                <Select size='small' value={connectorLineStartArrow} onChange={handleConnectorArrowStartTypeChange} style={{width: 56 }} options={connectorLineStartArrows} bordered={false}/>
+                <Select size='small' value={connectorLineStartArrow} onChange={handleConnectorArrowStartTypeChange} style={{width: 56 }} disabled={!connectorSelected} options={connectorLineStartArrows} bordered={false}/>
               </Tooltip>
               <Tooltip title={<FormattedMessage id='workspace.header.title.connector-arrow-end-type'/>}>
-              <Select size='small' value={connectorLineEndArrow} onChange={handleConnectorArrowEndTypeChange} style={{width: 56 }} options={connectorLineEndArrows} bordered={false}/>
+              <Select size='small' value={connectorLineEndArrow} onChange={handleConnectorArrowEndTypeChange} style={{width: 56 }} disabled={!connectorSelected} options={connectorLineEndArrows} bordered={false}/>
               </Tooltip>
             </Space>
           </Space>
