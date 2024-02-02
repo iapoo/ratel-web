@@ -5,6 +5,8 @@
 import { Color, Colors, TextVerticalAlignment, Point2, StrokeDashStyle, TextAlignment } from "@/components/Engine";
 import { Consts } from "./Consts";
 import { ConnectorArrowDisplayType, ConnectorType } from "@/components/Rockie/Shapes";
+import { ConnectorArrowTypeInfo } from "@/components/Rockie/Shapes/src/ConnectorShape";
+import { ConnectorArrowType } from "@/components/Rockie/Items/src/Connector";
 
 export class SystemUtils {
 
@@ -344,6 +346,20 @@ export class SystemUtils {
         }
     }
 
+    public static cloneConnectorLineArrowType(connectorArrowType: ConnectorArrowType): ConnectorArrowType {
+        return {
+            name: connectorArrowType.name,
+            description: connectorArrowType.description,
+            type: connectorArrowType.type,
+            height: connectorArrowType.height,
+            width: connectorArrowType.width,
+            modifier: connectorArrowType.modifier,
+            count: connectorArrowType.count,
+            outline: connectorArrowType.outline,
+            close: connectorArrowType.close,
+            displayMode: connectorArrowType.displayMode  
+        }
+    }
     public static debugPoints(points: Point2[]) {
         let count = points.length
         let output = `Array data: length = ${count}, data = `

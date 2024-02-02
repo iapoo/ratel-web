@@ -57,7 +57,7 @@ export interface ConnectorArrowTypeInfo {
   count: number
   outline: boolean
   close: boolean
-  displayMode: ConnectorArrowDisplayMode
+  displayMode: ConnectorArrowDisplayMode  
 }
 
 export class ConnectorShape extends EntityShape {

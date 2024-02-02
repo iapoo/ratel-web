@@ -755,9 +755,12 @@ const Header: FC<HeaderProps> = ({
       let editorItems = currentEditor.selectionLayer.getAllEditorItems()
       editorItems.forEach(editorItem => {
         if(editorItem instanceof Connector) {
-          const startArrow = editorItem.startArrow
-          startArrow.type = SystemUtils.parseConnectorArrowType(value)
-          editorItem.startArrow = startArrow
+          ConnectorArrowTypes.forEach(connectorArrayType => {
+            if(connectorArrayType.name == value) {
+              const startArrow = SystemUtils.cloneConnectorLineArrowType(connectorArrayType)              
+              editorItem.startArrow = startArrow
+            }
+          })
         }
       })
       currentEditor.focus()
@@ -771,9 +774,12 @@ const Header: FC<HeaderProps> = ({
       let editorItems = currentEditor.selectionLayer.getAllEditorItems()
       editorItems.forEach(editorItem => {
         if(editorItem instanceof Connector) {
-          const endArrow = editorItem.endArrow
-          endArrow.type = SystemUtils.parseConnectorArrowType(value)
-          editorItem.endArrow = endArrow
+          ConnectorArrowTypes.forEach(connectorArrayType => {
+            if(connectorArrayType.name == value) {
+              const endArrow = SystemUtils.cloneConnectorLineArrowType(connectorArrayType)  
+              editorItem.endArrow = endArrow
+            }
+          })
         }
       })
       currentEditor.focus()
@@ -793,19 +799,19 @@ const Header: FC<HeaderProps> = ({
     return {value: connectorLineMode.name, label: <img alt='intl.formatMessage({ id: connectorLineMode.label})' src={'/images/connector-line-mode-' + connectorLineMode.name.toLowerCase() + '.png'} width='16' height='16' />}
   })
  
-  const connectorLineStartArrows = ConnectorLineStartArrows.map(connectorLineStartArrow=> {
+  const connectorLineStartArrows3 = ConnectorLineStartArrows.map(connectorLineStartArrow=> {
     return {value: connectorLineStartArrow.name, label: <img alt='intl.formatMessage({ id: connectorLineMode.label})' src={'/images/connector-line-start-arrow-' + connectorLineStartArrow.name.toLowerCase() + '.png'} width='16' height='16' />}
   })
 
-  const connectorLineStartArrows2 = ConnectorArrowTypes.map(connectorArrowType=> {
+  const connectorLineStartArrows = ConnectorArrowTypes.map(connectorArrowType=> {
     return {value: connectorArrowType.name, label: <img alt={connectorArrowType.description} src={'/images/connector-line-start-arrow-' + connectorArrowType.name.toLowerCase() + '.png'} width='16' height='16' />}
   })
 
-  const connectorLineEndArrows = ConnectorLineEndArrows.map(connectorLineEndArrow=> {
+  const connectorLineEndArrows3 = ConnectorLineEndArrows.map(connectorLineEndArrow=> {
     return {value: connectorLineEndArrow.name, label: <img alt='intl.formatMessage({ id: connectorLineMode.label})' src={'/images/connector-line-end-arrow-' + connectorLineEndArrow.name.toLowerCase() + '.png'} width='16' height='16' />}
   })
 
-  const connectorLineEndArrows2 = ConnectorArrowTypes.map(connectorArrowType=> {
+  const connectorLineEndArrows = ConnectorArrowTypes.map(connectorArrowType=> {
     return {value: connectorArrowType.name, label: <img alt={connectorArrowType.description} src={'/images/connector-line-end-arrow-' + connectorArrowType.name.toLowerCase() + '.png'} width='16' height='16' />}
   })
 
@@ -896,19 +902,45 @@ const Header: FC<HeaderProps> = ({
       let count = ConnectorArrowTypes.length
       let y = 16
       let x = 0
-      currentEditor.contentLayer.removeAllEditorItems()
       for(let i = 0; i < count; i ++) {
+        currentEditor.contentLayer.removeAllEditorItems()
         let connectorArrowType = ConnectorArrowTypes[i]
         let connector = new Connector(new Point2(x, y), new Point2(x + 32, y), ConnectorDirection.Right)
         connector.startArrow = connectorArrowType
         currentEditor.contentLayer.addEditorItem(connector)
-        y += 32
-        if(i > 0 && i % 15 == 0) {
-          x += 64
-          y = 16
-        }
-        //const data = currentEditor.export()
-        //SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
+        // y += 32
+        // if(i > 0 && i % 15 == 0) {
+        //   x += 64
+        //   y = 16
+        // }
+        currentEditor.resize(32, 32)
+        const data = currentEditor.export()
+        console.log(`download file = connector-line-start-arrow-${connectorArrowType.name.toLowerCase()}.png`)
+        SystemUtils.generateDownloadFile(data, `connector-line-start-arrow-${connectorArrowType.name.toLowerCase()}.png`)
+      }
+    }
+  }
+
+  const handleTest4 = () => {
+    if(currentEditor) {
+      let count = ConnectorArrowTypes.length
+      let y = 16
+      let x = 0
+      for(let i = 0; i < count; i ++) {
+        currentEditor.contentLayer.removeAllEditorItems()
+        let connectorArrowType = ConnectorArrowTypes[i]
+        let connector = new Connector(new Point2(x + 32, y), new Point2(x, y), ConnectorDirection.Left)
+        connector.startArrow = connectorArrowType
+        currentEditor.contentLayer.addEditorItem(connector)
+        //y += 32
+        //if(i > 0 && i % 15 == 0) {
+        //  x += 64
+        //  y = 16
+        //}
+        currentEditor.resize(32, 32)
+        const data = currentEditor.export()
+        console.log(`download file = connector-line-end-arrow-${connectorArrowType.name.toLowerCase()}.png`)
+        SystemUtils.generateDownloadFile(data, `connector-line-end-arrow-${connectorArrowType.name.toLowerCase()}.png`)
       }
     }
   }
@@ -959,8 +991,9 @@ const Header: FC<HeaderProps> = ({
     { key: 'Open', label: 'Open', },
     { key: 'Save', label: 'Save', },
     { key: 'SaveAs', label: 'SaveAs', onClick: handleTestCode },
-    { key: 'Test', label: 'Test', onClick: handleTest, },
-    { key: 'Test3', label: 'Test', onClick: handleTest3, },
+    { key: 'Test Shapes', label: 'Test Shapes', onClick: handleTest, },
+    { key: 'Test Start Arrows', label: 'Test Start Arrows', onClick: handleTest3, },
+    { key: 'Test End Arrows', label: 'Test End Arrows', onClick: handleTest4, },
   ];
 
   const helpItems: MenuProps['items'] = [
