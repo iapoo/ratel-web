@@ -194,6 +194,7 @@ export class Connector extends Item {
 
   public set endArrow(value: ConnectorArrowType) {
     this._endArrow = value
+    this._connectorShape.endArrow = value
     this.updateTheme()
   }
 
