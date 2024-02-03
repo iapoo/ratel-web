@@ -152,8 +152,10 @@ export class Connector extends Item {
 
   public set startDirection(value: ConnectorDirection) {
     this._startDirection = value
-    this._connectorShape.startDirection = value
-    this.updateTheme()
+    if(this._connectorShape) { // may not initialized yet
+      this._connectorShape.startDirection = value
+      this.updateTheme()
+    }
   }
 
   public get endDirection() {
@@ -162,8 +164,10 @@ export class Connector extends Item {
  
   public set endDirection(value: ConnectorDirection) {
     this._endDirection = value
-    this._connectorShape.endDirection = value
-    this.updateTheme()
+    if(this._connectorShape) { // may not initialized yet
+      this._connectorShape.endDirection = value
+      this.updateTheme()
+    }
   }
 
   public get startDirection() {
@@ -2234,11 +2238,13 @@ export class Connector extends Item {
           points.push(new Point2(middleX, start.y))
           points.push(new Point2(middleX, end.y))
           points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
+          this.endDirection = ConnectorDirection.Right
         } else {
           points.push(new Point2(start.x, start.y))//Dummy point here for Segment
           points.push(new Point2(middleX, start.y))
           points.push(new Point2(middleX, end.y))
           points.push(new Point2(end.x, end.y))//Dummy point here for Segment
+          this.endDirection = ConnectorDirection.Right
         }
         break
       }
@@ -2251,27 +2257,32 @@ export class Connector extends Item {
             points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
             points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
             points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+            this.endDirection = ConnectorDirection.Left
           } else if(end.x > start.x) {
             points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
             points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, end.y + Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(end.x , end.y + Connector.DEFAULT_ARROW_SEGMENT))
+            this.endDirection = ConnectorDirection.Bottom
           } else {
             if(middleX - end.x > Connector.DEFAULT_ARROW_SEGMENT) {
               points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
               points.push(new Point2(middleX, start.y))
               points.push(new Point2(middleX, end.y))
               points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
+              this.endDirection = ConnectorDirection.Right
             } else {
               points.push(new Point2(start.x, start.y))//Dummy point here for Segment
               points.push(new Point2(middleX, start.y))
               points.push(new Point2(middleX, end.y))
               points.push(new Point2(end.x, end.y))//Dummy point here for Segment
+              this.endDirection = ConnectorDirection.Bottom
             }
           }
         } else {
           points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
           points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
           points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+          this.endDirection = ConnectorDirection.Left
         }
         break
       }
@@ -2283,23 +2294,27 @@ export class Connector extends Item {
             points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
             points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, end.y - Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(end.x , end.y - Connector.DEFAULT_ARROW_SEGMENT))
+            this.endDirection = ConnectorDirection.Top
           } else {
             if(middleX - end.x > Connector.DEFAULT_ARROW_SEGMENT) {
               points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
               points.push(new Point2(middleX, start.y))
               points.push(new Point2(middleX, end.y))
               points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
+              this.endDirection = ConnectorDirection.Right
             } else {
               points.push(new Point2(start.x, start.y))//Dummy point here for Segment
               points.push(new Point2(middleX, start.y))
               points.push(new Point2(middleX, end.y))
               points.push(new Point2(end.x, end.y))//Dummy point here for Segment
+              this.endDirection = ConnectorDirection.Top
             }
           }
         } else {
           points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
           points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
           points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+          this.endDirection = ConnectorDirection.Left
         }
         break
       }
@@ -2310,15 +2325,18 @@ export class Connector extends Item {
           points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
           points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
           points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+          this.endDirection = ConnectorDirection.Left
         } else if(end.y > startBottom) {
           points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
           points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
           points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+          this.endDirection = ConnectorDirection.Left
         } else {
           points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
           points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, startTop))
           points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, startTop))
           points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+          this.endDirection = ConnectorDirection.Left
         }
         break
       }
@@ -2330,11 +2348,13 @@ export class Connector extends Item {
           points.push(new Point2(middleX, start.y))
           points.push(new Point2(middleX, end.y))
           points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+          this.endDirection = ConnectorDirection.Left
         } else {
           points.push(new Point2(start.x, start.y))//Dummy point here for Segment
           points.push(new Point2(middleX, start.y))
           points.push(new Point2(middleX, end.y))
           points.push(new Point2(end.x, end.y)) //Dummy point here for Segment
+          this.endDirection = ConnectorDirection.Left
         }
         break
       }
@@ -2352,24 +2372,29 @@ export class Connector extends Item {
             points.push(new Point2(start.x, start.y - Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(start.x, end.y))
             points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
+            this.endDirection = ConnectorDirection.Right
           } else {
             points.push(new Point2(start.x, start.y - Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, start.y - Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
+            this.endDirection = ConnectorDirection.Right
           }
         } else {
           if(end.y < startTop) {
             points.push(new Point2(start.x, start.y - Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(start.x, end.y))
             points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
+            this.endDirection = ConnectorDirection.Right
           } else if(end.y < startTop2) {
             points.push(new Point2(start.x, start.y)) //Dummy point here for Segment
             points.push(new Point2(start.x, end.y))
             points.push(new Point2(end.x, end.y)) //Dummy point here for Segment
+            this.endDirection = ConnectorDirection.Right
           } else {
             points.push(new Point2(start.x, start.y - Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(end.x, start.y - Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(end.x, end.y - Connector.DEFAULT_ARROW_SEGMENT))
+            this.endDirection = ConnectorDirection.Top
           }
         }
         break
@@ -2382,10 +2407,12 @@ export class Connector extends Item {
             points.push(new Point2(start.x, start.y - Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(start.x, end.y))
             points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+            this.endDirection = ConnectorDirection.Left
           } else {
             points.push(new Point2(start.x, start.y)) //Dummy point here for Segment
             points.push(new Point2(start.x, end.y))
             points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+            this.endDirection = ConnectorDirection.Left
           }
         } else {
           if(Math.abs(middleY - start.y) > Connector.DEFAULT_ARROW_SEGMENT) {
@@ -2393,11 +2420,13 @@ export class Connector extends Item {
             points.push(new Point2(start.x, middleY))
             points.push(new Point2(end.x, middleY))
             points.push(new Point2(end.x, end.y + Connector.DEFAULT_ARROW_SEGMENT))
+            this.endDirection = ConnectorDirection.Bottom
           } else {
             points.push(new Point2(start.x, start.y)) //Dummy point here for Segment
             points.push(new Point2(start.x, middleY))
             points.push(new Point2(end.x, middleY))
             points.push(new Point2(end.x, end.y)) //Dummy point here for Segment
+            this.endDirection = ConnectorDirection.Bottom
           }
         }
         break
@@ -2409,15 +2438,18 @@ export class Connector extends Item {
           points.push(new Point2(start.x, start.y - Connector.DEFAULT_ARROW_SEGMENT))
           points.push(new Point2(end.x, start.y - Connector.DEFAULT_ARROW_SEGMENT))
           points.push(new Point2(end.x, end.y - Connector.DEFAULT_ARROW_SEGMENT))
+          this.endDirection = ConnectorDirection.Top
         } else if(end.x > startRight) {
           points.push(new Point2(start.x, start.y - Connector.DEFAULT_ARROW_SEGMENT))
           points.push(new Point2(end.x, start.y - Connector.DEFAULT_ARROW_SEGMENT))
           points.push(new Point2(end.x, end.y - Connector.DEFAULT_ARROW_SEGMENT))
+          this.endDirection = ConnectorDirection.Top
         } else {
           points.push(new Point2(start.x, start.y - Connector.DEFAULT_ARROW_SEGMENT))
           points.push(new Point2(startLeft, start.y - Connector.DEFAULT_ARROW_SEGMENT))
           points.push(new Point2(startLeft, end.y - Connector.DEFAULT_ARROW_SEGMENT))
           points.push(new Point2(end.x, end.y - Connector.DEFAULT_ARROW_SEGMENT))
+          this.endDirection = ConnectorDirection.Top
         }
         break
       }
@@ -2429,25 +2461,30 @@ export class Connector extends Item {
           if(end.y < startTop) {
             points.push(new Point2(start.x, start.y - Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(start.x, end.y))
-            points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
+            points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+            this.endDirection = ConnectorDirection.Left
           } else {
             points.push(new Point2(start.x, start.y - Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, start.y - Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+            this.endDirection = ConnectorDirection.Left
           }
         } else {
           if(end.y < startTop) {
             points.push(new Point2(start.x, start.y - Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(start.x, end.y))
-            points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
+            points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+            this.endDirection = ConnectorDirection.Left
           } else if(end.y < startTop2) {
             points.push(new Point2(start.x, start.y)) //Dummy point here for Segment
             points.push(new Point2(start.x, end.y))
             points.push(new Point2(end.x, end.y)) //Dummy point here for Segment
+            this.endDirection = ConnectorDirection.Left
           } else {
             points.push(new Point2(start.x, start.y - Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(end.x, start.y - Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(end.x, end.y - Connector.DEFAULT_ARROW_SEGMENT))
+            this.endDirection = ConnectorDirection.Top
           }
         }
         break
@@ -2460,11 +2497,13 @@ export class Connector extends Item {
           points.push(new Point2(start.x, middleY))
           points.push(new Point2(end.x, middleY))
           points.push(new Point2(end.x, end.y - Connector.DEFAULT_ARROW_SEGMENT))
+          this.endDirection = ConnectorDirection.Top
         } else {
           points.push(new Point2(start.x, start.y))//Dummy point here for Segment
           points.push(new Point2(start.x, middleY))
           points.push(new Point2(end.x, middleY))
           points.push(new Point2(end.x, end.y))//Dummy point here for Segment
+          this.endDirection = ConnectorDirection.Top
         }
         break
       }
@@ -2480,15 +2519,18 @@ export class Connector extends Item {
           points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
           points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
           points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
+          this.endDirection = ConnectorDirection.Right
         } else if(end.y > startBottom) {
           points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
           points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
           points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
+          this.endDirection = ConnectorDirection.Right
         } else {
           points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
           points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, startTop))
           points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, startTop))
           points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
+          this.endDirection = ConnectorDirection.Right
         }
         break
       }
@@ -2500,23 +2542,27 @@ export class Connector extends Item {
             points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
             points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, end.y + Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(end.x , end.y + Connector.DEFAULT_ARROW_SEGMENT))
+            this.endDirection = ConnectorDirection.Bottom
           } else {
             if(middleX - start.x > Connector.DEFAULT_ARROW_SEGMENT) {
               points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
               points.push(new Point2(middleX, start.y))
               points.push(new Point2(middleX, end.y))
               points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+              this.endDirection = ConnectorDirection.Left
             } else {
               points.push(new Point2(start.x, start.y))//Dummy point here for Segment
               points.push(new Point2(middleX, start.y))
               points.push(new Point2(middleX, end.y))
               points.push(new Point2(end.x, end.y))//Dummy point here for Segment
+              this.endDirection = ConnectorDirection.Left
             }
           }
         } else {
           points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
           points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
           points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
+          this.endDirection = ConnectorDirection.Right
         }
         break
       }
@@ -2528,23 +2574,27 @@ export class Connector extends Item {
             points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
             points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, end.y - Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(end.x , end.y - Connector.DEFAULT_ARROW_SEGMENT))
+            this.endDirection = ConnectorDirection.Top
           } else {
             if(middleX - start.x > Connector.DEFAULT_ARROW_SEGMENT) {
               points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
               points.push(new Point2(middleX, start.y))
               points.push(new Point2(middleX, end.y))
               points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+              this.endDirection = ConnectorDirection.Left
             } else {
               points.push(new Point2(start.x, start.y))//Dummy point here for Segment
               points.push(new Point2(middleX, start.y))
               points.push(new Point2(middleX, end.y))
               points.push(new Point2(end.x, end.y))//Dummy point here for Segment
+              this.endDirection = ConnectorDirection.Left
             }
           }
         } else {
           points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
           points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
           points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
+          this.endDirection = ConnectorDirection.Right
         }
         break
       }
@@ -2555,11 +2605,13 @@ export class Connector extends Item {
           points.push(new Point2(middleX, start.y))
           points.push(new Point2(middleX, end.y))
           points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+          this.endDirection = ConnectorDirection.Left
         } else {
           points.push(new Point2(start.x, start.y))//Dummy point here for Segment
           points.push(new Point2(middleX, start.y))
           points.push(new Point2(middleX, end.y))
           points.push(new Point2(end.x, end.y))//Dummy point here for Segment
+          this.endDirection = ConnectorDirection.Left
         }
         break
       }
@@ -2571,11 +2623,13 @@ export class Connector extends Item {
           points.push(new Point2(middleX, start.y))
           points.push(new Point2(middleX, end.y))
           points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
+          this.endDirection = ConnectorDirection.Right
         } else {
           points.push(new Point2(start.x, start.y))//Dummy point here for Segment
           points.push(new Point2(middleX, start.y))
           points.push(new Point2(middleX, end.y))
           points.push(new Point2(end.x, end.y))//Dummy point here for Segment
+          this.endDirection = ConnectorDirection.Right
         }
         break
       }
@@ -2593,24 +2647,29 @@ export class Connector extends Item {
             points.push(new Point2(start.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(start.x, end.y))
             points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
+            this.endDirection = ConnectorDirection.Right
           } else {
             points.push(new Point2(start.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, start.y + Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
+            this.endDirection = ConnectorDirection.Right
           }
         } else {
           if(end.y > startBottom) {
             points.push(new Point2(start.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(start.x, end.y))
             points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
+            this.endDirection = ConnectorDirection.Right
           } else if(end.y > startBottom2) {
             points.push(new Point2(start.x, start.y)) //Dummy point here for Segment
             points.push(new Point2(start.x, end.y))
             points.push(new Point2(end.x, end.y)) //Dummy point here for Segment
+            this.endDirection = ConnectorDirection.Right
           } else {
             points.push(new Point2(start.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(end.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(end.x, end.y + Connector.DEFAULT_ARROW_SEGMENT))
+            this.endDirection = ConnectorDirection.Bottom
           }
         }
         break
@@ -2622,15 +2681,18 @@ export class Connector extends Item {
           points.push(new Point2(start.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
           points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, start.y + Connector.DEFAULT_ARROW_SEGMENT))
           points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
+          this.endDirection = ConnectorDirection.Right
         } else if(end.x > startRight) {
           points.push(new Point2(start.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
           points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, start.y + Connector.DEFAULT_ARROW_SEGMENT))
           points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+          this.endDirection = ConnectorDirection.Left
         } else {
           points.push(new Point2(start.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
           points.push(new Point2(startLeft, start.y + Connector.DEFAULT_ARROW_SEGMENT))
           points.push(new Point2(startLeft, end.y + Connector.DEFAULT_ARROW_SEGMENT))
           points.push(new Point2(end.x, end.y + Connector.DEFAULT_ARROW_SEGMENT))
+          this.endDirection = ConnectorDirection.Bottom
         }
         break
       }
@@ -2642,10 +2704,12 @@ export class Connector extends Item {
             points.push(new Point2(start.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(start.x, end.y))
             points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+            this.endDirection = ConnectorDirection.Left
           } else {
             points.push(new Point2(start.x, start.y)) //Dummy point here for Segment
             points.push(new Point2(start.x, end.y))
-            points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
+            points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+            this.endDirection = ConnectorDirection.Left
           }
         } else {
           if(Math.abs(middleY - start.y) > Connector.DEFAULT_ARROW_SEGMENT) {
@@ -2653,11 +2717,13 @@ export class Connector extends Item {
             points.push(new Point2(start.x, middleY))
             points.push(new Point2(end.x, middleY))
             points.push(new Point2(end.x, end.y - Connector.DEFAULT_ARROW_SEGMENT))
+            this.endDirection = ConnectorDirection.Top
           } else {
             points.push(new Point2(start.x, start.y)) //Dummy point here for Segment
             points.push(new Point2(start.x, middleY))
             points.push(new Point2(end.x, middleY))
             points.push(new Point2(end.x, end.y)) //Dummy point here for Segment
+            this.endDirection = ConnectorDirection.Top
           }
         }
         break
@@ -2671,24 +2737,29 @@ export class Connector extends Item {
             points.push(new Point2(start.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(start.x, end.y))
             points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+            this.endDirection = ConnectorDirection.Left
           } else {
             points.push(new Point2(start.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, start.y + Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+            this.endDirection = ConnectorDirection.Left
           }
         } else {
           if(end.y > startBottom) {
             points.push(new Point2(start.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(start.x, end.y))
             points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+            this.endDirection = ConnectorDirection.Left
           } else if(end.y > startBottom2) {
             points.push(new Point2(start.x, start.y)) //Dummy point here for Segment
             points.push(new Point2(start.x, end.y))
             points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+            this.endDirection = ConnectorDirection.Left
           } else {
             points.push(new Point2(start.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(end.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(end.x, end.y + Connector.DEFAULT_ARROW_SEGMENT))
+            this.endDirection = ConnectorDirection.Bottom
           }
         }
         break
@@ -2701,11 +2772,13 @@ export class Connector extends Item {
           points.push(new Point2(start.x, middleY))
           points.push(new Point2(end.x, middleY))
           points.push(new Point2(end.x, end.y + Connector.DEFAULT_ARROW_SEGMENT))
+          this.endDirection = ConnectorDirection.Bottom
         } else {
           points.push(new Point2(start.x, start.y))//Dummy point here for Segment
           points.push(new Point2(start.x, middleY))
           points.push(new Point2(end.x, middleY))
           points.push(new Point2(end.x, end.y))//Dummy point here for Segment
+          this.endDirection = ConnectorDirection.Bottom
         }
         break
       }
@@ -2721,11 +2794,13 @@ export class Connector extends Item {
           points.push(new Point2(middleX, start.y))
           points.push(new Point2(middleX, end.y))
           points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+          this.startDirection = ConnectorDirection.Right
         } else {
           points.push(new Point2(start.x, start.y))//Dummy point here for Segment
           points.push(new Point2(middleX, start.y))
           points.push(new Point2(middleX, end.y))
           points.push(new Point2(end.x, end.y))//Dummy point here for Segment
+          this.startDirection = ConnectorDirection.Right
         }
         break
       }
@@ -2738,27 +2813,32 @@ export class Connector extends Item {
             points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
             points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
             points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+            this.startDirection = ConnectorDirection.Left
           } else if(start.x > end.x) {
             points.push(new Point2(start.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, start.y + Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT , end.y))
+            this.startDirection = ConnectorDirection.Bottom
           } else {
             if(middleX - start.x > Connector.DEFAULT_ARROW_SEGMENT) {
               points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
               points.push(new Point2(middleX, start.y))
               points.push(new Point2(middleX, end.y))
               points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+              this.startDirection = ConnectorDirection.Right
             } else {
               points.push(new Point2(start.x, start.y))//Dummy point here for Segment
               points.push(new Point2(middleX, start.y))
               points.push(new Point2(middleX, end.y))
               points.push(new Point2(end.x, end.y))//Dummy point here for Segment
+              this.startDirection = ConnectorDirection.Right
             }
           }
         } else {
           points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
           points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
           points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+          this.startDirection = ConnectorDirection.Left
         }
         break
       }
@@ -2770,23 +2850,27 @@ export class Connector extends Item {
             points.push(new Point2(start.x, start.y - Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, start.y - Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT , end.y))
+            this.startDirection = ConnectorDirection.Top
           } else {
             if(middleX - start.x > Connector.DEFAULT_ARROW_SEGMENT) {
               points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
               points.push(new Point2(middleX, start.y))
               points.push(new Point2(middleX, end.y))
               points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+              this.startDirection = ConnectorDirection.Right
             } else {
               points.push(new Point2(start.x, start.y))//Dummy point here for Segment
               points.push(new Point2(middleX, start.y))
               points.push(new Point2(middleX, end.y))
               points.push(new Point2(end.x, end.y))//Dummy point here for Segment
+              this.startDirection = ConnectorDirection.Right
             }
           }
         } else {
           points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
           points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
           points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+          this.startDirection = ConnectorDirection.Left
         }
         break
       }
@@ -2797,15 +2881,18 @@ export class Connector extends Item {
           points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
           points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
           points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+          this.startDirection = ConnectorDirection.Left
         } else if(start.y > endBottom) {
           points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
           points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
           points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+          this.startDirection = ConnectorDirection.Left
         } else {
           points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
           points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, endTop))
           points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, endTop))
           points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+          this.startDirection = ConnectorDirection.Left
         }
         break
       }
@@ -2817,11 +2904,13 @@ export class Connector extends Item {
           points.push(new Point2(middleX, start.y))
           points.push(new Point2(middleX, end.y))
           points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
+          this.startDirection = ConnectorDirection.Left
         } else {
           points.push(new Point2(start.x, start.y))//Dummy point here for Segment
           points.push(new Point2(middleX, start.y))
           points.push(new Point2(middleX, end.y))
           points.push(new Point2(end.x, end.y)) //Dummy point here for Segment
+          this.startDirection = ConnectorDirection.Left
         }
         break
       }
@@ -2839,24 +2928,29 @@ export class Connector extends Item {
             points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
             points.push(new Point2(end.x, start.y))
             points.push(new Point2(end.x, end.y - Connector.DEFAULT_ARROW_SEGMENT))
+            this.startDirection = ConnectorDirection.Right
           } else {
             points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
             points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, end.y - Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(end.x, end.y - Connector.DEFAULT_ARROW_SEGMENT))
+            this.startDirection = ConnectorDirection.Right
           }
         } else {
           if(start.y < endTop) {
             points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
             points.push(new Point2(end.x, start.y))
             points.push(new Point2(end.x, end.y - Connector.DEFAULT_ARROW_SEGMENT))
+            this.startDirection = ConnectorDirection.Right
           } else if(start.y < endTop2) {
             points.push(new Point2(start.x, start.y)) //Dummy point here for Segment
             points.push(new Point2(end.x, start.y))
             points.push(new Point2(end.x, end.y)) //Dummy point here for Segment
+            this.startDirection = ConnectorDirection.Right
           } else {
             points.push(new Point2(start.x, start.y - Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(start.x, end.y - Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(end.x, end.y - Connector.DEFAULT_ARROW_SEGMENT))
+            this.startDirection = ConnectorDirection.Top
           }
         }
         break
@@ -2869,10 +2963,12 @@ export class Connector extends Item {
             points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
             points.push(new Point2(end.x, start.y))
             points.push(new Point2(end.x, end.y - Connector.DEFAULT_ARROW_SEGMENT))
+            this.startDirection = ConnectorDirection.Left
           } else {
             points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y)) //Dummy point here for Segment
             points.push(new Point2(end.x, start.y))
             points.push(new Point2(end.x, end.y))
+            this.startDirection = ConnectorDirection.Left
           }
         } else {
           if(Math.abs(middleY - start.y) > Connector.DEFAULT_ARROW_SEGMENT) {
@@ -2880,11 +2976,13 @@ export class Connector extends Item {
             points.push(new Point2(start.x, middleY))
             points.push(new Point2(end.x, middleY))
             points.push(new Point2(end.x, end.y - Connector.DEFAULT_ARROW_SEGMENT))
+            this.startDirection = ConnectorDirection.Bottom
           } else {
             points.push(new Point2(start.x, start.y)) //Dummy point here for Segment
             points.push(new Point2(start.x, middleY))
             points.push(new Point2(end.x, middleY))
             points.push(new Point2(end.x, end.y)) //Dummy point here for Segment
+            this.startDirection = ConnectorDirection.Bottom
           }
         }
         break
@@ -2896,15 +2994,18 @@ export class Connector extends Item {
           points.push(new Point2(start.x, start.y - Connector.DEFAULT_ARROW_SEGMENT))
           points.push(new Point2(start.x, end.y - Connector.DEFAULT_ARROW_SEGMENT))
           points.push(new Point2(end.x, end.y - Connector.DEFAULT_ARROW_SEGMENT))
+          this.startDirection = ConnectorDirection.Top
         } else if(start.x > endRight) {
           points.push(new Point2(start.x, start.y - Connector.DEFAULT_ARROW_SEGMENT))
           points.push(new Point2(start.x, end.y - Connector.DEFAULT_ARROW_SEGMENT))
           points.push(new Point2(end.x, end.y - Connector.DEFAULT_ARROW_SEGMENT))
+          this.startDirection = ConnectorDirection.Top
         } else {
           points.push(new Point2(start.x, start.y - Connector.DEFAULT_ARROW_SEGMENT))
           points.push(new Point2(endLeft, start.y - Connector.DEFAULT_ARROW_SEGMENT))
           points.push(new Point2(endLeft, end.y - Connector.DEFAULT_ARROW_SEGMENT))
           points.push(new Point2(end.x, end.y - Connector.DEFAULT_ARROW_SEGMENT))
+          this.startDirection = ConnectorDirection.Top
         }
         break
       }
@@ -2917,24 +3018,29 @@ export class Connector extends Item {
             points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
             points.push(new Point2(end.x, start.y))
             points.push(new Point2(end.x , end.y - Connector.DEFAULT_ARROW_SEGMENT))
+            this.startDirection = ConnectorDirection.Left
           } else {
             points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
             points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, end.y - Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(end.x, end.y - Connector.DEFAULT_ARROW_SEGMENT))
+            this.startDirection = ConnectorDirection.Left
           }
         } else {
           if(start.y < endTop) {
             points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
             points.push(new Point2(end.x, start.y))
             points.push(new Point2(end.x, end.y - Connector.DEFAULT_ARROW_SEGMENT))
+            this.startDirection = ConnectorDirection.Left
           } else if(end.y < endTop2) {
             points.push(new Point2(start.x, start.y)) //Dummy point here for Segment
             points.push(new Point2(start.x, end.y))
             points.push(new Point2(end.x, end.y)) //Dummy point here for Segment
+            this.startDirection = ConnectorDirection.Left
           } else {
             points.push(new Point2(start.x, start.y - Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(start.x, end.y - Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(end.x, end.y - Connector.DEFAULT_ARROW_SEGMENT))
+            this.startDirection = ConnectorDirection.Top
           }
         }
         break
@@ -2947,11 +3053,13 @@ export class Connector extends Item {
           points.push(new Point2(start.x, middleY))
           points.push(new Point2(end.x, middleY))
           points.push(new Point2(end.x, end.y + Connector.DEFAULT_ARROW_SEGMENT))
+          this.startDirection = ConnectorDirection.Top
         } else {
           points.push(new Point2(start.x, start.y))//Dummy point here for Segment
           points.push(new Point2(start.x, middleY))
           points.push(new Point2(end.x, middleY))
           points.push(new Point2(end.x, end.y))//Dummy point here for Segment
+          this.startDirection = ConnectorDirection.Top
         }
         break
       }
@@ -2967,15 +3075,18 @@ export class Connector extends Item {
           points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
           points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
           points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
+          this.startDirection = ConnectorDirection.Right
         } else if(start.y > endBottom) {
           points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
           points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
           points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
+          this.startDirection = ConnectorDirection.Right
         } else {
           points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
           points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, endTop))
           points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, endTop))
           points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
+          this.startDirection = ConnectorDirection.Right
         }
         break
       }
@@ -2987,23 +3098,27 @@ export class Connector extends Item {
             points.push(new Point2(start.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, start.y + Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT , end.y))
+            this.startDirection = ConnectorDirection.Bottom
           } else {
             if(middleX - end.x > Connector.DEFAULT_ARROW_SEGMENT) {
               points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
               points.push(new Point2(middleX, start.y))
               points.push(new Point2(middleX, end.y))
               points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
+              this.startDirection = ConnectorDirection.Left
             } else {
               points.push(new Point2(start.x, start.y))//Dummy point here for Segment
               points.push(new Point2(middleX, start.y))
               points.push(new Point2(middleX, end.y))
               points.push(new Point2(end.x, end.y))//Dummy point here for Segment
+              this.startDirection = ConnectorDirection.Left
             }
           }
         } else {
           points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
           points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
           points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
+          this.startDirection = ConnectorDirection.Right
         }
         break
       }
@@ -3015,23 +3130,27 @@ export class Connector extends Item {
             points.push(new Point2(start.x, start.y - Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, start.y - Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(end.x+ Connector.DEFAULT_ARROW_SEGMENT , end.y))
+            this.startDirection = ConnectorDirection.Top
           } else {
             if(middleX - end.x > Connector.DEFAULT_ARROW_SEGMENT) {
               points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
               points.push(new Point2(middleX, start.y))
               points.push(new Point2(middleX, end.y))
               points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
+              this.startDirection = ConnectorDirection.Left
             } else {
               points.push(new Point2(start.x, start.y))//Dummy point here for Segment
               points.push(new Point2(middleX, start.y))
               points.push(new Point2(middleX, end.y))
               points.push(new Point2(end.x, end.y))//Dummy point here for Segment
+              this.startDirection = ConnectorDirection.Left
             }
           }
         } else {
           points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
           points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
           points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
+          this.startDirection = ConnectorDirection.Right
         }
         break
       }
@@ -3042,11 +3161,13 @@ export class Connector extends Item {
           points.push(new Point2(middleX, start.y))
           points.push(new Point2(middleX, end.y))
           points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
+          this.startDirection = ConnectorDirection.Left
         } else {
           points.push(new Point2(start.x, start.y))//Dummy point here for Segment
           points.push(new Point2(middleX, start.y))
           points.push(new Point2(middleX, end.y))
           points.push(new Point2(end.x, end.y))//Dummy point here for Segment
+          this.startDirection = ConnectorDirection.Left
         }
         break
       }
@@ -3058,11 +3179,13 @@ export class Connector extends Item {
           points.push(new Point2(middleX, start.y))
           points.push(new Point2(middleX, end.y))
           points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+          this.startDirection = ConnectorDirection.Right
         } else {
           points.push(new Point2(start.x, start.y))//Dummy point here for Segment
           points.push(new Point2(middleX, start.y))
           points.push(new Point2(middleX, end.y))
           points.push(new Point2(end.x, end.y))//Dummy point here for Segment
+          this.startDirection = ConnectorDirection.Right
         }
         break
       }
@@ -3080,24 +3203,29 @@ export class Connector extends Item {
             points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
             points.push(new Point2(end.x, start.y))
             points.push(new Point2(end.x, end.y + Connector.DEFAULT_ARROW_SEGMENT))
+            this.startDirection = ConnectorDirection.Right
           } else {
             points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
             points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, end.y + Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(end.x, end.y + Connector.DEFAULT_ARROW_SEGMENT))
+            this.startDirection = ConnectorDirection.Right
           }
         } else {
           if(start.y > endBottom) {
             points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
             points.push(new Point2(end.x, start.y))
             points.push(new Point2(end.x, end.y + Connector.DEFAULT_ARROW_SEGMENT))
+            this.startDirection = ConnectorDirection.Right
           } else if(start.y > endBottom2) {
             points.push(new Point2(start.x, start.y)) //Dummy point here for Segment
             points.push(new Point2(end.x, start.y))
             points.push(new Point2(end.x, end.y)) //Dummy point here for Segment
+            this.startDirection = ConnectorDirection.Right
           } else {
             points.push(new Point2(start.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(start.x, end.y + Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(end.x, end.y + Connector.DEFAULT_ARROW_SEGMENT))
+            this.startDirection = ConnectorDirection.Bottom
           }
         }
         break
@@ -3109,15 +3237,18 @@ export class Connector extends Item {
           points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
           points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, end.y + Connector.DEFAULT_ARROW_SEGMENT))
           points.push(new Point2(end.x, end.y + Connector.DEFAULT_ARROW_SEGMENT))
+          this.startDirection = ConnectorDirection.Right
         } else if(start.x > endRight) {
           points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
           points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, end.y + Connector.DEFAULT_ARROW_SEGMENT))
           points.push(new Point2(end.x, end.y + Connector.DEFAULT_ARROW_SEGMENT))
+          this.startDirection = ConnectorDirection.Left
         } else {
           points.push(new Point2(start.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
           points.push(new Point2(endLeft, start.y + Connector.DEFAULT_ARROW_SEGMENT))
           points.push(new Point2(endLeft, end.y + Connector.DEFAULT_ARROW_SEGMENT))
           points.push(new Point2(end.x, end.y + Connector.DEFAULT_ARROW_SEGMENT))
+          this.startDirection = ConnectorDirection.Bottom
         }
         break
       }
@@ -3129,10 +3260,12 @@ export class Connector extends Item {
             points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
             points.push(new Point2(end.x, start.y))
             points.push(new Point2(end.x, end.y + Connector.DEFAULT_ARROW_SEGMENT))
+            this.startDirection = ConnectorDirection.Left
           } else {
-            points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y)) //Dummy point here for Segment
+            points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y)) 
             points.push(new Point2(end.x, start.y))
-            points.push(new Point2(end.x, end.y))
+            points.push(new Point2(end.x, end.y)) //Dummy point here for Segment
+            this.startDirection = ConnectorDirection.Left
           }
         } else {
           if(Math.abs(middleY - start.y) > Connector.DEFAULT_ARROW_SEGMENT) {
@@ -3140,11 +3273,13 @@ export class Connector extends Item {
             points.push(new Point2(start.x, middleY))
             points.push(new Point2(end.x, middleY))
             points.push(new Point2(end.x, end.y + Connector.DEFAULT_ARROW_SEGMENT))
+            this.startDirection = ConnectorDirection.Top
           } else {
             points.push(new Point2(start.x, start.y)) //Dummy point here for Segment
             points.push(new Point2(start.x, middleY))
             points.push(new Point2(end.x, middleY))
             points.push(new Point2(end.x, end.y)) //Dummy point here for Segment
+            this.startDirection = ConnectorDirection.Top
           }
         }
         break
@@ -3158,24 +3293,29 @@ export class Connector extends Item {
             points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
             points.push(new Point2(end.x, start.y))
             points.push(new Point2(end.x, end.y + Connector.DEFAULT_ARROW_SEGMENT))
+            this.startDirection = ConnectorDirection.Left
           } else {
             points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
             points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, end.y + Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(end.x, end.y + Connector.DEFAULT_ARROW_SEGMENT))
+            this.startDirection = ConnectorDirection.Left
           }
         } else {
           if(start.y > endBottom) {
             points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
             points.push(new Point2(end.x, start.y))
             points.push(new Point2(end.x, end.y + Connector.DEFAULT_ARROW_SEGMENT))
+            this.startDirection = ConnectorDirection.Left
           } else if(start.y > endBottom2) {
             points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
             points.push(new Point2(end.x, start.y))
             points.push(new Point2(end.x, end.y)) //Dummy point here for Segment
+            this.startDirection = ConnectorDirection.Left
           } else {
             points.push(new Point2(start.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(start.x, end.y + Connector.DEFAULT_ARROW_SEGMENT))
             points.push(new Point2(end.x, end.y + Connector.DEFAULT_ARROW_SEGMENT))
+            this.startDirection = ConnectorDirection.Bottom
           }
         }
         break
@@ -3188,11 +3328,13 @@ export class Connector extends Item {
           points.push(new Point2(start.x, middleY))
           points.push(new Point2(end.x, middleY))
           points.push(new Point2(end.x, end.y - Connector.DEFAULT_ARROW_SEGMENT))
+          this.startDirection = ConnectorDirection.Bottom
         } else {
           points.push(new Point2(start.x, start.y))//Dummy point here for Segment
           points.push(new Point2(start.x, middleY))
           points.push(new Point2(end.x, middleY))
           points.push(new Point2(end.x, end.y))//Dummy point here for Segment
+          this.startDirection = ConnectorDirection.Bottom
         }
         break
       }
@@ -3201,26 +3343,79 @@ export class Connector extends Item {
 
 
   private initializeOrthogonalPointsWithoutSourceTarget(targetPosition: TargetPosition,points: Point2[], start: Point2, end: Point2) {
-    const middleX = (start.x + end.x) * 0.5
-    if(Math.abs(middleX - start.x) > Connector.DEFAULT_ARROW_SEGMENT) {
-      if(start.x < end.x) {
-        points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
-        points.push(new Point2(middleX, start.y))
-        points.push(new Point2(middleX, end.y))
-        points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
-      } else {
-        points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
-        points.push(new Point2(middleX, start.y))
-        points.push(new Point2(middleX, end.y))
-        points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
+    //console.log(`start.x = ${start.x}  end.x = ${end.x}  start.y = ${start.y}  end.y=${end.y}`)
+    if(Math.abs(start.x - end.x) > Math.abs(start.y - end.y)) {
+      const middleX = (start.x + end.x) * 0.5
+      if(Math.abs(middleX - start.x) > Connector.DEFAULT_ARROW_SEGMENT) {
+        if(start.x < end.x) {
+          points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
+          points.push(new Point2(middleX, start.y))
+          points.push(new Point2(middleX, end.y))
+          points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
+          this.startDirection = ConnectorDirection.Right
+          this.endDirection = ConnectorDirection.Left
+        } else {
+          points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
+          points.push(new Point2(middleX, start.y))
+          points.push(new Point2(middleX, end.y))
+          points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
+          this.startDirection = ConnectorDirection.Left
+          this.endDirection = ConnectorDirection.Right
+        }
+      } else {      
+        if(start.x < end.x) {
+          points.push(new Point2(start.x, start.y))//Dummy point here for Segment
+          points.push(new Point2(middleX, start.y))
+          points.push(new Point2(middleX, end.y))
+          points.push(new Point2(end.x, end.y))//Dummy point here for Segment
+          this.startDirection = ConnectorDirection.Right
+          this.endDirection = ConnectorDirection.Left
+        } else {
+          points.push(new Point2(start.x, start.y))//Dummy point here for Segment
+          points.push(new Point2(middleX, start.y))
+          points.push(new Point2(middleX, end.y))
+          points.push(new Point2(end.x, end.y))//Dummy point here for Segment
+          this.startDirection = ConnectorDirection.Left
+          this.endDirection = ConnectorDirection.Right
+        }
       }
-    } else {      
-      points.push(new Point2(start.x, start.y))//Dummy point here for Segment
-      points.push(new Point2(middleX, start.y))
-      points.push(new Point2(middleX, end.y))
-      points.push(new Point2(end.x, end.y))//Dummy point here for Segment
+    } else {
+      const middleY = (start.y + end.y) * 0.5
+      if(Math.abs(middleY - start.y) > Connector.DEFAULT_ARROW_SEGMENT) {
+        if(start.y < end.y) {
+          points.push(new Point2(start.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
+          points.push(new Point2(start.x, middleY))
+          points.push(new Point2(end.x, middleY))
+          points.push(new Point2(end.x, end.y - Connector.DEFAULT_ARROW_SEGMENT))
+          this.startDirection = ConnectorDirection.Bottom
+          this.endDirection = ConnectorDirection.Top
+        } else {
+          points.push(new Point2(start.x, start.y - Connector.DEFAULT_ARROW_SEGMENT))
+          points.push(new Point2(start.x, middleY))
+          points.push(new Point2(end.x, middleY))
+          points.push(new Point2(end.x, end.y + Connector.DEFAULT_ARROW_SEGMENT))
+          this.startDirection = ConnectorDirection.Top
+          this.endDirection = ConnectorDirection.Bottom
+        }
+      } else {      
+        if(start.y < end.y) {
+          points.push(new Point2(start.x, start.y))//Dummy point here for Segment
+          points.push(new Point2(start.x, middleY))
+          points.push(new Point2(end.x, middleY))
+          points.push(new Point2(end.x, end.y))//Dummy point here for Segment
+          this.startDirection = ConnectorDirection.Bottom
+          this.endDirection = ConnectorDirection.Top
+        } else {
+          points.push(new Point2(start.x, start.y))//Dummy point here for Segment
+          points.push(new Point2(start.x, middleY))
+          points.push(new Point2(end.x, middleY))
+          points.push(new Point2(end.x, end.y))//Dummy point here for Segment
+          this.startDirection = ConnectorDirection.Top
+          this.endDirection = ConnectorDirection.Bottom
+        }
+      }
     }
-  }
+}
 
   private initializeOrthogonalPointsLeftWithSameSourceTarget(targetPosition: TargetPosition,points: Point2[], start: Point2, end: Point2) {
     switch(this._endDirection) {

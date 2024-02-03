@@ -750,7 +750,7 @@ const Header: FC<HeaderProps> = ({
   }
 
   const handleConnectorArrowStartTypeChange = (value: string) => {
-    console.log(`orig value = ${connectorLineStartArrow}`)
+    //console.log(`orig value = ${connectorLineStartArrow}`)
     setConnectorLineStartArrow(value)
     if(currentEditor) {
       let editorItems = currentEditor.selectionLayer.getAllEditorItems()
