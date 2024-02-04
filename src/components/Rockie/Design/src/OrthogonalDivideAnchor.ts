@@ -5,6 +5,7 @@ import { Editor } from '../../Editor'
 import { Holder } from './Holder'
 import { ConnectorShape } from '../../Shapes'
 import { OrthogonalHelper } from './OrthogonalHelper'
+import { SelectionLayer } from '../../Editor/src/SelectionLayer'
 
 /**
  * 创建连接线
@@ -59,6 +60,13 @@ export class OrthogonalDivideAnchor extends Anchor {
     if (!this.target) {
       return;
     }
+    const theSelectionLayer = this.editor.selectionLayer as SelectionLayer
+    if (!theSelectionLayer.hasEditorItem(this.target)) {
+      theSelectionLayer.inHolder = true
+      theSelectionLayer.removeAllEditorItems()
+      theSelectionLayer.addEditorItem(this.target)
+    }
+    this.editor.triggerSelectionChange()
     this._moving = false
   }
   public handlePointerMove (x: number, y: number) {
