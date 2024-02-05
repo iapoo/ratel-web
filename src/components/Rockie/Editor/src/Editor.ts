@@ -2,7 +2,7 @@
 /* eslint-disable max-params */
 /* eslint-disable complexity */
 import { Painter, } from '@/components/Painter'
-import { Engine, Point2, Rectangle2D, Rotation, Shape, Line2D, Node, Rectangle, Graphics, Colors, MouseEvent, MouseCode, PointerEvent as UniPointerEvent, Control, PointerEvent, Path, Scale, KeyEvent, Color, Paint, StrokeDashStyle, } from '../../../Engine'
+import { Engine, Point2, Rectangle2D, Rotation, Shape, Line2D, Node, Rectangle, Graphics, Colors, MouseEvent, MouseCode, PointerEvent as UniPointerEvent, Control, PointerEvent, Path, Scale, KeyEvent, Color, Paint, StrokeDashStyle, Matrix, } from '../../../Engine'
 import { Action, } from '../../Actions'
 import { Holder, } from '../../Design'
 import { CellEntity, Connector, ContainerEntity, EditorItem, EditorItemInfo, Entity, Item, ShapeEntity, TableEntity, } from '../../Items'
@@ -19,6 +19,7 @@ import { SystemUtils } from '@/components/Workspace/Utils'
 import { Operation, OperationHelper, OperationService, OperationType } from '../../Operations'
 import { ContainerLayer } from './ContainerLayer'
 import { ConnectorDirection } from '../../Shapes'
+import { TableLayer } from './TableLayer'
 
 export class Editor extends Painter {
   /**
@@ -45,6 +46,7 @@ export class Editor extends Painter {
   private _rangeLayer: EditorLayer
   private _moveLayer: EditorLayer
   private _containerLayer: EditorLayer
+  private _tableLayer: EditorLayer
   private _zoom = 1.00;
   private _inMoving = false;
   private _moved = false; //Check if movement already started
@@ -91,6 +93,7 @@ export class Editor extends Painter {
   private _inContainerSelection: boolean = false
   private _containerSelectionShape: Rectangle2D = new Rectangle2D(0, 0, 0, 0)
   private _selectionOutlineShape: Rectangle2D = new Rectangle2D(0, 0, 0, 0)
+  private _tableActiveCellShape: Rectangle2D = new Rectangle2D(0, 0, 0, 0)
 
   public constructor (canvasId: string | HTMLCanvasElement) {
     super(canvasId)
@@ -103,6 +106,7 @@ export class Editor extends Painter {
     this._rangeLayer = new MaskLayer(0, 0, this.width, this.height)
     this._moveLayer = new MaskLayer(0, 0, this.width, this.height)
     this._containerLayer = new ContainerLayer(0, 0, this.width, this.height)
+    this._tableLayer = new TableLayer(0, 0, this.width, this.height)
     this._contentLayer.editor = this
     this._controllerLayer.editor = this
     this._hoverLayer.editor = this
@@ -111,6 +115,7 @@ export class Editor extends Painter {
     this._moveLayer.editor = this
     this._rangeLayer.editor = this
     this._containerLayer.editor = this
+    this._tableLayer.editor = this
     this._title = ''
     this._key = ''
     this._id = SystemUtils.generateID()
@@ -124,11 +129,16 @@ export class Editor extends Painter {
     this._containerSelectionShape.stroke.setStrokeWidth(5)
     this._selectionOutlineShape.stroke.setStrokeDashStyle(StrokeDashStyle.DASH)
     this._selectionOutlineShape.filled = false
+    this._tableActiveCellShape.filled = false
+    this._tableActiveCellShape.stroke.setColor(Colors.Red)
+    this._tableActiveCellShape.stroke.setStrokeWidth(2)
+    this._tableLayer.addNode(this._tableActiveCellShape)
     this.root.addNode(this._backgroundLayer)
     this.root.addNode(this._contentLayer)
     this.root.addNode(this._controllerLayer)
     this.root.addNode(this._rangeLayer)
     this.root.addNode(this._containerLayer)
+    this.root.addNode(this._tableLayer)
     this.root.addNode(this._moveLayer)
     this.root.addNode(this._maskLayer)
     this.root.addNode(this._hoverLayer)
@@ -695,6 +705,7 @@ export class Editor extends Painter {
         this._targetRowResizing = false
         this._targetItem = undefined
         this._targetItemIndex = 0
+        this.handleTableActiveCellShape()
       } else if (clickedEditorItem) {
         // const data = {}
         // const item: Item = clickedEditorItem as Item
@@ -741,6 +752,7 @@ export class Editor extends Painter {
             }
             this._targetItem = undefined
             this._targetItemIndex = 0
+            this.handleTableActiveCellShape()
             this._inMoving = true
             this.checkAndEndTextEdit()
             this.startMoveOutline(e)
@@ -753,6 +765,7 @@ export class Editor extends Painter {
               this._targetItem.shape.focused = false
             }
             this._targetItem = undefined
+            this.handleTableActiveCellShape()
             this._targetItemIndex = 0
             this._inMoving = true
             this.checkAndEndTextEdit()
@@ -766,6 +779,7 @@ export class Editor extends Painter {
               }
               this._targetItem = clickedEditorItem.items[itemIndex]
               this._targetItem.shape.focused = true
+              this.handleTableActiveCellShape()
               this._inMoving = true
               this.checkAndStartTextEdit()
               this.startMoveOutline(e)
@@ -819,6 +833,7 @@ export class Editor extends Painter {
         this._targetRowResizing = false
         this._targetItem = undefined
         this._targetItemIndex = 0
+        this.handleTableActiveCellShape()
         this.checkAndEndTextEdit()
         this.startRangeSelecting(e)
       }
@@ -1929,6 +1944,7 @@ export class Editor extends Painter {
       this._targetRowResizing = false
       this._targetItem = undefined
       this._targetItemIndex = 0
+      this.handleTableActiveCellShape()
     }
   }
 
@@ -1984,6 +2000,8 @@ export class Editor extends Painter {
     theHoverLayer.removeAllEditorItems()
     //Need this to update toolbar in time, Just hide here because of performance issue
     this.triggerSelectionResizing()
+    //Update active table cell outline
+    this.handleTableActiveCellShape()
   }
 
   private startMoveOutline(e: PointerEvent) {
@@ -2002,6 +2020,17 @@ export class Editor extends Painter {
     const [left, top, right, bottom] = this.getSelectionBoundary()
     this._selectionOutlineShape.boundary = Rectangle.makeLTWH(left, top, right - left, bottom - top)
     //this._selectionOutlineShape.boundary = Rectangle.makeLTWH(left * this._zoom, top * this._zoom, (right - left) * this._zoom, (bottom - top) * this._zoom)
+  }
+
+  private handleTableActiveCellShape() {
+    if(this._targetItem) {
+      const worldTransform = this._targetItem.shape.worldTransform
+      this._tableActiveCellShape.transform = worldTransform
+      this._tableActiveCellShape.boundary =  Rectangle.makeLTWH(0, 0, this._targetItem.width, this._targetItem.height)
+    } else {
+      this._tableActiveCellShape.transform = new Matrix()
+      this._tableActiveCellShape.boundary =  Rectangle.makeLTWH(0, 0, 0, 0)
+    }
   }
 
   private removeItemsFromContainer(e: PointerEvent) {
