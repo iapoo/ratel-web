@@ -118,6 +118,7 @@ const Content: FC<ContentProps> = ({
   const [popupType, setPopupType, ] = useState<PopupType>(PopupType.EDITOR)
   const [pasteLocation, setPasteLocation, ] = useState<Point2>(new Point2())
   const [pasteFromSystem, setPasteFromSystem, ] = useState<boolean>(true)
+  const [tableEdittable, setTableEdittable, ] = useState<boolean>(false)
 
   const newTabIndex = useRef(4)
 
@@ -239,6 +240,10 @@ const Content: FC<ContentProps> = ({
     Utils.currentEditor.onTextEditStart(handleTextEditStart)
     oldEditor?.removeTextEditEnd(handleTextEditEnd)
     Utils.currentEditor.onTextEditEnd(handleTextEditEnd)
+    oldEditor?.removeTableTextEditStart(handleTableTextEditStart)
+    Utils.currentEditor.onTableTextEditStart(handleTableTextEditStart)
+    oldEditor?.removeTableTextEditEnd(handleTableTextEditEnd)
+    Utils.currentEditor.onTableTextEditEnd(handleTableTextEditEnd)
     oldEditor?.removeSelectionResized(handleSelectionResized)
     Utils.currentEditor.onSelectionResized(handleSelectionResized)
     oldEditor?.removeSelectionResizing(handleSelectionResizing)
@@ -321,6 +326,10 @@ const Content: FC<ContentProps> = ({
     Utils.currentEditor.onTextEditStart(handleTextEditStart)
     oldEditor?.removeTextEditEnd(handleTextEditEnd)
     Utils.currentEditor.onTextEditEnd(handleTextEditEnd)
+    oldEditor?.removeTableTextEditStart(handleTableTextEditStart)
+    Utils.currentEditor.onTableTextEditStart(handleTableTextEditStart)
+    oldEditor?.removeTableTextEditEnd(handleTableTextEditEnd)
+    Utils.currentEditor.onTableTextEditEnd(handleTableTextEditEnd)
     oldEditor?.removeSelectionResized(handleSelectionResized)
     Utils.currentEditor.onSelectionResized(handleSelectionResized)
     oldEditor?.removeSelectionResizing(handleSelectionResizing)
@@ -354,6 +363,10 @@ const Content: FC<ContentProps> = ({
         Utils.currentEditor.onTextEditStart(handleTextEditStart)
         oldEditor?.removeTextEditEnd(handleTextEditEnd)
         Utils.currentEditor.onTextEditEnd(handleTextEditEnd)
+        oldEditor?.removeTableTextEditStart(handleTableTextEditStart)
+        Utils.currentEditor.onTableTextEditStart(handleTableTextEditStart)
+        oldEditor?.removeTableTextEditEnd(handleTableTextEditEnd)
+        Utils.currentEditor.onTableTextEditEnd(handleTableTextEditEnd)
         oldEditor?.removeSelectionResized(handleSelectionResized)
         Utils.currentEditor.onSelectionResized(handleSelectionResized)
         oldEditor?.removeSelectionResizing(handleSelectionResizing)
@@ -382,6 +395,17 @@ const Content: FC<ContentProps> = ({
       let textVerticalAlignmentValue = SystemUtils.generateTextVerticalAligment(editorItem.textVerticalAlignment)
       setTextVerticalAlignment(textVerticalAlignmentValue)
     }
+  }
+
+
+  const handleTableTextEditStart = (e: EditorEvent) => {
+    setTableEdittable(true)
+    console.log(`table edit  start check: ${tableEdittable}`)
+  }
+
+  const handleTableTextEditEnd = (e: EditorEvent) => {
+    setTableEdittable(false)
+    console.log(`table edit end check: ${tableEdittable}`)
   }
 
   const handleSelectionChange = (e: EditorEvent) => {
@@ -537,6 +561,10 @@ const Content: FC<ContentProps> = ({
     Utils.currentEditor.onTextEditStart(handleTextEditStart)
     oldEditor?.removeTextEditEnd(handleTextEditEnd)
     Utils.currentEditor.onTextEditEnd(handleTextEditEnd)
+    oldEditor?.removeTableTextEditStart(handleTableTextEditStart)
+    Utils.currentEditor.onTableTextEditStart(handleTableTextEditStart)
+    oldEditor?.removeTableTextEditEnd(handleTableTextEditEnd)
+    Utils.currentEditor.onTableTextEditEnd(handleTableTextEditEnd)
     oldEditor?.removeSelectionResized(handleSelectionResized)
     Utils.currentEditor.onSelectionResized(handleSelectionResized)
     oldEditor?.removeSelectionResizing(handleSelectionResizing)
@@ -571,7 +599,8 @@ const Content: FC<ContentProps> = ({
       Utils.currentEditor.onSelectionChange(handleSelectionChange)
       Utils.currentEditor.onTextEditStart(handleTextEditStart)
       Utils.currentEditor.onTextEditEnd(handleTextEditEnd)
-      Utils.currentEditor.onTextEditEnd(handleTextEditEnd)
+      Utils.currentEditor.onTableTextEditStart(handleTableTextEditStart)
+      Utils.currentEditor.onTableTextEditEnd(handleTableTextEditEnd)
       Utils.currentEditor.onSelectionResized(handleSelectionResized)
       Utils.currentEditor.onSelectionResizing(handleSelectionResizing)
     }
@@ -1100,7 +1129,64 @@ const Content: FC<ContentProps> = ({
   }
 
   const removeEditor = (editor: Editor) => {
+  }
 
+  const handleInsertRowBefore = () => {
+    if(currentEditor && currentEditor.targetItem && currentEditor.selectionLayer.getEditorItemCount() == 1) {
+      const tableEntity = currentEditor.selectionLayer.getEditorItem(0) as TableEntity
+      const targetItemIndex = currentEditor.targetItemIndex
+      const rowIndex = Math.floor(targetItemIndex / tableEntity.columnCount)
+      tableEntity.insertRowBefore(rowIndex)
+    }
+  }
+
+
+  const handleInsertRowAfter = () => {
+    if(currentEditor && currentEditor.targetItem && currentEditor.selectionLayer.getEditorItemCount() == 1) {
+      const tableEntity = currentEditor.selectionLayer.getEditorItem(0) as TableEntity
+      const targetItemIndex = currentEditor.targetItemIndex
+      const rowIndex = Math.floor(targetItemIndex / tableEntity.columnCount)
+      tableEntity.insertRowAfter(rowIndex)
+    }
+  }
+
+
+  const handleInsertColumnBefore = () => {
+    if(currentEditor && currentEditor.targetItem && currentEditor.selectionLayer.getEditorItemCount() == 1) {
+      const tableEntity = currentEditor.selectionLayer.getEditorItem(0) as TableEntity
+      const targetItemIndex = currentEditor.targetItemIndex
+      const columnIndex = targetItemIndex % tableEntity.columnCount
+      tableEntity.insertColumnBefore(columnIndex)
+    }
+  }
+
+
+  const handleInsertColumnAfter = () => {
+    if(currentEditor && currentEditor.targetItem && currentEditor.selectionLayer.getEditorItemCount() == 1) {
+      const tableEntity = currentEditor.selectionLayer.getEditorItem(0) as TableEntity
+      const targetItemIndex = currentEditor.targetItemIndex
+      const columnIndex = targetItemIndex % tableEntity.columnCount
+      tableEntity.insertColumnAfter(columnIndex)
+    }
+  }
+
+  const handleDeleteRow = () => {
+    if(currentEditor && currentEditor.targetItem && currentEditor.selectionLayer.getEditorItemCount() == 1) {
+      const tableEntity = currentEditor.selectionLayer.getEditorItem(0) as TableEntity
+      const targetItemIndex = currentEditor.targetItemIndex
+      const rowIndex = Math.floor(targetItemIndex / tableEntity.columnCount)
+      tableEntity.deleteRow(rowIndex)
+    }
+  }
+
+
+  const handleDeleteColumn = () => {
+    if(currentEditor && currentEditor.targetItem && currentEditor.selectionLayer.getEditorItemCount() == 1) {
+      const tableEntity = currentEditor.selectionLayer.getEditorItem(0) as TableEntity
+      const targetItemIndex = currentEditor.targetItemIndex
+      const columnIndex = targetItemIndex % tableEntity.columnCount
+      tableEntity.deleteColumn(columnIndex)
+    }
   }
 
   const popupShapeItems: MenuProps['items'] = [
@@ -1182,23 +1268,23 @@ const Content: FC<ContentProps> = ({
   const tableToolbars = <FloatButton.Group style={{left: tableToolbarLeft, top: tableToolbarTop - 40 - (textToolbarVisible ? 40 : 0), height: 32, display: tableToolbarVisible ? 'block' : 'none'}}>                  
     <Space direction='horizontal' style={{backgroundColor: 'white', borderColor: 'silver', borderWidth: 1, borderStyle: 'solid', padding: 2}}>
       <Tooltip title={<FormattedMessage id='workspace.header.title.font-bold'/>}>
-        <Button type='text' size='small' icon={<InsertRowAboveOutlined/>}  onClick={handleBoldChanged} />
+        <Button type='text' size='small' icon={<InsertRowAboveOutlined/>}  onClick={handleInsertRowBefore} disabled={!tableEdittable}/>
         </Tooltip>
       <Tooltip title={<FormattedMessage id='workspace.header.title.font-italic'/>}>
-        <Button type='text' size='small' icon={<InsertRowBelowOutlined/>} onClick={handleItalicChanged} />
+        <Button type='text' size='small' icon={<InsertRowBelowOutlined/>} onClick={handleInsertRowAfter}  disabled={!tableEdittable}/>
         </Tooltip>
       <Tooltip title={<FormattedMessage id='workspace.header.title.font-underline'/>}>
-        <Button type='text' size='small' icon={<InsertRowLeftOutlined/>} onClick={handleUnderlineChanged} />
+        <Button type='text' size='small' icon={<InsertRowLeftOutlined/>} onClick={handleInsertColumnBefore}  disabled={!tableEdittable}/>
       </Tooltip>
       <Tooltip title={<FormattedMessage id='workspace.header.title.font-underline'/>}>
-        <Button type='text' size='small' icon={<InsertRowRightOutlined/>} onClick={handleUnderlineChanged} />
+        <Button type='text' size='small' icon={<InsertRowRightOutlined/>} onClick={handleInsertColumnAfter}  disabled={!tableEdittable}/>
       </Tooltip>
       <Divider type='vertical' style={{ margin: 0 }} />
       <Tooltip title={<FormattedMessage id='workspace.header.title.text-left'/>}>
-        <Button type='text' size='small' icon={<DeleteRowOutlined/>} onClick={() => handleTextAlignmentChanged(Consts.TEXT_ALIGNMENT_LEFT)} />
+        <Button type='text' size='small' icon={<DeleteRowOutlined/>} onClick={() => handleDeleteRow()}  disabled={!tableEdittable}/>
       </Tooltip>
       <Tooltip title={<FormattedMessage id='workspace.header.title.text-center'/>}>
-        <Button type='text' size='small' icon={<DeleteColumnOutlined/>} onClick={() => handleTextAlignmentChanged(Consts.TEXT_ALIGNMENT_CENTER)} />
+        <Button type='text' size='small' icon={<DeleteColumnOutlined/>} onClick={() => handleDeleteColumn()}  disabled={!tableEdittable}/>
       </Tooltip>
     </Space>
   </FloatButton.Group>

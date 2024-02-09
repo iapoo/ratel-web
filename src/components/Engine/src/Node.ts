@@ -253,6 +253,21 @@ export abstract class Node {
       }
     }
 
+    public addNodeAt (node: Node, index: number): void {
+      if (this._nodes.indexOf(node) < 0) {
+        if(node.parent) {
+          node.parent.removeNode(node)
+        }
+        //this._nodes.push(node)
+        this._nodes.splice(index, 0, node)
+        node._parent = this
+        node.updateAlpha()
+        node.updateTransform()
+        node.updateVisible()
+        this.markDirty()
+      }
+    }
+
     public hasNode (node: Node): boolean {
       const index = this._nodes.indexOf(node)
       return index >= 0

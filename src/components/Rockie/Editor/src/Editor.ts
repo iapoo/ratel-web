@@ -80,6 +80,8 @@ export class Editor extends Painter {
   private _selectionResizedListeners = new Array<(e: EditorEvent) => void>(0)
   private _selectionResizingListeners = new Array<(e: EditorEvent) => void>(0)
   private _textEditStyleChangeListeners = new Array<(e: EditorEvent) => void>(0)
+  private _tableTextEditStartListeners = new Array<(e: EditorEvent) => void>(0)
+  private _tableTextEditEndListeners = new Array<(e: EditorEvent) => void>(0)
   private _startEditorItemInfos: EditorItemInfo[] = []
   private _origWidth: number
   private _origHeight: number
@@ -279,6 +281,52 @@ export class Editor extends Painter {
     return index >= 0
   }
 
+  public get tableTextEditStartListeners() {
+    return this._tableTextEditStartListeners
+  }
+
+  public onTableTextEditStart(callback: (e: EditorEvent) => void) {
+    const index = this._tableTextEditStartListeners.indexOf(callback)
+    if (index < 0) {
+      this._tableTextEditStartListeners.push(callback)
+    }
+  }  
+
+  public removeTableTextEditStart(callback: (e: EditorEvent) => void) {
+    const index = this._tableTextEditStartListeners.indexOf(callback)
+    if (index >= 0) {
+      this._tableTextEditStartListeners.splice(index, 1)
+    }
+  }
+  
+  public hasTableTextEditStart(callback: (e: EditorEvent) => void) {
+    const index = this._tableTextEditStartListeners.indexOf(callback)
+    return index >= 0
+  }
+
+  public get tableTextEditEndListeners() {
+    return this._tableTextEditEndListeners
+  }
+
+  public onTableTextEditEnd(callback: (e: EditorEvent) => void) {
+    const index = this._tableTextEditEndListeners.indexOf(callback)
+    if (index < 0) {
+      this._tableTextEditEndListeners.push(callback)
+    }
+  }  
+
+  public removeTableTextEditEnd(callback: (e: EditorEvent) => void) {
+    const index = this._tableTextEditEndListeners.indexOf(callback)
+    if (index >= 0) {
+      this._tableTextEditEndListeners.splice(index, 1)
+    }
+  }
+  
+  public hasTableTextEditEnd(callback: (e: EditorEvent) => void) {
+    const index = this._tableTextEditEndListeners.indexOf(callback)
+    return index >= 0
+  }
+
   public get selectionResizedListeners() {
     return this._selectionResizedListeners
   }
@@ -450,6 +498,10 @@ export class Editor extends Painter {
 
   public get targetItem(): EditorItem | undefined {
     return this._targetItem
+  }
+
+  public get targetItemIndex(): number {
+    return this._targetItemIndex
   }
 
   public get zoom (): number {
@@ -1527,6 +1579,20 @@ export class Editor extends Painter {
     })
   }
 
+  public triggerTableTextEditStart() {
+    this._tableTextEditStartListeners.forEach(callback => {
+      const event = new EditorEvent(this)
+      callback(event)
+    })
+  }
+
+  public triggerTableTextEditEnd() {
+    this._tableTextEditEndListeners.forEach(callback => {
+      const event = new EditorEvent(this)
+      callback(event)
+    })
+  }
+
   public triggerSelectionResized() {
     this._selectionResizedListeners.forEach(callback => {
       const event = new EditorEvent(this)
@@ -2027,9 +2093,11 @@ export class Editor extends Painter {
       const worldTransform = this._targetItem.shape.worldTransform
       this._tableActiveCellShape.transform = worldTransform
       this._tableActiveCellShape.boundary =  Rectangle.makeLTWH(0, 0, this._targetItem.width, this._targetItem.height)
+      this.triggerTableTextEditStart()
     } else {
       this._tableActiveCellShape.transform = new Matrix()
       this._tableActiveCellShape.boundary =  Rectangle.makeLTWH(0, 0, 0, 0)
+      this.triggerTableTextEditEnd()
     }
   }
 
