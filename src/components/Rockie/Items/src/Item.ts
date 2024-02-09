@@ -441,6 +441,18 @@ export abstract class Item implements EditorItem {
     }
   }
 
+  public addItemAt(item: EditorItem, index: number) {
+    const editorItem = item as Item
+    if (editorItem && this._items.indexOf(editorItem) < 0) {
+      if(editorItem.parent) {
+        editorItem.parent.removeItem(editorItem)
+      }
+      editorItem._parent = this
+      this._items.splice(index, 0, item)
+      this.shape.addNode(editorItem.shape)
+    }
+  }
+
   public removeItem (item: EditorItem) {
     const editorItem = item as Item
     const index = this._items.indexOf(item)
