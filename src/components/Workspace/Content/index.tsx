@@ -400,12 +400,12 @@ const Content: FC<ContentProps> = ({
 
   const handleTableTextEditStart = (e: EditorEvent) => {
     setTableEdittable(true)
-    console.log(`table edit  start check: ${tableEdittable}`)
+//    console.log(`table edit  start check: ${tableEdittable}`)
   }
 
   const handleTableTextEditEnd = (e: EditorEvent) => {
     setTableEdittable(false)
-    console.log(`table edit end check: ${tableEdittable}`)
+//    console.log(`table edit end check: ${tableEdittable}`)
   }
 
   const handleSelectionChange = (e: EditorEvent) => {
@@ -1137,6 +1137,8 @@ const Content: FC<ContentProps> = ({
       const targetItemIndex = currentEditor.targetItemIndex
       const rowIndex = Math.floor(targetItemIndex / tableEntity.columnCount)
       tableEntity.insertRowBefore(rowIndex)
+      currentEditor.invalideHolder()
+      currentEditor.triggerSelectionResized()
     }
   }
 
@@ -1147,6 +1149,8 @@ const Content: FC<ContentProps> = ({
       const targetItemIndex = currentEditor.targetItemIndex
       const rowIndex = Math.floor(targetItemIndex / tableEntity.columnCount)
       tableEntity.insertRowAfter(rowIndex)
+      currentEditor.invalideHolder()
+      currentEditor.triggerSelectionResized()
     }
   }
 
@@ -1157,6 +1161,8 @@ const Content: FC<ContentProps> = ({
       const targetItemIndex = currentEditor.targetItemIndex
       const columnIndex = targetItemIndex % tableEntity.columnCount
       tableEntity.insertColumnBefore(columnIndex)
+      currentEditor.invalideHolder()
+      currentEditor.triggerSelectionResized()
     }
   }
 
@@ -1167,6 +1173,8 @@ const Content: FC<ContentProps> = ({
       const targetItemIndex = currentEditor.targetItemIndex
       const columnIndex = targetItemIndex % tableEntity.columnCount
       tableEntity.insertColumnAfter(columnIndex)
+      currentEditor.invalideHolder()
+      currentEditor.triggerSelectionResized()
     }
   }
 
@@ -1175,7 +1183,9 @@ const Content: FC<ContentProps> = ({
       const tableEntity = currentEditor.selectionLayer.getEditorItem(0) as TableEntity
       const targetItemIndex = currentEditor.targetItemIndex
       const rowIndex = Math.floor(targetItemIndex / tableEntity.columnCount)
-      tableEntity.deleteRow(rowIndex)
+      tableEntity.deleteRow(rowIndex)      
+      currentEditor.invalideHolder()
+      currentEditor.triggerSelectionResized()
     }
   }
 
@@ -1186,6 +1196,8 @@ const Content: FC<ContentProps> = ({
       const targetItemIndex = currentEditor.targetItemIndex
       const columnIndex = targetItemIndex % tableEntity.columnCount
       tableEntity.deleteColumn(columnIndex)
+      currentEditor.invalideHolder()
+      currentEditor.triggerSelectionResized()
     }
   }
 
