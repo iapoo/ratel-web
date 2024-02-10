@@ -65,7 +65,9 @@ export abstract class Shape extends Node {
 
     public set boundary (boundary: Rectangle) {
       this._boundary = Rectangle.makeLTWH(boundary.left, boundary.top, boundary.width, boundary.height)
+      //this.position = new Point2(this._boundary.left, this._boundary.top)
       this.markDirty()
+      this.update()
     }
 
     public get width () {
