@@ -48,15 +48,22 @@ export class EditorHelper {
             selections = JSON.parse(data)
             //Need to use correct StyleInfo
             selections.forEach(selection => {
-                let count = selection.styles.length
-                for(let i = 0; i < count; i ++) {
-                    let oldStyleInfo = selection.styles[i]
-                    let styleInfo = new StyleInfo(oldStyleInfo.length, oldStyleInfo.typeFaceName, oldStyleInfo.size, oldStyleInfo.color, oldStyleInfo.bold, oldStyleInfo.italic, oldStyleInfo.underline)
-                    selection.styles[i] = styleInfo
-                }
+                EditorHelper.fixStyleInfo(selection)
             })
         }
         return selections
+    }
+
+    private static fixStyleInfo(editorItemInfo: EditorItemInfo) {
+        let count = editorItemInfo.styles.length
+        for(let i = 0; i < count; i ++) {
+            let oldStyleInfo = editorItemInfo.styles[i]
+            let styleInfo = new StyleInfo(oldStyleInfo.length, oldStyleInfo.typeFaceName, oldStyleInfo.size, oldStyleInfo.color, oldStyleInfo.bold, oldStyleInfo.italic, oldStyleInfo.underline)
+            editorItemInfo.styles[i] = styleInfo
+        }
+        editorItemInfo.items.forEach(child => {
+            EditorHelper.fixStyleInfo(child)
+        })
     }
 
     public static pasteSelections(selections: EditorItemInfo[], editor: Editor, pasteFromSystem: boolean, pasteLocation: Point2) {

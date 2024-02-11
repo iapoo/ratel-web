@@ -15,10 +15,10 @@ export class TableEntity extends ContainerEntity {
   private _rowCount: number
   private _columnCount: number
 
-  public constructor(left: number, top: number, width: number, height: number) {
+  public constructor(left: number, top: number, width: number, height: number, rowCount = 3, columnCount = 3) {
     super(left, top, width, height, { shapeType: TableEntity.TABLE_TYPE_TABLE, })
-    this._rowCount = 3
-    this._columnCount = 3
+    this._rowCount = rowCount
+    this._columnCount = columnCount
     this.type = TableEntity.TABLE_TYPE_TABLE
     this.refreshTable()
   }
@@ -27,18 +27,8 @@ export class TableEntity extends ContainerEntity {
     return this._rowCount
   }
 
-  public set rowCount(value: number) {
-    this._rowCount = value
-    this.refreshTable()
-  }
-
   public get columnCount() {
     return this._columnCount
-  }
-
-  public set columnCount(value: number) {
-    this._columnCount = value
-    this.refreshTable()
   }
 
   public getAllTypes(): Type[] {
