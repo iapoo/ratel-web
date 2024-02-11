@@ -9,6 +9,7 @@ import { CommonUtils } from "../../Utils"
 import { ShapeInfo } from "../../Items/src/ShapeInfo"
 import { Style, StyleInfo } from "../../Shapes/src/EntityUtils"
 import { ConnectorType } from "../../Shapes"
+import { TableInfo } from "../../Items/src/TableInfo"
 
 export class OperationHelper {
   public static loadItem(itemInfo: EditorItemInfo): EditorItem {
@@ -100,7 +101,8 @@ export class OperationHelper {
   }
 
   public static loadTableEntity(itemInfo: EditorItemInfo): TableEntity {
-    const tableEntity = new TableEntity(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height)
+    const tableInfo = itemInfo as TableInfo
+    const tableEntity = new TableEntity(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, tableInfo.rowCount, tableInfo.columnCount)
 
     return tableEntity
   }
@@ -115,6 +117,8 @@ export class OperationHelper {
         editorItemInfo = this.saveConnector(editorItem as Connector)
         break;
       case Categories.TABLE:
+        editorItemInfo = this.saveTable(editorItem as TableEntity)
+        break;
       case Categories.SHAPE:
       default:
         editorItemInfo = this.saveShape(editorItem as ShapeEntity)
@@ -142,13 +146,19 @@ export class OperationHelper {
     return shapeData
   }
 
+  public static  saveTable(tableEntity: TableEntity) : EditorItemInfo {
+    let styleInfos: StyleInfo[] = Style.makeStyleInfos(tableEntity.shape.styles)
+    let tableInfo = new TableInfo(tableEntity.left, tableEntity.top, tableEntity.width, tableEntity.height, tableEntity.rowCount, tableEntity.columnCount, tableEntity.rotation.radius, styleInfos)
+
+    return tableInfo
+  }
+
   public static  saveLine(lineEntity: LineEntity) : EditorItemInfo {
     let styleInfos: StyleInfo[] = Style.makeStyleInfos(lineEntity.shape.styles)
     let lineData = new LineInfo(lineEntity.start.x, lineEntity.start.y, lineEntity.end.x, lineEntity.end.y, lineEntity.text, lineEntity.rotation.radius, styleInfos)
 
     return lineData
   }
-
 
   public static  saveConnector(connector: Connector) : EditorItemInfo {
     let styleInfos: StyleInfo[] = Style.makeStyleInfos(connector.shape.styles)
