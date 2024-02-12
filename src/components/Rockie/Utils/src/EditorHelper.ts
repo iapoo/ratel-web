@@ -1,6 +1,6 @@
-import { Point2 } from "@/components/Engine";
+import { Point2, Rectangle } from "@/components/Engine";
 import { Editor } from "../../Editor";
-import { Categories, Connector, ConnectorInfo, EditorItem, EditorItemInfo, Entity } from "../../Items";
+import { Categories, Connector, ConnectorInfo, EditorItem, EditorItemInfo, Entity, Item, ShapeEntity } from "../../Items";
 import { OperationHelper } from "../../Operations";
 import { SystemUtils } from "@/components/Workspace/Utils";
 import { Style, StyleInfo } from "../../Shapes/src/EntityUtils";
@@ -77,9 +77,15 @@ export class EditorHelper {
             //refresh connections of shapes & Setup new location
             let editorItems: Array<EditorItem> = []
             selections.forEach(selection => {
-                selection.left = selection.left + offsetX
-                selection.top = selection.top + offsetY
                 let editorItem = OperationHelper.loadItem(selection)
+                if(editorItem instanceof Connector &&  editorItem.start && editorItem.end) {
+                    const start = editorItem.start
+                    const end = editorItem.end
+                    editorItem.start = new Point2(start.x + offsetX, start.y + offsetY)
+                    editorItem.end = new Point2(end.x + offsetX, end.y + offsetY)
+                } else if(editorItem instanceof Item) {
+                    editorItem.boundary = Rectangle.makeLTWH(editorItem.left + offsetX, editorItem.top + offsetY, editorItem.width, editorItem.height)
+                }
                 editorItems.push(editorItem)
             })
             //regenerate item id & load
@@ -101,12 +107,12 @@ export class EditorHelper {
             editorItems.forEach(editorItem => {
                 if (connectorInfo.id == editorItem.id) {
                     connector = editorItem as Connector
-                    this.refreshConnector(connectorInfo, connector, editorItems)
+                    EditorHelper.refreshConnector(connectorInfo, connector, editorItems)
                 }
             })
         }
         selection.items.forEach(item => {
-            this.refreshSelections(item, editorItems)
+            EditorHelper.refreshSelections(item, editorItems)
         })
     }
 
@@ -124,7 +130,7 @@ export class EditorHelper {
                 entity.addTargetConnector(connector)
             }
             if (editorItem.items.length > 0) {
-                this.refreshConnector(connectorInfo, connector, editorItem.items)
+                EditorHelper.refreshConnector(connectorInfo, connector, editorItem.items)
             }
         })
     }
