@@ -5,8 +5,9 @@
 import { Color, Colors, TextVerticalAlignment, Point2, StrokeDashStyle, TextAlignment } from "@/components/Engine";
 import { Consts } from "./Consts";
 import { ConnectorArrowDisplayType, ConnectorType } from "@/components/Rockie/Shapes";
-import { ConnectorArrowTypeInfo } from "@/components/Rockie/Shapes/src/ConnectorShape";
+import { ConnectorArrowDisplayMode, ConnectorArrowTypeInfo, ConnectorDirection } from "@/components/Rockie/Shapes/src/ConnectorShape";
 import { ConnectorArrowType, ConnectorArrowTypes } from "@/components/Rockie/Items/src/Connector";
+import { ConnectorArrowInfo } from "@/components/Rockie/Items";
 
 export class SystemUtils {
 
@@ -69,6 +70,33 @@ export class SystemUtils {
             }
         }
         return new Point2()
+    }
+
+
+    public static generatePointsString(points: Point2[]): string {
+        let result = ''
+        const count = points.length
+        for(let i = 0; i < count; i ++) {
+            const point = points[i]
+            result += point.x + ',' + point.y + ';'
+        }
+        return result
+    }
+
+    public static parsePointsString(points: string): Point2[] {
+        let result = []
+        if(points && points.length > 3) {
+            const pointStrs = points.split(';')
+            if(pointStrs.length > 0) {
+                pointStrs.forEach(pointStr => {
+                    const point = SystemUtils.parsePointString(pointStr)
+                    if(point) {
+                        result.push(point)
+                    }
+                })
+            }
+        }
+        return []
     }
 
     public static generateColorString(color: Color): string {
@@ -302,6 +330,7 @@ export class SystemUtils {
             displayMode: connectorArrowType.displayMode  
         }
     }
+
     public static debugPoints(points: Point2[]) {
         let count = points.length
         let output = `Array data: length = ${count}, data = `
@@ -311,6 +340,158 @@ export class SystemUtils {
         }
         console.log(output)
     }
+
+    public static generateConnectorArrow(arrow: ConnectorArrowType): ConnectorArrowInfo {
+        return new ConnectorArrowInfo(
+            arrow.name,
+            arrow.description,
+            SystemUtils.generateConnectorArrowDisplayType(arrow.type),
+            arrow.height,
+            arrow.width,
+            arrow.modifier,
+            arrow.count,
+            arrow.outline,
+            arrow.close,
+            SystemUtils.generateConnectorArrowDisplayMode(arrow.displayMode)
+        )
+    }
+
+
+    public static parseConnectorArrow(arrowInfo: ConnectorArrowInfo): ConnectorArrowType {
+        return {
+            name: arrowInfo.name,
+            description: arrowInfo.description,
+            type: SystemUtils.parseConnectorArrowDisplayType(arrowInfo.type),
+            height: arrowInfo.height,
+            width: arrowInfo.width,
+            modifier: arrowInfo.modifier,
+            count: arrowInfo.count,
+            outline: arrowInfo.outline,
+            close: arrowInfo.close,
+            displayMode: SystemUtils.parseConnectorArrowDisplayMode(arrowInfo.displayMode)
+        }
+    }
+
+    public static generateConnectorArrowDisplayType(displayType: ConnectorArrowDisplayType): string {
+        switch(displayType) {
+            case ConnectorArrowDisplayType.Triangle:
+                return Consts.CONNECTOR_ARROW_DISPLAY_TYPE_TRIANGLE
+            case ConnectorArrowDisplayType.Diamond:
+                return Consts.CONNECTOR_ARROW_DISPLAY_TYPE_DIAMOND
+            case ConnectorArrowDisplayType.Ellipse:
+                return Consts.CONNECTOR_ARROW_DISPLAY_TYPE_ELLIPSE
+            case ConnectorArrowDisplayType.LeftParenthesis:
+                return Consts.CONNECTOR_ARROW_DISPLAY_TYPE_LEFT_PARENTHESIS
+            case ConnectorArrowDisplayType.RightParenthesis:
+                return Consts.CONNECTOR_ARROW_DISPLAY_TYPE_RIGHT_PARENTHESIS
+            case ConnectorArrowDisplayType.Orthogonal:
+                return Consts.CONNECTOR_ARROW_DISPLAY_TYPE_ORTHOGONAL
+            case ConnectorArrowDisplayType.ForewardSlash:
+                return Consts.CONNECTOR_ARROW_DISPLAY_TYPE_FOREWARD_SLASH
+            case ConnectorArrowDisplayType.Backslashe:
+                return Consts.CONNECTOR_ARROW_DISPLAY_TYPE_BACKSLASHE
+            case ConnectorArrowDisplayType.VerticalLine:
+                return Consts.CONNECTOR_ARROW_DISPLAY_TYPE_VERTICAL_LINE
+            case ConnectorArrowDisplayType.LeftAngleBracket:
+                return Consts.CONNECTOR_ARROW_DISPLAY_TYPE_LEFT_ANGLE_BRACKET
+            case ConnectorArrowDisplayType.VerticaleLineAndLeftAngleBacket:
+                return Consts.CONNECTOR_ARROW_DISPLAY_TYPE_VERTICALE_LINE_LEFT_ANGLE_BACKET
+            case ConnectorArrowDisplayType.CircleAndLeftBacket:
+                return Consts.CONNECTOR_ARROW_DISPLAY_TYPE_CIRCLE_AND_LEFT_BACKET
+            case ConnectorArrowDisplayType.CircleAndVerticalLine:
+                return Consts.CONNECTOR_ARROW_DISPLAY_TYPE_CIRCLE_AND_VERTICAL_LINE
+            case ConnectorArrowDisplayType.None:
+            default:
+                return Consts.CONNECTOR_ARROW_DISPLAY_TYPE_NONE
+        }
+    }
+
+    public static parseConnectorArrowDisplayType(displayType: string): ConnectorArrowDisplayType {
+        switch(displayType) {
+            case Consts.CONNECTOR_ARROW_DISPLAY_TYPE_TRIANGLE:
+                return ConnectorArrowDisplayType.Triangle
+            case Consts.CONNECTOR_ARROW_DISPLAY_TYPE_DIAMOND:
+                return ConnectorArrowDisplayType.Diamond
+            case Consts.CONNECTOR_ARROW_DISPLAY_TYPE_ELLIPSE:
+                return ConnectorArrowDisplayType.Ellipse
+            case Consts.CONNECTOR_ARROW_DISPLAY_TYPE_LEFT_PARENTHESIS:
+                return ConnectorArrowDisplayType.LeftParenthesis
+            case Consts.CONNECTOR_ARROW_DISPLAY_TYPE_RIGHT_PARENTHESIS:
+                return ConnectorArrowDisplayType.RightParenthesis
+            case Consts.CONNECTOR_ARROW_DISPLAY_TYPE_ORTHOGONAL:
+                return ConnectorArrowDisplayType.Orthogonal
+            case Consts.CONNECTOR_ARROW_DISPLAY_TYPE_FOREWARD_SLASH:
+                return ConnectorArrowDisplayType.ForewardSlash
+            case Consts.CONNECTOR_ARROW_DISPLAY_TYPE_BACKSLASHE:
+                return ConnectorArrowDisplayType.Backslashe
+            case Consts.CONNECTOR_ARROW_DISPLAY_TYPE_VERTICAL_LINE:
+                return ConnectorArrowDisplayType.VerticalLine
+            case Consts.CONNECTOR_ARROW_DISPLAY_TYPE_LEFT_ANGLE_BRACKET:
+                return ConnectorArrowDisplayType.LeftAngleBracket
+            case Consts.CONNECTOR_ARROW_DISPLAY_TYPE_VERTICALE_LINE_LEFT_ANGLE_BACKET:
+                return ConnectorArrowDisplayType.VerticaleLineAndLeftAngleBacket
+            case Consts.CONNECTOR_ARROW_DISPLAY_TYPE_CIRCLE_AND_LEFT_BACKET:
+                return ConnectorArrowDisplayType.CircleAndLeftBacket
+            case Consts.CONNECTOR_ARROW_DISPLAY_TYPE_CIRCLE_AND_VERTICAL_LINE:
+                return ConnectorArrowDisplayType.CircleAndVerticalLine
+            case Consts.CONNECTOR_ARROW_DISPLAY_TYPE_NONE:
+            default:
+                return ConnectorArrowDisplayType.None
+        }
+    }
+
+    public static generateConnectorArrowDisplayMode(displayMode: ConnectorArrowDisplayMode): string {
+        switch(displayMode) {
+            case ConnectorArrowDisplayMode.Top:
+                return Consts.CONNECTOR_ARROW_DISPLAY_MODE_TOP
+            case ConnectorArrowDisplayMode.Bottom:
+                return Consts.CONNECTOR_ARROW_DISPLAY_MODE_BOTTOM
+            case ConnectorArrowDisplayMode.Full:
+            default:
+                return Consts.CONNECTOR_ARROW_DISPLAY_MODE_FULL
+        }
+    }
+
+    public static parseConnectorArrowDisplayMode(displayMode: string): ConnectorArrowDisplayMode {
+        switch(displayMode) {
+            case Consts.CONNECTOR_ARROW_DISPLAY_MODE_TOP:
+                return ConnectorArrowDisplayMode.Top
+            case Consts.CONNECTOR_ARROW_DISPLAY_MODE_BOTTOM:
+                return ConnectorArrowDisplayMode.Bottom
+            case Consts.CONNECTOR_ARROW_DISPLAY_MODE_FULL:
+            default:
+                return ConnectorArrowDisplayMode.Full
+        }  
+    }
+
+    public static generateConnectorDirection(direction: ConnectorDirection): string  {
+        switch(direction) {
+            case ConnectorDirection.Top:
+                return Consts.CONNECTOR_DIRECTION_TOP
+            case ConnectorDirection.Right:
+                return Consts.CONNECTOR_DIRECTION_RIGHT
+            case ConnectorDirection.Bottom:
+                return Consts.CONNECTOR_DIRECTION_BOTTOM
+            case ConnectorDirection.Left:
+            default:
+                return Consts.CONNECTOR_DIRECTION_LEFT
+        }
+    }
+
+    public static parseConnectorDirection(direction: string): ConnectorDirection {
+        switch(direction) {
+            case Consts.CONNECTOR_DIRECTION_TOP:
+                return ConnectorDirection.Top
+            case Consts.CONNECTOR_DIRECTION_RIGHT:
+                return ConnectorDirection.Right
+            case Consts.CONNECTOR_DIRECTION_BOTTOM:
+                return ConnectorDirection.Bottom
+            case Consts.CONNECTOR_DIRECTION_LEFT:
+            default:
+                return ConnectorDirection.Left
+        }
+    }
+
 }
 
 

@@ -1,5 +1,7 @@
+import { ConnectorArrowTypeInfo } from "../../Shapes/src/ConnectorShape"
 import { StyleInfo } from "../../Shapes/src/EntityUtils"
 import { Connector } from "./Connector"
+import { ConnectorArrowInfo } from "./ConnectorArrowInfo"
 import { EditorItemInfo } from "./EditorItemInfo"
 import { Categories } from "./Item"
 
@@ -18,6 +20,20 @@ export class ConnectorInfo extends EditorItemInfo {
     public target: string = ''
 
     public connectorType: string | null = null
+
+    public startArrow: ConnectorArrowInfo | null = null
+
+    public endArrow: ConnectorArrowInfo | null = null
+
+    public curveStartModifier: string = ''
+
+    public curveEndModifier: string = ''
+
+    public startDirection: string = ''
+
+    public endDirection: string = ''
+
+    public orthogonalPoints: string = ''
 
     public constructor(startX: number, startY: number, endX: number, endY: number, text: string = '', rotation: number = 0, styles: StyleInfo[] = []){
         super(Connector.CONNECTOR_TYPE_CONNECTOR, Categories.CONNECTOR, Math.min(startX, endX), Math.min(startY, endY), Math.abs(startX - endX), Math.abs(startY - endY), text, rotation, styles)
