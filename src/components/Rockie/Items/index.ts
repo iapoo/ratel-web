@@ -1,6 +1,7 @@
 export { CellEntity } from './src/CellEntity'
 export { Connector } from './src/Connector'
 export { ConnectorInfo, } from './src/ConnectorInfo'
+export { ConnectorArrowInfo, } from  './src/ConnectorArrowInfo'
 export { Entity } from './src/Entity'
 export { EditorItem } from './src/EditorItem'
 export { EditorItemInfo, } from './src/EditorItemInfo'

@@ -1,7 +1,7 @@
 /* eslint-disable max-params */
 
 import { SystemUtils } from "@/components/Workspace/Utils"
-import { Categories, Connector, EditorItem, EditorItemInfo, Entity, Item, LineEntity, ShapeEntity, TableEntity } from "../../Items"
+import { Categories, CellEntity, Connector, ConnectorArrowInfo, EditorItem, EditorItemInfo, Entity, Item, LineEntity, ShapeEntity, TableEntity } from "../../Items"
 import { ConnectorInfo } from "../../Items/src/ConnectorInfo"
 import { LineInfo } from "../../Items/src/LineInfo"
 import { Rotation } from "@/components/Engine"
@@ -30,10 +30,12 @@ export class OperationHelper {
         break
     }
     editorItem.shape.styles = StyleInfo.makeStyles(itemInfo.styles)
-    itemInfo.items.forEach(childItemInfo => {
-      let childItem = OperationHelper.loadItem(childItemInfo)
-      editorItem.addItem(childItem)
-    })
+    if(itemInfo.category != Categories.TABLE) {
+      itemInfo.items.forEach(childItemInfo => {
+        let childItem = OperationHelper.loadItem(childItemInfo)
+        editorItem.addItem(childItem)
+      })
+    }
     return editorItem
   }
 
@@ -94,6 +96,13 @@ export class OperationHelper {
       connector.targetJoint = SystemUtils.parsePointString(connectorInfo.targetJoint)
     }
     connector.id = connectorInfo.id
+    connector.startArrow = SystemUtils.parseConnectorArrow(connectorInfo.startArrow!)
+    connector.endArrow = SystemUtils.parseConnectorArrow(connectorInfo.endArrow!)
+    connector.curveStartModifier = SystemUtils.parsePointString(connectorInfo.curveStartModifier)
+    connector.curveEndModifier = SystemUtils.parsePointString(connectorInfo.curveEndModifier)
+    connector.startDirection = SystemUtils.parseConnectorDirection(connectorInfo.startDirection)
+    connector.endDirection = SystemUtils.parseConnectorDirection(connectorInfo.endDirection)
+    connector.orthogonalPoints = SystemUtils.parsePointsString(connectorInfo.orthogonalPoints)
     return connector
   }
 
@@ -119,10 +128,29 @@ export class OperationHelper {
     if (tableInfo.rotation) {
       tableEntity.rotation = new Rotation(tableInfo.rotation, tableInfo.width / 2, tableInfo.height / 2)
     }
-
+    tableEntity.removeAllItems()
+    itemInfo.items.forEach(childItemInfo => {
+      let childItem = OperationHelper.loadTableCellEntity(childItemInfo)
+      tableEntity.addItem(childItem)
+    })
     return tableEntity
   }
   
+  public static loadTableCellEntity(itemInfo: EditorItemInfo): CellEntity {
+    let shapeInfo = itemInfo as ShapeInfo
+    const shapeEntity = new CellEntity(shapeInfo.left, shapeInfo.top, shapeInfo.width, shapeInfo.height, {shapeType: shapeInfo.type})
+    shapeEntity.type = shapeInfo.type
+    shapeEntity.text = shapeInfo.text
+    shapeEntity.id = shapeInfo.id
+    if (shapeInfo.rotation) {
+      shapeEntity.rotation = new Rotation(shapeInfo.rotation, shapeEntity.width / 2, shapeEntity.height / 2)
+    }
+    shapeEntity.shape.modifier = SystemUtils.parsePointString(shapeInfo.modifier)
+    shapeEntity.shape.adapter = SystemUtils.parsePointString(shapeInfo.adapter)
+    shapeEntity.shape.styles = StyleInfo.makeStyles(shapeInfo.styles)
+    return shapeEntity
+  }
+
   public static saveEditorItem(editorItem: EditorItem): EditorItemInfo {
     let editorItemInfo: EditorItemInfo
     switch (editorItem.category) {
@@ -193,6 +221,13 @@ export class OperationHelper {
     }
     
     connectorInfo.connectorType = connector.connectorType ?  CommonUtils.parseConnectorType(connector.connectorType) : null
+    connectorInfo.startArrow = SystemUtils.generateConnectorArrow(connector.startArrow)
+    connectorInfo.endArrow = SystemUtils.generateConnectorArrow(connector.endArrow)
+    connectorInfo.curveStartModifier = SystemUtils.generatePointString(connector.curveStartModifier)
+    connectorInfo.curveEndModifier = SystemUtils.generatePointString(connector.curveEndModifier)
+    connectorInfo.startDirection = SystemUtils.generateConnectorDirection(connector.startDirection)
+    connectorInfo.endDirection = SystemUtils.generateConnectorDirection(connector.endDirection)
+    connectorInfo.orthogonalPoints = SystemUtils.generatePointsString(connector.orthogonalPoints)
 
     return connectorInfo
   }

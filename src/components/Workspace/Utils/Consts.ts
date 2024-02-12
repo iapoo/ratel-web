@@ -106,6 +106,30 @@ export class Consts {
     public static CONNECTOR_LINE_MODE_SIGNLE = 'single'
     public static CONNECTOR_LINE_MODE_DOUBLE = 'double'
 
+    public static CONNECTOR_ARROW_DISPLAY_MODE_TOP = 'top'
+    public static CONNECTOR_ARROW_DISPLAY_MODE_BOTTOM = 'bottom'
+    public static CONNECTOR_ARROW_DISPLAY_MODE_FULL = 'full'
+
+    public static CONNECTOR_ARROW_DISPLAY_TYPE_NONE = 'none'
+    public static CONNECTOR_ARROW_DISPLAY_TYPE_TRIANGLE = 'triangle'
+    public static CONNECTOR_ARROW_DISPLAY_TYPE_DIAMOND = 'diamond'
+    public static CONNECTOR_ARROW_DISPLAY_TYPE_ELLIPSE = 'ellipse'
+    public static CONNECTOR_ARROW_DISPLAY_TYPE_LEFT_PARENTHESIS = 'left-parenthesis'
+    public static CONNECTOR_ARROW_DISPLAY_TYPE_RIGHT_PARENTHESIS = 'right-parenthesis'
+    public static CONNECTOR_ARROW_DISPLAY_TYPE_ORTHOGONAL = 'orthogonal'
+    public static CONNECTOR_ARROW_DISPLAY_TYPE_FOREWARD_SLASH = 'foreward-slash'
+    public static CONNECTOR_ARROW_DISPLAY_TYPE_BACKSLASHE = 'backslashe'
+    public static CONNECTOR_ARROW_DISPLAY_TYPE_VERTICAL_LINE = 'vertical-line'
+    public static CONNECTOR_ARROW_DISPLAY_TYPE_LEFT_ANGLE_BRACKET = 'left=angle-bracket'
+    public static CONNECTOR_ARROW_DISPLAY_TYPE_VERTICALE_LINE_LEFT_ANGLE_BACKET = 'verticale-line-and-left-angle-backet'
+    public static CONNECTOR_ARROW_DISPLAY_TYPE_CIRCLE_AND_VERTICAL_LINE = 'circle-and-vertical-line'
+    public static CONNECTOR_ARROW_DISPLAY_TYPE_CIRCLE_AND_LEFT_BACKET = 'circle-and-left-backet'
+
+    public static CONNECTOR_DIRECTION_LEFT = 'left'
+    public static CONNECTOR_DIRECTION_TOP = 'top'
+    public static CONNECTOR_DIRECTION_RIGHT = 'right'
+    public static CONNECTOR_DIRECTION_BOTTOM = 'bottom'
+
 }
 
 export const StrokeDashStyles =  [
