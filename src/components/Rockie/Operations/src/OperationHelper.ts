@@ -81,6 +81,18 @@ export class OperationHelper {
     let end = SystemUtils.parsePointString(connectorInfo.end)
     let connector = new Connector(start, end)
     connector.connectorType = connectorInfo.connectorType ? CommonUtils.parseConnectorTypeString(connectorInfo.connectorType) : ConnectorType.Orthogonal
+    if(connectorInfo.source) {
+      //connector.source = connectorInfo.source
+    }
+    if(connectorInfo.target) {
+
+    }
+    if(connectorInfo.sourceJoint) {
+      connector.sourceJoint = SystemUtils.parsePointString(connectorInfo.sourceJoint)
+    }
+    if(connectorInfo.targetJoint) {
+      connector.targetJoint = SystemUtils.parsePointString(connectorInfo.targetJoint)
+    }
     connector.id = connectorInfo.id
     return connector
   }
@@ -103,6 +115,10 @@ export class OperationHelper {
   public static loadTableEntity(itemInfo: EditorItemInfo): TableEntity {
     const tableInfo = itemInfo as TableInfo
     const tableEntity = new TableEntity(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, tableInfo.rowCount, tableInfo.columnCount)
+    tableEntity.id = tableInfo.id
+    if (tableInfo.rotation) {
+      tableEntity.rotation = new Rotation(tableInfo.rotation, tableInfo.width / 2, tableInfo.height / 2)
+    }
 
     return tableEntity
   }
@@ -162,21 +178,22 @@ export class OperationHelper {
 
   public static  saveConnector(connector: Connector) : EditorItemInfo {
     let styleInfos: StyleInfo[] = Style.makeStyleInfos(connector.shape.styles)
-    let connectorData = new ConnectorInfo(connector.start.x, connector.start.y, connector.end.x, connector.end.y, connector.text, connector.rotation.radius, styleInfos)
+    let connectorInfo = new ConnectorInfo(connector.start.x, connector.start.y, connector.end.x, connector.end.y, connector.text, connector.rotation.radius, styleInfos)
     if(connector.source) {
-      connectorData.source = connector.source.id
+      connectorInfo.source = connector.source.id
     }
     if(connector.target) {
-      connectorData.target = connector.target.id
+      connectorInfo.target = connector.target.id
     }
     if(connector.sourceJoint) {
-      //connectorData.s
+      connectorInfo.sourceJoint = SystemUtils.generatePointString(connector.sourceJoint)
     }
     if(connector.targetJoint) {
-
+        connectorInfo.targetJoint = SystemUtils.generatePointString(connector.targetJoint)
     }
-    connectorData.connectorType = connector.connectorType ?  CommonUtils.parseConnectorType(connector.connectorType) : null
+    
+    connectorInfo.connectorType = connector.connectorType ?  CommonUtils.parseConnectorType(connector.connectorType) : null
 
-    return connectorData
+    return connectorInfo
   }
 }

@@ -934,7 +934,7 @@ const Content: FC<ContentProps> = ({
         let item = Utils.currentEditor.selectionLayer.getEditorItem(0) as Item
         if(item instanceof TableEntity && Utils.currentEditor.targetItem) {
           Utils.currentEditor.targetItem.shape.insertRichText(data)
-        } else {
+        } else if(item instanceof ShapeEntity ){
           item.shape.insertRichText(data)
         }
       } else {
