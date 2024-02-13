@@ -2004,6 +2004,7 @@ export class Editor extends Painter {
       if (this._targetItem) {
         this._targetItem.shape.focused = false
       }
+      this._action = undefined
       this._target = undefined
       this._targetTime = 0
       this._targetColumnResizing = false
