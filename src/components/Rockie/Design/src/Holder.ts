@@ -393,6 +393,9 @@ export class Holder extends Control {
         const orthogonalDivideAnchor1 = new OrthogonalDivideAnchor(this._editor, this, i, true)
         const orthogonalDivideAnchor2 = new OrthogonalDivideAnchor(this._editor, this, i, false)
         const orthogonalMovementAnchor = new OrthogonalMovementAnchor(this._editor, this, i)
+        orthogonalDivideAnchor1.scale = new Scale(1 / this.editor.zoom, 1 / this.editor.zoom)
+        orthogonalDivideAnchor2.scale = new Scale(1 / this.editor.zoom, 1 / this.editor.zoom)
+        orthogonalMovementAnchor.scale = new Scale(1 / this.editor.zoom, 1 / this.editor.zoom)
         orthogonalMovementAnchor.target = this._target
         orthogonalMovementAnchor.left = (orthogonalPoint.x + nextOrthogonalPoint.x) / 2 - Holder.ANCHOR_RADIUS
         orthogonalMovementAnchor.top = (orthogonalPoint.y + nextOrthogonalPoint.y) / 2 - Holder.ANCHOR_RADIUS
