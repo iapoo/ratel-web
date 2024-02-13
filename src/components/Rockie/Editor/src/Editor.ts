@@ -2034,8 +2034,12 @@ export class Editor extends Painter {
         const startY = Number(Math.round((editorItem.start.y + e.y / this._zoom - this._startPointY / this._zoom) / 1))
         const endX = Number(Math.round((editorItem.end.x + e.x / this._zoom - this._startPointX / this._zoom) / 1))
         const endY = Number(Math.round((editorItem.end.y + e.y / this._zoom - this._startPointY / this._zoom) / 1))
-        editorItem.start = new Point2(startX, startY)
-        editorItem.end = new Point2(endX, endY)
+        if(!editorItem.source) {
+          editorItem.start = new Point2(startX, startY)
+        }
+        if(!editorItem.target) {
+          editorItem.end = new Point2(endX, endY)
+        }
         //console.log(`startx = ${startX} start.y=${startY} end.x = ${endX} end.y = ${endY}`)
       } else if (editorItem instanceof Entity) {
       }
