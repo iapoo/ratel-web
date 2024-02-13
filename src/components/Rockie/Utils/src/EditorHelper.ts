@@ -93,10 +93,14 @@ export class EditorHelper {
                 EditorHelper.refreshSelections(selection, editorItems)
             })
             //regenerate item id & load
+            //Make them selected
+            editor.selectionLayer.removeAllEditorItems()
             editorItems.forEach(editorItem => {
                 EditorHelper.refreshEditorItem(editorItem)
                 editor.contentLayer.addEditorItem(editorItem)
+                editor.selectionLayer.addEditorItem(editorItem)
             })
+            
         }
     }
 
