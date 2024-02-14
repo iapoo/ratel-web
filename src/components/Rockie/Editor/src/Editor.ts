@@ -785,6 +785,12 @@ export class Editor extends Painter {
           this._targetColumnResizing = false
           this._targetRowResizing = false
           this._startEditorItemInfos.length = 0
+          if (this._targetItem) {
+            this._targetItem.shape.focused = false
+          }
+          this._targetItem = undefined
+          this._targetItemIndex = 0
+
           let editorItemInfo = OperationHelper.saveEditorItem(clickedEditorItem)
           this._startEditorItemInfos.push(editorItemInfo)
           this._inMoving = true

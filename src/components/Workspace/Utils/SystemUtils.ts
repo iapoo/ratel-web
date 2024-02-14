@@ -84,7 +84,7 @@ export class SystemUtils {
     }
 
     public static parsePointsString(points: string): Point2[] {
-        let result = []
+        let result: Point2[] = []
         if(points && points.length > 3) {
             const pointStrs = points.split(';')
             if(pointStrs.length > 0) {
@@ -96,7 +96,7 @@ export class SystemUtils {
                 })
             }
         }
-        return []
+        return result
     }
 
     public static generateColorString(color: Color): string {

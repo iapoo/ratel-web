@@ -441,8 +441,8 @@ const Content: FC<ContentProps> = ({
       let item = e.source.selectionLayer.getEditorItem(0) as Item
       let container = document.getElementById('editor-container')
       let postion = getElementAbsolutePosition(container)
-      let left = item.left
-      let top = item.top
+      let left = item.left * Utils.currentEditor.zoom
+      let top = item.top * Utils.currentEditor.zoom
       if(item instanceof TableEntity) {
         setTableToolbarLeft(left + postion.left)
         setTableToolbarTop(top + postion.top)
@@ -488,8 +488,8 @@ const Content: FC<ContentProps> = ({
       let item = e.source.selectionLayer.getEditorItem(0) as Item
       let container = document.getElementById('editor-container')
       let postion = getElementAbsolutePosition(container)
-      let left = item.left
-      let top = item.top
+      let left = item.left * Utils.currentEditor.zoom
+      let top = item.top * Utils.currentEditor.zoom
       setTextToolbarLeft(left + postion.left)
       setTextToolbarTop(top + postion.top)
       setTextToolbarVisible(true)
