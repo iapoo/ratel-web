@@ -2025,15 +2025,17 @@ export class Editor extends Painter {
       const top = editorItem.top
       const sourceConnectorCount = editorItem.getSourceConnectorCount()
       const targetConnectorCount = editorItem.getTargetConnectorCount()
-      // console.log('left=' + (left + e.x - this._startPointX) + ', top = ' + (top + e.y - this._startPointY) + ', width = ' + editorItem.width + ', height = ' + editorItem.height)
-      const ex = Number(Math.round((left + e.x / this._zoom - this._startPointX / this._zoom) / 1))
-      const ey = Number(Math.round((top + e.y / this._zoom - this._startPointY / this._zoom) / 1))
+      //const ex = Number(Math.round((left + e.x / this._zoom - this._startPointX / this._zoom) / 1))
+      //const ey = Number(Math.round((top + e.y / this._zoom - this._startPointY / this._zoom) / 1))
+      const ex = left + e.x / this._zoom - this._startPointX / this._zoom
+      const ey = top + e.y / this._zoom - this._startPointY / this._zoom
+      //console.log(`startx=${this._startPointX} starty=${this._startPointY} e.x=${e.x} e.y = ${e.y} ex = ${ex} ey=${ey} left=` + (left + e.x - this._startPointX) + ', top = ' + (top + e.y - this._startPointY) + ', width = ' + editorItem.width + ', height = ' + editorItem.height)
       editorItem.boundary = Rectangle.makeLTWH(ex, ey, editorItem.width, editorItem.height)
       if (editorItem instanceof Connector) {
-        const startX = Number(Math.round((editorItem.start.x + e.x / this._zoom - this._startPointX / this._zoom) / 1))
-        const startY = Number(Math.round((editorItem.start.y + e.y / this._zoom - this._startPointY / this._zoom) / 1))
-        const endX = Number(Math.round((editorItem.end.x + e.x / this._zoom - this._startPointX / this._zoom) / 1))
-        const endY = Number(Math.round((editorItem.end.y + e.y / this._zoom - this._startPointY / this._zoom) / 1))
+        const startX = editorItem.start.x + e.x / this._zoom - this._startPointX / this._zoom
+        const startY = editorItem.start.y + e.y / this._zoom - this._startPointY / this._zoom
+        const endX = editorItem.end.x + e.x / this._zoom - this._startPointX / this._zoom
+        const endY = editorItem.end.y + e.y / this._zoom - this._startPointY / this._zoom
         if(!editorItem.source) {
           editorItem.start = new Point2(startX, startY)
         }
@@ -2058,9 +2060,10 @@ export class Editor extends Painter {
         const connector = editorItem.getTargetConnector(j)
         if (connector.target == editorItem) {
           // connector.updateTargetJoint()
-          // console.log(`end is connector.end.x = ${connector.end.x} connector.end.y = ${connector.end.y}`)
           // connector.end = new Point2(connector.end.x + e.x - this._startPointX, connector.end.y + e.y - this._startPointY)
           connector.end = new Point2(connector.end.x + (e.x - this._startPointX) / this._zoom, connector.end.y + (e.y - this._startPointY) / this._zoom)
+          //connector.end = new Point2(connector.end.x + e.x - this._startPointX, connector.end.y + e.y - this._startPointY)
+          //console.log(`end is connector.end.x = ${connector.end.x} connector.end.y = ${connector.end.y} item.x = ${editorItem.left} item.y = ${editorItem.top}`)
         }
       }
     }
