@@ -35,8 +35,11 @@ export class ConnectorInfo extends EditorItemInfo {
 
     public orthogonalPoints: string = ''
 
-    public constructor(startX: number, startY: number, endX: number, endY: number, text: string = '', rotation: number = 0, styles: StyleInfo[] = []){
-        super(Connector.CONNECTOR_TYPE_CONNECTOR, Categories.CONNECTOR, Math.min(startX, endX), Math.min(startY, endY), Math.abs(startX - endX), Math.abs(startY - endY), text, rotation, styles)
+    public constructor(startX: number, startY: number, endX: number, endY: number, text: string = '', 
+            rotation: number = 0, styles: StyleInfo[] = [], useTheme = true, strokeColor: string | null = null
+            , fillColor: string | null = null, lineWidth: number | null = null){
+        super(Connector.CONNECTOR_TYPE_CONNECTOR, Categories.CONNECTOR, Math.min(startX, endX), Math.min(startY, endY), 
+            Math.abs(startX - endX), Math.abs(startY - endY), text, rotation, styles, useTheme, strokeColor, fillColor, lineWidth)
         this.start = startX + ',' + startY
         this.end = endX + ',' + endY
     }

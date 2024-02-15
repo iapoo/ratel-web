@@ -10,6 +10,7 @@ import { ShapeInfo } from "../../Items/src/ShapeInfo"
 import { Style, StyleInfo } from "../../Shapes/src/EntityUtils"
 import { ConnectorType } from "../../Shapes"
 import { TableInfo } from "../../Items/src/TableInfo"
+import { ThemeUtils } from "@/components/Workspace/Theme"
 
 export class OperationHelper {
   public static loadItem(itemInfo: EditorItemInfo): EditorItem {
@@ -36,6 +37,29 @@ export class OperationHelper {
         editorItem.addItem(childItem)
       })
     }
+    editorItem.id = itemInfo.id
+    if (itemInfo.rotation) {
+      editorItem.rotation = new Rotation(itemInfo.rotation, itemInfo.width / 2, itemInfo.height / 2)
+    }
+    editorItem.useTheme = itemInfo.useTheme
+    if(itemInfo.useTheme) {
+      editorItem.strokeColor = ThemeUtils.strokeColor
+      editorItem.fillColor = ThemeUtils.fillColor
+      editorItem.lineWidth = ThemeUtils.lineWidth
+    } else {
+      let strokeColor = SystemUtils.parseColorString(itemInfo.strokeColor)
+      if(strokeColor) {
+        editorItem.strokeColor = strokeColor
+      }
+      let fillColor = SystemUtils.parseColorString(itemInfo.fillColor)
+      if(fillColor) {
+        editorItem.fillColor = fillColor
+      }
+      if(itemInfo.lineWidth) {
+        editorItem.lineWidth = itemInfo.lineWidth
+      }
+    }
+
     return editorItem
   }
 
@@ -170,6 +194,17 @@ export class OperationHelper {
     }
     editorItemInfo.id = editorItem.id
     editorItemInfo.items.length = 0
+    editorItemInfo.useTheme = editorItem.useTheme
+    if(editorItem.useTheme) {
+      editorItemInfo.strokeColor = null
+      editorItemInfo.fillColor = null
+      editorItemInfo.lineWidth = null
+    } else {
+      editorItemInfo.strokeColor = SystemUtils.generateColorString(editorItem.strokeColor)
+      editorItemInfo.fillColor = SystemUtils.generateColorString(editorItem.fillColor)
+      editorItemInfo.lineWidth = editorItem.lineWidth
+    }
+
     const itemCount = editorItem.items.length
     for (let i = 0; i < itemCount; i++) {
       const childItem = editorItem.items[i]

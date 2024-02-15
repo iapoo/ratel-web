@@ -15,8 +15,14 @@ export class EditorItemInfo {
     public id: string = ''
     public parentId: string | null = null
     public styles: StyleInfo[] = []
+    public useTheme: boolean
+    public strokeColor: string | null
+    public fillColor: string | null
+    public lineWidth: number | null
 
-    public constructor (type = 'Shape', category = 'Rectangle', left = 0, top = 0, width = 100, height = 100, text = '', rotation = 0, styles: StyleInfo[] = []) {
+    public constructor (type = 'Shape', category = 'Rectangle', left = 0, top = 0, width = 100, height = 100, text = '' 
+        , rotation = 0, styles: StyleInfo[] = [], useTheme = true, strokeColor: string | null = null
+        , fillColor: string | null = null, lineWidth: number | null = null) {
       this.type = type
       this.category = category
       this.left = left
@@ -26,5 +32,9 @@ export class EditorItemInfo {
       this.text = text
       this.rotation = rotation
       this.styles = styles
+      this.useTheme = useTheme
+      this.strokeColor = strokeColor
+      this.fillColor = fillColor
+      this.lineWidth = lineWidth
     }
 }
