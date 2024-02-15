@@ -1,6 +1,6 @@
 /* eslint-disable max-params */
 import { Point2, Rotation } from '@/components/Engine'
-import { Editor, } from '@/components/Rockie/Editor'
+import { Editor, EditorInfo, } from '@/components/Rockie/Editor'
 import { Connector, EditorItem, Entity, LineEntity, ShapeEntity, ShapeTypes, Shapes, TableEntity, } from '@/components/Rockie/Items'
 import { Categories, } from '@/components/Rockie/Items/src/Item'
 import { EditorData, } from './EditorData'
@@ -132,7 +132,7 @@ export class StorageService {
     return this._storageData
   }
 
-  public save() {
+  public saveOld() {
     this._storageData.sheets.length = 0
     const count = this._editors.length
     for (let i = 0; i < count; i++) {
@@ -145,6 +145,20 @@ export class StorageService {
     const data = JSON.stringify(this._storageData)
     console.log(data)
     StorageService.testdata = data
+  }
+
+  public save() {
+    this._storageData.sheets.length = 0
+    const count = this._editors.length
+    for (let i = 0; i < count; i++) {
+      const editor = this._editors[i]
+      const editorInfo = new EditorInfo()
+      this.saveEditor(editor, editorInfo)
+      this._storageData.sheets.push(editorInfo)
+    }
+
+    const data = JSON.stringify(this._storageData)
+    console.log(data)
   }
 
   public static testdata = ''
