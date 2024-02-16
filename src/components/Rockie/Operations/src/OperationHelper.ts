@@ -1,7 +1,7 @@
 /* eslint-disable max-params */
 
 import { SystemUtils } from "@/components/Workspace/Utils"
-import { Categories, CellEntity, Connector, ConnectorArrowInfo, EditorItem, EditorItemInfo, Entity, Item, LineEntity, ShapeEntity, TableEntity } from "../../Items"
+import { Categories, CellEntity, Connector, ConnectorArrowInfo, ContainerEntity, ContainerInfo, EditorItem, EditorItemInfo, Entity, Item, LineEntity, ShapeEntity, TableEntity } from "../../Items"
 import { ConnectorInfo } from "../../Items/src/ConnectorInfo"
 import { LineInfo } from "../../Items/src/LineInfo"
 import { Rotation } from "@/components/Engine"
@@ -21,6 +21,9 @@ export class OperationHelper {
         break
       case Categories.CONNECTOR:
         editorItem = this.loadConnector(itemInfo)
+        break
+      case Categories.CONTAINER:
+        editorItem = this.loadContainerEntity(itemInfo)
         break
       case Categories.TABLE:
         editorItem = this.loadTableEntity(itemInfo)
@@ -147,6 +150,21 @@ export class OperationHelper {
     return shapeEntity
   }
 
+  public static loadContainerEntity(itemInfo: EditorItemInfo): ContainerEntity {
+    const containerInfo = itemInfo as ContainerInfo
+    const containerEntity = new ContainerEntity(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, {shapeType: containerInfo.type})
+    containerEntity.id = containerInfo.id
+    if (containerInfo.rotation) {
+      containerEntity.rotation = new Rotation(containerInfo.rotation, containerInfo.width / 2, containerInfo.height / 2)
+    }
+    containerEntity.removeAllItems()
+    itemInfo.items.forEach(childItemInfo => {
+      let childItem = OperationHelper.loadTableCellEntity(childItemInfo)
+      containerEntity.addItem(childItem)
+    })
+    return containerEntity
+  }
+
   public static loadTableEntity(itemInfo: EditorItemInfo): TableEntity {
     const tableInfo = itemInfo as TableInfo
     const tableEntity = new TableEntity(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, tableInfo.rowCount, tableInfo.columnCount)
@@ -189,6 +207,9 @@ export class OperationHelper {
         break;
       case Categories.TABLE:
         editorItemInfo = this.saveTable(editorItem as TableEntity)
+        break;
+      case Categories.CONTAINER:
+        editorItemInfo = this.saveContainer(editorItem as TableEntity)
         break;
       case Categories.SHAPE:
       default:
@@ -234,6 +255,15 @@ export class OperationHelper {
 
     return tableInfo
   }
+
+
+  public static  saveContainer(container: ContainerEntity) : EditorItemInfo {
+    let styleInfos: StyleInfo[] = Style.makeStyleInfos(container.shape.styles)
+    let containerInfo = new ContainerInfo(container.type, container.category, container.left, container.top, container.width, container.height, container.text,  container.rotation.radius, styleInfos)
+
+    return containerInfo
+  }
+
 
   public static  saveLine(lineEntity: LineEntity) : EditorItemInfo {
     let styleInfos: StyleInfo[] = Style.makeStyleInfos(lineEntity.shape.styles)
