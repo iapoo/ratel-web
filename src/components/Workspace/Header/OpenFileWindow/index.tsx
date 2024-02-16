@@ -441,7 +441,7 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
             <Button onClick={handleDeleteDocument} disabled={!selectedFolderIsDocument}>Delete Document</Button>
           </Space>
           <div style={{ width: '100%', height: '440px',borderWidth: '1px', borderColor: 'silver', borderStyle: 'solid', marginTop: '8px' }}>
-            <Tree style={{ width: '100%', height: '100%', overflow: 'scroll', margin: '8px', }}
+            <Tree style={{ width: '100%', height: '100%',  margin: '8px', }}
               height={420}
               showLine showIcon
               //checkable

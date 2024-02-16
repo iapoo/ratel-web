@@ -287,12 +287,12 @@ const Content: FC<ContentProps> = ({
       editor.key = pane.key
       editor.title = pane.title
       sheetData.items.forEach(itemData => {
-        const item = StorageService.loadItemData(itemData)
+        const item = OperationHelper.loadItem(itemData)
         editor.contentLayer.addEditorItem(item)
       })
       //Update item reference by id
       sheetData.items.forEach(itemData => {
-        StorageService.refreshItemData(itemData, editor.contentLayer.getAllEditorItems())
+        OperationHelper.refreshItem(itemData, editor.contentLayer.getAllEditorItems())
       })
       editor.resetModified()
       editor.start()

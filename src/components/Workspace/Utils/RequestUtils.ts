@@ -49,6 +49,7 @@ export class RequestUtils {
     private static password_: string = ''
     private static token_: string = ''
     private static serverAddress_: string = 'http://192.168.1.6:8080'
+    private static rockieAddress_: string = 'http://192.168.1.6:8081'
     //private static serverAddress_: string = 'http://127.0.0.1:8080'
     private static lastCheckTime_: number = 0;
     private static checkTimeInterval_: number = 60000;
@@ -226,7 +227,7 @@ export class RequestUtils {
                 'Token': RequestUtils.token
             }
         }
-        return axios.post(`http://127.0.0.1:8081/folder/folders`, data, config)
+        return axios.post(this.rockieAddress_ + `/folder/folders`, data, config)
     }
 
     public static getDocuments(folderId: number | null) {
@@ -239,7 +240,7 @@ export class RequestUtils {
                 'Token': RequestUtils.token
             }
         }
-        return axios.post(`http://127.0.0.1:8081/document/documents`, data, config)
+        return axios.post(this.rockieAddress_ + `/document/documents`, data, config)
     }
 
     public static loadDocument(documentId: number) {
@@ -252,7 +253,7 @@ export class RequestUtils {
                 'Token': RequestUtils.token
             }
         }
-        return axios.post(`http://127.0.0.1:8081/document/document`, data, config)
+        return axios.post(this.rockieAddress_ + `/document/document`, data, config)
     }
 
     public static saveDocument(documentName: String, content: string, folderId: number | null) {
@@ -270,7 +271,7 @@ export class RequestUtils {
                 'Token': RequestUtils.token
             }
         }
-        return axios.post(`http://127.0.0.1:8081/document/add`, data, config)
+        return axios.post(this.rockieAddress_ + `/document/add`, data, config)
     }
 
     public static updateDocument(documentId: number, documentName: String, content: string, folderId: number | null) {
@@ -289,7 +290,7 @@ export class RequestUtils {
                 'Token': RequestUtils.token
             }
         }
-        return axios.post(`http://127.0.0.1:8081/document/update`, data, config)
+        return axios.post(this.rockieAddress_ + `/document/update`, data, config)
     }
 
     public static deleteDocument(documentId: number) {
@@ -302,7 +303,7 @@ export class RequestUtils {
                 'Token': RequestUtils.token
             }
         }
-        return axios.post(`http://127.0.0.1:8081/document/delete`, data, config)
+        return axios.post(this.rockieAddress_ + `/document/delete`, data, config)
     }
 
     public static addFolder(folderName: String, parentId: number | null) {
@@ -316,7 +317,7 @@ export class RequestUtils {
                 'Token': RequestUtils.token
             }
         }
-        return axios.post(`http://127.0.0.1:8081/folder/add`, data, config)
+        return axios.post(this.rockieAddress_ + `/folder/add`, data, config)
     }
 
     public static deleteFolder(folderId: number) {
@@ -329,6 +330,6 @@ export class RequestUtils {
                 'Token': RequestUtils.token
             }
         }
-        return axios.post(`http://127.0.0.1:8081/folder/delete`, data, config)
+        return axios.post(this.rockieAddress_ + `/folder/delete`, data, config)
     }
 }
