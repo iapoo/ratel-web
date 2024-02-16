@@ -13,6 +13,7 @@ import { ConnectorData } from './ConnectorData'
 import { Consts, SystemUtils } from '../Utils'
 import { CommonUtils } from '@/components/Rockie/Utils'
 import { ThemeUtils } from '../Theme'
+import { OperationHelper } from '@/components/Rockie/Operations'
 
 export class StorageService {
   public static loadItemData(itemData: EditorItemData): EditorItem {
@@ -218,8 +219,8 @@ export class StorageService {
     const itemCount = editor.contentLayer.getEditorItemCount()
     for (let i = 0; i < itemCount; i++) {
       const editorItem = editor.contentLayer.getEditorItem(i)
-      const editorItemData = this.saveEditorItem(editorItem)
-      editorData.items.push(editorItemData)
+      const editorItemInfo = OperationHelper.saveEditorItem(editorItem)
+      editorData.items.push(editorItemInfo)
     }
   }
 

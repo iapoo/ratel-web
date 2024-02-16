@@ -30,6 +30,8 @@ export class OperationHelper {
         editorItem = this.loadShapeEntity(itemInfo)
         break
     }
+    //Need to use correct StyleInfo    
+    OperationHelper.fixStyleInfo(itemInfo)    
     editorItem.shape.styles = StyleInfo.makeStyles(itemInfo.styles)
     if(itemInfo.category != Categories.TABLE) {
       itemInfo.items.forEach(childItemInfo => {
@@ -171,6 +173,7 @@ export class OperationHelper {
     }
     shapeEntity.shape.modifier = SystemUtils.parsePointString(shapeInfo.modifier)
     shapeEntity.shape.adapter = SystemUtils.parsePointString(shapeInfo.adapter)
+    OperationHelper.fixStyleInfo(shapeInfo)
     shapeEntity.shape.styles = StyleInfo.makeStyles(shapeInfo.styles)
     return shapeEntity
   }
@@ -266,4 +269,18 @@ export class OperationHelper {
 
     return connectorInfo
   }
+
+
+  private static fixStyleInfo(editorItemInfo: EditorItemInfo) {
+    let count = editorItemInfo.styles.length
+    for(let i = 0; i < count; i ++) {
+        let oldStyleInfo = editorItemInfo.styles[i]
+        let styleInfo = new StyleInfo(oldStyleInfo.length, oldStyleInfo.typeFaceName, oldStyleInfo.size, oldStyleInfo.color, oldStyleInfo.bold, oldStyleInfo.italic, oldStyleInfo.underline)
+        editorItemInfo.styles[i] = styleInfo
+    }
+    editorItemInfo.items.forEach(child => {
+        OperationHelper.fixStyleInfo(child)
+    })
+}
+
 }
