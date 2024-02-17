@@ -2,8 +2,8 @@
 /* eslint-disable @typescript-eslint/prefer-for-of */
 import React, { useEffect, useState, useRef, FC, MouseEventHandler, SyntheticEvent, } from 'react'
 import styles from './index.css'
-import { Button, ColorPicker, Divider, Dropdown, FloatButton, Input, InputNumber, MenuProps, Space, Tabs, Tooltip, theme, } from 'antd'
-import { Consts, SystemUtils, Utils, } from '../Utils'
+import { Button, ColorPicker, Divider, Dropdown, FloatButton, Input, InputNumber, MenuProps, Select, Space, Tabs, Tooltip, theme, } from 'antd'
+import { Consts, FontSizeOptions, SystemUtils, Utils, } from '../Utils'
 import { Editor, EditorEvent, } from '../../Rockie/Editor'
 
 import { Engine, Rectangle2D, EngineUtils, Line2D, FontWeight, FontSlant, TextDecoration, Point2, } from '../../Engine'
@@ -1267,9 +1267,11 @@ const Content: FC<ContentProps> = ({
       </Tooltip>
       <Divider type='vertical' style={{ margin: 0 }} />
       <Tooltip title={<FormattedMessage id='workspace.header.title.font-size'/>}>
+        {/** TODO:  FIXME, HIDE TEMPORARY*/}
         <InputNumber min={Consts.FONT_SIZE_MIN} max={Consts.FONT_SIZE_MAX} value={fontSize} 
           ref={(node) => {setFontSizeNode(node)}} 
-          onChange={handleFontSizeChange}  onStep={handleFontSizeStepChange} onBlur={handleFontSizeBlur} onPressEnter={handleFontSizePressEnter} size='small' style={{ width: 60 }} />
+          onChange={handleFontSizeChange}  onStep={handleFontSizeStepChange} onBlur={handleFontSizeBlur} onPressEnter={handleFontSizePressEnter} size='small' style={{ width: 60, display: 'none' }} />
+        <Select size='small' value={fontSize} onChange={handleFontSizeChange} style={{width: 64, }} options={FontSizeOptions} bordered={false}/>
       </Tooltip>
       <Tooltip title={<FormattedMessage id='workspace.header.title.font-color'/>}>
         <ColorPicker size='small' value={fontColor} onChange={handleFontColorChange} />

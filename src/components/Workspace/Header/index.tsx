@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef, FC } from 'react'
 import styles from './index.css'
 import { Form, Input, Checkbox, Row, Col, Button, Modal, Menu, Space, Tooltip, Dropdown, Divider, Select, InputNumber, ColorPicker, message, } from 'antd'
 import type { MenuProps } from 'antd';
-import { ConnectorLineEndArrows, ConnectorLineModes, ConnectorLineStartArrows, ConnectorLineTypes, Consts, RequestUtils, StrokeDashStyles, SystemUtils, Utils, } from '../Utils'
+import { ConnectorLineEndArrows, ConnectorLineModes, ConnectorLineStartArrows, ConnectorLineTypes, Consts, FontSizeOptions, LineWidthOptions, RequestUtils, StrokeDashStyles, SystemUtils, Utils, } from '../Utils'
 import { setInterval } from 'timers'
 import { UserInfo } from '../Utils/RequestUtils'
 import LoginFormWindow from './LoginFormWindow'
@@ -1092,10 +1092,12 @@ const Header: FC<HeaderProps> = ({
                 <Button type={textVerticalAlignment == Consts.PLACE_HOLDER_ALIGNMENT_BOTTOM ? 'primary' : 'text'} size='small' icon={<VerticalAlignBottomOutlined/>} disabled={!selectionValid} onClick={() => handleTextVerticalAlignmentChanged(Consts.PLACE_HOLDER_ALIGNMENT_BOTTOM)} />
               </Tooltip>
               <Divider type='vertical' style={{ margin: 0 }} />
+              {/** TODO:  FIXME, HIDE TEMPORARY*/}
               <Tooltip title={<FormattedMessage id='workspace.header.title.font-size'/>}>
                 <InputNumber min={Consts.FONT_SIZE_MIN} max={Consts.FONT_SIZE_MAX} value={fontSize} 
                   ref={(node) => {setFontSizeNode(node)}} 
-                  onChange={handleFontSizeChange}  onStep={handleFontSizeStepChange} onBlur={handleFontSizeBlur} onPressEnter={handleFontSizePressEnter} size='small' style={{ width: 60 }} disabled={!selectionValid} />
+                  onChange={handleFontSizeChange}  onStep={handleFontSizeStepChange} onBlur={handleFontSizeBlur} onPressEnter={handleFontSizePressEnter} size='small' style={{ width: 60 , display:'none'}} disabled={!selectionValid} />
+                <Select size='small' value={fontSize} onChange={handleFontSizeChange} style={{width: 64, }} disabled={!selectionValid} options={FontSizeOptions} bordered={false}/>
               </Tooltip>
               <Tooltip title={<FormattedMessage id='workspace.header.title.fill-color'/>}>
                 <ColorPicker size='small' value={fillColor} onChange={handleFillColorChange} disabled={!selectionValid} />
@@ -1107,7 +1109,9 @@ const Header: FC<HeaderProps> = ({
                 <ColorPicker size='small' value={fontColor} onChange={handleFontColorChange} disabled={!selectionValid} />
               </Tooltip>
               <Tooltip title={<FormattedMessage id='workspace.header.title.line-width'/>}>
-                <InputNumber min={Consts.LINE_WIDTH_MIN} max={Consts.LINE_WIDTH_MAX} value={lineWidth} onChange={handleLineWidthChange} size='small' style={{ width: 50 }} disabled={!selectionValid} />
+                {/** TODO:  FIXME, HIDE TEMPORARY*/}
+                <InputNumber min={Consts.LINE_WIDTH_MIN} max={Consts.LINE_WIDTH_MAX} value={lineWidth} onChange={handleLineWidthChange} size='small' style={{ width: 50, display: 'none' }} disabled={!selectionValid} />
+                <Select size='small' value={lineWidth} onChange={handleLineWidthChange} style={{width: 64, }} disabled={!selectionValid} options={LineWidthOptions} bordered={false}/>
               </Tooltip>
               <Tooltip title={<FormattedMessage id='workspace.header.title.stroke-type'/>}>
                 <Select size='small' value={strokeDashStyle} onChange={handleStrokeDashStyleChange} style={{width: 110 }} dropdownStyle={{width: 110}} options={strokeDashStyles} bordered={false} disabled={!selectionValid} />
@@ -1115,7 +1119,7 @@ const Header: FC<HeaderProps> = ({
               <Tooltip title={<FormattedMessage id='workspace.header.title.connector-line-type'/>}>
                 <Select size='small' value={connectorLineType} onChange={handleConnectorLineTypeChange} style={{width: 56 }} disabled={!connectorSelected} options={connectorLineTypes} bordered={false}/>
               </Tooltip>
-              {/** TODO:  */}
+              {/** TODO:  FIXME, HIDE TEMPORARY*/}
               <Tooltip title={<FormattedMessage id='workspace.header.title.connector-line-mode'/>}>
                 <Select size='small' value={connectorLineMode} onChange={handleConnectorLineModeChange} style={{width: 56, display:'none' }} disabled={!connectorSelected} options={connectorLineModes} bordered={false}/>
               </Tooltip>
