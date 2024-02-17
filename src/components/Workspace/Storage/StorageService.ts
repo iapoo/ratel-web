@@ -16,108 +16,109 @@ import { ThemeUtils } from '../Theme'
 import { OperationHelper } from '@/components/Rockie/Operations'
 
 export class StorageService {
-  public static loadItemData(itemData: EditorItemData): EditorItem {
-    switch (itemData.category) {
-      case Categories.LINE:
-        return this.loadLineEntity(itemData)
-      case Categories.CONNECTOR:
-        return this.loadConnector(itemData)
-      case Categories.TABLE:
-        return this.loadTableEntity(itemData)
-      case Categories.SHAPE:
-      default:
-        return this.loadShapeEntity(itemData)
-    }
-  }
+  // public static loadItemData(itemData: EditorItemData): EditorItem {
+  //   switch (itemData.category) {
+  //     case Categories.LINE:
+  //       return this.loadLineEntity(itemData)
+  //     case Categories.CONNECTOR:
+  //       return this.loadConnector(itemData)
+  //     case Categories.TABLE:
+  //       return this.loadTableEntity(itemData)
+  //     case Categories.SHAPE:
+  //     default:
+  //       return this.loadShapeEntity(itemData)
+  //   }
+  // }
 
-  public static refreshItemData(itemData: EditorItemData, items: EditorItem[]) {
-    if (itemData.category == Categories.CONNECTOR) {
-      let connectorData = itemData as ConnectorData
-      let connector: Connector | null = null
-      items.forEach(item => {
-        if(connectorData.id == item.id) {
-          connector = item as Connector
-        }
-      })
-      items.forEach(item => {
-        if(connectorData.source == item.id && connector) {
-          let entity = item as Entity
-          connector.source =  entity
-          entity.addSourceConnector(connector)
-        }
-        if(connectorData.target == item.id && connector) {
-          let entity = item as Entity
-          connector.target =  entity
-          entity.addTargetConnector(connector)
-        }
-      })
-      console.log(connector)
-    }
-  }
+  // public static refreshItemData(itemData: EditorItemData, items: EditorItem[]) {
+  //   if (itemData.category == Categories.CONNECTOR) {
+  //     let connectorData = itemData as ConnectorData
+  //     let connector: Connector | null = null
+  //     items.forEach(item => {
+  //       if(connectorData.id == item.id) {
+  //         connector = item as Connector
+  //       }
+  //     })
+  //     items.forEach(item => {
+  //       if(connectorData.source == item.id && connector) {
+  //         let entity = item as Entity
+  //         connector.source =  entity
+  //         entity.addSourceConnector(connector)
+  //       }
+  //       if(connectorData.target == item.id && connector) {
+  //         let entity = item as Entity
+  //         connector.target =  entity
+  //         entity.addTargetConnector(connector)
+  //       }
+  //     })
+  //     console.log(connector)
+  //   }
+  // }
 
-  private static loadLineEntity(itemData: EditorItemData): EditorItem {
-    let lineData = itemData as LineData
-    let start = SystemUtils.parsePointString(lineData.start)
-    let end = SystemUtils.parsePointString(lineData.end)
-    let lineEntity = new LineEntity(start, end)
-    if (itemData.rotation) {
-      lineEntity.rotation = new Rotation(itemData.rotation, lineEntity.width / 2, lineEntity.height / 2)
-    }
-    lineEntity.text = itemData.text
-    lineEntity.id = itemData.id
-    return lineEntity
-  }
+  // private static loadLineEntity(itemData: EditorItemData): EditorItem {
+  //   let lineData = itemData as LineData
+  //   let start = SystemUtils.parsePointString(lineData.start)
+  //   let end = SystemUtils.parsePointString(lineData.end)
+  //   let lineEntity = new LineEntity(start, end)
+  //   if (itemData.rotation) {
+  //     lineEntity.rotation = new Rotation(itemData.rotation, lineEntity.width / 2, lineEntity.height / 2)
+  //   }
+  //   lineEntity.text = itemData.text
+  //   lineEntity.id = itemData.id
+  //   return lineEntity
+  // }
 
-  private static loadConnector(itemData: EditorItemData): EditorItem {
-    let connectorData = itemData as ConnectorData
-    let start = SystemUtils.parsePointString(connectorData.start)
-    let end = SystemUtils.parsePointString(connectorData.end)
-    let connector = new Connector(start, end)
-    connector.connectorType = connectorData.connectorType ? CommonUtils.parseConnectorTypeString(connectorData.connectorType) : ConnectorType.Orthogonal
-    connector.id = connectorData.id
-    return connector
-  }
+  // private static loadConnector(itemData: EditorItemData): EditorItem {
+  //   let connectorData = itemData as ConnectorData
+  //   let start = SystemUtils.parsePointString(connectorData.start)
+  //   let end = SystemUtils.parsePointString(connectorData.end)
+  //   let connector = new Connector(start, end)
+  //   connector.connectorType = connectorData.connectorType ? CommonUtils.parseConnectorTypeString(connectorData.connectorType) : ConnectorType.Orthogonal
+  //   connector.id = connectorData.id
+  //   return connector
+  // }
 
-  private static loadShapeEntity(itemData: EditorItemData): EditorItem {
-    let shapeData = itemData as ShapeData
-    const shapeEntity = new ShapeEntity(shapeData.left, shapeData.top, shapeData.width, shapeData.height, {
-      shapeType: shapeData.type
-    })
-    shapeEntity.type = shapeData.type
-    shapeEntity.text = shapeData.text
-    shapeEntity.id = shapeData.id
-    if (shapeData.rotation) {
-      shapeEntity.rotation = new Rotation(shapeData.rotation, shapeEntity.width / 2, shapeEntity.height / 2)
-    }
-    shapeEntity.useTheme = itemData.useTheme
-    if(itemData.useTheme) {
-      shapeEntity.strokeColor = ThemeUtils.strokeColor
-      shapeEntity.fillColor = ThemeUtils.fillColor
-      shapeEntity.lineWidth = ThemeUtils.lineWidth
-    } else {
-      let strokeColor = SystemUtils.parseColorString(shapeData.strokeColor)
-      if(strokeColor) {
-        shapeEntity.strokeColor = strokeColor
-      }
-      let fillColor = SystemUtils.parseColorString(shapeData.fillColor)
-      if(fillColor) {
-        shapeEntity.fillColor = fillColor
-      }
-      if(shapeData.lineWidth) {
-        shapeEntity.lineWidth = shapeData.lineWidth
-      }
-    }
-    shapeEntity.shape.modifier = SystemUtils.parsePointString(shapeData.modifier)
-    shapeEntity.shape.adapter = SystemUtils.parsePointString(shapeData.adapter)
+  // private static loadShapeEntity(itemData: EditorItemData): EditorItem {
+  //   let shapeData = itemData as ShapeData
+  //   const shapeEntity = new ShapeEntity(shapeData.left, shapeData.top, shapeData.width, shapeData.height, {
+  //     shapeType: shapeData.type
+  //   })
+  //   shapeEntity.type = shapeData.type
+  //   shapeEntity.text = shapeData.text
+  //   shapeEntity.id = shapeData.id
+  //   if (shapeData.rotation) {
+  //     shapeEntity.rotation = new Rotation(shapeData.rotation, shapeEntity.width / 2, shapeEntity.height / 2)
+  //   }
+  //   shapeEntity.useTheme = itemData.useTheme
+  //   if(itemData.useTheme) {
+  //     shapeEntity.strokeColor = ThemeUtils.strokeColor
+  //     shapeEntity.fillColor = ThemeUtils.fillColor
+  //     shapeEntity.lineWidth = ThemeUtils.lineWidth
+  //   } else {
+  //     let strokeColor = SystemUtils.parseColorString(shapeData.strokeColor)
+  //     if(strokeColor) {
+  //       shapeEntity.strokeColor = strokeColor
+  //     }
+  //     let fillColor = SystemUtils.parseColorString(shapeData.fillColor)
+  //     if(fillColor) {
+  //       shapeEntity.fillColor = fillColor
+  //     }
+  //     if(shapeData.lineWidth) {
+  //       shapeEntity.lineWidth = shapeData.lineWidth
+  //     }
+  //   }
+  //   shapeEntity.shape.modifier = SystemUtils.parsePointString(shapeData.modifier)
+  //   shapeEntity.shape.adapter = SystemUtils.parsePointString(shapeData.adapter)
 
-    return shapeEntity
-  }
+  //   return shapeEntity
+  // }
 
-  private static loadTableEntity(itemData: EditorItemData): EditorItem {
-    const tableEntity = new TableEntity(itemData.left, itemData.top, itemData.width, itemData.height)
+  // private static loadTableEntity(itemData: EditorItemData): EditorItem {
+  //   const tableEntity = new TableEntity(itemData.left, itemData.top, itemData.width, itemData.height)
 
-    return tableEntity
-  }
+  //   return tableEntity
+  // }
+  
   private _editors: Array<Editor> = new Array<Editor>(0)
   private _storageData: StorageData = new StorageData()
 
@@ -224,77 +225,77 @@ export class StorageService {
     }
   }
 
-  private saveEditorItem(editorItem: EditorItem): EditorItemData {
-    let editorItemData: EditorItemData
-    switch (editorItem.category) {
-      case Categories.LINE:
-        editorItemData = this.saveLineData(editorItem as LineEntity)
-        break
-      case Categories.CONNECTOR:
-        editorItemData = this.saveConnectorData(editorItem as Connector)
-        break;
-      case Categories.TABLE:
-      case Categories.SHAPE:
-      default:
-        editorItemData = this.saveShapeData(editorItem as ShapeEntity)
-        break
-    }
-    editorItemData.id = editorItem.id
-    editorItemData.items.length = 0    
-    editorItemData.useTheme = editorItem.useTheme
-    if(editorItem.useTheme) {
-      editorItemData.strokeColor = null
-      editorItemData.fillColor = null
-      editorItemData.lineWidth = null
-    } else {
-      editorItemData.strokeColor = SystemUtils.generateColorString(editorItem.strokeColor)
-      editorItemData.fillColor = SystemUtils.generateColorString(editorItem.strokeColor)
-      editorItemData.lineWidth = editorItem.lineWidth
-    }
+  // private saveEditorItem(editorItem: EditorItem): EditorItemData {
+  //   let editorItemData: EditorItemData
+  //   switch (editorItem.category) {
+  //     case Categories.LINE:
+  //       editorItemData = this.saveLineData(editorItem as LineEntity)
+  //       break
+  //     case Categories.CONNECTOR:
+  //       editorItemData = this.saveConnectorData(editorItem as Connector)
+  //       break;
+  //     case Categories.TABLE:
+  //     case Categories.SHAPE:
+  //     default:
+  //       editorItemData = this.saveShapeData(editorItem as ShapeEntity)
+  //       break
+  //   }
+  //   editorItemData.id = editorItem.id
+  //   editorItemData.items.length = 0    
+  //   editorItemData.useTheme = editorItem.useTheme
+  //   if(editorItem.useTheme) {
+  //     editorItemData.strokeColor = null
+  //     editorItemData.fillColor = null
+  //     editorItemData.lineWidth = null
+  //   } else {
+  //     editorItemData.strokeColor = SystemUtils.generateColorString(editorItem.strokeColor)
+  //     editorItemData.fillColor = SystemUtils.generateColorString(editorItem.strokeColor)
+  //     editorItemData.lineWidth = editorItem.lineWidth
+  //   }
     
-    const itemCount = editorItem.items.length
-    for (let i = 0; i < itemCount; i++) {
-      const childItem = editorItem.items[i]
-      const childEditorItemData = this.saveEditorItem(childItem)
-      editorItemData.items.push(childEditorItemData)
-    }
-    return editorItemData
-  }
+  //   const itemCount = editorItem.items.length
+  //   for (let i = 0; i < itemCount; i++) {
+  //     const childItem = editorItem.items[i]
+  //     const childEditorItemData = this.saveEditorItem(childItem)
+  //     editorItemData.items.push(childEditorItemData)
+  //   }
+  //   return editorItemData
+  // }
 
-  private saveShapeData(shapeEntity: ShapeEntity) : EditorItemData {
-    let shapeData = new ShapeData(shapeEntity.type, shapeEntity.category, shapeEntity.left, shapeEntity.top, shapeEntity.width, shapeEntity.height, shapeEntity.text,)
-    shapeData.rotation = shapeEntity.rotation.radius
-    shapeData.modifier = SystemUtils.generatePointString(shapeEntity.shape.modifier)
-    shapeData.adapter = SystemUtils.generatePointString(shapeEntity.shape.adapter)
-    shapeData.adapterSize = shapeEntity.shape.adapterSize
+  // private saveShapeData(shapeEntity: ShapeEntity) : EditorItemData {
+  //   let shapeData = new ShapeData(shapeEntity.type, shapeEntity.category, shapeEntity.left, shapeEntity.top, shapeEntity.width, shapeEntity.height, shapeEntity.text,)
+  //   shapeData.rotation = shapeEntity.rotation.radius
+  //   shapeData.modifier = SystemUtils.generatePointString(shapeEntity.shape.modifier)
+  //   shapeData.adapter = SystemUtils.generatePointString(shapeEntity.shape.adapter)
+  //   shapeData.adapterSize = shapeEntity.shape.adapterSize
 
-    return shapeData
-  }
+  //   return shapeData
+  // }
 
-  private saveLineData(lineEntity: LineEntity) : EditorItemData {
-    let lineData = new LineData(lineEntity.start.x, lineEntity.start.y, lineEntity.end.x, lineEntity.end.y, lineEntity.text, lineEntity.rotation.radius)
+  // private saveLineData(lineEntity: LineEntity) : EditorItemData {
+  //   let lineData = new LineData(lineEntity.start.x, lineEntity.start.y, lineEntity.end.x, lineEntity.end.y, lineEntity.text, lineEntity.rotation.radius)
 
-    return lineData
-  }
+  //   return lineData
+  // }
 
 
-  private saveConnectorData(connector: Connector) : EditorItemData {
-    let connectorData = new ConnectorData(connector.start.x, connector.start.y, connector.end.x, connector.end.y, connector.text, connector.rotation.radius)
-    if(connector.source) {
-      connectorData.source = connector.source.id
-    }
-    if(connector.target) {
-      connectorData.target = connector.target.id
-    }
-    if(connector.sourceJoint) {
-      //connectorData.s
-    }
-    if(connector.targetJoint) {
+  // private saveConnectorData(connector: Connector) : EditorItemData {
+  //   let connectorData = new ConnectorData(connector.start.x, connector.start.y, connector.end.x, connector.end.y, connector.text, connector.rotation.radius)
+  //   if(connector.source) {
+  //     connectorData.source = connector.source.id
+  //   }
+  //   if(connector.target) {
+  //     connectorData.target = connector.target.id
+  //   }
+  //   if(connector.sourceJoint) {
+  //     //connectorData.s
+  //   }
+  //   if(connector.targetJoint) {
 
-    }
-    connectorData.connectorType = connector.connectorType ?  CommonUtils.parseConnectorType(connector.connectorType) : null
+  //   }
+  //   connectorData.connectorType = connector.connectorType ?  CommonUtils.parseConnectorType(connector.connectorType) : null
 
-    return connectorData
-  }
+  //   return connectorData
+  // }
 
 }
