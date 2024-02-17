@@ -48,8 +48,8 @@ export class RequestUtils {
     private static userName_: string = ''
     private static password_: string = ''
     private static token_: string = ''
-    private static serverAddress_: string = 'http://192.168.1.6:8080'
-    private static rockieAddress_: string = 'http://192.168.1.6:8081'
+    private static serverAddress_: string = 'http://192.168.1.5:8080'
+    private static rockieAddress_: string = 'http://192.168.1.5:8081'
     //private static serverAddress_: string = 'http://127.0.0.1:8080'
     private static lastCheckTime_: number = 0;
     private static checkTimeInterval_: number = 60000;

@@ -89,9 +89,11 @@ export class SystemUtils {
             const pointStrs = points.split(';')
             if(pointStrs.length > 0) {
                 pointStrs.forEach(pointStr => {
-                    const point = SystemUtils.parsePointString(pointStr)
-                    if(point) {
-                        result.push(point)
+                    if(pointStr && pointStr.length > 0) {// It may be emptyt string here and need to ignore
+                        const point = SystemUtils.parsePointString(pointStr)
+                        if(point) {
+                            result.push(point)
+                        }
                     }
                 })
             }
