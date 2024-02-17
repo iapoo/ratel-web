@@ -2,7 +2,7 @@ import React, { FC, useEffect, useState, useRef} from 'react'
 import styles from './index.css'
 import Workspace from '@/components/Workspace'
 import { Button, Checkbox, ColorPicker, Descriptions, DescriptionsProps, Divider, InputNumber, Radio, RadioChangeEvent, Select, Tabs, TabsProps, } from 'antd'
-import { Consts, PageTypes, StrokeDashStyles, SystemUtils, Utils, } from '../Utils'
+import { Consts, LineWidthOptions, PageTypes, StrokeDashStyles, SystemUtils, Utils, } from '../Utils'
 import { Editor, EditorEvent } from '@/components/Rockie/Editor'
 import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
 import { DescriptionsItemProps } from 'antd/es/descriptions/Item'
@@ -371,7 +371,9 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
     </div>
     <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontWeight: 'bold', padding: 4, }}>
       <Select size='small' value={strokeDashStyle} onChange={handleStrokeDashStyleChange} style={{width: '60%'}} options={strokeDashStyles}/>
-      <InputNumber min={Consts.LINE_WIDTH_MIN} max={Consts.LINE_WIDTH_MAX} value={lineWidth} onChange={handleLineWidthChange} size='small' style={{ width: 50 }} />
+      {/** TODO:  FIXME, HIDE TEMPORARY*/}
+      <InputNumber min={Consts.LINE_WIDTH_MIN} max={Consts.LINE_WIDTH_MAX} value={lineWidth} onChange={handleLineWidthChange} size='small' style={{ width: 50, display: 'none' }} />
+      <Select size='small' value={lineWidth} onChange={handleLineWidthChange} style={{width: 64, }} options={LineWidthOptions}/>
     </div>
   </div>
 
