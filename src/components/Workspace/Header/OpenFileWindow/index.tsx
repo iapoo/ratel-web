@@ -138,7 +138,7 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
         }
         nodes.push(dataNode)
         nodeMap.set(key, folder)
-        console.log(`fetch Folder: parentId = ${parentId} folderId = ${key}`)
+        //console.log(`fetch Folder: parentId = ${parentId} folderId = ${key}`)
         await fetchFolder(nodeMap, dataNode.children!, folder.folderId)
         await fetchDocument(nodeMap, dataNode.children!, folder.folderId)
       }
@@ -164,7 +164,7 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
         }
         nodes.push(dataNode)
         nodeMap.set(key, document)
-        console.log(`fetch Document: folderId = ${folderId} documentId = ${key}`)
+        //console.log(`fetch Document: folderId = ${folderId} documentId = ${key}`)
       })
     }
   }

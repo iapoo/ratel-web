@@ -146,7 +146,7 @@ export class OperationHelper {
     }
     shapeEntity.shape.modifier = SystemUtils.parsePointString(shapeInfo.modifier)
     shapeEntity.shape.adapter = SystemUtils.parsePointString(shapeInfo.adapter)
-
+    shapeEntity.shape.adapterSize = shapeInfo.adapterSize
     return shapeEntity
   }
 
@@ -157,6 +157,10 @@ export class OperationHelper {
     if (containerInfo.rotation) {
       containerEntity.rotation = new Rotation(containerInfo.rotation, containerInfo.width / 2, containerInfo.height / 2)
     }
+    containerEntity.shape.modifier = SystemUtils.parsePointString(containerInfo.modifier)
+    containerEntity.shape.adapter = SystemUtils.parsePointString(containerInfo.adapter)
+    containerEntity.shape.adapterSize = containerInfo.adapterSize
+
     containerEntity.removeAllItems()
     itemInfo.items.forEach(childItemInfo => {
       let childItem = OperationHelper.loadTableCellEntity(childItemInfo)
@@ -240,13 +244,13 @@ export class OperationHelper {
 
   public static  saveShape(shapeEntity: ShapeEntity) : EditorItemInfo {
     let styleInfos: StyleInfo[] = Style.makeStyleInfos(shapeEntity.shape.styles)
-    let shapeData = new ShapeInfo(shapeEntity.type, shapeEntity.category, shapeEntity.left, shapeEntity.top, shapeEntity.width, shapeEntity.height, shapeEntity.text, shapeEntity.rotation.radius, styleInfos)
-    shapeData.rotation = shapeEntity.rotation.radius
-    shapeData.modifier = shapeEntity.shape.modifier.x + ',' + shapeEntity.shape.modifier.y
-    shapeData.adapter = shapeEntity.shape.adapter.x + ',' + shapeEntity.shape.adapter.y
-    shapeData.adapterSize = shapeEntity.shape.adapterSize
+    let shapeinfo = new ShapeInfo(shapeEntity.type, shapeEntity.category, shapeEntity.left, shapeEntity.top, shapeEntity.width, shapeEntity.height, shapeEntity.text, shapeEntity.rotation.radius, styleInfos)
+    shapeinfo.rotation = shapeEntity.rotation.radius
+    shapeinfo.modifier = shapeEntity.shape.modifier.x + ',' + shapeEntity.shape.modifier.y
+    shapeinfo.adapter = shapeEntity.shape.adapter.x + ',' + shapeEntity.shape.adapter.y
+    shapeinfo.adapterSize = shapeEntity.shape.adapterSize
 
-    return shapeData
+    return shapeinfo
   }
 
   public static  saveTable(tableEntity: TableEntity) : EditorItemInfo {
@@ -260,6 +264,10 @@ export class OperationHelper {
   public static  saveContainer(container: ContainerEntity) : EditorItemInfo {
     let styleInfos: StyleInfo[] = Style.makeStyleInfos(container.shape.styles)
     let containerInfo = new ContainerInfo(container.type, container.category, container.left, container.top, container.width, container.height, container.text,  container.rotation.radius, styleInfos)
+    containerInfo.rotation = container.rotation.radius
+    containerInfo.modifier = container.shape.modifier.x + ',' + container.shape.modifier.y
+    containerInfo.adapter = container.shape.adapter.x + ',' + container.shape.adapter.y
+    containerInfo.adapterSize = container.shape.adapterSize
 
     return containerInfo
   }
