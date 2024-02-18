@@ -127,6 +127,8 @@ const Content: FC<ContentProps> = ({
       initialize()
     }
 
+    refresh()
+
     // 根据浏览器窗口大小来调整各子div的滚动范围
     window.addEventListener('resize', calculateViewSize)
     window.addEventListener('copy', handleCopyDetail)
@@ -376,6 +378,11 @@ const Content: FC<ContentProps> = ({
     updateEditors(panes)
   }
 
+  const refresh = () => {
+    if(Utils.currentEditor)  {
+      refreshSelectionInfo(Utils.currentEditor)
+    }
+  }
 
   const refreshSelectionInfo = (editor: Editor) => {
     if (editor.selectionLayer.getEditorItemCount() > 0) {
@@ -648,6 +655,7 @@ const Content: FC<ContentProps> = ({
         }
       })
       Utils.currentEditor.focus()
+      Utils.currentEditor.triggerTextEditStyleChange()
     }
     if(fontSizeNode) {
       console.log('font size blue trigger on size change')
@@ -700,6 +708,7 @@ const Content: FC<ContentProps> = ({
         }
       })
       Utils.currentEditor.focus()    
+      Utils.currentEditor.triggerTextEditStyleChange()
     }
   }
 
@@ -715,8 +724,9 @@ const Content: FC<ContentProps> = ({
         } else {
           editorItem.fontWeight = fontBold ? FontWeight.NORMAL : FontWeight.BOLD
         }
-    })
+      })
       Utils.currentEditor.focus()    
+      Utils.currentEditor.triggerTextEditStyleChange()
     }
   }
 
@@ -734,6 +744,7 @@ const Content: FC<ContentProps> = ({
         }
       })
       Utils.currentEditor.focus()    
+      Utils.currentEditor.triggerTextEditStyleChange()
     }
   }
 
@@ -751,6 +762,7 @@ const Content: FC<ContentProps> = ({
         }
       })
       Utils.currentEditor.focus()    
+      Utils.currentEditor.triggerTextEditStyleChange()
     }
   }
 
@@ -768,6 +780,7 @@ const Content: FC<ContentProps> = ({
         }
       })
       Utils.currentEditor.focus()    
+      Utils.currentEditor.triggerTextEditStyleChange()
     }
   }
 
@@ -785,6 +798,7 @@ const Content: FC<ContentProps> = ({
         }
       })
       Utils.currentEditor.focus()    
+      Utils.currentEditor.triggerTextEditStyleChange()
     }
   }
 

@@ -531,6 +531,7 @@ const Header: FC<HeaderProps> = ({
         }
       })
       Utils.currentEditor.focus()
+      Utils.currentEditor.triggerTextEditStyleChange()
     }
     if(fontSizeNode) {
       console.log('font size blue trigger on size change')
@@ -637,8 +638,8 @@ const Header: FC<HeaderProps> = ({
         }
       })
       currentEditor.focus()
-    }
-    
+      currentEditor.triggerTextEditStyleChange()
+    }    
   }
 
   const handleItalicChanged = () => {
@@ -655,6 +656,7 @@ const Header: FC<HeaderProps> = ({
         }
       })
       currentEditor.focus()
+      currentEditor.triggerTextEditStyleChange()
     }
   }
 
@@ -672,6 +674,7 @@ const Header: FC<HeaderProps> = ({
         }
       })
       currentEditor.focus()
+      currentEditor.triggerTextEditStyleChange()
     }
   }
 
@@ -689,6 +692,7 @@ const Header: FC<HeaderProps> = ({
         }
       })
       currentEditor.focus()
+      currentEditor.triggerTextEditStyleChange()
     }
   }
 
@@ -706,6 +710,7 @@ const Header: FC<HeaderProps> = ({
         }
       })
       currentEditor.focus()
+      currentEditor.triggerTextEditStyleChange()
     }
   }
 
