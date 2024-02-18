@@ -98,11 +98,16 @@ export abstract class AbstractTextShape extends Shape {
     }
 
     public get fontColor() {
-      if(this._focused) {
-        return this._selectStyle.color
+      if(this._endIndex != this._startIndex) {
+        const selectionStyles = this.findSelectionStyles()
+        return selectionStyles[0].color
       } else {
-      return this._styles[0].color
-    }
+        if(this._focused) {
+          return this._selectStyle.color
+        } else {
+          return this._styles[0].color
+        }
+      } 
     }
 
     public set fontColor(value: Color) {
@@ -123,10 +128,15 @@ export abstract class AbstractTextShape extends Shape {
     }
 
     public get fontSize() {
-      if(this._focused) {
-        return this._selectStyle.size
+      if(this._endIndex != this._startIndex) {
+        const selectionStyles = this.findSelectionStyles()
+        return selectionStyles[0].size
       } else {
-        return this._styles[0].size
+        if(this._focused) {
+          return this._selectStyle.size
+        } else {
+          return this._styles[0].size
+        }
       }
     }
 
@@ -148,10 +158,15 @@ export abstract class AbstractTextShape extends Shape {
     }
 
     public get fontWeight() {
-      if(this._focused) {
-        return this._selectStyle.bold ? FontWeight.BOLD : FontWeight.NORMAL
+      if(this._endIndex != this._startIndex) {
+        const selectionStyles = this.findSelectionStyles()
+        return selectionStyles[0].bold ? FontWeight.BOLD : FontWeight.NORMAL
       } else {
-        return this._styles[0].bold ? FontWeight.BOLD : FontWeight.NORMAL
+        if(this._focused) {
+          return this._selectStyle.bold ? FontWeight.BOLD : FontWeight.NORMAL
+        } else {
+          return this._styles[0].bold ? FontWeight.BOLD : FontWeight.NORMAL
+        }
       }
     }
 
@@ -173,10 +188,15 @@ export abstract class AbstractTextShape extends Shape {
     }
 
     public get fontSlant() {
-      if(this._focused) {
-        return this._selectStyle.italic ? FontSlant.ITALIC : FontSlant.UP_RIGHT
+      if(this._endIndex != this._startIndex) {
+        const selectionStyles = this.findSelectionStyles()
+        return selectionStyles[0].italic ? FontSlant.ITALIC : FontSlant.UP_RIGHT
       } else {
-        return this._styles[0].italic ? FontSlant.ITALIC : FontSlant.UP_RIGHT
+        if(this._focused) {
+          return this._selectStyle.italic ? FontSlant.ITALIC : FontSlant.UP_RIGHT
+        } else {
+          return this._styles[0].italic ? FontSlant.ITALIC : FontSlant.UP_RIGHT
+        }
       }
     }
 
@@ -198,11 +218,16 @@ export abstract class AbstractTextShape extends Shape {
     }
 
     public get textDecoration() {
-      if(this._focused) {
-        return this._selectStyle.underline ? TextDecoration.UNDERLINE : TextDecoration.NONE
+      if(this._endIndex != this._startIndex) {
+        const selectionStyles = this.findSelectionStyles()
+        return selectionStyles[0].underline ? TextDecoration.UNDERLINE : TextDecoration.NONE
       } else {
-        return this._styles[0].underline ? TextDecoration.UNDERLINE : TextDecoration.NONE
-    }
+        if(this._focused) {
+          return this._selectStyle.underline ? TextDecoration.UNDERLINE : TextDecoration.NONE
+        } else {
+          return this._styles[0].underline ? TextDecoration.UNDERLINE : TextDecoration.NONE
+        }
+      }
     }
 
     public set textDecoration(value: TextDecoration) {
