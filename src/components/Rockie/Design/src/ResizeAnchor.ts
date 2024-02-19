@@ -82,7 +82,7 @@ export class ResizeAnchor extends Anchor {
 
       switch (this._resizeType) {
         case ResizeType.Left: {
-          const resizeX = x - this._startX
+          const resizeX = this.editor.alignToGridSize(x - this._startX)
           switch(this.target.shape.typeInfo.freeze) {
             case EntityShapeFreezeType.Width:
               newLeft = this.target.left + resizeX
@@ -110,8 +110,8 @@ export class ResizeAnchor extends Anchor {
           break
         }
         case ResizeType.LeftTop: {
-          const resizeX = x - this._startX
-          const resizeY = y - this._startY
+          const resizeX = this.editor.alignToGridSize(x - this._startX)
+          const resizeY = this.editor.alignToGridSize(y - this._startY)
           switch(this.target.shape.typeInfo.freeze) {
             case EntityShapeFreezeType.Width:
               newLeft = this.target.left + resizeX
@@ -149,7 +149,7 @@ export class ResizeAnchor extends Anchor {
           break
         }
         case ResizeType.Top: {
-          const resizeY = y - this._startY
+          const resizeY = this.editor.alignToGridSize(y - this._startY)
           switch(this.target.shape.typeInfo.freeze) {
             case EntityShapeFreezeType.Width:
               newTop = this.target.top + resizeY
@@ -177,8 +177,8 @@ export class ResizeAnchor extends Anchor {
           break
         }
         case ResizeType.RightTop: {
-          const resizeX = x - this._startX
-          const resizeY = y - this._startY
+          const resizeX = this.editor.alignToGridSize(x - this._startX)
+          const resizeY = this.editor.alignToGridSize(y - this._startY)
           switch(this.target.shape.typeInfo.freeze) {
             case EntityShapeFreezeType.Width:
               newTop = this.target.top + resizeY
@@ -211,7 +211,7 @@ export class ResizeAnchor extends Anchor {
           break
         }
         case ResizeType.Right: {
-          const resizeX = x - this._startX
+          const resizeX = this.editor.alignToGridSize(x - this._startX)
           switch(this.target.shape.typeInfo.freeze) {
             case EntityShapeFreezeType.Width:
               newWidth = this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
@@ -234,8 +234,8 @@ export class ResizeAnchor extends Anchor {
           break
         }
         case ResizeType.RightBottom: {
-          const resizeX = x - this._startX
-          const resizeY = y - this._startY
+          const resizeX = this.editor.alignToGridSize(x - this._startX)
+          const resizeY = this.editor.alignToGridSize(y - this._startY)
           switch(this.target.shape.typeInfo.freeze) {
             case EntityShapeFreezeType.Width:
               newWidth = this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
@@ -263,7 +263,7 @@ export class ResizeAnchor extends Anchor {
           break
         }
         case ResizeType.Bottom: {
-          const resizeY = y - this._startY
+          const resizeY = this.editor.alignToGridSize(y - this._startY)
           switch(this.target.shape.typeInfo.freeze) {
             case EntityShapeFreezeType.Width:
               newHeight = this.target.height + resizeY >= this.target.minHeight ? this.target.height + resizeY : this.target.minHeight
@@ -287,8 +287,8 @@ export class ResizeAnchor extends Anchor {
         }
         case ResizeType.LeftBottom:
         default: {
-          const resizeX = x - this._startX
-          const resizeY = y - this._startY
+          const resizeX = this.editor.alignToGridSize(x - this._startX)
+          const resizeY = this.editor.alignToGridSize(y - this._startY)
           switch(this.target.shape.typeInfo.freeze) {
             case EntityShapeFreezeType.Width:
               newLeft = this.target.left + resizeX
