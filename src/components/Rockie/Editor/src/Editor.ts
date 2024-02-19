@@ -50,7 +50,7 @@ export class Editor extends Painter {
   private _zoom = 1.00;
   private _inMoving = false;
   private _moved = false; //Check if movement already started
-  private _gridSize = 16;
+  private _gridSize = 10;
   private _action: Action | undefined;
   private _startPointX = 0;
   private _startPointY = 0;
