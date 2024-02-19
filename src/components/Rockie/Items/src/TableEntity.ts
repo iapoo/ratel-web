@@ -31,6 +31,17 @@ export class TableEntity extends ContainerEntity {
     return this._columnCount
   }
 
+  public get boundary (): Rectangle {
+    return super.boundary
+  }
+
+  public set boundary (value: Rectangle) {
+    const oldWidth = this.width
+    const oldHeight = this.height
+    super.boundary = value
+    this.updateTableBoundary(oldWidth, oldHeight)
+  }
+
   public getAllTypes(): Type[] {
     return [{ name: TableEntity.TABLE_TYPE_TABLE, description: TableEntity.TABLE_DESC_TABLE, },]
   }
@@ -165,7 +176,6 @@ export class TableEntity extends ContainerEntity {
 
   }
 
-
   private refreshTable() {
     this.removeAllItems()
     const cellWidth = this.width / this.columnCount
@@ -184,6 +194,17 @@ export class TableEntity extends ContainerEntity {
         // }
         // cell.shape.fill = paint
         this.addItem(cell)
+      }
+    }
+  }
+
+  private updateTableBoundary(oldWidth: number, oldHeight: number) {
+    const widthRatio =  this.width / oldWidth
+    const heightRatio =  this.height / oldHeight
+    for (let rowIndex = 0; rowIndex < this._rowCount; rowIndex++) {
+      for (let columnIndex = 0; columnIndex < this._columnCount; columnIndex++) {
+        const cell = this.items[rowIndex * this._columnCount + columnIndex]
+        cell.boundary =  Rectangle.makeLTWH(cell.left * widthRatio, cell.top * heightRatio, cell.width * widthRatio, cell.height * heightRatio)
       }
     }
   }
