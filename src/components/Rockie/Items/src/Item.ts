@@ -164,7 +164,7 @@ export abstract class Item implements EditorItem {
   }
 
   public set boundary (value: Rectangle) {
-    const oldBoundary = this._boundary
+    //const oldBoundary = this._boundary
     this._boundary = value
     this._shape.boundary = value
     //this.updateItemsBoundary(oldBoundary, value)
