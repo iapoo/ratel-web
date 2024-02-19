@@ -108,6 +108,7 @@ export default {
   'workspace.property-editor.page-setting.portrait': 'Portrait',
   'workspace.property-editor.page-setting.show-background': 'Show Background',
   'workspace.property-editor.page-setting.show-grid': 'Show Grid',
+  'workspace.property-editor.page-setting.snap-to-grid': 'Snap To Grid',
   'workspace.property-editor.page-setting.title': 'Page Settings',
   'workspace.property-editor.page-setting.width': 'W',
   'workspace.property-editor.page-style.title': 'Page Style',

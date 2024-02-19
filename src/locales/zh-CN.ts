@@ -108,6 +108,7 @@ export default {
   'workspace.property-editor.page-setting.portrait': '纵向',
   'workspace.property-editor.page-setting.show-background': '显示背景',
   'workspace.property-editor.page-setting.show-grid': '显示网格',
+  'workspace.property-editor.page-setting.snap-to-grid': '启用网格对齐',
   'workspace.property-editor.page-setting.title': '页面设置',
   'workspace.property-editor.page-setting.width': '宽',
   'workspace.property-editor.page-style.title': '页面风格',

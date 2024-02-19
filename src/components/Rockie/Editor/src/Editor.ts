@@ -86,6 +86,7 @@ export class Editor extends Painter {
   private _origWidth: number
   private _origHeight: number
   private _showGrid: boolean = true
+  private _snapToGrid: boolean = true
   private _gridColor: Color = Colors.Gray
   private _showBackground: boolean = false
   private _backgroundColor: Color = Colors.White
@@ -438,6 +439,15 @@ export class Editor extends Painter {
 
   public set showGrid(value: boolean) {
     this._showGrid = value
+    this._backgroundLayer.invalidateLayer()
+  }
+
+  public get snapToGrid (): boolean {
+    return this._snapToGrid
+  }
+
+  public set snapToGrid(value: boolean) {
+    this._snapToGrid = value
     this._backgroundLayer.invalidateLayer()
   }
 
@@ -1435,14 +1445,14 @@ export class Editor extends Painter {
     }
     const controllerItem = this.controllerLayer.getEditorItem(0)
     // console.log(`Moving... x = ${e.x} width=${controllerItem.width} `)
-    const width = controllerItem.width
-    const height = controllerItem.height
-    const ex = Math.round(e.x / this._zoom / this.gridSize) * this.gridSize
-    const ey = Math.round(e.y / this._zoom / this.gridSize) * this.gridSize
-    controllerItem.boundary = Rectangle.makeLTWH(Math.round(ex - width / 2), Math.round(ey - height / 2), width, height)
-     if (controllerItem instanceof Connector) {
-       controllerItem.start = new Point2(Math.round(e.x / this._zoom - width / 2), Math.round(e.y / this._zoom - height / 2))
-       controllerItem.end = new Point2(Math.round(e.x / this._zoom + width / 2), Math.round(e.y / this._zoom + height / 2))
+    const width = this.alignToGridSize(controllerItem.width)
+    const height = this.alignToGridSize(controllerItem.height)
+    const ex =e.x / this._zoom 
+    const ey = e.y / this._zoom
+    controllerItem.boundary = Rectangle.makeLTWH(this.alignToGridSize(ex - width / 2), this.alignToGridSize(ey - height / 2), width, height)
+    if (controllerItem instanceof Connector) {
+       controllerItem.start = new Point2(this.alignToGridSize(e.x / this._zoom - width / 2), this.alignToGridSize(e.y / this._zoom - height / 2))
+       controllerItem.end = new Point2(this.alignToGridSize(e.x / this._zoom + width / 2), this.alignToGridSize(e.y / this._zoom + height / 2))
     } else if (controllerItem instanceof Entity) {
     }
 
@@ -2025,6 +2035,10 @@ export class Editor extends Painter {
     const theSelectionLayer = this.selectionLayer as SelectionLayer
     const theHoverLayer = this.hoverLayer as HoverLayer
     const count = theSelectionLayer.getEditorItemCount()
+    const moveX = e.x / this._zoom - this._startPointX / this._zoom
+    const moveY = e.y / this._zoom - this._startPointY / this._zoom
+    const alignMoveX = this.alignToGridSize(moveX)
+    const alignMoveY = this.alignToGridSize(moveY)
     for (let i = 0; i < count; i++) {
       const editorItem = theSelectionLayer.getEditorItem(i) as Item
       const left = editorItem.left
@@ -2033,15 +2047,17 @@ export class Editor extends Painter {
       const targetConnectorCount = editorItem.getTargetConnectorCount()
       //const ex = Number(Math.round((left + e.x / this._zoom - this._startPointX / this._zoom) / 1))
       //const ey = Number(Math.round((top + e.y / this._zoom - this._startPointY / this._zoom) / 1))
-      const ex = left + e.x / this._zoom - this._startPointX / this._zoom
-      const ey = top + e.y / this._zoom - this._startPointY / this._zoom
+      //const ex = left + e.x / this._zoom - this._startPointX / this._zoom
+      //const ey = top + e.y / this._zoom - this._startPointY / this._zoom
+      const newLeft = left + alignMoveX
+      const newTop = top + alignMoveY
       //console.log(`startx=${this._startPointX} starty=${this._startPointY} e.x=${e.x} e.y = ${e.y} ex = ${ex} ey=${ey} left=` + (left + e.x - this._startPointX) + ', top = ' + (top + e.y - this._startPointY) + ', width = ' + editorItem.width + ', height = ' + editorItem.height)
-      editorItem.boundary = Rectangle.makeLTWH(ex, ey, editorItem.width, editorItem.height)
+      editorItem.boundary = Rectangle.makeLTWH(newLeft, newTop, editorItem.width, editorItem.height)
       if (editorItem instanceof Connector) {
-        const startX = editorItem.start.x + e.x / this._zoom - this._startPointX / this._zoom
-        const startY = editorItem.start.y + e.y / this._zoom - this._startPointY / this._zoom
-        const endX = editorItem.end.x + e.x / this._zoom - this._startPointX / this._zoom
-        const endY = editorItem.end.y + e.y / this._zoom - this._startPointY / this._zoom
+        const startX = editorItem.start.x + alignMoveX
+        const startY = editorItem.start.y + alignMoveY
+        const endX = editorItem.end.x + alignMoveX
+        const endY = editorItem.end.y + alignMoveY
         if(!editorItem.source) {
           editorItem.start = new Point2(startX, startY)
         }
@@ -2059,7 +2075,7 @@ export class Editor extends Painter {
           // if (connector.sourceJoint) {
           //  connector.sourceJoint = new Point2(connector.sourceJoint.x + e.x / this._zoom - this._startPointX / this._zoom, connector.sourceJoint.y + e.y / this._zoom - this._startPointY / this._zoom)
           // }
-          connector.start = new Point2(connector.start.x + (e.x - this._startPointX) / this._zoom, connector.start.y + (e.y - this._startPointY) / this._zoom)
+          connector.start = new Point2(connector.start.x + alignMoveX, connector.start.y + alignMoveY)
         }
       }
       for (let j = 0; j < targetConnectorCount; j++) {
@@ -2067,14 +2083,18 @@ export class Editor extends Painter {
         if (connector.target == editorItem) {
           // connector.updateTargetJoint()
           // connector.end = new Point2(connector.end.x + e.x - this._startPointX, connector.end.y + e.y - this._startPointY)
-          connector.end = new Point2(connector.end.x + (e.x - this._startPointX) / this._zoom, connector.end.y + (e.y - this._startPointY) / this._zoom)
+          connector.end = new Point2(connector.end.x + alignMoveX, connector.end.y + alignMoveY)
           //connector.end = new Point2(connector.end.x + e.x - this._startPointX, connector.end.y + e.y - this._startPointY)
           //console.log(`end is connector.end.x = ${connector.end.x} connector.end.y = ${connector.end.y} item.x = ${editorItem.left} item.y = ${editorItem.top}`)
         }
       }
     }
-    this._startPointX = e.x
-    this._startPointY = e.y
+    if(alignMoveX != 0) {
+      this._startPointX = e.x
+    }
+    if(alignMoveY != 0) {
+      this._startPointY = e.y
+    }
     this._moved = true
     theSelectionLayer.invalidateLayer()
     theHoverLayer.removeAllEditorItems()
@@ -2192,5 +2212,13 @@ export class Editor extends Painter {
       }
     }
     return result
+  }
+
+  public alignToGridSize(value: number) {
+    if(this._snapToGrid) {
+      return value - value % this._gridSize
+    } else {
+      return value
+    }
   }
 }

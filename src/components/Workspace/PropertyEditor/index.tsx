@@ -24,6 +24,7 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
   const [ gridSize, setGridSize, ] = useState<number>(Consts.GRID_SIZE_DEFAULT)
   const [ gridColor, setGridColor, ] = useState<string>(Consts.COLOR_GRID_DEFAULT)
   const [ showGrid, setShowGrid, ] = useState<boolean>(true)
+  const [ snapToGrid, setSnapToGrid, ] = useState<boolean>(true)
   const [ backgroundColor, setBackgroundColor, ] = useState<string>(Consts.COLOR_BACKGROUND_DEFAULT)
   const [ showPageItems, setShowPageItems, ] = useState<boolean>(true)
   const [ showBackground, setShowBackground, ] = useState<boolean>(false)
@@ -186,6 +187,14 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
       //console.log(`${showGrid}    ${e.target.checked}    ${currentEditor.showGrid}`)
       setShowGrid(e.target.checked)
       currentEditor.showGrid = e.target.checked
+    }
+  }
+
+  const handleSnapToGridChange = (e: CheckboxChangeEvent) => {
+    if(currentEditor) {
+      //console.log(`${showGrid}    ${e.target.checked}    ${currentEditor.showGrid}`)
+      setSnapToGrid(e.target.checked)
+      currentEditor.snapToGrid = e.target.checked
     }
   }
 
@@ -383,7 +392,7 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
 
   const pageSettings = <div>
     <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontWeight: 'bold', padding: 4, }}>
-      <Checkbox onChange={handleShowGridChange} checked={enableFill}><FormattedMessage id='workspace.property-editor.page-setting.show-grid'/></Checkbox>      
+      <Checkbox onChange={handleShowGridChange} checked={showGrid}><FormattedMessage id='workspace.property-editor.page-setting.show-grid'/></Checkbox>      
     </div>
     <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 4, }}>
       <div><FormattedMessage id='workspace.property-editor.page-setting.grid-size'/></div>
@@ -392,6 +401,9 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
     <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 4, }}>
       <div><FormattedMessage id='workspace.property-editor.page-setting.grid-color'/></div>
       <ColorPicker size='small' value={gridColor} onChange={handleGridColorChange} />
+    </div>
+    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 4, }}>
+      <Checkbox onChange={handleSnapToGridChange} checked={snapToGrid}><FormattedMessage id='workspace.property-editor.page-setting.snap-to-grid'/></Checkbox>      
     </div>
     <Divider style={{margin: 4}}/>
     <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontWeight: 'bold', padding: 8, }}>
