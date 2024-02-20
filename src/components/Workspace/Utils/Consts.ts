@@ -130,6 +130,30 @@ export class Consts {
     public static CONNECTOR_DIRECTION_RIGHT = 'right'
     public static CONNECTOR_DIRECTION_BOTTOM = 'bottom'
 
+    public static EDITOR_CURSOR_AUTO = 'auto'
+    public static EDITOR_CURSOR_DEFAULT = 'default'
+    public static EDITOR_CURSOR_ALL_SCROLL = 'all-scroll'
+    public static EDITOR_CURSOR_HELP = 'help'
+    public static EDITOR_CURSOR_MOVE = 'move'
+    public static EDITOR_CURSOR_POINTER = 'pointer'
+    public static EDITOR_CURSOR_PROGRESS = 'progress'
+    public static EDITOR_CURSOR_TEXT = 'text'
+    public static EDITOR_CURSOR_VERTICAL_TEXT = 'vertical-text'
+    public static EDITOR_CURSOR_WAIT = 'wait'
+    public static EDITOR_CURSOR_NO_DROP = 'no-drop'
+    public static EDITOR_CURSOR_NOT_ALLOWED = 'not-allowed'
+    public static EDITOR_CURSOR_E_RESIZE = 'e-resize'
+    public static EDITOR_CURSOR_N_RESIZE = 'n-resize'
+    public static EDITOR_CURSOR_S_RESIZE = 's-resize'
+    public static EDITOR_CURSOR_W_RESIZE = 'w-resize'
+    public static EDITOR_CURSOR_NE_RESIZE = 'ne-resize'
+    public static EDITOR_CURSOR_NW_RESIZE = 'nw-resize'
+    public static EDITOR_CURSOR_SE_RESIZE = 'se-resize'
+    public static EDITOR_CURSOR_SW_RESIZE = 'sw-resize'
+    public static EDITOR_CURSOR_ROW_RESIZE = 'row-resize'
+    public static EDITOR_CURSOR_COL_RESIZE = 'col-resize'
+    public static EDITOR_CURSOR_CROSSHAIR = 'crosshair'
+  
 }
 
 export const FontSizeOptions = [

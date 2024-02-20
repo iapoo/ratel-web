@@ -8,6 +8,7 @@ import { ConnectorArrowDisplayType, ConnectorType } from "@/components/Rockie/Sh
 import { ConnectorArrowDisplayMode, ConnectorArrowTypeInfo, ConnectorDirection } from "@/components/Rockie/Shapes/src/ConnectorShape";
 import { ConnectorArrowType, ConnectorArrowTypes } from "@/components/Rockie/Items/src/Connector";
 import { ConnectorArrowInfo } from "@/components/Rockie/Items";
+import { EditorMode } from "@/components/Rockie/Editor";
 
 export class SystemUtils {
 
@@ -494,6 +495,59 @@ export class SystemUtils {
         }
     }
 
+    public static generateEditorMode(editorMode: EditorMode){
+        switch(editorMode) {
+            case EditorMode.AUTO:
+                return Consts.EDITOR_CURSOR_AUTO
+            case EditorMode.DEFAULT:
+                return Consts.EDITOR_CURSOR_DEFAULT
+            case EditorMode.ALL_SCROLL:
+                return Consts.EDITOR_CURSOR_ALL_SCROLL
+            case EditorMode.HELP:
+                return Consts.EDITOR_CURSOR_HELP
+            case EditorMode.MOVE:
+                return Consts.EDITOR_CURSOR_MOVE
+            case EditorMode.POINTER:
+                return Consts.EDITOR_CURSOR_POINTER
+            case EditorMode.PROGRESS:
+                return Consts.EDITOR_CURSOR_PROGRESS
+            case EditorMode.TEXT:
+                return Consts.EDITOR_CURSOR_TEXT
+            case EditorMode.VERTICAL_TEXT:
+                return Consts.EDITOR_CURSOR_VERTICAL_TEXT
+            case EditorMode.WAIT:
+                return Consts.EDITOR_CURSOR_WAIT
+            case EditorMode.NO_DROP:
+                return Consts.EDITOR_CURSOR_NO_DROP
+            case EditorMode.NOT_ALLOWED:
+                return Consts.EDITOR_CURSOR_NOT_ALLOWED
+            case EditorMode.E_RESIZE:
+                return Consts.EDITOR_CURSOR_E_RESIZE
+            case EditorMode.N_RESIZE:
+                return Consts.EDITOR_CURSOR_N_RESIZE
+            case EditorMode.S_RESIZE:
+                return Consts.EDITOR_CURSOR_S_RESIZE
+            case EditorMode.W_RESIZE:
+                return Consts.EDITOR_CURSOR_W_RESIZE
+            case EditorMode.NE_RESIZE:
+                return Consts.EDITOR_CURSOR_NE_RESIZE
+            case EditorMode.NW_RESIZE:
+                return Consts.EDITOR_CURSOR_NW_RESIZE
+            case EditorMode.SE_RESIZE:
+                return Consts.EDITOR_CURSOR_SE_RESIZE
+            case EditorMode.SW_RESIZE:
+                return Consts.EDITOR_CURSOR_SW_RESIZE
+            case EditorMode.ROW_RESIZE:
+                return Consts.EDITOR_CURSOR_ROW_RESIZE
+            case EditorMode.COL_RESIZE:
+                return Consts.EDITOR_CURSOR_COL_RESIZE
+            case EditorMode.CROSSHAIR:
+                return Consts.EDITOR_CURSOR_CROSSHAIR
+            case EditorMode.AUTO:
+            default:
+                return Consts.EDITOR_CURSOR_AUTO
+        }
+    }
 }
 
 

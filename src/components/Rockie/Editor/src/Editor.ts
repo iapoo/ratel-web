@@ -21,6 +21,33 @@ import { ContainerLayer } from './ContainerLayer'
 import { ConnectorDirection } from '../../Shapes'
 import { TableLayer } from './TableLayer'
 
+
+export enum EditorMode {
+  AUTO,
+  DEFAULT,
+  ALL_SCROLL,
+  HELP,
+  MOVE,
+  POINTER,
+  PROGRESS,
+  TEXT,
+  VERTICAL_TEXT,
+  WAIT,
+  NO_DROP,
+  NOT_ALLOWED,
+  E_RESIZE,
+  N_RESIZE,
+  S_RESIZE,
+  W_RESIZE,
+  NE_RESIZE,
+  NW_RESIZE,
+  SE_RESIZE,
+  SW_RESIZE,
+  ROW_RESIZE,
+  COL_RESIZE,
+  CROSSHAIR,
+}
+
 export class Editor extends Painter {
   /**
    * Shadow size
@@ -82,6 +109,7 @@ export class Editor extends Painter {
   private _textEditStyleChangeListeners = new Array<(e: EditorEvent) => void>(0)
   private _tableTextEditStartListeners = new Array<(e: EditorEvent) => void>(0)
   private _tableTextEditEndListeners = new Array<(e: EditorEvent) => void>(0)
+  private _editorModeChangeListeners = new Array<(e: EditorEvent) => void>(0)
   private _startEditorItemInfos: EditorItemInfo[] = []
   private _origWidth: number
   private _origHeight: number
@@ -97,6 +125,7 @@ export class Editor extends Painter {
   private _containerSelectionShape: Rectangle2D = new Rectangle2D(0, 0, 0, 0)
   private _selectionOutlineShape: Rectangle2D = new Rectangle2D(0, 0, 0, 0)
   private _tableActiveCellShape: Rectangle2D = new Rectangle2D(0, 0, 0, 0)
+  private _mode: EditorMode = EditorMode.AUTO
 
   public constructor (canvasId: string | HTMLCanvasElement) {
     super(canvasId)
@@ -192,6 +221,10 @@ export class Editor extends Painter {
 
   public get operationChangeListeners() {
     return this._operationChangeListeners
+  }
+
+  public get mode() {
+    return this._mode
   }
 
   public onOperationChange(callback: (e:EditorEvent) => void) {
@@ -401,24 +434,47 @@ export class Editor extends Painter {
     return this._sizeChangeListeners
   }
 
-  public onsizeChange(callback: (e: EditorEvent) => void) {
+  public onSizeChange(callback: (e: EditorEvent) => void) {
     const index = this._sizeChangeListeners.indexOf(callback)
     if (index < 0) {
       this._sizeChangeListeners.push(callback)
     }
   }  
 
-  public removesizeChange(callback: (e: EditorEvent) => void) {
+  public removeSizeChange(callback: (e: EditorEvent) => void) {
     const index = this._sizeChangeListeners.indexOf(callback)
     if (index >= 0) {
       this._sizeChangeListeners.splice(index, 1)
     }
   }
   
-  public hassizeChange(callback: (e: EditorEvent) => void) {
+  public hasSizeChange(callback: (e: EditorEvent) => void) {
     const index = this._sizeChangeListeners.indexOf(callback)
     return index >= 0
   }
+
+  public get editorModeChangeListeners() {
+    return this._editorModeChangeListeners
+  }
+
+  public onEditorModeChange(callback: (e: EditorEvent) => void) {
+    const index = this._editorModeChangeListeners.indexOf(callback)
+    if (index < 0) {
+      this._editorModeChangeListeners.push(callback)
+    }
+  }  
+
+  public removeEditorModeChange(callback: (e: EditorEvent) => void) {
+    const index = this._editorModeChangeListeners.indexOf(callback)
+    if (index >= 0) {
+      this._editorModeChangeListeners.splice(index, 1)
+    }
+  }
+  
+  public hasEditorModeChange(callback: (e: EditorEvent) => void) {
+    const index = this._editorModeChangeListeners.indexOf(callback)
+    return index >= 0
+  }  
 
   public get textArea() {
     return this._textArea
@@ -1630,6 +1686,13 @@ export class Editor extends Painter {
     })
   }
 
+  public triggerEditorModeChange() {
+    this._editorModeChangeListeners.forEach(callback => {
+      const event = new EditorEvent(this)
+      callback(event)
+    })
+  }
+
   private handleRemoveEditorItem(id: string) {
     let itemCount = this._contentLayer.getEditorItemCount()
     for(let i = itemCount - 1; i >= 0; i --) {
@@ -1917,17 +1980,25 @@ export class Editor extends Painter {
     const theHoverLayer: HoverLayer = this.hoverLayer as HoverLayer
     const theSelectionLayer: SelectionLayer = this.selectionLayer as SelectionLayer
     const editorItem = this.findEditorItem(e.x, e.y, false)
-    // console.log(`Finding ...... ${editorItem}`)
+    //console.log(`Finding ...... ${editorItem}`)
     const isEdge = editorItem ? this.hasEditorItemJoint(editorItem, e.x, e.y) : false
-    // console.log(` Find editor item edge = ${isEdge}`)
+    //console.log(` Find editor item edge = ${isEdge}`)
     if (editorItem && isEdge) {
+      //console.log(` Check here1`)
       const inEditorItem = this.isInEditorItem(editorItem, e.x, e.y)
-      const targetPoint = this.findEditorItemJoint(editorItem, e.x, e.y, inEditorItem)
-      if (targetPoint) {
-        //  console.log(`Find editor item joint: x = ${targetPoint.x} y = ${targetPoint.y} `)
+      //const targetPoint = this.findEditorItemJoint(editorItem, e.x, e.y, inEditorItem)
+      if(inEditorItem) {
+        //console.log(` Check here2`)
+        this.updateEditorMode(EditorMode.MOVE)
       } else {
-        console.log(`It shouldn't be here`)
+        //console.log(` Check here3`)
+        this.updateEditorMode(EditorMode.CROSSHAIR)
       }
+      //if (targetPoint) {
+      //  console.log(`Find editor item joint: x = ${targetPoint.x} y = ${targetPoint.y} `)
+      //} else {
+      //  console.log(`It shouldn't be here`)
+      //}
     } else if (editorItem !== null && editorItem !== undefined) {
       // DO hover but not include those selected
       if (!theSelectionLayer.hasEditorItem(editorItem)) {
@@ -1941,6 +2012,24 @@ export class Editor extends Painter {
           theHoverLayer.inHolder = true
           theHoverLayer.invalidateLayer()
         }
+        if (editorItem instanceof TableEntity) {
+          const targetPoint = this.findEditorItemPoint(editorItem, e.x, e.y)
+          const [ targetRow, targetRowIndex, ] = this.isTableRowtResizable(editorItem, targetPoint.x, targetPoint.y)
+          const [ targetColumn, targetColumnIndex, ] = this.isTableColumnResizable(editorItem, targetPoint.x, targetPoint.y)
+          if (targetRow) {
+            this.updateEditorMode(EditorMode.ROW_RESIZE)
+          } else if (targetColumn) {
+            this.updateEditorMode(EditorMode.COL_RESIZE)
+          } else if(this._targetItem && this._textFocused && this._textSelecting) {
+            this.updateEditorMode(EditorMode.TEXT)
+          } else {
+            this.updateEditorMode(EditorMode.MOVE)
+          }
+        } else if(this._textFocused && this._textSelecting) {
+          this.updateEditorMode(EditorMode.TEXT)
+        } else {
+          this.updateEditorMode(EditorMode.MOVE)
+        }
       } else {
         if (editorItem instanceof TableEntity) {
           const targetPoint = this.findEditorItemPoint(editorItem, e.x, e.y)
@@ -1950,22 +2039,29 @@ export class Editor extends Painter {
             // console.log('========2')
             // this._targetRow = true
             // this._targetRowIndex = targetRowIndex
+            this.updateEditorMode(EditorMode.ROW_RESIZE)
           } else if (targetColumn) {
             // console.log('========3')
             // this._targetColumn = targetColumn
             // this._targetColumnIndex = targetColumnIndex
-          }
-          if(this._targetItem && this._textFocused && this._textSelecting) {
+            this.updateEditorMode(EditorMode.COL_RESIZE)
+          } else if(this._targetItem && this._textFocused && this._textSelecting) {
             const cellPoint = this.findEditorItemPoint(this._targetItem, e.x, e.y)
             this._targetItem.shape.enterTo(cellPoint.x, cellPoint.y)
+            this.updateEditorMode(EditorMode.TEXT)
+          } else {
+            this.updateEditorMode(EditorMode.MOVE)
           }
         } else if(this._textFocused && this._textSelecting) {
           const targetPoint = this.findEditorItemPoint(editorItem, e.x, e.y)
           editorItem.shape.enterTo(targetPoint.x, targetPoint.y)
+          this.updateEditorMode(EditorMode.TEXT)
+        } else {
+          this.updateEditorMode(EditorMode.MOVE)
         }
       }
     } else {
-      // console.log('test code here')
+      //console.log('test code here')
       if (theHoverLayer.getEditorItemCount() > 0) {
         const hoverEditorItem = theHoverLayer.getEditorItem(0)
         if (hoverEditorItem instanceof Connector) {
@@ -1978,6 +2074,7 @@ export class Editor extends Painter {
             theHoverLayer.inHolder = true
             theHoverLayer.removeAllEditorItems()
           }
+          this.updateEditorMode(EditorMode.AUTO)
         } else {
           // console.log('Connector is not found')
           if (hoverEditorItem.left - Holder.PADDING < e.x / this._zoom && hoverEditorItem.right + Holder.PADDING > e.x / this._zoom &&
@@ -1990,7 +2087,10 @@ export class Editor extends Painter {
             theHoverLayer.inHolder = true
             theHoverLayer.removeAllEditorItems()
           }
+          this.updateEditorMode(EditorMode.AUTO)
         }
+      } else {
+        this.updateEditorMode(EditorMode.AUTO)
       }
     }
   }
@@ -2219,6 +2319,14 @@ export class Editor extends Painter {
       return value - value % this._gridSize
     } else {
       return value
+    }
+  }
+
+  private updateEditorMode(mode: EditorMode) {
+    //console.log(` this.mode= ${this._mode}  mode =  ${mode}`)
+    if(this._mode != mode) {
+      this._mode =  mode
+      this.triggerEditorModeChange()
     }
   }
 }

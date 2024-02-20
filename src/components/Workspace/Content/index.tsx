@@ -119,7 +119,7 @@ const Content: FC<ContentProps> = ({
   const [pasteLocation, setPasteLocation, ] = useState<Point2>(new Point2())
   const [pasteFromSystem, setPasteFromSystem, ] = useState<boolean>(true)
   const [tableEdittable, setTableEdittable, ] = useState<boolean>(false)
-
+  const [editorCursor, setEditorCursor, ] = useState<string>(Consts.EDITOR_CURSOR_AUTO)
   const newTabIndex = useRef(4)
 
   useEffect(() => {
@@ -252,6 +252,8 @@ const Content: FC<ContentProps> = ({
     Utils.currentEditor.onSelectionResizing(handleSelectionResizing)
     oldEditor?.removeTextEditStyleChange(handleTextEditStyleChange)
     Utils.currentEditor.onTextEditStyleChange(handleTextEditStyleChange)
+    oldEditor?.removeEditorModeChange(handleEditorModeChange)
+    Utils.currentEditor.onEditorModeChange(handleEditorModeChange)
   }
 
   const updateEditors = (panes: Pane[]) => {
@@ -336,6 +338,8 @@ const Content: FC<ContentProps> = ({
     Utils.currentEditor.onSelectionResized(handleSelectionResized)
     oldEditor?.removeSelectionResizing(handleSelectionResizing)
     Utils.currentEditor.onSelectionResizing(handleSelectionResizing)
+    oldEditor?.removeEditorModeChange(handleEditorModeChange)
+    Utils.currentEditor.onEditorModeChange(handleEditorModeChange)
   }
 
   const onChange = (newActiveKey: string) => {
@@ -373,6 +377,8 @@ const Content: FC<ContentProps> = ({
         Utils.currentEditor.onSelectionResized(handleSelectionResized)
         oldEditor?.removeSelectionResizing(handleSelectionResizing)
         Utils.currentEditor.onSelectionResizing(handleSelectionResizing)
+        oldEditor?.removeEditorModeChange(handleEditorModeChange)
+        Utils.currentEditor.onEditorModeChange(handleEditorModeChange)
       }
     }
     updateEditors(panes)
@@ -489,6 +495,14 @@ const Content: FC<ContentProps> = ({
     }
   }
 
+  const handleEditorModeChange = (e: EditorEvent) => {
+    if(Utils.currentEditor) {
+      const editorCursor =  SystemUtils.generateEditorMode(Utils.currentEditor.mode)
+      setEditorCursor(editorCursor)
+      //console.log(`cursor is updated = ${editorCursor}`)
+    }
+  }
+
   const handleTextEditStart = (e: EditorEvent) => {
     //console.log(`handle text start`)
     if(Utils.currentEditor && e.source.selectionLayer.getEditorItemCount() == 1 ) {
@@ -528,7 +542,7 @@ const Content: FC<ContentProps> = ({
   }
 
   const handleTextEditEnd = (e: EditorEvent) => {
-    console.log(`handle text end`)
+    //console.log(`handle text end`)
     setTextToolbarVisible(false)
 
   }
@@ -576,6 +590,8 @@ const Content: FC<ContentProps> = ({
     Utils.currentEditor.onSelectionResized(handleSelectionResized)
     oldEditor?.removeSelectionResizing(handleSelectionResizing)
     Utils.currentEditor.onSelectionResizing(handleSelectionResizing)
+    oldEditor?.removeEditorModeChange(handleEditorModeChange)
+    Utils.currentEditor.onEditorModeChange(handleEditorModeChange)
     let operation = new Operation(Utils.currentEditor, OperationType.ADD_EDITOR, [])
     Utils.currentEditor.operationService.addOperation(operation)
 }
@@ -610,6 +626,7 @@ const Content: FC<ContentProps> = ({
       Utils.currentEditor.onTableTextEditEnd(handleTableTextEditEnd)
       Utils.currentEditor.onSelectionResized(handleSelectionResized)
       Utils.currentEditor.onSelectionResizing(handleSelectionResizing)
+      Utils.currentEditor.onEditorModeChange(handleEditorModeChange)
     }
   }
 
@@ -1328,7 +1345,7 @@ const Content: FC<ContentProps> = ({
               <Dropdown 
                   menu={{items: popupType == PopupType.SHAPES ? popupShapeItems : (popupType == PopupType.EDITOR ? popupEditorItems : popupText)}} 
                   trigger={['contextMenu']} >
-                <div id='editor-container' style={{ width: editorWidth, height: '100%', float: 'left', backgroundColor: 'darkgray', }} onContextMenu={handleContextTrigger} >
+                <div id='editor-container' style={{ width: editorWidth, height: '100%', float: 'left', backgroundColor: 'darkgray', cursor: editorCursor }} onContextMenu={handleContextTrigger} >
                   {textToolbars}
                   {tableToolbars}                  
                 </div>
