@@ -2322,7 +2322,7 @@ export class Editor extends Painter {
     }
   }
 
-  private updateEditorMode(mode: EditorMode) {
+  public updateEditorMode(mode: EditorMode) {
     //console.log(` this.mode= ${this._mode}  mode =  ${mode}`)
     if(this._mode != mode) {
       this._mode =  mode
