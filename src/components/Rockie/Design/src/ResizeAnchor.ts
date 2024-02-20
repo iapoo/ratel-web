@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable complexity */
 import { Point2, Rectangle, Rotation, } from '@/components/Engine'
-import { Editor, } from '../../Editor/src/Editor'
+import { Editor, EditorMode, } from '../../Editor/src/Editor'
 import { SelectionLayer, } from '../../Editor/src/SelectionLayer'
 import { Anchor, } from './Anchor'
 import { Holder, } from './Holder'
@@ -356,6 +356,8 @@ export class ResizeAnchor extends Anchor {
         // this.editor.hoverLayer.invalidateLayer()
         // this.editor.selectionLayer.invalidateLayer()
       }
+    } else {
+      this.updateEditorCursor()
     }
   }
 
@@ -371,5 +373,43 @@ export class ResizeAnchor extends Anchor {
       const child = item.items[i]
       //this.updateItemBoundary(child, )
     }
+  }
+
+  private updateEditorCursor() {
+    switch (this._resizeType) {
+      case ResizeType.Left: {
+        this.editor.updateEditorMode(EditorMode.W_RESIZE)
+        break
+      }
+      case ResizeType.LeftTop: {
+        this.editor.updateEditorMode(EditorMode.NW_RESIZE)
+        break
+      }
+      case ResizeType.Top: {
+        this.editor.updateEditorMode(EditorMode.N_RESIZE)
+        break
+      }
+      case ResizeType.RightTop: {
+        this.editor.updateEditorMode(EditorMode.NE_RESIZE)
+        break
+      }
+      case ResizeType.Right: {
+        this.editor.updateEditorMode(EditorMode.E_RESIZE)
+        break
+      }
+      case ResizeType.RightBottom: {
+        this.editor.updateEditorMode(EditorMode.SE_RESIZE)
+        break
+      }
+      case ResizeType.Bottom: {
+        this.editor.updateEditorMode(EditorMode.S_RESIZE)
+        break
+      }
+      case ResizeType.LeftBottom:
+      default: {
+        this.editor.updateEditorMode(EditorMode.SW_RESIZE)
+        break
+      }
+    }   
   }
 }
