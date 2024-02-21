@@ -70,7 +70,7 @@ export class RotationAnchor extends Anchor {
         this.lastMovingTime = nowTime;
       }
     } else {
-      this.editor.updateEditorMode(EditorMode.ROTATION)
+      this.editor.updateEditorMode(EditorMode.POINTER)
     }
   }
   protected buildAnchor() {
