@@ -1,7 +1,7 @@
 import { Colors, Paint, Point2, Rectangle } from '@/components/Engine'
 import { Anchor, } from './Anchor'
 import { Connector } from '../../Items'
-import { Editor } from '../../Editor'
+import { Editor, EditorMode } from '../../Editor'
 import { Holder } from './Holder'
 import { ConnectorShape } from '../../Shapes'
 import { OrthogonalHelper } from './OrthogonalHelper'
@@ -184,6 +184,8 @@ export class OrthogonalDivideAnchor extends Anchor {
         this.holder.refreshOrthogonalAnchors()
         this.holder.layoutAnchors()
         this.lastMovingTime = nowTime
+      } else {
+        this.updateEditorCursor()
       }
     }
 
@@ -213,5 +215,20 @@ export class OrthogonalDivideAnchor extends Anchor {
   protected buildAnchor () {
     this.path.reset()
     this.path.addOval(Rectangle.makeLTWH(0, 0, this.width, this.height))
+  }
+
+  private updateEditorCursor() {
+    if(this.target instanceof Connector) {
+      const orthogonalPoints = this.target.orthogonalPoints
+      const orthogonalPoint = orthogonalPoints[this._index]
+      const nextOrthogonalPoint = orthogonalPoints[this._index + 1]
+        if(orthogonalPoint.y == nextOrthogonalPoint.y) {
+          this.editor.updateEditorMode(EditorMode.N_RESIZE)
+        } else {
+          this.editor.updateEditorMode(EditorMode.W_RESIZE)
+        }
+    } else {
+      this.editor.updateEditorMode(EditorMode.AUTO)
+    }
   }
 }

@@ -1,6 +1,6 @@
 /* eslint-disable complexity */
 import { Point2, Rectangle, } from '@/components/Engine'
-import { Editor, } from '../../Editor'
+import { Editor, EditorMode, } from '../../Editor'
 import { SelectionLayer, } from '../../Editor/src/SelectionLayer'
 import { LineEntity, LineType, } from '../../Items'
 import { Anchor, } from './Anchor'
@@ -73,6 +73,8 @@ export class PointAnchor extends Anchor {
         this.editor.hoverLayer.invalidateLayer()
         this.editor.selectionLayer.invalidateLayer()
       }
+    } else {
+      this.editor.updateEditorMode(EditorMode.AUTO)
     }
   }
 

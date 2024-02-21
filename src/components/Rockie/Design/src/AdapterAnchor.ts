@@ -1,5 +1,5 @@
 import { Colors, MathUtils, Paint, Point2 } from '@/components/Engine'
-import { Editor } from '../../Editor'
+import { Editor, EditorMode } from '../../Editor'
 import { Anchor, } from './Anchor'
 import { Holder } from './Holder'
 import { ShapeEntity, Shapes } from '../../Items'
@@ -233,6 +233,8 @@ export class AdapterAnchor extends Anchor {
         this.holder.layoutAnchors()
         this.lastMovingTime = nowTime
       }
+    } else {
+      this.updateEditorCursor()
     }
   }
   protected buildAnchor() {
@@ -242,5 +244,9 @@ export class AdapterAnchor extends Anchor {
     this.path.lineTo(this.width / 2, this.height)
     this.path.lineTo(0, this.height / 2)
     this.path.lineTo(this.width / 2, 0)
+  }
+
+  private updateEditorCursor() {
+    this.editor.updateEditorMode(EditorMode.AUTO)
   }
 }

@@ -1,7 +1,7 @@
 import { Colors, Paint, Point2, Rectangle } from '@/components/Engine'
 import { Anchor, } from './Anchor'
 import { Connector } from '../../Items'
-import { Editor } from '../../Editor'
+import { Editor, EditorMode } from '../../Editor'
 import { Holder } from './Holder'
 
 /**
@@ -57,6 +57,8 @@ export class CubicControllerAnchor extends Anchor {
         const endModifierY = this.target.curveEndModifier.y + moveY / this.target.height
         this.target.curveEndModifier = new Point2(endModifierX, endModifierY)
       }
+    } else {
+      this.editor.updateEditorMode(EditorMode.AUTO)
     }
     this._startX = x
     this._startY = y

@@ -1,5 +1,5 @@
 import { Colors, MathUtils, Paint, Point2 } from '@/components/Engine'
-import { Editor } from '../../Editor'
+import { Editor, EditorMode } from '../../Editor'
 import { Anchor, } from './Anchor'
 import { Holder } from './Holder'
 import { ShapeEntity } from '../../Items'
@@ -96,6 +96,8 @@ export class ReshapeAnchor extends Anchor {
         this.holder.layoutAnchors()
         this.lastMovingTime = nowTime
       }
+    } else {
+      this.editor.updateEditorMode(EditorMode.AUTO)
     }
   }
   protected buildAnchor () {
