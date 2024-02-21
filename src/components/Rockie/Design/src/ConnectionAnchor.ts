@@ -1,6 +1,6 @@
 import { Colors, Paint, Point2, Rectangle, Rotation } from '@/components/Engine'
 import { Anchor, } from './Anchor'
-import { Editor } from '../../Editor'
+import { Editor, EditorMode } from '../../Editor'
 import { Holder } from './Holder'
 import { Connector, Item } from '../../Items'
 import { SelectionLayer } from '../../Editor/src/SelectionLayer'
@@ -65,6 +65,7 @@ export class ConnectionAnchor extends Anchor {
       return
     }
     if(!this._moving) {
+      this.editor.updateEditorMode(EditorMode.AUTO)
       return
     }
     const point = this.worldTransform.makePoint(new Point2(x, y))

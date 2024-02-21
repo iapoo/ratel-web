@@ -1,7 +1,7 @@
 import { Colors, Paint, Point2, Rectangle } from '@/components/Engine'
 import { Anchor, } from './Anchor'
 import { Connector } from '../../Items'
-import { Editor } from '../../Editor'
+import { Editor, EditorMode } from '../../Editor'
 import { Holder } from './Holder'
 import { ConnectorShape } from '../../Shapes'
 import { OrthogonalHelper } from './OrthogonalHelper'
@@ -77,6 +77,7 @@ export class OrthogonalMovementAnchor extends Anchor {
       return
     }
     if(!this._moving) {
+      this.updateEditorCursor()
       return
     }
     //console.log(`x = ${x} y = ${y} startx = ${this._startX} starty = ${this._startY}`)
@@ -167,5 +168,33 @@ export class OrthogonalMovementAnchor extends Anchor {
   protected buildAnchor () {
     this.path.reset()
     this.path.addOval(Rectangle.makeLTWH(0, 0, this.width, this.height))
+  }
+
+
+  private updateEditorCursor() {
+    if(this.target instanceof Connector) {
+      const orthogonalPoints = this.target.orthogonalPoints
+      const orthogonalPoint = orthogonalPoints[this._index]
+      const nextOrthogonalPoint = orthogonalPoints[this._index + 1]
+      if(orthogonalPoint.x == nextOrthogonalPoint.x) {
+        if(this._index == 1) {
+          this.editor.updateEditorMode(EditorMode.W_RESIZE)
+        } else if(this._index == orthogonalPoints.length - 3) {
+          this.editor.updateEditorMode(EditorMode.W_RESIZE)
+        } else {
+          this.editor.updateEditorMode(EditorMode.W_RESIZE)
+        }
+      } else {
+        if(this._index == 1) {
+          this.editor.updateEditorMode(EditorMode.N_RESIZE)
+        } else if(this._index == orthogonalPoints.length - 3) {
+          this.editor.updateEditorMode(EditorMode.N_RESIZE)
+        } else {
+          this.editor.updateEditorMode(EditorMode.N_RESIZE)
+        }
+      }   
+    } else {
+      this.editor.updateEditorMode(EditorMode.AUTO)
+    }
   }
 }

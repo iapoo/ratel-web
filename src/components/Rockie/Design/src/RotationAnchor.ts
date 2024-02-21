@@ -1,6 +1,7 @@
 import { GraphicsUtils, Point2, Rectangle, Rotation } from '@/components/Engine';
 import { Anchor } from './Anchor';
 import { Holder } from './Holder';
+import { EditorMode } from '../../Editor';
 
 /**
  * 旋转
@@ -68,6 +69,8 @@ export class RotationAnchor extends Anchor {
         // this.holder.layoutAnchors()
         this.lastMovingTime = nowTime;
       }
+    } else {
+      this.editor.updateEditorMode(EditorMode.ROTATION)
     }
   }
   protected buildAnchor() {

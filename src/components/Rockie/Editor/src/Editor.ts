@@ -46,6 +46,7 @@ export enum EditorMode {
   ROW_RESIZE,
   COL_RESIZE,
   CROSSHAIR,
+  ROTATION,  
 }
 
 export class Editor extends Painter {
