@@ -14,11 +14,18 @@ export class BackgroundLayer extends EditorLayer {
   private _gridColor: Color
   private _backgroundBrush: Paint
   private _backgroundColor: Color
+  private _workPaint: Paint
+  private _spacePaint: Paint
 
   public constructor (editor: Editor, left = 0, top = 0, width = 100, height = 100, gridSize = 16, gridZoom = 1.0) {
     super(left, top, width, height, true)
+    this.editor = editor
     this._gridColor = editor.gridColor
     this._backgroundColor = editor.backgroundColor
+    this._spacePaint = new Paint()
+    this._spacePaint.setColor(Colors.Gainsboro)
+    this._workPaint = new Paint()
+    this._workPaint.setColor(Colors.White)
     this._mainStroke = new Paint()
     this._subStroke = new Paint()
     this._backgroundBrush = new Paint()
@@ -71,6 +78,10 @@ export class BackgroundLayer extends EditorLayer {
 
   public render (graphics: Graphics): void {
     super.render(graphics)
+    if(this.editor) {
+      graphics.drawRectangle(Rectangle.makeLTWH(-this.editor.horizontalSpace, -this.editor.verticalSpace, this.editor.width, this.editor.height), this._spacePaint)
+    }
+    graphics.drawRectangle(Rectangle.makeLTWH(0, 0, this.width, this.height), this._workPaint)
     if(this._theEditor.showBackground) {
       graphics.drawRectangle(Rectangle.makeLTWH(0, 0, this.width, this.height), this._backgroundBrush)
     }
