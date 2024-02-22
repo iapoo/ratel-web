@@ -98,6 +98,8 @@ export class Holder extends Control {
       0,
       //target.boundary.left,
       //target.boundary.top,
+      //-editor.horizontalSpace,
+      //-editor.verticalSpace,
       target.boundary.width,
       target.boundary.height
     )

@@ -52,7 +52,7 @@ export class Editor extends Painter {
   /**
    * Shadow size
    */
-  public static readonly SHADOW_SIZE = 100
+  public static readonly SHADOW_SIZE = 0
 
   /**
    * Test region size
@@ -63,6 +63,12 @@ export class Editor extends Painter {
    * Check time offset for double click
    */
   private static readonly DOUBLE_CLICK_TIME = 500
+
+  /**
+   * Margin area can be reached, but not printable or exportable. Range selection need to extend to out of page.
+   */
+  public static readonly HORIZONTAL_SPACE_DEFAULT = 256
+  public static readonly VERTICAL_SPACE_DEFAULT = 256
 
   private _backgroundLayer: BackgroundLayer
   private _contentLayer: EditorLayer;
@@ -126,18 +132,20 @@ export class Editor extends Painter {
   private _selectionOutlineShape: Rectangle2D = new Rectangle2D(0, 0, 0, 0)
   private _tableActiveCellShape: Rectangle2D = new Rectangle2D(0, 0, 0, 0)
   private _mode: EditorMode = EditorMode.AUTO
+  private _horizontalSpace: number = Editor.HORIZONTAL_SPACE_DEFAULT
+  private _verticalSpace: number = Editor.VERTICAL_SPACE_DEFAULT
 
   public constructor (canvasId: string | HTMLCanvasElement) {
     super(canvasId)
-    this._backgroundLayer = new BackgroundLayer(this, 0, 0, this.width, this.height, this.gridSize)
-    this._contentLayer = new ContentLayer(0, 0, this.width, this.height)
-    this._controllerLayer = new ControllerLayer(0, 0, this.width, this.height)
+    this._backgroundLayer = new BackgroundLayer(this, this.horizontalSpace, this.verticalSpace, this.workWidth, this.workHeight, this.gridSize)
+    this._contentLayer = new ContentLayer(this.horizontalSpace, this.verticalSpace, this.workWidth, this.workHeight)
+    this._controllerLayer = new ControllerLayer(this.horizontalSpace, this.verticalSpace, this.workWidth, this.workHeight)
     this._hoverLayer = new HoverLayer(0, 0, this.width, this.height)
     this._selectionLayer = new SelectionLayer(0, 0, this.width, this.height)
     this._maskLayer = new MaskLayer(0, 0, this.width, this.height)
     this._rangeLayer = new MaskLayer(0, 0, this.width, this.height)
-    this._moveLayer = new MaskLayer(0, 0, this.width, this.height)
-    this._containerLayer = new ContainerLayer(0, 0, this.width, this.height)
+    this._moveLayer = new MaskLayer(this.horizontalSpace, this.verticalSpace, this.workWidth, this.workHeight)
+    this._containerLayer = new ContainerLayer(this.horizontalSpace, this.verticalSpace, this.workWidth, this.workHeight)
     this._tableLayer = new TableLayer(0, 0, this.width, this.height)
     this._contentLayer.editor = this
     this._controllerLayer.editor = this
@@ -225,6 +233,30 @@ export class Editor extends Painter {
 
   public get mode() {
     return this._mode
+  }
+
+  public get horizontalSpace() {
+    return this._horizontalSpace
+  }
+
+  public set horizontalSpace(value: number) {
+    this._horizontalSpace = value
+  }
+
+  public get verticalSpace() {
+    return this._verticalSpace
+  }
+
+  public set verticalSpace(value: number) {
+    this._verticalSpace = value
+  }
+
+  public get workWidth(): number {
+    return this.width - this.horizontalSpace * 2
+  }
+
+  public get workHeight(): number {
+    return this.height - this.verticalSpace * 2
   }
 
   public onOperationChange(callback: (e:EditorEvent) => void) {
@@ -628,21 +660,23 @@ export class Editor extends Painter {
   }
 
   public resize (origWidth: number, origHeight: number) {
-    super.resize(origWidth * this._zoom, origHeight * this._zoom)
+    super.resize(origWidth * this._zoom + this.horizontalSpace * 2, origHeight * this._zoom + this.horizontalSpace * 2)
   }
 
   public invalidate () {
     super.invalidate()
-    const newBoundary = new Rectangle(0, 0, this.width, this.height)
+    const newBoundary = new Rectangle(this.horizontalSpace, this.verticalSpace, this.width - this.horizontalSpace, this.height - this.verticalSpace)
+    const newFullBoundary = new Rectangle(0, 0, this.width, this.height)
     this._backgroundLayer.boundary = newBoundary
     this._contentLayer.boundary = newBoundary
     this._controllerLayer.boundary = newBoundary
-    this._hoverLayer.boundary = newBoundary
-    this._selectionLayer.boundary = newBoundary
-    this._maskLayer.boundary = newBoundary
-    this._rangeLayer.boundary = newBoundary
+    this._hoverLayer.boundary = newFullBoundary
+    this._selectionLayer.boundary = newFullBoundary
+    this._maskLayer.boundary = newFullBoundary
+    this._rangeLayer.boundary = newFullBoundary
     this._moveLayer.boundary = newBoundary
     this._containerLayer.boundary = newBoundary
+    this._tableLayer.boundary = newFullBoundary
     this._backgroundLayer.invalidateLayer()
   }
 
@@ -1503,12 +1537,12 @@ export class Editor extends Painter {
     // console.log(`Moving... x = ${e.x} width=${controllerItem.width} `)
     const width = this.alignToGridSize(controllerItem.width)
     const height = this.alignToGridSize(controllerItem.height)
-    const ex =e.x / this._zoom 
-    const ey = e.y / this._zoom
+    const ex = (e.x - this.horizontalSpace) / this._zoom 
+    const ey = (e.y - this.verticalSpace) / this._zoom
     controllerItem.boundary = Rectangle.makeLTWH(this.alignToGridSize(ex - width / 2), this.alignToGridSize(ey - height / 2), width, height)
     if (controllerItem instanceof Connector) {
-       controllerItem.start = new Point2(this.alignToGridSize(e.x / this._zoom - width / 2), this.alignToGridSize(e.y / this._zoom - height / 2))
-       controllerItem.end = new Point2(this.alignToGridSize(e.x / this._zoom + width / 2), this.alignToGridSize(e.y / this._zoom + height / 2))
+       controllerItem.start = new Point2(this.alignToGridSize(ex - width / 2), this.alignToGridSize(ey - height / 2))
+       controllerItem.end = new Point2(this.alignToGridSize(ex + width / 2), this.alignToGridSize(ey + height / 2))
     } else if (controllerItem instanceof Entity) {
     }
 
@@ -1560,7 +1594,7 @@ export class Editor extends Painter {
         connector.target.removeTargetConnector(connector)
       }
       connector.target = undefined
-      connector.end = new Point2(e.x / this._zoom, e.y / this._zoom)
+      connector.end = new Point2((e.x - this.horizontalSpace) / this._zoom, (e.y - this.verticalSpace) / this._zoom)
     }
   }
 
@@ -1844,10 +1878,10 @@ export class Editor extends Painter {
   private endRangeSelecting(e: PointerEvent) {
     this._inRangeSelecting = false
     this._rangeLayer.removeNode(this._rangeSelectionShape)
-    let left = Math.min(this._startPointX, e.x)
-    let top = Math.min(this._startPointY, e.y)
-    let right = Math.max(this._startPointX, e.x)
-    let bottom = Math.max(this._startPointY, e.y)
+    let left = Math.min(this._startPointX, e.x) - this.horizontalSpace
+    let top = Math.min(this._startPointY, e.y) - this.verticalSpace
+    let right = Math.max(this._startPointX, e.x) - this.horizontalSpace
+    let bottom = Math.max(this._startPointY, e.y) - this.verticalSpace
     let itemCount = this.contentLayer.getEditorItemCount()
     for(let i = 0; i < itemCount; i ++) {
       let item = this.contentLayer.getEditorItem(i)
@@ -1950,7 +1984,7 @@ export class Editor extends Painter {
         bottom = selectionBottom > bottom ? selectionBottom : bottom
       }
     }
-    return [left, top, right, bottom]
+    return [left - this.horizontalSpace, top - this.verticalSpace, right - this.horizontalSpace, bottom - this.verticalSpace]
   }
 
   private checkIfSelectionInContainer(containerEntity: ContainerEntity): boolean {
@@ -2077,8 +2111,8 @@ export class Editor extends Painter {
           this.updateEditorMode(EditorMode.AUTO)
         } else {
           // console.log('Connector is not found')
-          if (hoverEditorItem.left - Holder.PADDING < e.x / this._zoom && hoverEditorItem.right + Holder.PADDING > e.x / this._zoom &&
-            hoverEditorItem.top - Holder.PADDING < e.y / this._zoom && hoverEditorItem.bottom + Holder.PADDING > e.y / this._zoom) {
+          if (hoverEditorItem.left - Holder.PADDING < (e.x - this.horizontalSpace) / this._zoom && hoverEditorItem.right + Holder.PADDING > (e.x - this.horizontalSpace) / this._zoom &&
+            hoverEditorItem.top - Holder.PADDING < (e.y - this.verticalSpace) / this._zoom && hoverEditorItem.bottom + Holder.PADDING > (e.y - this.verticalSpace) / this._zoom) {
             // console.log('inHolder = false')
             theHoverLayer.inHolder = false
             theHoverLayer.invalidateLayer()

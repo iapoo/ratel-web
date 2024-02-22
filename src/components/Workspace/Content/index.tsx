@@ -428,8 +428,10 @@ const Content: FC<ContentProps> = ({
       if(item instanceof TableEntity) {
         let container = document.getElementById('editor-container')
         let postion = getElementAbsolutePosition(container)
-        let left = item.left
-        let top = item.top
+        let worldTransform = item.shape.worldTransform
+        let point = worldTransform.makePoint(new Point2(0, 0))
+        let left = point.x * Utils.currentEditor.zoom
+        let top = point.y * Utils.currentEditor.zoom
         setTableToolbarLeft(left + postion.left)
         setTableToolbarTop(top + postion.top)
         setTableToolbarVisible(true)
@@ -454,8 +456,12 @@ const Content: FC<ContentProps> = ({
       let item = e.source.selectionLayer.getEditorItem(0) as Item
       let container = document.getElementById('editor-container')
       let postion = getElementAbsolutePosition(container)
-      let left = item.left * Utils.currentEditor.zoom
-      let top = item.top * Utils.currentEditor.zoom
+      let worldTransform = item.shape.worldTransform
+      let point = worldTransform.makePoint(new Point2(0, 0))
+      let left = point.x * Utils.currentEditor.zoom
+      let top = point.y * Utils.currentEditor.zoom
+      //let left = item.left * Utils.currentEditor.zoom
+      //let top = item.top * Utils.currentEditor.zoom
       if(item instanceof TableEntity) {
         setTableToolbarLeft(left + postion.left)
         setTableToolbarTop(top + postion.top)
@@ -509,8 +515,12 @@ const Content: FC<ContentProps> = ({
       let item = e.source.selectionLayer.getEditorItem(0) as Item
       let container = document.getElementById('editor-container')
       let postion = getElementAbsolutePosition(container)
-      let left = item.left * Utils.currentEditor.zoom
-      let top = item.top * Utils.currentEditor.zoom
+      let worldTransform = item.shape.worldTransform
+      let point = worldTransform.makePoint(new Point2(0, 0))
+      let left = point.x * Utils.currentEditor.zoom
+      let top = point.y * Utils.currentEditor.zoom
+      //let left = item.left * Utils.currentEditor.zoom
+      //let top = item.top * Utils.currentEditor.zoom
       setTextToolbarLeft(left + postion.left)
       setTextToolbarTop(top + postion.top)
       setTextToolbarVisible(true)
