@@ -149,6 +149,7 @@ export class PointAnchor extends Anchor {
           if (connector.source === this.target && connector.sourceJoint && this.target) {
             const sourceJoint = new Point2(connector.sourceJoint.x * newWidth / this.target.width, connector.sourceJoint.y * newHeight / this.target.height)
             connector.sourceJoint = sourceJoint
+            this.editor.fixConnectorSourceJoint(connector)
           }
         })
         this.target.getAllTargetConnectors().forEach(connector => {
@@ -156,6 +157,7 @@ export class PointAnchor extends Anchor {
             const targetJoint = new Point2(connector.targetJoint.x * newWidth / this.target.width, connector.targetJoint.y * newHeight / this.target.height)
             // console.log(`new target point is x = ${targetJoint.x}, y = ${targetJoint.y}, newWidth = ${newWidth}, width = ${this.target.width}, newHeight = ${newHeight}, height = ${this.target.height}`)
             connector.targetJoint = targetJoint
+            this.editor.fixConnectorTargetJoint(connector)
           }
         })
         this.target.boundary = Rectangle.makeLTWH(newLeft, newTop, newWidth, newHeight)

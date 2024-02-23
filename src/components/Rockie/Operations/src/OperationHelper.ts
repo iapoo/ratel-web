@@ -11,16 +11,17 @@ import { Style, StyleInfo } from "../../Shapes/src/EntityUtils"
 import { ConnectorType } from "../../Shapes"
 import { TableInfo } from "../../Items/src/TableInfo"
 import { ThemeUtils } from "@/components/Workspace/Theme"
+import { Editor } from "../../Editor"
 
 export class OperationHelper {
-  public static loadItem(itemInfo: EditorItemInfo): EditorItem {
+  public static loadItem(itemInfo: EditorItemInfo, editor: Editor): EditorItem {
     let editorItem: Item
     switch (itemInfo.category) {
       case Categories.LINE:
         editorItem = this.loadLine(itemInfo)
         break
       case Categories.CONNECTOR:
-        editorItem = this.loadConnector(itemInfo)
+        editorItem = this.loadConnector(itemInfo, editor)
         break
       case Categories.CONTAINER:
         editorItem = this.loadContainerEntity(itemInfo)
@@ -38,7 +39,7 @@ export class OperationHelper {
     editorItem.shape.styles = StyleInfo.makeStyles(itemInfo.styles)
     if(itemInfo.category != Categories.TABLE) {
       itemInfo.items.forEach(childItemInfo => {
-        let childItem = OperationHelper.loadItem(childItemInfo)
+        let childItem = OperationHelper.loadItem(childItemInfo, editor)
         editorItem.addItem(childItem)
       })
     }
@@ -106,7 +107,7 @@ export class OperationHelper {
     return lineEntity
   }
 
-  public static loadConnector(itemInfo: EditorItemInfo): Connector {
+  public static loadConnector(itemInfo: EditorItemInfo, editor: Editor): Connector {
     let connectorInfo = itemInfo as ConnectorInfo
     let start = SystemUtils.parsePointString(connectorInfo.start)
     let end = SystemUtils.parsePointString(connectorInfo.end)
@@ -120,9 +121,11 @@ export class OperationHelper {
     }
     if(connectorInfo.sourceJoint) {
       connector.sourceJoint = SystemUtils.parsePointString(connectorInfo.sourceJoint)
+      //editor.fixConnectorSourceJoint(connector)
     }
     if(connectorInfo.targetJoint) {
       connector.targetJoint = SystemUtils.parsePointString(connectorInfo.targetJoint)
+      //editor.fixConnectorTargetJoint(connector)
     }
     connector.id = connectorInfo.id
     connector.startArrow = SystemUtils.parseConnectorArrow(connectorInfo.startArrow!)
