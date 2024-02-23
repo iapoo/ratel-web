@@ -708,7 +708,7 @@ export class Editor extends Painter {
         this._backgroundLayer.visible = false
         this._selectionLayer.visible = false
         this.render()
-        const image = this.engine.surface.makeImageSnapshot()
+        const image = this.engine.surface.makeImageSnapshot([this.horizontalSpace, this.verticalSpace, this.workWidth + this.horizontalSpace, this.workHeight + this.verticalSpace])
         const data = image.encodeToBytes()
         let encoded = ''
         if(data) {
