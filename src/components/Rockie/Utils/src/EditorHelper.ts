@@ -61,7 +61,7 @@ export class EditorHelper {
             //refresh connections of shapes & Setup new location
             let editorItems: Array<EditorItem> = []
             selections.forEach(selection => {
-                let editorItem = OperationHelper.loadItem(selection)
+                let editorItem = OperationHelper.loadItem(selection, editor)
                 if(editorItem instanceof Connector &&  editorItem.start && editorItem.end) {
                     const start = editorItem.start
                     const end = editorItem.end
