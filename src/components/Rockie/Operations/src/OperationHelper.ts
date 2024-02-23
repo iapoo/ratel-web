@@ -121,11 +121,9 @@ export class OperationHelper {
     }
     if(connectorInfo.sourceJoint) {
       connector.sourceJoint = SystemUtils.parsePointString(connectorInfo.sourceJoint)
-      //editor.fixConnectorSourceJoint(connector)
     }
     if(connectorInfo.targetJoint) {
       connector.targetJoint = SystemUtils.parsePointString(connectorInfo.targetJoint)
-      //editor.fixConnectorTargetJoint(connector)
     }
     connector.id = connectorInfo.id
     connector.startArrow = SystemUtils.parseConnectorArrow(connectorInfo.startArrow!)

@@ -835,13 +835,12 @@ export class Editor extends Painter {
         const targetEntity = clickedEditorItem as Entity
         const theControllerLayer = this.controllerLayer as ControllerLayer
         this._inCreatingConnector = true
-        const worldTargetPoint = clickedEditorItem.shape.worldTransform.makePoint(targetPoint)
-        const startPoint = new Point2(worldTargetPoint.x - this.horizontalSpace, worldTargetPoint.y - this.verticalSpace)
-        const connector = new Connector(startPoint, new Point2(startPoint.x + 10, startPoint.y + 10), startDirection)
+        const worldTargetPoint = clickedEditorItem.worldTransform.makePoint(targetPoint)
+        //const startPoint = new Point2(worldTargetPoint.x - this.horizontalSpace, worldTargetPoint.y - this.verticalSpace)
+        const connector = new Connector(worldTargetPoint, new Point2(worldTargetPoint.x + 10, worldTargetPoint.y + 10), startDirection)
         // const sourceJoint = new Point2(targetPoint.x - targetEntity.left, targetPoint.y - targetEntity.top)
         connector.source = targetEntity
         connector.sourceJoint = targetPoint
-        this.fixConnectorSourceJoint(connector)
         theControllerLayer.removeAllEditorItems()
         theControllerLayer.addEditorItem(connector)
         targetEntity.addSourceConnector(connector)
@@ -1599,7 +1598,7 @@ export class Editor extends Painter {
       }
       connector.target = undefined
       connector.end = new Point2((e.x - this.horizontalSpace) / this._zoom, (e.y - this.verticalSpace) / this._zoom)
-      console.log(`connector end is x= ${(e.x - this.horizontalSpace) / this._zoom} e.x=${e.x} connector start is x = ${connector.start.x}`)
+      //console.log(`connector end is x= ${(e.x - this.horizontalSpace) / this._zoom} e.x=${e.x} connector start is x = ${connector.start.x}`)
     }
   }
 
@@ -1968,7 +1967,7 @@ export class Editor extends Painter {
     let selectionCount = this.selectionLayer.getEditorItemCount()
     for(let i = 0; i < selectionCount; i ++) {      
       const selection = this.selectionLayer.getEditorItem(i)
-      const worldTransform = selection.shape.worldTransform
+      const worldTransform = selection.worldTransform
       const leftTopPoint = worldTransform.makePoint(new Point2(0, 0))
       const rightTopPoint = worldTransform.makePoint(new Point2(selection.width, 0))
       const rightBottomPoint = worldTransform.makePoint(new Point2(selection.width, selection.height))
@@ -1989,7 +1988,7 @@ export class Editor extends Painter {
         bottom = selectionBottom > bottom ? selectionBottom : bottom
       }
     }
-    return [left - this.horizontalSpace, top - this.verticalSpace, right - this.horizontalSpace, bottom - this.verticalSpace]
+    return [left, top, right, bottom]
   }
 
   private checkIfSelectionInContainer(containerEntity: ContainerEntity): boolean {
@@ -2307,29 +2306,6 @@ export class Editor extends Painter {
    * @param y 
    * @returns 
    */
-  private checkIfConnectorHorizontal(editorItem: EditorItem, x: number, y: number): boolean {
-    let result = true
-    const shape = editorItem.shape
-    const matrix = shape.worldInverseTransform
-    if(matrix) {
-      const position = matrix.makePoint(new Point2(x, y))
-      if(Math.abs(position.y - shape.height / 2) < Math.abs(position.x - shape.width / 2)) {
-        result = true
-      } else {
-        result = false
-      }
-    }
-    return result
-  }
-
-
-  /**
-   * Check and decide how to draw connector orthogonal line
-   * @param editorItem 
-   * @param x 
-   * @param y 
-   * @returns 
-   */
   public findConnectorDirection(editorItem: EditorItem, x: number, y: number): ConnectorDirection {
     let result = ConnectorDirection.Right
     const shape = editorItem.shape
@@ -2367,13 +2343,5 @@ export class Editor extends Painter {
       this._mode =  mode
       this.triggerEditorModeChange()
     }
-  }
-
-  public fixConnectorSourceJoint(connector: Connector) {
-    connector.start = new Point2(connector.start.x - this.horizontalSpace, connector.start.y - this.verticalSpace)
-  }
-
-  public fixConnectorTargetJoint(connector: Connector) {
-    connector.end = new Point2(connector.end.x - this.horizontalSpace, connector.end.y - this.verticalSpace)
   }
 }

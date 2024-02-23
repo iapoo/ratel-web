@@ -110,7 +110,6 @@ export class ConnectionAnchor extends Anchor {
                 this.target.startDirection = startDirection
                 this.target.source = editorItem
                 this.target.sourceJoint = sourceJoint
-                this.editor.fixConnectorTargetJoint(this.target)
                 editorItem.addSourceConnector(this.target)
                 //console.log(`source is removed & added`)
               }
@@ -127,7 +126,6 @@ export class ConnectionAnchor extends Anchor {
               this.target.startDirection = startDirection
               this.target.source = editorItem
               this.target.sourceJoint = sourceJoint
-              this.editor.fixConnectorSourceJoint(this.target)
               editorItem.addSourceConnector(this.target)
               //console.log(`source is added`)
             }
@@ -143,7 +141,6 @@ export class ConnectionAnchor extends Anchor {
                 this.target.endDirection = endDirection
                 this.target.target = editorItem
                 this.target.targetJoint = targetJoint
-                this.editor.fixConnectorTargetJoint(this.target)
                 editorItem.addTargetConnector(this.target)
                 //console.log(`target is removed & added`)
               }
@@ -160,7 +157,6 @@ export class ConnectionAnchor extends Anchor {
               this.target.endDirection = endDirection
               this.target.target = editorItem
               this.target.targetJoint = targetJoint
-              this.editor.fixConnectorTargetJoint(this.target)
               editorItem.addTargetConnector(this.target)
               //console.log(`target is added`)
             }

@@ -1,4 +1,4 @@
-import { Color, FontSlant, FontWeight, FontWidth, Rectangle, Rotation, StrokeDashStyle, TextAlignment, TextDecoration, TextDirection, TextVerticalAlignment, } from '@/components/Engine'
+import { Color, FontSlant, FontWeight, FontWidth, Matrix, Rectangle, Rotation, StrokeDashStyle, TextAlignment, TextDecoration, TextDirection, TextVerticalAlignment, } from '@/components/Engine'
 import { EntityShape, } from '../../Shapes'
 import { EditorItemInfo } from '../../Items';
 import { Editor } from '../../Editor';
@@ -20,6 +20,9 @@ export interface EditorItem {
   readonly type: string;
   readonly rotation: Rotation;
   readonly useTheme: boolean
+  readonly worldTransform: Matrix
+  readonly worldInverseTransform: Matrix | null
+  readonly internalTransform: Matrix
   strokeColor: Color 
   fillColor: Color 
   lineWidth: number
