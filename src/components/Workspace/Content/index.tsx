@@ -34,6 +34,7 @@ const DOCUMENT_CONTENT = 'Dummy'
 //TODO FIXME, if setup with same width and height, some strange behavor may happen while zooming. and so make default value some strange
 const DEFAULT_PAINTER_WIDTH = 801
 const DEFAULT_PAINTER_HEIGHT = 599
+const MIN_VISUAL_SIZE = 32
 
 const initialPanes: Pane[] = [
   { title: DOCUMENT_PREFIX + '1', content: DOCUMENT_CONTENT, key: '1', editor: null, },
@@ -182,7 +183,16 @@ const Content: FC<ContentProps> = ({
         setEditorHeight(newEditorHeight)
       }
     }
-  }
+    const contentContainer = document.getElementById('content-container')
+    if(contentContainer) {
+      if(contentContainer.scrollWidth > contentContainer.clientWidth) {
+        contentContainer.scrollLeft = (contentContainer.scrollWidth - contentContainer.clientWidth) / 2
+      }
+      if(contentContainer.scrollHeight > contentContainer.clientHeight) {
+        contentContainer.scrollTop = (contentContainer.scrollHeight - contentContainer.clientHeight) / 2
+      }
+    }
+}
 
 
   const calculateViewSize = () => {
@@ -254,6 +264,26 @@ const Content: FC<ContentProps> = ({
     Utils.currentEditor.onTextEditStyleChange(handleTextEditStyleChange)
     oldEditor?.removeEditorModeChange(handleEditorModeChange)
     Utils.currentEditor.onEditorModeChange(handleEditorModeChange)
+    updateScroll()
+  }
+
+  const updateScroll = () => {
+    const contentContainer = document.getElementById('content-container')
+    if(contentContainer) {
+      const horizontalSpace = contentContainer.clientWidth - MIN_VISUAL_SIZE
+      const verticalSpace = contentContainer.clientHeight - MIN_VISUAL_SIZE
+      if(Utils.currentEditor) {
+        Utils.currentEditor.horizontalSpace = horizontalSpace
+        Utils.currentEditor.verticalSpace = verticalSpace
+      }
+      if(contentContainer.scrollWidth > contentContainer.clientWidth) {
+        contentContainer.scrollLeft = (contentContainer.scrollWidth - contentContainer.clientWidth) / 2
+      }
+      if(contentContainer.scrollHeight > contentContainer.clientHeight) {
+        contentContainer.scrollTop = (contentContainer.scrollHeight - contentContainer.clientHeight) / 2
+      }
+      updateEditorSize()
+    }
   }
 
   const updateEditors = (panes: Pane[]) => {
@@ -1242,6 +1272,10 @@ const Content: FC<ContentProps> = ({
     }
   }
 
+  const handleScroll = () => {
+
+  }
+
   const popupShapeItems: MenuProps['items'] = [
     {label: 'Delete', key: '1', onClick: handleDelete, },
     {type: 'divider' },
@@ -1347,7 +1381,7 @@ const Content: FC<ContentProps> = ({
   return (
     <div  style={{ position: 'absolute', top: '0px', bottom: '0px', left: x, right: y, backgroundColor: 'lightgray', }}>
       <div style={{ position: 'absolute', width: '100%', height: `calc(100% - ${Utils.TITLE_HEIGHT}px + 16px) `, zIndex: 2, }} >
-        <div style={{ width: '100%', height: '100%', overflow: 'scroll', display: 'grid', placeItems: 'center', }}>
+        <div id='content-container' style={{ width: '100%', height: '100%', overflow: 'scroll', display: 'grid', placeItems: 'center', }} onScroll={handleScroll}>
           <div style={{ width: contentWidth, height: contentHeight, }}>
             <div style={{ width: '100%', height: Editor.SHADOW_SIZE, backgroundColor: 'lightgray', }} />
             <div style={{ width: '100%', height: editorHeight, boxSizing: 'border-box', }}>

@@ -67,8 +67,8 @@ export class Editor extends Painter {
   /**
    * Margin area can be reached, but not printable or exportable. Range selection need to extend to out of page.
    */
-  public static readonly HORIZONTAL_SPACE_DEFAULT = 256
-  public static readonly VERTICAL_SPACE_DEFAULT = 256
+  public static readonly HORIZONTAL_SPACE_DEFAULT = 1256
+  public static readonly VERTICAL_SPACE_DEFAULT = 1256
 
   private _backgroundLayer: BackgroundLayer
   private _contentLayer: EditorLayer;
@@ -241,6 +241,7 @@ export class Editor extends Painter {
 
   public set horizontalSpace(value: number) {
     this._horizontalSpace = value
+    this.setup(this.zoom, this.origWidth, this.origHeight)
   }
 
   public get verticalSpace() {
@@ -249,6 +250,7 @@ export class Editor extends Painter {
 
   public set verticalSpace(value: number) {
     this._verticalSpace = value
+    this.setup(this.zoom, this.origWidth, this.origHeight)
   }
 
   public get workWidth(): number {
@@ -660,7 +662,7 @@ export class Editor extends Painter {
   }
 
   public resize (origWidth: number, origHeight: number) {
-    super.resize(origWidth * this._zoom + this.horizontalSpace * 2, origHeight * this._zoom + this.horizontalSpace * 2)
+    super.resize(origWidth * this._zoom + this.horizontalSpace * 2, origHeight * this._zoom + this.verticalSpace * 2)
   }
 
   public invalidate () {
