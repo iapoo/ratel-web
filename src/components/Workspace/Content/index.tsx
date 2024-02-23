@@ -458,10 +458,11 @@ const Content: FC<ContentProps> = ({
       if(item instanceof TableEntity) {
         let container = document.getElementById('editor-container')
         let postion = getElementAbsolutePosition(container)
+        const [scrollLeft, scrollTop] = findEditorScrollPosition()
         let worldTransform = item.shape.worldTransform
         let point = worldTransform.makePoint(new Point2(0, 0))
-        let left = point.x * Utils.currentEditor.zoom
-        let top = point.y * Utils.currentEditor.zoom
+        let left = point.x * Utils.currentEditor.zoom - scrollLeft
+        let top = point.y * Utils.currentEditor.zoom - scrollTop
         setTableToolbarLeft(left + postion.left)
         setTableToolbarTop(top + postion.top)
         setTableToolbarVisible(true)
@@ -488,8 +489,9 @@ const Content: FC<ContentProps> = ({
       let postion = getElementAbsolutePosition(container)
       let worldTransform = item.shape.worldTransform
       let point = worldTransform.makePoint(new Point2(0, 0))
-      let left = point.x * Utils.currentEditor.zoom
-      let top = point.y * Utils.currentEditor.zoom
+      const [scrollLeft, scrollTop] = findEditorScrollPosition()
+      let left = point.x * Utils.currentEditor.zoom - scrollLeft
+      let top = point.y * Utils.currentEditor.zoom - scrollTop
       //let left = item.left * Utils.currentEditor.zoom
       //let top = item.top * Utils.currentEditor.zoom
       if(item instanceof TableEntity) {
@@ -545,10 +547,11 @@ const Content: FC<ContentProps> = ({
       let item = e.source.selectionLayer.getEditorItem(0) as Item
       let container = document.getElementById('editor-container')
       let postion = getElementAbsolutePosition(container)
+      const [scrollLeft, scrollTop] = findEditorScrollPosition()
       let worldTransform = item.shape.worldTransform
       let point = worldTransform.makePoint(new Point2(0, 0))
-      let left = point.x * Utils.currentEditor.zoom
-      let top = point.y * Utils.currentEditor.zoom
+      let left = point.x * Utils.currentEditor.zoom - scrollLeft
+      let top = point.y * Utils.currentEditor.zoom - scrollTop
       //let left = item.left * Utils.currentEditor.zoom
       //let top = item.top * Utils.currentEditor.zoom
       setTextToolbarLeft(left + postion.left)
@@ -587,6 +590,15 @@ const Content: FC<ContentProps> = ({
 
   }
 
+  const findEditorScrollPosition = () => {
+    const contentContainer = document.getElementById('content-container')
+    if(contentContainer) {
+      return [contentContainer.scrollLeft, contentContainer.scrollTop]
+    } else {
+      return [0, 0]
+    }
+    
+  }
 
   const add = () => {
     const newActiveKey = `${newTabIndex.current++}`
