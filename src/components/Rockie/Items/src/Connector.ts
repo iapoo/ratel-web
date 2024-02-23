@@ -301,8 +301,7 @@ export class Connector extends Item {
   public set sourceJoint (value: Point2 | undefined) {
     this._sourceJoint = value
     if (value && this._source && this._sourceJoint) {
-      const startPoint = this._source.shape.worldTransform.makePoint(value)
-      this._start = this._source.shape.worldTransform.makePoint(value)
+      this._start = this._source.worldTransform.makePoint(value)
       this.boundary = Rectangle.makeLTWH(Math.min(this._start.x, this._end.x), Math.min(this._start.y, this._end.y), Math.abs(this._start.x - this._end.x), Math.abs(this._start.y - this._end.y))
     }
   }
@@ -331,7 +330,7 @@ export class Connector extends Item {
   public set targetJoint (value: Point2 | undefined) {
     this._targetJoint = value
     if (value && this._target && this._targetJoint) {
-      this._end = this._target.shape.worldTransform.makePoint(value)
+      this._end = this._target.worldTransform.makePoint(value)
       this._connectorShape.end = this._end
       this._orthogonalPoints = this.initializeOrthogonalPoints()
       this._connectorShape.orthogonalPoints = this._orthogonalPoints

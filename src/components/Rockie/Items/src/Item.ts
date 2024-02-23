@@ -1,5 +1,5 @@
 /* eslint-disable max-params */
-import { Color, Colors, FontWeight, FontWidth, FontSlant, Paint, PaintStyle, Rectangle, Rotation, StrokeDashStyle, TextDecoration, TextAlignment, TextDirection, TextVerticalAlignment, } from './../../../Engine'
+import { Color, Colors, FontWeight, FontWidth, FontSlant, Paint, PaintStyle, Rectangle, Rotation, StrokeDashStyle, TextDecoration, TextAlignment, TextDirection, TextVerticalAlignment, MatrixHelper, Matrix, } from './../../../Engine'
 import { Connector, } from './Connector'
 import { EntityShape, } from '../../Shapes'
 import { Editor, } from '../../Editor'
@@ -427,6 +427,27 @@ export abstract class Item implements EditorItem {
 
   public get items (): EditorItem[] {
     return this._items
+  }
+
+  public get worldTransform() {
+    const worldTransform = new Matrix()
+    if(this.parent) {
+      worldTransform.multiply(this.parent.worldTransform.source)
+    }
+    worldTransform.multiply(this.internalTransform.source)
+    return worldTransform
+  }
+
+  public get worldInverseTransform() {
+    const worldTransform = new Matrix()
+    if(this.parent) {
+      worldTransform.multiply(this.parent.worldTransform.source)
+    }
+    return worldTransform.invert()
+  }
+
+  public get internalTransform() {
+    return this._shape.internalTransform
   }
 
   public addItem (item: EditorItem) {
