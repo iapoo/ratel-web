@@ -392,6 +392,7 @@ const Content: FC<ContentProps> = ({
         if(oldEditor) {
           let operation = new Operation(oldEditor, OperationType.SELECT_EDITOR, [])
           Utils.currentEditor.operationService.addOperation(operation)
+          Utils.currentEditor.triggerOperationChange()
         }
         oldEditor?.removeSelectionChange(handleSelectionChange)
         Utils.currentEditor.onSelectionChange(handleSelectionChange)
@@ -646,7 +647,8 @@ const Content: FC<ContentProps> = ({
     Utils.currentEditor.onEditorModeChange(handleEditorModeChange)
     let operation = new Operation(Utils.currentEditor, OperationType.ADD_EDITOR, [])
     Utils.currentEditor.operationService.addOperation(operation)
-}
+    Utils.currentEditor.triggerOperationChange()
+  }
 
   const remove = (targetKey: string) => {
     let newActiveKey = activeKey
@@ -670,6 +672,7 @@ const Content: FC<ContentProps> = ({
     if(Utils.currentEditor) {
       let operation = new Operation(Utils.currentEditor, OperationType.REMOVE_EDITOR, [])
       Utils.currentEditor.operationService.addOperation(operation)
+      Utils.currentEditor.triggerOperationChange()
       //oldEditor?.removeSelectionChange(handleSelectionChange)
       Utils.currentEditor.onSelectionChange(handleSelectionChange)
       Utils.currentEditor.onTextEditStart(handleTextEditStart)
@@ -985,6 +988,7 @@ const Content: FC<ContentProps> = ({
         e.clipboardData.clearData()
         e.clipboardData.setData('text/plain', data)
         //e.clipboardData.setData('text/retel', data)
+        EditorHelper.deleteSelections(Utils.currentEditor)
         console.log(`cube data = ${data}`) 
         //deleteCurrentDocumentSelection()
       }
@@ -1001,6 +1005,7 @@ const Content: FC<ContentProps> = ({
         return
       }
       const data = EditorHelper.exportEditorSelections(Utils.currentEditor)
+      EditorHelper.deleteSelections(Utils.currentEditor)
       await clipboard.writeText(data)
     }
   }
