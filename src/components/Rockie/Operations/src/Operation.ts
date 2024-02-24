@@ -26,7 +26,7 @@ export class Operation {
     private _afterEditor: Editor | null
     private _afterItemId: string | null
 
-    public constructor(editor: Editor, type: OperationType, itemInfos: Array<EditorItemInfo>, origItemInfos: Array<EditorItemInfo> = [], description: string = '', afterEditor: Editor | null = null, afterItemId: string | null = null) {
+    public constructor(editor: Editor, type: OperationType, itemInfos: Array<EditorItemInfo>, selected: boolean = false, origItemInfos: Array<EditorItemInfo> = [], description: string = '', afterEditor: Editor | null = null, afterItemId: string | null = null) {
         this._editor = editor
         this._type = type
         this._description = description

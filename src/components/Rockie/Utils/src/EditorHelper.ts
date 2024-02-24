@@ -1,7 +1,7 @@
 import { Point2, Rectangle } from "@/components/Engine";
 import { Editor } from "../../Editor";
 import { Categories, Connector, ConnectorInfo, EditorItem, EditorItemInfo, Entity, Item, ShapeEntity } from "../../Items";
-import { OperationHelper } from "../../Operations";
+import { Operation, OperationHelper, OperationType } from "../../Operations";
 import { SystemUtils } from "@/components/Workspace/Utils";
 import { Style, StyleInfo } from "../../Shapes/src/EntityUtils";
 
@@ -10,13 +10,18 @@ export class EditorHelper {
     public static DEFAULT_OFFSET_X = 32
     public static DEFAULT_OFFSET_Y = 32
 
-    public static exportEditorSelections(editor: Editor): string {
-        let selections: Array<EditorItemInfo> = []
-        let editorItems = editor.selectionLayer.getAllEditorItems()
+    public static generateEditorSelections(editor: Editor):  EditorItemInfo[] {
+        const selections: Array<EditorItemInfo> = []
+        const editorItems = editor.selectionLayer.getAllEditorItems()
         editorItems.forEach(editorItem => {
             let editorItemInfo = OperationHelper.saveEditorItem(editorItem)
             selections.push(editorItemInfo)
         })
+        return selections
+    }
+
+    public static exportEditorSelections(editor: Editor): string {
+        const selections: Array<EditorItemInfo> = EditorHelper.generateEditorSelections(editor)
         let json = JSON.stringify(selections)
         return json
     }
@@ -55,8 +60,8 @@ export class EditorHelper {
             let offsetX = EditorHelper.DEFAULT_OFFSET_X
             let offsetY = EditorHelper.DEFAULT_OFFSET_Y
             if (!pasteFromSystem) {
-                offsetX = pasteLocation.x - selections[0].left
-                offsetY = pasteLocation.y - selections[0].top
+                offsetX = pasteLocation.x - selections[0].left - editor.horizontalSpace
+                offsetY = pasteLocation.y - selections[0].top - editor.verticalSpace
             }
             //refresh connections of shapes & Setup new location
             let editorItems: Array<EditorItem> = []
@@ -86,6 +91,19 @@ export class EditorHelper {
             })
             
         }
+    }
+
+    public static deleteSelections(editor: Editor) {
+        const editorItems = editor.selectionLayer.getAllEditorItems()
+        const selections = EditorHelper.generateEditorSelections(editor)
+        editorItems.forEach(editorItem => {
+            editor.contentLayer.removeEditorItem(editorItem)
+        })
+        EditorHelper.exportEditorSelections(editor)
+        editor.selectionLayer.removeAllEditorItems()
+        const operation = new Operation(editor, OperationType.REMOVE_SELECTION_ITEMS, selections, true)
+        editor.operationService.addOperation(operation)
+        editor.triggerOperationChange()
     }
 
     private static refreshSelections(selection: EditorItemInfo, editorItems: EditorItem[]) {

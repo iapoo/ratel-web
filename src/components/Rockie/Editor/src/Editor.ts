@@ -738,8 +738,20 @@ export class Editor extends Painter {
           this.handleOperationUndoUpdateItems(operation.origItemInfos)
           break;
         case OperationType.ADD_SELECTION_ITEMS:
+          this.handleOperationUndoAddSelectionItems(operation.itemInfos)
           break;
         case OperationType.REMOVE_SELECTION_ITEMS:
+          this.handleOperationUndoRemoveSelectionItems(operation.itemInfos)
+          break;
+        case OperationType.SELECT_EDITOR:
+          break;
+        case OperationType.ADD_EDITOR:
+          break;
+        case OperationType.REMOVE_EDITOR:
+          break;
+        case OperationType.RENAME_EDITOR:
+          break;
+        case OperationType.MOVE_EDITOR:
           break;
         default:
           break;
@@ -765,8 +777,20 @@ export class Editor extends Painter {
           this.handleOperationRedoUpdateItems(operation.itemInfos)
           break;
         case OperationType.ADD_SELECTION_ITEMS:
+          this.handleOperationRedoAddSelectionItems(operation.itemInfos)
           break;
         case OperationType.REMOVE_SELECTION_ITEMS:
+          this.handleOperationRedoRemoveSelectionItems(operation.itemInfos)
+          break;
+        case OperationType.SELECT_EDITOR:
+          break;
+        case OperationType.ADD_EDITOR:
+          break;
+        case OperationType.REMOVE_EDITOR:
+          break;
+        case OperationType.RENAME_EDITOR:
+          break;
+        case OperationType.MOVE_EDITOR:
           break;
         default:
           break;
@@ -1008,19 +1032,25 @@ export class Editor extends Painter {
     if(e.mouseCode == MouseCode.RIGHT_MOUSE_UP) {
       return
     }
-    if(this._action) {
+    if(this._action) { // It shouldn't happen here
+      console.log(`It is a exception here, shouldn't be reached`)
+      this.selectionLayer.removeAllEditorItems()
+      this.selectionLayer.addEditorItem(this._action.item)
       let editorItemInfo = OperationHelper.saveEditorItem(this._action.item)
-      let operation = new Operation(this, OperationType.ADD_ITEMS, [editorItemInfo], [])
+      let operation = new Operation(this, OperationType.ADD_ITEMS, [editorItemInfo], true, [])
       this._operationService.addOperation(operation)
       this.triggerOperationChange()
       this._action = undefined
-    } else if (this._inCreatingConnector) {
+    } else if (this._inCreatingConnector) {// It shouldn't happen here
+      console.log(`It is a exception here, shouldn't be reached`)
       const theControllerLayer = this.controllerLayer as ControllerLayer
       const connector = theControllerLayer.getEditorItem(0)
       this.controllerLayer.removeAllEditorItems()
       this.contentLayer.addEditorItem(connector)
+      this.selectionLayer.removeAllEditorItems()
+      this.selectionLayer.addEditorItem(connector)
       let editorItemInfo = OperationHelper.saveEditorItem(connector)
-      let operation = new Operation(this, OperationType.ADD_ITEMS, [editorItemInfo], [])
+      let operation = new Operation(this, OperationType.ADD_ITEMS, [editorItemInfo], true, [])
       this._operationService.addOperation(operation)
       this.triggerOperationChange()
       this._action = undefined
@@ -1108,7 +1138,7 @@ export class Editor extends Painter {
     if(this.inMoving && this._moved &&  this._target && this._startEditorItemInfos.length > 0) {
       let origItemInfo = this._startEditorItemInfos[0]
       let editorItemInfo =  OperationHelper.saveEditorItem(this._target)
-      let operation = new Operation(this, OperationType.MOVE_ITEMS, [editorItemInfo], [origItemInfo])
+      let operation = new Operation(this, OperationType.MOVE_ITEMS, [editorItemInfo],true, [origItemInfo])
       this._operationService.addOperation(operation)
       this.triggerOperationChange()
     }
@@ -1835,6 +1865,19 @@ export class Editor extends Painter {
     })
   }
 
+  private handleOperationUndoAddSelectionItems(items: EditorItemInfo[]) {
+    items.forEach(editorItemInfo => {
+      const id = editorItemInfo.id
+      this.handleRemoveEditorItem(id)
+    })
+  }
+
+  private handleOperationUndoRemoveSelectionItems(items: EditorItemInfo[]) {
+    items.forEach(editorItemInfo => {
+      this.handleAddEditorItem(editorItemInfo)
+    })
+  }
+
   private handleOperationRedoAddItems(items: EditorItemInfo[]) {
     items.forEach(editorItemInfo => {
       this.handleAddEditorItem(editorItemInfo)
@@ -1859,6 +1902,19 @@ export class Editor extends Painter {
     items.forEach(editorItemInfo => {
       this.handleUpdateEditorItem(editorItemInfo)
     })
+  }
+
+  private handleOperationRedoAddSelectionItems(items: EditorItemInfo[]) {
+    items.forEach(editorItemInfo => {
+      this.handleAddEditorItem(editorItemInfo)
+    })
+  }
+
+  private handleOperationRedoRemoveSelectionItems(items: EditorItemInfo[]) {
+    items.forEach(editorItemInfo => {
+      const id = editorItemInfo.id
+      this.handleRemoveEditorItem(id)
+    })    
   }
 
   private checkAndStartTextEdit() {
@@ -2145,6 +2201,12 @@ export class Editor extends Painter {
         clickedEditorItem.addItem(this._action.item)
       } else {
         this.contentLayer.addEditorItem(this._action.item)
+        this.selectionLayer.removeAllEditorItems()
+        this.selectionLayer.addEditorItem(this._action.item)
+        let editorItemInfo = OperationHelper.saveEditorItem(this._action.item)
+        let operation = new Operation(this, OperationType.ADD_ITEMS, [editorItemInfo], true, [])
+        this._operationService.addOperation(operation)
+        this.triggerOperationChange()
       }
       this.controllerLayer.removeAllEditorItems()
       this.controllerLayer.clear()
