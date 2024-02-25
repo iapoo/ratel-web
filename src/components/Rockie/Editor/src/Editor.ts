@@ -2347,9 +2347,17 @@ export class Editor extends Painter {
     const [left, top, right, bottom] = this.getSelectionBoundary()
     if(this.selectionLayer.getEditorItemCount() > 0) {
       const firstSelection = this.selectionLayer.getEditorItem(0) as Item
-      if(firstSelection.parent && !firstSelection.parent.shape.intersects(left, top, right, bottom)) {
-        requireRemove = true
+      if(firstSelection.parent) {
+        const parent = firstSelection.parent
+        if(left > parent.left && top > parent.top && right < parent.right && bottom < parent.bottom) {
+          requireRemove = false
+        } else {
+          requireRemove = true
+        }
       }
+      //if(firstSelection.parent && !firstSelection.parent.shape.intersects(left, top, right, bottom)) {
+      //  requireRemove = true
+      //}
     }
     if(requireRemove) {
       const count = this.selectionLayer.getEditorItemCount()
