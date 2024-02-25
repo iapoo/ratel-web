@@ -753,6 +753,10 @@ export class Editor extends Painter {
           break;
         case OperationType.MOVE_EDITOR:
           break;
+        case OperationType.ADD_ITEMS_TO_CONTAINER:
+          break;
+        case OperationType.REMOVE_ITEMS_FROM_CONTAINER:
+          break;
         default:
           break;
       }
@@ -791,6 +795,10 @@ export class Editor extends Painter {
         case OperationType.RENAME_EDITOR:
           break;
         case OperationType.MOVE_EDITOR:
+          break;
+        case OperationType.ADD_ITEMS_TO_CONTAINER:
+          break;
+        case OperationType.REMOVE_ITEMS_FROM_CONTAINER:
           break;
         default:
           break;
@@ -872,6 +880,7 @@ export class Editor extends Painter {
           this._target.shape.focused = false
         }
         this.checkAndEndTextEdit()
+        this.finishTextEditOperation()
         if (this._target) {
           this._target.shape.focused = false
         }
@@ -886,24 +895,6 @@ export class Editor extends Painter {
         this._targetItemIndex = 0
         this.handleTableActiveCellShape()
       } else if (clickedEditorItem) {
-        // const data = {}
-        // const item: Item = clickedEditorItem as Item
-        // item.saveData(data)
-        // console.log(data)
-        // if(clickedEditorItem instanceof CellEntity) {
-        //   //theSelectionLayer.inHolder = true
-        //   theSelectionLayer.removeAllEditorItems()
-        //   //theSelectionLayer.addEditorItem(clickedEditorItem)
-        //   this.triggerSelectionChange()
-        //   this._targetColumnResizing = false
-        //   this._targetRowResizing = false
-        //   this._startEditorItemInfos.length = 0
-        //   let editorItemInfo = OperationHelper.saveEditorItem(clickedEditorItem)
-        //   this._startEditorItemInfos.push(editorItemInfo)
-        //   //this._inMoving = true
-        //   this.checkAndEndTextEdit()
-        //   //this.startMoveOutline(e)
-        // } else 
         if (!theSelectionLayer.hasEditorItem(clickedEditorItem)) {
           theSelectionLayer.inHolder = true
           theSelectionLayer.removeAllEditorItems()
@@ -911,24 +902,27 @@ export class Editor extends Painter {
           this.triggerSelectionChange()
           this._targetColumnResizing = false
           this._targetRowResizing = false
-          this._startEditorItemInfos.length = 0
+          this.beginOperation(clickedEditorItem)
+          this.checkAndEndTextEdit()
+          this.finishTextEditOperation()
+          this.startMoveOutline(e)
+          if (this._target) {
+            this._target.shape.focused = false
+          }
           if (this._targetItem) {
             this._targetItem.shape.focused = false
           }
           this._targetItem = undefined
           this._targetItemIndex = 0
-
-          let editorItemInfo = OperationHelper.saveEditorItem(clickedEditorItem)
-          this._startEditorItemInfos.push(editorItemInfo)
           this._inMoving = true
-          this.checkAndEndTextEdit()
-          this.startMoveOutline(e)
         } else if (clickedEditorItem instanceof TableEntity) {
           const targetPoint = this.findEditorItemPoint(clickedEditorItem, e.x, e.y)
           const [ targetRow, targetRowIndex, ] = this.isTableRowtResizable(clickedEditorItem, targetPoint.x, targetPoint.y)
           const [ targetColumn, targetColumnIndex, ] = this.isTableColumnResizable(clickedEditorItem, targetPoint.x, targetPoint.y)
           if (targetRow) {
             // console.log('========1')
+            this.checkAndEndTextEdit()
+            this.finishTextEditOperation()
             this._targetRowResizing = true
             this._targetRowIndex = targetRowIndex
             this._target = clickedEditorItem
@@ -939,10 +933,11 @@ export class Editor extends Painter {
             this._targetItemIndex = 0
             this.handleTableActiveCellShape()
             this._inMoving = true
-            this.checkAndEndTextEdit()
             this.startMoveOutline(e)
           } else if (targetColumn) {
             // console.log('========0')
+            this.checkAndEndTextEdit()
+            this.finishTextEditOperation()
             this._targetColumnResizing = targetColumn
             this._targetColumnIndex = targetColumnIndex
             this._target = clickedEditorItem
@@ -953,7 +948,6 @@ export class Editor extends Painter {
             this.handleTableActiveCellShape()
             this._targetItemIndex = 0
             this._inMoving = true
-            this.checkAndEndTextEdit()
             this.startMoveOutline(e)
           } else {
             const itemIndex = this.findTableItemIndex(clickedEditorItem, targetPoint.x, targetPoint.y)
@@ -967,6 +961,7 @@ export class Editor extends Painter {
               this.handleTableActiveCellShape()
               this._inMoving = true
               this.checkAndStartTextEdit()
+              this.beginTextEditOperation(clickedEditorItem)
               this.startMoveOutline(e)
               const cellPoint = this.findEditorItemPoint(this._targetItem, e.x, e.y)
               this.updateTextCursorLocation(this._targetItem, cellPoint.x, cellPoint.y)
@@ -983,28 +978,27 @@ export class Editor extends Painter {
               } else {
                 this._inMoving = true
                 this.checkAndEndTextEdit()
+                this.finishTextEditOperation()
                 this.startMoveOutline(e)
               }
             }
           }
-          this._startEditorItemInfos.length = 0
-          let editorItemInfo = OperationHelper.saveEditorItem(clickedEditorItem)
-          this._startEditorItemInfos.push(editorItemInfo)
+          this.beginOperation(clickedEditorItem)
         } else if(this._textFocused) {
           const targetPoint = this.findEditorItemPoint(clickedEditorItem, e.x, e.y)
           this.updateTextCursorLocation(clickedEditorItem, targetPoint.x, targetPoint.y)
           clickedEditorItem.shape.enter(targetPoint.x, targetPoint.y)
           this._textSelecting = true
         } else {
-          this._startEditorItemInfos.length = 0
-          let editorItemInfo = OperationHelper.saveEditorItem(clickedEditorItem)
-          this._startEditorItemInfos.push(editorItemInfo)
+          this.beginOperation(clickedEditorItem)
           this._inMoving = true
           this.startMoveOutline(e)
         }
       } else {
         theSelectionLayer.removeAllEditorItems()
         this.triggerSelectionChange()
+        this.checkAndEndTextEdit()
+        this.finishTextEditOperation()
         if (this._target) {
           this._target.shape.focused = false
         }
@@ -1019,7 +1013,6 @@ export class Editor extends Painter {
         this._targetItem = undefined
         this._targetItemIndex = 0
         this.handleTableActiveCellShape()
-        this.checkAndEndTextEdit()
         this.startRangeSelecting(e)
       }
     }
@@ -1073,6 +1066,7 @@ export class Editor extends Painter {
           if (this._target) {
             this._target.shape.focused = false
             this.checkAndEndTextEdit()
+            this.finishTextEditOperation()
           }
           this._target = clickedEditorItem
           this._targetTime = Date.now()
@@ -1102,6 +1096,7 @@ export class Editor extends Painter {
                   this._textArea.textContent = ''
                   this.updateTextCursorLocation(this._targetItem, cellPoint.x, cellPoint.y)
                   this.triggerTextEditStyleChange()
+                  this.beginTextEditOperation(clickedEditorItem)
                 }
               }
               this._targetTime = nowTime
@@ -1128,6 +1123,7 @@ export class Editor extends Painter {
                 this._textArea.textContent = ''
                 this.updateTextCursorLocation(clickedEditorItem, targetPoint.x, targetPoint.y)
                 this.triggerTextEditStyleChange()
+                this.beginTextEditOperation(this._target)
               }
             }
             this._targetTime = nowTime
@@ -1136,11 +1132,7 @@ export class Editor extends Painter {
       }
     }
     if(this.inMoving && this._moved &&  this._target && this._startEditorItemInfos.length > 0) {
-      let origItemInfo = this._startEditorItemInfos[0]
-      let editorItemInfo =  OperationHelper.saveEditorItem(this._target)
-      let operation = new Operation(this, OperationType.MOVE_ITEMS, [editorItemInfo],true, [origItemInfo])
-      this._operationService.addOperation(operation)
-      this.triggerOperationChange()
+      this.finishOperation(this._target)
     }
     if(this._inRangeSelecting) {
       this.endRangeSelecting(e)
@@ -1822,11 +1814,12 @@ export class Editor extends Painter {
   }
 
   private updateEditorItemDetail(item: Item, editorItemInfo: EditorItemInfo) {
-    item.type =  editorItemInfo.type
-    item.boundary = Rectangle.makeLTWH(editorItemInfo.left, editorItemInfo.top, editorItemInfo.width, editorItemInfo.height)
+    //item.type =  editorItemInfo.type
+    //item.boundary = Rectangle.makeLTWH(editorItemInfo.left, editorItemInfo.top, editorItemInfo.width, editorItemInfo.height)
     //item.rotation = new Rotation(item.width / 2, item.height / 2, editorItemInfo.rotation)
-    item.text = editorItemInfo.text
-    
+    //item.text = editorItemInfo.text
+    this.handleRemoveEditorItem(item.id)
+    this.handleAddEditorItem(editorItemInfo)
   }
 
   private removeItemById(item: Item, id: string): boolean {
@@ -2221,6 +2214,7 @@ export class Editor extends Painter {
         this._target.shape.focused = false
       }
       this.checkAndEndTextEdit()
+      this.finishTextEditOperation()
       if (this._target) {
         this._target.shape.focused = false
       }
@@ -2420,5 +2414,50 @@ export class Editor extends Painter {
       this._mode =  mode
       this.triggerEditorModeChange()
     }
+  }
+
+  private beginOperation(editorItem: EditorItem) {
+    this._startEditorItemInfos.length = 0
+    let editorItemInfo = OperationHelper.saveEditorItem(editorItem)
+    this._startEditorItemInfos.push(editorItemInfo)
+  }
+
+  private beginTextEditOperation(editorItem: EditorItem) {
+    this._startEditorItemInfos.length = 0
+    let editorItemInfo = OperationHelper.saveEditorItem(editorItem)
+    this._startEditorItemInfos.push(editorItemInfo)
+    console.log(`save: ${editorItemInfo}`)
+  }
+
+  private finishOperation(editorItem: EditorItem) {
+    let origItemInfo = this._startEditorItemInfos[0]
+    let editorItemInfo =  OperationHelper.saveEditorItem(editorItem)
+    let operation = new Operation(this, OperationType.UPDATE_ITEMS, [editorItemInfo],true, [origItemInfo])
+    this._operationService.addOperation(operation)
+    this.triggerOperationChange()
+    this._startEditorItemInfos.length = 0
+  }
+
+  private finishTextEditOperation() {
+    if(this._target && this._targetItem && this._startEditorItemInfos.length > 0) {
+      let origItemInfo = this._startEditorItemInfos[0]
+      let editorItemInfo =  OperationHelper.saveEditorItem(this._target)
+      let operation = new Operation(this, OperationType.UPDATE_ITEMS, [editorItemInfo],true, [origItemInfo])
+      this._operationService.addOperation(operation)
+      //console.log(`finish: ${editorItemInfo}`)
+      //console.log(`finish2: ${origItemInfo}`)
+      this.triggerOperationChange()
+      this._startEditorItemInfos.length = 0
+    } else if(this._target && this._startEditorItemInfos.length > 0) {
+      let origItemInfo = this._startEditorItemInfos[0]
+      let editorItemInfo =  OperationHelper.saveEditorItem(this._target)
+      let operation = new Operation(this, OperationType.UPDATE_ITEMS, [editorItemInfo],true, [origItemInfo])
+      this._operationService.addOperation(operation)
+      //console.log(`finish3: ${editorItemInfo}`)
+      //console.log(`finish4: ${origItemInfo}`)
+      this.triggerOperationChange()
+      this._startEditorItemInfos.length = 0
+    }
+
   }
 }
