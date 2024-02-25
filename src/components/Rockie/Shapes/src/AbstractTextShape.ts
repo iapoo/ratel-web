@@ -48,6 +48,7 @@ export abstract class AbstractTextShape extends Shape {
       this._paragraphBuilder.addText(this._text)
       this._paragraph = this._paragraphBuilder.build()
       this._paragraph.layout(this._textWidth - this._textMargin * 2)
+      this.textAlignment = TextAlignment.CENTER
       this.insert(text)
       // const style = new Style(2, EngineUtils.FONT_NAME_SERIF, 36)
       // this.applyStyleToRange(style, 1, 3)
