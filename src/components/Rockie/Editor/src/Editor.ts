@@ -1264,13 +1264,20 @@ export class Editor extends Painter {
 
   private updateTextCursorLocation (editorItem: EditorItem, x: number, y: number) {
     // this._textArea.style.position = 'absolute'
-    const parent = this._textArea.parentElement
+    //const parent = this._textArea.parentElement
+    //const scrollContainer = parent?.parentElement?.parentElement?.parentElement
+    const scrollContainer = document.getElementById('content-container')
+    const worldTransform = editorItem.worldTransform
     // const pos = this.getRelativePosition(parent)
-    if(parent) {
-      const pos = parent.getBoundingClientRect()
-      // console.log(`'Cursor x = ${parent.offsetLeft} , pos = ${pos}`)
-      this._textArea.style.left = (Editor.SHADOW_SIZE + (editorItem.left + x) * this._zoom + pos.left) + 'px'
-      this._textArea.style.top = (Editor.SHADOW_SIZE + (editorItem.top + y) * this._zoom + pos.top) + 'px'
+    if(parent && scrollContainer) {
+      //const position = worldTransform.makePoint(new Point2(0, 0))
+      const point = worldTransform.makePoint(new Point2(x, y))
+      //const pos = parent.getBoundingClientRect()
+      //this._textArea.style.left = (Editor.SHADOW_SIZE + (editorItem.left + x) * this._zoom + this.horizontalSpace  + pos.left - scrollContainer.scrollLeft) + 'px'
+      //this._textArea.style.top = (Editor.SHADOW_SIZE + (editorItem.top + y) * this._zoom + this.verticalSpace  + pos.top - scrollContainer.scrollTop) + 'px'
+      this._textArea.style.left = (Editor.SHADOW_SIZE + (point.x) * this._zoom  + this.horizontalSpace  - scrollContainer.scrollLeft) + 'px'
+      this._textArea.style.top = (Editor.SHADOW_SIZE + (point.y) * this._zoom + this.verticalSpace  - scrollContainer.scrollTop) + 'px'
+      console.log(`'Check left = ${editorItem.left}  x=${x} text.left = ${this._textArea.style.left}  scroll=${scrollContainer.scrollLeft}`)
     }
   }
 

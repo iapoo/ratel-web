@@ -1,6 +1,6 @@
 /* eslint-disable radix */
 /* eslint-disable @typescript-eslint/prefer-for-of */
-import React, { useEffect, useState, useRef, FC, MouseEventHandler, SyntheticEvent, } from 'react'
+import React, { useEffect, useState, useRef, FC, MouseEventHandler, SyntheticEvent, UIEvent, } from 'react'
 import styles from './index.css'
 import { Button, ColorPicker, Divider, Dropdown, FloatButton, Input, InputNumber, MenuProps, Select, Space, Tabs, Tooltip, theme, } from 'antd'
 import { Consts, FontSizeOptions, SystemUtils, Utils, } from '../Utils'
@@ -1289,8 +1289,13 @@ const Content: FC<ContentProps> = ({
     }
   }
 
-  const handleScroll = () => {
-
+  const handleScroll = (event: UIEvent) => {
+    //const scrollLeft = event.currentTarget.scrollLeft
+    //const scrollTop = event.currentTarget.scrollTop
+    //if(Utils.currentEditor) {
+      //currentEditor.
+    //}
+    
   }
 
   const popupShapeItems: MenuProps['items'] = [
