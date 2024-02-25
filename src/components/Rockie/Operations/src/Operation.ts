@@ -7,13 +7,15 @@ export enum OperationType {
     REMOVE_ITEMS,
     MOVE_ITEMS,
     UPDATE_ITEMS,
-    ADD_SELECTION_ITEMS,
-    REMOVE_SELECTION_ITEMS,
+    ADD_SELECTION_ITEMS,     //Paste items, rename id
+    REMOVE_SELECTION_ITEMS,  // Cut items, 
     SELECT_EDITOR,
     ADD_EDITOR,
     REMOVE_EDITOR,
     RENAME_EDITOR,
     MOVE_EDITOR,
+    ADD_ITEMS_TO_CONTAINER,
+    REMOVE_ITEMS_FROM_CONTAINER,    
 }
 
 export class Operation {
