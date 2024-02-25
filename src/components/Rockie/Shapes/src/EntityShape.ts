@@ -149,10 +149,12 @@ export class EntityShape extends AbstractTextShape {
 
 
   protected buildShape () {    
-    if(this instanceof ConnectorShape) {
+    if(!this._typeInfo) {
       return
     }
-    if(!this._typeInfo) {
+    if(this instanceof ConnectorShape) {
+      this.textWidth = this.width
+      this.textHeight = this.height
       return
     }
     let modifierWidth = this.modifier.x + this.typeInfo.modifierStart.x * this.width
