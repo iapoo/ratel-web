@@ -27,6 +27,7 @@ export class Operation {
     private _origItemInfos: Array<EditorItemInfo>
     private _afterEditor: Editor | null
     private _afterItemId: string | null
+    private _selected: boolean
 
     public constructor(editor: Editor, type: OperationType, itemInfos: Array<EditorItemInfo>, selected: boolean = false, origItemInfos: Array<EditorItemInfo> = [], description: string = '', afterEditor: Editor | null = null, afterItemId: string | null = null) {
         this._editor = editor
@@ -36,6 +37,7 @@ export class Operation {
         this._origItemInfos = origItemInfos
         this._afterEditor = afterEditor
         this._afterItemId = afterItemId
+        this._selected = selected
     }
 
     public get editor() {
@@ -64,5 +66,9 @@ export class Operation {
 
     public get origItemInfos() {
         return this._origItemInfos
+    }
+
+    public get selected() {
+        return this._selected
     }
 }

@@ -877,20 +877,23 @@ const Content: FC<ContentProps> = ({
   }
 
   const handleKeyDownEvent = (event: KeyboardEvent)  => {
+    if(event.key == 'Delete') {
+      event.preventDefault()
+      handleDelete()
+}
     if(event.metaKey || event.ctrlKey) {
       switch(event.key) {
         case 'z':
           event.preventDefault()
-          console.log(`ctrl+z`)
           handleUndo()          
           break;
         case 'y':
           event.preventDefault()
-          console.log(`ctrl+y`)
           handleRedo()
           break;
       }
     }
+    
   }
 
   /**
@@ -1182,10 +1185,6 @@ const Content: FC<ContentProps> = ({
 
   }
 
-  const handleDelete = () => {
-
-  }
-
   const handleDuplicate = () => {
 
   }
@@ -1235,10 +1234,15 @@ const Content: FC<ContentProps> = ({
     }
   }
 
-
   const handleRedo = () => {
     if (currentEditor) {
       currentEditor.redo()
+    }
+  }
+
+  const handleDelete = () => {
+    if (currentEditor) {
+      EditorHelper.deleteSelections(currentEditor)
     }
   }
 

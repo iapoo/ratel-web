@@ -1848,8 +1848,7 @@ export class Editor extends Painter {
 
   private handleOperationUndoRemoveItems(items: EditorItemInfo[]) {
     items.forEach(editorItemInfo => {
-      const id = editorItemInfo.id
-      this.handleRemoveEditorItem(id)
+      this.handleAddEditorItem(editorItemInfo)
     })
   }
 
