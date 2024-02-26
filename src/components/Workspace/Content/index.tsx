@@ -1,6 +1,6 @@
 /* eslint-disable radix */
 /* eslint-disable @typescript-eslint/prefer-for-of */
-import React, { useEffect, useState, useRef, FC, MouseEventHandler, SyntheticEvent, UIEvent, } from 'react'
+import React, { useEffect, useState, useRef, FC, MouseEventHandler, SyntheticEvent, UIEvent, KeyboardEvent, } from 'react'
 import styles from './index.css'
 import { Button, ColorPicker, Divider, Dropdown, FloatButton, Input, InputNumber, MenuProps, Select, Space, Tabs, Tooltip, theme, } from 'antd'
 import { Consts, FontSizeOptions, SystemUtils, Utils, } from '../Utils'
@@ -135,6 +135,7 @@ const Content: FC<ContentProps> = ({
     window.addEventListener('copy', handleCopyDetail)
     window.addEventListener('cut', handleCutDetail)
     window.addEventListener('paste', handlePasteDetail)
+    window.addEventListener('keydown', handleKeyDownEvent)
     // const timer = setInterval(() => {
     // }, 100)
 
@@ -143,7 +144,8 @@ const Content: FC<ContentProps> = ({
       window.removeEventListener('copy', handleCopyDetail)
       window.removeEventListener('cut', handleCutDetail)
       window.removeEventListener('paste', handlePasteDetail)
-        // clearInterval(timer)
+      window.removeEventListener('keydown', handleKeyDownEvent)
+      // clearInterval(timer)
     }
   })
 
@@ -874,6 +876,23 @@ const Content: FC<ContentProps> = ({
     }
   }
 
+  const handleKeyDownEvent = (event: KeyboardEvent)  => {
+    if(event.metaKey || event.ctrlKey) {
+      switch(event.key) {
+        case 'z':
+          event.preventDefault()
+          console.log(`ctrl+z`)
+          handleUndo()          
+          break;
+        case 'y':
+          event.preventDefault()
+          console.log(`ctrl+y`)
+          handleRedo()
+          break;
+      }
+    }
+  }
+
   /**
    * Handle copy command from system or application.
    * @param e 
@@ -1213,6 +1232,13 @@ const Content: FC<ContentProps> = ({
         }
         currentEditor.undo()
       }
+    }
+  }
+
+
+  const handleRedo = () => {
+    if (currentEditor) {
+      currentEditor.redo()
     }
   }
 
