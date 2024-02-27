@@ -9,6 +9,8 @@ export class Consts {
     public static LINE_WIDTH_MIN = 0.25
     public static LINE_WIDTH_MAX = 64
     public static DOUBLE_LINE_DEFAULT = 3
+    public static DOUBLE_LINE_ARROW_LENGTH_DEFAULT = 12
+    public static DOUBLE_LINE_ARROW_DISTANCE_DEFAULT = 6
 
     public static GRID_SIZE_DEFAULT = 16
     public static GRID_SIZE_MIN = 8
@@ -106,7 +108,9 @@ export class Consts {
 
     public static CONNECTOR_LINE_MODE_SIGNLE = 'single'
     public static CONNECTOR_LINE_MODE_DOUBLE = 'double'
-    public static CONNECTOR_LINE_MODE_DOUBLE_ARROW = 'double-arrow'
+    public static CONNECTOR_LINE_MODE_DOUBLE_START = 'double-start'
+    public static CONNECTOR_LINE_MODE_DOUBLE_END = 'double-end'
+    public static CONNECTOR_LINE_MODE_DOUBLE_BOTH = 'double-both'
 
     public static CONNECTOR_ARROW_DISPLAY_MODE_TOP = 'top'
     public static CONNECTOR_ARROW_DISPLAY_MODE_BOTTOM = 'bottom'
@@ -247,7 +251,9 @@ export const ConnectorLineTypes = [
 export const ConnectorLineModes = [
     {name: Consts.CONNECTOR_LINE_MODE_SIGNLE, label: 'workspace.header.text.connector-mode-single'},
     {name: Consts.CONNECTOR_LINE_MODE_DOUBLE, label: 'workspace.header.text.connector-mode-double'},
-    {name: Consts.CONNECTOR_LINE_MODE_DOUBLE_ARROW, label: 'workspace.header.text.connector-mode-double-arrow'},
+    {name: Consts.CONNECTOR_LINE_MODE_DOUBLE_START, label: 'workspace.header.text.connector-mode-double-start'},
+    {name: Consts.CONNECTOR_LINE_MODE_DOUBLE_END, label: 'workspace.header.text.connector-mode-double-end'},
+    {name: Consts.CONNECTOR_LINE_MODE_DOUBLE_BOTH, label: 'workspace.header.text.connector-mode-double-both'},
 ]
 
 export const PageTypes = [

@@ -6,6 +6,7 @@ import { EditorItem } from './EditorItem'
 import { EditorItemInfo } from './EditorItemInfo'
 import { Editor } from '../../Editor'
 import { ConnectorInfo } from './ConnectorInfo'
+import { Consts } from '@/components/Workspace/Utils'
 
 export interface ConnectorArrowType {
   name: string
@@ -100,6 +101,8 @@ export class Connector extends Item {
   private _endDirection: ConnectorDirection
   private _orthogonalPoints: Point2[]
   private _connectorDoubleLineGap: number
+  private _connectorDoubleLineArrowLength: number
+  private _connectorDoubleLineArrowDistance: number
 
   public constructor (start: Point2, end: Point2, startDirection: ConnectorDirection = ConnectorDirection.Right, endDirection: ConnectorDirection = ConnectorDirection.Left) {
     super(Math.min(start.x, end.x), Math.min(start.y, end.y), Math.abs(start.x - end.x), Math.abs(start.y - end.y))
@@ -125,7 +128,9 @@ export class Connector extends Item {
     this._startDirection = startDirection
     this._endDirection = endDirection
     this._connectorShape.orthogonalPoints = this._orthogonalPoints
-    this._connectorDoubleLineGap = 3
+    this._connectorDoubleLineGap = Consts.DOUBLE_LINE_DEFAULT
+    this._connectorDoubleLineArrowLength = Consts.DOUBLE_LINE_ARROW_LENGTH_DEFAULT
+    this._connectorDoubleLineArrowDistance = Consts.DOUBLE_LINE_ARROW_DISTANCE_DEFAULT
     this.updateTheme()
   }
 
@@ -221,6 +226,26 @@ export class Connector extends Item {
   public set connectorDoubleLineGap(value: number) {
     this._connectorDoubleLineGap = value
     this._connectorShape.connectorDoubleLineGap = value
+    this.updateTheme()
+  }
+
+  public get connectorDoubleLineArrowLength() {
+    return this._connectorDoubleLineArrowLength
+  }
+
+  public set connectorDoubleLineArrowLength(value: number) {
+    this._connectorDoubleLineArrowLength = value
+    this._connectorShape.connectorDoubleLineArrowLength = value
+    this.updateTheme()
+  }
+
+  public get connectorDoubleLineArrowDistance() {
+    return this._connectorDoubleLineArrowDistance
+  }
+
+  public set connectorDoubleLineArrowDistance(value: number) {
+    this._connectorDoubleLineArrowDistance = value
+    this._connectorShape.connectorDoubleLineArrowDistance = value
     this.updateTheme()
   }
 
