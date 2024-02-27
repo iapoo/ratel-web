@@ -1,7 +1,7 @@
 /* eslint-disable max-params */
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
 
-import { FillType, Graphics, Paint, PaintStyle, Path, Point2, Rectangle, Rotation, Shape, } from '@/components/Engine'
+import { FillType, Graphics, MathUtils, Paint, PaintStyle, Path, Point2, Rectangle, Rotation, Shape, } from '@/components/Engine'
 import { Line, Cubic, } from '@antv/g-math'
 import { EntityShape, } from './EntityShape'
 import { SystemUtils } from '@/components/Workspace/Utils'
@@ -39,6 +39,7 @@ export enum ConnectorArrowDisplayMode {
 export enum ConnectorMode {
   Single,
   Double,
+  DoubleArrow,
 }
 
 export enum ConnectorDirection {
@@ -80,6 +81,7 @@ export class ConnectorShape extends EntityShape {
   private _endArrowPath: Path
   private _arrowStroke: Paint
   private _arrowFill: Paint
+  private _connectorDoubleLineGap: number
 
   public constructor (startX: number, startY: number, endX: number, endY: number, 
     startDirection: ConnectorDirection = ConnectorDirection.Right, endDirection: ConnectorDirection = ConnectorDirection.Left,
@@ -126,6 +128,7 @@ export class ConnectorShape extends EntityShape {
     this._endArrowPath = new Path()
     this._arrowStroke = new Paint()
     this._arrowFill = new Paint()
+    this._connectorDoubleLineGap = 3
   }
 
   public get start (): Point2 {
@@ -205,6 +208,15 @@ export class ConnectorShape extends EntityShape {
 
   public set connectorMode(value: ConnectorMode) {
     this._connectorMode = value
+    this.markDirty()
+  }
+
+  public get connectorDoubleLineGap() {
+    return this._connectorDoubleLineGap
+  }
+
+  public set connectorDoubleLineGap(value: number) {
+    this._connectorDoubleLineGap = value
     this.markDirty()
   }
 
@@ -289,7 +301,7 @@ export class ConnectorShape extends EntityShape {
 
   public render (graphics: Graphics): void {
     super.render(graphics)
-    if(this._startArrow.type != ConnectorArrowDisplayType.None || true) {
+    if(this._startArrow.type != ConnectorArrowDisplayType.None) {
       if(this._startArrow.close) {
         if(this._startArrow.outline) {
           graphics.drawPath(this._startArrowPath, this._arrowFill)
@@ -299,7 +311,7 @@ export class ConnectorShape extends EntityShape {
       }
       graphics.drawPath(this._startArrowPath, this.stroke)
     }
-    if(this._endArrow.type != ConnectorArrowDisplayType.None || true) {
+    if(this._endArrow.type != ConnectorArrowDisplayType.None) {
       if(this._endArrow.close) {
         if(this._endArrow.outline) {
           graphics.drawPath(this._endArrowPath, this._arrowFill)
@@ -695,7 +707,6 @@ export class ConnectorShape extends EntityShape {
     }
   }
 
-
   private updateArrayTypeOrthogonal(start: Point2, direction: ConnectorDirection, arrowTypeInfo: ConnectorArrowTypeInfo, arrowPath: Path) {
     arrowPath.reset()
     switch(direction) {
@@ -931,10 +942,26 @@ export class ConnectorShape extends EntityShape {
   }
 
   private updateStraightLinePath() {
+    const x1 = this.start.x - this.left
+    const y1 = this.start.y - this.top
+    const x2 = this.end.x - this.left
+    const y2 = this.end.y - this.top
+    const distance = this._connectorDoubleLineGap * 0.5
+    const [leftX1, leftY1, leftX2, leftY2,rightX1, rightY1, rightX2, rightY2] = MathUtils.getTranslatedLine(x1, y1, x2, y2, distance)
       this.path.reset()
-      this.path.moveTo(this.start.x - this.left, this.start.y - this.top)
-      this.path.lineTo(this.end.x - this.left, this.end.y - this.top)
-      this.path.close()
+      switch(this._connectorMode) {
+        case ConnectorMode.Double:
+          this.path.moveTo(leftX1, leftY1)
+          this.path.lineTo(leftX2, leftY2)
+          this.path.moveTo(rightX1, rightY1)
+          this.path.lineTo(rightX2, rightY2)
+          break;
+        case ConnectorMode.Single:
+        default:
+          this.path.moveTo(x1, y1)
+          this.path.lineTo(x2, y2)
+          break;    
+      }
   }
 
 
@@ -991,7 +1018,6 @@ export class ConnectorShape extends EntityShape {
     const endModifier = new Point2(end.x + this.curveEndModifier.x * this.width, end.y + this.curveEndModifier.y * this.height)
 
     const distance = Cubic.pointDistance(start.x, start.y,startModifier.x, startModifier.y, endModifier.x, endModifier.y, end.x, end.y, x,y)
-    return distance
-   
+    return distance   
   }
 }

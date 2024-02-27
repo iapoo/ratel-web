@@ -1026,7 +1026,7 @@ export class Editor extends Painter {
       return
     }
     if(this._action) { // It shouldn't happen here
-      console.log(`It is a exception here, shouldn't be reached`)
+      //console.log(`It is a exception here, shouldn't be reached`)
       this.selectionLayer.removeAllEditorItems()
       this.selectionLayer.addEditorItem(this._action.item)
       let editorItemInfo = OperationHelper.saveEditorItem(this._action.item)
@@ -1035,17 +1035,21 @@ export class Editor extends Painter {
       this.triggerOperationChange()
       this._action = undefined
     } else if (this._inCreatingConnector) {// It shouldn't happen here
-      console.log(`It is a exception here, shouldn't be reached`)
+      //console.log(`It is a exception here, shouldn't be reached`)
       const theControllerLayer = this.controllerLayer as ControllerLayer
+      const theSelectionLayer = this.selectionLayer as SelectionLayer
       const connector = theControllerLayer.getEditorItem(0)
       this.controllerLayer.removeAllEditorItems()
       this.contentLayer.addEditorItem(connector)
-      this.selectionLayer.removeAllEditorItems()
-      this.selectionLayer.addEditorItem(connector)
+      //theSelectionLayer.inHolder = true
+      theSelectionLayer.removeAllEditorItems()
+      theSelectionLayer.addEditorItem(connector)
       let editorItemInfo = OperationHelper.saveEditorItem(connector)
       let operation = new Operation(this, OperationType.ADD_ITEMS, [editorItemInfo], true, [])
       this._operationService.addOperation(operation)
       this.triggerOperationChange()
+      this.triggerSelectionChange()
+      this.triggerSelectionResized()
       this._action = undefined
       // } else if (this.inMoving_) {
       //  const theSelectionLayer = this.selectionLayer

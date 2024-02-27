@@ -5,7 +5,7 @@
 import { Color, Colors, TextVerticalAlignment, Point2, StrokeDashStyle, TextAlignment } from "@/components/Engine";
 import { Consts } from "./Consts";
 import { ConnectorArrowDisplayType, ConnectorType } from "@/components/Rockie/Shapes";
-import { ConnectorArrowDisplayMode, ConnectorArrowTypeInfo, ConnectorDirection } from "@/components/Rockie/Shapes/src/ConnectorShape";
+import { ConnectorArrowDisplayMode, ConnectorArrowTypeInfo, ConnectorDirection, ConnectorMode } from "@/components/Rockie/Shapes/src/ConnectorShape";
 import { ConnectorArrowType, ConnectorArrowTypes } from "@/components/Rockie/Items/src/Connector";
 import { ConnectorArrowInfo } from "@/components/Rockie/Items";
 import { EditorMode } from "@/components/Rockie/Editor";
@@ -305,6 +305,36 @@ export class SystemUtils {
             case ConnectorType.Orthogonal:
             default:
                 return Consts.CONNECTOR_LINE_TYPE_ORTHOGONAL
+                break
+        }
+    }
+
+    public static parseConnectorMode(connectorMode: string): ConnectorMode {
+        switch (connectorMode) {
+            case Consts.CONNECTOR_LINE_MODE_DOUBLE:
+                return ConnectorMode.Double
+                break
+            case Consts.CONNECTOR_LINE_MODE_DOUBLE_ARROW:
+                return ConnectorMode.DoubleArrow
+                break
+            case Consts.CONNECTOR_LINE_MODE_SIGNLE:
+            default:
+                return ConnectorMode.Single
+                break
+        }
+    }
+
+    public static generateConnectorMode(connectorMode: ConnectorMode): string {
+        switch (connectorMode) {
+            case ConnectorMode.Double:
+                return Consts.CONNECTOR_LINE_MODE_DOUBLE
+                break
+            case ConnectorMode.DoubleArrow:
+                return Consts.CONNECTOR_LINE_MODE_DOUBLE_ARROW
+                break
+            case ConnectorMode.Single:
+            default:
+                return Consts.CONNECTOR_LINE_MODE_SIGNLE
                 break
         }
     }

@@ -99,6 +99,7 @@ export class Connector extends Item {
   private _startDirection: ConnectorDirection
   private _endDirection: ConnectorDirection
   private _orthogonalPoints: Point2[]
+  private _connectorDoubleLineGap: number
 
   public constructor (start: Point2, end: Point2, startDirection: ConnectorDirection = ConnectorDirection.Right, endDirection: ConnectorDirection = ConnectorDirection.Left) {
     super(Math.min(start.x, end.x), Math.min(start.y, end.y), Math.abs(start.x - end.x), Math.abs(start.y - end.y))
@@ -124,6 +125,7 @@ export class Connector extends Item {
     this._startDirection = startDirection
     this._endDirection = endDirection
     this._connectorShape.orthogonalPoints = this._orthogonalPoints
+    this._connectorDoubleLineGap = 3
     this.updateTheme()
   }
 
@@ -208,6 +210,17 @@ export class Connector extends Item {
 
   public set connectorMode(value: ConnectorMode) {
     this._connectorMode = value
+    this._connectorShape.connectorMode = value
+    this.updateTheme()
+  }
+
+  public get connectorDoubleLineGap() {
+    return this._connectorDoubleLineGap
+  }
+
+  public set connectorDoubleLineGap(value: number) {
+    this._connectorDoubleLineGap = value
+    this._connectorShape.connectorDoubleLineGap = value
     this.updateTheme()
   }
 

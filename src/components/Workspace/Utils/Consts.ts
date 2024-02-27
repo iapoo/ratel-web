@@ -8,6 +8,7 @@ export class Consts {
     public static LINE_WIDTH_DEFAULT = 1
     public static LINE_WIDTH_MIN = 0.25
     public static LINE_WIDTH_MAX = 64
+    public static DOUBLE_LINE_DEFAULT = 3
 
     public static GRID_SIZE_DEFAULT = 16
     public static GRID_SIZE_MIN = 8
@@ -105,6 +106,7 @@ export class Consts {
 
     public static CONNECTOR_LINE_MODE_SIGNLE = 'single'
     public static CONNECTOR_LINE_MODE_DOUBLE = 'double'
+    public static CONNECTOR_LINE_MODE_DOUBLE_ARROW = 'double-arrow'
 
     public static CONNECTOR_ARROW_DISPLAY_MODE_TOP = 'top'
     public static CONNECTOR_ARROW_DISPLAY_MODE_BOTTOM = 'bottom'
@@ -186,6 +188,24 @@ export const FontSizeOptions = [
     {value: 72, label: '72'},
   ]
 
+  export const DoubleLineGapOptions = [
+    {value: 1, label: '1'},
+    {value: 2, label: '2'},
+    {value: 3, label: '3'},
+    {value: 4, label: '4'},
+    {value: 5, label: '5'},
+    {value: 6, label: '6'},
+    {value: 7, label: '7'},
+    {value: 8, label: '8'},
+    {value: 9, label: '9'},
+    {value: 10, label: '10'},
+    {value: 12, label: '12'},
+    {value: 14, label: '14'},
+    {value: 16, label: '16'},
+    {value: 20, label: '20'},
+    {value: 24, label: '24'},
+  ]
+
 export const LineWidthOptions = [    
     {value: 0.25, label: '0.25'},
     {value: 0.5, label: '0.5'},
@@ -227,6 +247,7 @@ export const ConnectorLineTypes = [
 export const ConnectorLineModes = [
     {name: Consts.CONNECTOR_LINE_MODE_SIGNLE, label: 'workspace.header.text.connector-mode-single'},
     {name: Consts.CONNECTOR_LINE_MODE_DOUBLE, label: 'workspace.header.text.connector-mode-double'},
+    {name: Consts.CONNECTOR_LINE_MODE_DOUBLE_ARROW, label: 'workspace.header.text.connector-mode-double-arrow'},
 ]
 
 export const PageTypes = [
