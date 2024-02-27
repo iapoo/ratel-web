@@ -972,10 +972,20 @@ export class ConnectorShape extends EntityShape {
     const y2 = this.end.y - this.top
     const distance = this._connectorDoubleLineGap * 0.5
     const [leftX1, leftY1, leftX2, leftY2,rightX1, rightY1, rightX2, rightY2] = MathUtils.getTranslatedLine(x1, y1, x2, y2, distance)
+    const [leftX3, leftY3, leftX4, leftY4,rightX3, rightY3, rightX4, rightY4] = MathUtils.getTranslatedLine(x1, y1, x2, y2, distance + this.connectorDoubleLineArrowDistance)
     const lineLength = Line.length(leftX1, leftY1, leftX2, leftY2)
-    const ratio = 3
-    const leftStart = Line.pointAt(leftX1, leftY1, leftX2, leftY2, 0.5)
+    const ratio1 = this._connectorDoubleLineArrowLength / lineLength
+    const ratio2 = 1 - ratio1
+    const leftStart1 = Line.pointAt(leftX1, leftY1, leftX2, leftY2, ratio1)
+    const rightStart1 = Line.pointAt(rightX1, rightY1, rightX2, rightY2, ratio1)
+    const leftStart2 = Line.pointAt(leftX1, leftY1, leftX2, leftY2, ratio2)
+    const rightStart2 = Line.pointAt(rightX1, rightY1, rightX2, rightY2, ratio2)
+    const leftStart3 = Line.pointAt(leftX3, leftY3, leftX4, leftY4, ratio1)
+    const rightStart3 = Line.pointAt(rightX3, rightY3, rightX4, rightY4, ratio1)
+    const leftStart4 = Line.pointAt(leftX3, leftY3, leftX4, leftY4, ratio2)
+    const rightStart4 = Line.pointAt(rightX3, rightY3, rightX4, rightY4, ratio2)
     this.path.reset()
+    //Don't start from joint point of arrow, it will cause 1 empty point
     switch(this._connectorMode) {
       case ConnectorMode.Double:
         this.path.moveTo(leftX1, leftY1)
@@ -984,22 +994,36 @@ export class ConnectorShape extends EntityShape {
         this.path.lineTo(rightX2, rightY2)
         break;
       case ConnectorMode.DoubleAndStartArrow:
-        this.path.moveTo(leftX1, leftY1)
-        this.path.lineTo(leftX2, leftY2)
-        this.path.moveTo(rightX1, rightY1)
+        this.path.moveTo(leftX2, leftY2)
+        this.path.lineTo(leftStart1.x, leftStart1.y)
+        this.path.lineTo(leftStart3.x, leftStart3.y)
+        this.path.lineTo(x1, y1)
+        this.path.lineTo(rightStart3.x, rightStart3.y)
+        this.path.lineTo(rightStart1.x, rightStart1.y)
         this.path.lineTo(rightX2, rightY2)
         break;
       case ConnectorMode.DoubleAndEndArrow:
         this.path.moveTo(leftX1, leftY1)
-        this.path.lineTo(leftX2, leftY2)
-        this.path.moveTo(rightX1, rightY1)
-        this.path.lineTo(rightX2, rightY2)
+        this.path.lineTo(leftStart2.x, leftStart2.y)
+        this.path.lineTo(leftStart4.x, leftStart4.y)
+        this.path.lineTo(x2, y2)
+        this.path.lineTo(rightStart4.x, rightStart4.y)
+        this.path.lineTo(rightStart2.x, rightStart2.y)
+        this.path.lineTo(rightX1, rightY1)
         break;
       case ConnectorMode.DoubleAndBothArrows:
-        this.path.moveTo(leftX1, leftY1)
-        this.path.lineTo(leftX2, leftY2)
-        this.path.moveTo(rightX1, rightY1)
-        this.path.lineTo(rightX2, rightY2)
+        this.path.moveTo(leftStart1.x, leftStart1.y)
+        this.path.lineTo(leftStart3.x, leftStart3.y)
+        this.path.lineTo(x1, y1)
+        this.path.lineTo(rightStart3.x, rightStart3.y)
+        this.path.lineTo(rightStart1.x, rightStart1.y)
+        this.path.lineTo(rightStart2.x, rightStart2.y)
+        this.path.lineTo(rightStart4.x, rightStart4.y)
+        this.path.lineTo(x2, y2)
+        this.path.lineTo(leftStart4.x, leftStart4.y)
+        this.path.lineTo(leftStart2.x, leftStart2.y)
+        this.path.lineTo(leftStart1.x, leftStart1.y)
+        this.path.close()
         break;
       case ConnectorMode.Single:
       default:
