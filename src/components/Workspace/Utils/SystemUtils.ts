@@ -314,8 +314,14 @@ export class SystemUtils {
             case Consts.CONNECTOR_LINE_MODE_DOUBLE:
                 return ConnectorMode.Double
                 break
-            case Consts.CONNECTOR_LINE_MODE_DOUBLE_ARROW:
-                return ConnectorMode.DoubleArrow
+            case Consts.CONNECTOR_LINE_MODE_DOUBLE_START:
+                return ConnectorMode.DoubleAndStartArrow
+                break
+            case Consts.CONNECTOR_LINE_MODE_DOUBLE_END:
+                return ConnectorMode.DoubleAndEndArrow
+                break
+            case Consts.CONNECTOR_LINE_MODE_DOUBLE_BOTH:
+                return ConnectorMode.DoubleAndBothArrows
                 break
             case Consts.CONNECTOR_LINE_MODE_SIGNLE:
             default:
@@ -329,8 +335,14 @@ export class SystemUtils {
             case ConnectorMode.Double:
                 return Consts.CONNECTOR_LINE_MODE_DOUBLE
                 break
-            case ConnectorMode.DoubleArrow:
-                return Consts.CONNECTOR_LINE_MODE_DOUBLE_ARROW
+            case ConnectorMode.DoubleAndStartArrow:
+                return Consts.CONNECTOR_LINE_MODE_DOUBLE_START
+                break
+            case ConnectorMode.DoubleAndEndArrow:
+                return Consts.CONNECTOR_LINE_MODE_DOUBLE_END
+                break
+            case ConnectorMode.DoubleAndBothArrows:
+                return Consts.CONNECTOR_LINE_MODE_DOUBLE_BOTH
                 break
             case ConnectorMode.Single:
             default:

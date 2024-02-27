@@ -4,7 +4,7 @@
 import { FillType, Graphics, MathUtils, Paint, PaintStyle, Path, Point2, Rectangle, Rotation, Shape, } from '@/components/Engine'
 import { Line, Cubic, } from '@antv/g-math'
 import { EntityShape, } from './EntityShape'
-import { SystemUtils } from '@/components/Workspace/Utils'
+import { Consts, SystemUtils } from '@/components/Workspace/Utils'
 import { ConnectorArrowType } from '../../Items/src/Connector'
 
 export enum ConnectorType {
@@ -39,7 +39,9 @@ export enum ConnectorArrowDisplayMode {
 export enum ConnectorMode {
   Single,
   Double,
-  DoubleArrow,
+  DoubleAndStartArrow,
+  DoubleAndEndArrow,
+  DoubleAndBothArrows,
 }
 
 export enum ConnectorDirection {
@@ -82,6 +84,8 @@ export class ConnectorShape extends EntityShape {
   private _arrowStroke: Paint
   private _arrowFill: Paint
   private _connectorDoubleLineGap: number
+  private _connectorDoubleLineArrowLength: number
+  private _connectorDoubleLineArrowDistance: number
 
   public constructor (startX: number, startY: number, endX: number, endY: number, 
     startDirection: ConnectorDirection = ConnectorDirection.Right, endDirection: ConnectorDirection = ConnectorDirection.Left,
@@ -128,7 +132,9 @@ export class ConnectorShape extends EntityShape {
     this._endArrowPath = new Path()
     this._arrowStroke = new Paint()
     this._arrowFill = new Paint()
-    this._connectorDoubleLineGap = 3
+    this._connectorDoubleLineGap = Consts.DOUBLE_LINE_DEFAULT
+    this._connectorDoubleLineArrowLength = Consts.DOUBLE_LINE_ARROW_LENGTH_DEFAULT
+    this._connectorDoubleLineArrowDistance = Consts.DOUBLE_LINE_ARROW_DISTANCE_DEFAULT
   }
 
   public get start (): Point2 {
@@ -217,6 +223,24 @@ export class ConnectorShape extends EntityShape {
 
   public set connectorDoubleLineGap(value: number) {
     this._connectorDoubleLineGap = value
+    this.markDirty()
+  }
+
+  public get connectorDoubleLineArrowLength() {
+    return this._connectorDoubleLineArrowLength
+  }
+
+  public set connectorDoubleLineArrowLength(value: number) {
+    this._connectorDoubleLineArrowLength = value
+    this.markDirty()
+  }
+
+  public get connectorDoubleLineArrowDistance() {
+    return this._connectorDoubleLineArrowDistance
+  }
+
+  public set connectorDoubleLineArrowDistance(value: number) {
+    this._connectorDoubleLineArrowDistance = value
     this.markDirty()
   }
 
@@ -948,21 +972,42 @@ export class ConnectorShape extends EntityShape {
     const y2 = this.end.y - this.top
     const distance = this._connectorDoubleLineGap * 0.5
     const [leftX1, leftY1, leftX2, leftY2,rightX1, rightY1, rightX2, rightY2] = MathUtils.getTranslatedLine(x1, y1, x2, y2, distance)
-      this.path.reset()
-      switch(this._connectorMode) {
-        case ConnectorMode.Double:
-          this.path.moveTo(leftX1, leftY1)
-          this.path.lineTo(leftX2, leftY2)
-          this.path.moveTo(rightX1, rightY1)
-          this.path.lineTo(rightX2, rightY2)
-          break;
-        case ConnectorMode.Single:
-        default:
-          this.path.moveTo(x1, y1)
-          this.path.lineTo(x2, y2)
-          break;    
-      }
-  }
+    const lineLength = Line.length(leftX1, leftY1, leftX2, leftY2)
+    const ratio = 3
+    const leftStart = Line.pointAt(leftX1, leftY1, leftX2, leftY2, 0.5)
+    this.path.reset()
+    switch(this._connectorMode) {
+      case ConnectorMode.Double:
+        this.path.moveTo(leftX1, leftY1)
+        this.path.lineTo(leftX2, leftY2)
+        this.path.moveTo(rightX1, rightY1)
+        this.path.lineTo(rightX2, rightY2)
+        break;
+      case ConnectorMode.DoubleAndStartArrow:
+        this.path.moveTo(leftX1, leftY1)
+        this.path.lineTo(leftX2, leftY2)
+        this.path.moveTo(rightX1, rightY1)
+        this.path.lineTo(rightX2, rightY2)
+        break;
+      case ConnectorMode.DoubleAndEndArrow:
+        this.path.moveTo(leftX1, leftY1)
+        this.path.lineTo(leftX2, leftY2)
+        this.path.moveTo(rightX1, rightY1)
+        this.path.lineTo(rightX2, rightY2)
+        break;
+      case ConnectorMode.DoubleAndBothArrows:
+        this.path.moveTo(leftX1, leftY1)
+        this.path.lineTo(leftX2, leftY2)
+        this.path.moveTo(rightX1, rightY1)
+        this.path.lineTo(rightX2, rightY2)
+        break;
+      case ConnectorMode.Single:
+      default:
+        this.path.moveTo(x1, y1)
+        this.path.lineTo(x2, y2)
+        break;    
+    }
+}
 
 
   private updateOrthogonalPath() {
