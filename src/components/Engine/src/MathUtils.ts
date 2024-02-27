@@ -64,4 +64,22 @@ export class MathUtils {
         return new Point2(xf, yf)
     }
   }
+
+  
+  /**
+   * 计算线段平移一段距离后的线段。距离为d。返回2个线段，一个左移动，一个右移动
+   * https://blog.csdn.net/weixin_52808620/article/details/131332969
+   */
+  public static getTranslatedLine(x1: number, y1: number, x2: number, y2: number, d: number) {
+    const leftX1 = d * (y1 - y2)/Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)) + x1
+    const leftY1 = d * (x2 - x1)/Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)) + y1
+    const leftX2 = d * (y1 - y2)/Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)) + x2
+    const leftY2 = d * (x2 - x1)/Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)) + y2
+    const rightX1 = d * (y2 - y1)/Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)) + x1
+    const rightY1 = d * (x1 - x2)/Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)) + y1
+    const rightX2 = d * (y2 - y1)/Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)) + x2
+    const rightY2 = d * (x1 - x2)/Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)) + y2
+    return [leftX1, leftY1, leftX2, leftY2, rightX1, rightY1, rightX2,rightY2]
+  }
+
 }

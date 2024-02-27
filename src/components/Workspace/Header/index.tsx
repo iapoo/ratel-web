@@ -20,6 +20,7 @@ import { Connector, ContainerEntity, ContainerTypes, Item, ShapeEntity, ShapeTyp
 import { ShapeAction } from '@/components/Rockie/Actions';
 import { ConnectorArrowTypes } from '@/components/Rockie/Items/src/Connector';
 import { ConnectorDirection } from '@/components/Rockie/Shapes';
+import { DoubleLineGapOptions } from '../Utils/Consts';
 
 interface HeaderProps {
   previousEditor: Editor | undefined
@@ -57,6 +58,7 @@ const Header: FC<HeaderProps> = ({
   const [fillColor, setFillColor,] = useState<string>(Consts.COLOR_FILL_DEFAULT)
   const [strokeColor, setStrokeColor,] = useState<string>(Consts.COLOR_STROKE_DEFAULT)
   const [lineWidth, setLineWidth,] = useState<number>(Consts.LINE_WIDTH_DEFAULT)
+  const [doubleLineGap, setDoubleLineGap, ] = useState<number>(Consts.DOUBLE_LINE_DEFAULT)
   const [zoom, setZoom,] = useState<number>(currentEditor? currentEditor.zoom : Consts.ZOOM_DEFAULT)
   const [fontSize, setFontSize,] = useState<number>(Consts.FONT_SIZE_DEFAULT)
   const [fontColor, setFontColor, ] = useState<string>(Consts.COLOR_FONT_DEFAULT)
@@ -752,6 +754,30 @@ const Header: FC<HeaderProps> = ({
 
   const handleConnectorLineModeChange = (value: string) => {
     setConnectorLineMode(value)
+    if(currentEditor) {
+      let editorItems = currentEditor.selectionLayer.getAllEditorItems()
+      editorItems.forEach(editorItem => {
+        if(editorItem instanceof Connector) {
+          editorItem.connectorMode = SystemUtils.parseConnectorMode(value)
+        }
+      })
+      currentEditor.focus()
+      currentEditor.invalideHolder()
+    }
+  }
+
+  const handleDoubleLineGapChange = (value: number) => {
+    setDoubleLineGap(value)
+    if(currentEditor) {
+      let editorItems = currentEditor.selectionLayer.getAllEditorItems()
+      editorItems.forEach(editorItem => {
+        if(editorItem instanceof Connector) {
+          editorItem.connectorDoubleLineGap = value
+        }
+      })
+      currentEditor.focus()
+      currentEditor.invalideHolder()
+    }
   }
 
   const handleConnectorArrowStartTypeChange = (value: string) => {
@@ -1124,15 +1150,17 @@ const Header: FC<HeaderProps> = ({
               <Tooltip title={<FormattedMessage id='workspace.header.title.connector-line-type'/>}>
                 <Select size='small' value={connectorLineType} onChange={handleConnectorLineTypeChange} style={{width: 56 }} disabled={!connectorSelected} options={connectorLineTypes} bordered={false}/>
               </Tooltip>
-              {/** TODO:  FIXME, HIDE TEMPORARY*/}
-              <Tooltip title={<FormattedMessage id='workspace.header.title.connector-line-mode'/>}>
-                <Select size='small' value={connectorLineMode} onChange={handleConnectorLineModeChange} style={{width: 56, display:'none' }} disabled={!connectorSelected} options={connectorLineModes} bordered={false}/>
-              </Tooltip>
               <Tooltip title={<FormattedMessage id='workspace.header.title.connector-arrow-start-type'/>}>
                 <Select size='small' value={connectorLineStartArrow} onChange={handleConnectorArrowStartTypeChange} style={{width: 56 }} disabled={!connectorSelected} options={connectorLineStartArrows} bordered={false}/>
               </Tooltip>
               <Tooltip title={<FormattedMessage id='workspace.header.title.connector-arrow-end-type'/>}>
               <Select size='small' value={connectorLineEndArrow} onChange={handleConnectorArrowEndTypeChange} style={{width: 56 }} disabled={!connectorSelected} options={connectorLineEndArrows} bordered={false}/>
+              </Tooltip>
+              <Tooltip title={<FormattedMessage id='workspace.header.title.connector-line-mode'/>}>
+                <Select size='small' value={connectorLineMode} onChange={handleConnectorLineModeChange} style={{width: 56, }} disabled={!connectorSelected} options={connectorLineModes} bordered={false}/>
+              </Tooltip>
+              <Tooltip title={<FormattedMessage id='workspace.header.title.line-width'/>}>
+                <Select size='small' value={doubleLineGap} onChange={handleDoubleLineGapChange} style={{width: 64, }} disabled={!connectorSelected} options={DoubleLineGapOptions} bordered={false}/>
               </Tooltip>
             </Space>
           </Space>
