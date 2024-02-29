@@ -8,7 +8,7 @@ export class Consts {
     public static LINE_WIDTH_DEFAULT = 1
     public static LINE_WIDTH_MIN = 0.25
     public static LINE_WIDTH_MAX = 64
-    public static DOUBLE_LINE_DEFAULT = 6
+    public static DOUBLE_LINE_GAP_DEFAULT = 6
     public static DOUBLE_LINE_ARROW_LENGTH_DEFAULT = 12
     public static DOUBLE_LINE_ARROW_DISTANCE_DEFAULT = 6
 

@@ -128,7 +128,7 @@ export class Connector extends Item {
     this._startDirection = startDirection
     this._endDirection = endDirection
     this._connectorShape.orthogonalPoints = this._orthogonalPoints
-    this._connectorDoubleLineGap = Consts.DOUBLE_LINE_DEFAULT
+    this._connectorDoubleLineGap = Consts.DOUBLE_LINE_GAP_DEFAULT
     this._connectorDoubleLineArrowLength = Consts.DOUBLE_LINE_ARROW_LENGTH_DEFAULT
     this._connectorDoubleLineArrowDistance = Consts.DOUBLE_LINE_ARROW_DISTANCE_DEFAULT
     this.updateTheme()
