@@ -20,7 +20,7 @@ import { Connector, ContainerEntity, ContainerTypes, Item, ShapeEntity, ShapeTyp
 import { ShapeAction } from '@/components/Rockie/Actions';
 import { ConnectorArrowTypes } from '@/components/Rockie/Items/src/Connector';
 import { ConnectorDirection } from '@/components/Rockie/Shapes';
-import { DoubleLineGapOptions } from '../Utils/Consts';
+import { ConnectorLineModesForCurve, DoubleLineGapOptions } from '../Utils/Consts';
 
 interface HeaderProps {
   previousEditor: Editor | undefined
@@ -750,6 +750,20 @@ const Header: FC<HeaderProps> = ({
       currentEditor.focus()
       currentEditor.invalideHolder()
     }
+    //Update it to default if not supported
+    if(value == Consts.CONNECTOR_LINE_TYPE_CURVED &&  connectorLineMode != Consts.CONNECTOR_LINE_MODE_SIGNLE && connectorLineMode != Consts.CONNECTOR_LINE_MODE_DOUBLE) {
+      setConnectorLineMode(Consts.CONNECTOR_LINE_MODE_SIGNLE)
+      if(currentEditor) {
+        let editorItems = currentEditor.selectionLayer.getAllEditorItems()
+        editorItems.forEach(editorItem => {
+          if(editorItem instanceof Connector) {
+            editorItem.connectorMode = SystemUtils.parseConnectorMode(Consts.CONNECTOR_LINE_MODE_SIGNLE)
+          }
+        })
+        currentEditor.focus()
+        currentEditor.invalideHolder()
+      }
+      }
   }
 
   const handleConnectorLineModeChange = (value: string) => {
@@ -828,6 +842,10 @@ const Header: FC<HeaderProps> = ({
   })
  
   const connectorLineModes = ConnectorLineModes.map(connectorLineMode=> {
+    return {value: connectorLineMode.name, label: <img alt='intl.formatMessage({ id: connectorLineMode.label})' src={'/images/connector-line-mode-' + connectorLineMode.name.toLowerCase() + '.png'} width='16' height='16' />}
+  })
+ 
+  const connectorLineModesForCurve = ConnectorLineModesForCurve.map(connectorLineMode=> {
     return {value: connectorLineMode.name, label: <img alt='intl.formatMessage({ id: connectorLineMode.label})' src={'/images/connector-line-mode-' + connectorLineMode.name.toLowerCase() + '.png'} width='16' height='16' />}
   })
  
@@ -1157,7 +1175,7 @@ const Header: FC<HeaderProps> = ({
               <Select size='small' value={connectorLineEndArrow} onChange={handleConnectorArrowEndTypeChange} style={{width: 56 }} disabled={!connectorSelected} options={connectorLineEndArrows} bordered={false}/>
               </Tooltip>
               <Tooltip title={<FormattedMessage id='workspace.header.title.connector-line-mode'/>}>
-                <Select size='small' value={connectorLineMode} onChange={handleConnectorLineModeChange} style={{width: 56, }} disabled={!connectorSelected} options={connectorLineModes} bordered={false}/>
+                <Select size='small' value={connectorLineMode} onChange={handleConnectorLineModeChange} style={{width: 56, }} disabled={!connectorSelected} options={connectorLineType ==  Consts.CONNECTOR_LINE_TYPE_CURVED ? connectorLineModesForCurve : connectorLineModes} bordered={false}/>
               </Tooltip>
               <Tooltip title={<FormattedMessage id='workspace.header.title.line-width'/>}>
                 <Select size='small' value={doubleLineGap} onChange={handleDoubleLineGapChange} style={{width: 64, }} disabled={!connectorSelected} options={DoubleLineGapOptions} bordered={false}/>

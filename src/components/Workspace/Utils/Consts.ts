@@ -256,6 +256,11 @@ export const ConnectorLineModes = [
     {name: Consts.CONNECTOR_LINE_MODE_DOUBLE_BOTH, label: 'workspace.header.text.connector-mode-double-both'},
 ]
 
+export const ConnectorLineModesForCurve = [
+    {name: Consts.CONNECTOR_LINE_MODE_SIGNLE, label: 'workspace.header.text.connector-mode-single'},
+    {name: Consts.CONNECTOR_LINE_MODE_DOUBLE, label: 'workspace.header.text.connector-mode-double'},
+]
+
 export const PageTypes = [
     {name: Consts.PAGE_SIZE_A0, label: 'workspace.property-editor.page-setting.page-size.a0', width: 4493.9, height: 3178.6},
     {name: Consts.PAGE_SIZE_A1, label: 'workspace.property-editor.page-setting.page-size.a1', width: 3178.6, height: 2245},
