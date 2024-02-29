@@ -1,14 +1,16 @@
 import React, { FC, useEffect, useState, useRef} from 'react'
 import styles from './index.css'
 import Workspace from '@/components/Workspace'
-import { Button, Checkbox, ColorPicker, Descriptions, DescriptionsProps, Divider, InputNumber, Radio, RadioChangeEvent, Select, Tabs, TabsProps, } from 'antd'
-import { Consts, LineWidthOptions, PageTypes, StrokeDashStyles, SystemUtils, Utils, } from '../Utils'
+import { Button, Checkbox, ColorPicker, Descriptions, DescriptionsProps, Divider, InputNumber, Radio, RadioChangeEvent, Select, Tabs, TabsProps, Tooltip, } from 'antd'
+import { ConnectorLineModes, ConnectorLineTypes, Consts, LineWidthOptions, PageTypes, StrokeDashStyles, SystemUtils, Utils, } from '../Utils'
 import { Editor, EditorEvent } from '@/components/Rockie/Editor'
 import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
 import { DescriptionsItemProps } from 'antd/es/descriptions/Item'
 import { wrap } from 'module'
 import { Color, Colors, StrokeCap, StrokeDashStyle, StrokeJoin } from '@/components/Engine'
 import { CheckboxChangeEvent } from 'antd/es/checkbox'
+import { Connector, ConnectorArrowTypes } from '@/components/Rockie/Items/src/Connector'
+import { ConnectorLineModesForCurve, DoubleLineArrowDistanceOptions, DoubleLineArrowLengthOptions, DoubleLineGapOptions } from '../Utils/Consts'
 
 interface PropertyEditorProps {
   previousEditor: Editor | undefined
@@ -42,6 +44,14 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
   const [ enableFill, setEnableFill, ] = useState<boolean>(true)
   const [ enableStroke, setEnableStroke, ] = useState<boolean>(true)
   const [ strokeDashStyle, setStrokeDashStyle, ] = useState<string>(Consts.STROKE_DASH_STYLE_SOLID)
+  const [ connectorLineType, setConnectorLineType, ] = useState<string>(Consts.CONNECTOR_LINE_TYPE_STRAIGHT)
+  const [ connectorLineMode, setConnectorLineMode, ] = useState<string>(Consts.CONNECTOR_LINE_MODE_SIGNLE)
+  const [ connectorLineStartArrow, setConnectorLineStartArrow, ] = useState<string>(ConnectorArrowTypes[0].name)
+  const [ connectorLineEndArrow, setConnectorLineEndArrow, ] = useState<string>(ConnectorArrowTypes[0].name)
+  const [ doubleLineGap, setDoubleLineGap, ] = useState<number>(Consts.DOUBLE_LINE_GAP_DEFAULT)
+  const [ connectorSelected, setConnectorSelected, ] = useState<boolean>(false)
+  const [ connectorDoubleLineArrowLength, setConnectorDoubleLineArrowLength, ] = useState<number>(Consts.DOUBLE_LINE_ARROW_LENGTH_DEFAULT)
+  const [ connectorDoubleLineArrowDistance, setConnectorDoubleLineArrowDistance, ] = useState<number>(Consts.DOUBLE_LINE_ARROW_DISTANCE_DEFAULT)
 
   useEffect(() => {
     if (!initialized) {
@@ -68,6 +78,7 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
         setShowPageItems(false)
         refreshSelectionInfo(currentEditor)
       } else {
+        setConnectorSelected(false)
         setShowPageItems(true)
         setGridSize(currentEditor.gridSize)
         setShowGrid(currentEditor.showGrid)
@@ -84,6 +95,11 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
 
   const refreshSelectionInfo = (editor: Editor) => {
     let editorItem = editor.selectionLayer.getEditorItem(0)
+    if(editorItem instanceof Connector) {
+      setConnectorSelected(true)
+    } else {
+      setConnectorSelected(false)
+    }
     setZoom(editor.zoom)
     setFontSize(editorItem.fontSize)
     setLineWidth(editorItem.lineWidth)
@@ -363,10 +379,185 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
     }
   }
 
+
+  const handleConnectorLineTypeChange = (value: string) => {
+    setConnectorLineType(value)
+    if(currentEditor) {
+      let editorItems = currentEditor.selectionLayer.getAllEditorItems()
+      editorItems.forEach(editorItem => {
+        if(editorItem instanceof Connector) {
+          editorItem.connectorType = SystemUtils.parseConnectorType(value)
+        }
+      })
+      currentEditor.focus()
+      currentEditor.invalideHolder()
+    }
+    //Update it to default if not supported
+    if(value == Consts.CONNECTOR_LINE_TYPE_CURVED &&  connectorLineMode != Consts.CONNECTOR_LINE_MODE_SIGNLE && connectorLineMode != Consts.CONNECTOR_LINE_MODE_DOUBLE) {
+      setConnectorLineMode(Consts.CONNECTOR_LINE_MODE_SIGNLE)
+      if(currentEditor) {
+        let editorItems = currentEditor.selectionLayer.getAllEditorItems()
+        editorItems.forEach(editorItem => {
+          if(editorItem instanceof Connector) {
+            editorItem.connectorMode = SystemUtils.parseConnectorMode(Consts.CONNECTOR_LINE_MODE_SIGNLE)
+          }
+        })
+        currentEditor.focus()
+        currentEditor.invalideHolder()
+      }
+      }
+  }
+
+  const handleConnectorLineModeChange = (value: string) => {
+    setConnectorLineMode(value)
+    if(currentEditor) {
+      let editorItems = currentEditor.selectionLayer.getAllEditorItems()
+      editorItems.forEach(editorItem => {
+        if(editorItem instanceof Connector) {
+          editorItem.connectorMode = SystemUtils.parseConnectorMode(value)
+        }
+      })
+      currentEditor.focus()
+      currentEditor.invalideHolder()
+    }
+  }
+
+  const handleDoubleLineGapChange = (value: number) => {
+    setDoubleLineGap(value)
+    if(currentEditor) {
+      let editorItems = currentEditor.selectionLayer.getAllEditorItems()
+      editorItems.forEach(editorItem => {
+        if(editorItem instanceof Connector) {
+          editorItem.connectorDoubleLineGap = value
+        }
+      })
+      currentEditor.focus()
+      currentEditor.invalideHolder()
+    }
+  }
+
+  const handleDoubleLineArrowLengthChange = (value: number) => {
+    setDoubleLineGap(value)
+    if(currentEditor) {
+      let editorItems = currentEditor.selectionLayer.getAllEditorItems()
+      editorItems.forEach(editorItem => {
+        if(editorItem instanceof Connector) {
+          editorItem.connectorDoubleLineArrowLength = value
+        }
+      })
+      currentEditor.focus()
+      currentEditor.invalideHolder()
+    }
+  }
+
+  const handleDoubleLineArrowDistanceChange = (value: number) => {
+    setDoubleLineGap(value)
+    if(currentEditor) {
+      let editorItems = currentEditor.selectionLayer.getAllEditorItems()
+      editorItems.forEach(editorItem => {
+        if(editorItem instanceof Connector) {
+          editorItem.connectorDoubleLineArrowDistance = value
+        }
+      })
+      currentEditor.focus()
+      currentEditor.invalideHolder()
+    }
+  }
+
+  const handleConnectorArrowStartTypeChange = (value: string) => {
+    //console.log(`orig value = ${connectorLineStartArrow}`)
+    setConnectorLineStartArrow(value)
+    if(currentEditor) {
+      let editorItems = currentEditor.selectionLayer.getAllEditorItems()
+      editorItems.forEach(editorItem => {
+        if(editorItem instanceof Connector) {
+          ConnectorArrowTypes.forEach(connectorArrayType => {
+            if(connectorArrayType.name == value) {
+              const startArrow = SystemUtils.cloneConnectorLineArrowType(connectorArrayType)              
+              editorItem.startArrow = startArrow
+            }
+          })
+        }
+      })
+      currentEditor.focus()
+      currentEditor.invalideHolder()
+    }
+  }
+
+  const handleConnectorArrowEndTypeChange = (value: string) => {
+    setConnectorLineEndArrow(value)
+    if(currentEditor) {
+      let editorItems = currentEditor.selectionLayer.getAllEditorItems()
+      editorItems.forEach(editorItem => {
+        if(editorItem instanceof Connector) {
+          ConnectorArrowTypes.forEach(connectorArrayType => {
+            if(connectorArrayType.name == value) {
+              const endArrow = SystemUtils.cloneConnectorLineArrowType(connectorArrayType)  
+              editorItem.endArrow = endArrow
+            }
+          })
+        }
+      })
+      currentEditor.focus()
+      currentEditor.invalideHolder()
+    }
+  }
+
   const strokeDashStyles = StrokeDashStyles.map(strokeDashStyle=> {
     //return {value: strokeDashStyle.name, label: intl.formatMessage({ id: strokeDashStyle.label})}
     return {value: strokeDashStyle.name, label: <img alt='intl.formatMessage({ id: strokeDashStyle.label})' src={'/images/line-' + strokeDashStyle.name + '.png'} width='64' height='12' />}
   })
+
+
+  const connectorLineTypes = ConnectorLineTypes.map(connectorLineType=> {
+    return {value: connectorLineType.name, label: <img alt='intl.formatMessage({ id: connectorLineType.label})' src={'/images/connector-line-type-' + connectorLineType.name.toLowerCase() + '.png'} width='16' height='16' />}
+  })
+ 
+  const connectorLineModes = ConnectorLineModes.map(connectorLineMode=> {
+    return {value: connectorLineMode.name, label: <img alt='intl.formatMessage({ id: connectorLineMode.label})' src={'/images/connector-line-mode-' + connectorLineMode.name.toLowerCase() + '.png'} width='16' height='16' />}
+  })
+ 
+  const connectorLineModesForCurve = ConnectorLineModesForCurve.map(connectorLineMode=> {
+    return {value: connectorLineMode.name, label: <img alt='intl.formatMessage({ id: connectorLineMode.label})' src={'/images/connector-line-mode-' + connectorLineMode.name.toLowerCase() + '.png'} width='16' height='16' />}
+  })
+ 
+  const connectorLineStartArrows = ConnectorArrowTypes.map(connectorArrowType=> {
+    return {value: connectorArrowType.name, label: <img alt={connectorArrowType.description} src={'/images/connector-line-start-arrow-' + connectorArrowType.name.toLowerCase() + '.png'} width='16' height='16' />}
+  })
+
+  const connectorLineEndArrows = ConnectorArrowTypes.map(connectorArrowType=> {
+    return {value: connectorArrowType.name, label: <img alt={connectorArrowType.description} src={'/images/connector-line-end-arrow-' + connectorArrowType.name.toLowerCase() + '.png'} width='16' height='16' />}
+  })
+
+  const connectorSettings = <div>
+    <Divider style={{margin: 4}}/>
+    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontWeight: 'bold', padding: 8, }}>
+      <FormattedMessage id='workspace.property-editor.item-setting.connector.connector-title'/>
+    </div>
+    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontWeight: 'bold', padding: 4, }}>
+      <Tooltip title={<FormattedMessage id='workspace.header.title.connector-line-type'/>}>
+        <Select size='small' value={connectorLineType} onChange={handleConnectorLineTypeChange} style={{width: 64, }} options={connectorLineTypes} />
+      </Tooltip>
+      <Tooltip title={<FormattedMessage id='workspace.header.title.connector-line-mode'/>}>
+        <Select size='small' value={connectorLineMode} onChange={handleConnectorLineModeChange} style={{width: 64, }} options={connectorLineType ==  Consts.CONNECTOR_LINE_TYPE_CURVED ? connectorLineModesForCurve : connectorLineModes}/>
+      </Tooltip>
+    </div>
+    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontWeight: 'bold', padding: 4, }}>
+      <Tooltip title={<FormattedMessage id='workspace.header.title.connector-arrow-start-type'/>}>
+        <Select size='small' value={connectorLineStartArrow} onChange={handleConnectorArrowStartTypeChange} style={{width: 64, }} options={connectorLineStartArrows} />
+      </Tooltip>
+      <Tooltip title={<FormattedMessage id='workspace.header.title.connector-arrow-end-type'/>}>
+        <Select size='small' value={connectorLineEndArrow} onChange={handleConnectorArrowEndTypeChange} style={{width: 64, }} options={connectorLineEndArrows} />
+      </Tooltip>
+    </div>
+    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontWeight: 'bold', padding: 4, }}>
+      <Tooltip title={<FormattedMessage id='workspace.header.title.line-width'/>}>
+        <Select size='small' value={doubleLineGap} onChange={handleDoubleLineGapChange} style={{width: 56, }} options={DoubleLineGapOptions}/>
+        <Select size='small' value={connectorDoubleLineArrowLength} onChange={handleDoubleLineArrowLengthChange} style={{width: 56, }} options={DoubleLineArrowLengthOptions}/>
+        <Select size='small' value={connectorDoubleLineArrowDistance} onChange={handleDoubleLineArrowDistanceChange} style={{width: 56, }} options={DoubleLineArrowDistanceOptions}/>
+      </Tooltip>
+    </div>
+  </div>
 
   const shapeSettings = <div>
     <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontWeight: 'bold', padding: 4, }}>
@@ -384,6 +575,7 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
       <InputNumber min={Consts.LINE_WIDTH_MIN} max={Consts.LINE_WIDTH_MAX} value={lineWidth} onChange={handleLineWidthChange} size='small' style={{ width: 50, display: 'none' }} />
       <Select size='small' value={lineWidth} onChange={handleLineWidthChange} style={{width: 64, }} options={LineWidthOptions}/>
     </div>
+    {connectorSelected ? connectorSettings : ''}
   </div>
 
   const pageSizeOptions = PageTypes.map(pageType=> {

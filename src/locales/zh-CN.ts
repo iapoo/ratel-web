@@ -115,6 +115,7 @@ export default {
   'workspace.property-editor.page-setting.title': '页面设置',
   'workspace.property-editor.page-setting.width': '宽',
   'workspace.property-editor.page-style.title': '页面风格',
+  'workspace.property-editor.item-setting.connector.connector-title': '连接线',
   'workspace.property-editor.item-setting.fill': '填充',
   'workspace.property-editor.item-setting.stroke': '线条',
   'workspace.property-editor.item-setting.title': '图形设置',
