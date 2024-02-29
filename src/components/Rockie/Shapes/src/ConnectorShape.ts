@@ -341,22 +341,45 @@ export class ConnectorShape extends EntityShape {
   }
 
   public render (graphics: Graphics): void {
-    switch(this.connectorMode) {
-      case ConnectorMode.DoubleAndStartArrow:
-      case ConnectorMode.DoubleAndEndArrow:
-      case ConnectorMode.DoubleAndBothArrows:
-        //graphics.drawPath(this.path, this._connectorDoubleLineStroke)
-        //graphics.drawPath(this.path, this._connectorDoubleLineFill)
-        graphics.drawPath(this._connectorDoubleLinePath, this._connectorDoubleLinePaint)
+    switch(this.connectorType) {
+      case ConnectorType.Curve:
+        switch(this.connectorMode) {
+          case ConnectorMode.Double:
+            graphics.drawPath(this.path, this._connectorDoubleLineStroke)
+            graphics.drawPath(this.path, this._connectorDoubleLineFill)
+            break;
+          case ConnectorMode.DoubleAndStartArrow:
+          case ConnectorMode.DoubleAndEndArrow:
+          case ConnectorMode.DoubleAndBothArrows:
+          case ConnectorMode.Single:
+          default:
+            graphics.drawPath(this.path, this.stroke)
+          break
+        }
         break;
-      case ConnectorMode.Double:
-        graphics.drawPath(this.path, this._connectorDoubleLineStroke)
-        graphics.drawPath(this.path, this._connectorDoubleLineFill)
+      case ConnectorType.Orthogonal:
+        switch(this.connectorMode) {
+          case ConnectorMode.DoubleAndStartArrow:
+          case ConnectorMode.DoubleAndEndArrow:
+          case ConnectorMode.DoubleAndBothArrows:
+            //graphics.drawPath(this.path, this._connectorDoubleLineStroke)
+            //graphics.drawPath(this.path, this._connectorDoubleLineFill)
+            graphics.drawPath(this._connectorDoubleLinePath, this._connectorDoubleLinePaint)
+            break;
+          case ConnectorMode.Double:
+            graphics.drawPath(this.path, this._connectorDoubleLineStroke)
+            graphics.drawPath(this.path, this._connectorDoubleLineFill)
+            break;
+          case ConnectorMode.Single:
+          default:
+            graphics.drawPath(this.path, this.stroke)
+          break
+        }
         break;
-      case ConnectorMode.Single:
+      case ConnectorType.StraightLine:
       default:
         graphics.drawPath(this.path, this.stroke)
-      break
+        break;
     }
     super.render(graphics)
     //Arrows only work for Single Solid lines
