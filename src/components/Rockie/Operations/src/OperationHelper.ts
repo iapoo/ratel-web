@@ -8,7 +8,7 @@ import { Rotation } from "@/components/Engine"
 import { CommonUtils } from "../../Utils"
 import { ShapeInfo } from "../../Items/src/ShapeInfo"
 import { Style, StyleInfo } from "../../Shapes/src/EntityUtils"
-import { ConnectorType } from "../../Shapes"
+import { ConnectorMode, ConnectorType } from "../../Shapes"
 import { TableInfo } from "../../Items/src/TableInfo"
 import { ThemeUtils } from "@/components/Workspace/Theme"
 import { Editor } from "../../Editor"
@@ -126,6 +126,7 @@ export class OperationHelper {
       connector.targetJoint = SystemUtils.parsePointString(connectorInfo.targetJoint)
     }
     connector.id = connectorInfo.id
+    connector.text = connectorInfo.text
     connector.startArrow = SystemUtils.parseConnectorArrow(connectorInfo.startArrow!)
     connector.endArrow = SystemUtils.parseConnectorArrow(connectorInfo.endArrow!)
     connector.curveStartModifier = SystemUtils.parsePointString(connectorInfo.curveStartModifier)
@@ -133,6 +134,10 @@ export class OperationHelper {
     connector.startDirection = SystemUtils.parseConnectorDirection(connectorInfo.startDirection)
     connector.endDirection = SystemUtils.parseConnectorDirection(connectorInfo.endDirection)
     connector.orthogonalPoints = SystemUtils.parsePointsString(connectorInfo.orthogonalPoints)
+    connector.connectorMode = connectorInfo.connectorMode ? SystemUtils.parseConnectorMode(connectorInfo.connectorMode) : ConnectorMode.Single
+    connector.connectorDoubleLineGap = connectorInfo.connectorDoubleLineGap
+    connector.connectorDoubleLineArrowLength = connectorInfo.connectorDoubleLineArrowLength
+    connector.connectorDoubleLineArrowDistance = connectorInfo.connectorDoubleLineArrowDistance
     return connector
   }
 
@@ -297,6 +302,7 @@ export class OperationHelper {
         connectorInfo.targetJoint = SystemUtils.generatePointString(connector.targetJoint)
     }
     
+    connectorInfo.text = connector.text
     connectorInfo.connectorType = connector.connectorType ?  CommonUtils.parseConnectorType(connector.connectorType) : null
     connectorInfo.startArrow = SystemUtils.generateConnectorArrow(connector.startArrow)
     connectorInfo.endArrow = SystemUtils.generateConnectorArrow(connector.endArrow)
@@ -305,6 +311,10 @@ export class OperationHelper {
     connectorInfo.startDirection = SystemUtils.generateConnectorDirection(connector.startDirection)
     connectorInfo.endDirection = SystemUtils.generateConnectorDirection(connector.endDirection)
     connectorInfo.orthogonalPoints = SystemUtils.generatePointsString(connector.orthogonalPoints)
+    connectorInfo.connectorMode = SystemUtils.generateConnectorMode(connector.connectorMode)
+    connectorInfo.connectorDoubleLineGap = connector.connectorDoubleLineGap
+    connectorInfo.connectorDoubleLineArrowLength = connector.connectorDoubleLineArrowLength
+    connectorInfo.connectorDoubleLineArrowDistance = connector.connectorDoubleLineArrowDistance
 
     return connectorInfo
   }
