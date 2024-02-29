@@ -21,6 +21,8 @@ export class ConnectorInfo extends EditorItemInfo {
 
     public connectorType: string | null = null
 
+    public connectorMode: string | null = null
+
     public startArrow: ConnectorArrowInfo | null = null
 
     public endArrow: ConnectorArrowInfo | null = null
@@ -34,6 +36,12 @@ export class ConnectorInfo extends EditorItemInfo {
     public endDirection: string = ''
 
     public orthogonalPoints: string = ''
+    
+    public connectorDoubleLineGap: number = 1
+
+    public connectorDoubleLineArrowLength: number = 1
+
+    public connectorDoubleLineArrowDistance: number = 1
 
     public constructor(startX: number, startY: number, endX: number, endY: number, text: string = '', 
             rotation: number = 0, styles: StyleInfo[] = [], useTheme = true, strokeColor: string | null = null
