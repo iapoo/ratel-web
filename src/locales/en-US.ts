@@ -115,6 +115,7 @@ export default {
   'workspace.property-editor.page-setting.title': 'Page Settings',
   'workspace.property-editor.page-setting.width': 'W',
   'workspace.property-editor.page-style.title': 'Page Style',
+  'workspace.property-editor.item-setting.connector.connector-title': 'Connector',
   'workspace.property-editor.item-setting.fill': 'Fill',
   'workspace.property-editor.item-setting.stroke': 'Stroke',
   'workspace.property-editor.item-setting.title': 'Shape Settings',
