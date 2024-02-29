@@ -1094,10 +1094,10 @@ export class ConnectorShape extends EntityShape {
     }
   }
 
-  private getTranslatedPaths(includeStart: boolean, includeEnd: boolean) {
+  private getTranslatedPaths(includeStart: boolean, includeEnd: boolean, firstLineWith3Points: boolean) {
     const count = this._orthogonalPoints.length
     const points = this._orthogonalPoints.filter((value, index) => {
-      if(index == 1 || index == count - 2) {
+      if(firstLineWith3Points && (index == 1 || index == count - 2)) {
         return false
       } else {
         return true
@@ -1116,63 +1116,24 @@ export class ConnectorShape extends EntityShape {
       let x2 = points[i + 1].x
       let y2 = points[i + 1].y
       //Make joint point smoothy
-      if(!includeStart && !includeEnd) {
-        if(x1 == x2) { //vertical line
-          if(y1 < y2) {
-            y1 = y1 - (this.connectorDoubleLineGap ) * 0.5
-          } else {
-            y1 = y1 + (this.connectorDoubleLineGap ) * 0.5
-          }
+      if(x1 == x2) { //vertical line
+        if(y1 < y2) {
+          y1 = y1 - (this.connectorDoubleLineGap ) * 0.5
+          y2 = y2 + (this.connectorDoubleLineGap ) * 0.5
         } else {
-          if(x1 < x2) {
-            x1 = x1 - (this.connectorDoubleLineGap ) * 0.5
-          } else {
-            x1 = x1 + (this.connectorDoubleLineGap ) * 0.5
-          }
-        }
-      } else if(!includeStart) {
-        if(x1 == x2) { //vertical line
-          if(y1 < y2) {
-            y1 = y1 - (this.connectorDoubleLineGap ) * 0.5
-          } else {
-            y1 = y1 + (this.connectorDoubleLineGap ) * 0.5
-          }
-        } else {
-          if(x1 < x2) {
-            x1 = x1 - (this.connectorDoubleLineGap ) * 0.5
-          } else {
-            x1 = x1 + (this.connectorDoubleLineGap ) * 0.5
-          }
-        }
-      } else if(!includeEnd) {
-        if(x1 == x2) { //vertical line
-          if(y1 < y2) {
-            y2 = y2 + (this.connectorDoubleLineGap ) * 0.5
-          } else {
-            y2 = y2 - (this.connectorDoubleLineGap ) * 0.5
-          }
-        } else {
-          if(x1 < x2) {
-            x2 = x2 + (this.connectorDoubleLineGap ) * 0.5
-          } else {
-            x2 = x2 - (this.connectorDoubleLineGap ) * 0.5
-          }
+          y1 = y1 + (this.connectorDoubleLineGap ) * 0.5
+          y2 = y2 - (this.connectorDoubleLineGap ) * 0.5
         }
       } else {
-        if(x1 == x2) { //vertical line
-          if(y1 < y2) {
-            y1 = y1 - (this.connectorDoubleLineGap ) * 0.5
-          } else {
-            y1 = y1 + (this.connectorDoubleLineGap ) * 0.5
-          }
+        if(x1 < x2) {
+          x1 = x1 - (this.connectorDoubleLineGap ) * 0.5
+          x2 = x2 + (this.connectorDoubleLineGap ) * 0.5
         } else {
-          if(x1 < x2) {
-            x1 = x1 - (this.connectorDoubleLineGap ) * 0.5
-          } else {
-            x1 = x1 + (this.connectorDoubleLineGap ) * 0.5
-          }
+          x1 = x1 + (this.connectorDoubleLineGap ) * 0.5
+          x2 = x2 - (this.connectorDoubleLineGap ) * 0.5
         }
       }
+
       const distance = this._connectorDoubleLineGap * 0.5
       const segment = MathUtils.getTranslatedLine(x1, y1, x2, y2, distance)
       segments.push(segment)
@@ -1235,13 +1196,18 @@ export class ConnectorShape extends EntityShape {
     this._connectorDoubleLinePath.reset()
     switch(this.connectorMode) {
       case ConnectorMode.DoubleAndStartArrow: {
+        let startIndex = 1
+        if((this._orthogonalPoints[0].x == this._orthogonalPoints[1].x && this._orthogonalPoints[0].x == this._orthogonalPoints[2].x) ||
+            (this._orthogonalPoints[0].y == this._orthogonalPoints[1].y && this._orthogonalPoints[0].y == this._orthogonalPoints[2].y)) {
+              startIndex = 2
+        }
         const x1 = this._orthogonalPoints[0].x
         const y1 = this._orthogonalPoints[0].y
-        const x2 = this._orthogonalPoints[2].x
-        const y2 = this._orthogonalPoints[2].y
+        const x2 = this._orthogonalPoints[startIndex].x
+        const y2 = this._orthogonalPoints[startIndex].y
         this.populateDoubleLineArrowPath(this._connectorDoubleLinePath, x1, y1, x2, y2, true)
         let newPath: Path = this._connectorDoubleLinePath
-        const paths = this.getTranslatedPaths(false, true)
+        const paths = this.getTranslatedPaths(false, true, startIndex == 2)
         paths.forEach(path => {
           const result = newPath.op(path, PathOp.UNION)
           if(result) {
@@ -1252,13 +1218,18 @@ export class ConnectorShape extends EntityShape {
         break;
       }
       case ConnectorMode.DoubleAndEndArrow: {
+        let startIndex = 1
+        if((this._orthogonalPoints[0].x == this._orthogonalPoints[1].x && this._orthogonalPoints[0].x == this._orthogonalPoints[2].x) ||
+            (this._orthogonalPoints[0].y == this._orthogonalPoints[1].y && this._orthogonalPoints[0].y == this._orthogonalPoints[2].y)) {
+              startIndex = 2
+        }
         const x1 = this._orthogonalPoints[this._orthogonalPoints.length - 1].x
         const y1 = this._orthogonalPoints[this._orthogonalPoints.length - 1].y
-        const x2 = this._orthogonalPoints[this._orthogonalPoints.length - 3].x
-        const y2 = this._orthogonalPoints[this._orthogonalPoints.length - 3].y
+        const x2 = this._orthogonalPoints[this._orthogonalPoints.length - 1 - startIndex].x
+        const y2 = this._orthogonalPoints[this._orthogonalPoints.length - 1 - startIndex].y
         this.populateDoubleLineArrowPath(this._connectorDoubleLinePath, x1, y1, x2, y2, false)
         let newPath: Path = this._connectorDoubleLinePath
-        const paths = this.getTranslatedPaths(true, false)
+        const paths = this.getTranslatedPaths(true, false, startIndex == 2)
         paths.forEach(path => {
           const result = newPath.op(path, PathOp.UNION)
           if(result) {
@@ -1270,14 +1241,19 @@ export class ConnectorShape extends EntityShape {
         break;
       }
       case ConnectorMode.DoubleAndBothArrows: {
+        let startIndex = 1
+        if((this._orthogonalPoints[0].x == this._orthogonalPoints[1].x && this._orthogonalPoints[0].x == this._orthogonalPoints[2].x) ||
+            (this._orthogonalPoints[0].y == this._orthogonalPoints[1].y && this._orthogonalPoints[0].y == this._orthogonalPoints[2].y)) {
+              startIndex = 2
+        }
         const x1 = this._orthogonalPoints[0].x
         const y1 = this._orthogonalPoints[0].y
-        const x2 = this._orthogonalPoints[2].x
-        const y2 = this._orthogonalPoints[2].y
+        const x2 = this._orthogonalPoints[startIndex].x
+        const y2 = this._orthogonalPoints[startIndex].y
         const x3 = this._orthogonalPoints[this._orthogonalPoints.length - 1].x
         const y3 = this._orthogonalPoints[this._orthogonalPoints.length - 1].y
-        const x4 = this._orthogonalPoints[this._orthogonalPoints.length - 3].x
-        const y4 = this._orthogonalPoints[this._orthogonalPoints.length - 3].y
+        const x4 = this._orthogonalPoints[this._orthogonalPoints.length - 1 - startIndex].x
+        const y4 = this._orthogonalPoints[this._orthogonalPoints.length - 1 - startIndex].y
         const startPath = new Path()
         const endPath = new Path()
         this.populateDoubleLineArrowPath(startPath, x1, y1, x2, y2, true)
@@ -1291,7 +1267,7 @@ export class ConnectorShape extends EntityShape {
         if(endResult) {
           newPath =  endResult
         }
-        const paths = this.getTranslatedPaths(false, false)
+        const paths = this.getTranslatedPaths(false, false, startIndex == 2)
         paths.forEach(path => {
           const result = newPath.op(path, PathOp.UNION)
           if(result) {
