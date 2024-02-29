@@ -1,7 +1,7 @@
 /* eslint-disable max-params */
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
 
-import { FillType, Graphics, MathUtils, Paint, PaintStyle, Path, Point2, Rectangle, Rotation, Shape, } from '@/components/Engine'
+import { Color, Colors, FillType, Graphics, MathUtils, Paint, PaintStyle, Path, PathOp, Point2, Rectangle, Rotation, Shape, } from '@/components/Engine'
 import { Line, Cubic, } from '@antv/g-math'
 import { EntityShape, } from './EntityShape'
 import { Consts, SystemUtils } from '@/components/Workspace/Utils'
@@ -86,6 +86,10 @@ export class ConnectorShape extends EntityShape {
   private _connectorDoubleLineGap: number
   private _connectorDoubleLineArrowLength: number
   private _connectorDoubleLineArrowDistance: number
+  private _connectorDoubleLinePath: Path
+  private _connectorDoubleLineStroke: Paint
+  private _connectorDoubleLineFill: Paint
+  private _connectorDoubleLinePaint: Paint
 
   public constructor (startX: number, startY: number, endX: number, endY: number, 
     startDirection: ConnectorDirection = ConnectorDirection.Right, endDirection: ConnectorDirection = ConnectorDirection.Left,
@@ -132,9 +136,22 @@ export class ConnectorShape extends EntityShape {
     this._endArrowPath = new Path()
     this._arrowStroke = new Paint()
     this._arrowFill = new Paint()
-    this._connectorDoubleLineGap = Consts.DOUBLE_LINE_DEFAULT
+    this._connectorDoubleLineGap = Consts.DOUBLE_LINE_GAP_DEFAULT
     this._connectorDoubleLineArrowLength = Consts.DOUBLE_LINE_ARROW_LENGTH_DEFAULT
     this._connectorDoubleLineArrowDistance = Consts.DOUBLE_LINE_ARROW_DISTANCE_DEFAULT
+    this._connectorDoubleLinePath = new Path()
+    this._connectorDoubleLinePaint = new Paint()
+    this._connectorDoubleLinePaint.setStrokeWidth(this.stroke.getStroketWidth())
+    this._connectorDoubleLinePaint.setPaintStyle(PaintStyle.STROKE)
+    this._connectorDoubleLinePaint.setColor(this.stroke.getColor())
+    this._connectorDoubleLineStroke = new Paint()
+    this._connectorDoubleLineStroke.setStrokeWidth(this.stroke.getStroketWidth() * 2  + this._connectorDoubleLineGap)
+    this._connectorDoubleLineStroke.setPaintStyle(PaintStyle.STROKE)
+    this._connectorDoubleLineStroke.setColor(this.stroke.getColor())
+    this._connectorDoubleLineFill = new Paint()
+    this._connectorDoubleLineFill.setStrokeWidth(this._connectorDoubleLineGap)
+    this._connectorDoubleLineFill.setPaintStyle(PaintStyle.STROKE)
+    this._connectorDoubleLineFill.setColor(this.fill.getColor())
   }
 
   public get start (): Point2 {
@@ -324,26 +341,46 @@ export class ConnectorShape extends EntityShape {
   }
 
   public render (graphics: Graphics): void {
-    super.render(graphics)
-    if(this._startArrow.type != ConnectorArrowDisplayType.None) {
-      if(this._startArrow.close) {
-        if(this._startArrow.outline) {
-          graphics.drawPath(this._startArrowPath, this._arrowFill)
-        } else {
-          graphics.drawPath(this._startArrowPath, this._arrowStroke)
-        }
-      }
-      graphics.drawPath(this._startArrowPath, this.stroke)
+    switch(this.connectorMode) {
+      case ConnectorMode.DoubleAndStartArrow:
+      case ConnectorMode.DoubleAndEndArrow:
+      case ConnectorMode.DoubleAndBothArrows:
+        //graphics.drawPath(this.path, this._connectorDoubleLineStroke)
+        //graphics.drawPath(this.path, this._connectorDoubleLineFill)
+        graphics.drawPath(this._connectorDoubleLinePath, this._connectorDoubleLinePaint)
+        break;
+      case ConnectorMode.Double:
+        graphics.drawPath(this.path, this._connectorDoubleLineStroke)
+        graphics.drawPath(this.path, this._connectorDoubleLineFill)
+        break;
+      case ConnectorMode.Single:
+      default:
+        graphics.drawPath(this.path, this.stroke)
+      break
     }
-    if(this._endArrow.type != ConnectorArrowDisplayType.None) {
-      if(this._endArrow.close) {
-        if(this._endArrow.outline) {
-          graphics.drawPath(this._endArrowPath, this._arrowFill)
-        } else {
-          graphics.drawPath(this._endArrowPath, this._arrowStroke)
+    super.render(graphics)
+    //Arrows only work for Single Solid lines
+    if(this.connectorMode == ConnectorMode.Single) {
+      if(this._startArrow.type != ConnectorArrowDisplayType.None) {
+        if(this._startArrow.close) {
+          if(this._startArrow.outline) {
+            graphics.drawPath(this._startArrowPath, this._arrowFill)
+          } else {
+            graphics.drawPath(this._startArrowPath, this._arrowStroke)
+          }
         }
+        graphics.drawPath(this._startArrowPath, this.stroke)
       }
-      graphics.drawPath(this._endArrowPath, this.stroke)
+      if(this._endArrow.type != ConnectorArrowDisplayType.None) {
+        if(this._endArrow.close) {
+          if(this._endArrow.outline) {
+            graphics.drawPath(this._endArrowPath, this._arrowFill)
+          } else {
+            graphics.drawPath(this._endArrowPath, this._arrowStroke)
+          }
+        }
+        graphics.drawPath(this._endArrowPath, this.stroke)
+      }
     }
   }
 
@@ -402,7 +439,31 @@ export class ConnectorShape extends EntityShape {
       this._arrowFill.setColor(this.fill.getColor())
       this._arrowStroke.setPaintStyle(PaintStyle.FILL)
       this._arrowStroke.setColor(this.stroke.getColor())
-    }
+      this._connectorDoubleLinePaint.setStrokeWidth(this.stroke.getStroketWidth())
+      this._connectorDoubleLinePaint.setPaintStyle(PaintStyle.STROKE)
+      this._connectorDoubleLinePaint.setColor(this.stroke.getColor())
+      this._connectorDoubleLineStroke.setStrokeWidth(this.stroke.getStroketWidth() * 2  + this._connectorDoubleLineGap)
+      this._connectorDoubleLineStroke.setPaintStyle(PaintStyle.STROKE)
+      this._connectorDoubleLineStroke.setColor(this.stroke.getColor())
+      this._connectorDoubleLineFill.setStrokeWidth(this._connectorDoubleLineGap)
+      this._connectorDoubleLineFill.setPaintStyle(PaintStyle.STROKE)
+      this._connectorDoubleLineFill.setColor(this.fill.getColor())
+
+      switch(this.connectorMode) {
+        case ConnectorMode.Double:
+        case ConnectorMode.DoubleAndStartArrow:
+        case ConnectorMode.DoubleAndEndArrow:
+        case ConnectorMode.DoubleAndBothArrows:
+          this.stroked = false
+          this.filled = false
+          break;
+        case ConnectorMode.Single:
+        default:
+          this.stroked = true
+          this.filled = false
+        break
+      }
+      }
   }
 
   private updateArrows(point: Point2, direction: ConnectorDirection, arrow: ConnectorArrowTypeInfo, arrowPath: Path) {
@@ -1031,29 +1092,234 @@ export class ConnectorShape extends EntityShape {
         this.path.lineTo(x2, y2)
         break;    
     }
-}
+  }
 
+  private getTranslatedPaths(includeStart: boolean, includeEnd: boolean) {
+    const count = this._orthogonalPoints.length
+    const points = this._orthogonalPoints.filter((value, index) => {
+      if(index == 1 || index == count - 2) {
+        return false
+      } else {
+        return true
+      }
+    })
+    if(!includeStart) {
+      points.splice(0,1)
+    }
+    if(!includeEnd) {
+      points.splice(points.length - 1, 1)
+    }
+    const segments: Array<number[]> = []
+    for(let i = 0; i < points.length - 1; i ++) {
+      let x1 = points[i].x
+      let y1 = points[i].y
+      let x2 = points[i + 1].x
+      let y2 = points[i + 1].y
+      //Make joint point smoothy
+      if(!includeStart && !includeEnd) {
+        if(x1 == x2) { //vertical line
+          if(y1 < y2) {
+            y1 = y1 - (this.connectorDoubleLineGap ) * 0.5
+          } else {
+            y1 = y1 + (this.connectorDoubleLineGap ) * 0.5
+          }
+        } else {
+          if(x1 < x2) {
+            x1 = x1 - (this.connectorDoubleLineGap ) * 0.5
+          } else {
+            x1 = x1 + (this.connectorDoubleLineGap ) * 0.5
+          }
+        }
+      } else if(!includeStart) {
+        if(x1 == x2) { //vertical line
+          if(y1 < y2) {
+            y1 = y1 - (this.connectorDoubleLineGap ) * 0.5
+          } else {
+            y1 = y1 + (this.connectorDoubleLineGap ) * 0.5
+          }
+        } else {
+          if(x1 < x2) {
+            x1 = x1 - (this.connectorDoubleLineGap ) * 0.5
+          } else {
+            x1 = x1 + (this.connectorDoubleLineGap ) * 0.5
+          }
+        }
+      } else if(!includeEnd) {
+        if(x1 == x2) { //vertical line
+          if(y1 < y2) {
+            y2 = y2 + (this.connectorDoubleLineGap ) * 0.5
+          } else {
+            y2 = y2 - (this.connectorDoubleLineGap ) * 0.5
+          }
+        } else {
+          if(x1 < x2) {
+            x2 = x2 + (this.connectorDoubleLineGap ) * 0.5
+          } else {
+            x2 = x2 - (this.connectorDoubleLineGap ) * 0.5
+          }
+        }
+      } else {
+        if(x1 == x2) { //vertical line
+          if(y1 < y2) {
+            y1 = y1 - (this.connectorDoubleLineGap ) * 0.5
+          } else {
+            y1 = y1 + (this.connectorDoubleLineGap ) * 0.5
+          }
+        } else {
+          if(x1 < x2) {
+            x1 = x1 - (this.connectorDoubleLineGap ) * 0.5
+          } else {
+            x1 = x1 + (this.connectorDoubleLineGap ) * 0.5
+          }
+        }
+      }
+      const distance = this._connectorDoubleLineGap * 0.5
+      const segment = MathUtils.getTranslatedLine(x1, y1, x2, y2, distance)
+      segments.push(segment)
+    }
+    const paths: Array<Path> = []
+    for(let i = 0; i < segments.length; i ++) {
+      const segment = segments[i]
+      const path = new Path()
+      path.moveTo(segment[0], segment[1])
+      path.lineTo(segment[2], segment[3])
+      path.lineTo(segment[6], segment[7])
+      path.lineTo(segment[4], segment[5])
+      path.close()
+      paths.push(path)
+    }
+    return paths
+  }
+
+  private populateDoubleLineArrowPath(path: Path, x1: number, y1: number, x2: number, y2: number, forStart: boolean) {
+    const distance = this._connectorDoubleLineGap * 0.5
+    const [leftX1, leftY1, leftX2, leftY2,rightX1, rightY1, rightX2, rightY2] = MathUtils.getTranslatedLine(x1, y1, x2, y2, distance)
+    const [leftX3, leftY3, leftX4, leftY4,rightX3, rightY3, rightX4, rightY4] = MathUtils.getTranslatedLine(x1, y1, x2, y2, distance + this.connectorDoubleLineArrowDistance)
+    const lineLength = Line.length(leftX1, leftY1, leftX2, leftY2)
+    const ratio1 = this._connectorDoubleLineArrowLength / lineLength
+    const ratio2 = 1 - ratio1
+    const leftStart1 = Line.pointAt(leftX1, leftY1, leftX2, leftY2, ratio1)
+    const rightStart1 = Line.pointAt(rightX1, rightY1, rightX2, rightY2, ratio1)
+    const leftStart2 = Line.pointAt(leftX1, leftY1, leftX2, leftY2, ratio2)
+    const rightStart2 = Line.pointAt(rightX1, rightY1, rightX2, rightY2, ratio2)
+    const leftStart3 = Line.pointAt(leftX3, leftY3, leftX4, leftY4, ratio1)
+    const rightStart3 = Line.pointAt(rightX3, rightY3, rightX4, rightY4, ratio1)
+    const leftStart4 = Line.pointAt(leftX3, leftY3, leftX4, leftY4, ratio2)
+    const rightStart4 = Line.pointAt(rightX3, rightY3, rightX4, rightY4, ratio2)    
+    if(forStart) {
+      path.moveTo(leftX2,  leftY2)
+      path.lineTo(leftStart1.x, leftStart1.y)
+      path.lineTo(leftStart3.x, leftStart3.y)
+      path.lineTo(x1, y1)
+      path.lineTo(rightStart3.x, rightStart3.y)
+      path.lineTo(rightStart1.x, rightStart1.y)
+      path.lineTo(rightX2,  rightY2)
+    } else {
+      path.moveTo(leftX2,  leftY2)
+      path.lineTo(leftStart1.x, leftStart1.y)
+      path.lineTo(leftStart3.x, leftStart3.y)
+      path.lineTo(x1, y1)
+      path.lineTo(rightStart3.x, rightStart3.y)
+      path.lineTo(rightStart1.x, rightStart1.y)
+      path.lineTo(rightX2,  rightY2)
+    }
+  }
 
   private updateOrthogonalPath() {
-    const start = new Point2(this.start.x - this.left, this.start.y - this.top)
-    const end = new Point2(this.end.x - this.left, this.end.y - this.top)
     const count = this._orthogonalPoints.length
-    this.path.reset()
-    //this.path.setFillType(FillType.Winding)
-    for(let i = 0; i < count; i ++) {
-      const point = this._orthogonalPoints[i]
-      if(i == 0) {
-        this.path.moveTo(point.x, point.y)
-      } else {
-        this.path.lineTo(point.x, point.y)
-      }
-    }
-    //TODO: FIX ME, unclose path casue white background, we duplicate points so make path so close and them remove strznge white background
-    for(let i = count - 1; i >= 0; i --) {
-      const point = this._orthogonalPoints[i]
-      this.path.lineTo(point.x, point.y)
+    if(count < 3) {
+      return
     }
 
+    this.path.reset()
+    this._connectorDoubleLinePath.reset()
+    switch(this.connectorMode) {
+      case ConnectorMode.DoubleAndStartArrow: {
+        const x1 = this._orthogonalPoints[0].x
+        const y1 = this._orthogonalPoints[0].y
+        const x2 = this._orthogonalPoints[2].x
+        const y2 = this._orthogonalPoints[2].y
+        this.populateDoubleLineArrowPath(this._connectorDoubleLinePath, x1, y1, x2, y2, true)
+        let newPath: Path = this._connectorDoubleLinePath
+        const paths = this.getTranslatedPaths(false, true)
+        paths.forEach(path => {
+          const result = newPath.op(path, PathOp.UNION)
+          if(result) {
+            newPath = result
+          }
+        })
+        this._connectorDoubleLinePath =  newPath
+        break;
+      }
+      case ConnectorMode.DoubleAndEndArrow: {
+        const x1 = this._orthogonalPoints[this._orthogonalPoints.length - 1].x
+        const y1 = this._orthogonalPoints[this._orthogonalPoints.length - 1].y
+        const x2 = this._orthogonalPoints[this._orthogonalPoints.length - 3].x
+        const y2 = this._orthogonalPoints[this._orthogonalPoints.length - 3].y
+        this.populateDoubleLineArrowPath(this._connectorDoubleLinePath, x1, y1, x2, y2, false)
+        let newPath: Path = this._connectorDoubleLinePath
+        const paths = this.getTranslatedPaths(true, false)
+        paths.forEach(path => {
+          const result = newPath.op(path, PathOp.UNION)
+          if(result) {
+            newPath = result
+          }
+        })
+        this._connectorDoubleLinePath =  newPath
+
+        break;
+      }
+      case ConnectorMode.DoubleAndBothArrows: {
+        const x1 = this._orthogonalPoints[0].x
+        const y1 = this._orthogonalPoints[0].y
+        const x2 = this._orthogonalPoints[2].x
+        const y2 = this._orthogonalPoints[2].y
+        const x3 = this._orthogonalPoints[this._orthogonalPoints.length - 1].x
+        const y3 = this._orthogonalPoints[this._orthogonalPoints.length - 1].y
+        const x4 = this._orthogonalPoints[this._orthogonalPoints.length - 3].x
+        const y4 = this._orthogonalPoints[this._orthogonalPoints.length - 3].y
+        const startPath = new Path()
+        const endPath = new Path()
+        this.populateDoubleLineArrowPath(startPath, x1, y1, x2, y2, true)
+        this.populateDoubleLineArrowPath(endPath, x3, y3, x4, y4, false )
+        let newPath: Path = this._connectorDoubleLinePath
+        const startResult = newPath.op(startPath, PathOp.UNION)
+        if(startResult) {
+          newPath = startResult
+        }
+        const endResult = newPath.op(endPath, PathOp.UNION)
+        if(endResult) {
+          newPath =  endResult
+        }
+        const paths = this.getTranslatedPaths(false, false)
+        paths.forEach(path => {
+          const result = newPath.op(path, PathOp.UNION)
+          if(result) {
+            newPath = result
+          }
+        })
+        this._connectorDoubleLinePath =  newPath
+        break;
+      }
+      case ConnectorMode.Double:
+      case ConnectorMode.Single:
+      default: {
+        for(let i = 0; i < count; i ++) {
+          const point = this._orthogonalPoints[i]
+          if(i == 0) {
+            this.path.moveTo(point.x, point.y)
+          } else {
+            this.path.lineTo(point.x, point.y)
+          }
+        }
+        //TODO: FIX ME, unclose path casue white background, we duplicate points so make path so close and them remove strznge white background
+        for(let i = count - 1; i >= 0; i --) {
+          const point = this._orthogonalPoints[i]
+          this.path.lineTo(point.x, point.y)
+        }
+        break;
+      }    
+    }
     //if(count == 2) {
     //  SystemUtils.debugPoints(this._orthogonalPoints)
     //}
@@ -1065,7 +1331,6 @@ export class ConnectorShape extends EntityShape {
     const distance = Line.pointDistance(start.x, start.y, end.x, end.y, x, y)
     return distance
   }
-
 
   private getOrthogonalNearstDistance(x: number, y: number) {
     let distance = 99999

@@ -1041,9 +1041,10 @@ export class Editor extends Painter {
       const connector = theControllerLayer.getEditorItem(0)
       this.controllerLayer.removeAllEditorItems()
       this.contentLayer.addEditorItem(connector)
-      //theSelectionLayer.inHolder = true
+      theSelectionLayer.inHolder = true
       theSelectionLayer.removeAllEditorItems()
       theSelectionLayer.addEditorItem(connector)
+      theSelectionLayer.invalidateLayer()
       let editorItemInfo = OperationHelper.saveEditorItem(connector)
       let operation = new Operation(this, OperationType.ADD_ITEMS, [editorItemInfo], true, [])
       this._operationService.addOperation(operation)
