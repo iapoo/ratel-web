@@ -3,7 +3,7 @@ import styles from './index.css'
 import { Button, Collapse, CollapseProps, Divider, Image, Popover, Space, Tooltip, message, } from 'antd'
 import { Utils, RequestUtils, } from '../Utils'
 import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
-import { ConnectorAction, ContainerAction, LineAction, ShapeAction, TableAction, } from '../../Rockie/Actions'
+import { ConnectorAction, ContainerAction, CustomShapeAction, LineAction, ShapeAction, TableAction, } from '../../Rockie/Actions'
 import { StorageService, } from '../Storage'
 import {
   Rectangle, RoundRectangle, Text, Ellipse, Square, Circle, Process, Diamond, Parallelogram, Hexagon, Triangle,
@@ -63,6 +63,12 @@ const Navigator: FC<NavigatorProps> = ({
   const addContainer = (type: string) => {
     if (Utils.currentEditor) {      
       Utils.currentEditor.action = new ContainerAction(Utils.currentEditor, type)
+    }
+  }
+
+  const addCustomShape = () => {
+    if(Utils.currentEditor) {
+      Utils.currentEditor.action = new CustomShapeAction(Utils.currentEditor)
     }
   }
 
@@ -196,6 +202,11 @@ const Navigator: FC<NavigatorProps> = ({
     }
   )
 
+  const customShapes = <Popover title='Custom Shape' placement='right' content='' overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 280, width: 280,}}>
+  <Button type='text' onClick={() => addCustomShape()} style={{padding: 2, display: 'table'}}>
+    <img src={`/shapes/container.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+  </Button>
+</Popover>
 
   const items: CollapseProps['items'] = [
     {
@@ -206,6 +217,7 @@ const Navigator: FC<NavigatorProps> = ({
       {line}
       {table}
       {containers}
+      {customShapes}
     </Space>,
     },
     {

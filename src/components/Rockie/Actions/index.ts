@@ -1,6 +1,7 @@
 export { Action } from './src/Action'
 export { ConnectorAction } from './src/ConnectorAction'
 export { ContainerAction } from './src/ContainerAction'
+export { CustomShapeAction } from './src/CustomShapeAction'
 export { LineAction } from './src/LineAction'
 export { ShapeAction } from './src/ShapeAction'
 export { TableAction } from './src/TableAction'

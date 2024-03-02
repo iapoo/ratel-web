@@ -34,6 +34,7 @@ export enum EntityShapeType {
   Container,
   HorizontalContainer,
   VerticalContainer,
+  CustomShape,
 }
 
 export enum EntityShapeFreezeType {
