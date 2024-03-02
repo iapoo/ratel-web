@@ -290,7 +290,7 @@ export class ShapeEntity extends Entity {
     return theAdaptDirection
   }
 
-  private parseTypeInfo(shapeOptions: ShapeOptions): ShapeTypeInfo{
+  protected parseTypeInfo(shapeOptions: ShapeOptions): ShapeTypeInfo{
     let theShapeType = this._shapeTypes[0]
     this._shapeTypes.forEach(shapeType => {
       if(shapeType.name == shapeOptions.shapeType) {
