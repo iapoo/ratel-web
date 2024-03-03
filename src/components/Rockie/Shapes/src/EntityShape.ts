@@ -171,8 +171,8 @@ export class EntityShape extends AbstractTextShape {
     if(this._typeInfo?.adaptInPercent) {
       adapterWidth = this.width * this.adapter.x * (this.typeInfo.adapterEnd.x - this.typeInfo.adapterStart.x) + this.typeInfo.adapterStart.x * this.width
       adapterHeight = this.height * this.adapter.y * (this.typeInfo.adapterEnd.y - this.typeInfo.adapterStart.y) + this.typeInfo.adapterStart.y * this.height
-      adapterSizeX = this.adapterSize * (this.typeInfo.modifierEnd.x - this.typeInfo.modifierStart.x) * this.width
-      adapterSizeY = this.adapterSize * (this.typeInfo.modifierEnd.y - this.typeInfo.modifierStart.y) * this.height
+      adapterSizeX = this.adapterSize * (this.typeInfo.adapterEnd.x - this.typeInfo.adapterStart.x) * this.width
+      adapterSizeY = this.adapterSize * (this.typeInfo.adapterEnd.y - this.typeInfo.adapterStart.y) * this.height
     }
     this.textWidth = this.width
     this.textHeight = this.height

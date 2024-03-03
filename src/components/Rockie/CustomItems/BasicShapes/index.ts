@@ -1,1 +1,5 @@
+export { BottomTriangle} from './src/BottomTriangle'
+export {LeftTriangle} from './src/LeftTriangle'
+export {RightTriangle} from './src/RightTriangle'
 export {Star} from './src/Star'
+export {TopTriangle} from './src/TopTriangle'

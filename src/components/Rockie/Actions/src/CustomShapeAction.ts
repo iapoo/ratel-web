@@ -3,7 +3,7 @@ import { Theme, Themes, } from '@/components/Workspace/Theme'
 import { CustomEntity, Item, ShapeEntity, Shapes, } from '../../Items'
 import { Action, } from './Action'
 import { ShapeTypes } from '../../Items/src/ShapeEntity'
-import { Star } from '../../CustomItems/BasicShapes'
+import { BottomTriangle, Star, TopTriangle } from '../../CustomItems/BasicShapes'
 
 export class CustomShapeAction extends Action {
 
@@ -12,7 +12,7 @@ export class CustomShapeAction extends Action {
     let top = 0
     let width = 100
     let height = 100
-    const customEntity = new Star(left, top, width, height)
+    const customEntity = new TopTriangle(left, top, width, height)
     return customEntity
   }
 
