@@ -4,31 +4,31 @@ import { CustomShape } from '../../../Shapes'
 import { CustomEntity, Shapes } from '../../../Items'
 import { Type } from '../../../Items/src/Item'
 
-const TYPE_STAR = 'Star'
-const DESC_STAR = 'Star'
-const TEXT_STAR = 'Star'
+const TYPE_TOP_TRIANGLE = 'TopTriangle'
+const DESC_TOP_TRIANGLE = 'TopTriangle'
+const TEXT_TOP_TRIANGLE = ''
 
-export const StarTypes = [{ name: TYPE_STAR, description: DESC_STAR, 
-  freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 120, height: 80, 
-  modifiable: true, modifierX: 0.3, modifierY: 0, modifierStartX: 0, modifierStartY: 0, 
-  modifierEndX: 0.5, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
-  adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, 
-  adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+export const TopTriangleTypes = [{ name: TYPE_TOP_TRIANGLE, description: DESC_TOP_TRIANGLE, 
+  freeze: Shapes.FREEZE_NONE, text: TEXT_TOP_TRIANGLE, left: 0, top: 0, width: 120, height: 80, 
+  modifiable: true, modifierX: 0.5, modifierY: 0, modifierStartX: 0, modifierStartY: 0, 
+  modifierEndX: 1, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
+  adaptable: true, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 1, 
+  adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true
 }]
 
-export class Star extends CustomEntity {
+export class TopTriangle extends CustomEntity {
   
   public constructor(left: number, top: number, width: number, height: number) {
-    super(left, top, width, height, {shapeType: TYPE_STAR}, StarTypes)
-    const customTypeInfo = this.parseTypeInfo({shapeType: TYPE_STAR})
+    super(left, top, width, height, {shapeType: TYPE_TOP_TRIANGLE}, TopTriangleTypes)
+    const customTypeInfo = this.parseTypeInfo({shapeType: TYPE_TOP_TRIANGLE})
     this._shape = new CustomShape(left, top, width, height, this.buildShape, customTypeInfo)
     this.initializeTheme()
-    CustomEntity.registry(Star)
+    CustomEntity.registry(TopTriangle)
   }
 
 
   public get types(): Type[] {
-    return StarTypes
+    return TopTriangleTypes
   }
 
   public buildShape(theThis: CustomShape) {
@@ -50,11 +50,8 @@ export class Star extends CustomEntity {
       adapterSizeY = theThis.adapterSize * (theThis.typeInfo.adapterEnd.y - theThis.typeInfo.adapterStart.y) * this.height
     }
     theThis.path.moveTo(modifierWidth, 0)
-    theThis.path.lineTo(this.width - modifierWidth, 0)
-    theThis.path.lineTo(this.width, this.height / 2)
-    theThis.path.lineTo(this.width - modifierWidth, this.height)
-    theThis.path.lineTo(modifierWidth, this.height)
-    theThis.path.lineTo(0, this.height / 2)
+    theThis.path.lineTo(adapterWidth + adapterSizeX, theThis.height)
+    theThis.path.lineTo(adapterWidth, theThis.height)
     theThis.path.lineTo(modifierWidth, 0)
   }
 

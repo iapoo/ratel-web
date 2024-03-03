@@ -4,31 +4,31 @@ import { CustomShape } from '../../../Shapes'
 import { CustomEntity, Shapes } from '../../../Items'
 import { Type } from '../../../Items/src/Item'
 
-const TYPE_STAR = 'Star'
-const DESC_STAR = 'Star'
-const TEXT_STAR = 'Star'
+const TYPE_LEFT_TRIANGLE = 'LeftTriangle'
+const DESC_LEFT_TRIANGLE = 'LeftTriangle'
+const TEXT_LEFT_TRIANGLE = ''
 
-export const StarTypes = [{ name: TYPE_STAR, description: DESC_STAR, 
-  freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 120, height: 80, 
-  modifiable: true, modifierX: 0.3, modifierY: 0, modifierStartX: 0, modifierStartY: 0, 
-  modifierEndX: 0.5, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
+export const LeftTriangleTypes = [{ name: TYPE_LEFT_TRIANGLE, description: DESC_LEFT_TRIANGLE, 
+  freeze: Shapes.FREEZE_NONE, text: TEXT_LEFT_TRIANGLE, left: 0, top: 0, width: 120, height: 80, 
+  modifiable: true, modifierX: 0.5, modifierY: 0, modifierStartX: 0, modifierStartY: 0, 
+  modifierEndX: 1, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
   adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, 
   adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
 }]
 
-export class Star extends CustomEntity {
+export class LeftTriangle extends CustomEntity {
   
   public constructor(left: number, top: number, width: number, height: number) {
-    super(left, top, width, height, {shapeType: TYPE_STAR}, StarTypes)
-    const customTypeInfo = this.parseTypeInfo({shapeType: TYPE_STAR})
+    super(left, top, width, height, {shapeType: TYPE_LEFT_TRIANGLE}, LeftTriangleTypes)
+    const customTypeInfo = this.parseTypeInfo({shapeType: TYPE_LEFT_TRIANGLE})
     this._shape = new CustomShape(left, top, width, height, this.buildShape, customTypeInfo)
     this.initializeTheme()
-    CustomEntity.registry(Star)
+    CustomEntity.registry(LeftTriangle)
   }
 
 
   public get types(): Type[] {
-    return StarTypes
+    return LeftTriangleTypes
   }
 
   public buildShape(theThis: CustomShape) {
@@ -50,11 +50,8 @@ export class Star extends CustomEntity {
       adapterSizeY = theThis.adapterSize * (theThis.typeInfo.adapterEnd.y - theThis.typeInfo.adapterStart.y) * this.height
     }
     theThis.path.moveTo(modifierWidth, 0)
-    theThis.path.lineTo(this.width - modifierWidth, 0)
-    theThis.path.lineTo(this.width, this.height / 2)
-    theThis.path.lineTo(this.width - modifierWidth, this.height)
-    theThis.path.lineTo(modifierWidth, this.height)
-    theThis.path.lineTo(0, this.height / 2)
+    theThis.path.lineTo(this.width, this.height)
+    theThis.path.lineTo(0, this.height)
     theThis.path.lineTo(modifierWidth, 0)
   }
 
