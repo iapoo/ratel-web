@@ -10,10 +10,10 @@ const TEXT_LEFT_TRIANGLE = ''
 
 export const LeftTriangleTypes = [{ name: TYPE_LEFT_TRIANGLE, description: DESC_LEFT_TRIANGLE, 
   freeze: Shapes.FREEZE_NONE, text: TEXT_LEFT_TRIANGLE, left: 0, top: 0, width: 120, height: 80, 
-  modifiable: true, modifierX: 0.5, modifierY: 0, modifierStartX: 0, modifierStartY: 0, 
-  modifierEndX: 1, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
-  adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, 
-  adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  modifiable: true, modifierX: 0, modifierY: 0.5, modifierStartX: 0, modifierStartY: 0, 
+  modifierEndX: 0, modifierEndY: 1, modifyInLine: true, modifyInPercent: true,
+  adaptable: true, adapterX: 0, adapterY: 0, adapterDirection: 'Y', adapterSize: 1, 
+  adapterStartX: 1, adapterStartY: 0, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true
 }]
 
 export class LeftTriangle extends CustomEntity {
@@ -49,10 +49,10 @@ export class LeftTriangle extends CustomEntity {
       adapterSizeX = theThis.adapterSize * (theThis.typeInfo.adapterEnd.x - theThis.typeInfo.adapterStart.x) * this.width
       adapterSizeY = theThis.adapterSize * (theThis.typeInfo.adapterEnd.y - theThis.typeInfo.adapterStart.y) * this.height
     }
-    theThis.path.moveTo(modifierWidth, 0)
-    theThis.path.lineTo(this.width, this.height)
-    theThis.path.lineTo(0, this.height)
-    theThis.path.lineTo(modifierWidth, 0)
+    theThis.path.moveTo(0, modifierHeight)
+    theThis.path.lineTo(theThis.width, adapterHeight + adapterSizeY)
+    theThis.path.lineTo(theThis.width, adapterHeight)
+    theThis.path.lineTo(0, modifierHeight)
   }
 
   protected parseEntityShapeType(type: string): EntityShapeType {

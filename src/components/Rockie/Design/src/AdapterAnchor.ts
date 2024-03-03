@@ -188,40 +188,27 @@ export class AdapterAnchor extends Anchor {
             targetAdapterSize = newAdapterSizeValue
           }
         } else if (shapeType.adapterDirection == Shapes.ADAPTER_DIRECTION_Y) {
-          let endXForBegin = startX + this.target.shape.adapter.x + this.target.shape.adapterSize
-          let endYForBegin = endY
-          let adapterX = this.target.shape.adapter.x + startX
-          let adapterY = this.target.shape.adapter.y + startY
-          if (shapeType.modifyInPercent) {
-            adapterX = (endX - startX) * this.target.shape.adapter.x + startX
-            adapterY = (endY - startY) * this.target.shape.adapter.y + startY
+          let startYForEnd = startY + this.target.shape.adapter.y
+          let endYForEnd = endY
+          let adapterSize = this.target.shape.adapterSize
+          if (shapeType.adaptInPercent) {
+            startYForEnd = startY + this.target.shape.adapter.y * (endY - startY)
+            endYForEnd = endY
+            adapterSize = (endY - startY) * this.target.shape.adapterSize
           }
-          let newAdapterX = adapterX + resizeX
-          let newAdapterY = adapterY + resizeY
-          if (shapeType.modifyInLine) {
-            let newAdapterPoint = MathUtils.getNearestPointOfPointToLine(newAdapterX, newAdapterY, startX, startY, endX, endY)
-            let newAdapterXValue = newAdapterPoint.x < startX ? startX : (newAdapterPoint.x > endX ? endX : newAdapterPoint.x)
-            let newAdapterYValue = newAdapterPoint.y < startY ? startY : (newAdapterPoint.y > endY ? endY : newAdapterPoint.y)
-            //console.log(newAdapterPoint)
-            if (shapeType.modifyInPercent) {
-              newAdapterXValue = (endX - startX) > 0 ? (newAdapterX - startX) / (endX - startX) : 0
-              newAdapterYValue = (endY - startY) > 0 ? (newAdapterY - startY) / (endY - startY) : 0
-              newAdapterXValue = newAdapterXValue < 0 ? 0 : (newAdapterXValue > 1 ? 1 : newAdapterXValue)
-              newAdapterYValue = newAdapterYValue < 0 ? 0 : (newAdapterYValue > 1 ? 1 : newAdapterYValue)
+          let newAdapterSize = adapterSize + resizeY
+          if (shapeType.adaptInLine) {
+            let newAdapterSizeValue = newAdapterSize < 0 ? 0 : (newAdapterSize > endYForEnd - startYForEnd ? endYForEnd - startYForEnd : newAdapterSize)
+            if (shapeType.adaptInPercent) {
+              newAdapterSizeValue = newAdapterSize < 0 ? 0 : (newAdapterSize > endYForEnd - startYForEnd ? (endYForEnd - startYForEnd) / (endY - startY) : newAdapterSize / (endY - startY))
             }
-            targetAdapter = new Point2(newAdapterXValue, newAdapterYValue)
-          } else { // modifyInPercent
-            let newAdapterXValue = newAdapterX - startX
-            let newAdapterYValue = newAdapterY - startY
-            newAdapterXValue = newAdapterXValue < startX ? startX : (newAdapterXValue > endXForBegin ? endXForBegin : newAdapterXValue)
-            newAdapterYValue = newAdapterYValue < startY ? startY : (newAdapterYValue > endYForBegin ? endYForBegin : newAdapterYValue)
-            if (shapeType.modifyInPercent) {
-              newAdapterXValue = (newAdapterX - startX) / (endX - startX)
-              newAdapterYValue = (newAdapterY - startY) / (endY - startY)
-              newAdapterXValue = newAdapterXValue < 0 ? 0 : (newAdapterXValue > endXForBegin / endX ? endXForBegin / endX : newAdapterXValue)
-              newAdapterYValue = newAdapterYValue < 0 ? 0 : (newAdapterYValue > endYForBegin / endY ? endYForBegin / endY : newAdapterYValue)
+            targetAdapterSize = newAdapterSizeValue
+          } else { // adaptInLine is false
+            let newAdapterSizeValue = newAdapterSize < 0 ? 0 : (newAdapterSize > endYForEnd - startYForEnd ? endYForEnd - startYForEnd : newAdapterSize)
+            if (shapeType.adaptInPercent) {
+              newAdapterSizeValue = newAdapterSize < 0 ? 0 : (newAdapterSize > endYForEnd - startYForEnd ? (endYForEnd - startYForEnd) / (endY - startY) : newAdapterSize / (endY - startY))
             }
-            targetAdapter = new Point2(newAdapterXValue, newAdapterYValue)
+            targetAdapterSize = newAdapterSizeValue
           }
         }
       }

@@ -10,10 +10,10 @@ const TEXT_RIGHT_TRIANGLE = ''
 
 export const RightTriangleTypes = [{ name: TYPE_RIGHT_TRIANGLE, description: DESC_RIGHT_TRIANGLE, 
   freeze: Shapes.FREEZE_NONE, text: TEXT_RIGHT_TRIANGLE, left: 0, top: 0, width: 120, height: 80, 
-  modifiable: true, modifierX: 0.5, modifierY: 0, modifierStartX: 0, modifierStartY: 0, 
-  modifierEndX: 1, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
-  adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, 
-  adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  modifiable: true, modifierX: 0, modifierY: 0.5, modifierStartX: 1, modifierStartY: 0, 
+  modifierEndX: 1, modifierEndY: 1, modifyInLine: true, modifyInPercent: true,
+  adaptable: true, adapterX: 0, adapterY: 0,adapterDirection: 'Y', adapterSize: 1, 
+  adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 1, adaptInLine: true, adaptInPercent: true
 }]
 
 export class RightTriangle extends CustomEntity {
@@ -49,10 +49,10 @@ export class RightTriangle extends CustomEntity {
       adapterSizeX = theThis.adapterSize * (theThis.typeInfo.adapterEnd.x - theThis.typeInfo.adapterStart.x) * this.width
       adapterSizeY = theThis.adapterSize * (theThis.typeInfo.adapterEnd.y - theThis.typeInfo.adapterStart.y) * this.height
     }
-    theThis.path.moveTo(modifierWidth, 0)
-    theThis.path.lineTo(this.width, this.height)
-    theThis.path.lineTo(0, this.height)
-    theThis.path.lineTo(modifierWidth, 0)
+    theThis.path.moveTo(theThis.width, modifierHeight)
+    theThis.path.lineTo(0, adapterHeight + adapterSizeY)
+    theThis.path.lineTo(0, adapterHeight)
+    theThis.path.lineTo(theThis.width, modifierHeight)
   }
 
   protected parseEntityShapeType(type: string): EntityShapeType {

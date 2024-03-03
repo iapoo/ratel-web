@@ -9,7 +9,8 @@ import {
   Rectangle, RoundRectangle, Text, Ellipse, Square, Circle, Process, Diamond, Parallelogram, Hexagon, Triangle,
   Cylinder, Cloud, Document, InternalStorage, Cube, Step, Trapezoid, Tape, Note, Card, Callout, Actor, Container
 } from '@/components/Resource/LargeIcons'
-import { ContainerTypes, Containers, ShapeTypes, Shapes } from '@/components/Rockie/Items'
+import { ContainerTypes, Containers, CustomEntity, ShapeTypes, Shapes } from '@/components/Rockie/Items'
+import { BasicShapes } from '@/components/Rockie/CustomItems/BasicShapes';
 
 interface NavigatorProps {
   navigatorWidth: number
@@ -66,9 +67,9 @@ const Navigator: FC<NavigatorProps> = ({
     }
   }
 
-  const addCustomShape = () => {
+  const addCustomShape = (type: string, classType: typeof CustomEntity) => {
     if(Utils.currentEditor) {
-      Utils.currentEditor.action = new CustomShapeAction(Utils.currentEditor)
+      Utils.currentEditor.action = new CustomShapeAction(Utils.currentEditor, type, classType)
     }
   }
 
@@ -202,11 +203,16 @@ const Navigator: FC<NavigatorProps> = ({
     }
   )
 
-  const customShapes = <Popover title='Custom Shape' placement='right' content='' overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 280, width: 280,}}>
-  <Button type='text' onClick={() => addCustomShape()} style={{padding: 2, display: 'table'}}>
-    <img src={`/shapes/container.png`} width={28} height={28} style={{display: 'table-cell'}}/>
-  </Button>
-</Popover>
+  const customShapes = BasicShapes.map(
+    basicType => {
+      return <Popover title={basicType.name} placement='right' content='' overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 280, width: 280,}}>
+      <Button type='text' onClick={() => addCustomShape(basicType.name, basicType.type)} style={{padding: 2, display: 'table'}}>
+        <img src={`/shapes/container.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+      </Button>
+    </Popover>
+    }
+  )
+  
 
   const items: CollapseProps['items'] = [
     {
