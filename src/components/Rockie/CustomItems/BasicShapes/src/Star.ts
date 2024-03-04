@@ -1,5 +1,5 @@
 import { Graphics, MathUtils, ParagraphDirection, Point2, Rectangle } from '@/components/Engine'
-import { EntityShapeType } from '../../../Shapes/src/EntityShape'
+import { EntityShape, EntityShapeType } from '../../../Shapes/src/EntityShape'
 import { CustomShape } from '../../../Shapes'
 import { CustomEntity, Shapes } from '../../../Items'
 import { Type } from '../../../Items/src/Item'
@@ -18,13 +18,13 @@ export const StarTypes = [{ name: TYPE_STAR, description: DESC_STAR,
 }]
 
 export class Star extends CustomEntity {
-  private _initialized: boolean = false
 
   public constructor(left: number, top: number, width: number, height: number) {
     super(left, top, width, height, {shapeType: TYPE_STAR}, StarTypes)
     const customTypeInfo = this.parseTypeInfo({shapeType: TYPE_STAR})
     this._shape = new CustomShape(left, top, width, height, this.buildShape, customTypeInfo)
     this.initializeTheme()
+    this.updateTypeInfo(this._shape)
   }
 
 
@@ -34,11 +34,6 @@ export class Star extends CustomEntity {
 
   public buildShape(theThis: CustomShape) {
     const [points, newPoints, centerPoint, adapterPoint] = MathUtils.getStar(theThis.width, 5)
-    if(!this._initialized) {
-      theThis.typeInfo.modifierStart = new Point2(centerPoint.x / theThis.width, centerPoint.y / theThis.height)
-      theThis.typeInfo.modifierEnd = new Point2(adapterPoint.x / theThis.width, adapterPoint.y / theThis.height)
-      this._initialized = true
-    }
     let modifierWidth = theThis.modifier.x + theThis.typeInfo.modifierStart.x * theThis.width
     let modifierHeight = theThis.modifier.y + theThis.typeInfo.modifierStart.y * theThis.height
     let adapterWidth = theThis.adapter.x + theThis.typeInfo.adapterStart.x * theThis.width
@@ -71,5 +66,15 @@ export class Star extends CustomEntity {
     let shapeType = EntityShapeType.CustomShape
     return shapeType
   } 
+
+  private updateTypeInfo(shape: EntityShape) {
+    const [points, newPoints, centerPoint, adapterPoint] = MathUtils.getStar(shape.width, 5)
+    shape.typeInfo.modifierStart = new Point2(centerPoint.x / shape.width, centerPoint.y / shape.height)
+    shape.typeInfo.modifierEnd = new Point2(adapterPoint.x / shape.width, adapterPoint.y / shape.height)
+    this.shapeType.modifierStartX = centerPoint.x / shape.width
+    this.shapeType.modifierStartY = centerPoint.y / shape.height
+    this.shapeType.modifierEndX = adapterPoint.x / shape.width
+    this.shapeType.modifierEndY = adapterPoint.y / shape.height
+  }
 
 }
