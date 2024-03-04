@@ -154,6 +154,14 @@ const Navigator: FC<NavigatorProps> = ({
       </div>
   }
 
+  const getCustomShapePopoverContent = (name: string, width: number, height: number) => {
+    return <div style={{width: width * 1.25, display: 'table'}}>
+        <div style={{display: 'table-cell', textAlign: 'center', verticalAlign: 'middle', borderTop: '0px solid gray', padding: '2px'}}>
+          <img src={`/custom-shapes-large/basic-shapes/${name}.png`} />
+        </div>
+      </div>
+  }
+
   const line = <Popover title={'Line'} placement='right' content={getPopoverContent('Line', 128, 128)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 180, width: 180,}}>
     <Button type='text' onClick={() => addLine()} style={{padding: 2, display: 'table'}}>
       <img src={`/shapes/Line.png`} width={28} height={28} style={{display: 'table-cell'}}/>
@@ -205,9 +213,9 @@ const Navigator: FC<NavigatorProps> = ({
 
   const customShapes = BasicShapes.map(
     basicType => {
-      return <Popover title={basicType.name} placement='right' content='' overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 280, width: 280,}}>
+      return <Popover title={basicType.name} placement='right' content={getCustomShapePopoverContent(basicType.name, basicType.typeInfo.width, basicType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
       <Button type='text' onClick={() => addCustomShape(basicType.name, basicType.type)} style={{padding: 2, display: 'table'}}>
-        <img src={`/shapes/container.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+        <img src={`/custom-shapes/basic-shapes/${basicType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
       </Button>
     </Popover>
     }
