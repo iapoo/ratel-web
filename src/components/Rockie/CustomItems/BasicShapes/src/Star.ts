@@ -55,7 +55,7 @@ export class Star extends CustomEntity {
       adapterSizeX = theThis.adapterSize * (theThis.typeInfo.adapterEnd.x - theThis.typeInfo.adapterStart.x) * theThis.width
       adapterSizeY = theThis.adapterSize * (theThis.typeInfo.adapterEnd.y - theThis.typeInfo.adapterStart.y) * theThis.height
     }
-    console.log(`=====${(modifierWidth - centerPoint.x) ^ 2}    ${(modifierWidth - centerPoint.x) * (modifierWidth - centerPoint.x)}`)
+    //console.log(`=====${(modifierWidth - centerPoint.x) ^ 2}    ${(modifierWidth - centerPoint.x) * (modifierWidth - centerPoint.x)}`)
     const modifier = Math.sqrt((modifierWidth - centerPoint.x) * (modifierWidth - centerPoint.x) + (modifierHeight - centerPoint.y) * (modifierHeight - centerPoint.y)) / Math.sqrt((adapterPoint.x - centerPoint.x) * (adapterPoint.x - centerPoint.x) + (adapterPoint.y - centerPoint.y) * (adapterPoint.y - centerPoint.y))
     theThis.path.reset()
     theThis.path.moveTo(points[0].x, points[0].y)

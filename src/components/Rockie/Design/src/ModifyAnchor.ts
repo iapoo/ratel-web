@@ -70,8 +70,8 @@ export class ModifyAnchor extends Anchor {
         if(shapeType.modifyInPercent) {
           //newModifierValue = Math.sqrt((newModifierPoint.x - startX) * (newModifierPoint.x - startX) + (newModifierPoint.y - startY) * (newModifierPoint.y - startY)) /
           //Math.sqrt((endX - startX) * (endX - startX) + (endY - startX) * (endY - startX))
-          newModifierXValue = (endX - startX) > 0 ? (newModifierX - startX) / (endX - startX) : 0
-          newModifierYValue = (endY - startY) > 0 ? (newModifierY - startY) / (endY - startY) : 0
+          newModifierXValue = (endX - startX) > 0 ? (newModifierXValue - startX) / (endX - startX) : 0
+          newModifierYValue = (endY - startY) > 0 ? (newModifierYValue - startY) / (endY - startY) : 0
           newModifierXValue = newModifierXValue < 0 ? 0 : (newModifierXValue > 1 ? 1 : newModifierXValue)
           newModifierYValue = newModifierYValue < 0 ? 0 : (newModifierYValue > 1 ? 1 : newModifierYValue)
         }  
@@ -82,8 +82,8 @@ export class ModifyAnchor extends Anchor {
         newModifierXValue = newModifierXValue < startX ? startX : (newModifierXValue > endX ? endX : newModifierXValue)
         newModifierYValue = newModifierYValue < startY ? startY : (newModifierYValue > endY ? endY : newModifierYValue)
         if(shapeType.modifyInPercent) {
-          newModifierXValue = (newModifierX - startX) / (endX - startX)
-          newModifierYValue = (newModifierY - startY) / (endY - startY)
+          newModifierXValue = (newModifierXValue - startX) / (endX - startX)
+          newModifierYValue = (newModifierYValue - startY) / (endY - startY)
           newModifierXValue = newModifierXValue < 0 ? 0 : (newModifierXValue > 1 ? 1 : newModifierXValue)
           newModifierYValue = newModifierYValue < 0 ? 0 : (newModifierYValue > 1 ? 1 : newModifierYValue)
         }  
