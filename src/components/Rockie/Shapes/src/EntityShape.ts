@@ -57,6 +57,7 @@ export enum AdapterDirection {
 }
 
 export interface ShapeTypeInfo {
+  name: string
   type: EntityShapeType
   freeze: EntityShapeFreezeType
   text: string
@@ -86,6 +87,7 @@ export class EntityShape extends AbstractTextShape {
   private _adapterSize: number
 
   constructor (text = '', left = 0, top = 0, width = 100, height = 100, typeInfo: ShapeTypeInfo =  {
+    name: '',
     type: EntityShapeType.Rectangle, 
     freeze: EntityShapeFreezeType.None,
     text: '',

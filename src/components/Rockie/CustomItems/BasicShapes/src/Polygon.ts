@@ -19,7 +19,7 @@ export const PolygonTypes = [{ name: TYPE_POLYGON, description: DESC_POLYGON,
 export class Polygon extends CustomEntity {
   
   public constructor(left: number, top: number, width: number, height: number) {
-    super(left, top, width, height, {shapeType: TYPE_POLYGON}, PolygonTypes)
+    super(left, top, width, height, '', {shapeType: TYPE_POLYGON}, PolygonTypes)
     const customTypeInfo = this.parseTypeInfo({shapeType: TYPE_POLYGON})
     this._shape = new CustomShape(left, top, width, height, this.buildShape, customTypeInfo)
     this.initializeTheme()

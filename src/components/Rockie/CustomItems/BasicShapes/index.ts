@@ -18,5 +18,12 @@ export const BasicShapes = [
     {name: PolygonTypes[0].name, type: Polygon, typeInfo: PolygonTypes[0] },
     {name: RightTriangleTypes[0].name, type: RightTriangle, typeInfo: RightTriangleTypes[0] },
     {name: StarTypes[0].name, type: Star, typeInfo: StarTypes[0] },
+    {name: StarTypes[1].name, type: Star, typeInfo: StarTypes[1] },
+    {name: StarTypes[2].name, type: Star, typeInfo: StarTypes[2] },
+    {name: StarTypes[3].name, type: Star, typeInfo: StarTypes[3] },
+    {name: StarTypes[4].name, type: Star, typeInfo: StarTypes[4] },
+    {name: StarTypes[5].name, type: Star, typeInfo: StarTypes[5] },
+    {name: StarTypes[6].name, type: Star, typeInfo: StarTypes[6] },
+    {name: StarTypes[7].name, type: Star, typeInfo: StarTypes[7] },
     {name: TopTriangleTypes[0].name, type: TopTriangle, typeInfo: TopTriangleTypes[0] },
 ]

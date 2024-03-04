@@ -23,7 +23,7 @@ export class CustomShapeAction extends Action {
     let width = 100
     let height = 100
     if(this._classType) {
-      const customEntity = new this._classType(left, top, width, height)
+      const customEntity = new this._classType(left, top, width, height, this.type)
       return customEntity
     } 
     return new CustomEntity(left, top, width, height)

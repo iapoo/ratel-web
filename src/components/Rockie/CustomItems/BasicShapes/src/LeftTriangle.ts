@@ -19,7 +19,7 @@ export const LeftTriangleTypes = [{ name: TYPE_LEFT_TRIANGLE, description: DESC_
 export class LeftTriangle extends CustomEntity {
   
   public constructor(left: number, top: number, width: number, height: number) {
-    super(left, top, width, height, {shapeType: TYPE_LEFT_TRIANGLE}, LeftTriangleTypes)
+    super(left, top, width, height, '', {shapeType: TYPE_LEFT_TRIANGLE}, LeftTriangleTypes)
     const customTypeInfo = this.parseTypeInfo({shapeType: TYPE_LEFT_TRIANGLE})
     this._shape = new CustomShape(left, top, width, height, this.buildShape, customTypeInfo)
     this.initializeTheme()
