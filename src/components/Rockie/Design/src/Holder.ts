@@ -4,7 +4,7 @@ import { DivideAnchor, } from './DivideAnchor'
 import { ConnectionAnchor, } from './ConnectionAnchor'
 import { ResizeAnchor, ResizeType, } from './ResizeAnchor'
 import { RotationAnchor, } from './RotationAnchor'
-import { ReshapeAnchor, } from './ReshapeAnchor'
+import { ModifyAnchor, } from './ModifyAnchor'
 import { Colors, Control, Line2D, Point2, Rectangle, Scale, StrokeDashStyle, } from '@/components/Engine'
 import { Connector, Item, LineEntity, LineType, Shapes, } from '../../Items'
 import { Editor, } from '../../Editor/src/Editor'
@@ -24,7 +24,7 @@ export class Holder extends Control {
   public static readonly ANCHOR_DISTANCE = 24;
   private _divideAnchors: DivideAnchor[] = [];
   private _rotationAnchor: RotationAnchor;
-  private _reshapeAnchor: ReshapeAnchor;
+  private _modifyAnchor: ModifyAnchor;
   private _leftCreationAnchor: CreationAnchor;
   private _topCreationAnchor: CreationAnchor;
   private _rightCreationAnchor: CreationAnchor;
@@ -58,7 +58,7 @@ export class Holder extends Control {
     super()
     this._editor = editor
     this._rotationAnchor = new RotationAnchor(editor, this)
-    this._reshapeAnchor = new ReshapeAnchor(editor, this)
+    this._modifyAnchor = new ModifyAnchor(editor, this)
     this._leftCreationAnchor = new CreationAnchor(editor, this)
     this._topCreationAnchor = new CreationAnchor(editor, this)
     this._rightCreationAnchor = new CreationAnchor(editor, this)
@@ -107,7 +107,7 @@ export class Holder extends Control {
     //this.rotation = target.rotation
 
     this._rotationAnchor.target = target
-    this._reshapeAnchor.target = target
+    this._modifyAnchor.target = target
     this._leftResizeAnchor.target = target
     this.leftTopResizeAnchor.target = target
     this.topResizeAnchor.target = target
@@ -153,8 +153,8 @@ export class Holder extends Control {
   public get rotationAnchor (): RotationAnchor {
     return this._rotationAnchor
   }
-  public get reshapeAnchor (): ReshapeAnchor {
-    return this._reshapeAnchor
+  public get modifyAnchor (): ModifyAnchor {
+    return this._modifyAnchor
   }
   public get leftCreationAnchor (): CreationAnchor {
     return this._leftCreationAnchor
@@ -202,7 +202,7 @@ export class Holder extends Control {
   public layoutAnchors () {
 
     this._rotationAnchor.scale = new Scale(1 / this.editor.zoom, 1 / this.editor.zoom)
-    this._reshapeAnchor.scale = new Scale(1 / this.editor.zoom, 1 / this.editor.zoom)
+    this._modifyAnchor.scale = new Scale(1 / this.editor.zoom, 1 / this.editor.zoom)
     this._leftCreationAnchor.scale = new Scale(1 / this.editor.zoom, 1 / this.editor.zoom)
     this._topCreationAnchor.scale = new Scale(1 / this.editor.zoom, 1 / this.editor.zoom)
     this._rightCreationAnchor.scale = new Scale(1 / this.editor.zoom, 1 / this.editor.zoom)
@@ -259,8 +259,8 @@ export class Holder extends Control {
         x = (endX - startX) * this.target.shape.modifier.x +  startX
         y = (endY - startY) * this.target.shape.modifier.y + startY
       }
-      this._reshapeAnchor.left = x - Holder.ANCHOR_RADIUS
-      this._reshapeAnchor.top = y - Holder.ANCHOR_RADIUS
+      this._modifyAnchor.left = x - Holder.ANCHOR_RADIUS
+      this._modifyAnchor.top = y - Holder.ANCHOR_RADIUS
       let startAdapterX = shapeType.adapterStartX * this.target.width
       let startAdapterY = shapeType.adapterStartY * this.target.height
       let endAdapterX = shapeType.adapterEndX * this.target.width
@@ -471,7 +471,7 @@ export class Holder extends Control {
         this.addNode(this._rotationAnchor)
         if(this._target instanceof ShapeEntity) {
           if (this._target.shapeType.modifiable) {
-            this.addNode(this._reshapeAnchor)
+            this.addNode(this._modifyAnchor)
           }
           if(this._target.shapeType.adaptable) {
             this.addNode(this._endAdapterAnchor)
@@ -513,7 +513,7 @@ export class Holder extends Control {
         this.removeNode(this._rotationAnchor)
         if(this._target instanceof ShapeEntity) {
           if (this._target.shapeType.modifiable) {
-            this.removeNode(this._reshapeAnchor)
+            this.removeNode(this._modifyAnchor)
           }
           if(this._target.shapeType.adaptable) {
             this.removeNode(this._startAdapterAnchor)
