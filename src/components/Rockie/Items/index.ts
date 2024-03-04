@@ -11,6 +11,7 @@ export { EditorItemInfo, } from './src/EditorItemInfo'
 export { GroupEntity } from './src/GroupEntity'
 export { Item, Categories, } from './src/Item'
 export { LineType, LineEntity } from './src/LineEntity'
+export { PoolEntity } from './src/PoolEntity'
 export { ShapeEntity, Shapes, ShapeTypes, } from './src/ShapeEntity'
 export { TableEntity } from './src/TableEntity'
 

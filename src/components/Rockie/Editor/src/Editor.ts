@@ -98,7 +98,7 @@ export class Editor extends Painter {
   private _targetColumnResizing = false
   private _targetRowIndex = 0
   private _targetColumnIndex = 0
-  private _targetItemIndex = 0
+  private _targetItemIndex = -1  //It need to be -1 since first cell have 0 index
   private _targetItem: EditorItem | undefined
   private _title: string
   private _key: string
@@ -892,7 +892,7 @@ export class Editor extends Painter {
         this._targetColumnResizing = false
         this._targetRowResizing = false
         this._targetItem = undefined
-        this._targetItemIndex = 0
+        this._targetItemIndex = -1
         this.handleTableActiveCellShape()
       } else if (clickedEditorItem) {
         if (!theSelectionLayer.hasEditorItem(clickedEditorItem)) {
@@ -913,7 +913,7 @@ export class Editor extends Painter {
             this._targetItem.shape.focused = false
           }
           this._targetItem = undefined
-          this._targetItemIndex = 0
+          this._targetItemIndex = -1
           this._inMoving = true
         } else if (clickedEditorItem instanceof TableEntity) {
           const targetPoint = this.findEditorItemPoint(clickedEditorItem, e.x, e.y)
@@ -930,7 +930,7 @@ export class Editor extends Painter {
               this._targetItem.shape.focused = false
             }
             this._targetItem = undefined
-            this._targetItemIndex = 0
+            this._targetItemIndex = -1
             this.handleTableActiveCellShape()
             this._inMoving = true
             this.startMoveOutline(e)
@@ -946,7 +946,7 @@ export class Editor extends Painter {
             }
             this._targetItem = undefined
             this.handleTableActiveCellShape()
-            this._targetItemIndex = 0
+            this._targetItemIndex = -1
             this._inMoving = true
             this.startMoveOutline(e)
           } else {
@@ -1011,7 +1011,7 @@ export class Editor extends Painter {
         this._targetColumnResizing = false
         this._targetRowResizing = false
         this._targetItem = undefined
-        this._targetItemIndex = 0
+        this._targetItemIndex = -1
         this.handleTableActiveCellShape()
         this.startRangeSelecting(e)
       }
@@ -2231,7 +2231,7 @@ export class Editor extends Painter {
       this._targetColumnResizing = false
       this._targetRowResizing = false
       this._targetItem = undefined
-      this._targetItemIndex = 0
+      this._targetItemIndex = -1
       this.handleTableActiveCellShape()
     }
   }
