@@ -32,6 +32,7 @@ export abstract class AbstractTextShape extends Shape {
     constructor (text = '', left = 0, top = 0, width = 100, height = 100) {
       super(left, top, width, height)
       // this.filled = false
+      this.clipped = false
       this._textWidth = width
       this._textHeight = height
       this._textMargin = AbstractTextShape.DEFAULT_TEXT_PADDING

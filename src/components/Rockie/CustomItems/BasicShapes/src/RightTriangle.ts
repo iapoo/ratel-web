@@ -9,7 +9,7 @@ const DESC_RIGHT_TRIANGLE = 'RightTriangle'
 const TEXT_RIGHT_TRIANGLE = ''
 
 export const RightTriangleTypes = [{ name: TYPE_RIGHT_TRIANGLE, description: DESC_RIGHT_TRIANGLE, 
-  freeze: Shapes.FREEZE_NONE, text: TEXT_RIGHT_TRIANGLE, left: 0, top: 0, width: 120, height: 80, 
+  freeze: Shapes.FREEZE_NONE, text: TEXT_RIGHT_TRIANGLE, left: 0, top: 0, width: 100, height: 100, 
   modifiable: true, modifierX: 0, modifierY: 0.5, modifierStartX: 1, modifierStartY: 0, 
   modifierEndX: 1, modifierEndY: 1, modifyInLine: true, modifyInPercent: true,
   adaptable: true, adapterX: 0, adapterY: 0,adapterDirection: 'Y', adapterSize: 1, 
@@ -23,7 +23,6 @@ export class RightTriangle extends CustomEntity {
     const customTypeInfo = this.parseTypeInfo({shapeType: TYPE_RIGHT_TRIANGLE})
     this._shape = new CustomShape(left, top, width, height, this.buildShape, customTypeInfo)
     this.initializeTheme()
-    CustomEntity.registry(RightTriangle)
   }
 
 

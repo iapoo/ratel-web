@@ -9,7 +9,7 @@ const DESC_BOTTOM_TRIANGLE = 'BottomTriangle'
 const TEXT_BOTTOM_TRIANGLE = ''
 
 export const BottomTriangleTypes = [{ name: TYPE_BOTTOM_TRIANGLE, description: DESC_BOTTOM_TRIANGLE, 
-  freeze: Shapes.FREEZE_NONE, text: TEXT_BOTTOM_TRIANGLE, left: 0, top: 0, width: 120, height: 80, 
+  freeze: Shapes.FREEZE_NONE, text: TEXT_BOTTOM_TRIANGLE, left: 0, top: 0, width: 100, height: 100, 
   modifiable: true, modifierX: 0.5, modifierY: 0, modifierStartX: 0, modifierStartY: 1, 
   modifierEndX: 1, modifierEndY: 1, modifyInLine: true, modifyInPercent: true,
   adaptable: true, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 1, 
@@ -23,7 +23,6 @@ export class BottomTriangle extends CustomEntity {
     const customTypeInfo = this.parseTypeInfo({shapeType: TYPE_BOTTOM_TRIANGLE})
     this._shape = new CustomShape(left, top, width, height, this.buildShape, customTypeInfo)
     this.initializeTheme()
-    CustomEntity.registry(BottomTriangle)
   }
 
 

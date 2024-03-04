@@ -50,21 +50,13 @@ export const CustomEntityTypes = [{ name: CustomEntities.TYPE_CUSTOMER_SHAPE, de
 
 export class CustomEntity extends ShapeEntity {
   
-  public static customClasses: Map<string, typeof CustomEntity> = new Map<string, typeof CustomEntity>()
-
   public constructor(left: number, top: number, width: number, height: number, 
       shapeOptions: ShapeOptions = { shapeType: CustomEntities.TYPE_CUSTOMER_SHAPE },
       shapeTypes: ShapeType[] = CustomEntityTypes) {
     super(left, top, width, height, shapeOptions, shapeTypes)
     const customTypeInfo = this.parseTypeInfo(shapeOptions)
     this._shape = new CustomShape(left, top, width, height, this.buildShape, customTypeInfo)
-    CustomEntity.registry(CustomEntity)
   }
-
-  public static registry(customEntityTypeInfo: typeof CustomEntity) {
-    CustomEntity.customClasses.set(customEntityTypeInfo.name, customEntityTypeInfo)
-  }
-
   public get types(): Type[] {
     return CustomEntityTypes
   }
