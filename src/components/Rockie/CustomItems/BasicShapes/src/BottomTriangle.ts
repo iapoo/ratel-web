@@ -19,7 +19,7 @@ export const BottomTriangleTypes = [{ name: TYPE_BOTTOM_TRIANGLE, description: D
 export class BottomTriangle extends CustomEntity {
   
   public constructor(left: number, top: number, width: number, height: number) {
-    super(left, top, width, height, {shapeType: TYPE_BOTTOM_TRIANGLE}, BottomTriangleTypes)
+    super(left, top, width, height, '', {shapeType: TYPE_BOTTOM_TRIANGLE}, BottomTriangleTypes)
     const customTypeInfo = this.parseTypeInfo({shapeType: TYPE_BOTTOM_TRIANGLE})
     this._shape = new CustomShape(left, top, width, height, this.buildShape, customTypeInfo)
     this.initializeTheme()

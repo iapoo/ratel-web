@@ -301,6 +301,7 @@ export class ShapeEntity extends Entity {
     let shapeType = this.parseEntityShapeType(this.type)
     let adapterDirection = this.parseAdaptDirection(theShapeType.adapterDirection)
     return {
+      name: theShapeType.name,
       type: shapeType, 
       freeze: freezeType,
       text: theShapeType.text,

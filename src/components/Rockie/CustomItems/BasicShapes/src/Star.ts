@@ -5,23 +5,64 @@ import { CustomEntity, Shapes } from '../../../Items'
 import { Type } from '../../../Items/src/Item'
 import { Line } from '@antv/g-math'
 
-const TYPE_STAR = 'Star'
-const DESC_STAR = 'Star'
+const TYPE_STAR_4 = 'Star4'
+const DESC_STAR_4 = 'Star4'
+const TYPE_STAR_5 = 'Star5'
+const DESC_STAR_5 = 'Star5'
+const TYPE_STAR_6 = 'Star6'
+const DESC_STAR_6 = 'Star6'
+const TYPE_STAR_7 = 'Star7'
+const DESC_STAR_7 = 'Star7'
+const TYPE_STAR_8 = 'Star8'
+const DESC_STAR_8 = 'Star8'
+const TYPE_STAR_16 = 'Star16'
+const DESC_STAR_16 = 'Star16'
+const TYPE_STAR_24 = 'Star24'
+const DESC_STAR_24 = 'Star24'
+const TYPE_STAR_32 = 'Star32'
+const DESC_STAR_32 = 'Star32'
 const TEXT_STAR = ''
 
-export const StarTypes = [{ name: TYPE_STAR, description: DESC_STAR, 
-  freeze: Shapes.FREEZE_NONE, text: TEXT_STAR, left: 0, top: 0, width: 100, height: 100, 
-  modifiable: true, modifierX: 0.5, modifierY: 0.5, modifierStartX: 0, modifierStartY: 0, 
-  modifierEndX: 1, modifierEndY: 1, modifyInLine: true, modifyInPercent: true,
-  adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, 
-  adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
-}]
+export const StarTypes = [
+  { name: TYPE_STAR_4, description: DESC_STAR_4, freeze: Shapes.FREEZE_NONE, text: TEXT_STAR, left: 0, top: 0, width: 100, height: 100, 
+    modifiable: true, modifierX: 0.5, modifierY: 0.5, modifierStartX: 0, modifierStartY: 0, modifierEndX: 1, modifierEndY: 1, modifyInLine: true, modifyInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  { name: TYPE_STAR_5, description: DESC_STAR_5, freeze: Shapes.FREEZE_NONE, text: TEXT_STAR, left: 0, top: 0, width: 100, height: 100, 
+    modifiable: true, modifierX: 0.5, modifierY: 0.5, modifierStartX: 0, modifierStartY: 0, modifierEndX: 1, modifierEndY: 1, modifyInLine: true, modifyInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  { name: TYPE_STAR_6, description: DESC_STAR_6, freeze: Shapes.FREEZE_NONE, text: TEXT_STAR, left: 0, top: 0, width: 100, height: 100, 
+    modifiable: true, modifierX: 0.5, modifierY: 0.5, modifierStartX: 0, modifierStartY: 0, modifierEndX: 1, modifierEndY: 1, modifyInLine: true, modifyInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  { name: TYPE_STAR_7, description: DESC_STAR_7, freeze: Shapes.FREEZE_NONE, text: TEXT_STAR, left: 0, top: 0, width: 100, height: 100, 
+    modifiable: true, modifierX: 0.5, modifierY: 0.5, modifierStartX: 0, modifierStartY: 0, modifierEndX: 1, modifierEndY: 1, modifyInLine: true, modifyInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  { name: TYPE_STAR_8, description: DESC_STAR_8, freeze: Shapes.FREEZE_NONE, text: TEXT_STAR, left: 0, top: 0, width: 100, height: 100, 
+    modifiable: true, modifierX: 0.5, modifierY: 0.5, modifierStartX: 0, modifierStartY: 0, modifierEndX: 1, modifierEndY: 1, modifyInLine: true, modifyInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  { name: TYPE_STAR_16, description: DESC_STAR_16, freeze: Shapes.FREEZE_NONE, text: TEXT_STAR, left: 0, top: 0, width: 100, height: 100, 
+    modifiable: true, modifierX: 0.5, modifierY: 0.5, modifierStartX: 0, modifierStartY: 0, modifierEndX: 1, modifierEndY: 1, modifyInLine: true, modifyInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  { name: TYPE_STAR_24, description: DESC_STAR_24, freeze: Shapes.FREEZE_NONE, text: TEXT_STAR, left: 0, top: 0, width: 100, height: 100, 
+    modifiable: true, modifierX: 0.5, modifierY: 0.5, modifierStartX: 0, modifierStartY: 0, modifierEndX: 1, modifierEndY: 1, modifyInLine: true, modifyInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  { name: TYPE_STAR_32, description: DESC_STAR_32, freeze: Shapes.FREEZE_NONE, text: TEXT_STAR, left: 0, top: 0, width: 100, height: 100, 
+    modifiable: true, modifierX: 0.5, modifierY: 0.5, modifierStartX: 0, modifierStartY: 0, modifierEndX: 1, modifierEndY: 1, modifyInLine: true, modifyInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+]
 
 export class Star extends CustomEntity {
 
-  public constructor(left: number, top: number, width: number, height: number) {
-    super(left, top, width, height, {shapeType: TYPE_STAR}, StarTypes)
-    const customTypeInfo = this.parseTypeInfo({shapeType: TYPE_STAR})
+  public constructor(left: number, top: number, width: number, height: number, starType: string) {
+    super(left, top, width, height, starType, {shapeType: starType}, StarTypes)
+    const customTypeInfo = this.parseTypeInfo({shapeType: starType})
     this._shape = new CustomShape(left, top, width, height, this.buildShape, customTypeInfo)
     this.initializeTheme()
     this.updateTypeInfo(this._shape)
@@ -33,7 +74,37 @@ export class Star extends CustomEntity {
   }
 
   public buildShape(theThis: CustomShape) {
-    const [points, newPoints, centerPoint, adapterPoint] = MathUtils.getStar(theThis.width, 5)
+    let sideCount = 5
+    switch(theThis.typeInfo.name) {
+      case TYPE_STAR_4: 
+        sideCount = 4 
+        break
+      case TYPE_STAR_5: 
+        sideCount = 5
+        break
+      case TYPE_STAR_6: 
+        sideCount = 6
+        break
+      case TYPE_STAR_7: 
+        sideCount = 7
+        break
+      case TYPE_STAR_8: 
+        sideCount = 8
+        break
+      case TYPE_STAR_16: 
+        sideCount = 16
+        break
+      case TYPE_STAR_24: 
+        sideCount = 24
+        break
+      case TYPE_STAR_32: 
+        sideCount = 32
+        break
+      default: 
+        sideCount = 5
+        break
+    }
+    const [points, newPoints, centerPoint, adapterPoint] = MathUtils.getStar(theThis.width, sideCount)
     let modifierWidth = theThis.modifier.x + theThis.typeInfo.modifierStart.x * theThis.width
     let modifierHeight = theThis.modifier.y + theThis.typeInfo.modifierStart.y * theThis.height
     let adapterWidth = theThis.adapter.x + theThis.typeInfo.adapterStart.x * theThis.width
@@ -54,10 +125,10 @@ export class Star extends CustomEntity {
     const modifier = Math.sqrt((modifierWidth - centerPoint.x) * (modifierWidth - centerPoint.x) + (modifierHeight - centerPoint.y) * (modifierHeight - centerPoint.y)) / Math.sqrt((adapterPoint.x - centerPoint.x) * (adapterPoint.x - centerPoint.x) + (adapterPoint.y - centerPoint.y) * (adapterPoint.y - centerPoint.y))
     theThis.path.reset()
     theThis.path.moveTo(points[0].x, points[0].y)
-    for(let i = 0; i < 5; i ++) {      
+    for(let i = 0; i < sideCount; i ++) {      
       const point = Line.pointAt(centerPoint.x, centerPoint.y, newPoints[i].x, newPoints[i].y, modifier)
       theThis.path.lineTo(point.x, point.y)
-      theThis.path.lineTo(points[i < 4 ? i + 1 : 0].x, points[i < 4 ? i + 1 : 0].y)
+      theThis.path.lineTo(points[i < sideCount - 1 ? i + 1 : 0].x, points[i < sideCount - 1 ? i + 1 : 0].y)
     }
     theThis.path.close()
   }
@@ -76,5 +147,4 @@ export class Star extends CustomEntity {
     this.shapeType.modifierEndX = adapterPoint.x / shape.width
     this.shapeType.modifierEndY = adapterPoint.y / shape.height
   }
-
 }

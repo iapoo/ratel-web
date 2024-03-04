@@ -50,7 +50,7 @@ export const CustomEntityTypes = [{ name: CustomEntities.TYPE_CUSTOMER_SHAPE, de
 
 export class CustomEntity extends ShapeEntity {
   
-  public constructor(left: number, top: number, width: number, height: number, 
+  public constructor(left: number, top: number, width: number, height: number, name: string = '',
       shapeOptions: ShapeOptions = { shapeType: CustomEntities.TYPE_CUSTOMER_SHAPE },
       shapeTypes: ShapeType[] = CustomEntityTypes) {
     super(left, top, width, height, shapeOptions, shapeTypes)
