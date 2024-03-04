@@ -131,30 +131,30 @@ export class AdapterAnchor extends Anchor {
           let endYForBegin = endY
           let adapterX = this.target.shape.adapter.x + startX
           let adapterY = this.target.shape.adapter.y + startY
-          if (shapeType.modifyInPercent) {
+          if (shapeType.adaptInPercent) {
             adapterX = (endX - startX) * this.target.shape.adapter.x + startX
             adapterY = (endY - startY) * this.target.shape.adapter.y + startY
           }
           let newAdapterX = adapterX + resizeX
           let newAdapterY = adapterY + resizeY
-          if (shapeType.modifyInLine) {
+          if (shapeType.adaptInLine) {
             let newAdapterPoint = MathUtils.getNearestPointOfPointToLine(newAdapterX, newAdapterY, startX, startY, endX, endY)
             let newAdapterXValue = newAdapterPoint.x < startX ? startX : (newAdapterPoint.x > endX ? endX : newAdapterPoint.x)
             let newAdapterYValue = newAdapterPoint.y < startY ? startY : (newAdapterPoint.y > endY ? endY : newAdapterPoint.y)
             //console.log(newAdapterPoint)
-            if (shapeType.modifyInPercent) {
+            if (shapeType.adaptInPercent) {
               newAdapterXValue = (endX - startX) > 0 ? (newAdapterX - startX) / (endX - startX) : 0
               newAdapterYValue = (endY - startY) > 0 ? (newAdapterY - startY) / (endY - startY) : 0
               newAdapterXValue = newAdapterXValue < 0 ? 0 : (newAdapterXValue > 1 ? 1 : newAdapterXValue)
               newAdapterYValue = newAdapterYValue < 0 ? 0 : (newAdapterYValue > 1 ? 1 : newAdapterYValue)
             }
             targetAdapter = new Point2(newAdapterXValue, newAdapterYValue)
-          } else { // modifyInPercent
+          } else { // adaptInPercent
             let newAdapterXValue = newAdapterX - startX
             let newAdapterYValue = newAdapterY - startY
             newAdapterXValue = newAdapterXValue < startX ? startX : (newAdapterXValue > endXForBegin ? endXForBegin : newAdapterXValue)
             newAdapterYValue = newAdapterYValue < startY ? startY : (newAdapterYValue > endYForBegin ? endYForBegin : newAdapterYValue)
-            if (shapeType.modifyInPercent) {
+            if (shapeType.adaptInPercent) {
               newAdapterXValue = (newAdapterX - startX) / (endX - startX)
               newAdapterYValue = (newAdapterY - startY) / (endY - startY)
               newAdapterXValue = newAdapterXValue < 0 ? 0 : (newAdapterXValue > endXForBegin / endX ? endXForBegin / endX : newAdapterXValue)

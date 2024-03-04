@@ -7,7 +7,7 @@ import { ShapeEntity } from '../../Items'
 /**
  * 变形，如调整梯形的梯形大小等
  */
-export class ReshapeAnchor extends Anchor {
+export class ModifyAnchor extends Anchor {
   private _reshaping = false
   private _startX = 0
   private _startY = 0

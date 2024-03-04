@@ -7,10 +7,10 @@ import { Line } from '@antv/g-math'
 
 const TYPE_STAR = 'Star'
 const DESC_STAR = 'Star'
-const TEXT_STAR = 'Star'
+const TEXT_STAR = ''
 
 export const StarTypes = [{ name: TYPE_STAR, description: DESC_STAR, 
-  freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 100, height: 100, 
+  freeze: Shapes.FREEZE_NONE, text: TEXT_STAR, left: 0, top: 0, width: 100, height: 100, 
   modifiable: true, modifierX: 0.5, modifierY: 0.5, modifierStartX: 0, modifierStartY: 0, 
   modifierEndX: 1, modifierEndY: 1, modifyInLine: true, modifyInPercent: true,
   adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, 
@@ -58,11 +58,11 @@ export class Star extends CustomEntity {
     console.log(`=====${(modifierWidth - centerPoint.x) ^ 2}    ${(modifierWidth - centerPoint.x) * (modifierWidth - centerPoint.x)}`)
     const modifier = Math.sqrt((modifierWidth - centerPoint.x) * (modifierWidth - centerPoint.x) + (modifierHeight - centerPoint.y) * (modifierHeight - centerPoint.y)) / Math.sqrt((adapterPoint.x - centerPoint.x) * (adapterPoint.x - centerPoint.x) + (adapterPoint.y - centerPoint.y) * (adapterPoint.y - centerPoint.y))
     theThis.path.reset()
-    theThis.path.moveTo(newPoints[0].x, newPoints[0].y)
+    theThis.path.moveTo(points[0].x, points[0].y)
     for(let i = 0; i < 5; i ++) {      
-      const point = Line.pointAt(centerPoint.x, centerPoint.y, points[i < 4 ? i + 1 : 0].x, points[i < 4 ? i + 1 : 0].y, modifier)
+      const point = Line.pointAt(centerPoint.x, centerPoint.y, newPoints[i].x, newPoints[i].y, modifier)
       theThis.path.lineTo(point.x, point.y)
-      theThis.path.lineTo(newPoints[i < 4 ? i + 1 : 0].x, newPoints[i < 4 ? i + 1 : 0].y)
+      theThis.path.lineTo(points[i < 4 ? i + 1 : 0].x, points[i < 4 ? i + 1 : 0].y)
     }
     theThis.path.close()
   }
