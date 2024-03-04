@@ -82,4 +82,64 @@ export class MathUtils {
     return [leftX1, leftY1, leftX2, leftY2, rightX1, rightY1, rightX2,rightY2]
   }
 
+  /**
+   * 自动生成多边形的点，以x,y为中心，沿Y方向对称
+   * http://quanzhan.applemei.com/webStack/TXpnM05nPT0%3D
+   */
+  public static getPolygon(x: number, y: number, radius: number, sides: number) {
+    const points: Array<Point2> = []
+    let angle = 0
+    let centerAngle = 2 * Math.PI / sides
+    for(let i = 0;  i < sides;  i++){
+        points.push(new Point2( x + radius * Math.sin(angle), y - radius * Math.cos(angle) ))
+        angle += centerAngle
+    }
+    //console.log(points)
+    return points
+  }
+
+  /**
+   * 自动生成多边形的点，返回一个正方形范围内点,以左上角为(0, 0)
+   */
+  public static getPolygonInSquare(squareWidth: number, sides: number) {
+    const points: Array<Point2> = MathUtils.getPolygon(0, 0, 100, sides)
+    let minX = 0
+    let minY = 0
+    let maxX = 0
+    let maxY = 0
+    points.forEach(point => {
+      minX = minX < point.x ? minX : point.x
+      minY = minY < point.y ? minY : point.y
+      maxX = maxX > point.x ? maxX : point.x
+      maxY = maxY > point.y ? maxY : point.y
+    })
+    const newPoints: Array<Point2> = []
+    points.forEach(point => {
+      const x = (point.x - minX) * squareWidth / (maxX - minX)
+      const y = (point.y - minY) * squareWidth / (maxY - minY) 
+      newPoints.push(new Point2(x, y))
+    })
+    
+    return newPoints
+  }
+
+  /**
+   * 自动生成多边星的点，及控制点的起点和终点，返回一个正方形范围内点,以左上角为(0, 0).
+   * 默认多边形点即为控制点。多边形的各边中点则为角.控制点选择第一个点。
+   */
+  public static getStar(squareWidth: number, sides: number): [Point2[], Point2[], Point2, Point2] {
+    const points: Array<Point2> = MathUtils.getPolygonInSquare(squareWidth, sides)
+    const newPoints: Array<Point2> = []
+    const firstPoint = points[0]
+    const sencondPoint = points[1]
+    const adapterPoint = new Point2((firstPoint.x + sencondPoint.x) / 2, (firstPoint.y + sencondPoint.y) / 2)
+    const centerPoint = new Point2(squareWidth / 2, squareWidth /2)
+    for(let i = 0; i < points.length; i ++) {
+      const start = points[i]      
+      const end = points[i < points.length - 1 ? i + 1 : 0]
+      const newPoint = new Point2((start.x + end.x) / 2, (start.y + end.y) / 2)
+      newPoints.push(newPoint)
+    }
+    return [points, newPoints, centerPoint, adapterPoint]
+  }
 }

@@ -9,7 +9,7 @@ const DESC_TOP_TRIANGLE = 'TopTriangle'
 const TEXT_TOP_TRIANGLE = ''
 
 export const TopTriangleTypes = [{ name: TYPE_TOP_TRIANGLE, description: DESC_TOP_TRIANGLE, 
-  freeze: Shapes.FREEZE_NONE, text: TEXT_TOP_TRIANGLE, left: 0, top: 0, width: 120, height: 80, 
+  freeze: Shapes.FREEZE_NONE, text: TEXT_TOP_TRIANGLE, left: 0, top: 0, width: 100, height: 100, 
   modifiable: true, modifierX: 0.5, modifierY: 0, modifierStartX: 0, modifierStartY: 0, 
   modifierEndX: 1, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
   adaptable: true, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 1, 
@@ -23,7 +23,6 @@ export class TopTriangle extends CustomEntity {
     const customTypeInfo = this.parseTypeInfo({shapeType: TYPE_TOP_TRIANGLE})
     this._shape = new CustomShape(left, top, width, height, this.buildShape, customTypeInfo)
     this.initializeTheme()
-    CustomEntity.registry(TopTriangle)
   }
 
 

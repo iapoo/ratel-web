@@ -21,6 +21,7 @@ import { ShapeAction } from '@/components/Rockie/Actions';
 import { ConnectorArrowTypes } from '@/components/Rockie/Items/src/Connector';
 import { ConnectorDirection } from '@/components/Rockie/Shapes';
 import { ConnectorLineModesForCurve, DoubleLineGapOptions } from '../Utils/Consts';
+import { BasicShapes } from '@/components/Rockie/CustomItems/BasicShapes';
 
 interface HeaderProps {
   previousEditor: Editor | undefined
@@ -987,6 +988,24 @@ const Header: FC<HeaderProps> = ({
     }
   }
 
+
+  const handleTest5 = () => {
+    if(currentEditor) {
+      let count = BasicShapes.length
+      for(let i = 0; i < count; i ++) {
+        const margin = 5
+        currentEditor.contentLayer.removeAllEditorItems()
+        const customShapeInfo = BasicShapes[i].typeInfo
+        const customEntity = new BasicShapes[i].type(customShapeInfo.left + margin, customShapeInfo.top + margin, customShapeInfo.width, customShapeInfo.height)
+        currentEditor.contentLayer.addEditorItem(customEntity)
+        currentEditor.resize(customShapeInfo.width + margin * 2, customShapeInfo.height + margin * 2)
+        const data = currentEditor.export()
+        console.log(`download file = custom-shapes-basictypes-${customShapeInfo.name.toLowerCase()}.png`)
+        SystemUtils.generateDownloadFile(data, `custom-shapes-basictypes-${customShapeInfo.name.toLowerCase()}.png`)
+      }
+    }
+  }
+
   const fileItems: MenuProps['items'] = [
     { key: 'New', label: <FormattedMessage id='workspace.header.menu-file-new' />, icon: <FileAddOutlined />, onClick: handleFileNew },
     { key: 'OpenFrom', label: <FormattedMessage id='workspace.header.menu-file-open-from' />, disabled: true, icon: <FolderOpenOutlined />, },
@@ -1036,6 +1055,7 @@ const Header: FC<HeaderProps> = ({
     { key: 'Test Shapes', label: 'Test Shapes', onClick: handleTest, },
     { key: 'Test Start Arrows', label: 'Test Start Arrows', onClick: handleTest3, },
     { key: 'Test End Arrows', label: 'Test End Arrows', onClick: handleTest4, },
+    { key: 'Test Custom Shapes Large', label: 'Test Custom Shapes Large', onClick: handleTest5, },
   ];
 
   const helpItems: MenuProps['items'] = [
