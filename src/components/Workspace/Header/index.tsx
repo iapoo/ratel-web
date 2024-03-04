@@ -996,12 +996,40 @@ const Header: FC<HeaderProps> = ({
         const margin = 5
         currentEditor.contentLayer.removeAllEditorItems()
         const customShapeInfo = BasicShapes[i].typeInfo
-        const customEntity = new BasicShapes[i].type(customShapeInfo.left + margin, customShapeInfo.top + margin, customShapeInfo.width, customShapeInfo.height)
+        const customShapeTypeName = BasicShapes[i].name
+        const customEntity = new BasicShapes[i].type(customShapeInfo.left + margin, customShapeInfo.top + margin, customShapeInfo.width, customShapeInfo.height, customShapeTypeName)
         currentEditor.contentLayer.addEditorItem(customEntity)
         currentEditor.resize(customShapeInfo.width + margin * 2, customShapeInfo.height + margin * 2)
         const data = currentEditor.export()
-        console.log(`download file = custom-shapes-basictypes-${customShapeInfo.name.toLowerCase()}.png`)
-        SystemUtils.generateDownloadFile(data, `custom-shapes-basictypes-${customShapeInfo.name.toLowerCase()}.png`)
+        console.log(`download file = ${customShapeInfo.name}.png`)
+        SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.png`)
+      }
+    }
+  }
+
+  const handleTest6 = () => {
+    if(currentEditor) {
+      let count = BasicShapes.length
+      for(let i = 0; i < count; i ++) {
+        const margin = 2        
+        let lineFactor = 1
+        let fontFactor = 0.5
+        let sizeFactor = 0.25
+        let modifierFactor = 0.25
+        currentEditor.contentLayer.removeAllEditorItems()
+        const customShapeInfo = BasicShapes[i].typeInfo
+        const customShapeTypeName = BasicShapes[i].name
+        const customEntity = new BasicShapes[i].type(customShapeInfo.left + margin, customShapeInfo.top + margin, customShapeInfo.width * sizeFactor, customShapeInfo.height * sizeFactor, customShapeTypeName)
+        customEntity.lineWidth = customEntity.lineWidth * lineFactor
+        customEntity.fontSize = customEntity.fontSize * fontFactor
+        if(!customShapeInfo.modifyInPercent) {
+          customEntity.shape.modifier = new Point2(Math.round(customEntity.shape.modifier.x * modifierFactor), Math.round(customEntity.shape.modifier.y * modifierFactor))
+        }
+        currentEditor.contentLayer.addEditorItem(customEntity)
+        currentEditor.resize(customShapeInfo.width * sizeFactor + margin * 2, customShapeInfo.height * sizeFactor + margin * 2)
+        const data = currentEditor.export()
+        console.log(`download file = ${customShapeInfo.name}.png`)
+        SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.png`)
       }
     }
   }
@@ -1056,6 +1084,7 @@ const Header: FC<HeaderProps> = ({
     { key: 'Test Start Arrows', label: 'Test Start Arrows', onClick: handleTest3, },
     { key: 'Test End Arrows', label: 'Test End Arrows', onClick: handleTest4, },
     { key: 'Test Custom Shapes Large', label: 'Test Custom Shapes Large', onClick: handleTest5, },
+    { key: 'Test Custom Shapes Small', label: 'Test Custom Shapes Small', onClick: handleTest6, },
   ];
 
   const helpItems: MenuProps['items'] = [
