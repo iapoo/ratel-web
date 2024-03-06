@@ -12,6 +12,7 @@ export const TopTriangleTypes = [{ name: TYPE_TOP_TRIANGLE, description: DESC_TO
   freeze: Shapes.FREEZE_NONE, text: TEXT_TOP_TRIANGLE, left: 0, top: 0, width: 100, height: 100, 
   modifiable: true, modifierX: 0.5, modifierY: 0, modifierStartX: 0, modifierStartY: 0, 
   modifierEndX: 1, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
+  controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
   adaptable: true, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 1, 
   adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true
 }]

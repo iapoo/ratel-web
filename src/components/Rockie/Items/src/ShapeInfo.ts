@@ -3,7 +3,8 @@ import { EditorItemInfo } from "./EditorItemInfo"
 
 /* eslint-disable max-params */
 export class ShapeInfo extends EditorItemInfo {
-  public modifier: string = '0,0'
+  public modifier: string = '0,0'  
+  public controller: string = '0,0'
   public adapter: string = '0,0'
   public adapterSize: number = 0
 

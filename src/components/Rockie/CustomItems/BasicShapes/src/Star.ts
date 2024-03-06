@@ -26,34 +26,42 @@ const TEXT_STAR = ''
 export const StarTypes = [
   { name: TYPE_STAR_4, description: DESC_STAR_4, freeze: Shapes.FREEZE_NONE, text: TEXT_STAR, left: 0, top: 0, width: 100, height: 100, 
     modifiable: true, modifierX: 0.5, modifierY: 0.5, modifierStartX: 0, modifierStartY: 0, modifierEndX: 1, modifierEndY: 1, modifyInLine: true, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
   { name: TYPE_STAR_5, description: DESC_STAR_5, freeze: Shapes.FREEZE_NONE, text: TEXT_STAR, left: 0, top: 0, width: 100, height: 100, 
     modifiable: true, modifierX: 0.5, modifierY: 0.5, modifierStartX: 0, modifierStartY: 0, modifierEndX: 1, modifierEndY: 1, modifyInLine: true, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
   { name: TYPE_STAR_6, description: DESC_STAR_6, freeze: Shapes.FREEZE_NONE, text: TEXT_STAR, left: 0, top: 0, width: 100, height: 100, 
     modifiable: true, modifierX: 0.5, modifierY: 0.5, modifierStartX: 0, modifierStartY: 0, modifierEndX: 1, modifierEndY: 1, modifyInLine: true, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
   { name: TYPE_STAR_7, description: DESC_STAR_7, freeze: Shapes.FREEZE_NONE, text: TEXT_STAR, left: 0, top: 0, width: 100, height: 100, 
     modifiable: true, modifierX: 0.5, modifierY: 0.5, modifierStartX: 0, modifierStartY: 0, modifierEndX: 1, modifierEndY: 1, modifyInLine: true, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
   { name: TYPE_STAR_8, description: DESC_STAR_8, freeze: Shapes.FREEZE_NONE, text: TEXT_STAR, left: 0, top: 0, width: 100, height: 100, 
     modifiable: true, modifierX: 0.5, modifierY: 0.5, modifierStartX: 0, modifierStartY: 0, modifierEndX: 1, modifierEndY: 1, modifyInLine: true, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
   { name: TYPE_STAR_16, description: DESC_STAR_16, freeze: Shapes.FREEZE_NONE, text: TEXT_STAR, left: 0, top: 0, width: 100, height: 100, 
     modifiable: true, modifierX: 0.5, modifierY: 0.5, modifierStartX: 0, modifierStartY: 0, modifierEndX: 1, modifierEndY: 1, modifyInLine: true, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
   { name: TYPE_STAR_24, description: DESC_STAR_24, freeze: Shapes.FREEZE_NONE, text: TEXT_STAR, left: 0, top: 0, width: 100, height: 100, 
     modifiable: true, modifierX: 0.5, modifierY: 0.5, modifierStartX: 0, modifierStartY: 0, modifierEndX: 1, modifierEndY: 1, modifyInLine: true, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
   { name: TYPE_STAR_32, description: DESC_STAR_32, freeze: Shapes.FREEZE_NONE, text: TEXT_STAR, left: 0, top: 0, width: 100, height: 100, 
     modifiable: true, modifierX: 0.5, modifierY: 0.5, modifierStartX: 0, modifierStartY: 0, modifierEndX: 1, modifierEndY: 1, modifyInLine: true, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
 ]

@@ -70,6 +70,11 @@ export interface ShapeTypeInfo {
   modifierEnd: Point2
   modifyInLine: boolean
   modifyInPercent: boolean
+  controller: Point2
+  controllerStart: Point2
+  controllerEnd: Point2
+  controlInLine: boolean
+  controlInPercent: boolean
   adapter: Point2
   adapterDirection: AdapterDirection
   adapterSize: number
@@ -83,6 +88,7 @@ export interface ShapeTypeInfo {
 export class EntityShape extends AbstractTextShape {
   private _typeInfo: ShapeTypeInfo
   private _modifier: Point2
+  private _controller: Point2
   private _adapter: Point2
   private _adapterSize: number
 
@@ -100,6 +106,11 @@ export class EntityShape extends AbstractTextShape {
     modifierEnd: new Point2(0,0),
     modifyInLine: true,
     modifyInPercent: true,
+    controller: new Point2(),
+    controllerStart: new Point2(0,0),
+    controllerEnd: new Point2(0,0),
+    controlInLine: true,
+    controlnPercent: true,
     adapter: new Point2(0,0),
     adapterDirection: AdapterDirection.X,
     adapterSize: 0,
@@ -111,6 +122,7 @@ export class EntityShape extends AbstractTextShape {
     super(text, left, top, width, height)
     this._typeInfo = typeInfo
     this._modifier = typeInfo.modifier
+    this._controller = typeInfo.controller    
     this._adapter = typeInfo.adapter
     this._adapterSize = typeInfo.adapterSize
   }
@@ -121,6 +133,15 @@ export class EntityShape extends AbstractTextShape {
 
   public set modifier(value: Point2) {
     this._modifier = value
+    this.markDirty()
+  }
+
+  public get controller() {
+    return this._controller
+  }
+
+  public set controller(value: Point2) {
+    this._controller = value
     this.markDirty()
   }
 
