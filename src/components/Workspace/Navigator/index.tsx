@@ -11,6 +11,8 @@ import {
 } from '@/components/Resource/LargeIcons'
 import { ContainerTypes, Containers, CustomEntity, ShapeTypes, Shapes } from '@/components/Rockie/Items'
 import { BasicShapes } from '@/components/Rockie/CustomItems/BasicShapes';
+import { ShapeTypeInfo } from '@/components/Rockie/Shapes/src/EntityShape';
+import { ShapeType } from '@/components/Rockie/Items/src/ShapeEntity';
 
 interface NavigatorProps {
   navigatorWidth: number
@@ -67,9 +69,9 @@ const Navigator: FC<NavigatorProps> = ({
     }
   }
 
-  const addCustomShape = (type: string, classType: typeof CustomEntity) => {
+  const addCustomShape = (type: string, classType: typeof CustomEntity, shapeType: ShapeType) => {
     if(Utils.currentEditor) {
-      Utils.currentEditor.action = new CustomShapeAction(Utils.currentEditor, type, classType)
+      Utils.currentEditor.action = new CustomShapeAction(Utils.currentEditor, type, classType, shapeType)
     }
   }
 
@@ -214,7 +216,7 @@ const Navigator: FC<NavigatorProps> = ({
   const customShapes = BasicShapes.map(
     basicType => {
       return <Popover title={basicType.name} placement='right' content={getCustomShapePopoverContent(basicType.name, basicType.typeInfo.width, basicType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
-      <Button type='text' onClick={() => addCustomShape(basicType.name, basicType.type)} style={{padding: 2, display: 'table'}}>
+      <Button type='text' onClick={() => addCustomShape(basicType.name, basicType.type, basicType.typeInfo)} style={{padding: 2, display: 'table'}}>
         <img src={`/custom-shapes/basic-shapes/${basicType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
       </Button>
     </Popover>
