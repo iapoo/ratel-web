@@ -1,3 +1,4 @@
+
 export class Consts {
     public static ZOOM_DEFAULT = 1
 

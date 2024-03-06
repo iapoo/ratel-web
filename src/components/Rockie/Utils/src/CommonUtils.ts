@@ -1,4 +1,20 @@
+import { Arrows } from "../../CustomItems/Arrows";
+import { BasicShapes } from "../../CustomItems/BasicShapes";
+import { CustomEntity } from "../../Items";
+import { ShapeType } from "../../Items/src/ShapeEntity";
 import { ConnectorType } from "../../Shapes";
+
+
+export interface CustomShapeType {
+    type: typeof CustomEntity
+    shapeType: ShapeType
+}
+
+//FIXME, Move it to better place
+export const CustomShapes = [
+    ...BasicShapes,
+    ...Arrows
+  ]
 
 export class CommonUtils {
     public static CONNECTOR_TYPE_STRAIGHT_LINE = 'StraightLine'

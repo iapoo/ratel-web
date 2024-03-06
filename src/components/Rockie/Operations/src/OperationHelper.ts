@@ -1,11 +1,11 @@
 /* eslint-disable max-params */
 
 import { SystemUtils } from "@/components/Workspace/Utils"
-import { Categories, CellEntity, Connector, ConnectorArrowInfo, ContainerEntity, ContainerInfo, EditorItem, EditorItemInfo, Entity, Item, LineEntity, ShapeEntity, TableEntity } from "../../Items"
+import { Categories, CellEntity, Connector, ConnectorArrowInfo, ContainerEntity, ContainerInfo, CustomEntity, CustomShapeInfo, EditorItem, EditorItemInfo, Entity, Item, LineEntity, ShapeEntity, TableEntity } from "../../Items"
 import { ConnectorInfo } from "../../Items/src/ConnectorInfo"
 import { LineInfo } from "../../Items/src/LineInfo"
 import { Rotation } from "@/components/Engine"
-import { CommonUtils } from "../../Utils"
+import { CommonUtils, CustomShapeType, CustomShapes } from "../../Utils"
 import { ShapeInfo } from "../../Items/src/ShapeInfo"
 import { Style, StyleInfo } from "../../Shapes/src/EntityUtils"
 import { ConnectorMode, ConnectorType } from "../../Shapes"
@@ -14,6 +14,8 @@ import { ThemeUtils } from "@/components/Workspace/Theme"
 import { Editor } from "../../Editor"
 
 export class OperationHelper {
+  private static customShapes = new Map<string, CustomShapeType>()
+
   public static loadItem(itemInfo: EditorItemInfo, editor: Editor): EditorItem {
     let editorItem: Item
     switch (itemInfo.category) {
@@ -28,6 +30,9 @@ export class OperationHelper {
         break
       case Categories.TABLE:
         editorItem = this.loadTableEntity(itemInfo)
+        break
+      case Categories.CUSTOM_SHAPE:
+        editorItem = this.loadCustomEntity(itemInfo)
         break
       case Categories.SHAPE:
       default:
@@ -157,6 +162,47 @@ export class OperationHelper {
     return shapeEntity
   }
 
+
+  private static initializeCustomEntities() {
+    CustomShapes.forEach(customShape => {
+      OperationHelper.customShapes.set(customShape.name, {type: customShape.type, shapeType: customShape.typeInfo})
+    })
+  }
+  public static loadCustomEntity(itemInfo: EditorItemInfo): ShapeEntity {
+    if(OperationHelper.customShapes.size == 0) {
+      OperationHelper.initializeCustomEntities()
+    }
+    let shapeInfo = itemInfo as CustomShapeInfo
+    let customShapeType = OperationHelper.customShapes.get(shapeInfo.type)
+    if(customShapeType) {
+      const customEntity = new customShapeType.type(shapeInfo.left, shapeInfo.top, shapeInfo.width, shapeInfo.height, shapeInfo.type)
+      customEntity.type = shapeInfo.type
+      customEntity.text = shapeInfo.text
+      customEntity.id = shapeInfo.id
+      if (shapeInfo.rotation) {
+        customEntity.rotation = new Rotation(shapeInfo.rotation, customEntity.width / 2, customEntity.height / 2)
+      }
+      customEntity.shape.modifier = SystemUtils.parsePointString(shapeInfo.modifier)
+      customEntity.shape.controller  = SystemUtils.parsePointString(shapeInfo.controller)
+      customEntity.shape.adapter = SystemUtils.parsePointString(shapeInfo.adapter)
+      customEntity.shape.adapterSize = shapeInfo.adapterSize
+      return customEntity
+    } else {
+      const shapeEntity = new ShapeEntity(shapeInfo.left, shapeInfo.top, shapeInfo.width, shapeInfo.height, {shapeType: shapeInfo.type})
+    shapeEntity.type = shapeInfo.type
+    shapeEntity.text = shapeInfo.text
+    shapeEntity.id = shapeInfo.id
+    if (shapeInfo.rotation) {
+      shapeEntity.rotation = new Rotation(shapeInfo.rotation, shapeEntity.width / 2, shapeEntity.height / 2)
+    }
+    shapeEntity.shape.modifier = SystemUtils.parsePointString(shapeInfo.modifier)
+    shapeEntity.shape.controller  = SystemUtils.parsePointString(shapeInfo.controller)
+    shapeEntity.shape.adapter = SystemUtils.parsePointString(shapeInfo.adapter)
+    shapeEntity.shape.adapterSize = shapeInfo.adapterSize
+    return shapeEntity
+    }
+  }
+
   public static loadContainerEntity(itemInfo: EditorItemInfo): ContainerEntity {
     const containerInfo = itemInfo as ContainerInfo
     const containerEntity = new ContainerEntity(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, {shapeType: containerInfo.type})
@@ -222,6 +268,9 @@ export class OperationHelper {
       case Categories.CONTAINER:
         editorItemInfo = this.saveContainer(editorItem as TableEntity)
         break;
+      case Categories.CUSTOM_SHAPE:
+        editorItemInfo = this.saveCustomShape(editorItem as CustomEntity)
+        break;
       case Categories.SHAPE:
       default:
         editorItemInfo = this.saveShape(editorItem as ShapeEntity)
@@ -261,6 +310,17 @@ export class OperationHelper {
     return shapeinfo
   }
 
+  public static  saveCustomShape(customEntity: CustomEntity) : EditorItemInfo {
+    let styleInfos: StyleInfo[] = Style.makeStyleInfos(customEntity.shape.styles)
+    let shapeinfo = new ShapeInfo(customEntity.type, customEntity.category, customEntity.left, customEntity.top, customEntity.width, customEntity.height, customEntity.text, customEntity.rotation.radius, styleInfos)
+    shapeinfo.rotation = customEntity.rotation.radius
+    shapeinfo.modifier = customEntity.shape.modifier.x + ',' + customEntity.shape.modifier.y
+    shapeinfo.controller = customEntity.shape.controller.x + ',' + customEntity.shape.controller.y
+    shapeinfo.adapter = customEntity.shape.adapter.x + ',' + customEntity.shape.adapter.y
+    shapeinfo.adapterSize = customEntity.shape.adapterSize
+
+    return shapeinfo
+  }
   public static  saveTable(tableEntity: TableEntity) : EditorItemInfo {
     let styleInfos: StyleInfo[] = Style.makeStyleInfos(tableEntity.shape.styles)
     let tableInfo = new TableInfo(tableEntity.left, tableEntity.top, tableEntity.width, tableEntity.height, tableEntity.rowCount, tableEntity.columnCount, tableEntity.rotation.radius, styleInfos)
