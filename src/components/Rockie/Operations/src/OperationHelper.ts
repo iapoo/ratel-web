@@ -151,6 +151,7 @@ export class OperationHelper {
       shapeEntity.rotation = new Rotation(shapeInfo.rotation, shapeEntity.width / 2, shapeEntity.height / 2)
     }
     shapeEntity.shape.modifier = SystemUtils.parsePointString(shapeInfo.modifier)
+    shapeEntity.shape.controller  = SystemUtils.parsePointString(shapeInfo.controller)
     shapeEntity.shape.adapter = SystemUtils.parsePointString(shapeInfo.adapter)
     shapeEntity.shape.adapterSize = shapeInfo.adapterSize
     return shapeEntity
@@ -253,6 +254,7 @@ export class OperationHelper {
     let shapeinfo = new ShapeInfo(shapeEntity.type, shapeEntity.category, shapeEntity.left, shapeEntity.top, shapeEntity.width, shapeEntity.height, shapeEntity.text, shapeEntity.rotation.radius, styleInfos)
     shapeinfo.rotation = shapeEntity.rotation.radius
     shapeinfo.modifier = shapeEntity.shape.modifier.x + ',' + shapeEntity.shape.modifier.y
+    shapeinfo.controller = shapeEntity.shape.controller.x + ',' + shapeEntity.shape.controller.y
     shapeinfo.adapter = shapeEntity.shape.adapter.x + ',' + shapeEntity.shape.adapter.y
     shapeinfo.adapterSize = shapeEntity.shape.adapterSize
 

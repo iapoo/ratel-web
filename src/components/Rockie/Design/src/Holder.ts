@@ -17,6 +17,7 @@ import { ConnectorType } from '../../Shapes'
 import { OrthogonalDivideAnchor } from './OrthogonalDivideAnchor'
 import { OrthogonalMovementAnchor } from './OrthogonalMovementAnchor'
 import { SystemUtils } from '@/components/Workspace/Utils'
+import { ControllerAnchor } from './ControllerAnchor'
 
 export class Holder extends Control {
   public static readonly PADDING = 32;
@@ -25,6 +26,7 @@ export class Holder extends Control {
   private _divideAnchors: DivideAnchor[] = [];
   private _rotationAnchor: RotationAnchor;
   private _modifyAnchor: ModifyAnchor;
+  private _controllerAnchor: ControllerAnchor;
   private _leftCreationAnchor: CreationAnchor;
   private _topCreationAnchor: CreationAnchor;
   private _rightCreationAnchor: CreationAnchor;
@@ -59,6 +61,7 @@ export class Holder extends Control {
     this._editor = editor
     this._rotationAnchor = new RotationAnchor(editor, this)
     this._modifyAnchor = new ModifyAnchor(editor, this)
+    this._controllerAnchor = new ControllerAnchor(editor, this)
     this._leftCreationAnchor = new CreationAnchor(editor, this)
     this._topCreationAnchor = new CreationAnchor(editor, this)
     this._rightCreationAnchor = new CreationAnchor(editor, this)
@@ -108,6 +111,7 @@ export class Holder extends Control {
 
     this._rotationAnchor.target = target
     this._modifyAnchor.target = target
+    this._controllerAnchor.target = target
     this._leftResizeAnchor.target = target
     this.leftTopResizeAnchor.target = target
     this.topResizeAnchor.target = target
@@ -156,6 +160,9 @@ export class Holder extends Control {
   public get modifyAnchor (): ModifyAnchor {
     return this._modifyAnchor
   }
+  public get controllerAnchor (): ControllerAnchor {
+    return this._controllerAnchor
+  }
   public get leftCreationAnchor (): CreationAnchor {
     return this._leftCreationAnchor
   }
@@ -203,6 +210,7 @@ export class Holder extends Control {
 
     this._rotationAnchor.scale = new Scale(1 / this.editor.zoom, 1 / this.editor.zoom)
     this._modifyAnchor.scale = new Scale(1 / this.editor.zoom, 1 / this.editor.zoom)
+    this._controllerAnchor.scale = new Scale(1 / this.editor.zoom, 1 / this.editor.zoom)
     this._leftCreationAnchor.scale = new Scale(1 / this.editor.zoom, 1 / this.editor.zoom)
     this._topCreationAnchor.scale = new Scale(1 / this.editor.zoom, 1 / this.editor.zoom)
     this._rightCreationAnchor.scale = new Scale(1 / this.editor.zoom, 1 / this.editor.zoom)
@@ -262,6 +270,18 @@ export class Holder extends Control {
       this._modifyAnchor.left = x - Holder.ANCHOR_RADIUS
       this._modifyAnchor.top = y - Holder.ANCHOR_RADIUS
       //console.log(`Modify Anchor left= ${this._modifyAnchor.left} top = ${this._modifyAnchor.top}`)
+      let controllerStartX = shapeType.controllerStartX * this.target.width
+      let controllerStartY = shapeType.controllerStartY * this.target.height
+      let controllerEndX = shapeType.controllerEndX * this.target.width
+      let controllerEndY = shapeType.controllerEndY * this.target.height      
+      let controllerX = this.target.shape.controller.x +  controllerStartX
+      let controllerY = this.target.shape.controller.y + controllerStartY
+      if(shapeType.controlInPercent) { // only for x
+        controllerX = (controllerEndX - controllerStartX) * this.target.shape.controller.x +  controllerStartX
+        controllerY = (controllerEndY - controllerStartY) * this.target.shape.controller.y + controllerStartY
+      }
+      this._controllerAnchor.left = controllerX - Holder.ANCHOR_RADIUS
+      this._controllerAnchor.top = controllerY - Holder.ANCHOR_RADIUS
       let startAdapterX = shapeType.adapterStartX * this.target.width
       let startAdapterY = shapeType.adapterStartY * this.target.height
       let endAdapterX = shapeType.adapterEndX * this.target.width
@@ -474,6 +494,9 @@ export class Holder extends Control {
           if (this._target.shapeType.modifiable) {
             this.addNode(this._modifyAnchor)
           }
+          if(this._target.shapeType.controllable) {
+            this.addNode(this._controllerAnchor)
+          }
           if(this._target.shapeType.adaptable) {
             this.addNode(this._endAdapterAnchor)
             this.addNode(this._startAdapterAnchor)
@@ -515,6 +538,9 @@ export class Holder extends Control {
         if(this._target instanceof ShapeEntity) {
           if (this._target.shapeType.modifiable) {
             this.removeNode(this._modifyAnchor)
+          }
+          if(this._target.shapeType.controllable) {
+            this.addNode(this._controllerAnchor)
           }
           if(this._target.shapeType.adaptable) {
             this.removeNode(this._startAdapterAnchor)
