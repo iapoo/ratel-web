@@ -77,8 +77,8 @@ export class ModifyAnchor extends Anchor {
         }  
         targetModifier = new Point2(newModifierXValue, newModifierYValue)
       } else {
-        let newModifierXValue = newModifierX - startX
-        let newModifierYValue = newModifierY - startY
+        let newModifierXValue = newModifierX //- startX
+        let newModifierYValue = newModifierY //- startY
         if(endX > startX) {
           newModifierXValue = newModifierXValue < startX ? startX : (newModifierXValue > endX ? endX : newModifierXValue)
         } else {
