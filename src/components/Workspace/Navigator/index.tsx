@@ -13,6 +13,7 @@ import { ContainerTypes, Containers, CustomEntity, ShapeTypes, Shapes } from '@/
 import { BasicShapes } from '@/components/Rockie/CustomItems/BasicShapes';
 import { ShapeTypeInfo } from '@/components/Rockie/Shapes/src/EntityShape';
 import { ShapeType } from '@/components/Rockie/Items/src/ShapeEntity';
+import { Arrows } from '@/components/Rockie/CustomItems/Arrows';
 
 interface NavigatorProps {
   navigatorWidth: number
@@ -156,10 +157,18 @@ const Navigator: FC<NavigatorProps> = ({
       </div>
   }
 
-  const getCustomShapePopoverContent = (name: string, width: number, height: number) => {
+  const getCustomShapeBasicShapesPopoverContent = (name: string, width: number, height: number) => {
     return <div style={{width: width * 1.25, display: 'table'}}>
         <div style={{display: 'table-cell', textAlign: 'center', verticalAlign: 'middle', borderTop: '0px solid gray', padding: '2px'}}>
           <img src={`/custom-shapes-large/basic-shapes/${name}.png`} />
+        </div>
+      </div>
+  }
+
+  const getCustomShapeArrowsPopoverContent = (name: string, width: number, height: number) => {
+    return <div style={{width: width * 1.25, display: 'table'}}>
+        <div style={{display: 'table-cell', textAlign: 'center', verticalAlign: 'middle', borderTop: '0px solid gray', padding: '2px'}}>
+          <img src={`/custom-shapes-large/arrows/${name}.png`} />
         </div>
       </div>
   }
@@ -213,9 +222,9 @@ const Navigator: FC<NavigatorProps> = ({
     }
   )
 
-  const customShapes = BasicShapes.map(
+  const customShapeBasicShapes = BasicShapes.map(
     basicType => {
-      return <Popover title={basicType.name} placement='right' content={getCustomShapePopoverContent(basicType.name, basicType.typeInfo.width, basicType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
+      return <Popover title={basicType.name} placement='right' content={getCustomShapeBasicShapesPopoverContent(basicType.name, basicType.typeInfo.width, basicType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
       <Button type='text' onClick={() => addCustomShape(basicType.name, basicType.type, basicType.typeInfo)} style={{padding: 2, display: 'table'}}>
         <img src={`/custom-shapes/basic-shapes/${basicType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
       </Button>
@@ -223,6 +232,23 @@ const Navigator: FC<NavigatorProps> = ({
     }
   )
   
+
+  const customShapeArrowss = Arrows.map(
+    arrow => {
+      let width = 28
+      let height = 28
+      if(arrow.typeInfo.width > arrow.typeInfo.height) {
+        height = Math.round(28 * arrow.typeInfo.height / arrow.typeInfo.width)
+      } else {
+        width = 28
+      }
+        return <Popover title={arrow.name} placement='right' content={getCustomShapeArrowsPopoverContent(arrow.name, arrow.typeInfo.width, arrow.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 180, width: 180,}}>
+      <Button type='text' onClick={() => addCustomShape(arrow.name, arrow.type, arrow.typeInfo)} style={{padding: 2, display: 'table'}}>
+        <img src={`/custom-shapes/arrows/${arrow.name}.png`} width={width} height={height} style={{display: 'table-cell'}}/>
+      </Button>
+    </Popover>
+    }
+  )
 
   const items: CollapseProps['items'] = [
     {
@@ -233,7 +259,8 @@ const Navigator: FC<NavigatorProps> = ({
       {line}
       {table}
       {containers}
-      {customShapes}
+      {customShapeBasicShapes}
+      {customShapeArrowss}
     </Space>,
     },
     {
