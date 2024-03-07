@@ -1769,6 +1769,12 @@ export class Vector3 {
 export class Matrix {
   private _source: number[];
 
+  public static make(data: number[]) {
+    const matrix = new Matrix()
+    matrix._source = data
+    return matrix
+  }
+
   public constructor () {
     this._source = [ 1, 0, 0, 0, 1, 0, 0, 0, 1, ]
   }
@@ -2012,6 +2018,11 @@ export class Path {
     return this
   }
 
+  public arcToRotated(rx: number, ry: number, xAxisRotate: number, useSmallArc: boolean, isCCW: boolean, x: number, y: number): Path {
+    this._source.arcToRotated(rx, ry, xAxisRotate, useSmallArc, isCCW, x, y)
+    return this
+  }
+
   public rArcTo (
     rx: number,
     ry: number,
@@ -2081,9 +2092,11 @@ export class Path {
   public toSVGString (): string {
     return this._source.toSVGString()
   }
-  // public transform(...args: any[]): Path {
-  //  return this
-  // }
+
+  public transform(...args: any[]): Path {
+    this._source.transform(args)
+    return this
+  }
   // public trim(startT: number, stopT: number, isComplement: boolean): Path | null {
   //  return this
   // }
