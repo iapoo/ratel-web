@@ -110,7 +110,7 @@ export class EntityShape extends AbstractTextShape {
     controllerStart: new Point2(0,0),
     controllerEnd: new Point2(0,0),
     controlInLine: true,
-    controlnPercent: true,
+    controlInPercent: true,
     adapter: new Point2(0,0),
     adapterDirection: AdapterDirection.X,
     adapterSize: 0,
