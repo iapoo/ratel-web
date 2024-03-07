@@ -14,5 +14,6 @@ export { Item, Categories, } from './src/Item'
 export { LineType, LineEntity } from './src/LineEntity'
 export { PoolEntity } from './src/PoolEntity'
 export { ShapeEntity, Shapes, ShapeTypes, } from './src/ShapeEntity'
+export { SvgContainer } from './src/SvgContainer'
 export { TableEntity } from './src/TableEntity'
 

@@ -14,6 +14,7 @@ import { BasicShapes } from '@/components/Rockie/CustomItems/BasicShapes';
 import { ShapeTypeInfo } from '@/components/Rockie/Shapes/src/EntityShape';
 import { ShapeType } from '@/components/Rockie/Items/src/ShapeEntity';
 import { Arrows } from '@/components/Rockie/CustomItems/Arrows';
+import { SvgContainerAction } from '@/components/Rockie/Actions/src/SvgContainerAction';
 
 interface NavigatorProps {
   navigatorWidth: number
@@ -123,6 +124,12 @@ const Navigator: FC<NavigatorProps> = ({
     }
   }
 
+  const addSvgContainer = () => {
+    if (Utils.currentEditor) {
+      Utils.currentEditor.action = new SvgContainerAction(Utils.currentEditor)
+    }
+  }
+
   const addTable = () => {
     if (Utils.currentEditor) {
       Utils.currentEditor.action = new TableAction(Utils.currentEditor)
@@ -181,6 +188,12 @@ const Navigator: FC<NavigatorProps> = ({
 
   const table = <Popover title={'Table'} placement='right' content={getPopoverContent('Table', 128, 128)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 180, width: 180,}}>
   <Button type='text' onClick={() => addTable()} style={{padding: 2, display: 'table'}}>
+    <img src={`/shapes/Table.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+  </Button>
+  </Popover>
+
+  const svgContainer = <Popover title={'Table'} placement='right' content={getPopoverContent('Table', 128, 128)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 180, width: 180,}}>
+  <Button type='text' onClick={() => addSvgContainer()} style={{padding: 2, display: 'table'}}>
     <img src={`/shapes/Table.png`} width={28} height={28} style={{display: 'table-cell'}}/>
   </Button>
   </Popover>
@@ -261,6 +274,7 @@ const Navigator: FC<NavigatorProps> = ({
       {containers}
       {customShapeBasicShapes}
       {customShapeArrowss}
+      {svgContainer}
     </Space>,
     },
     {
