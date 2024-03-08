@@ -1,17 +1,18 @@
-import { CustomShape } from "../../Shapes"
+import { CustomShape, CustomSvgShape } from "../../Shapes"
 import { EntityShapeType } from "../../Shapes/src/EntityShape"
 import { SvgUtils } from "../../Utils"
 import { CustomEntity } from "./CustomEntity"
-import { Type } from "./Item"
-import { Shapes } from "./ShapeEntity"
+import { Categories, Type } from "./Item"
+import { ShapeEntity, Shapes } from "./ShapeEntity"
 import {Path, Rect, SVG} from '@svgdotjs/svg.js'
+import test from '@/components/Resource/svg/test2.txt'
 
-const TYPE_LEFT_TRIANGLE = 'LeftTriangle'
-const DESC_LEFT_TRIANGLE = 'LeftTriangle'
-const TEXT_LEFT_TRIANGLE = ''
+const TYPE_SVG_CONTAINER = 'SVGContainer'
+const DESC_SVG_CONTAINER = 'SVGContainer'
+const TEXT_SVG_CONTAINER = ''
 
-export const LeftTriangleTypes = [{ name: TYPE_LEFT_TRIANGLE, description: DESC_LEFT_TRIANGLE, 
-  freeze: Shapes.FREEZE_NONE, text: TEXT_LEFT_TRIANGLE, left: 0, top: 0, width: 100, height: 100, 
+export const SvgContainerTypes = [{ name: TYPE_SVG_CONTAINER, description: DESC_SVG_CONTAINER, 
+  freeze: Shapes.FREEZE_NONE, text: TEXT_SVG_CONTAINER, left: 0, top: 0, width: 100, height: 100, 
   modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, 
   modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
   controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
@@ -19,41 +20,38 @@ export const LeftTriangleTypes = [{ name: TYPE_LEFT_TRIANGLE, description: DESC_
   adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
 }]
 
-export class SvgContainer extends CustomEntity {
-  private _svg =  ''
-  public constructor(left: number, top: number, width: number, height: number) {
-    super(left, top, width, height, '', {shapeType: TYPE_LEFT_TRIANGLE}, LeftTriangleTypes)
-    const customTypeInfo = this.parseTypeInfo({shapeType: TYPE_LEFT_TRIANGLE})
-    this._shape = new CustomShape(left, top, width, height, this.buildShape, customTypeInfo)
+export class SvgContainer extends ShapeEntity {
+  private _svg: string
+
+  public constructor(left: number, top: number, width: number, height: number, svg: string) {    
+    super(left, top, width, height, {shapeType: TYPE_SVG_CONTAINER}, SvgContainerTypes)
+    this._svg =  svg
+    const customTypeInfo = this.parseTypeInfo({shapeType: TYPE_SVG_CONTAINER})
+    this._shape = new CustomSvgShape(left, top, width, height, svg, this.buildShape, customTypeInfo)
     this.initializeTheme()
   }
 
+  public get svg() {
+    return this._svg
+  }
+
+  public set svg(value: string) {
+    this._svg = value
+    this.updateTheme()
+  }
 
   public get types(): Type[] {
-    return LeftTriangleTypes
+    return SvgContainerTypes
   }
 
-  private parseSVG() {
-    const svg = SVG().size(90, 90)
-    svg.rect(20, 20)
-    const path = svg.path()
-    const children = svg.children()
-    children.forEach((element ,index, array) => {
-      if(element instanceof Path) {
-        element.array().forEach(value => {
-          switch(value[0]) {
-            
-          }
-        })
-        console.log(element)
-      }
-    })
-    console.log(svg.svg())
-    console.log(children)
+  public get category(): string {
+    return Categories.CUSTOM_SVG_SHAPE
   }
 
-  public buildShape(theThis: CustomShape) {
-    SvgUtils.parse('', theThis)
+  public buildShape(theThis: CustomSvgShape) {
+    const a = test
+    console.log(a)
+    SvgUtils.parse(theThis.svg, theThis)
   }
 
   protected parseEntityShapeType(type: string): EntityShapeType {

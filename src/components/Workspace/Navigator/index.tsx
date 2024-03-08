@@ -15,6 +15,7 @@ import { ShapeTypeInfo } from '@/components/Rockie/Shapes/src/EntityShape';
 import { ShapeType } from '@/components/Rockie/Items/src/ShapeEntity';
 import { Arrows } from '@/components/Rockie/CustomItems/Arrows';
 import { SvgContainerAction } from '@/components/Rockie/Actions/src/SvgContainerAction';
+import { AliyunShapes } from '@/components/Rockie/CustomItems/Aliyun';
 
 interface NavigatorProps {
   navigatorWidth: number
@@ -77,6 +78,12 @@ const Navigator: FC<NavigatorProps> = ({
     }
   }
 
+  const addSvgShape = (type: string, data: string, width: number, height: number) => {
+    if (Utils.currentEditor) {
+      Utils.currentEditor.action = new SvgContainerAction(Utils.currentEditor, type, data, width, height)
+    }
+  }
+
   const addLine = () => {
     if (Utils.currentEditor) {
       Utils.currentEditor.action = new ConnectorAction(Utils.currentEditor)
@@ -124,11 +131,11 @@ const Navigator: FC<NavigatorProps> = ({
     }
   }
 
-  const addSvgContainer = () => {
-    if (Utils.currentEditor) {
-      Utils.currentEditor.action = new SvgContainerAction(Utils.currentEditor)
-    }
-  }
+  // const addSvgContainer = () => {
+  //   if (Utils.currentEditor) {
+  //     Utils.currentEditor.action = new SvgContainerAction(Utils.currentEditor)
+  //   }
+  // }
 
   const addTable = () => {
     if (Utils.currentEditor) {
@@ -192,11 +199,11 @@ const Navigator: FC<NavigatorProps> = ({
   </Button>
   </Popover>
 
-  const svgContainer = <Popover title={'Table'} placement='right' content={getPopoverContent('Table', 128, 128)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 180, width: 180,}}>
-  <Button type='text' onClick={() => addSvgContainer()} style={{padding: 2, display: 'table'}}>
-    <img src={`/shapes/Table.png`} width={28} height={28} style={{display: 'table-cell'}}/>
-  </Button>
-  </Popover>
+  // const svgContainer = <Popover title={'Table'} placement='right' content={getPopoverContent('Table', 128, 128)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 180, width: 180,}}>
+  // <Button type='text' onClick={() => addSvgContainer()} style={{padding: 2, display: 'table'}}>
+  //   <img src={`/shapes/Table.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+  // </Button>
+  // </Popover>
 
   const connector = <Popover title={'Connector'} placement='right' content={getPopoverContent('Connector', 128, 128)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 180, width: 180,}}>
   <Button type='text' onClick={() => addConnector()} style={{padding: 2, display: 'table'}}>
@@ -263,6 +270,17 @@ const Navigator: FC<NavigatorProps> = ({
     }
   )
 
+
+  const aliyunShapes = AliyunShapes.map(
+    shapeType => {
+      return <Popover title={shapeType.name} placement='right' content={getCustomShapeBasicShapesPopoverContent(shapeType.name, shapeType.width, shapeType.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
+      <Button type='text' onClick={() => addSvgShape(shapeType.name, shapeType.data, shapeType.width, shapeType.height)} style={{padding: 2, display: 'table'}}>
+        <img src={`/custom-shapes/basic-shapes/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+      </Button>
+    </Popover>
+    }
+  )
+
   const items: CollapseProps['items'] = [
     {
       key: '1',
@@ -274,7 +292,7 @@ const Navigator: FC<NavigatorProps> = ({
       {containers}
       {customShapeBasicShapes}
       {customShapeArrowss}
-      {svgContainer}
+      {aliyunShapes}
     </Space>,
     },
     {
