@@ -1,6 +1,6 @@
 import { Circle, Container, Element, Ellipse, G, Gradient, Line, Marker, Path, Pattern, PointArray, Polyline, Rect, SVG, Stop, Style, Svg, } from "@svgdotjs/svg.js";
 import { EntityShape } from "../../Shapes";
-import { Colors, Matrix, Rectangle,  RoundRectangle,  Shape, } from "@/components/Engine";
+import { Colors, Matrix, Rectangle,  RoundRectangle,  Scale,  Shape, } from "@/components/Engine";
 import { SystemUtils } from "@/components/Workspace/Utils";
 
 export class SvgShape extends Shape {
@@ -9,6 +9,14 @@ export class SvgShape extends Shape {
       this.clipped = false
       this.fill.setColor(Colors.Black)
     }
+}
+
+export class SvgRootShape extends Shape {
+    public constructor (left: number, top: number, width: number, height: number) {
+        super(left, top, width, height)
+        this.clipped = false
+        this.fill.setColor(Colors.Black)
+      }
 }
 
 export class SvgUtils {
@@ -30,29 +38,31 @@ export class SvgUtils {
         const svg = SVG().svg(svgContent)
         shape.clear()
         shape.path.reset()
-        SvgUtils.parseContainer(svg, shape)
+        const svgRootShape = new SvgRootShape(0, 0, shape.width, shape.height)
+        shape.addNode(svgRootShape)
+        SvgUtils.parseContainer(svg, shape, svgRootShape)
         //Make shape can be clicked 
         shape.path.addRectangle(Rectangle.makeLTWH(0, 0, shape.width, shape.height))
         shape.filled = false
         shape.stroked = false
     }
 
-    private static parseContainer(container: Container, shape: EntityShape) {
+    private static parseContainer(container: Container, shape: EntityShape, svgRootShape: SvgRootShape) {
         const children =  container.children()
         shape.path.reset()
         children.forEach((element, index, array) => {
             if(element instanceof Path) {
-                SvgUtils.parsePath(element, shape)
+                SvgUtils.parsePath(element, shape, svgRootShape)
             } else if(element instanceof Rect) {
-                SvgUtils.parseRect(element, shape)
+                SvgUtils.parseRect(element, shape, svgRootShape)
             } else if(element instanceof Circle) {
-                SvgUtils.parseCircle(element, shape)
+                SvgUtils.parseCircle(element, shape, svgRootShape)
             } else if (element instanceof Ellipse) {
-                SvgUtils.parseEllipse(element, shape)
+                SvgUtils.parseEllipse(element, shape, svgRootShape)
             } else if (element instanceof Line) {
-                SvgUtils.parseLine(element, shape)
+                SvgUtils.parseLine(element, shape, svgRootShape)
             } else if (element instanceof Polyline) {
-                SvgUtils.parsePolyline(element, shape)
+                SvgUtils.parsePolyline(element, shape, svgRootShape)
             } else if (element instanceof Gradient) {
                 
             } else if (element instanceof Stop) {
@@ -64,15 +74,20 @@ export class SvgUtils {
             } else if (element instanceof Marker) {
                 
             } else if (element instanceof Svg) {
-                SvgUtils.parseSvg(element, shape)
+                SvgUtils.parseSvg(element, shape, svgRootShape)
             }
         })
     }
-    private static parseSvg(svg: Svg, shape: EntityShape) {
-        SvgUtils.parseContainer(svg, shape)
+    private static parseSvg(svg: Svg, shape: EntityShape, svgRootShape: SvgRootShape) {
+        const viewbox = svg.viewbox()
+        const width = viewbox.width
+        const height = viewbox.height
+        svgRootShape.scale = new Scale(shape.width / width, shape.height / height)
+        SvgUtils.parseContainer(svg, shape, svgRootShape)
+
     }
 
-    private static parseAttrs(attrs: any, shape: EntityShape, svgShape: SvgShape) {
+    private static parseAttrs(attrs: any, shape: EntityShape, svgRootShape: SvgRootShape, svgShape: SvgShape) {
         if(attrs) {
             if(attrs['fill']) {
                 if(attrs['fill'].toLowerCase() == 'none') {
@@ -109,39 +124,39 @@ export class SvgUtils {
         }
     }
 
-    private static parseCircle(circle: Circle, shape: EntityShape) {
+    private static parseCircle(circle: Circle, shape: EntityShape, svgRootShape: SvgRootShape) {
         const cx = circle.cx()
         const cy = circle.cy()
         const radius = circle.radius()
-        const circleShape = new SvgShape(0, 0, 100, 100)
-        shape.addNode(circleShape)
-        SvgUtils.parseCommon(circle, shape, circleShape)
+        const circleShape = new SvgShape(0, 0, shape.width, shape.height)
+        svgRootShape.addNode(circleShape)
+        SvgUtils.parseCommon(circle, shape, svgRootShape, circleShape)
         circleShape.path.addOval(Rectangle.makeLTWH(cx - radius, cy - radius, radius * 2, radius * 2))
     }
 
-    private static parseEllipse(ellipse: Ellipse, shape: EntityShape) {
+    private static parseEllipse(ellipse: Ellipse, shape: EntityShape, svgRootShape: SvgRootShape) {
         const cx = ellipse.cx()
         const cy = ellipse.cy()
         const rx = ellipse.rx()
         const ry = ellipse.ry()
-        const ellipseShape = new SvgShape(0, 0, 100, 100)
-        shape.addNode(ellipseShape)
-        SvgUtils.parseCommon(ellipse, shape, ellipseShape)
+        const ellipseShape = new SvgShape(0, 0, shape.width, shape.height)
+        svgRootShape.addNode(ellipseShape)
+        SvgUtils.parseCommon(ellipse, shape, svgRootShape, ellipseShape)
         ellipseShape.path.addOval(Rectangle.makeLTWH(cx, cy, rx * 2, ry * 2))
     }
 
-    private static parseLine(line: Line, shape: EntityShape) {
-        const linetShape = new SvgShape(0, 0, 100, 100)
-        shape.addNode(linetShape)
-        SvgUtils.parseCommon(line, shape, linetShape)
+    private static parseLine(line: Line, shape: EntityShape, svgRootShape: SvgRootShape) {
+        const linetShape = new SvgShape(0, 0, shape.width, shape.height)
+        svgRootShape.addNode(linetShape)
+        SvgUtils.parseCommon(line, shape, svgRootShape, linetShape)
         const pointArray = line.array()
-        SvgUtils.parsePointArray(pointArray,linetShape)
+        SvgUtils.parsePointArray(pointArray, linetShape)
     }
 
-    private static parsePolyline(polyline: Polyline, shape: EntityShape) {
-        const polylineShape = new SvgShape(0, 0, 100, 100)
-        shape.addNode(polylineShape)
-        SvgUtils.parseCommon(polyline, shape, polylineShape)
+    private static parsePolyline(polyline: Polyline, shape: EntityShape, svgRootShape: SvgRootShape) {
+        const polylineShape = new SvgShape(0, 0, shape.width, shape.height)
+        svgRootShape.addNode(polylineShape)
+        SvgUtils.parseCommon(polyline, shape, svgRootShape, polylineShape)
         const pointArray = polyline.array()
         SvgUtils.parsePointArray(pointArray,polylineShape)
     }
@@ -162,32 +177,33 @@ export class SvgUtils {
             svgShape.path.lineTo(point[0], point[1])
         }
     }
-    private static parseRect(rect: Rect, shape: EntityShape) {
+
+    private static parseRect(rect: Rect, shape: EntityShape, svgRootShape: SvgRootShape) {
         const width = rect.width()
         const x = rect.x()
         const y = rect.y()
         const height = rect.height()
         const rx = rect.rx()
         const ry = rect.ry()
-        const rectShape = new SvgShape(0, 0, 100, 100)
-        shape.addNode(rectShape)
-        SvgUtils.parseCommon(rect, shape, rectShape)
+        const rectShape = new SvgShape(0, 0, shape.width, shape.height)
+        svgRootShape.addNode(rectShape)
+        SvgUtils.parseCommon(rect, shape, svgRootShape, rectShape)
         rectShape.path.addRRect(new RoundRectangle(x, y, width, height,rx, ry))
     }
 
-    private static parseCommon(element: Element, shape: EntityShape, svgShape: SvgShape) {
+    private static parseCommon(element: Element, shape: EntityShape, svgRootShape: SvgRootShape, svgShape: SvgShape) {
         const attrs = element.attr()
         const transform = element.transform()
         const matrix = Matrix.make([transform.a!, transform.c!, transform.e!, transform.b!, transform.d!, transform.f!, 0, 0, 1])
         svgShape.transform = matrix
-        SvgUtils.parseAttrs(attrs, shape, svgShape)
+        SvgUtils.parseAttrs(attrs, shape, svgRootShape, svgShape)
     }
 
-    private static parsePath(path: Path, shape: EntityShape) {
-        const pathShape = new SvgShape(0, 0, 100, 100)
-        shape.addNode(pathShape)
-        SvgUtils.parseCommon(path, shape, pathShape)
-        SvgUtils.parsePathCommand(path, pathShape)
+    private static parsePath(path: Path, shape: EntityShape, svgRootShape: SvgRootShape) {
+        const pathShape = new SvgShape(0, 0, shape.width, shape.height)
+        svgRootShape.addNode(pathShape)
+        SvgUtils.parseCommon(path, shape, svgRootShape, pathShape)
+        SvgUtils.parsePathCommand(path, svgRootShape)
     }
 
     private static parsePathCommand(path: Path, shape: SvgShape) {
@@ -345,12 +361,16 @@ export class SvgUtils {
                     controlPointQExists = true
                     break;
                 case 'A':
-                    shape.path.arcToRotated(pathCommand[1], pathCommand[2], pathCommand[3], pathCommand[4] == 1 ? false : true, true, pathCommand[5], pathCommand[6])
+                    shape.path.arcToRotated(pathCommand[1], pathCommand[2], pathCommand[3], pathCommand[4] == 1 ? false : true, pathCommand[5] == 1 ? false : true, pathCommand[6], pathCommand[7])
+                    x = pathCommand[6]
+                    y = pathCommand[7]
                     controlPointCExists = false
                     controlPointQExists = false
                     break;
                 case 'a':
-                    shape.path.arcToRotated(pathCommand[1], pathCommand[2], pathCommand[3], pathCommand[4] == 1 ? false : true, true, x + pathCommand[5], y + pathCommand[6])
+                    shape.path.arcToRotated(pathCommand[1], pathCommand[2], pathCommand[3], pathCommand[4] == 1 ? false : true, pathCommand[5] == 1 ? false : true, x + pathCommand[6], y + pathCommand[7])
+                    x = x + pathCommand[6]
+                    y = y + pathCommand[7]
                     controlPointCExists = false
                     controlPointQExists = false
                     break;
