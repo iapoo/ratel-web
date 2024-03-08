@@ -49,8 +49,6 @@ export class SvgContainer extends ShapeEntity {
   }
 
   public buildShape(theThis: CustomSvgShape) {
-    const a = test
-    console.log(a)
     SvgUtils.parse(theThis.svg, theThis)
   }
 
