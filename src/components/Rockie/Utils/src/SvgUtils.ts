@@ -1,5 +1,5 @@
 import { Circle, Container, Element, Ellipse, G, Gradient, Line, Marker, Path, Pattern, PointArray, Polyline, Rect, SVG, Stop, Style, Svg, } from "@svgdotjs/svg.js";
-import { EntityShape } from "../../Shapes";
+import { CustomSvgShape } from "../../Shapes";
 import { Colors, Matrix, Rectangle,  RoundRectangle,  Scale,  Shape, } from "@/components/Engine";
 import { SystemUtils } from "@/components/Workspace/Utils";
 
@@ -21,7 +21,7 @@ export class SvgRootShape extends Shape {
 
 export class SvgUtils {
 
-    public static parse(svgContent: string, shape: EntityShape) {
+    public static parse(svgContent: string, shape: CustomSvgShape) {
         const content = `<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.dev/svgjs" 
             width="90" height="90">
             <rect width="20" height="20"></rect>
@@ -47,7 +47,7 @@ export class SvgUtils {
         shape.stroked = false
     }
 
-    private static parseContainer(container: Container, shape: EntityShape, svgRootShape: SvgRootShape) {
+    private static parseContainer(container: Container, shape: CustomSvgShape, svgRootShape: SvgRootShape) {
         const children =  container.children()
         shape.path.reset()
         children.forEach((element, index, array) => {
@@ -78,7 +78,7 @@ export class SvgUtils {
             }
         })
     }
-    private static parseSvg(svg: Svg, shape: EntityShape, svgRootShape: SvgRootShape) {
+    private static parseSvg(svg: Svg, shape: CustomSvgShape, svgRootShape: SvgRootShape) {
         const viewbox = svg.viewbox()
         const width = viewbox.width
         const height = viewbox.height
@@ -87,7 +87,7 @@ export class SvgUtils {
 
     }
 
-    private static parseAttrs(attrs: any, shape: EntityShape, svgRootShape: SvgRootShape, svgShape: SvgShape) {
+    private static parseAttrs(attrs: any, shape: CustomSvgShape, svgRootShape: SvgRootShape, svgShape: SvgShape) {
         if(attrs) {
             if(attrs['fill']) {
                 if(attrs['fill'].toLowerCase() == 'none') {
@@ -122,9 +122,15 @@ export class SvgUtils {
                 svgShape.fill.setAlpha(opacity)
             }
         }
+        if(shape.enableFillColor) {
+            svgShape.fill.setColor(shape.fill.getColor())
+        }
+        if(shape.enableStrokeColor) {
+            svgShape.stroke.setColor(shape.stroke.getColor())
+        }
     }
 
-    private static parseCircle(circle: Circle, shape: EntityShape, svgRootShape: SvgRootShape) {
+    private static parseCircle(circle: Circle, shape: CustomSvgShape, svgRootShape: SvgRootShape) {
         const cx = circle.cx()
         const cy = circle.cy()
         const radius = circle.radius()
@@ -134,7 +140,7 @@ export class SvgUtils {
         circleShape.path.addOval(Rectangle.makeLTWH(cx - radius, cy - radius, radius * 2, radius * 2))
     }
 
-    private static parseEllipse(ellipse: Ellipse, shape: EntityShape, svgRootShape: SvgRootShape) {
+    private static parseEllipse(ellipse: Ellipse, shape: CustomSvgShape, svgRootShape: SvgRootShape) {
         const cx = ellipse.cx()
         const cy = ellipse.cy()
         const rx = ellipse.rx()
@@ -145,7 +151,7 @@ export class SvgUtils {
         ellipseShape.path.addOval(Rectangle.makeLTWH(cx, cy, rx * 2, ry * 2))
     }
 
-    private static parseLine(line: Line, shape: EntityShape, svgRootShape: SvgRootShape) {
+    private static parseLine(line: Line, shape: CustomSvgShape, svgRootShape: SvgRootShape) {
         const linetShape = new SvgShape(0, 0, shape.width, shape.height)
         svgRootShape.addNode(linetShape)
         SvgUtils.parseCommon(line, shape, svgRootShape, linetShape)
@@ -153,7 +159,7 @@ export class SvgUtils {
         SvgUtils.parsePointArray(pointArray, linetShape)
     }
 
-    private static parsePolyline(polyline: Polyline, shape: EntityShape, svgRootShape: SvgRootShape) {
+    private static parsePolyline(polyline: Polyline, shape: CustomSvgShape, svgRootShape: SvgRootShape) {
         const polylineShape = new SvgShape(0, 0, shape.width, shape.height)
         svgRootShape.addNode(polylineShape)
         SvgUtils.parseCommon(polyline, shape, svgRootShape, polylineShape)
@@ -178,7 +184,7 @@ export class SvgUtils {
         }
     }
 
-    private static parseRect(rect: Rect, shape: EntityShape, svgRootShape: SvgRootShape) {
+    private static parseRect(rect: Rect, shape: CustomSvgShape, svgRootShape: SvgRootShape) {
         const width = rect.width()
         const x = rect.x()
         const y = rect.y()
@@ -191,7 +197,7 @@ export class SvgUtils {
         rectShape.path.addRRect(new RoundRectangle(x, y, width, height,rx, ry))
     }
 
-    private static parseCommon(element: Element, shape: EntityShape, svgRootShape: SvgRootShape, svgShape: SvgShape) {
+    private static parseCommon(element: Element, shape: CustomSvgShape, svgRootShape: SvgRootShape, svgShape: SvgShape) {
         const attrs = element.attr()
         const transform = element.transform()
         const matrix = Matrix.make([transform.a!, transform.c!, transform.e!, transform.b!, transform.d!, transform.f!, 0, 0, 1])
@@ -199,11 +205,11 @@ export class SvgUtils {
         SvgUtils.parseAttrs(attrs, shape, svgRootShape, svgShape)
     }
 
-    private static parsePath(path: Path, shape: EntityShape, svgRootShape: SvgRootShape) {
+    private static parsePath(path: Path, shape: CustomSvgShape, svgRootShape: SvgRootShape) {
         const pathShape = new SvgShape(0, 0, shape.width, shape.height)
         svgRootShape.addNode(pathShape)
         SvgUtils.parseCommon(path, shape, svgRootShape, pathShape)
-        SvgUtils.parsePathCommand(path, svgRootShape)
+        SvgUtils.parsePathCommand(path, pathShape)
     }
 
     private static parsePathCommand(path: Path, shape: SvgShape) {
