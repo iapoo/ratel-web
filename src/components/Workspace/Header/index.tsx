@@ -1261,13 +1261,13 @@ const Header: FC<HeaderProps> = ({
                 <Select size='small' value={fontSize} onChange={handleFontSizeChange} style={{width: 64, }} disabled={!selectionValid} options={FontSizeOptions} bordered={false}/>
               </Tooltip>
               <Tooltip title={<FormattedMessage id='workspace.header.title.fill-color'/>}>
-                <ColorPicker size='small' value={fillColor} onChange={handleFillColorChange} disabled={!selectionValid} />
+                <ColorPicker size='small' value={fillColor} onChange={handleFillColorChange} disabled={!selectionValid}  destroyTooltipOnHide={true}/>
               </Tooltip>
               <Tooltip title={<FormattedMessage id='workspace.header.title.stroke-color'/>}>
-                <ColorPicker size='small' value={strokeColor} onChange={handleStrokeColorChange} disabled={!selectionValid} />
+                <ColorPicker size='small' value={strokeColor} onChange={handleStrokeColorChange} disabled={!selectionValid} destroyTooltipOnHide={true}/>
               </Tooltip>
               <Tooltip title={<FormattedMessage id='workspace.header.title.font-color'/>}>
-                <ColorPicker size='small' value={fontColor} onChange={handleFontColorChange} disabled={!selectionValid} />
+                <ColorPicker size='small' value={fontColor} onChange={handleFontColorChange} disabled={!selectionValid} destroyTooltipOnHide={true}/>
               </Tooltip>
               <Tooltip title={<FormattedMessage id='workspace.header.title.line-width'/>}>
                 {/** TODO:  FIXME, HIDE TEMPORARY*/}
