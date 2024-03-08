@@ -6,6 +6,7 @@ import { Categories, Type } from "./Item"
 import { ShapeEntity, Shapes } from "./ShapeEntity"
 import {Path, Rect, SVG} from '@svgdotjs/svg.js'
 import test from '@/components/Resource/svg/test2.txt'
+import { Color, Node, Shape } from "@/components/Engine"
 
 const TYPE_SVG_CONTAINER = 'SVGContainer'
 const DESC_SVG_CONTAINER = 'SVGContainer'
@@ -22,13 +23,62 @@ export const SvgContainerTypes = [{ name: TYPE_SVG_CONTAINER, description: DESC_
 
 export class SvgContainer extends ShapeEntity {
   private _svg: string
+  private _svgShape: CustomSvgShape
+  private _enableStrokeColor: boolean
+  private _enableFillColor: boolean
 
   public constructor(left: number, top: number, width: number, height: number, svg: string) {    
     super(left, top, width, height, {shapeType: TYPE_SVG_CONTAINER}, SvgContainerTypes)
     this._svg =  svg
     const customTypeInfo = this.parseTypeInfo({shapeType: TYPE_SVG_CONTAINER})
-    this._shape = new CustomSvgShape(left, top, width, height, svg, this.buildShape, customTypeInfo)
+    this._svgShape = new CustomSvgShape(left, top, width, height, svg, this.buildShape, customTypeInfo)
+    this._shape = this._svgShape
+    this._enableFillColor = false
+    this._enableStrokeColor = false
     this.initializeTheme()
+    this._svgShape.svgInitialized = true
+  }
+
+  public get enableStrokeColor() {
+    return this._enableStrokeColor
+  }
+
+  public set enableStrokeColor(value: boolean) {
+    this._enableStrokeColor =value
+    this._svgShape.enableStrokeColor = value
+  }
+
+  public get enableFillColor() {
+    return this._enableFillColor
+  }
+
+  public set enableFillColor(value: boolean) {
+    this._enableFillColor = value
+    this._svgShape.enableFillColor = value
+  }
+
+  public get strokeColor(): Color  {
+    return super.strokeColor
+  }
+
+  public set strokeColor(value: Color ) {
+    super.strokeColor = value
+    if(this._svgShape && this._svgShape.svgInitialized) {
+      this._enableStrokeColor = true
+      this._svgShape.enableStrokeColor = true
+    }
+  }
+
+  public get fillColor(): Color {
+    return super.fillColor
+  }
+
+  public set fillColor(value: Color ) {
+    super.fillColor = value
+    if(this._svgShape && this._svgShape.svgInitialized) {
+      this._enableFillColor = true
+      this._svgShape.enableFillColor = true
+    }
   }
 
   public get svg() {
@@ -49,6 +99,7 @@ export class SvgContainer extends ShapeEntity {
   }
 
   public buildShape(theThis: CustomSvgShape) {
+    console.log(this._svg)
     SvgUtils.parse(theThis.svg, theThis)
   }
 
@@ -56,5 +107,4 @@ export class SvgContainer extends ShapeEntity {
     let shapeType = EntityShapeType.CustomShape
     return shapeType
   } 
-
 }
