@@ -1401,7 +1401,7 @@ const Content: FC<ContentProps> = ({
         <Select size='small' value={fontSize} onChange={handleFontSizeChange} style={{width: 64, }} options={FontSizeOptions} bordered={false}/>
       </Tooltip>
       <Tooltip title={<FormattedMessage id='workspace.header.title.font-color'/>}>
-        <ColorPicker size='small' value={fontColor} onChange={handleFontColorChange} />
+        <ColorPicker size='small' value={fontColor} onChange={handleFontColorChange} destroyTooltipOnHide={true}/>
       </Tooltip>
     </Space>
   </FloatButton.Group>

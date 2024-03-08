@@ -562,12 +562,12 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
   const shapeSettings = <div>
     <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontWeight: 'bold', padding: 4, }}>
       <Checkbox onChange={handleEnableFillChange} checked={enableFill}><FormattedMessage id='workspace.property-editor.item-setting.fill'/></Checkbox>      
-      <ColorPicker size='small' value={fillColor} onChange={handleFillColorChange}/>
+      <ColorPicker size='small' value={fillColor} onChange={handleFillColorChange} destroyTooltipOnHide={true}/>
     </div>
     <Divider style={{margin: 4}}/>
     <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontWeight: 'bold', padding: 4, }}>
       <Checkbox onChange={handleEnableStrokeChange} checked={enableStroke}><FormattedMessage id='workspace.property-editor.item-setting.stroke'/></Checkbox>      
-      <ColorPicker size='small' value={strokeColor} onChange={handleStrokeColorChange}/>
+      <ColorPicker size='small' value={strokeColor} onChange={handleStrokeColorChange} destroyTooltipOnHide={true}/>
     </div>
     <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontWeight: 'bold', padding: 4, }}>
       <Select size='small' value={strokeDashStyle} onChange={handleStrokeDashStyleChange} style={{width: '60%'}} options={strokeDashStyles}/>
@@ -592,7 +592,7 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
     </div>
     <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 4, }}>
       <div><FormattedMessage id='workspace.property-editor.page-setting.grid-color'/></div>
-      <ColorPicker size='small' value={gridColor} onChange={handleGridColorChange} />
+      <ColorPicker size='small' value={gridColor} onChange={handleGridColorChange} destroyTooltipOnHide={true}/>
     </div>
     <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 4, }}>
       <Checkbox onChange={handleSnapToGridChange} checked={snapToGrid}><FormattedMessage id='workspace.property-editor.page-setting.snap-to-grid'/></Checkbox>      
@@ -603,7 +603,7 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
     </div>
     <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
       <div><FormattedMessage id='workspace.property-editor.page-setting.background-color'/></div>
-      <ColorPicker size='small' value={backgroundColor} onChange={handleBackgroundColorChange} />
+      <ColorPicker size='small' value={backgroundColor} onChange={handleBackgroundColorChange} destroyTooltipOnHide={true}/>
     </div>
     <Divider style={{margin: 4}}/>
     <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontWeight: 'bold', padding: 8, }}>
