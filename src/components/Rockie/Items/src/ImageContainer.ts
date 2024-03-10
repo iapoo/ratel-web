@@ -48,14 +48,18 @@ export class ImageContainer extends ShapeEntity {
     return Categories.CUSTOM_IMAGE_SHAPE
   }
 
-  public async buildShape(theThis: CustomImageShape) {
-    //theThis.path.reset()
-    const blob = ImageUtils.convertBase64StringToBlob(theThis.image)
-    if(blob) {
-      await blob.arrayBuffer().then( arrayBuffer => {
-        const image = Image.make(arrayBuffer)
-        theThis.imageData = image
-      })
+  public buildShape(theThis: CustomImageShape) {
+    // const blob = ImageUtils.convertBase64StringToBlob(theThis.image)
+    // if(blob) {
+    //   await blob.arrayBuffer().then( arrayBuffer => {
+    //     const image = Image.make(arrayBuffer)
+    //     theThis.imageData = image
+    //   })
+    // }
+    const blob2 = ImageUtils.convertBase64StringToUInt8Array(theThis.image)
+    if(blob2) {
+      const image = Image.make(blob2.buffer)
+      theThis.imageData = image
     }
 
   }
