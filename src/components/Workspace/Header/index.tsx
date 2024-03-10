@@ -16,13 +16,15 @@ import { Editor, EditorEvent } from '@/components/Rockie/Editor';
 import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
 import { Placeholder, } from '@/components/Resource/Icons'
 import { OperationType } from '@/components/Rockie/Operations';
-import { Connector, ContainerEntity, ContainerTypes, Item, ShapeEntity, ShapeTypes, TableEntity } from '@/components/Rockie/Items';
+import { Connector, ContainerEntity, ContainerTypes, ImageContainer, Item, ShapeEntity, ShapeTypes, SvgContainer, TableEntity } from '@/components/Rockie/Items';
 import { ShapeAction } from '@/components/Rockie/Actions';
 import { ConnectorArrowTypes } from '@/components/Rockie/Items/src/Connector';
 import { ConnectorDirection } from '@/components/Rockie/Shapes';
 import { ConnectorLineModesForCurve, DoubleLineGapOptions } from '../Utils/Consts';
 import { BasicShapes } from '@/components/Rockie/CustomItems/BasicShapes';
 import { Arrows } from '@/components/Rockie/CustomItems/Arrows';
+import { AliyunShapes } from '@/components/Rockie/CustomItems/Aliyun';
+import { AwsShapes } from '@/components/Rockie/CustomItems/Aws';
 
 interface HeaderProps {
   previousEditor: Editor | undefined
@@ -1095,6 +1097,76 @@ const Header: FC<HeaderProps> = ({
       }
     }
   }
+
+  const handleTestSvgShapes = () => {
+    if(currentEditor) {
+      let count = AliyunShapes.length
+      for(let i = 0; i < count; i ++) {
+        const margin = 5
+        currentEditor.contentLayer.removeAllEditorItems()
+        const customShapeInfo = AliyunShapes[i]
+        const customEntity = new SvgContainer(margin, margin, customShapeInfo.width, customShapeInfo.height, customShapeInfo.data)
+        currentEditor.contentLayer.addEditorItem(customEntity)
+        currentEditor.resize(customShapeInfo.width + margin * 2, customShapeInfo.height + margin * 2)
+        const data = currentEditor.export()
+        console.log(`download file = ${customShapeInfo.name}.png`)
+        SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.png`)
+      }
+    }
+  }
+
+  const handleTestSvgShapesSmall = () => {
+    if(currentEditor) {
+      let count = AliyunShapes.length
+      for(let i = 0; i < count; i ++) {
+        const margin = 2
+        let sizeFactor = 0.25
+        currentEditor.contentLayer.removeAllEditorItems()
+        const customShapeInfo = AliyunShapes[i]
+        const customEntity = new SvgContainer(margin, margin, customShapeInfo.width * sizeFactor, customShapeInfo.height * sizeFactor, customShapeInfo.data)
+        currentEditor.contentLayer.addEditorItem(customEntity)
+        currentEditor.resize(customShapeInfo.width * sizeFactor + margin * 2, customShapeInfo.height * sizeFactor + margin * 2)
+        const data = currentEditor.export()
+        console.log(`download file = ${customShapeInfo.name}.png`)
+        SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.png`)
+      }
+    }
+  }
+
+  const handleTestImageShapes = () => {
+    if(currentEditor) {
+      let count = AwsShapes.length
+      for(let i = 0; i < count; i ++) {
+        const margin = 5
+        currentEditor.contentLayer.removeAllEditorItems()
+        const customShapeInfo = AwsShapes[i]
+        const customEntity = new ImageContainer(margin, margin, customShapeInfo.width, customShapeInfo.height, customShapeInfo.data)
+        currentEditor.contentLayer.addEditorItem(customEntity)
+        currentEditor.resize(customShapeInfo.width + margin * 2, customShapeInfo.height + margin * 2)
+        const data = currentEditor.export()
+        console.log(`download file = ${customShapeInfo.name}.png`)
+        SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.png`)
+      }
+    }
+  }
+
+  const handleTestImageShapesSmall = () => {
+    if(currentEditor) {
+      let count = AliyunShapes.length
+      for(let i = 0; i < count; i ++) {
+        const margin = 2
+        let sizeFactor = 0.25
+        currentEditor.contentLayer.removeAllEditorItems()
+        const customShapeInfo = AwsShapes[i]
+        const customEntity = new ImageContainer(margin, margin, customShapeInfo.width * sizeFactor, customShapeInfo.height * sizeFactor, customShapeInfo.data)
+        currentEditor.contentLayer.addEditorItem(customEntity)
+        currentEditor.resize(customShapeInfo.width * sizeFactor + margin * 2, customShapeInfo.height * sizeFactor + margin * 2)
+        const data = currentEditor.export()
+        console.log(`download file = ${customShapeInfo.name}.png`)
+        SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.png`)
+      }
+    }
+  }
   const fileItems: MenuProps['items'] = [
     { key: 'New', label: <FormattedMessage id='workspace.header.menu-file-new' />, icon: <FileAddOutlined />, onClick: handleFileNew },
     { key: 'OpenFrom', label: <FormattedMessage id='workspace.header.menu-file-open-from' />, disabled: true, icon: <FolderOpenOutlined />, },
@@ -1148,6 +1220,10 @@ const Header: FC<HeaderProps> = ({
     { key: 'Test Custom Shapes Small', label: 'Test Custom Shapes Small', onClick: handleTest6, },
     { key: 'Test Custom Shapes Arrow Large', label: 'Test Custom Shapes Arrow Large', onClick: handleTestArrows, },
     { key: 'Test Custom Shapes Arrow Small', label: 'Test Custom Shapes Arrow Small', onClick: handleTestArrowsSmall, },
+    { key: 'Test Custom Shapes SVG Large', label: 'Test Custom Shapes SVG Large', onClick: handleTestSvgShapes, },
+    { key: 'Test Custom Shapes SVG Small', label: 'Test Custom Shapes SVG Small', onClick: handleTestSvgShapesSmall, },
+    { key: 'Test Custom Shapes Image Large', label: 'Test Custom Shapes Image Large', onClick: handleTestImageShapes, },
+    { key: 'Test Custom Shapes Image Small', label: 'Test Custom Shapes Image Small', onClick: handleTestImageShapesSmall, },
   ];
 
   const helpItems: MenuProps['items'] = [
