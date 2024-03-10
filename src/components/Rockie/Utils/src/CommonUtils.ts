@@ -4,7 +4,6 @@ import { CustomEntity } from "../../Items";
 import { ShapeType } from "../../Items/src/ShapeEntity";
 import { ConnectorType } from "../../Shapes";
 
-
 export interface CustomShapeType {
     type: typeof CustomEntity
     shapeType: ShapeType
@@ -50,4 +49,5 @@ export class CommonUtils {
                 break;
         }
     }
+
 }
