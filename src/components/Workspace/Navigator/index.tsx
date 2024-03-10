@@ -3,7 +3,7 @@ import styles from './index.css'
 import { Button, Collapse, CollapseProps, Divider, Image, Popover, Space, Tooltip, message, } from 'antd'
 import { Utils, RequestUtils, } from '../Utils'
 import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
-import { ConnectorAction, ContainerAction, CustomShapeAction, LineAction, ShapeAction, TableAction, } from '../../Rockie/Actions'
+import { ConnectorAction, ContainerAction, CustomShapeAction, ImageContainerAction, SvgContainerAction, LineAction, ShapeAction, TableAction, } from '../../Rockie/Actions'
 import { StorageService, } from '../Storage'
 import {
   Rectangle, RoundRectangle, Text, Ellipse, Square, Circle, Process, Diamond, Parallelogram, Hexagon, Triangle,
@@ -14,8 +14,8 @@ import { BasicShapes } from '@/components/Rockie/CustomItems/BasicShapes';
 import { ShapeTypeInfo } from '@/components/Rockie/Shapes/src/EntityShape';
 import { ShapeType } from '@/components/Rockie/Items/src/ShapeEntity';
 import { Arrows } from '@/components/Rockie/CustomItems/Arrows';
-import { SvgContainerAction } from '@/components/Rockie/Actions/src/SvgContainerAction';
 import { AliyunShapes } from '@/components/Rockie/CustomItems/Aliyun';
+import { AwsShapes } from '@/components/Rockie/CustomItems/Aws';
 
 interface NavigatorProps {
   navigatorWidth: number
@@ -81,6 +81,12 @@ const Navigator: FC<NavigatorProps> = ({
   const addSvgShape = (type: string, data: string, width: number, height: number) => {
     if (Utils.currentEditor) {
       Utils.currentEditor.action = new SvgContainerAction(Utils.currentEditor, type, data, width, height)
+    }
+  }
+
+  const addImageShape = (type: string, data: string, width: number, height: number) => {
+    if (Utils.currentEditor) {
+      Utils.currentEditor.action = new ImageContainerAction(Utils.currentEditor, type, data, width, height)
     }
   }
 
@@ -270,11 +276,20 @@ const Navigator: FC<NavigatorProps> = ({
     }
   )
 
-
   const aliyunShapes = AliyunShapes.map(
     shapeType => {
       return <Popover title={shapeType.name} placement='right' content={getCustomShapeBasicShapesPopoverContent(shapeType.name, shapeType.width, shapeType.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
       <Button type='text' onClick={() => addSvgShape(shapeType.name, shapeType.data, shapeType.width, shapeType.height)} style={{padding: 2, display: 'table'}}>
+        <img src={`/custom-shapes/basic-shapes/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+      </Button>
+    </Popover>
+    }
+  )
+
+  const awsShapes = AwsShapes.map(
+    shapeType => {
+      return <Popover title={shapeType.name} placement='right' content={getCustomShapeBasicShapesPopoverContent(shapeType.name, shapeType.width, shapeType.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
+      <Button type='text' onClick={() => addImageShape(shapeType.name, shapeType.data, shapeType.width, shapeType.height)} style={{padding: 2, display: 'table'}}>
         <img src={`/custom-shapes/basic-shapes/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
       </Button>
     </Popover>
@@ -293,6 +308,7 @@ const Navigator: FC<NavigatorProps> = ({
       {customShapeBasicShapes}
       {customShapeArrowss}
       {aliyunShapes}
+      {awsShapes}
     </Space>,
     },
     {

@@ -5,14 +5,14 @@ import { Categories, CellEntity, Connector, ConnectorArrowInfo, ContainerEntity,
 import { ConnectorInfo } from "../../Items/src/ConnectorInfo"
 import { LineInfo } from "../../Items/src/LineInfo"
 import { Rotation } from "@/components/Engine"
-import { CommonUtils, CustomShapes } from "../../Utils"
+import { CommonUtils, } from "../../Utils"
 import { ShapeInfo } from "../../Items/src/ShapeInfo"
 import { Style, StyleInfo } from "../../Shapes/src/EntityUtils"
 import { ConnectorMode, ConnectorType } from "../../Shapes"
 import { TableInfo } from "../../Items/src/TableInfo"
 import { ThemeUtils } from "@/components/Workspace/Theme"
 import { Editor } from "../../Editor"
-import { CustomShapeType } from "../../Utils/src/CommonUtils"
+import { CustomShapes } from "../../Utils/src/CommonUtils"
 
 export class OperationHelper {
 

@@ -7,6 +7,7 @@ import { ShapeEntity, Shapes } from "./ShapeEntity"
 import {Path, Rect, SVG} from '@svgdotjs/svg.js'
 import test from '@/components/Resource/svg/test2.txt'
 import { Color, Node, Shape } from "@/components/Engine"
+import Yaya from "@/components/Resource/images/test.png"
 
 const TYPE_SVG_CONTAINER = 'SVGContainer'
 const DESC_SVG_CONTAINER = 'SVGContainer'
@@ -99,6 +100,8 @@ export class SvgContainer extends ShapeEntity {
   }
 
   public buildShape(theThis: CustomSvgShape) {
+    const yaya = Yaya
+    console.log(yaya)
     console.log(this._svg)
     SvgUtils.parse(theThis.svg, theThis)
   }
