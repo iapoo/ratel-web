@@ -1,9 +1,9 @@
 import { Image } from "@/components/Engine"
 import { CustomImageShape, } from "../../Shapes"
 import { EntityShapeType } from "../../Shapes/src/EntityShape"
-import { ImageUtils,} from "../../Utils"
 import { Categories, Type } from "./Item"
 import { ShapeEntity, Shapes, } from "./ShapeEntity"
+import { ImageUtils } from "../../Utils/src/ImageUtils"
 
 const TYPE_IMAGE_CONTAINER = 'ImageContainer'
 const DESC_IMAGE_CONTAINER = 'ImageContainer'
@@ -27,6 +27,8 @@ export class ImageContainer extends ShapeEntity {
     const customTypeInfo = this.parseTypeInfo({shapeType: TYPE_IMAGE_CONTAINER})
     this._shape = new CustomImageShape(left, top, width, height, image, this.buildShape, customTypeInfo)
     this.initializeTheme()
+    this._shape.filled = false
+    this._shape.stroked = false
   }
 
   public get image() {
@@ -47,11 +49,14 @@ export class ImageContainer extends ShapeEntity {
   }
 
   public async buildShape(theThis: CustomImageShape) {
-    // const blob = ImageUtils.convertBase64StringToBlob(theThis.image)
-    // await blob.arrayBuffer().then( arrayBuffer => {
-    //   const image = Image.make(arrayBuffer)
-    //   theThis.imageData = image
-    // })
+    //theThis.path.reset()
+    const blob = ImageUtils.convertBase64StringToBlob(theThis.image)
+    if(blob) {
+      await blob.arrayBuffer().then( arrayBuffer => {
+        const image = Image.make(arrayBuffer)
+        theThis.imageData = image
+      })
+    }
 
   }
 

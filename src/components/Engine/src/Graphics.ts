@@ -2127,21 +2127,42 @@ export class ImageInfo {
 export class Image {
   public static makeFrom (imageInfo: ImageInfo, bytes: number[], bytesPerRow: number): Image {
     const image = new Image()
-    image._source = Engine.canvasKit.MakeImage(imageInfo.source, bytes, bytesPerRow)
+    const source = Engine.canvasKit.MakeImage(imageInfo.source, bytes, bytesPerRow)
+    if(source) {
+      image._width = source.width()
+      image._height = source.height()
+    }
+    image._source = source
     return image
   }
 
   public static make (bytes: ArrayBuffer): Image {
     const image = new Image()
-    image._source = Engine.canvasKit.MakeImageFromEncoded(bytes)
+    const source = Engine.canvasKit.MakeImageFromEncoded(bytes)
+    if(source) {
+      image._width = source.width()
+      image._height = source.height()
+    }
+    image._source = source
     return image
   }
-  private _source: any;
+
+  private _source: any
+  private _width: number = 0
+  private _height: number = 0
 
   private constructor () {}
 
   public get source () {
     return this._source
+  }
+
+  public get width() {
+    return this._width
+  }
+
+  public get height() {
+    return this._height
   }
 }
 
