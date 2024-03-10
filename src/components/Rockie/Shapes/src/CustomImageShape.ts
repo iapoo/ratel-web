@@ -1,7 +1,7 @@
 /* eslint-disable max-params */
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
 
-import { Graphics, Image, } from '@/components/Engine'
+import { Graphics, Image, Rectangle, } from '@/components/Engine'
 import { EntityShape, ShapeTypeInfo, } from './EntityShape'
 
 export class CustomImageShape extends EntityShape {
@@ -15,6 +15,8 @@ export class CustomImageShape extends EntityShape {
     this._image = image
     this._buildShape = buildShape
     this._imageData = undefined
+    // this.filled = false
+    // this.stroked = false
   }
 
   public get image() {
@@ -33,7 +35,7 @@ export class CustomImageShape extends EntityShape {
   public render (graphics: Graphics): void {
     super.render(graphics)
     if(this._imageData) {
-      graphics.drawImage(this._imageData, 0, 0)
+      graphics.drawImageRect(this._imageData, Rectangle.makeLTWH(0, 0, this._imageData.width, this._imageData.height), Rectangle.makeLTWH(0, 0, this.width, this.height), this.fill, true)
     }
   }
 
