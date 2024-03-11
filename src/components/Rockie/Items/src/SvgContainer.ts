@@ -40,6 +40,10 @@ export class SvgContainer extends ShapeEntity {
     this._svgShape.svgInitialized = true
   }
 
+  public get svgShape() {
+    return this._svgShape
+  }
+  
   public get enableStrokeColor() {
     return this._enableStrokeColor
   }
@@ -100,9 +104,9 @@ export class SvgContainer extends ShapeEntity {
   }
 
   public buildShape(theThis: CustomSvgShape) {
-    const yaya = Yaya
-    console.log(yaya)
-    console.log(this._svg)
+    //const yaya = Yaya
+    //console.log(yaya)
+    //console.log(this._svg)
     SvgUtils.parse(theThis.svg, theThis)
   }
 

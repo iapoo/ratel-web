@@ -1,7 +1,7 @@
 /* eslint-disable max-params */
 
 import { SystemUtils } from "@/components/Workspace/Utils"
-import { Categories, CellEntity, Connector, ConnectorArrowInfo, ContainerEntity, ContainerInfo, CustomEntity, CustomShapeInfo, EditorItem, EditorItemInfo, Entity, Item, LineEntity, ShapeEntity, TableEntity } from "../../Items"
+import { Categories, CellEntity, Connector, ConnectorArrowInfo, ContainerEntity, ContainerInfo, CustomEntity, CustomShapeInfo, EditorItem, EditorItemInfo, Entity, ImageContainer, ImageContainerInfo, Item, LineEntity, ShapeEntity, SvgContainer, SvgContainerInfo, TableEntity } from "../../Items"
 import { ConnectorInfo } from "../../Items/src/ConnectorInfo"
 import { LineInfo } from "../../Items/src/LineInfo"
 import { Rotation } from "@/components/Engine"
@@ -12,7 +12,7 @@ import { ConnectorMode, ConnectorType } from "../../Shapes"
 import { TableInfo } from "../../Items/src/TableInfo"
 import { ThemeUtils } from "@/components/Workspace/Theme"
 import { Editor } from "../../Editor"
-import { CustomShapes } from "../../Utils/src/CommonUtils"
+import { CustomShapeType, CustomShapes } from "../../Utils/src/CommonUtils"
 
 export class OperationHelper {
 
@@ -35,6 +35,12 @@ export class OperationHelper {
         break
       case Categories.CUSTOM_SHAPE:
         editorItem = this.loadCustomEntity(itemInfo)
+        break
+      case Categories.CUSTOM_SVG_SHAPE:
+        editorItem = this.loadSvgContainer(itemInfo)
+        break
+      case Categories.CUSTOM_IMAGE_SHAPE:
+        editorItem = this.loadImageContainer(itemInfo)
         break
       case Categories.SHAPE:
       default:
@@ -73,6 +79,14 @@ export class OperationHelper {
       }
     }
 
+    //TODO: FIXME : Some cleanup or intializeation
+    if(editorItem instanceof SvgContainer) {
+      editorItem.svgShape.svgInitialized = true
+    }
+    if(editorItem instanceof ImageContainer) {
+      editorItem.shape.stroked = false
+      editorItem.shape.filled = false
+    }
     return editorItem
   }
 
@@ -170,6 +184,7 @@ export class OperationHelper {
       OperationHelper.customShapes.set(customShape.name, {type: customShape.type, shapeType: customShape.typeInfo})
     })
   }
+
   public static loadCustomEntity(itemInfo: EditorItemInfo): ShapeEntity {
     if(OperationHelper.customShapes.size == 0) {
       OperationHelper.initializeCustomEntities()
@@ -203,6 +218,46 @@ export class OperationHelper {
     shapeEntity.shape.adapterSize = shapeInfo.adapterSize
     return shapeEntity
     }
+  }
+
+  public static loadSvgContainer(itemInfo: EditorItemInfo): ShapeEntity {
+    let svgContainerInfo = itemInfo as SvgContainerInfo
+    const svgContainer = new SvgContainer(svgContainerInfo.left, svgContainerInfo.top, svgContainerInfo.width, svgContainerInfo.height, svgContainerInfo.svg)
+    svgContainer.svgShape.svgInitialized = false
+    svgContainer.type = svgContainerInfo.type
+    svgContainer.text = svgContainerInfo.text
+    svgContainer.id = svgContainerInfo.id
+    if (svgContainerInfo.rotation) {
+      svgContainer.rotation = new Rotation(svgContainerInfo.rotation, svgContainer.width / 2, svgContainer.height / 2)
+    }
+    svgContainer.shape.modifier = SystemUtils.parsePointString(svgContainerInfo.modifier)
+    svgContainer.shape.controller  = SystemUtils.parsePointString(svgContainerInfo.controller)
+    svgContainer.shape.adapter = SystemUtils.parsePointString(svgContainerInfo.adapter)
+    svgContainer.shape.adapterSize = svgContainerInfo.adapterSize
+    if(svgContainerInfo.enableFillColor) {
+      svgContainer.enableFillColor = svgContainerInfo.enableFillColor
+    }
+    if(svgContainerInfo.enableStrokeColor) {
+      svgContainer.enableStrokeColor = svgContainerInfo.enableStrokeColor
+    }
+
+    return svgContainer    
+  }
+
+  public static loadImageContainer(itemInfo: EditorItemInfo): ShapeEntity {
+    let imageContainerInfo = itemInfo as ImageContainerInfo
+    const imageContainer = new ImageContainer(imageContainerInfo.left, imageContainerInfo.top, imageContainerInfo.width, imageContainerInfo.height, imageContainerInfo.image)
+    imageContainer.type = imageContainerInfo.type
+    imageContainer.text = imageContainerInfo.text
+    imageContainer.id = imageContainerInfo.id
+    if (imageContainerInfo.rotation) {
+      imageContainer.rotation = new Rotation(imageContainerInfo.rotation, imageContainer.width / 2, imageContainer.height / 2)
+    }
+    imageContainer.shape.modifier = SystemUtils.parsePointString(imageContainerInfo.modifier)
+    imageContainer.shape.controller  = SystemUtils.parsePointString(imageContainerInfo.controller)
+    imageContainer.shape.adapter = SystemUtils.parsePointString(imageContainerInfo.adapter)
+    imageContainer.shape.adapterSize = imageContainerInfo.adapterSize
+    return imageContainer    
   }
 
   public static loadContainerEntity(itemInfo: EditorItemInfo): ContainerEntity {
@@ -273,6 +328,12 @@ export class OperationHelper {
       case Categories.CUSTOM_SHAPE:
         editorItemInfo = this.saveCustomShape(editorItem as CustomEntity)
         break;
+      case Categories.CUSTOM_SVG_SHAPE:
+        editorItemInfo = this.saveCustomSvgShape(editorItem as SvgContainer)
+        break;
+      case Categories.CUSTOM_IMAGE_SHAPE:
+        editorItemInfo = this.saveCustomImageShape(editorItem as ImageContainer)
+        break;
       case Categories.SHAPE:
       default:
         editorItemInfo = this.saveShape(editorItem as ShapeEntity)
@@ -323,6 +384,35 @@ export class OperationHelper {
 
     return shapeinfo
   }
+
+  public static  saveCustomSvgShape(svgContainer: SvgContainer) : EditorItemInfo {
+    let styleInfos: StyleInfo[] = Style.makeStyleInfos(svgContainer.shape.styles)
+    let svgContainerInfo = new SvgContainerInfo(svgContainer.type, svgContainer.category, svgContainer.left, svgContainer.top, svgContainer.width, svgContainer.height, svgContainer.text, svgContainer.rotation.radius, styleInfos)
+    svgContainerInfo.rotation = svgContainer.rotation.radius
+    svgContainerInfo.modifier = svgContainer.shape.modifier.x + ',' + svgContainer.shape.modifier.y
+    svgContainerInfo.controller = svgContainer.shape.controller.x + ',' + svgContainer.shape.controller.y
+    svgContainerInfo.adapter = svgContainer.shape.adapter.x + ',' + svgContainer.shape.adapter.y
+    svgContainerInfo.adapterSize = svgContainer.shape.adapterSize
+    svgContainerInfo.svg = svgContainer.svg
+    svgContainerInfo.enableFillColor = svgContainer.enableFillColor
+    svgContainerInfo.enableStrokeColor = svgContainer.enableStrokeColor
+
+    return svgContainerInfo
+  }
+
+  public static  saveCustomImageShape(imageContainer: ImageContainer) : EditorItemInfo {
+    let styleInfos: StyleInfo[] = Style.makeStyleInfos(imageContainer.shape.styles)
+    let imageContainerInfo = new ImageContainerInfo(imageContainer.type, imageContainer.category, imageContainer.left, imageContainer.top, imageContainer.width, imageContainer.height, imageContainer.text, imageContainer.rotation.radius, styleInfos)
+    imageContainerInfo.rotation = imageContainer.rotation.radius
+    imageContainerInfo.modifier = imageContainer.shape.modifier.x + ',' + imageContainer.shape.modifier.y
+    imageContainerInfo.controller = imageContainer.shape.controller.x + ',' + imageContainer.shape.controller.y
+    imageContainerInfo.adapter = imageContainer.shape.adapter.x + ',' + imageContainer.shape.adapter.y
+    imageContainerInfo.adapterSize = imageContainer.shape.adapterSize
+    imageContainerInfo.image = imageContainer.image
+
+    return imageContainerInfo
+  }
+
   public static  saveTable(tableEntity: TableEntity) : EditorItemInfo {
     let styleInfos: StyleInfo[] = Style.makeStyleInfos(tableEntity.shape.styles)
     let tableInfo = new TableInfo(tableEntity.left, tableEntity.top, tableEntity.width, tableEntity.height, tableEntity.rowCount, tableEntity.columnCount, tableEntity.rotation.radius, styleInfos)
