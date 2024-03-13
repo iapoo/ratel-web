@@ -77,8 +77,8 @@ export class ControllerAnchor extends Anchor {
         }  
         targetController = new Point2(newControllerXValue, newControllerYValue)
       } else {
-        let newControllerXValue = newControllerX - startX
-        let newControllerYValue = newControllerY - startY
+        let newControllerXValue = newControllerX// - startX
+        let newControllerYValue = newControllerY// - startY
         if(endX > startX) {
           newControllerXValue = newControllerXValue < startX ? startX : (newControllerXValue > endX ? endX : newControllerXValue)
         } else {
