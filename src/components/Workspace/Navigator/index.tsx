@@ -16,6 +16,7 @@ import { ShapeType } from '@/components/Rockie/Items/src/ShapeEntity';
 import { Arrows } from '@/components/Rockie/CustomItems/Arrows';
 import { AliyunShapes } from '@/components/Rockie/CustomItems/Aliyun';
 import { AwsShapes } from '@/components/Rockie/CustomItems/Aws';
+import { FlowChartShapes } from '@/components/Rockie/CustomItems/FlowChart';
 
 interface NavigatorProps {
   navigatorWidth: number
@@ -275,6 +276,16 @@ const Navigator: FC<NavigatorProps> = ({
   )
   
 
+  const customShapeFlowChartShapes = FlowChartShapes.map(
+    basicType => {
+      return <Popover title={basicType.name} placement='right' content={getCustomShapeBasicShapesPopoverContent(basicType.name, basicType.typeInfo.width, basicType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
+      <Button type='text' onClick={() => addCustomShape(basicType.name, basicType.type, basicType.typeInfo)} style={{padding: 2, display: 'table'}}>
+        <img src={`/custom-shapes/flowchart/${basicType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+      </Button>
+    </Popover>
+    }
+  )
+  
   const customShapeArrowss = Arrows.map(
     arrow => {
       let width = 28
@@ -325,6 +336,7 @@ const Navigator: FC<NavigatorProps> = ({
       {customShapeArrowss}
       {aliyunShapes}
       {awsShapes}
+      {customShapeFlowChartShapes}
     </Space>,
     },
     {
