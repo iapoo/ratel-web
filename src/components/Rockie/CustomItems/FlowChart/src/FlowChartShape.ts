@@ -256,12 +256,12 @@ export const FlowChartShapeTypes = [
     adaptable: true, adapterX: 0.7, adapterY: 0,adapterDirection: 'X', adapterSize: 0.15, adapterStartX: 0, adapterStartY: 0, adapterEndX: 1, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
   { name: TYPE_FLOWCHART_ANNOTATION_LEFT_BRACE, description: DESC_FLOWCHART_ANNOTATION_LEFT_BRACE, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_ANNOTATION_LEFT_BRACE, left: 0, top: 0, width: 100, height: 100, 
-    modifiable: true, modifierX: 0.2, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 1, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
+    modifiable: true, modifierX: 0.4, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0.5, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true
   },
   { name: TYPE_FLOWCHART_ANNOTATION_RIGHT_BRACE, description: DESC_FLOWCHART_ANNOTATION_RIGHT_BRACE, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_ANNOTATION_RIGHT_BRACE, left: 0, top: 0, width: 100, height: 100, 
-    modifiable: true, modifierX: 0.8, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 1, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
+    modifiable: true, modifierX: 0.6, modifierY: 0, modifierStartX: 0.5, modifierStartY: 0, modifierEndX: 1, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true
   },
@@ -575,9 +575,31 @@ export class FlowChartShape extends CustomEntity {
         break;
       }
       case TYPE_FLOWCHART_ANNOTATION_LEFT_BRACE: {
+        const radius = modifierWidth * 0.5
+        const diameter = radius * 2
+        theThis.path.moveTo(0 , 0)
+        theThis.path.addArc(Rectangle.makeLTWH(- radius, 0, diameter, diameter),270, 90)
+        theThis.path.lineTo(radius, this.height * 0.5 - radius)
+        theThis.path.moveTo(diameter, this.height * 0.5)
+        theThis.path.addArc(Rectangle.makeLTWH(radius, this.height * 0.5 -  diameter, diameter, diameter),90, 90)
+        theThis.path.moveTo(radius, this.height * 0.5 +  radius)
+        theThis.path.addArc(Rectangle.makeLTWH(radius, this.height * 0.5, diameter, diameter),180, 90)
+        theThis.path.moveTo(radius, this.height * 0.5 +  radius)
+        theThis.path.lineTo(radius, this.height - radius)
+        theThis.path.addArc(Rectangle.makeLTWH(- radius, this.height - diameter, diameter, diameter), 0, 90)
         break;
       }
       case TYPE_FLOWCHART_ANNOTATION_RIGHT_BRACE: {
+        const radius = (this.width - modifierWidth) * 0.5
+        const diameter = radius * 2
+        theThis.path.moveTo(this.width - radius , radius)
+        theThis.path.addArc(Rectangle.makeLTWH(this.width - radius, 0, diameter, diameter),180, 90)
+        theThis.path.moveTo(this.width - radius , radius)
+        theThis.path.lineTo(this.width - radius, this.height * 0.5 - radius)
+        theThis.path.addArc(Rectangle.makeLTWH(this.width - diameter - radius, this.height * 0.5 -  diameter, diameter, diameter),0, 90)
+        theThis.path.addArc(Rectangle.makeLTWH(this.width - diameter - radius, this.height * 0.5, diameter, diameter),270, 90)
+        theThis.path.lineTo(this.width - radius, this.height - radius)
+        theThis.path.addArc(Rectangle.makeLTWH(this.width - radius, this.height - diameter, diameter, diameter), 90, 90)
         break;
       }
       case TYPE_FLOWCHART_PROCESS:
