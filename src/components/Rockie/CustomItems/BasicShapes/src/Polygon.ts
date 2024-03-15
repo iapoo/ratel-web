@@ -15,22 +15,22 @@ const DESC_POLYGON_10 = 'Decagon'
 const TEXT_POLYGON = ''
 
 export const PolygonTypes = [
-  { name: TYPE_POLYGON_5, description: DESC_POLYGON_5, freeze: Shapes.FREEZE_NONE, text: TEXT_POLYGON, left: 0, top: 0, width: 100, height: 100, 
+  { name: TYPE_POLYGON_5, description: DESC_POLYGON_5, freeze: Shapes.FREEZE_NONE, text: TEXT_POLYGON, left: 0, top: 0, width: 100, height: 100, enableMask: false, 
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
-  { name: TYPE_POLYGON_6, description: DESC_POLYGON_6, freeze: Shapes.FREEZE_NONE, text: TEXT_POLYGON, left: 0, top: 0, width: 100, height: 100, 
+  { name: TYPE_POLYGON_6, description: DESC_POLYGON_6, freeze: Shapes.FREEZE_NONE, text: TEXT_POLYGON, left: 0, top: 0, width: 100, height: 100, enableMask: false, 
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
-  { name: TYPE_POLYGON_8, description: DESC_POLYGON_8, freeze: Shapes.FREEZE_NONE, text: TEXT_POLYGON, left: 0, top: 0, width: 100, height: 100, 
+  { name: TYPE_POLYGON_8, description: DESC_POLYGON_8, freeze: Shapes.FREEZE_NONE, text: TEXT_POLYGON, left: 0, top: 0, width: 100, height: 100, enableMask: false, 
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
-  { name: TYPE_POLYGON_10, description: DESC_POLYGON_10, freeze: Shapes.FREEZE_NONE, text: TEXT_POLYGON, left: 0, top: 0, width: 100, height: 100, 
+  { name: TYPE_POLYGON_10, description: DESC_POLYGON_10, freeze: Shapes.FREEZE_NONE, text: TEXT_POLYGON, left: 0, top: 0, width: 100, height: 100, enableMask: false, 
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true

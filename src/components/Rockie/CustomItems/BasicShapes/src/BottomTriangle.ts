@@ -9,12 +9,10 @@ const DESC_BOTTOM_TRIANGLE = 'BottomTriangle'
 const TEXT_BOTTOM_TRIANGLE = ''
 
 export const BottomTriangleTypes = [{ name: TYPE_BOTTOM_TRIANGLE, description: DESC_BOTTOM_TRIANGLE, 
-  freeze: Shapes.FREEZE_NONE, text: TEXT_BOTTOM_TRIANGLE, left: 0, top: 0, width: 100, height: 100, 
-  modifiable: true, modifierX: 0.5, modifierY: 0, modifierStartX: 0, modifierStartY: 1, 
-  modifierEndX: 1, modifierEndY: 1, modifyInLine: true, modifyInPercent: true,
+  freeze: Shapes.FREEZE_NONE, text: TEXT_BOTTOM_TRIANGLE, left: 0, top: 0, width: 100, height: 100, enableMask: false, 
+  modifiable: true, modifierX: 0.5, modifierY: 0, modifierStartX: 0, modifierStartY: 1, modifierEndX: 1, modifierEndY: 1, modifyInLine: true, modifyInPercent: true,
   controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-  adaptable: true, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 1, 
-  adapterStartX: 0, adapterStartY: 0, adapterEndX: 1, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  adaptable: true, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 0, adapterEndX: 1, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
 }]
 
 export class BottomTriangle extends CustomEntity {

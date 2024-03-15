@@ -19,32 +19,32 @@ const DESC_ARROW_BOTH_WAY_VERTICAL = 'ArrowBothWayVertical'
 const TEXT_ARROW = ''
 
 export const ArrowTypes = [
-  { name: TYPE_ARROW_RIGHT, description: DESC_ARROW_RIGHT, freeze: Shapes.FREEZE_NONE, text: TEXT_ARROW, left: 0, top: 0, width: 120, height: 70, 
+  { name: TYPE_ARROW_RIGHT, description: DESC_ARROW_RIGHT, freeze: Shapes.FREEZE_NONE, text: TEXT_ARROW, left: 0, top: 0, width: 120, height: 70, enableMask: false, 
     modifiable: true, modifierX: 0.7, modifierY: 0.6, modifierStartX: 0, modifierStartY: 0, modifierEndX: 1, modifierEndY: 0.5, modifyInLine: false, modifyInPercent: true,
     controllable: true, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0.5, controllerEndX: 0.8, controllerEndY: 0.5, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
-  { name: TYPE_ARROW_LEFT, description: DESC_ARROW_LEFT, freeze: Shapes.FREEZE_NONE, text: TEXT_ARROW, left: 0, top: 0, width: 120, height: 70, 
+  { name: TYPE_ARROW_LEFT, description: DESC_ARROW_LEFT, freeze: Shapes.FREEZE_NONE, text: TEXT_ARROW, left: 0, top: 0, width: 120, height: 70, enableMask: false, 
     modifiable: true, modifierX: 0.3, modifierY: 0.6, modifierStartX: 0, modifierStartY: 0, modifierEndX: 1, modifierEndY: 0.5, modifyInLine: false, modifyInPercent: true,
     controllable: true, controllerX: 1, controllerY: 0, controllerStartX: 0.2, controllerStartY: 0.5, controllerEndX: 1, controllerEndY: 0.5, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
-  { name: TYPE_ARROW_TOP, description: DESC_ARROW_TOP, freeze: Shapes.FREEZE_NONE, text: TEXT_ARROW, left: 0, top: 0, width: 70, height: 120, 
+  { name: TYPE_ARROW_TOP, description: DESC_ARROW_TOP, freeze: Shapes.FREEZE_NONE, text: TEXT_ARROW, left: 0, top: 0, width: 70, height: 120, enableMask: false, 
     modifiable: true, modifierX: 0.6, modifierY: 0.3, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0.5, modifierEndY: 1, modifyInLine: false, modifyInPercent: true,
     controllable: true, controllerX: 0, controllerY: 1, controllerStartX: 0.5, controllerStartY: 0.2, controllerEndX: 0.5, controllerEndY: 1, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
-  { name: TYPE_ARROW_BOTTOM, description: DESC_ARROW_BOTTOM, freeze: Shapes.FREEZE_NONE, text: TEXT_ARROW, left: 0, top: 0, width: 70, height: 120, 
+  { name: TYPE_ARROW_BOTTOM, description: DESC_ARROW_BOTTOM, freeze: Shapes.FREEZE_NONE, text: TEXT_ARROW, left: 0, top: 0, width: 70, height: 120, enableMask: false, 
     modifiable: true, modifierX: 0.6, modifierY: 0.7, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0.5, modifierEndY: 1, modifyInLine: false, modifyInPercent: true,
     controllable: true, controllerX: 0, controllerY: 0, controllerStartX: 0.5, controllerStartY: 0, controllerEndX: 0.5, controllerEndY: 0.8, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
-  { name: TYPE_ARROW_BOTH_WAY_HORIZONTAL, description: DESC_ARROW_BOTH_WAY_HORIZONTAL, freeze: Shapes.FREEZE_NONE, text: TEXT_ARROW, left: 0, top: 0, width: 120, height: 70, 
+  { name: TYPE_ARROW_BOTH_WAY_HORIZONTAL, description: DESC_ARROW_BOTH_WAY_HORIZONTAL, freeze: Shapes.FREEZE_NONE, text: TEXT_ARROW, left: 0, top: 0, width: 120, height: 70, enableMask: false, 
     modifiable: true, modifierX: 0.4, modifierY: 0.6, modifierStartX: 0.5, modifierStartY: 0, modifierEndX: 1, modifierEndY: 0.5, modifyInLine: false, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
-  { name: TYPE_ARROW_BOTH_WAY_VERTICAL, description: DESC_ARROW_BOTH_WAY_VERTICAL, freeze: Shapes.FREEZE_NONE, text: TEXT_ARROW, left: 0, top: 0, width: 70, height: 120, 
+  { name: TYPE_ARROW_BOTH_WAY_VERTICAL, description: DESC_ARROW_BOTH_WAY_VERTICAL, freeze: Shapes.FREEZE_NONE, text: TEXT_ARROW, left: 0, top: 0, width: 70, height: 120, enableMask: false, 
     modifiable: true, modifierX: 0.6, modifierY: 0.4, modifierStartX: 0, modifierStartY: 0.5, modifierEndX: 0.5, modifierEndY: 1, modifyInLine: false, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true

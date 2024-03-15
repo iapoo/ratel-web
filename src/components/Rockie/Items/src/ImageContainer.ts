@@ -10,12 +10,10 @@ const DESC_IMAGE_CONTAINER = 'ImageContainer'
 const TEXT_IMAGE_CONTAINER = ''
 
 export const ImageContainerTypes = [{ name: TYPE_IMAGE_CONTAINER, description: DESC_IMAGE_CONTAINER, 
-  freeze: Shapes.FREEZE_NONE, text: TEXT_IMAGE_CONTAINER, left: 0, top: 0, width: 100, height: 100, 
-  modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, 
-  modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
+  freeze: Shapes.FREEZE_NONE, text: TEXT_IMAGE_CONTAINER, left: 0, top: 0, width: 100, height: 100, enableMask: false, 
+  modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
   controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-  adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'Y', adapterSize: 0, 
-  adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'Y', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
 }]
 
 export class ImageContainer extends ShapeEntity {
