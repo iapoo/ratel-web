@@ -397,10 +397,10 @@ export class FlowChartShape extends CustomEntity {
         //Ref to: https://www.ibashu.cn/news/show_261576.html
         //Ref to: https://blog.csdn.net/jeremyjone/article/details/102069294
         let k = modifierWidth / 0.75
-        theThis.path.addArc(Rectangle.makeLTWH(this.width - modifierWidth, 0, modifierWidth * 2, this.height), 0, 360)
+        theThis.path.addArc(Rectangle.makeLTWH(this.width - modifierWidth * 2, 0, modifierWidth * 2, this.height), 0, 360)
         theThis.path.moveTo(modifierWidth, 0)
-        theThis.path.lineTo(this.width, 0)
-        theThis.path.cubicTo(this.width - k, 0, this.width - k, this.height, this.width, this.height)
+        theThis.path.lineTo(this.width - modifierWidth, 0)
+        theThis.path.cubicTo(this.width - modifierWidth - k, 0, this.width - modifierWidth - k, this.height, this.width - modifierWidth, this.height)
         theThis.path.lineTo(modifierWidth, this.height)
         theThis.path.cubicTo(modifierWidth - k, this.height, modifierWidth - k, 0, modifierWidth, 0)
         break;

@@ -25,6 +25,8 @@ import { BasicShapes } from '@/components/Rockie/CustomItems/BasicShapes';
 import { Arrows } from '@/components/Rockie/CustomItems/Arrows';
 import { AliyunShapes } from '@/components/Rockie/CustomItems/Aliyun';
 import { AwsShapes } from '@/components/Rockie/CustomItems/Aws';
+import { FlowChartShapeTypes } from '@/components/Rockie/CustomItems/FlowChart/src/FlowChartShape';
+import { FlowChartShapes } from '@/components/Rockie/CustomItems/FlowChart';
 
 interface HeaderProps {
   previousEditor: Editor | undefined
@@ -1167,6 +1169,69 @@ const Header: FC<HeaderProps> = ({
       }
     }
   }
+
+
+  const handleTestFlowChartShapes = () => {
+    if(currentEditor) {
+      let count = FlowChartShapes.length
+      for(let i = 0; i < count; i ++) {
+        const margin = 5
+        currentEditor.contentLayer.removeAllEditorItems()
+        const customShapeInfo = FlowChartShapes[i].typeInfo
+        let left = customShapeInfo.left + margin
+        if(customShapeInfo.width < customShapeInfo.height) {
+          left = Math.round(customShapeInfo.left + (customShapeInfo.height - customShapeInfo.width) * 0.5) + margin
+        }
+        const customShapeTypeName = FlowChartShapes[i].name
+        const customEntity = new FlowChartShapes[i].type(left, customShapeInfo.top + margin, customShapeInfo.width, customShapeInfo.height, customShapeTypeName)
+        currentEditor.contentLayer.addEditorItem(customEntity)
+        if(customShapeInfo.width < customShapeInfo.height) {
+          currentEditor.resize(customShapeInfo.height + margin * 2, customShapeInfo.height + margin * 2)
+        } else {
+          currentEditor.resize(customShapeInfo.width + margin * 2, customShapeInfo.height + margin * 2)
+        }
+        const data = currentEditor.export()
+        console.log(`download file = ${customShapeInfo.name}.png`)
+        SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.png`)
+      }
+    }
+  }
+
+  const handleTestFlowChartShapesSmall = () => {
+    if(currentEditor) {
+      let count = FlowChartShapes.length
+      for(let i = 0; i < count; i ++) {
+        const margin = 2        
+        let lineFactor = 1
+        let fontFactor = 0.5
+        let sizeFactor = 0.25
+        let modifierFactor = 0.25
+        currentEditor.contentLayer.removeAllEditorItems()
+        const customShapeInfo = FlowChartShapes[i].typeInfo
+        let left = customShapeInfo.left + margin
+        if(customShapeInfo.width < customShapeInfo.height) {
+          left = Math.round(customShapeInfo.left + (customShapeInfo.height - customShapeInfo.width) * sizeFactor * 0.5) + margin
+        }
+        const customShapeTypeName = FlowChartShapes[i].name
+        const customEntity = new FlowChartShapes[i].type(left, customShapeInfo.top + margin, customShapeInfo.width * sizeFactor, customShapeInfo.height * sizeFactor, customShapeTypeName)
+        customEntity.lineWidth = customEntity.lineWidth * lineFactor
+        customEntity.fontSize = customEntity.fontSize * fontFactor
+        if(!customShapeInfo.modifyInPercent) {
+          customEntity.shape.modifier = new Point2(Math.round(customEntity.shape.modifier.x * modifierFactor), Math.round(customEntity.shape.modifier.y * modifierFactor))
+        }
+        currentEditor.contentLayer.addEditorItem(customEntity)
+        if(customShapeInfo.width < customShapeInfo.height) {
+          currentEditor.resize(customShapeInfo.height * sizeFactor + margin * 2, customShapeInfo.height * sizeFactor + margin * 2)
+        } else {
+          currentEditor.resize(customShapeInfo.width * sizeFactor + margin * 2, customShapeInfo.height * sizeFactor + margin * 2)
+        }
+        const data = currentEditor.export()
+        console.log(`download file = ${customShapeInfo.name}.png`)
+        SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.png`)
+      }
+    }
+  }
+
   const fileItems: MenuProps['items'] = [
     { key: 'New', label: <FormattedMessage id='workspace.header.menu-file-new' />, icon: <FileAddOutlined />, onClick: handleFileNew },
     { key: 'OpenFrom', label: <FormattedMessage id='workspace.header.menu-file-open-from' />, disabled: true, icon: <FolderOpenOutlined />, },
@@ -1224,6 +1289,8 @@ const Header: FC<HeaderProps> = ({
     { key: 'Test Custom Shapes SVG Small', label: 'Test Custom Shapes SVG Small', onClick: handleTestSvgShapesSmall, },
     { key: 'Test Custom Shapes Image Large', label: 'Test Custom Shapes Image Large', onClick: handleTestImageShapes, },
     { key: 'Test Custom Shapes Image Small', label: 'Test Custom Shapes Image Small', onClick: handleTestImageShapesSmall, },
+    { key: 'Test Custom Shapes FlowChart Large', label: 'Test Custom Shapes FlowChart Large', onClick: handleTestFlowChartShapes, },
+    { key: 'Test Custom Shapes FlowChart Small', label: 'Test Custom Shapes FlowChart Small', onClick: handleTestFlowChartShapesSmall, },
   ];
 
   const helpItems: MenuProps['items'] = [
