@@ -17,7 +17,8 @@ export interface CustomEntityType {
   left: number 
   top: number
   width: number
-  height: number, 
+  height: number 
+  enableMask: boolean
   modifiable: boolean
   modifierX: number
   modifierY: number
@@ -41,7 +42,7 @@ export interface CustomEntityType {
 }
 
 export const CustomEntityTypes = [{ name: CustomEntities.TYPE_CUSTOMER_SHAPE, description: CustomEntities.DESC_CUSTOMER_SHAPE, 
-    freeze: Shapes.FREEZE_NONE, text: 'Custom Shape', left: 0, top: 0, width: 200, height: 200, 
+    freeze: Shapes.FREEZE_NONE, text: 'Custom Shape', left: 0, top: 0, width: 200, height: 200, enableMask: false, 
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, 
     modifierEndY: 0, modifyInLine: true, modifyInPercent: true, adaptable: false, adapterX: 0, adapterY: 0,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,

@@ -65,6 +65,7 @@ export interface ShapeTypeInfo {
   top: number
   width: number
   height: number
+  enableMask: boolean
   modifier: Point2
   modifierStart: Point2
   modifierEnd: Point2
@@ -91,6 +92,7 @@ export class EntityShape extends AbstractTextShape {
   private _controller: Point2
   private _adapter: Point2
   private _adapterSize: number
+  private _maskPath: Path
 
   constructor (text = '', left = 0, top = 0, width = 100, height = 100, typeInfo: ShapeTypeInfo =  {
     name: '',
@@ -101,6 +103,7 @@ export class EntityShape extends AbstractTextShape {
     top: 0,
     width: 100,
     height: 100,
+    enableMask: true,
     modifier: new Point2(),
     modifierStart: new Point2(0,0),
     modifierEnd: new Point2(0,0),
@@ -125,6 +128,7 @@ export class EntityShape extends AbstractTextShape {
     this._controller = typeInfo.controller    
     this._adapter = typeInfo.adapter
     this._adapterSize = typeInfo.adapterSize
+    this._maskPath = new Path()
   }
 
   public get modifier() {
@@ -171,6 +175,36 @@ export class EntityShape extends AbstractTextShape {
     this._typeInfo = value
   }
 
+  
+  public update () {
+    super.update()
+    if (this.dirty) {
+      this._maskPath.reset()
+      this._maskPath.addRectangle(Rectangle.makeLTWH(0, 0, this.width, this.height))
+    }
+  }
+
+  public contains (x: number, y: number) {
+    if (this.worldInverseTransform) {
+      const point = [ x, y, ]
+      const inversePoint = this.worldInverseTransform.makePoints(point)
+      if(this.typeInfo.enableMask) {
+        return this._maskPath.contains(inversePoint[0], inversePoint[1])
+      } else {
+        return this.path.contains(inversePoint[0], inversePoint[1])
+      }
+    } else {
+      return false
+    }
+  }
+
+  public intersects (left: number, top: number, width: number, height: number) {
+    if(this.typeInfo.enableMask) {
+      return this.contains(left, top) || this.contains(left + width, top) || this.contains(left + width, top + height) || this.contains(left, top + height)
+    } else {
+      return super.intersects(left, top, width, height)
+    }
+  }
 
   protected buildShape () {    
     if(!this._typeInfo) {
