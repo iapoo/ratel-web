@@ -404,14 +404,14 @@ const Header: FC<HeaderProps> = ({
     setDisableFileName(false)
   }
 
-  const handleAutoSave = () => {
+  const handleAutoSave = async () => {
     if (online) {
       doHandleFileSave()
     } else {
-      messageApi.open({
-        type: 'warning',
-        content: intl.formatMessage({ id: 'workspace.header.message-auto-save-disabled-without-login', })
-      })
+      // messageApi.open({
+      //   type: 'warning',
+      //   content: intl.formatMessage({ id: 'workspace.header.message-auto-save-disabled-without-login', })
+      // })
     }
   }
 
