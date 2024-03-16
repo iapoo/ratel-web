@@ -134,7 +134,9 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
           folderId: record.folderId,
           folderName: record.folderName,
           parentId: record.parentId,
-          data: dataNode
+          data: dataNode,
+          modifiedDate: SystemUtils.extractDateFromServerCalendar(record.updatedTime),
+          modifiedTime: SystemUtils.extractTimeFromServerCalendar(record.updatedTime),
         }
         nodes.push(dataNode)
         nodeMap.set(key, folder)
@@ -153,12 +155,14 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
           folderId: record.folderId,
           documentId: record.documentId,
           documentName: record.documentName,
-          content: record.content
+          content: record.content,
+          modifiedDate: SystemUtils.extractDateFromServerCalendar(record.updatedTime),
+          modifiedTime: SystemUtils.extractTimeFromServerCalendar(record.updatedTime),
         }
         let key = DOC + record.documentId
         let dataNode: DataNode = {
           key: key,
-          title: record.documentName,
+          title: <label>{record.documentName} <small><i>({document.modifiedDate + ' ' + document.modifiedTime})</i></small></label>,
           icon: <FileOutlined/>,
           children: []
         }

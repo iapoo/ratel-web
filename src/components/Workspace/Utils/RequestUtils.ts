@@ -19,12 +19,16 @@ export interface Folder {
     folderName: string;
     parentId: number | null;
     data: DataNode;
+    modifiedDate: string
+    modifiedTime: string
 }
 
 export interface Document {
     documentId: number;
     documentName: string;
     content: string;
+    modifiedDate: string
+    modifiedTime: string
     folderId: number | null;
 }
 
