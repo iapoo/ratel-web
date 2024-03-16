@@ -20,6 +20,7 @@ export default {
   'workspace.header.message-apply-locale': 'Please refresh page to apply locale modification',
   'workspace.header.message-invalid-document-name': 'Invalid document name provided',
   'workspace.header.message-invalid-document-id': 'Invalid document id detected',
+  'workspace.header.message-auto-save-disabled-without-login': 'Auto save requires login first',
   'workspace.header.text.connector-mode-single': 'Single',
   'workspace.header.text.connector-mode-double': 'Double',
   'workspace.header.text.connector-mode-double-start': 'Double & Start Arrow',

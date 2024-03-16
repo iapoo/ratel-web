@@ -20,6 +20,7 @@ export default {
   'workspace.header.message-apply-locale': '请刷新页面以应用语言修改',
   'workspace.header.message-invalid-document-name': '无效的文档名称',
   'workspace.header.message-invalid-document-id': '无效的文档ID',
+  'workspace.header.message-auto-save-disabled-without-login': '自动保存需登录才能启用',
   'workspace.header.text.connector-mode-single': '直线',
   'workspace.header.text.connector-mode-double': '双线',
   'workspace.header.text.connector-mode-double-start': '双线和开始箭头',

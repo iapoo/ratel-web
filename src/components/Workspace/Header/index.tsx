@@ -112,8 +112,13 @@ const Header: FC<HeaderProps> = ({
       setUserInfo(RequestUtils.userInfo)
     }, 2000)
 
+    const autoSaveTimer = setInterval(async () => {
+      handleAutoSave()
+    }, 60000)
+
     return () => {
       clearInterval(timer)
+      clearInterval(autoSaveTimer)
     }
   }
 
@@ -397,6 +402,17 @@ const Header: FC<HeaderProps> = ({
   const doHandleFileOpen = () => {
     setOpenFileWindowVisible(!openFileWindowVisible)
     setDisableFileName(false)
+  }
+
+  const handleAutoSave = () => {
+    if (online) {
+      doHandleFileSave()
+    } else {
+      messageApi.open({
+        type: 'warning',
+        content: intl.formatMessage({ id: 'workspace.header.message-auto-save-disabled-without-login', })
+      })
+    }
   }
 
   const handleFileSave = () => {
