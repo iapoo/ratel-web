@@ -9,8 +9,21 @@ import { ConnectorArrowDisplayMode, ConnectorArrowTypeInfo, ConnectorDirection, 
 import { ConnectorArrowType, ConnectorArrowTypes } from "@/components/Rockie/Items/src/Connector";
 import { ConnectorArrowInfo } from "@/components/Rockie/Items";
 import { EditorMode } from "@/components/Rockie/Editor";
+import moment from 'moment'
 
 export class SystemUtils {
+
+    public static extractDateFromServerCalendar(dateTime: number) {
+        return moment(dateTime).format('YYYY-MM-DD')
+    }
+
+    public static extractTimeFromServerCalendar(dateTime: number) {
+        return moment(dateTime).format('HH:mm')
+    }
+
+    public static extractDateTimeFromServerCalendar(dateTime: number) {
+        return moment(dateTime).format('YYYY-MM-DD HH:mm')
+    }
 
     public static convertDocumentData(documentData: any) {
         let content = documentData.data.data.content.content
