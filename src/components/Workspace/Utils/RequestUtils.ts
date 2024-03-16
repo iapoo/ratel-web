@@ -187,9 +187,9 @@ export class RequestUtils {
             return false
         }
         if(nowTime - RequestUtils.lastCheckTime_ > RequestUtils.checkTimeInterval_) {
+            RequestUtils.lastCheckTime_ = nowTime
             const online = await RequestUtils.checkOnline()
             if(online) {
-                RequestUtils.lastCheckTime_ = nowTime
                 return true;
             } else {
                 return false;
