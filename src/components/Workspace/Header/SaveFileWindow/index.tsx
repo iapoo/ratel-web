@@ -154,7 +154,7 @@ const SaveFileWindowPage: FC<SaveFileWindowProps> = ({
       setConfirmOverwriteDocumentId(documentId)
       saveInFolder = false      
     } else {
-      SystemUtils.handleInternalError(`Unknow error occurs here with selectedFolderKey=${selectedFolderKey}`)
+      SystemUtils.handleInternalError(`Unknown error occurs here with selectedFolderKey=${selectedFolderKey}`)
       return
     }
 

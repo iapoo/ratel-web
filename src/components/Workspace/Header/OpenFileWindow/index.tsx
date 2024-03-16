@@ -332,8 +332,10 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
       documentId = parseInt(selectedFolderKey.substring(4))
       setConfirmOverwriteDocumentId(documentId)
       saveInFolder = false      
+    } else if (selectedFolderKey == '') {
+      folderId = null      
     } else {
-      SystemUtils.handleInternalError(`Unknow error occurs here with selectedFolderKey=${selectedFolderKey}`)
+      SystemUtils.handleInternalError(`Unknown error occurs here with selectedFolderKey=${selectedFolderKey}`)
       return
     }
 
