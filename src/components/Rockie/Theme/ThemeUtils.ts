@@ -80,5 +80,4 @@ export class ThemeUtils {
   public static get filled(): boolean {
     return true
   }
-
 }
