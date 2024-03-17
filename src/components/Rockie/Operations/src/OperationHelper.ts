@@ -10,7 +10,7 @@ import { ShapeInfo } from "../../Items/src/ShapeInfo"
 import { Style, StyleInfo } from "../../Shapes/src/EntityUtils"
 import { ConnectorMode, ConnectorType } from "../../Shapes"
 import { TableInfo } from "../../Items/src/TableInfo"
-import { ThemeUtils } from "@/components/Workspace/Theme"
+import { ThemeUtils } from "@/components/Rockie/Theme"
 import { Editor } from "../../Editor"
 import { CustomShapeType, CustomShapes } from "../../Utils/src/CommonUtils"
 

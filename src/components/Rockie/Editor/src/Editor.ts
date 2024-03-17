@@ -20,6 +20,7 @@ import { Operation, OperationHelper, OperationService, OperationType } from '../
 import { ContainerLayer } from './ContainerLayer'
 import { ConnectorDirection } from '../../Shapes'
 import { TableLayer } from './TableLayer'
+import { EditorUtils } from '@/components/Rockie/Theme'
 
 
 export enum EditorMode {
@@ -164,14 +165,26 @@ export class Editor extends Painter {
     this._origWidth = this.width * this._zoom
     this._origHeight = this.height * this.zoom
     this._showGrid = true
-    this._rangeSelectionShape.fill.setAlpha(0.3)
-    this._containerSelectionShape.fill.setAlpha(0.3)
-    this._containerSelectionShape.stroke.setStrokeWidth(5)
-    this._selectionOutlineShape.stroke.setStrokeDashStyle(StrokeDashStyle.DASH)
+    this._rangeSelectionShape.fill.setColor(EditorUtils.rangeSelectionFillColor)
+    this._rangeSelectionShape.fill.setAlpha(EditorUtils.rangeSelectionFillAlpha)
+    this._rangeSelectionShape.stroke.setColor(EditorUtils.rangeSelectionStrokeColor)
+    this._rangeSelectionShape.stroke.setStrokeWidth(EditorUtils.rangeSelectionStrokeLineWidth)
+    this._rangeSelectionShape.stroke.setAntiAlias(EditorUtils.rangeSelectionStrokeAntiAlias)
+    this._rangeSelectionShape.stroke.setAlpha(EditorUtils.rangeSelectionStrokeAlpha)
+    this._containerSelectionShape.fill.setColor(EditorUtils.containerSelectionFillColor)
+    this._containerSelectionShape.fill.setAlpha(EditorUtils.containerSelectionFillAlpha)
+    this._containerSelectionShape.stroke.setColor(EditorUtils.containerSelectionStrokeColor)
+    this._containerSelectionShape.stroke.setStrokeWidth(EditorUtils.containerSelectionStrokeLineWidth)
+    this._selectionOutlineShape.stroke.setColor(EditorUtils.selectionOutlineStrokeColor)
+    this._selectionOutlineShape.stroke.setStrokeWidth(EditorUtils.selectionOutlineStrokeLineWidth)
+    this._selectionOutlineShape.stroke.setAntiAlias(EditorUtils.selectionOutlineStrokeAntiAlias)
+    this._selectionOutlineShape.stroke.setStrokeDashStyle(EditorUtils.selectionOutlineStrokeDashStyle)
     this._selectionOutlineShape.filled = false
     this._tableActiveCellShape.filled = false
-    this._tableActiveCellShape.stroke.setColor(Colors.Red)
-    this._tableActiveCellShape.stroke.setStrokeWidth(2)
+    this._tableActiveCellShape.stroke.setColor(EditorUtils.tableActiveCellStrokeColor)
+    this._tableActiveCellShape.stroke.setStrokeWidth(EditorUtils.tableActiveCellStrokeLineWidth)
+    this._tableActiveCellShape.stroke.setStrokeDashStyle(EditorUtils.tableActiveCellStrokeDashStyle)
+    this._tableActiveCellShape.stroke.setAntiAlias(EditorUtils.tableActiveCellStrokeAntiAlias)
     this._tableLayer.addNode(this._tableActiveCellShape)
     this.root.addNode(this._backgroundLayer)
     this.root.addNode(this._contentLayer)
@@ -2329,9 +2342,10 @@ export class Editor extends Painter {
 
   private handleTableActiveCellShape() {
     if(this._targetItem) {
+      const margin = EditorUtils.tableActiveCellMargin
       const worldTransform = this._targetItem.shape.worldTransform
       this._tableActiveCellShape.transform = worldTransform
-      this._tableActiveCellShape.boundary =  Rectangle.makeLTWH(0, 0, this._targetItem.width, this._targetItem.height)
+      this._tableActiveCellShape.boundary =  Rectangle.makeLTWH(margin, margin, this._targetItem.width - margin * 2, this._targetItem.height - margin * 2)
       this.triggerTableTextEditStart()
     } else {
       this._tableActiveCellShape.transform = new Matrix()

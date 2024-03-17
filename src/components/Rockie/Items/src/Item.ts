@@ -6,7 +6,7 @@ import { Editor, } from '../../Editor'
 import { SystemUtils } from '@/components/Workspace/Utils';
 import { EditorItemInfo } from './EditorItemInfo';
 import { EditorItem } from './EditorItem';
-import { ThemeUtils } from '@/components/Workspace/Theme';
+import { ThemeUtils } from '@/components/Rockie/Theme';
 
 export interface Type {
   name: string;
