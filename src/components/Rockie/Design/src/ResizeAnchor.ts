@@ -7,6 +7,7 @@ import { Anchor, } from './Anchor'
 import { Holder, } from './Holder'
 import { EntityShapeFreezeType } from '../../Shapes/src/EntityShape'
 import { EditorItem } from '../../Items'
+import { EditorUtils } from '../../Theme'
 
 export enum ResizeType {
   Left,
@@ -31,6 +32,9 @@ export class ResizeAnchor extends Anchor {
   public constructor (editor: Editor, holder: Holder, resizeType: ResizeType) {
     super(editor, holder)
     this._resizeType = resizeType
+    this.fill.setColor(EditorUtils.anchorResizeFillColor)
+    this.stroke.setColor(EditorUtils.anchorResizeStrokeColor)
+    this.stroke.setStrokeWidth(EditorUtils.anchorResizeStrokeLineWidth)
     // this.fontName = 'vapo'
     // this.text = 'C'
   }

@@ -4,6 +4,7 @@ import { Anchor, } from './Anchor'
 import { Holder } from './Holder'
 import { ShapeEntity, Shapes } from '../../Items'
 import { AdapterDirection } from '../../Shapes/src/EntityShape'
+import { EditorUtils } from '../../Theme'
 
 
 export enum AdapterType {
@@ -24,7 +25,9 @@ export class AdapterAnchor extends Anchor {
     this._adapterType = adapterType
     this.width = 12
     this.height = 12
-    this.fill = Paint.makeColorPaint(Colors.Red)
+    this.fill.setColor(EditorUtils.anchorAdapterFillColor)
+    this.stroke.setColor(EditorUtils.anchorAdapterStrokeColor)
+    this.stroke.setStrokeWidth(EditorUtils.anchorAdapterStrokeLineWidth)
     this.buildAnchor()
   }
 

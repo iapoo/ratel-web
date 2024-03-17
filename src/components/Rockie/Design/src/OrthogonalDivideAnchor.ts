@@ -6,6 +6,7 @@ import { Holder } from './Holder'
 import { ConnectorShape } from '../../Shapes'
 import { OrthogonalHelper } from './OrthogonalHelper'
 import { SelectionLayer } from '../../Editor/src/SelectionLayer'
+import { EditorUtils } from '../../Theme'
 
 /**
  * 创建连接线
@@ -25,7 +26,9 @@ export class OrthogonalDivideAnchor extends Anchor {
     this.height = 12
     this._index = index
     this._left = left
-    this.fill = Paint.makeColorPaint(Colors.Gray)
+    this.fill.setColor(EditorUtils.anchorOrthogonalDivideFillColor)
+    this.stroke.setColor(EditorUtils.anchorOrthogonalDivideStrokeColor)
+    this.stroke.setStrokeWidth(EditorUtils.anchorOrthogonalDivideStrokeLineWidth)
     this.buildAnchor()
   }
 

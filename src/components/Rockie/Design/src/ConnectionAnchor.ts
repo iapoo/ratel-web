@@ -4,6 +4,7 @@ import { Editor, EditorMode } from '../../Editor'
 import { Holder } from './Holder'
 import { Connector, Item } from '../../Items'
 import { SelectionLayer } from '../../Editor/src/SelectionLayer'
+import { EditorUtils } from '../../Theme'
 
 /**
  * 创建连接线
@@ -23,7 +24,9 @@ export class ConnectionAnchor extends Anchor {
     this.width = 12
     this.height = 12
     this._fromSource = fromSource
-    this.fill = Paint.makeColorPaint(Colors.Green)
+    this.fill.setColor(EditorUtils.anchorConnectorFillColor)
+    this.stroke.setColor(EditorUtils.anchorConnectorStrokeColor)
+    this.stroke.setStrokeWidth(EditorUtils.anchorConnectorStrokeLineWidth)
     this.buildAnchor()
   }
 

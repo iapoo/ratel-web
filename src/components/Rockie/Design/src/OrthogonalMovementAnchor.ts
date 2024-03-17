@@ -7,6 +7,7 @@ import { ConnectorShape } from '../../Shapes'
 import { OrthogonalHelper } from './OrthogonalHelper'
 import { SystemUtils } from '@/components/Workspace/Utils'
 import { SelectionLayer } from '../../Editor/src/SelectionLayer'
+import { EditorUtils } from '../../Theme'
 
 /**
  * 创建连接线
@@ -23,7 +24,9 @@ export class OrthogonalMovementAnchor extends Anchor {
     this.width = 12
     this.height = 12
     this._index = index
-    this.fill = Paint.makeColorPaint(Colors.Green)
+    this.fill.setColor(EditorUtils.anchorOrthogonalMovementFillColor)
+    this.stroke.setColor(EditorUtils.anchorOrthogonalMovementStrokeColor)
+    this.stroke.setStrokeWidth(EditorUtils.anchorOrthogonalMovementStrokeLineWidth)
     this.buildAnchor()
   }
 

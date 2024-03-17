@@ -1,7 +1,8 @@
 import { GraphicsUtils, Point2, Rectangle, Rotation } from '@/components/Engine';
 import { Anchor } from './Anchor';
 import { Holder } from './Holder';
-import { EditorMode } from '../../Editor';
+import { Editor, EditorMode } from '../../Editor';
+import { EditorUtils } from '../../Theme';
 
 /**
  * 旋转
@@ -12,6 +13,15 @@ export class RotationAnchor extends Anchor {
   private _startY = 0;
   private _centerX = 0;
   private _centerY = 0;
+
+  public constructor (editor: Editor, holder: Holder) {
+    super(editor, holder)
+    this.fill.setColor(EditorUtils.anchorRotationFillColor)
+    this.stroke.setColor(EditorUtils.anchorRotationStrokeColor)
+    this.stroke.setStrokeWidth(EditorUtils.anchorRotationStrokeLineWidth)
+    // this.fontName = 'vapo'
+    // this.text = 'C'
+  }
 
   public handlePointerClick(x: number, y: number) {}
 
