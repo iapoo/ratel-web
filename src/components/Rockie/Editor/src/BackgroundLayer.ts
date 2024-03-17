@@ -2,6 +2,7 @@
 import { Color, Colors, Graphics, Paint, PaintStyle, Path, Rectangle, } from '@/components/Engine'
 import { Editor, } from './Editor'
 import { EditorLayer, } from './EditorLayer'
+import { EditorUtils } from '../../Theme'
 
 export class BackgroundLayer extends EditorLayer {
   private _mainStroke: Paint
@@ -23,9 +24,9 @@ export class BackgroundLayer extends EditorLayer {
     this._gridColor = editor.gridColor
     this._backgroundColor = editor.backgroundColor
     this._spacePaint = new Paint()
-    this._spacePaint.setColor(Colors.Gainsboro)
+    this._spacePaint.setColor(EditorUtils.backgroundSpaceColor)
     this._workPaint = new Paint()
-    this._workPaint.setColor(Colors.White)
+    this._workPaint.setColor(EditorUtils.backgroundWorkColor)
     this._mainStroke = new Paint()
     this._subStroke = new Paint()
     this._backgroundBrush = new Paint()

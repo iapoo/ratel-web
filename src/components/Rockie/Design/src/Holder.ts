@@ -18,6 +18,7 @@ import { OrthogonalDivideAnchor } from './OrthogonalDivideAnchor'
 import { OrthogonalMovementAnchor } from './OrthogonalMovementAnchor'
 import { SystemUtils } from '@/components/Workspace/Utils'
 import { ControllerAnchor } from './ControllerAnchor'
+import { EditorUtils } from '../../Theme'
 
 export class Holder extends Control {
   public static readonly PADDING = 32;
@@ -84,11 +85,14 @@ export class Holder extends Control {
     this._endAdapterAnchor = new AdapterAnchor(editor, this, AdapterType.END)
     this._startCubicControllerLine = new Line2D(0, 0, 0, 0)
     this._endCubicControllerLine = new Line2D(0, 0, 0, 0)
-    this._startCubicControllerLine.stroke.setStrokeWidth(3)
-    this._startCubicControllerLine.stroke.setColor(Colors.Green)
+    this._startCubicControllerLine.stroke.setStrokeWidth(EditorUtils.anchorCubiicControllerLineStrokeLineWidth)
+    this._startCubicControllerLine.stroke.setColor(EditorUtils.anchorCubiicControllerLineStrokeColor)
+    this._endCubicControllerLine.stroke.setStrokeWidth(EditorUtils.anchorCubiicControllerLineStrokeLineWidth)
+    this._endCubicControllerLine.stroke.setColor(EditorUtils.anchorCubiicControllerLineStrokeColor)
     this.stroked = true
-    this.stroke.setStrokeDashStyle(StrokeDashStyle.DASH)
-    this.stroke.setColor(Colors.Red)
+    this.stroke.setStrokeDashStyle(EditorUtils.holderStrokeDashStyle)
+    this.stroke.setColor(EditorUtils.holderStrokeColor)
+    this.stroke.setStrokeWidth(EditorUtils.holderStrokeLineWidth)
     this.filled = false
     this.clipped = false
     this._target = target

@@ -3,6 +3,7 @@ import { Anchor, } from './Anchor'
 import { Connector } from '../../Items'
 import { Editor, EditorMode } from '../../Editor'
 import { Holder } from './Holder'
+import { EditorUtils } from '../../Theme'
 
 /**
  * 创建连接线
@@ -17,7 +18,9 @@ export class CubicControllerAnchor extends Anchor {
     this._isStartController = isStartController
     this.width = 12
     this.height = 12
-    this.fill = Paint.makeColorPaint(Colors.Red)
+    this.fill.setColor(EditorUtils.anchorCubiicControllerFillColor)
+    this.stroke.setColor(EditorUtils.anchorCubiicControllerStrokeColor)
+    this.stroke.setStrokeWidth(EditorUtils.anchorCubiicControllerStrokeLineWidth)
     this.buildAnchor()
   }
 

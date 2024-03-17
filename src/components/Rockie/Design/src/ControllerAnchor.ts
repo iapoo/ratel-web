@@ -3,6 +3,7 @@ import { Editor, EditorMode } from '../../Editor'
 import { Anchor, } from './Anchor'
 import { Holder } from './Holder'
 import { ShapeEntity } from '../../Items'
+import { EditorUtils } from '../../Theme'
 
 /**
  * 变形，如调整梯形的梯形大小等, 同ModifyAnchor功能类似
@@ -16,7 +17,9 @@ export class ControllerAnchor extends Anchor {
     super(editor, holder)
     this.width = 12
     this.height = 12
-    this.fill = Paint.makeColorPaint(Colors.GreenYellow)
+    this.fill.setColor(EditorUtils.anchorControllerFillColor)
+    this.stroke.setColor(EditorUtils.anchorControllerStrokeColor)
+    this.stroke.setStrokeWidth(EditorUtils.anchorControllerStrokeLineWidth)
     this.buildAnchor()
   }
 
