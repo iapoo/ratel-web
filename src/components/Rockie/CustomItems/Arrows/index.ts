@@ -9,4 +9,6 @@ export const Arrows = [
     {name: ArrowTypes[3].name, type: Arrow, typeInfo: ArrowTypes[3] },
     {name: ArrowTypes[4].name, type: Arrow, typeInfo: ArrowTypes[4] },
     {name: ArrowTypes[5].name, type: Arrow, typeInfo: ArrowTypes[5] },
+    {name: ArrowTypes[6].name, type: Arrow, typeInfo: ArrowTypes[6] },
+    {name: ArrowTypes[7].name, type: Arrow, typeInfo: ArrowTypes[7] },
 ]
