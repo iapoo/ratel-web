@@ -38,6 +38,13 @@ export class OrthogonalMovementAnchor extends Anchor {
     return this._orthogonalPoints
   }
 
+  public handlePointerEnter(): void {
+    
+  }
+
+  public handlePointerLeave(): void {
+    
+  }
   public handlePointerClick (x: number, y: number) {
 
   }

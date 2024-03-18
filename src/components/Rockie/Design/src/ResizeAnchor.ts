@@ -42,6 +42,13 @@ export class ResizeAnchor extends Anchor {
   public get resizeType (): ResizeType {
     return this._resizeType
   }
+  public handlePointerEnter(): void {
+    
+  }
+
+  public handlePointerLeave(): void {
+    
+  }
 
   public handlePointerClick (x: number, y: number) {
     // console.log(`'anchor Pointer click'`)

@@ -34,13 +34,23 @@ export abstract class Anchor extends Shape {
     this.onPointerMove((e) => {
       this.handlePointerMove(e.x, e.y)
     })
+
+    this.onPointerEnter( (e) => {
+      this.handlePointerEnter()
+    })
+
+    this.onPointerLeave( (e) => {
+      this.handlePointerLeave()
+    })
     this.buildAnchor()
   }
 
-  public abstract handlePointerClick(x: number, y: number): void;
-  public abstract handlePointerDown(x: number, y: number): void;
-  public abstract handlePointerUp(x: number, y: number): void;
-  public abstract handlePointerMove(x: number, y: number): void;
+  public abstract handlePointerClick(x: number, y: number): void
+  public abstract handlePointerDown(x: number, y: number): void
+  public abstract handlePointerUp(x: number, y: number): void
+  public abstract handlePointerMove(x: number, y: number): void
+  public abstract handlePointerEnter(): void
+  public abstract handlePointerLeave(): void
 
   protected get lastMovingTime (): number {
     return this._lastMovingTime

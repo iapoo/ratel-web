@@ -23,6 +23,13 @@ export class ControllerAnchor extends Anchor {
     this.buildAnchor()
   }
 
+  public handlePointerEnter(): void {
+    
+  }
+
+  public handlePointerLeave(): void {
+    
+  }
   public handlePointerClick (x: number, y: number) {
 
   }
