@@ -16,6 +16,10 @@ const TYPE_ARROW_BOTH_WAY_HORIZONTAL = 'ArrowBothWayHorizontal'
 const DESC_ARROW_BOTH_WAY_HORIZONTAL = 'ArrowBothWayHorizontal'
 const TYPE_ARROW_BOTH_WAY_VERTICAL = 'ArrowBothWayVertical'
 const DESC_ARROW_BOTH_WAY_VERTICAL = 'ArrowBothWayVertical'
+const TYPE_ARROW_JUMP_IN_LEFT = 'ArrowJumpInLeft'
+const DESC_ARROW_JUMP_IN_LEFT = 'ArrowJumpInLeft'
+const TYPE_ARROW_JUMP_IN_RIGHT = 'ArrowJumpInRight'
+const DESC_ARROW_JUMP_IN_RIGHT = 'ArrowJumpInRight'
 const TEXT_ARROW = ''
 
 export const ArrowTypes = [
@@ -49,6 +53,16 @@ export const ArrowTypes = [
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
+  { name: TYPE_ARROW_JUMP_IN_LEFT, description: DESC_ARROW_JUMP_IN_LEFT, freeze: Shapes.FREEZE_NONE, text: TEXT_ARROW, left: 0, top: 0, width: 100, height: 100, enableMask: false, 
+    modifiable: true, modifierX: 0, modifierY: 1, modifierStartX: 1, modifierStartY: 0.5, modifierEndX: 1, modifierEndY: 1, modifyInLine: true, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
+    adaptable: true, adapterX: 0.5, adapterY: 0.2,adapterDirection: 'Y', adapterSize: 0.5, adapterStartX: 0, adapterStartY: 0, adapterEndX: 1, adapterEndY: 1, adaptInLine: false, adaptInPercent: true
+  },
+  { name: TYPE_ARROW_JUMP_IN_RIGHT, description: DESC_ARROW_JUMP_IN_RIGHT, freeze: Shapes.FREEZE_NONE, text: TEXT_ARROW, left: 0, top: 0, width: 100, height: 100, enableMask: false, 
+    modifiable: true, modifierX: 0, modifierY: 1, modifierStartX: 0, modifierStartY: 0.5, modifierEndX: 0, modifierEndY: 1, modifyInLine: true, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
+    adaptable: true, adapterX: 0.5, adapterY: 0.2,adapterDirection: 'Y', adapterSize: 0.5, adapterStartX: 0, adapterStartY: 0, adapterEndX: 1, adapterEndY: 1, adaptInLine: false, adaptInPercent: true
+  },
 ]
 
 export class Arrow extends CustomEntity {
@@ -70,6 +84,10 @@ export class Arrow extends CustomEntity {
     let modifierHeight = theThis.modifier.y + theThis.typeInfo.modifierStart.y * theThis.height
     let controllerWidth = theThis.controller.x + theThis.typeInfo.controllerStart.x * theThis.width
     let controllerHeight = theThis.controller.y + theThis.typeInfo.controllerStart.y * theThis.height
+    let adapterWidth = theThis.adapter.x +theThis.typeInfo.adapterStart.x * theThis.width
+    let adapterHeight = theThis.adapter.y + theThis.typeInfo.adapterStart.y * theThis.height
+    let adapterSizeX = theThis.adapterSize
+    let adapterSizeY = theThis.adapterSize
     if(theThis.typeInfo.modifyInPercent) {
       modifierWidth = theThis.width * theThis.modifier.x * (theThis.typeInfo.modifierEnd.x - theThis.typeInfo.modifierStart.x) + theThis.typeInfo.modifierStart.x * theThis.width
       modifierHeight = theThis.height * theThis.modifier.y * (theThis.typeInfo.modifierEnd.y - theThis.typeInfo.modifierStart.y) + theThis.typeInfo.modifierStart.y * theThis.height
@@ -77,6 +95,12 @@ export class Arrow extends CustomEntity {
     if(theThis.typeInfo.controlInPercent) {
       controllerWidth = theThis.width * theThis.controller.x * (theThis.typeInfo.controllerEnd.x - theThis.typeInfo.controllerStart.x) + theThis.typeInfo.controllerStart.x * theThis.width
       controllerHeight = theThis.height * theThis.controller.y * (theThis.typeInfo.controllerEnd.y - theThis.typeInfo.controllerStart.y) + theThis.typeInfo.controllerStart.y * theThis.height
+    }
+    if(theThis.typeInfo.adaptInPercent) {
+      adapterWidth = theThis.width * theThis.adapter.x * (theThis.typeInfo.adapterEnd.x - theThis.typeInfo.adapterStart.x) + theThis.typeInfo.adapterStart.x * theThis.width
+      adapterHeight = theThis.height * theThis.adapter.y * (theThis.typeInfo.adapterEnd.y - theThis.typeInfo.adapterStart.y) + theThis.typeInfo.adapterStart.y * theThis.height
+      adapterSizeX = theThis.adapterSize * (theThis.typeInfo.adapterEnd.x - theThis.typeInfo.adapterStart.x) * this.width
+      adapterSizeY = theThis.adapterSize * (theThis.typeInfo.adapterEnd.y - theThis.typeInfo.adapterStart.y) * this.height
     }
     theThis.path.reset()
     switch(theThis.typeInfo.name) {
@@ -139,6 +163,42 @@ export class Arrow extends CustomEntity {
         theThis.path.lineTo(theThis.width, theThis.height - modifierHeight)
         theThis.path.lineTo(theThis.width * 0.5, 0)
         break;
+      case TYPE_ARROW_JUMP_IN_LEFT: {
+        if(adapterHeight > this.height / 2) {
+          adapterHeight = this.height / 2
+        }
+        if(adapterSizeY < adapterHeight) {
+          adapterSizeY = adapterHeight
+        }
+        let height = adapterHeight + adapterSizeY
+        theThis.path.moveTo(this.width, modifierHeight)
+        theThis.path.quadTo(this.width, adapterHeight, adapterWidth, adapterHeight)
+        theThis.path.lineTo(adapterWidth, 0)
+        theThis.path.lineTo(0, height /2)
+        theThis.path.lineTo(adapterWidth, height)
+        theThis.path.lineTo(adapterWidth, height - adapterHeight)
+        theThis.path.quadTo(this.width, height - adapterHeight, this.width, this.height)
+        theThis.path.lineTo(this.width, modifierHeight)
+        break;
+      }
+      case TYPE_ARROW_JUMP_IN_RIGHT: {
+        if(adapterHeight > this.height / 2) {
+          adapterHeight = this.height / 2
+        }
+        if(adapterSizeY < adapterHeight) {
+          adapterSizeY = adapterHeight
+        }
+        let height = adapterHeight + adapterSizeY
+        theThis.path.moveTo(0, modifierHeight)
+        theThis.path.quadTo(0, adapterHeight, adapterWidth, adapterHeight)
+        theThis.path.lineTo(adapterWidth, 0)
+        theThis.path.lineTo(this.width, height /2)
+        theThis.path.lineTo(adapterWidth, height)
+        theThis.path.lineTo(adapterWidth, height - adapterHeight)
+        theThis.path.quadTo(0, height - adapterHeight, 0, this.height)
+        theThis.path.lineTo(0, modifierHeight)
+        break;
+      }
       case TYPE_ARROW_RIGHT:
       default:
         theThis.path.moveTo(0, modifierHeight)
