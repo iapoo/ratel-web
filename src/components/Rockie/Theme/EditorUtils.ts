@@ -202,6 +202,7 @@ export class EditorUtils {
   public static get anchorResizeStrokeLineWidth(): number {
     return 1
   }
+
   public static get anchorRotationFillColor(): Color {
     return Colors.Orange
   }
@@ -212,5 +213,17 @@ export class EditorUtils {
 
   public static get anchorRotationStrokeLineWidth(): number {
     return 1
+  }
+
+  public static get anchorCreationFillColor(): Color {
+    return Colors.SeaGreen
+  }
+
+  public static get anchorCreationStrokeColor(): Color {
+    return Colors.Blue
+  }
+
+  public static get anchorCreationStrokeLineWidth(): number {
+    return 0.5
   }
 }
