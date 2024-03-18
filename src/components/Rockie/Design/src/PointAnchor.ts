@@ -19,6 +19,13 @@ export class PointAnchor extends Anchor {
     super(editor, holder)
     this._isStart = isStart
   }
+  public handlePointerEnter(): void {
+    
+  }
+
+  public handlePointerLeave(): void {
+    
+  }
   public handlePointerClick (x: number, y: number) {
 
   }

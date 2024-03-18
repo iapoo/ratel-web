@@ -40,6 +40,13 @@ export class OrthogonalDivideAnchor extends Anchor {
     return this._left
   }
 
+  public handlePointerEnter(): void {
+    
+  }
+
+  public handlePointerLeave(): void {
+    
+  }
   public handlePointerClick (x: number, y: number) {
 
   }

@@ -16,6 +16,13 @@ export class DivideAnchor extends Anchor {
   public handlePointerMove (x: number, y: number) {
 
   }
+  public handlePointerEnter(): void {
+    
+  }
+
+  public handlePointerLeave(): void {
+    
+  }
   protected buildAnchor () {
     this.path.reset()
     this.path.addOval(Rectangle.makeLTWH(0, 0, this.width, this.height))

@@ -23,6 +23,13 @@ export class RotationAnchor extends Anchor {
     // this.text = 'C'
   }
 
+  public handlePointerEnter(): void {
+    
+  }
+
+  public handlePointerLeave(): void {
+    
+  }
   public handlePointerClick(x: number, y: number) {}
 
   public handlePointerDown(x: number, y: number) {
