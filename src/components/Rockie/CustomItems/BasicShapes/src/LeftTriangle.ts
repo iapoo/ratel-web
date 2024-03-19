@@ -5,7 +5,7 @@ import { CustomEntity, Shapes } from '../../../Items'
 import { Type } from '../../../Items/src/Item'
 
 const TYPE_LEFT_TRIANGLE = 'LeftTriangle'
-const DESC_LEFT_TRIANGLE = 'LeftTriangle'
+const DESC_LEFT_TRIANGLE = 'Left Triangle'
 const TEXT_LEFT_TRIANGLE = ''
 
 export const LeftTriangleTypes = [{ name: TYPE_LEFT_TRIANGLE, description: DESC_LEFT_TRIANGLE, 

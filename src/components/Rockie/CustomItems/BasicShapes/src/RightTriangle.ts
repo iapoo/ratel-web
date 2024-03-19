@@ -5,7 +5,7 @@ import { CustomEntity, Shapes } from '../../../Items'
 import { Type } from '../../../Items/src/Item'
 
 const TYPE_RIGHT_TRIANGLE = 'RightTriangle'
-const DESC_RIGHT_TRIANGLE = 'RightTriangle'
+const DESC_RIGHT_TRIANGLE = 'Right Triangle'
 const TEXT_RIGHT_TRIANGLE = ''
 
 export const RightTriangleTypes = [{ name: TYPE_RIGHT_TRIANGLE, description: DESC_RIGHT_TRIANGLE, 

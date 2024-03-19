@@ -5,7 +5,7 @@ import { CustomEntity, Shapes } from '../../../Items'
 import { Type } from '../../../Items/src/Item'
 
 const TYPE_TOP_TRIANGLE = 'TopTriangle'
-const DESC_TOP_TRIANGLE = 'TopTriangle'
+const DESC_TOP_TRIANGLE = 'Top Triangle'
 const TEXT_TOP_TRIANGLE = ''
 
 export const TopTriangleTypes = [{ name: TYPE_TOP_TRIANGLE, description: DESC_TOP_TRIANGLE, 
