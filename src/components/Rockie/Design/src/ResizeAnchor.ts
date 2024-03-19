@@ -32,22 +32,20 @@ export class ResizeAnchor extends Anchor {
   public constructor (editor: Editor, holder: Holder, resizeType: ResizeType) {
     super(editor, holder)
     this._resizeType = resizeType
-    this.fill.setColor(EditorUtils.anchorResizeFillColor)
+    this.fill.setColor(EditorUtils.anchorResizeFillDefaultColor)
     this.stroke.setColor(EditorUtils.anchorResizeStrokeColor)
     this.stroke.setStrokeWidth(EditorUtils.anchorResizeStrokeLineWidth)
-    // this.fontName = 'vapo'
-    // this.text = 'C'
   }
 
   public get resizeType (): ResizeType {
     return this._resizeType
   }
   public handlePointerEnter(): void {
-    
+    this.fill.setColor(EditorUtils.anchorResizeFillHighlightColor)
   }
 
   public handlePointerLeave(): void {
-    
+    this.fill.setColor(EditorUtils.anchorResizeFillDefaultColor)
   }
 
   public handlePointerClick (x: number, y: number) {
