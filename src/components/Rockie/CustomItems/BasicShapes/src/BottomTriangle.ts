@@ -5,7 +5,7 @@ import { CustomEntity, Shapes } from '../../../Items'
 import { Type } from '../../../Items/src/Item'
 
 const TYPE_BOTTOM_TRIANGLE = 'BottomTriangle'
-const DESC_BOTTOM_TRIANGLE = 'BottomTriangle'
+const DESC_BOTTOM_TRIANGLE = 'Bottom Triangle'
 const TEXT_BOTTOM_TRIANGLE = ''
 
 export const BottomTriangleTypes = [{ name: TYPE_BOTTOM_TRIANGLE, description: DESC_BOTTOM_TRIANGLE, 

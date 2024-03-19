@@ -275,7 +275,7 @@ const Navigator: FC<NavigatorProps> = ({
 
   const customShapeBasicShapes = BasicShapes.map(
     basicType => {
-      return <Popover title={basicType.name} placement='right' content={getCustomShapeBasicShapesPopoverContent(basicType.name, basicType.typeInfo.width, basicType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
+      return <Popover title={basicType.typeInfo.description} placement='right' content={getCustomShapeBasicShapesPopoverContent(basicType.name, basicType.typeInfo.width, basicType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
       <Button type='text' onClick={() => addCustomShape(basicType.name, basicType.type, basicType.typeInfo)} style={{padding: 2, display: 'table'}}>
         <img src={`/custom-shapes/basic-shapes/${basicType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
       </Button>
@@ -293,7 +293,7 @@ const Navigator: FC<NavigatorProps> = ({
       } else {
         width = 28
       }
-      return <Popover title={basicType.name} placement='right' content={getCustomShapeFlowChartShapesPopoverContent(basicType.name, basicType.typeInfo.width, basicType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
+      return <Popover title={basicType.typeInfo.description} placement='right' content={getCustomShapeFlowChartShapesPopoverContent(basicType.name, basicType.typeInfo.width, basicType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
       <Button type='text' onClick={() => addCustomShape(basicType.name, basicType.type, basicType.typeInfo)} style={{padding: 2, display: 'table'}}>
         <img src={`/custom-shapes/flowchart/${basicType.name}.png`} width={width} height={height} style={{display: 'table-cell'}}/>
       </Button>
@@ -301,7 +301,7 @@ const Navigator: FC<NavigatorProps> = ({
     }
   )
   
-  const customShapeArrowss = Arrows.map(
+  const customShapeArrows = Arrows.map(
     arrow => {
       let width = 28
       let height = 28
@@ -310,7 +310,7 @@ const Navigator: FC<NavigatorProps> = ({
       } else {
         width = 28
       }
-        return <Popover title={arrow.name} placement='right' content={getCustomShapeArrowsPopoverContent(arrow.name, arrow.typeInfo.width, arrow.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 180, width: 180,}}>
+        return <Popover title={arrow.typeInfo.description} placement='right' content={getCustomShapeArrowsPopoverContent(arrow.name, arrow.typeInfo.width, arrow.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 180, width: 180,}}>
       <Button type='text' onClick={() => addCustomShape(arrow.name, arrow.type, arrow.typeInfo)} style={{padding: 2, display: 'table'}}>
         <img src={`/custom-shapes/arrows/${arrow.name}.png`} width={width} height={height} style={{display: 'table-cell'}}/>
       </Button>
@@ -348,7 +348,7 @@ const Navigator: FC<NavigatorProps> = ({
       {table}
       {containers}
       {customShapeBasicShapes}
-      {customShapeArrowss}
+      {customShapeArrows}
       {aliyunShapes}
       {awsShapes}
       {customShapeFlowChartShapes}
