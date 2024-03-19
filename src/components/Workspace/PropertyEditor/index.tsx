@@ -562,12 +562,12 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
   const shapeSettings = <div>
     <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontWeight: 'bold', padding: 4, }}>
       <Checkbox onChange={handleEnableFillChange} checked={enableFill}><FormattedMessage id='workspace.property-editor.item-setting.fill'/></Checkbox>      
-      <ColorPicker size='small' value={fillColor} onChange={handleFillColorChange} destroyTooltipOnHide={true}/>
+      <ColorPicker size='small' value={fillColor} trigger='hover' onChange={handleFillColorChange} destroyTooltipOnHide={true}/>
     </div>
     <Divider style={{margin: 4}}/>
     <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontWeight: 'bold', padding: 4, }}>
       <Checkbox onChange={handleEnableStrokeChange} checked={enableStroke}><FormattedMessage id='workspace.property-editor.item-setting.stroke'/></Checkbox>      
-      <ColorPicker size='small' value={strokeColor} onChange={handleStrokeColorChange} destroyTooltipOnHide={true}/>
+      <ColorPicker size='small' value={strokeColor} trigger='hover' onChange={handleStrokeColorChange} destroyTooltipOnHide={true}/>
     </div>
     <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontWeight: 'bold', padding: 4, }}>
       <Select size='small' value={strokeDashStyle} onChange={handleStrokeDashStyleChange} style={{width: '60%'}} options={strokeDashStyles}/>
