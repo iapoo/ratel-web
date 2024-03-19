@@ -764,7 +764,6 @@ const Content: FC<ContentProps> = ({
     //e.stopPropagation()
   }
 
-
   const handleFontColorChange = (value: any) => {
     setFontColor(value)
     if (Utils.currentEditor) {
@@ -781,6 +780,13 @@ const Content: FC<ContentProps> = ({
           }
         }
       })
+      Utils.currentEditor.focus()    
+      Utils.currentEditor.triggerTextEditStyleChange()
+    }
+  }
+
+  const handleFontColorChangeComplete = (value: any) => {
+    if (Utils.currentEditor) {
       Utils.currentEditor.focus()    
       Utils.currentEditor.triggerTextEditStyleChange()
     }
@@ -1401,7 +1407,7 @@ const Content: FC<ContentProps> = ({
         <Select size='small' value={fontSize} onChange={handleFontSizeChange} style={{width: 64, }} options={FontSizeOptions} bordered={false}/>
       </Tooltip>
       <Tooltip title={<FormattedMessage id='workspace.header.title.font-color'/>}>
-        <ColorPicker size='small' value={fontColor} onChange={handleFontColorChange} destroyTooltipOnHide={true}/>
+        <ColorPicker size='small' value={fontColor} onChange={handleFontColorChange} onChangeComplete={handleFontColorChangeComplete} destroyTooltipOnHide={true} trigger='hover'/>
       </Tooltip>
     </Space>
   </FloatButton.Group>

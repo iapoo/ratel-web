@@ -621,6 +621,9 @@ const Header: FC<HeaderProps> = ({
     }
   }
 
+  const handleFillColorChangeComplete = (value: any) => {
+  }
+
   const handleStrokeColorChange = (value: any) => {
     setStrokeColor(value)
     if (Utils.currentEditor) {
@@ -634,6 +637,9 @@ const Header: FC<HeaderProps> = ({
     }
   }
 
+  const handleStrokeColorChangeComplete = (value: any) => {
+  }
+
   const handleFontColorChange = (value: any) => {
     setFontColor(value)
     if (Utils.currentEditor) {
@@ -644,6 +650,12 @@ const Header: FC<HeaderProps> = ({
           editorItem.fontColor = color
         }
       })
+      Utils.currentEditor.focus()
+    }
+  }
+
+  const handleFontColorChangeComplete = (value: any) => {
+    if (Utils.currentEditor) {
       Utils.currentEditor.focus()
     }
   }
@@ -1420,13 +1432,13 @@ const Header: FC<HeaderProps> = ({
                 <Select size='small' value={fontSize} onChange={handleFontSizeChange} style={{width: 64, }} disabled={!selectionValid} options={FontSizeOptions} bordered={false}/>
               </Tooltip>
               <Tooltip title={<FormattedMessage id='workspace.header.title.fill-color'/>}>
-                <ColorPicker size='small' value={fillColor} onChange={handleFillColorChange} disabled={!selectionValid}  destroyTooltipOnHide={true}/>
+                <ColorPicker size='small' value={fillColor} trigger='hover' onChange={handleFillColorChange} onChangeComplete={handleFillColorChangeComplete} disabled={!selectionValid}  destroyTooltipOnHide={true}/>
               </Tooltip>
               <Tooltip title={<FormattedMessage id='workspace.header.title.stroke-color'/>}>
-                <ColorPicker size='small' value={strokeColor} onChange={handleStrokeColorChange} disabled={!selectionValid} destroyTooltipOnHide={true}/>
+                <ColorPicker size='small' value={strokeColor} trigger='hover' onChange={handleStrokeColorChange} onChangeComplete={handleStrokeColorChangeComplete} disabled={!selectionValid} destroyTooltipOnHide={true}/>
               </Tooltip>
               <Tooltip title={<FormattedMessage id='workspace.header.title.font-color'/>}>
-                <ColorPicker size='small' value={fontColor} onChange={handleFontColorChange} disabled={!selectionValid} destroyTooltipOnHide={true}/>
+                <ColorPicker size='small' value={fontColor} trigger='hover' onChange={handleFontColorChange} onChangeComplete={handleFontColorChangeComplete} disabled={!selectionValid} destroyTooltipOnHide={true}/>
               </Tooltip>
               <Tooltip title={<FormattedMessage id='workspace.header.title.line-width'/>}>
                 {/** TODO:  FIXME, HIDE TEMPORARY*/}
