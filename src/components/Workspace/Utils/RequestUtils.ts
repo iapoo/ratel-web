@@ -199,7 +199,7 @@ export class RequestUtils {
                 return true
             }
         }
-        return true
+        return false
     }
 
     public static async checkOnline() {
