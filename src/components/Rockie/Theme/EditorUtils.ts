@@ -191,8 +191,12 @@ export class EditorUtils {
     return 1
   }
 
-  public static get anchorResizeFillColor(): Color {
+  public static get anchorResizeFillDefaultColor(): Color {
     return Colors.White
+  }
+
+  public static get anchorResizeFillHighlightColor(): Color {
+    return Colors.SkyBlue
   }
 
   public static get anchorResizeStrokeColor(): Color {
