@@ -19,10 +19,11 @@ export interface EditorItem {
   readonly category: string;
   readonly type: string;
   readonly rotation: Rotation;
-  readonly useTheme: boolean
   readonly worldTransform: Matrix
   readonly worldInverseTransform: Matrix | null
   readonly internalTransform: Matrix
+  useTheme: boolean
+  themeName: string
   strokeColor: Color 
   fillColor: Color 
   lineWidth: number

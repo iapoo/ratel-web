@@ -6,7 +6,7 @@ import { Editor, } from '../../Editor'
 import { SystemUtils } from '@/components/Workspace/Utils';
 import { EditorItemInfo } from './EditorItemInfo';
 import { EditorItem } from './EditorItem';
-import { ThemeUtils } from '@/components/Rockie/Theme';
+import { DocumentThemes, ThemeUtils } from '@/components/Rockie/Theme';
 
 export interface Type {
   name: string;
@@ -64,6 +64,8 @@ export abstract class Item implements EditorItem {
   private _fillColor: Color = Colors.White
 
   private _useTheme: boolean = false
+
+  private _themeName: string = DocumentThemes.TYPE_DEFAULT
 
   private _lineWidth: number = 1
 
@@ -204,6 +206,16 @@ export abstract class Item implements EditorItem {
 
   public set useTheme(value: boolean) {
     this._useTheme = value
+    this.updateTheme()
+  }
+
+  public get themeName(): string {
+    return this._themeName
+  }
+
+  public set themeName(value: string) {
+    this._themeName = value
+    this._useTheme = true
     this.updateTheme()
   }
 
@@ -383,8 +395,13 @@ export abstract class Item implements EditorItem {
 
   public updateTheme() {
     if(this._useTheme) {
-      this._shape.stroke.setColor(ThemeUtils.strokeColor)
-      this._shape.fill.setColor(ThemeUtils.fillColor)
+      if(this.category == Categories.CONNECTOR) {
+        this._shape.stroke.setColor(ThemeUtils.getConnectorStrokeColor(this._themeName))
+        this._shape.fill.setColor(ThemeUtils.getConnectorFillColor(this._themeName))
+      } else {
+        this._shape.stroke.setColor(ThemeUtils.getShapeStrokeColor(this._themeName))
+        this._shape.fill.setColor(ThemeUtils.getShapeFillColor(this._themeName))
+      }
       this._shape.stroke.setStrokeWidth(ThemeUtils.lineWidth)
       this._shape.stroke.setStrokeDashStyle(ThemeUtils.strokeDashStyle)
       //this._shape.fontColor = ThemeUtils.fontColor
@@ -414,8 +431,13 @@ export abstract class Item implements EditorItem {
   }
 
   public initializeTheme() {
-    this.fillColor = ThemeUtils.fillColor
-    this.strokeColor = ThemeUtils.strokeColor
+    if(this.category == Categories.CONNECTOR) {
+      this.strokeColor = ThemeUtils.getConnectorStrokeColor(this._themeName)
+      this.fillColor = ThemeUtils.getConnectorFillColor(this._themeName)
+    } else {
+      this.strokeColor = ThemeUtils.getShapeStrokeColor(this._themeName)
+      this.fillColor = ThemeUtils.getShapeFillColor(this._themeName)
+    }
     this.lineWidth = ThemeUtils.lineWidth
     this.fontSize = ThemeUtils.fontSize
     this.fontColor = ThemeUtils.fontColor

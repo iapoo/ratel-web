@@ -16,6 +16,7 @@ export class EditorItemInfo {
     public parentId: string | null = null
     public styles: StyleInfo[] = []
     public useTheme: boolean
+    public themeName: string = ''
     public strokeColor: string | null
     public fillColor: string | null
     public lineWidth: number | null

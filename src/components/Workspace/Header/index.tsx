@@ -27,6 +27,7 @@ import { AliyunShapes } from '@/components/Rockie/CustomItems/Aliyun';
 import { AwsShapes } from '@/components/Rockie/CustomItems/Aws';
 import { FlowChartShapeTypes } from '@/components/Rockie/CustomItems/FlowChart/src/FlowChartShape';
 import { FlowChartShapes } from '@/components/Rockie/CustomItems/FlowChart';
+import { DocumentThemeTypes } from '@/components/Rockie/Theme';
 
 interface HeaderProps {
   previousEditor: Editor | undefined
@@ -1260,6 +1261,48 @@ const Header: FC<HeaderProps> = ({
     }
   }
 
+  const handleTestStyle  = () => {
+    if(currentEditor) {
+      let count = DocumentThemeTypes.length
+      for(let i = 0; i < count; i ++) {
+        const documentTheme = DocumentThemeTypes[i]
+        let shapeType = ShapeTypes[0]
+        let margin = 5 //2
+        let lineFactor = 1 //1
+        let fontFactor = 1 //0.5
+        let sizeFactor = 0.5 //0.25
+        let modifierFactor = 1 //0.25
+        currentEditor.contentLayer.removeAllEditorItems()
+        let left = shapeType.left + margin
+        if(shapeType.width < shapeType.height) {
+          left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
+        }
+        let shapeEntity = new ShapeEntity(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, {shapeType: shapeType.name})
+        shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
+        shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
+        shapeEntity.text = 'Text'
+        if(!shapeType.modifyInPercent) {
+          shapeEntity.shape.modifier = new Point2(Math.round(shapeEntity.shape.modifier.x * modifierFactor), Math.round(shapeEntity.shape.modifier.y * modifierFactor))
+        }
+        const start = new Point2(left + shapeType.width * sizeFactor * 0.25, shapeType.top + margin + shapeType.height * sizeFactor)
+        const end = new Point2(left + shapeType.width * sizeFactor * 0.75, shapeType.top + margin + shapeType.height * sizeFactor)
+        const connector = new Connector(start, end, ConnectorDirection.Bottom, ConnectorDirection.Bottom)
+        connector.endArrow = ConnectorArrowTypes[1]
+        connector.orthogonalPoints = [new Point2(0, 0), new Point2(0, 12), new Point2(0, 24), new Point2(30, 24), new Point2(30, 12), new Point2(30, 0), ]
+        shapeEntity.themeName =  documentTheme.name
+        connector.themeName = documentTheme.name
+        if(shapeType.width < shapeType.height) {
+          currentEditor.resize(shapeType.height * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+        } else {
+          currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor * 1.8 + margin * 2)
+        }
+        currentEditor.contentLayer.addEditorItem(shapeEntity)
+        currentEditor.contentLayer.addEditorItem(connector)
+        const data = currentEditor.export()
+        SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
+      }
+    }
+  }
   const fileItems: MenuProps['items'] = [
     { key: 'New', label: <FormattedMessage id='workspace.header.menu-file-new' />, icon: <FileAddOutlined />, onClick: handleFileNew },
     { key: 'OpenFrom', label: <FormattedMessage id='workspace.header.menu-file-open-from' />, disabled: true, icon: <FolderOpenOutlined />, },
@@ -1319,6 +1362,7 @@ const Header: FC<HeaderProps> = ({
     { key: 'Test Custom Shapes Image Small', label: 'Test Custom Shapes Image Small', onClick: handleTestImageShapesSmall, },
     { key: 'Test Custom Shapes FlowChart Large', label: 'Test Custom Shapes FlowChart Large', onClick: handleTestFlowChartShapes, },
     { key: 'Test Custom Shapes FlowChart Small', label: 'Test Custom Shapes FlowChart Small', onClick: handleTestFlowChartShapesSmall, },
+    { key: 'Test Style', label: 'Test Style', onClick: handleTestStyle, },
   ];
 
   const helpItems: MenuProps['items'] = [
