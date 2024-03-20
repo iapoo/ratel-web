@@ -62,8 +62,15 @@ export class OperationHelper {
     }
     editorItem.useTheme = itemInfo.useTheme
     if(itemInfo.useTheme) {
-      editorItem.strokeColor = ThemeUtils.strokeColor
-      editorItem.fillColor = ThemeUtils.fillColor
+      if(itemInfo.category == Categories.CONNECTOR) {
+        editorItem.strokeColor = ThemeUtils.getConnectorStrokeColor(itemInfo.themeName)
+        editorItem.fillColor = ThemeUtils.getConnectorFillColor(itemInfo.themeName)
+        editorItem.fontColor = ThemeUtils.getConnectorFontColor(itemInfo.themeName)
+      } else {
+        editorItem.strokeColor = ThemeUtils.getShapeStrokeColor(itemInfo.themeName)
+        editorItem.fillColor = ThemeUtils.getShapeFillColor(itemInfo.themeName)
+        editorItem.fontColor = ThemeUtils.getShapeFontColor(itemInfo.themeName)
+      }
       editorItem.lineWidth = ThemeUtils.lineWidth
     } else {
       let strokeColor = SystemUtils.parseColorString(itemInfo.strokeColor)
@@ -342,6 +349,7 @@ export class OperationHelper {
     editorItemInfo.id = editorItem.id
     editorItemInfo.items.length = 0
     editorItemInfo.useTheme = editorItem.useTheme
+    editorItemInfo.themeName = editorItem.themeName
     if(editorItem.useTheme) {
       editorItemInfo.strokeColor = null
       editorItemInfo.fillColor = null

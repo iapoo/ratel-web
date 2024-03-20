@@ -11,6 +11,7 @@ import { Color, Colors, StrokeCap, StrokeDashStyle, StrokeJoin } from '@/compone
 import { CheckboxChangeEvent } from 'antd/es/checkbox'
 import { Connector, ConnectorArrowTypes } from '@/components/Rockie/Items/src/Connector'
 import { ConnectorLineModesForCurve, DoubleLineArrowDistanceOptions, DoubleLineArrowLengthOptions, DoubleLineGapOptions } from '../Utils/Consts'
+import { DocumentThemes } from '@/components/Rockie/Theme'
 
 interface PropertyEditorProps {
   previousEditor: Editor | undefined
@@ -30,6 +31,7 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
   const [ backgroundColor, setBackgroundColor, ] = useState<string>(Consts.COLOR_BACKGROUND_DEFAULT)
   const [ showPageItems, setShowPageItems, ] = useState<boolean>(true)
   const [ showBackground, setShowBackground, ] = useState<boolean>(false)
+  const [ pageStyle, setPageStyle, ] = useState<string>(DocumentThemes.TYPE_DEFAULT)
   const [ pageSize, setPageSize, ] = useState<string>('1')
   const [ pageWidth, setPageWidth, ] = useState<number>(Consts.PAGE_WIDTH_DEFAULT)
   const [ pageHeight, setPageHeight, ] = useState<number>(Consts.PAGE_HEIGHT_DEFAULT)
@@ -211,6 +213,16 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
       //console.log(`${showGrid}    ${e.target.checked}    ${currentEditor.showGrid}`)
       setSnapToGrid(e.target.checked)
       currentEditor.snapToGrid = e.target.checked
+    }
+  }
+
+  const handlePageStyleChange = (value: string, options: any) => {
+    if(currentEditor) {
+      setPageStyle(value)      
+      let editorItems = currentEditor.contentLayer.getAllEditorItems()
+      editorItems.forEach(editorItem => {
+        editorItem.themeName = value
+      })
     }
   }
 
@@ -627,6 +639,20 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
     </div>
   </div>
 
+
+  const pagStypeOptions = [
+    {value: 'Default', Label: 'Default'},
+    {value: 'Default2', Label: 'Default2'},
+  ]
+
+  const pageStyles = <div>  
+  <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 4}}>
+    <Select size='small' value={pageStyle} onChange={handlePageStyleChange} style={{width: '100%'}}
+      options={pagStypeOptions}/>
+  </div>
+  
+  </div>
+
   const pageItems: TabsProps['items'] = [ {
     key: '1', 
     label: intl.formatMessage({ id: 'workspace.property-editor.page-setting.title', }), 
@@ -634,7 +660,7 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
   },{ 
     key: '2', 
     label: intl.formatMessage({ id: 'workspace.property-editor.page-style.title', }), 
-    children: 'content2'
+    children: pageStyles
   },]
 
   const shapeItems: TabsProps['items'] = [{

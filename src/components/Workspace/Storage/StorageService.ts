@@ -12,7 +12,6 @@ import { LineData } from './LineData'
 import { ConnectorData } from './ConnectorData'
 import { Consts, SystemUtils } from '../Utils'
 import { CommonUtils } from '@/components/Rockie/Utils'
-import { ThemeUtils } from '../../Rockie/Theme'
 import { OperationHelper } from '@/components/Rockie/Operations'
 
 export class StorageService {

@@ -1,5 +1,6 @@
 import { Arrows } from "../../CustomItems/Arrows";
 import { BasicShapes } from "../../CustomItems/BasicShapes";
+import { FlowChartShapes } from "../../CustomItems/FlowChart";
 import { CustomEntity } from "../../Items";
 import { ShapeType } from "../../Items/src/ShapeEntity";
 import { ConnectorType } from "../../Shapes";
@@ -12,7 +13,8 @@ export interface CustomShapeType {
 //FIXME, Move it to better place
 export const CustomShapes = [
     ...BasicShapes,
-    ...Arrows
+    ...Arrows,
+    ...FlowChartShapes
   ]
 
 export class CommonUtils {
