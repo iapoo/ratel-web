@@ -61,6 +61,9 @@ const Body: FC<BodyProps> = ({
   }
 
   const handleEditorChange = (oldEditor: Editor | undefined, newEditor: Editor | undefined)=> {
+    if(oldEditor) {
+      oldEditor.checkAndEndTextEdit()
+    }
     onEditorChange(oldEditor, newEditor)
   }
   return (
