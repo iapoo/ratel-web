@@ -294,6 +294,10 @@ const Content: FC<ContentProps> = ({
       Utils.editors.push(pane.editor!)
     })
     updateEditorSize()
+
+    //Need to hide toolbar & terminate editting operations here
+    setTextToolbarVisible(false)
+    setTableToolbarVisible(false)
   }
 
   const saveData = () => {
@@ -385,7 +389,7 @@ const Content: FC<ContentProps> = ({
       if (pane.key == newActiveKey) {
         const editor = pane.editor
         const canvas = editor?.container
-        container?.append(canvas!)
+        container?.append(canvas!)        
         editor?.activate()
         let oldEditor = Utils.currentEditor
         Utils.currentEditor = editor!
@@ -1440,6 +1444,8 @@ const Content: FC<ContentProps> = ({
     <div  style={{ position: 'absolute', top: '0px', bottom: '0px', left: x, right: y, backgroundColor: 'lightgray', }}>
       <div style={{ position: 'absolute', width: '100%', height: `calc(100% - ${Utils.TITLE_HEIGHT}px + 16px) `, zIndex: 2, }} >
         <div id='content-container' style={{ width: '100%', height: '100%', overflow: 'scroll', scrollbarWidth: 'thin', display: 'grid', placeItems: 'center', }} onScroll={handleScroll}>
+          {textToolbars}
+          {tableToolbars}      
           <div style={{ width: contentWidth, height: contentHeight, }}>
             <div style={{ width: '100%', height: Editor.SHADOW_SIZE, backgroundColor: 'lightgray', }} />
             <div style={{ width: '100%', height: editorHeight, boxSizing: 'border-box', }}>
@@ -1448,8 +1454,6 @@ const Content: FC<ContentProps> = ({
                   menu={{items: popupType == PopupType.SHAPES ? popupShapeItems : (popupType == PopupType.EDITOR ? popupEditorItems : popupText)}} 
                   trigger={['contextMenu']} >
                 <div id='editor-container' style={{ width: editorWidth, height: '100%', float: 'left', backgroundColor: 'darkgray', cursor: editorCursor }} onContextMenu={handleContextTrigger} >
-                  {textToolbars}
-                  {tableToolbars}                  
                 </div>
               </Dropdown>
               <div style={{ width: Editor.SHADOW_SIZE, height: '100%', float: 'left', backgroundColor: 'lightgray', }} />

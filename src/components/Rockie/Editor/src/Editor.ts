@@ -1934,14 +1934,17 @@ export class Editor extends Painter {
     })    
   }
 
-  private checkAndStartTextEdit() {
+  public checkAndStartTextEdit() {
     if(!this._textFocused) {
       this._textFocused = true
       this.triggerTextEditStart()
     }
   }
 
-  private checkAndEndTextEdit() {
+  public checkAndEndTextEdit() {
+    if (this._target) {
+      this._target.shape.focused = false
+    }
     if(this._textFocused) {
       this._textFocused = false
       this.triggerTextEditEnd()
