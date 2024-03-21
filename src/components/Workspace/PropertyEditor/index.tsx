@@ -11,7 +11,7 @@ import { Color, Colors, StrokeCap, StrokeDashStyle, StrokeJoin } from '@/compone
 import { CheckboxChangeEvent } from 'antd/es/checkbox'
 import { Connector, ConnectorArrowTypes } from '@/components/Rockie/Items/src/Connector'
 import { ConnectorLineModesForCurve, DoubleLineArrowDistanceOptions, DoubleLineArrowLengthOptions, DoubleLineGapOptions } from '../Utils/Consts'
-import { DocumentThemes } from '@/components/Rockie/Theme'
+import { DocumentThemeTypes, DocumentThemes } from '@/components/Rockie/Theme'
 
 interface PropertyEditorProps {
   previousEditor: Editor | undefined
@@ -515,6 +515,16 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
     }
   }
 
+  const handleDocumentStyleChange  = (styleName: string, styleDescription: string) => {
+    if(currentEditor) {
+      setPageStyle(styleName)      
+      let editorItems = currentEditor.contentLayer.getAllEditorItems()
+      editorItems.forEach(editorItem => {
+        editorItem.themeName = styleName
+      })
+    }
+  }
+
   const strokeDashStyles = StrokeDashStyles.map(strokeDashStyle=> {
     //return {value: strokeDashStyle.name, label: intl.formatMessage({ id: strokeDashStyle.label})}
     return {value: strokeDashStyle.name, label: <img alt='intl.formatMessage({ id: strokeDashStyle.label})' src={'/images/line-' + strokeDashStyle.name + '.png'} width='64' height='12' />}
@@ -639,18 +649,20 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
     </div>
   </div>
 
-
-  const pagStypeOptions = [
-    {value: 'Default', Label: 'Default'},
-    {value: 'Default2', Label: 'Default2'},
-  ]
+  const documentThemeTypes = DocumentThemeTypes.map(
+    documentThemeType => 
+      <div style={{padding: '2px'}}>
+        <Button type='default' onClick={() => handleDocumentStyleChange(documentThemeType.name, documentThemeType.description)} style={{padding: '2px', display: 'table', width: '76px', height: '76px'}}>
+          <img src={`/styles/${documentThemeType.name}.png`} style={{display: 'table-cell'}}/>
+        </Button>
+      </div>
+    
+  )
 
   const pageStyles = <div>  
-  <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 4}}>
-    <Select size='small' value={pageStyle} onChange={handlePageStyleChange} style={{width: '100%'}}
-      options={pagStypeOptions}/>
+  <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', padding: 4}}>
+    {documentThemeTypes}
   </div>
-  
   </div>
 
   const pageItems: TabsProps['items'] = [ {

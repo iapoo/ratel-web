@@ -1299,7 +1299,7 @@ const Header: FC<HeaderProps> = ({
         currentEditor.contentLayer.addEditorItem(shapeEntity)
         currentEditor.contentLayer.addEditorItem(connector)
         const data = currentEditor.export()
-        SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
+        SystemUtils.generateDownloadFile(data, `${documentTheme.name}.png`)
       }
     }
   }
