@@ -525,6 +525,16 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
     }
   }
 
+  const handleShapeStyleChange  = (styleName: string, styleDescription: string) => {
+    if(currentEditor) {
+      setPageStyle(styleName)      
+      let editorItems = currentEditor.selectionLayer.getAllEditorItems()
+      editorItems.forEach(editorItem => {
+        editorItem.themeName = styleName
+      })
+    }
+  }
+
   const strokeDashStyles = StrokeDashStyles.map(strokeDashStyle=> {
     //return {value: strokeDashStyle.name, label: intl.formatMessage({ id: strokeDashStyle.label})}
     return {value: strokeDashStyle.name, label: <img alt='intl.formatMessage({ id: strokeDashStyle.label})' src={'/images/line-' + strokeDashStyle.name + '.png'} width='64' height='12' />}
@@ -655,6 +665,15 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
         <Button type='default' onClick={() => handleDocumentStyleChange(documentThemeType.name, documentThemeType.description)} style={{padding: '2px', display: 'table', width: '76px', height: '76px'}}>
           <img src={`/styles/${documentThemeType.name}.png`} style={{display: 'table-cell'}}/>
         </Button>
+      </div>    
+  )
+
+  const shapeThemeTypes = DocumentThemeTypes.map(
+    documentThemeType => 
+      <div style={{padding: '2px'}}>
+        <Button type='default' onClick={() => handleShapeStyleChange(documentThemeType.name, documentThemeType.description)} style={{padding: '2px', display: 'table', width: '76px', height: '76px'}}>
+          <img src={`/styles/${documentThemeType.name}.png`} style={{display: 'table-cell'}}/>
+        </Button>
       </div>
     
   )
@@ -662,6 +681,12 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
   const pageStyles = <div>  
   <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', padding: 4}}>
     {documentThemeTypes}
+  </div>
+  </div>
+
+  const shapeStyles = <div>  
+  <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', padding: 4}}>
+    {shapeThemeTypes}
   </div>
   </div>
 
@@ -682,7 +707,7 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
   }, {
     key: '2', 
     label: intl.formatMessage({ id: 'workspace.property-editor.item-style.title', }), 
-    children: 'content4'
+    children: shapeStyles
   },]
 
   return (
