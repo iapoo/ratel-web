@@ -1439,7 +1439,7 @@ const Content: FC<ContentProps> = ({
   return (
     <div  style={{ position: 'absolute', top: '0px', bottom: '0px', left: x, right: y, backgroundColor: 'lightgray', }}>
       <div style={{ position: 'absolute', width: '100%', height: `calc(100% - ${Utils.TITLE_HEIGHT}px + 16px) `, zIndex: 2, }} >
-        <div id='content-container' style={{ width: '100%', height: '100%', overflow: 'scroll', display: 'grid', placeItems: 'center', }} onScroll={handleScroll}>
+        <div id='content-container' style={{ width: '100%', height: '100%', overflow: 'scroll', scrollbarWidth: 'thin', display: 'grid', placeItems: 'center', }} onScroll={handleScroll}>
           <div style={{ width: contentWidth, height: contentHeight, }}>
             <div style={{ width: '100%', height: Editor.SHADOW_SIZE, backgroundColor: 'lightgray', }} />
             <div style={{ width: '100%', height: editorHeight, boxSizing: 'border-box', }}>
