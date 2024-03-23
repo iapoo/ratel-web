@@ -1306,15 +1306,15 @@ export class ConnectorShape extends EntityShape {
         for(let i = 0; i < count; i ++) {
           const point = this._orthogonalPoints[i]
           if(i == 0) {
-            this.path.moveTo(point.x, point.y)
+            this.path.moveTo(Math.round(point.x), Math.round(point.y))
           } else {
-            this.path.lineTo(point.x, point.y)
+            this.path.lineTo(Math.round(point.x), Math.round(point.y))
           }
         }
         //TODO: FIX ME, unclose path casue white background, we duplicate points so make path so close and them remove strznge white background
         for(let i = count - 1; i >= 0; i --) {
           const point = this._orthogonalPoints[i]
-          this.path.lineTo(point.x, point.y)
+          this.path.lineTo(Math.round(point.x), Math.round(point.y))
         }
         break;
       }    
