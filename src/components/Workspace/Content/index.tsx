@@ -20,6 +20,9 @@ interface Pane {
   content: string,
   key: string,
   editor: Editor | null
+  initialized: boolean
+  scrollLeft: number
+  scrollTop: number
 }
 
 interface ContentProps {
@@ -37,9 +40,9 @@ const DEFAULT_PAINTER_HEIGHT = 599
 const MIN_VISUAL_SIZE = 32
 
 const initialPanes: Pane[] = [
-  { title: DOCUMENT_PREFIX + '1', content: DOCUMENT_CONTENT, key: '1', editor: null, },
-  { title: DOCUMENT_PREFIX + '2', content: DOCUMENT_CONTENT, key: '2', editor: null, },
-  { title: DOCUMENT_PREFIX + '3', content: DOCUMENT_CONTENT, key: '3', editor: null, },
+  { title: DOCUMENT_PREFIX + '1', content: DOCUMENT_CONTENT, key: '1', editor: null, initialized: false, scrollLeft: 0, scrollTop: 0, },
+  { title: DOCUMENT_PREFIX + '2', content: DOCUMENT_CONTENT, key: '2', editor: null, initialized: false, scrollLeft: 0, scrollTop: 0, },
+  { title: DOCUMENT_PREFIX + '3', content: DOCUMENT_CONTENT, key: '3', editor: null, initialized: false, scrollLeft: 0, scrollTop: 0, },
 ]
 
 //const {  useToken, } = theme
@@ -89,6 +92,7 @@ const Content: FC<ContentProps> = ({
   const [ initialized, setInitialized, ] = useState<boolean>(false)
   const [ activeKey, setActiveKey, ] = useState(initialPanes[0].key)
   const [ panes, setPanes, ] = useState(initialPanes)
+  const [ activePane, setActivePane, ] = useState<Pane | null>(initialPanes[0])
   const [ viewWidth, setViewWidth, ] = useState<number>(300)
   const [ viewHeight, setViewHeight, ] = useState<number>(300)
   const [ contentWidth, setContentWidth, ] = useState<string>(getDefaultContentWidth())
@@ -150,6 +154,15 @@ const Content: FC<ContentProps> = ({
   })
 
   const updateEditorSize = () => {
+    const contentContainer = document.getElementById('content-container')
+    if(contentContainer) {
+      const horizontalSpace = contentContainer.clientWidth - MIN_VISUAL_SIZE
+      const verticalSpace = contentContainer.clientHeight - MIN_VISUAL_SIZE
+      if(Utils.currentEditor) {
+        Utils.currentEditor.horizontalSpace = horizontalSpace
+        Utils.currentEditor.verticalSpace = verticalSpace
+      }
+    }
     if (Utils.currentEditor) {
       const newContentWidth = Math.round(Utils.currentEditor.width + Editor.SHADOW_SIZE * 2) + 'px'
       if (contentWidth !== newContentWidth) {
@@ -185,13 +198,33 @@ const Content: FC<ContentProps> = ({
         setEditorHeight(newEditorHeight)
       }
     }
-    const contentContainer = document.getElementById('content-container')
-    if(contentContainer) {
-      if(contentContainer.scrollWidth > contentContainer.clientWidth) {
-        contentContainer.scrollLeft = (contentContainer.scrollWidth - contentContainer.clientWidth) / 2
-      }
-      if(contentContainer.scrollHeight > contentContainer.clientHeight) {
-        contentContainer.scrollTop = (contentContainer.scrollHeight - contentContainer.clientHeight) / 2
+    const currentPane = findCurrentPane()
+    if(contentContainer && currentPane) {
+      if(currentPane.initialized) {
+        if(contentContainer.scrollWidth > contentContainer.clientWidth) {
+          contentContainer.scrollLeft = currentPane.scrollLeft
+        } else {
+          contentContainer.scrollLeft = 0
+        }
+        if(contentContainer.scrollHeight > contentContainer.clientHeight) {
+          contentContainer.scrollTop = currentPane.scrollTop
+        } else {
+          contentContainer.scrollTop = 0
+        }
+      } else {
+        if(contentContainer.scrollWidth > contentContainer.clientWidth) {
+          contentContainer.scrollLeft = (contentContainer.scrollWidth - contentContainer.clientWidth) / 2
+        } else {
+          contentContainer.scrollLeft = 0
+        }
+        if(contentContainer.scrollHeight > contentContainer.clientHeight) {
+          contentContainer.scrollTop = (contentContainer.scrollHeight - contentContainer.clientHeight) / 2
+        } else {
+          contentContainer.scrollTop = 0
+        }
+        currentPane.scrollLeft = contentContainer.scrollLeft
+        currentPane.scrollTop = contentContainer.scrollTop
+        currentPane.initialized = true
       }
     }
 }
@@ -246,6 +279,7 @@ const Content: FC<ContentProps> = ({
     Utils.updateEditorSize = updateEditorSize
     Utils.loadData = loadData
     Utils.checkIfModified = checkIfDocumentModified
+    updateScroll()
     updateEditorSize()
     checkIfDocumentModified(false)
     oldEditor?.removeSelectionChange(handleSelectionChange)
@@ -266,7 +300,6 @@ const Content: FC<ContentProps> = ({
     Utils.currentEditor.onTextEditStyleChange(handleTextEditStyleChange)
     oldEditor?.removeEditorModeChange(handleEditorModeChange)
     Utils.currentEditor.onEditorModeChange(handleEditorModeChange)
-    updateScroll()
   }
 
   const updateScroll = () => {
@@ -278,14 +311,17 @@ const Content: FC<ContentProps> = ({
         Utils.currentEditor.horizontalSpace = horizontalSpace
         Utils.currentEditor.verticalSpace = verticalSpace
       }
-      if(contentContainer.scrollWidth > contentContainer.clientWidth) {
-        contentContainer.scrollLeft = (contentContainer.scrollWidth - contentContainer.clientWidth) / 2
-      }
-      if(contentContainer.scrollHeight > contentContainer.clientHeight) {
-        contentContainer.scrollTop = (contentContainer.scrollHeight - contentContainer.clientHeight) / 2
-      }
-      updateEditorSize()
     }
+  }
+
+  const findCurrentPane = () => {
+    for (let i = 0; i < panes.length; i++) {
+      const pane = panes[i]
+      if (pane.editor == Utils.currentEditor) {
+        return pane
+      }
+    }
+    return null
   }
 
   const updateEditors = (panes: Pane[]) => {
@@ -313,10 +349,11 @@ const Content: FC<ContentProps> = ({
     let activeKey = ''
     let activateCanvas = null
     let activeEditor = null
+    let activePane: Pane | null = null
     const panes: Pane[] = []
     for (let sheetIndex = 0; sheetIndex < sheetCount; sheetIndex++) {
       const sheetData = storageData.sheets[sheetIndex]
-      const pane: Pane = { title: sheetData.title, content: DOCUMENT_CONTENT, key: sheetData.key, editor: null, }
+      const pane: Pane = { title: sheetData.title, content: DOCUMENT_CONTENT, key: sheetData.key, editor: null, initialized: false, scrollLeft: 0, scrollTop: 0, }
       const canvasId = 'editor-' + pane.key
       const canvas = document.createElement('canvas')
       canvas.width = DEFAULT_PAINTER_WIDTH
@@ -341,10 +378,12 @@ const Content: FC<ContentProps> = ({
         activeKey = sheetData.key
         activateCanvas = canvas
         activeEditor = editor
+        activePane = pane
       }
     }
     setPanes(panes)
     setActiveKey(activeKey)
+    setActivePane(activePane)
 
     const container = document.getElementById('editor-container')
     while (container?.hasChildNodes()) {
@@ -378,12 +417,13 @@ const Content: FC<ContentProps> = ({
     Utils.currentEditor.onEditorModeChange(handleEditorModeChange)
   }
 
-  const onChange = (newActiveKey: string) => {
+  const onTabChange = (newActiveKey: string) => {
     const container = document.getElementById('editor-container')
     setActiveKey(newActiveKey)
     while (container?.hasChildNodes()) {
       container?.removeChild(container.lastChild!)
     }
+    let currentPane: Pane | null = null
     for (let i = 0; i < panes.length; i++) {
       const pane = panes[i]
       if (pane.key == newActiveKey) {
@@ -394,7 +434,10 @@ const Content: FC<ContentProps> = ({
         let oldEditor = Utils.currentEditor
         Utils.currentEditor = editor!
         setCurrentEditor(editor!)
+        currentPane = pane
+        setActivePane(pane)
         onEditorChange(oldEditor, Utils.currentEditor)
+        
         if(oldEditor) {
           let operation = new Operation(oldEditor, OperationType.SELECT_EDITOR, [])
           Utils.currentEditor.operationService.addOperation(operation)
@@ -610,7 +653,7 @@ const Content: FC<ContentProps> = ({
   const add = () => {
     const newActiveKey = `${newTabIndex.current++}`
     const newPanes = [ ...panes, ]
-    const pane: Pane = { title: DOCUMENT_PREFIX + newActiveKey, content: DOCUMENT_CONTENT, key: newActiveKey, editor: null, }
+    const pane: Pane = { title: DOCUMENT_PREFIX + newActiveKey, content: DOCUMENT_CONTENT, key: newActiveKey, editor: null, initialized: false, scrollLeft: 0, scrollTop: 0, }
     const canvasId = 'editor-' + pane.key
     const canvas = document.createElement('canvas')
     canvas.width = DEFAULT_PAINTER_WIDTH
@@ -624,6 +667,7 @@ const Content: FC<ContentProps> = ({
     newPanes.push(pane)
     setPanes(newPanes)
     setActiveKey(newActiveKey)
+    setActivePane(pane)
     const container = document.getElementById('editor-container')
     while (container?.hasChildNodes()) {
       container?.removeChild(container.lastChild!)
@@ -659,6 +703,7 @@ const Content: FC<ContentProps> = ({
   const remove = (targetKey: string) => {
     let newActiveKey = activeKey
     let lastIndex = -1
+    let newActivePane: Pane | null = null
     panes.forEach((pane, i) => {
       if (pane.key === targetKey) {
         lastIndex = i - 1
@@ -668,12 +713,15 @@ const Content: FC<ContentProps> = ({
     if (newPanes.length && newActiveKey === targetKey) {
       if (lastIndex >= 0) {
         newActiveKey = newPanes[lastIndex].key
+        newActivePane = newPanes[lastIndex]
       } else {
         newActiveKey = newPanes[0].key
+        newActivePane = newPanes[0]
       }
     }
     setPanes(newPanes)
     setActiveKey(newActiveKey)
+    setActivePane(newActivePane)
     updateEditors(panes)
     if(Utils.currentEditor) {
       let operation = new Operation(Utils.currentEditor, OperationType.REMOVE_EDITOR, [])
@@ -1330,12 +1378,12 @@ const Content: FC<ContentProps> = ({
   }
 
   const handleScroll = (event: UIEvent) => {
-    //const scrollLeft = event.currentTarget.scrollLeft
-    //const scrollTop = event.currentTarget.scrollTop
-    //if(Utils.currentEditor) {
-      //currentEditor.
-    //}
-    
+    const scrollLeft = event.currentTarget.scrollLeft
+    const scrollTop = event.currentTarget.scrollTop
+    if(activePane) {
+      activePane.scrollLeft = scrollLeft
+      activePane.scrollTop = scrollTop
+    }    
   }
 
   const popupShapeItems: MenuProps['items'] = [
@@ -1463,7 +1511,7 @@ const Content: FC<ContentProps> = ({
         </div>
       </div>
       <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: `${Utils.TITLE_HEIGHT}px`, zIndex: 1, }} >
-        <Tabs type='editable-card' size='small' tabPosition='bottom' onChange={onChange} activeKey={activeKey} onEdit = {onEdit} >
+        <Tabs type='editable-card' size='small' tabPosition='bottom' onChange={onTabChange} activeKey={activeKey} onEdit = {onEdit} >
           {
             panes.map(pane => (
               <TabPane tab={pane.title} key={pane.key} />
