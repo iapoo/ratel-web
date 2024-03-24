@@ -250,7 +250,12 @@ export class Painter {
     }
     // this.test()
     // this.endEditting()
-  }
+    //Force to blur, it is for rename sheet title since it looks keep focus even after mouse down in canvas.
+    const activeElement = document.activeElement
+    if(activeElement) {
+      activeElement.blur()
+    }
+}
 
   private handlePointerUpType (e: PointerEvent) {
     let mouseCode = MouseCode.LEFT_MOUSE_UP
