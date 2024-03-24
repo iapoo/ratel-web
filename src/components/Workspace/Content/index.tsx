@@ -1631,7 +1631,8 @@ const Content: FC<ContentProps> = ({
                       <Input ref={inputRef} defaultValue={pane.title} size='small' variant='borderless' style={{width: '72px', display: 'none' }} 
                         onChange={e => handlePaneTitleChange(pane, e.target.value)} 
                         onPressEnter={e => handlePaneTitleChangeCompleted(pane, inputRef, labelRef)} 
-                        onBlur={ e => handlePaneTitleChangeCompleted(pane, inputRef, labelRef)}/>
+                        onBlur={ e => handlePaneTitleChangeCompleted(pane, inputRef, labelRef)}
+                        />
                       <label style={{display: 'block'}} ref={labelRef} onContextMenu={handleContextTrigger} onDoubleClick={e => handlePageRename(pane, inputRef, labelRef)}>{pane.title}</label>
                     </div>
                 </Dropdown>
