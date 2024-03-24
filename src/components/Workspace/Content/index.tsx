@@ -1,8 +1,8 @@
 /* eslint-disable radix */
 /* eslint-disable @typescript-eslint/prefer-for-of */
-import React, { useEffect, useState, useRef, FC, MouseEventHandler, SyntheticEvent, UIEvent, KeyboardEvent, } from 'react'
+import React, { useEffect, useState, useRef, FC, MouseEventHandler, SyntheticEvent, UIEvent, KeyboardEvent, ChangeEvent, Ref, MutableRefObject, } from 'react'
 import styles from './index.css'
-import { Button, ColorPicker, Divider, Dropdown, FloatButton, Input, InputNumber, MenuProps, Select, Space, Tabs, Tooltip, theme, } from 'antd'
+import { Button, ColorPicker, Divider, Dropdown, FloatButton, Input, InputNumber, InputRef, MenuProps, Select, Space, Tabs, Tooltip, theme, } from 'antd'
 import { Consts, FontSizeOptions, SystemUtils, Utils, } from '../Utils'
 import { Editor, EditorEvent, } from '../../Rockie/Editor'
 
@@ -14,6 +14,35 @@ import { Item, ShapeEntity, TableEntity } from '@/components/Rockie/Items'
 import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
 import ClipboardJS from 'clipboard'
 import { EditorHelper } from '@/components/Rockie/Utils'
+import type { DragEndEvent } from '@dnd-kit/core'
+import { DndContext, PointerSensor, useSensor } from '@dnd-kit/core'
+import { arrayMove, horizontalListSortingStrategy, SortableContext, useSortable, } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
+
+
+interface DraggableTabPaneProps extends React.HTMLAttributes<HTMLDivElement> {
+  'data-node-key': string;
+}
+
+const DraggableTabNode = ({ className, ...props }: DraggableTabPaneProps) => {
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
+    id: props['data-node-key'],
+  });
+
+  const style: React.CSSProperties = {
+    ...props.style,
+    transform: CSS.Transform.toString(transform && { ...transform, scaleX: 1 }),
+    transition,
+    cursor: 'move',
+  };
+
+  return React.cloneElement(props.children as React.ReactElement, {
+    ref: setNodeRef,
+    style,
+    ...attributes,
+    ...listeners,
+  });
+};
 
 interface Pane {
   title: string,
@@ -127,6 +156,8 @@ const Content: FC<ContentProps> = ({
   const [editorCursor, setEditorCursor, ] = useState<string>(Consts.EDITOR_CURSOR_AUTO)
   const newTabIndex = useRef(4)
 
+  const sensor = useSensor(PointerSensor, {activationConstraint: {distance: 10}})
+
   useEffect(() => {
     if (!initialized) {
       initialize()
@@ -222,9 +253,16 @@ const Content: FC<ContentProps> = ({
         } else {
           contentContainer.scrollTop = 0
         }
+        
         currentPane.scrollLeft = contentContainer.scrollLeft
         currentPane.scrollTop = contentContainer.scrollTop
         currentPane.initialized = true
+        // const newPanes = clonePanes()
+        // const newPane = findPane(currentPane.key, newPanes)
+        // newPane.scrollLeft = contentContainer.scrollLeft
+        // newPane.scrollTop = contentContainer.scrollTop
+        // newPane.initialized = true
+        // setPanes(newPanes)
       }
     }
 }
@@ -1386,6 +1424,64 @@ const Content: FC<ContentProps> = ({
     }    
   }
 
+  const onDragEnd = ({active, over} : DragEndEvent) => {
+    if (active.id !== over?.id) {
+      setPanes((prev) => {
+        const activeIndex = prev.findIndex((i) => i.key === active.id);
+        const overIndex = prev.findIndex((i) => i.key === over?.id);
+        return arrayMove(prev, activeIndex, overIndex);
+      });
+    }
+  }
+
+  const handlePaneTitleChangeCompleted = (pane: Pane, inputRef: any, labelRef: any) => {
+    inputRef.current.input.style.display = 'none'
+    labelRef.current.style.display = 'block'
+    const newPanes = clonePanes()
+    //pane.title = inputRef.current.input.value
+    //panes[0].title = inputRef.current.input.value
+    //if(pane.editor) {
+    //  pane.editor.title = pane.title
+    //}
+    const newPane = findPane(pane.key, newPanes)
+    newPane.title = inputRef.current.input.value
+    newPane.editor!.title = newPane.title
+    setPanes(newPanes)
+  }
+
+  const clonePanes = () => {
+    const newPanes: Pane[] = []
+    panes.forEach(pane => {
+      const newPane = { title: pane.title, content: pane.content, key: pane.key, editor: pane.editor, initialized: pane.initialized, scrollLeft: pane.scrollLeft, scrollTop: pane.scrollTop, }
+      newPanes.push(newPane)
+    })
+    return newPanes
+  }
+
+  const findPane = (key: string, panes: Pane[]) => {
+    let newPane = panes[0]
+    panes.forEach(pane => {
+      if(key == pane.key) {
+        newPane = pane
+      }
+    })
+    return newPane
+  }
+
+  const handlePaneTitleChange = (pane: Pane, titleValue: string) => {
+    console.log(`${pane.title}, ${titleValue}`)
+  }
+
+  const handlePageRename = (pane: Pane, inputRef: any, labelRef: any) => {
+    //setPanes(panes)
+    //console.log(inputRef.current)
+    inputRef.current.input.style.display = 'block'
+    inputRef.current.input.style.width = labelRef.current.clientWidth + 'px'
+    inputRef.current.input.style.height = labelRef.current.clientHeight + 'px'
+    //console.log(`width = ${labelRef.current.clientWidth}`)
+    labelRef.current.style.display = 'none'
+  }
+
   const popupShapeItems: MenuProps['items'] = [
     {label: 'Delete', key: '1', onClick: handleDelete, },
     {type: 'divider' },
@@ -1511,11 +1607,36 @@ const Content: FC<ContentProps> = ({
         </div>
       </div>
       <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: `${Utils.TITLE_HEIGHT}px`, zIndex: 1, }} >
-        <Tabs type='editable-card' size='small' tabPosition='bottom' onChange={onTabChange} activeKey={activeKey} onEdit = {onEdit} >
+        <Tabs type='editable-card' size='small' tabPosition='bottom' onChange={onTabChange} activeKey={activeKey} onEdit = {onEdit} 
+          renderTabBar={(tabBarProps: any, DefaultTabBar: any) => (
+            <DndContext sensors={[sensor]} onDragEnd={onDragEnd}>
+              <SortableContext items={panes.map((i) => i.key)} strategy={horizontalListSortingStrategy}>
+                <DefaultTabBar {...tabBarProps} >
+                  {(node: any) => (
+                    <DraggableTabNode {...node.props} key={node.key}>
+                      {node}
+                    </DraggableTabNode>
+                  )}
+                </DefaultTabBar>
+              </SortableContext>
+            </DndContext>
+          )}>
           {
-            panes.map(pane => (
-              <TabPane tab={pane.title} key={pane.key} />
-            ))
+            panes.map(pane => {
+              const inputRef = useRef<any>(undefined)
+              const labelRef = useRef<any>(undefined)
+              const paneTitle = <Dropdown menu={{items: popupType == PopupType.SHAPES ? popupShapeItems : (popupType == PopupType.EDITOR ? popupEditorItems : popupText)}} 
+                  trigger={['contextMenu']} >
+                    <div>
+                      <Input ref={inputRef} defaultValue={pane.title} size='small' variant='borderless' style={{width: '72px', display: 'none' }} 
+                        onChange={e => handlePaneTitleChange(pane, e.target.value)} 
+                        onPressEnter={e => handlePaneTitleChangeCompleted(pane, inputRef, labelRef)} 
+                        onBlur={ e => handlePaneTitleChangeCompleted(pane, inputRef, labelRef)}/>
+                      <label style={{display: 'block'}} ref={labelRef} onContextMenu={handleContextTrigger} onDoubleClick={e => handlePageRename(pane, inputRef, labelRef)}>{pane.title}</label>
+                    </div>
+                </Dropdown>
+              return <TabPane tab={paneTitle} key={pane.key} />
+            })
           }
         </Tabs>
       </div>
