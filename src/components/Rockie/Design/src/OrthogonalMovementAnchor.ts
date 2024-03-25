@@ -21,8 +21,8 @@ export class OrthogonalMovementAnchor extends Anchor {
 
   public constructor(editor: Editor, holder: Holder, index: number) {
     super(editor, holder)
-    this.width = 12
-    this.height = 12
+    this.width = 10
+    this.height = 10
     this._index = index
     this.fill.setColor(EditorUtils.anchorOrthogonalMovementFillColor)
     this.stroke.setColor(EditorUtils.anchorOrthogonalMovementStrokeColor)

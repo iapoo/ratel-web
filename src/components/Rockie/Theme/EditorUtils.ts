@@ -124,7 +124,7 @@ export class EditorUtils {
   }
 
   public static get anchorCubiicControllerFillColor(): Color {
-    return Colors.Red
+    return Colors.Orange
   }
 
   public static get anchorCubiicControllerStrokeColor(): Color {
@@ -168,7 +168,7 @@ export class EditorUtils {
   }
 
   public static get anchorOrthogonalDivideFillColor(): Color {
-    return Colors.Orange
+    return Colors.White
   }
 
   public static get anchorOrthogonalDivideStrokeColor(): Color {
@@ -180,7 +180,7 @@ export class EditorUtils {
   }
 
   public static get anchorOrthogonalMovementFillColor(): Color {
-    return Colors.Green
+    return Colors.Orange
   }
 
   public static get anchorOrthogonalMovementStrokeColor(): Color {

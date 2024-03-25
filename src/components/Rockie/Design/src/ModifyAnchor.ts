@@ -15,8 +15,8 @@ export class ModifyAnchor extends Anchor {
 
   public constructor (editor: Editor, holder: Holder) {
     super(editor, holder)
-    this.width = 12
-    this.height = 12
+    this.width = 10
+    this.height = 10
     this.fill.setColor(EditorUtils.anchorModifyFillColor)
     this.stroke.setColor(EditorUtils.anchorModifyStrokeColor)
     this.stroke.setStrokeWidth(EditorUtils.anchorModifyStrokeLineWidth)

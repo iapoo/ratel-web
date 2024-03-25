@@ -22,13 +22,15 @@ export class OrthogonalDivideAnchor extends Anchor {
   
   public constructor(editor: Editor, holder: Holder, index: number, left: boolean) {
     super(editor, holder)
-    this.width = 12
-    this.height = 12
+    this.width = 10
+    this.height = 10
     this._index = index
     this._left = left
     this.fill.setColor(EditorUtils.anchorOrthogonalDivideFillColor)
     this.stroke.setColor(EditorUtils.anchorOrthogonalDivideStrokeColor)
     this.stroke.setStrokeWidth(EditorUtils.anchorOrthogonalDivideStrokeLineWidth)
+    this.stroke.setAlpha(0)
+    this.fill.setAlpha(0)
     this.buildAnchor()
   }
 
@@ -41,11 +43,13 @@ export class OrthogonalDivideAnchor extends Anchor {
   }
 
   public handlePointerEnter(): void {
-    
+    this.stroke.setAlpha(1)
+    this.fill.setAlpha(1)
   }
 
   public handlePointerLeave(): void {
-    
+    this.stroke.setAlpha(0)
+    this.fill.setAlpha(0)
   }
   public handlePointerClick (x: number, y: number) {
 

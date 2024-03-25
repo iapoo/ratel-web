@@ -16,8 +16,8 @@ export class CubicControllerAnchor extends Anchor {
   public constructor(editor: Editor, holder: Holder, isStartController: boolean) {
     super(editor, holder)
     this._isStartController = isStartController
-    this.width = 12
-    this.height = 12
+    this.width = 10
+    this.height = 10
     this.fill.setColor(EditorUtils.anchorCubiicControllerFillColor)
     this.stroke.setColor(EditorUtils.anchorCubiicControllerStrokeColor)
     this.stroke.setStrokeWidth(EditorUtils.anchorCubiicControllerStrokeLineWidth)
