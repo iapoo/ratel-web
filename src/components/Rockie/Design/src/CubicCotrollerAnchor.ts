@@ -61,7 +61,7 @@ export class CubicControllerAnchor extends Anchor {
         const startModifierX = this.target.curveStartModifier.x + moveX / this.target.width
         const startModifierY = this.target.curveStartModifier.y + moveY / this.target.height
         this.target.curveStartModifier = new Point2(startModifierX, startModifierY)
-        console.log(`x = ${startModifierX}  y = ${startModifierY}`)
+        //console.log(`x = ${startModifierX}  y = ${startModifierY}`)
       } else {
         const endModifierX = this.target.curveEndModifier.x + moveX / this.target.width
         const endModifierY = this.target.curveEndModifier.y + moveY / this.target.height
