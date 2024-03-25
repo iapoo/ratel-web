@@ -1,7 +1,7 @@
 /* eslint-disable max-params */
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
 
-import { Color, Colors, FillType, Graphics, MathUtils, Paint, PaintStyle, Path, PathOp, Point2, Rectangle, Rotation, Shape, } from '@/components/Engine'
+import { Color, Colors, FillType, Graphics, MathUtils, Matrix, Paint, PaintStyle, Path, PathOp, Point2, Rectangle, Rotation, Shape, } from '@/components/Engine'
 import { Line, Cubic, } from '@antv/g-math'
 import { EntityShape, } from './EntityShape'
 import { Consts, SystemUtils } from '@/components/Workspace/Utils'
@@ -456,6 +456,9 @@ export class ConnectorShape extends EntityShape {
         this.updateArrows(this._orthogonalPoints[0], this._startDirection, this._startArrow, this._startArrowPath)
         this.updateArrows(this._orthogonalPoints[this._orthogonalPoints.length - 1], this._endDirection, this._endArrow, this._endArrowPath)
       }
+      if(this.connectorType == ConnectorType.Curve) {
+        this.updateArrowsInCurve()
+      }
       //console.log(` connectionType = ${this.connectorType} left = ${this.left} top =${this.top} startx = ${this.start.x} starty = ${this.start.y}  endx = ${this.end.x} end.y = ${this.end.y}`)
       //this.resetDirty() 
       this._arrowFill.setPaintStyle(PaintStyle.FILL)
@@ -489,6 +492,23 @@ export class ConnectorShape extends EntityShape {
       }
   }
 
+  /**
+   * Make arrows direction along with curve
+   */
+  private updateArrowsInCurve() {
+    const start = new Point2(this.start.x - this.left, this.start.y - this.top)
+    const end = new Point2(this.end.x - this.left, this.end.y - this.top)
+    const startTransform = new Matrix()
+    const endTransform = new Matrix()
+    const startAngle = MathUtils.getAngleIn3PointsEx(this._orthogonalPoints[0].x, this._orthogonalPoints[0].y, this._curveStartModifier.x * this.width, this._curveStartModifier.y * this.width, this._orthogonalPoints[2].x, this._orthogonalPoints[2].y)
+    const endAngle = MathUtils.getAngleIn3PointsEx(this._orthogonalPoints[this._orthogonalPoints.length - 1].x, this._orthogonalPoints[this._orthogonalPoints.length - 1].y, this._curveEndModifier.x * this.width, this._curveEndModifier.y * this.width, this._orthogonalPoints[this._orthogonalPoints.length - 3].x, this._orthogonalPoints[this._orthogonalPoints.length - 1].y)
+    //console.log(`angle= ${startAngle}`)
+    startTransform.rotate(-startAngle, start.x, start.y)
+    endTransform.rotate(-endAngle, end.x, end.y)
+    this._startArrowPath.transform(startTransform)
+    this._endArrowPath.transform(endTransform)
+  }
+  
   private updateArrows(point: Point2, direction: ConnectorDirection, arrow: ConnectorArrowTypeInfo, arrowPath: Path) {
     switch(arrow.type) {
       case ConnectorArrowDisplayType.Triangle: {

@@ -425,8 +425,8 @@ export class MatrixHelper {
     return Engine.canvasKit.Matrix.invert(matrix)
   }
 
-  public static rotate (radius: number, px: number | undefined, py: number | undefined): number[] {
-    return Engine.canvasKit.Matrix.rotated(radius, px, py)
+  public static rotate (angle: number, px: number | undefined, py: number | undefined): number[] {
+    return Engine.canvasKit.Matrix.rotated(angle, px, py)
   }
 
   public static multiply (...matrices: number[][]): number[] {

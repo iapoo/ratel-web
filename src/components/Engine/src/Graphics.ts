@@ -1798,8 +1798,8 @@ export class Matrix {
     }
   }
 
-  public rotate (radius: number, px = 0, py = 0) {
-    this._source = MatrixHelper.multiply(this._source, MatrixHelper.rotate(radius, px, py))
+  public rotate (angle: number, px = 0, py = 0) {
+    this._source = MatrixHelper.multiply(this._source, MatrixHelper.rotate(angle, px, py))
   }
 
   public multiply (...matrices: number[][]) {
@@ -2093,8 +2093,8 @@ export class Path {
     return this._source.toSVGString()
   }
 
-  public transform(...args: any[]): Path {
-    this._source.transform(args)
+  public transform(matrix: Matrix): Path {
+    this._source.transform(matrix.source)
     return this
   }
   // public trim(startT: number, stopT: number, isComplement: boolean): Path | null {
