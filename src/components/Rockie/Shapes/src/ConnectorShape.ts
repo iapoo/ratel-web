@@ -496,19 +496,62 @@ export class ConnectorShape extends EntityShape {
    * Make arrows direction along with curve
    */
   private updateArrowsInCurve() {
+    const hint = 20 // Just number, it is for direction, any number is fine.
     const start = new Point2(this.start.x - this.left, this.start.y - this.top)
     const end = new Point2(this.end.x - this.left, this.end.y - this.top)
     const startTransform = new Matrix()
     const endTransform = new Matrix()
-    const startAngle = MathUtils.getAngleIn3PointsEx(this._orthogonalPoints[0].x, this._orthogonalPoints[0].y, this._curveStartModifier.x * this.width, this._curveStartModifier.y * this.width, this._orthogonalPoints[2].x, this._orthogonalPoints[2].y)
-    const endAngle = MathUtils.getAngleIn3PointsEx(this._orthogonalPoints[this._orthogonalPoints.length - 1].x, this._orthogonalPoints[this._orthogonalPoints.length - 1].y, this._curveEndModifier.x * this.width, this._curveEndModifier.y * this.width, this._orthogonalPoints[this._orthogonalPoints.length - 3].x, this._orthogonalPoints[this._orthogonalPoints.length - 1].y)
+    const startModifier = new Point2(start.x + this._curveStartModifier.x * this.width, start.y + this.curveStartModifier.y * this.height )
+    const endModifier = new Point2(end.x + this.curveEndModifier.x * this.width, end.y + this.curveEndModifier.y * this.height)
+    let startOffsetPoint = new Point2(start.x + hint, start.y)
+    let endOffsetPoint = new Point2(end.x - hint, end.y)
+    switch(this._startDirection) {
+      case ConnectorDirection.Left: {
+        startOffsetPoint = new Point2(start.x - hint, start.y)
+        break;
+      }
+      case ConnectorDirection.Top: {
+        startOffsetPoint = new Point2(start.x, start.y - hint)
+        break;
+      }
+      case ConnectorDirection.Bottom: {
+        startOffsetPoint = new Point2(start.x, start.y + hint)
+        break;
+      }
+      case ConnectorDirection.Right: 
+      default: {
+        startOffsetPoint = new Point2(start.x + hint, start.y)
+        break;
+      }
+    }
+    switch(this._endDirection) {
+      case ConnectorDirection.Left: {
+        endOffsetPoint = new Point2(end.x - hint, end.y)
+        break;
+      }
+      case ConnectorDirection.Top: {
+        endOffsetPoint = new Point2(end.x, end.y - hint)
+        break;
+      }
+      case ConnectorDirection.Bottom: {
+        endOffsetPoint = new Point2(end.x, end.y + hint)
+        break;
+      }
+      case ConnectorDirection.Right: 
+      default: {
+        endOffsetPoint = new Point2(end.x + hint, end.y)
+        break;
+      }
+    }
+    const startAngle = MathUtils.getAngleIn3PointsEx(start.x, start.y, startModifier.x, startModifier.y, startOffsetPoint.x, startOffsetPoint.y)
+    const endAngle = MathUtils.getAngleIn3PointsEx(end.x, end.y, endModifier.x, endModifier.y, endOffsetPoint.x, endOffsetPoint.y)
     //console.log(`angle= ${startAngle}`)
     startTransform.rotate(-startAngle, start.x, start.y)
     endTransform.rotate(-endAngle, end.x, end.y)
     this._startArrowPath.transform(startTransform)
     this._endArrowPath.transform(endTransform)
   }
-  
+
   private updateArrows(point: Point2, direction: ConnectorDirection, arrow: ConnectorArrowTypeInfo, arrowPath: Path) {
     switch(arrow.type) {
       case ConnectorArrowDisplayType.Triangle: {

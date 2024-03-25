@@ -162,8 +162,13 @@ export class MathUtils {
    * Ref：https://blog.csdn.net/xiangxianghehe/article/details/99544534
    */
   public static getAngleIn3PointsEx(x1: number, y1: number, x2: number, y2: number, x3: number, y3: number) {
-    const theta = Math.atan2(x2 - x1, y2 - y1) - Math.atan2(x3 - x1, y3 - y1)
-
+    let theta = Math.atan2(x2 - x1, y2 - y1) - Math.atan2(x3 - x1, y3 - y1)
+    if(theta > Math.PI) {
+      theta -= 2 * Math.PI
+    } 
+    if(theta < -Math.PI) {
+      theta += 2 * Math.PI
+    }
     return theta
   }
 }
