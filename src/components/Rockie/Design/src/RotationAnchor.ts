@@ -41,7 +41,7 @@ export class RotationAnchor extends Anchor {
     this._startY = -Holder.ANCHOR_RADIUS + y;
     this._centerX = this.target.width / 2;
     this._centerY = this.target.height / 2;
-    console.log(`'anchor Pointer down' x=${x} y =${y}`);
+    //console.log(`'anchor Pointer down' x=${x} y =${y}`);
   }
 
   public handlePointerUp(x: number, y: number) {
@@ -66,9 +66,9 @@ export class RotationAnchor extends Anchor {
         -Holder.ANCHOR_RADIUS + y,
       );
       let angle = GraphicsUtils.getTriangleAngleEx(target, end, start);
-      console.log(
-        `rotation anchor moving x=${x} y =${y}   endX=${end.x} endY =${end.y} startx=${this._startX} startY=${this._startY} centerX=${this._centerX} centerY=${this._centerY} and angle=${angle}`,
-      );
+      //console.log(
+      //  `rotation anchor moving x=${x} y =${y}   endX=${end.x} endY =${end.y} startx=${this._startX} startY=${this._startY} centerX=${this._centerX} centerY=${this._centerY} and angle=${angle}`,
+      //);
 
       angle = Math.round(angle / 5) * 5;
 

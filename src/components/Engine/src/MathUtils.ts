@@ -142,4 +142,28 @@ export class MathUtils {
     }
     return [points, newPoints, centerPoint, adapterPoint]
   }
+
+  /**
+   * 已知3点求夹角：A: x1,y1, B: x2,y2, C: x3,y3。返回BAC角度. 无法支持大于180度或者方向
+   * Ref：https://blog.csdn.net/zhang1244j/article/details/55053184
+   */
+  public static getAngleIn3Points(x1: number, y1: number, x2: number, y2: number, x3: number, y3: number) {
+      const lengthAB = Math.sqrt( Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2))
+      const lengthAC = Math.sqrt( Math.pow(x1 - x3, 2) + Math.pow(y1 - y3, 2))
+      const lengthBC = Math.sqrt( Math.pow(x2 - x3, 2) + Math.pow(y2 - y3, 2))
+      const cosA = (Math.pow(lengthAB, 2) + Math.pow(lengthAC, 2) - Math.pow(lengthBC, 2)) / (2 * lengthAB * lengthAC);
+      const angleA = Math.round( Math.acos(cosA) * 180 / Math.PI );
+
+      return angleA
+  }
+
+  /**
+   * 已知3点求夹角：A: x1,y1, B: x2,y2, C: x3,y3。返回BAC角度
+   * Ref：https://blog.csdn.net/xiangxianghehe/article/details/99544534
+   */
+  public static getAngleIn3PointsEx(x1: number, y1: number, x2: number, y2: number, x3: number, y3: number) {
+    const theta = Math.atan2(x2 - x1, y2 - y1) - Math.atan2(x3 - x1, y3 - y1)
+
+    return theta
+  }
 }
