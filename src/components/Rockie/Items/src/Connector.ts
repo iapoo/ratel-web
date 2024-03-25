@@ -127,6 +127,7 @@ export class Connector extends Item {
     //}
     this._startDirection = startDirection
     this._endDirection = endDirection
+    this.initializeCurveModifiers()
     this._connectorShape.orthogonalPoints = this._orthogonalPoints
     this._connectorDoubleLineGap = Consts.DOUBLE_LINE_GAP_DEFAULT
     this._connectorDoubleLineArrowLength = Consts.DOUBLE_LINE_ARROW_LENGTH_DEFAULT
@@ -310,6 +311,7 @@ export class Connector extends Item {
     this.boundary = Rectangle.makeLTWH(Math.min(this._start.x, this._end.x), Math.min(this._start.y, this._end.y), Math.abs(this._start.x - this._end.x), Math.abs(this._start.y - this._end.y))
     this._orthogonalPoints = this.initializeOrthogonalPoints()
     this._connectorShape.orthogonalPoints = this._orthogonalPoints    
+    this.initializeCurveModifiers()
   }
 
   public get end (): Point2 {
@@ -322,6 +324,7 @@ export class Connector extends Item {
     this.boundary = Rectangle.makeLTWH(Math.min(this._start.x, this._end.x), Math.min(this._start.y, this._end.y), Math.abs(this._start.x - this._end.x), Math.abs(this._start.y - this._end.y))
     this._orthogonalPoints = this.initializeOrthogonalPoints()
     this._connectorShape.orthogonalPoints = this._orthogonalPoints   
+    this.initializeCurveModifiers()
   }
 
   public get target (): Entity | undefined {
@@ -340,7 +343,11 @@ export class Connector extends Item {
     this._sourceJoint = value
     if (value && this._source && this._sourceJoint) {
       this._start = this._source.worldTransform.makePoint(value)
+      this._connectorShape.start = this._start
+      this._orthogonalPoints = this.initializeOrthogonalPoints()
+      this._connectorShape.orthogonalPoints = this._orthogonalPoints
       this.boundary = Rectangle.makeLTWH(Math.min(this._start.x, this._end.x), Math.min(this._start.y, this._end.y), Math.abs(this._start.x - this._end.x), Math.abs(this._start.y - this._end.y))
+      this.initializeCurveModifiers()
     }
   }
 
@@ -373,6 +380,7 @@ export class Connector extends Item {
       this._orthogonalPoints = this.initializeOrthogonalPoints()
       this._connectorShape.orthogonalPoints = this._orthogonalPoints
       this.boundary = Rectangle.makeLTWH(Math.min(this._start.x, this._end.x), Math.min(this._start.y, this._end.y), Math.abs(this._start.x - this._end.x), Math.abs(this._start.y - this._end.y))
+      this.initializeCurveModifiers()
     }
   }
 
@@ -414,6 +422,55 @@ export class Connector extends Item {
   //   let connector = new Connector(this.start, this.end)
   //   return connector;
   // }
+  private initializeCurveModifiers() {
+    switch(this._startDirection) {
+      case ConnectorDirection.Left: {
+        this._curveStartModifier = new Point2(-0.4, 0)
+        this.connectorShape.curveStartModifier = new Point2(-0.4, 0)
+        break;
+      }
+      case ConnectorDirection.Top: {
+        this._curveStartModifier = new Point2(0, -0.4)
+        this.connectorShape.curveStartModifier = new Point2(0, -0.4)
+        break;
+      }
+      case ConnectorDirection.Bottom: {
+        this._curveStartModifier = new Point2(0, 0.4)
+        this.connectorShape.curveStartModifier = new Point2(0, 0.4)
+        break;
+      }
+      case ConnectorDirection.Right: 
+      default: {
+        this._curveStartModifier = new Point2(0.4, 0)
+        this.connectorShape.curveStartModifier = new Point2(0.4, 0)
+        break;
+      }
+    }
+    switch(this._endDirection) {
+      case ConnectorDirection.Left: {
+        this._curveEndModifier = new Point2(-0.4, 0)
+        this.connectorShape.curveEndModifier = new Point2(-0.4, 0)
+        break;
+      }
+      case ConnectorDirection.Top: {
+        this._curveEndModifier = new Point2(0, -0.4)
+        this.connectorShape.curveEndModifier = new Point2(0, -0.4)
+        break;
+      }
+      case ConnectorDirection.Bottom: {
+        this._curveEndModifier = new Point2(0, 0.4)
+        this.connectorShape.curveEndModifier = new Point2(0, 0.4)
+        break;
+      }
+      case ConnectorDirection.Right: 
+      default: {
+        this._curveEndModifier = new Point2(0.4, 0)
+        this.connectorShape.curveEndModifier = new Point2(0.4, 0)
+        break;
+      }
+    }
+  }
+
   private initializeOrthogonalPoints(): Point2[] {   
     const start = new Point2(this.start.x - this.left, this.start.y - this.top)
     const end = new Point2(this.end.x - this.left, this.end.y - this.top)
