@@ -139,6 +139,10 @@ export class EditorHelper {
                 EditorHelper.refreshConnector(connectorInfo, connector, editorItem.items)
             }
         })
+        //Need to restore points here
+        connector.startDirection = SystemUtils.parseConnectorDirection(connectorInfo.startDirection)
+        connector.endDirection = SystemUtils.parseConnectorDirection(connectorInfo.endDirection)
+        connector.orthogonalPoints = SystemUtils.parsePointsString(connectorInfo.orthogonalPoints)
     }
 
     private static refreshEditorItem(editorItem: EditorItem) {
