@@ -23,8 +23,8 @@ export class AdapterAnchor extends Anchor {
   public constructor(editor: Editor, holder: Holder, adapterType: AdapterType) {
     super(editor, holder)
     this._adapterType = adapterType
-    this.width = 12
-    this.height = 12
+    this.width = 10
+    this.height = 10
     this.fill.setColor(EditorUtils.anchorAdapterFillColor)
     this.stroke.setColor(EditorUtils.anchorAdapterStrokeColor)
     this.stroke.setStrokeWidth(EditorUtils.anchorAdapterStrokeLineWidth)
