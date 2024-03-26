@@ -225,7 +225,18 @@ const Header: FC<HeaderProps> = ({
     } else {
       setSelectionValid(false)
     }
-  }
+    let connectorSelected = true
+    if (e.source.selectionLayer.getEditorItemCount() > 0) {
+      e.source.selectionLayer.getAllEditorItems().forEach(editorItem => {
+        if(!(editorItem instanceof Connector)) {
+          connectorSelected = false          
+        }
+      })
+    } else {
+      connectorSelected = false
+    }
+    setConnectorSelected(connectorSelected)
+}
 
   const handleOperationChange = (e: EditorEvent) => {
     refreshOperationInfos()
