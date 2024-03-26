@@ -12,6 +12,7 @@ import { CheckboxChangeEvent } from 'antd/es/checkbox'
 import { Connector, ConnectorArrowTypes } from '@/components/Rockie/Items/src/Connector'
 import { ConnectorLineModesForCurve, DoubleLineArrowDistanceOptions, DoubleLineArrowLengthOptions, DoubleLineGapOptions } from '../Utils/Consts'
 import { DocumentThemeTypes, DocumentThemes } from '@/components/Rockie/Theme'
+import { DocumentThemeType } from '@/components/Rockie/Theme/DocumentTheme'
 
 interface PropertyEditorProps {
   previousEditor: Editor | undefined
@@ -515,13 +516,14 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
     }
   }
 
-  const handleDocumentStyleChange  = (styleName: string, styleDescription: string) => {
+  const handleDocumentStyleChange  = (styleName: string, documentThemeType: DocumentThemeType) => {
     if(currentEditor) {
       setPageStyle(styleName)      
       let editorItems = currentEditor.contentLayer.getAllEditorItems()
       editorItems.forEach(editorItem => {
         editorItem.themeName = styleName
       })
+      currentEditor.theme = documentThemeType
     }
   }
 
@@ -662,7 +664,7 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
   const documentThemeTypes = DocumentThemeTypes.map(
     documentThemeType => 
       <div style={{padding: '2px'}}>
-        <Button type='default' onClick={() => handleDocumentStyleChange(documentThemeType.name, documentThemeType.description)} style={{padding: '2px', display: 'table', width: '76px', height: '76px'}}>
+        <Button type='default' onClick={() => handleDocumentStyleChange(documentThemeType.name, documentThemeType)} style={{padding: '2px', display: 'table', width: '76px', height: '76px'}}>
           <img src={`/styles/${documentThemeType.name}.png`} style={{display: 'table-cell'}}/>
         </Button>
       </div>    

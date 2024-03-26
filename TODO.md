@@ -7,6 +7,7 @@
 5. Arrow directions for Connector curve lines
 6. Add Layer support
 7. Full operation support
+8. Use System Font resource
 
 # Minor Features
 
