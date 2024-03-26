@@ -20,7 +20,8 @@ import { Operation, OperationHelper, OperationService, OperationType } from '../
 import { ContainerLayer } from './ContainerLayer'
 import { ConnectorDirection } from '../../Shapes'
 import { TableLayer } from './TableLayer'
-import { EditorUtils } from '@/components/Rockie/Theme'
+import { DocumentThemeTypes, EditorUtils } from '@/components/Rockie/Theme'
+import { DocumentThemeType } from '../../Theme/DocumentTheme'
 
 
 export enum EditorMode {
@@ -135,6 +136,7 @@ export class Editor extends Painter {
   private _mode: EditorMode = EditorMode.AUTO
   private _horizontalSpace: number = Editor.HORIZONTAL_SPACE_DEFAULT
   private _verticalSpace: number = Editor.VERTICAL_SPACE_DEFAULT
+  private _theme: DocumentThemeType = DocumentThemeTypes[0]
 
   public constructor (canvasId: string | HTMLCanvasElement) {
     super(canvasId)
@@ -272,6 +274,14 @@ export class Editor extends Painter {
 
   public get workHeight(): number {
     return this.height - this.verticalSpace * 2
+  }
+
+  public get theme(): DocumentThemeType {
+    return this._theme
+  }
+
+  public set theme(value: DocumentThemeType) {
+    this._theme = value
   }
 
   public onOperationChange(callback: (e:EditorEvent) => void) {
@@ -640,6 +650,17 @@ export class Editor extends Painter {
 
   public set action (value: Action | undefined) {
     this._action = value
+    if(this._action) {
+      if(this._action.item instanceof Connector) {
+        this._action.item.strokeColor = SystemUtils.parseColorString(this._theme.connectorStrokeColor)!
+        this._action.item.fillColor = SystemUtils.parseColorString(this._theme.connectorFillColor)!
+        this._action.item.fontColor = SystemUtils.parseColorString(this._theme.connectorFontColor)!
+      } else {
+        this._action.item.strokeColor = SystemUtils.parseColorString(this._theme.shapeStrokeColor)!
+        this._action.item.fillColor = SystemUtils.parseColorString(this._theme.shapeFillColor)!
+        this._action.item.fontColor = SystemUtils.parseColorString(this._theme.shapeFontColor)!
+      }
+    }
   }
 
   public get title () {

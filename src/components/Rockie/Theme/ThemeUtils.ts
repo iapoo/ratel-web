@@ -15,6 +15,30 @@ export class ThemeUtils {
     })
   }
 
+  public static isDefault(themeName: string): boolean {
+    if(!ThemeUtils.initialized) {
+      ThemeUtils.initializeTheme()
+    }
+    const documentThemeType = ThemeUtils.documentThemeMap.get(themeName)
+    if(documentThemeType) {
+      return documentThemeType.isDefault
+    } else {
+      return true
+    }
+  }
+
+  public static getDocumentTheme(themeName: string): DocumentThemeType {
+    if(!ThemeUtils.initialized) {
+      ThemeUtils.initializeTheme()
+    }
+    const documentThemeType = ThemeUtils.documentThemeMap.get(themeName)
+    if(documentThemeType) {
+      return documentThemeType
+    } else {
+      return DocumentThemeTypes[0]
+    }
+  }
+
   public static getShapeStrokeColor(themeName: string): Color {
     if(!ThemeUtils.initialized) {
       ThemeUtils.initializeTheme()
