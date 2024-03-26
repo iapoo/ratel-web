@@ -1314,6 +1314,18 @@ const Header: FC<HeaderProps> = ({
       }
     }
   }
+
+  const handleFontHelper = async () => {
+    if(window.queryLocalFonts) {
+      console.log(`Good to check local fonts `)
+      const availableFonts = await window.queryLocalFonts()
+      for(const fontData in availableFonts) {
+        console.log(fontData.postcriptName)
+      }
+    } else {
+      console.log(`Bad to check local fonts `)
+    }
+  }
   const fileItems: MenuProps['items'] = [
     { key: 'New', label: <FormattedMessage id='workspace.header.menu-file-new' />, icon: <FileAddOutlined />, onClick: handleFileNew },
     { key: 'OpenFrom', label: <FormattedMessage id='workspace.header.menu-file-open-from' />, disabled: true, icon: <FolderOpenOutlined />, },
@@ -1323,7 +1335,7 @@ const Header: FC<HeaderProps> = ({
   ];
 
   const editItems: MenuProps['items'] = [
-    { key: 'New', label: 'New', },
+    { key: 'New', label: 'New', onClick: handleFontHelper },
     { key: 'OpenFrom', label: 'OpenFrom', },
     { key: 'Open', label: 'Open', },
     { key: 'Save', label: 'Save', },

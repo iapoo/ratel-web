@@ -14,5 +14,5 @@
 1. Page rename (Done)
 2. Translate & title check
 3. Keep old points while moving for connectors
-4. Avoid unintentional connector created when mouse down near to edge of shape
-5. Decrease anchor points for connector line.
+4. Avoid unintentional connector created when mouse down near to edge of shape (Done)
+5. Decrease anchor points for connector line. (Done)
