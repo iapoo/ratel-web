@@ -6,6 +6,7 @@
 4. Temporary working stage
 5. Arrow directions for Connector curve lines
 6. Add Layer support
+7. Full operation support
 
 # Minor Features
 

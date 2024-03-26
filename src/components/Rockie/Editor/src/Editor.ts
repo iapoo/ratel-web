@@ -1047,7 +1047,7 @@ export class Editor extends Painter {
       this._operationService.addOperation(operation)
       this.triggerOperationChange()
       this._action = undefined
-    } else if (this._inCreatingConnector) {// It shouldn't happen here
+    } else if (this._inCreatingConnector) {
       //console.log(`It is a exception here, shouldn't be reached`)
       const theControllerLayer = this.controllerLayer as ControllerLayer
       const theSelectionLayer = this.selectionLayer as SelectionLayer
@@ -1062,8 +1062,8 @@ export class Editor extends Painter {
       let operation = new Operation(this, OperationType.ADD_ITEMS, [editorItemInfo], true, [])
       this._operationService.addOperation(operation)
       this.triggerOperationChange()
+      //this.triggerSelectionResized()
       this.triggerSelectionChange()
-      this.triggerSelectionResized()
       this._action = undefined
       // } else if (this.inMoving_) {
       //  const theSelectionLayer = this.selectionLayer
