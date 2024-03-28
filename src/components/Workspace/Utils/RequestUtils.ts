@@ -336,4 +336,16 @@ export class RequestUtils {
         }
         return axios.post(this.rockieAddress_ + `/folder/delete`, data, config)
     }
+
+    public static getGoogleFonts() {
+        const data = {            
+        }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Token': RequestUtils.token
+            }
+        }
+        return axios.post(this.rockieAddress_ + `/utils/google-fonts`, data, config)
+    }
 }
