@@ -1325,6 +1325,13 @@ const Header: FC<HeaderProps> = ({
     } else {
       console.log(`Bad to check local fonts `)
     }
+    await EngineUtils.getWebFontData('Roboto')
+    const webFonts = EngineUtils.webFonts
+    //EngineUtils.getWebFontData('Roboto')
+    //EngineUtils.getWebFontData('Roboto')
+    console.log(`${webFonts}`)
+    //const googleFonts = await RequestUtils.getGoogleFonts()
+    //console.log(googleFonts)
   }
   const fileItems: MenuProps['items'] = [
     { key: 'New', label: <FormattedMessage id='workspace.header.menu-file-new' />, icon: <FileAddOutlined />, onClick: handleFileNew },

@@ -768,7 +768,7 @@ export class TextStyle {
     textStyle: TextStyleOptions = {
       color: Colors.Black,
       fontSize: 14,
-      fontFamilies: [ EngineUtils.FONT_NAME_SANS, ],
+      fontFamilies: [ EngineUtils.FONT_NAME_DEFAULT, ],
       
     }
   ) {
