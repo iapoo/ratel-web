@@ -2,7 +2,7 @@
 import * as CanvasKitInit from 'canvaskit-wasm'
 // eslint-disable-next-line no-unused-vars
 import { CanvasKit, Paint, RRect, FontMgr, Typeface, TypefaceFontProvider, PaintStyle, Canvas, Surface, Path, ClipOp, InputRect, InputRRect, InputMatrix, ColorIntArray, AngleInDegrees, Image, InputFlattenedRectangleArray, InputFlattenedRSXFormArray, BlendMode, CubicResampler, FilterOptions, InputColor, ColorInt, InputGlyphIDArray, InputFlattenedPointArray, Font, FilterMode, MipmapMode, InputIRect, Paragraph, Color, SkPicture, PointMode, InputVector3, TextBlob, Vertices, Matrix4x4, ImageInfo, MallocObj, ImageFilter, SaveLayerFlag, AlphaType, ColorType, ColorSpace, } from 'canvaskit-wasm/types'
-import { EngineUtils, WebFonts, } from './EngineUtils'
+import { EngineUtils, SystemFonts, } from './EngineUtils'
 import { Graphics, } from './Graphics'
 import { Node, } from './Node'
 import { Shape, } from './Shape'
@@ -15,7 +15,6 @@ export class Engine {
   private static _initialized = false
   private static _fontInitialized = false
   private static _canvaskitInitialized = false
-  private static _webFonts: WebFonts = new WebFonts()
 
   public static async initialize () {
     if (!this._initialized) {
@@ -148,8 +147,12 @@ export class Engine {
 
   private static async initializeFonts () {
     if (!this._fontInitialized) {
-      await this.registerFont(EngineUtils.FONT_NAME_ROBOTO, '/fonts/Roboto-Regular.woff2')
-      await this.registerFont(EngineUtils.FONT_NAME_NOTOSERIFSC, '/fonts/Noto-Serif-SC-Regular.woff2')
+      //await this.registerFont(EngineUtils.FONT_NAME_ROBOTO, '/fonts/Roboto-Regular.woff2')
+      //await this.registerFont(EngineUtils.FONT_NAME_NOTOSERIFSC, '/fonts/Noto-Serif-SC-Regular.woff2')
+      for(let i = 0; i < SystemFonts.length; i ++) {
+        const systemFont = SystemFonts[i]
+        await Engine.registerFont(systemFont.fontName, systemFont.fontUrl)
+      }
       this._fontInitialized = true
     }
   }
