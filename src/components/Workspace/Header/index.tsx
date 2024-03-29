@@ -1325,8 +1325,8 @@ const Header: FC<HeaderProps> = ({
     } else {
       console.log(`Bad to check local fonts `)
     }
-    await FontUtils.getWebFontData('Roboto')
-    await FontUtils.loadWebFontFiles()
+    await FontUtils.getWebFontData('Noto Serif SC')
+    await FontUtils.loadWebFontFilesEx()
     //const webFonts = EngineUtils.webFonts
     //EngineUtils.getWebFontData('Roboto')
     //EngineUtils.getWebFontData('Roboto')

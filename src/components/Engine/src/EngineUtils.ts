@@ -1,4 +1,6 @@
 import axios, { AxiosResponse, AxiosRequestConfig, } from 'axios'
+import { CanvasKit, Typeface, TypefaceFontProvider } from 'canvaskit-wasm'
+import { FontStyle } from './Graphics'
 
 
 export class EngineUtils {
@@ -96,6 +98,47 @@ export const WebFonts: WebFontMeta[] = [
 
 export class WebFontManager {  
   private _webFonts: Map<string, WebFont[]> = new Map<string, WebFont[]>()
+  private _typeFaceFontProvider: TypefaceFontProvider | null = null
+  private _fontDataMap: Map<string, ArrayBuffer> = new Map<string, ArrayBuffer>()
+  private _typeFaces: Map<string, Typeface | null> = new Map<string, Typeface | null>()
+  private _canvasKit: CanvasKit | null = null
+  private _initialized: boolean = false
+
+  /**
+   * Always initialized before be used
+   * @returns 
+   */
+  public get typeFaceFontProvider(): TypefaceFontProvider {
+    return this._typeFaceFontProvider!
+  }
+
+  /**
+   * Always initialized before be used
+   * @returns 
+   */
+  public get canvasKit(): CanvasKit {
+    return this._canvasKit!
+  }
+
+  public get fontDataMap() {
+    return this._fontDataMap
+  }
+
+  public get typeFaces() {
+    return this._typeFaces
+  }
+
+  /**
+   * Must be initialized while startup
+   * @returns 
+   */
+  public initialize(canvasKit: CanvasKit) {
+    if(!this._initialized) {
+      this._canvasKit = canvasKit
+      this._typeFaceFontProvider = canvasKit.TypefaceFontProvider.Make()
+      this._initialized = true
+    }
+  }
 
   public registWebFont(key: string, webFont: WebFont) {    
     let fonts = this._webFonts.get(key)
@@ -122,15 +165,78 @@ export class WebFontManager {
     return this._webFonts.get(key)
   }
 
-  private async registSystemFont(fontName: string, fontUrl: string) {
-    const webFont = new WebFont()
-    const response = await fetch(fontUrl)
-    const fontData = await response.arrayBuffer()    
-  }
 }
 
 export class FontUtils {
   public static webFontManager = new WebFontManager()
+
+  public static async intialize(canvasKit: CanvasKit) {
+    FontUtils.webFontManager.initialize(canvasKit)
+    for(let i = 0; i < SystemFonts.length; i ++) {
+      const systemFont = SystemFonts[i]
+      await FontUtils.registerFont(systemFont.fontName, systemFont.fontUrl)
+    }
+    console.log(`Font initialized is done`)
+  }
+
+
+  /**
+   * Always initialized before be used
+   * @returns 
+   */
+  public static get typeFaceFontProvider(): TypefaceFontProvider {
+    return FontUtils.webFontManager.typeFaceFontProvider
+  }
+
+  public static getTypeFace (fontName: string): Typeface | null {
+    let typeface = FontUtils.webFontManager.typeFaces.get(fontName)
+    if (typeface == undefined) {
+      typeface = null
+    }
+    return typeface
+  }
+
+  public static async registerFont (fontName: string, fontUrl: string) {
+    const fontData = await FontUtils.loadSystemFontFile(fontUrl)
+    FontUtils.webFontManager.fontDataMap.set(fontName, fontData)
+    FontUtils.webFontManager.typeFaceFontProvider.registerFont(fontData, fontName)
+    const typeface = FontUtils.webFontManager.canvasKit.Typeface.MakeFreeTypeFaceFromData(fontData)
+    // if(typeface) {
+    //   const test  = typeface.getGlyphIDs('测试')
+    //   console.log(`${test}`)
+    // }
+    FontUtils.webFontManager.typeFaces.set(fontName, typeface)
+  }
+
+  public static async loadWebFontFilesEx() {
+    const webFontKeys = FontUtils.webFontManager.getWebFontKeys()
+    for(let key of webFontKeys) {
+      const webFonts = FontUtils.webFontManager.getWebFonts(key)
+      if(webFonts && webFonts.length > 0) {
+        for(let webFont of webFonts) {
+          const webFontFile = await FontUtils.getWebFontFile(webFont.url)
+          if(webFontFile.data) {
+            console.log(`Register Font: family = ${webFont.fontFamily}, data length = ${webFontFile.data.byteLength}`)
+            FontUtils.webFontManager.typeFaceFontProvider.registerFont(webFontFile.data, webFont.fontFamily)
+            //const typeface = FontUtils.webFontManager.canvasKit.Typeface.MakeFreeTypeFaceFromData(webFontFile.data)
+            //FontUtils.webFontManager.typeFaces.set(fontName, typeface)
+
+            //console.log(webFontFile.data.byteLength)
+            //break;
+          }
+        }
+      }
+    }
+    const count = FontUtils.webFontManager.typeFaceFontProvider.countFamilies()
+    console.log(` Total count = ${count}`)
+    const fontStyle = new FontStyle()
+    const typeFace = FontUtils.webFontManager.typeFaceFontProvider.matchFamilyStyle('Noto Serif SC', 
+      {weight: FontUtils.webFontManager.canvasKit.FontWeight.Normal,
+      width:FontUtils.webFontManager.canvasKit.FontWidth.Normal,
+      slant:FontUtils.webFontManager.canvasKit.FontSlant.Upright})
+    //const array = typeFace.getGlyphIDs('测试')
+    //console.log(array)
+  }
 
   public static async loadWebFontFiles() {
     const webFontKeys = FontUtils.webFontManager.getWebFontKeys()
@@ -146,6 +252,11 @@ export class FontUtils {
         }
       }
     }
+  }
+
+  private static async loadSystemFontFile(fontUrl: string) {
+    const webFontFile = await FontUtils.getWebFontFile(fontUrl)
+    return webFontFile.data
   }
 
   public static async getWebFontFile(url: string) {
@@ -176,17 +287,17 @@ export class FontUtils {
                 //console.log(cssRule.style)
                 if (cssRule.style) {
                   const webFont = new WebFont()
-                  const fontFamily = cssRule.style['font-family']
+                  const fontFamily: string = cssRule.style['font-family']
                   const fontStyle = cssRule.style['font-style']
                   const fontWeight = cssRule.style['font-weight']
                   const src = cssRule.style['src']
                   const unicodeRange: string = cssRule.style['unicode-range']
 
-                  webFont.fontFamily = fontFamily
+                  webFont.fontFamily = fontFamily.substring(1, fontFamily.length - 1)
                   webFont.src = src
                   webFont.fontStyle = fontStyle
                   webFont.fontWeight = fontWeight
-                  FontUtils.webFontManager.registWebFont(fontFamily, webFont)
+                  FontUtils.webFontManager.registWebFont(webFont.fontFamily, webFont)
 
                   const urlRegexp = /url\((\"https\:\/\/fonts\.gstatic\.com\/.*)\) format/gm
                   const urlMatch = urlRegexp.exec(src)
