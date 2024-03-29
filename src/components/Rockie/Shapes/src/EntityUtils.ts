@@ -1,5 +1,5 @@
 /* eslint-disable max-params */
-import { Color, Colors, Engine, EngineUtils, FontSlant, FontStyle, FontWeight, FontWidth, Graphics, Paint, Path, TextStyle, } from '@/components/Engine'
+import { Color, Colors, Engine, EngineUtils, FontSlant, FontStyle, FontUtils, FontWeight, FontWidth, Graphics, Paint, Path, TextStyle, } from '@/components/Engine'
 import { SystemUtils } from '@/components/Workspace/Utils'
 
 export class CursorMaker {
@@ -143,7 +143,7 @@ export class Style {
   }
 
   public get typeface () {
-    return Engine.getTypeFace(this.typeFaceName)
+    return FontUtils.getTypeFace(this.typeFaceName)
   }
 
   public isSameStyle(style: Style): boolean {

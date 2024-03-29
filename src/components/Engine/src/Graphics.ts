@@ -5,7 +5,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable max-params */
 import { MatrixHelper, Engine, } from './Engine'
-import { EngineUtils, } from './EngineUtils'
+import { EngineUtils, FontUtils, } from './EngineUtils'
 import { Node, } from './Node'
 
 export class Point2 {
@@ -1356,7 +1356,8 @@ export class ParagraphBuilder {
   constructor (paragraphStyle: ParagraphStyle) {
     this._source = Engine.canvasKit.ParagraphBuilder.MakeFromFontProvider(
       paragraphStyle.source,
-      Engine.typeFaceFontProvider
+      //Engine.typeFaceFontProvider
+      FontUtils.typeFaceFontProvider
     )
   }
 
@@ -2183,7 +2184,7 @@ export class GlyphRun {
   }
 
   public get typeface () {
-    return Engine.getTypeFace(this.typefaceName)!
+    return FontUtils.getTypeFace(this.typefaceName)!
   }
 }
 

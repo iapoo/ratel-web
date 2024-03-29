@@ -2,67 +2,67 @@
 import * as CanvasKitInit from 'canvaskit-wasm'
 // eslint-disable-next-line no-unused-vars
 import { CanvasKit, Paint, RRect, FontMgr, Typeface, TypefaceFontProvider, PaintStyle, Canvas, Surface, Path, ClipOp, InputRect, InputRRect, InputMatrix, ColorIntArray, AngleInDegrees, Image, InputFlattenedRectangleArray, InputFlattenedRSXFormArray, BlendMode, CubicResampler, FilterOptions, InputColor, ColorInt, InputGlyphIDArray, InputFlattenedPointArray, Font, FilterMode, MipmapMode, InputIRect, Paragraph, Color, SkPicture, PointMode, InputVector3, TextBlob, Vertices, Matrix4x4, ImageInfo, MallocObj, ImageFilter, SaveLayerFlag, AlphaType, ColorType, ColorSpace, } from 'canvaskit-wasm/types'
-import { EngineUtils, SystemFonts, } from './EngineUtils'
+import { EngineUtils, FontUtils, SystemFonts, } from './EngineUtils'
 import { Graphics, } from './Graphics'
 import { Node, } from './Node'
 import { Shape, } from './Shape'
 
 export class Engine {
   private static _canvasKit: CanvasKit
-  private static _typeFaceFontProvider: TypefaceFontProvider
-  private static _fontDatas: Map<string, ArrayBuffer> = new Map<string, ArrayBuffer>()
-  private static _typeFaces: Map<string, Typeface | null> = new Map<string, Typeface | null>()
+  // private static _typeFaceFontProvider: TypefaceFontProvider
+  // private static _fontDatas: Map<string, ArrayBuffer> = new Map<string, ArrayBuffer>()
+  // private static _typeFaces: Map<string, Typeface | null> = new Map<string, Typeface | null>()
   private static _initialized = false
-  private static _fontInitialized = false
+  // private static _fontInitialized = false
   private static _canvaskitInitialized = false
 
   public static async initialize () {
     if (!this._initialized) {
       await Engine.initilizeCanvasKit()
-      await Engine.initializeFonts()
+      //await Engine.initializeFonts()
       Engine._initialized = true
     }
   }
 
-  public static async registerFont (fontName: string, fontUrl: string) {
-    const response = await fetch(fontUrl)
-    const fontData = await response.arrayBuffer()
-    this._fontDatas.set(fontName, fontData)
-    this._typeFaceFontProvider.registerFont(fontData, fontName)
-    const typeface = Engine._canvasKit.Typeface.MakeFreeTypeFaceFromData(fontData)
-    this._typeFaces.set(fontName, typeface)
-  }
+  // public static async registerFont (fontName: string, fontUrl: string) {
+  //   const response = await fetch(fontUrl)
+  //   const fontData = await response.arrayBuffer()
+  //   this._fontDatas.set(fontName, fontData)
+  //   this._typeFaceFontProvider.registerFont(fontData, fontName)
+  //   const typeface = Engine._canvasKit.Typeface.MakeFreeTypeFaceFromData(fontData)
+  //   this._typeFaces.set(fontName, typeface)
+  // }
 
-  public static get fontDatas () {
-    return Engine._fontDatas
-  }
+  // public static get fontDatas () {
+  //   return Engine._fontDatas
+  // }
 
   public static get canvasKit (): CanvasKit {
     return Engine._canvasKit
   }
 
-  public static get typeFaceFontProvider () {
-    return Engine._typeFaceFontProvider
-  }
+  // public static get typeFaceFontProvider () {
+  //   return Engine._typeFaceFontProvider
+  // }
 
-  public static get typeFaces() {
-    return Engine._typeFaces
-  }
+  // public static get typeFaces() {
+  //   return Engine._typeFaces
+  // }
 
-  public static getFontData (fontName: string): ArrayBuffer | undefined {
-    return this._fontDatas.get(fontName)
-  }
+  // public static getFontData (fontName: string): ArrayBuffer | undefined {
+  //   return this._fontDatas.get(fontName)
+  // }
 
-  public static getTypeFace (fontName: string): Typeface | null {
-    let typeface = this._typeFaces.get(fontName)
-    if (typeface == undefined) {
-      typeface = null
-    }
-    return typeface
-  }
+  // public static getTypeFace (fontName: string): Typeface | null {
+  //   let typeface = this._typeFaces.get(fontName)
+  //   if (typeface == undefined) {
+  //     typeface = null
+  //   }
+  //   return typeface
+  // }
 
   public static makeFont (fontName: string, fontSize = 14): Font {
-    const typeFace = this.getTypeFace(fontName)
+    const typeFace = FontUtils.getTypeFace(fontName)
     const font = new Engine._canvasKit.Font(typeFace, fontSize)
     font.setSubpixel(true)
     return font
@@ -140,22 +140,23 @@ export class Engine {
       //console.log(canvasKit)
 
       Engine._canvasKit = canvasKit
-      Engine._typeFaceFontProvider = Engine._canvasKit.TypefaceFontProvider.Make()
-      Engine._canvaskitInitialized = true
+      //Engine._typeFaceFontProvider = Engine._canvasKit.TypefaceFontProvider.Make()
+      //Engine._canvaskitInitialized = true
+      FontUtils.intialize(canvasKit)
     }
   }
 
-  private static async initializeFonts () {
-    if (!this._fontInitialized) {
-      //await this.registerFont(EngineUtils.FONT_NAME_ROBOTO, '/fonts/Roboto-Regular.woff2')
-      //await this.registerFont(EngineUtils.FONT_NAME_NOTOSERIFSC, '/fonts/Noto-Serif-SC-Regular.woff2')
-      for(let i = 0; i < SystemFonts.length; i ++) {
-        const systemFont = SystemFonts[i]
-        await Engine.registerFont(systemFont.fontName, systemFont.fontUrl)
-      }
-      this._fontInitialized = true
-    }
-  }
+  // private static async initializeFonts () {
+  //   if (!this._fontInitialized) {
+  //     //await this.registerFont(EngineUtils.FONT_NAME_ROBOTO, '/fonts/Roboto-Regular.woff2')
+  //     //await this.registerFont(EngineUtils.FONT_NAME_NOTOSERIFSC, '/fonts/Noto-Serif-SC-Regular.woff2')
+  //     for(let i = 0; i < SystemFonts.length; i ++) {
+  //       const systemFont = SystemFonts[i]
+  //       await Engine.registerFont(systemFont.fontName, systemFont.fontUrl)
+  //     }
+  //     this._fontInitialized = true
+  //   }
+  // }
 
   private _canvas: Canvas
 

@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-parameter-properties */
 /* eslint-disable max-params */
 import { Engine, } from './Engine'
-import { EngineUtils, } from './EngineUtils'
+import { EngineUtils, FontUtils, } from './EngineUtils'
 import { Color, Colors, Graphics, Paint, Path, TextStyle, } from './Graphics'
 
 export class CursorMaker {
@@ -109,7 +109,7 @@ export class Block {
     }
 
     public get typeface () {
-      return Engine.getTypeFace(this.typefaceName)!
+      return FontUtils.getTypeFace(this.typefaceName)!
     }
 }
 
@@ -123,7 +123,7 @@ export class Style {
   }
 
   public get typeface () {
-    return Engine.getTypeFace(this.typeFaceName)
+    return FontUtils.getTypeFace(this.typeFaceName)
   }
 
   public mergeFrom (src: Style) {
