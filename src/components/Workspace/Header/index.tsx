@@ -11,7 +11,7 @@ import { AlignCenterOutlined, AlignLeftOutlined, AlignRightOutlined, BoldOutline
 import OpenFileWindow from './OpenFileWindow';
 import { StorageService } from '../Storage';
 import { Rectangle } from '@/components/Resource/LargeIcons';
-import { EngineUtils, Font, FontSlant, FontWeight, GraphicsUtils, Matrix, Point2, TextDecoration, TextShape } from '@/components/Engine';
+import { EngineUtils, Font, FontSlant, FontUtils, FontWeight, GraphicsUtils, Matrix, Point2, TextDecoration, TextShape } from '@/components/Engine';
 import { Editor, EditorEvent } from '@/components/Rockie/Editor';
 import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
 import { Placeholder, } from '@/components/Resource/Icons'
@@ -1325,11 +1325,12 @@ const Header: FC<HeaderProps> = ({
     } else {
       console.log(`Bad to check local fonts `)
     }
-    await EngineUtils.getWebFontData('Roboto')
-    const webFonts = EngineUtils.webFonts
+    await FontUtils.getWebFontData('Roboto')
+    await FontUtils.loadWebFontFiles()
+    //const webFonts = EngineUtils.webFonts
     //EngineUtils.getWebFontData('Roboto')
     //EngineUtils.getWebFontData('Roboto')
-    console.log(`${webFonts}`)
+    //console.log(`${webFonts}`)
     //const googleFonts = await RequestUtils.getGoogleFonts()
     //console.log(googleFonts)
   }
