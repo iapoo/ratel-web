@@ -301,7 +301,8 @@ export class FontUtils {
         let greatThan0 = (glyphIDs[0] > 0)
         for(let i = 1; i < glyphIDs.length; i ++) {          
           if(greatThan0) {
-            if(glyphIDs[i] > 0) {            
+            //Some special charactors are also 0
+            if(glyphIDs[i] > 0 || text.at(i) == '\n') {            
               end = i
             } else {
               result.push(glyphIDs.slice(start, i))
@@ -310,13 +311,14 @@ export class FontUtils {
               greatThan0 = false
             }
           } else {
-            if(glyphIDs[i] <= 0) {            
-              end = i
-            } else {
+            //Some special charactors are also 0
+            if(glyphIDs[i] > 0 || text.at(i) == '\n') {            
               result.push(glyphIDs.slice(start, i))
               start = i
               end = i
               greatThan0 = true
+            } else {
+              end = i
             }
           }
         }
