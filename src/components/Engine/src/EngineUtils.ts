@@ -7,8 +7,12 @@ export class EngineUtils {
   public static FONT_NAME_DEFAULT = 'Roboto'
   //public static FONT_NAME_SANS = 'Sans'
   //public static FONT_NAME_SERIF = 'Serif'
+  public static FONT_NAME_LATO = 'Lato'
+  public static FONT_NAME_NOTO_SERIF_SC = 'Noto Serif SC'
+  public static FONT_NAME_OPEN_SANS = 'Open Sans'
+  public static FONT_NAME_ROBOTO_SLAB = 'Roboto Slab'
   public static FONT_NAME_ROBOTO = 'Roboto'
-  public static FONT_NAME_NOTOSERIFSC = 'NotoSerifSC'
+  public static FONT_NAME_SOURCE_CODE_PRO = 'Source Code Pro'
   public static FONT_SIZE_DEFAULT = 14
 
   public static LANG_EN_US = 'en-US'
@@ -57,9 +61,9 @@ export interface LanguageFont {
 }
 
 export const LanguageFonts: LanguageFont[] = [
-  {language: EngineUtils.LANG_EN_US, defaultLatinFont: EngineUtils.FONT_NAME_ROBOTO, defaultNonLatinFont: EngineUtils.FONT_NAME_NOTOSERIFSC, 
-    fonts: ['Lato', 'Open Sans', 'Source Sans Pro', 'Roboto Slab',]},
-  {language: EngineUtils.LANG_ZH_CN, defaultLatinFont: EngineUtils.FONT_NAME_ROBOTO, defaultNonLatinFont: EngineUtils.FONT_NAME_NOTOSERIFSC, 
+  {language: EngineUtils.LANG_EN_US, defaultLatinFont: EngineUtils.FONT_NAME_ROBOTO, defaultNonLatinFont: EngineUtils.FONT_NAME_NOTO_SERIF_SC, 
+    fonts: ['Lato', 'Open Sans', 'Source Code Pro', 'Roboto Slab',]},
+  {language: EngineUtils.LANG_ZH_CN, defaultLatinFont: EngineUtils.FONT_NAME_ROBOTO, defaultNonLatinFont: EngineUtils.FONT_NAME_NOTO_SERIF_SC, 
     fonts: ['Noto Sans SC']},
 ]
 
@@ -70,8 +74,12 @@ export enum Languages {
 
 
 export const SystemFonts = [
+  {fontName: EngineUtils.FONT_NAME_LATO, fontUrl: '/fonts/Lato-Regular.woff2'},
+  {fontName: EngineUtils.FONT_NAME_OPEN_SANS, fontUrl: '/fonts/Open-Sans-Regular.woff2'},
   {fontName: EngineUtils.FONT_NAME_ROBOTO, fontUrl: '/fonts/Roboto-Regular.woff2'},
-  {fontName: EngineUtils.FONT_NAME_NOTOSERIFSC, fontUrl: '/fonts/Noto-Serif-SC-Regular.woff2'},
+  {fontName: EngineUtils.FONT_NAME_ROBOTO_SLAB, fontUrl: '/fonts/Roboto-Slab-Regular.woff2'},
+  {fontName: EngineUtils.FONT_NAME_SOURCE_CODE_PRO, fontUrl: '/fonts/Source-Code-Pro-Regular.woff2'},
+  {fontName: EngineUtils.FONT_NAME_NOTO_SERIF_SC, fontUrl: '/fonts/Noto-Serif-SC-Regular.woff2'},
 ]
 
 export enum WebFontSource {

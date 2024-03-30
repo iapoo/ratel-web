@@ -20,7 +20,7 @@ import { Connector, ContainerEntity, ContainerTypes, ImageContainer, Item, Shape
 import { ShapeAction } from '@/components/Rockie/Actions';
 import { ConnectorArrowTypes } from '@/components/Rockie/Items/src/Connector';
 import { ConnectorDirection } from '@/components/Rockie/Shapes';
-import { ConnectorLineModesForCurve, DoubleLineGapOptions } from '../Utils/Consts';
+import { ConnectorLineModesForCurve, DoubleLineGapOptions, FontNameOptions } from '../Utils/Consts';
 import { BasicShapes } from '@/components/Rockie/CustomItems/BasicShapes';
 import { Arrows } from '@/components/Rockie/CustomItems/Arrows';
 import { AliyunShapes } from '@/components/Rockie/CustomItems/Aliyun';
@@ -67,6 +67,7 @@ const Header: FC<HeaderProps> = ({
   const [lineWidth, setLineWidth,] = useState<number>(Consts.LINE_WIDTH_DEFAULT)
   const [doubleLineGap, setDoubleLineGap, ] = useState<number>(Consts.DOUBLE_LINE_GAP_DEFAULT)
   const [zoom, setZoom,] = useState<number>(currentEditor? currentEditor.zoom : Consts.ZOOM_DEFAULT)
+  const [fontName, setFontName,] = useState<string>(Consts.FONT_NAME_DEFAULT)
   const [fontSize, setFontSize,] = useState<number>(Consts.FONT_SIZE_DEFAULT)
   const [fontColor, setFontColor, ] = useState<string>(Consts.COLOR_FONT_DEFAULT)
   const [fontWeight, setFontWeight, ] = useState<string>(Consts.FONT_WEIGHT_NORMAL)
@@ -165,6 +166,7 @@ const Header: FC<HeaderProps> = ({
       //let shape = editorItem.shape
       setZoom(editor.zoom)
       setFontSize(editorItem.fontSize)
+      setFontName(editorItem.fontName)
       setLineWidth(editorItem.lineWidth)
       let fillColorValue = SystemUtils.generateColorString(editorItem.fillColor)
       setFillColor(fillColorValue.substring(0, 7))
@@ -208,6 +210,7 @@ const Header: FC<HeaderProps> = ({
     } else {
       setZoom(Consts.ZOOM_DEFAULT)
     }
+    setFontName(Consts.FONT_NAME_DEFAULT)
     setFontSize(Consts.FONT_SIZE_DEFAULT)
     setLineWidth(Consts.LINE_WIDTH_DEFAULT)
     setFillColor(Consts.COLOR_FILL_DEFAULT)
@@ -552,6 +555,25 @@ const Header: FC<HeaderProps> = ({
     }
   }
 
+  const handleFontNameChange = (value: any) => {
+    console.log('font name changed')
+    setFontName(value)
+    if (Utils.currentEditor) {
+      let editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
+      editorItems.forEach(editorItem => {
+        if(editorItem instanceof TableEntity) {
+          if(Utils.currentEditor?.targetItem) {
+            Utils.currentEditor.targetItem.fontName = value
+          }
+        } else {
+          editorItem.fontName = value
+        }
+      })
+      Utils.currentEditor.focus()
+      Utils.currentEditor.triggerTextEditStyleChange()
+    }
+  }
+  
   const handleFontSizeChange = (value: any) => {
     console.log('font size changed')
     setFontSize(value)
@@ -1469,6 +1491,16 @@ const Header: FC<HeaderProps> = ({
                 <Button type="text" size='small' icon={<RedoOutlined />} disabled={!editorRedoable} onClick={handleRedo} />
               </Tooltip>
               <Divider type='vertical' style={{ margin: 0 }} />
+              {/** TODO:  FIXME, HIDE TEMPORARY*/}
+              <Tooltip title={<FormattedMessage id='workspace.header.title.font-size'/>}>
+                <Select size='small' value={fontName} onChange={handleFontNameChange} style={{width: 120, }} popupMatchSelectWidth={false} disabled={!selectionValid} options={FontNameOptions} bordered={false}/>
+              </Tooltip>
+              <Tooltip title={<FormattedMessage id='workspace.header.title.font-size'/>}>
+                <InputNumber min={Consts.FONT_SIZE_MIN} max={Consts.FONT_SIZE_MAX} value={fontSize} 
+                  ref={(node) => {setFontSizeNode(node)}} 
+                  onChange={handleFontSizeChange}  onStep={handleFontSizeStepChange} onBlur={handleFontSizeBlur} onPressEnter={handleFontSizePressEnter} size='small' style={{ width: 60 , display:'none'}} disabled={!selectionValid} />
+                <Select size='small' value={fontSize} onChange={handleFontSizeChange} style={{width: 64, }} disabled={!selectionValid} options={FontSizeOptions} bordered={false}/>
+              </Tooltip>
               <Tooltip title={<FormattedMessage id='workspace.header.title.font-bold'/>}>
                 <Button type={fontBold ? 'primary' : 'text'} size='small' icon={<BoldOutlined/>} disabled={!selectionValid} onClick={handleBoldChanged} />
                 </Tooltip>
@@ -1499,13 +1531,6 @@ const Header: FC<HeaderProps> = ({
                 <Button type={textVerticalAlignment == Consts.PLACE_HOLDER_ALIGNMENT_BOTTOM ? 'primary' : 'text'} size='small' icon={<VerticalAlignBottomOutlined/>} disabled={!selectionValid} onClick={() => handleTextVerticalAlignmentChanged(Consts.PLACE_HOLDER_ALIGNMENT_BOTTOM)} />
               </Tooltip>
               <Divider type='vertical' style={{ margin: 0 }} />
-              {/** TODO:  FIXME, HIDE TEMPORARY*/}
-              <Tooltip title={<FormattedMessage id='workspace.header.title.font-size'/>}>
-                <InputNumber min={Consts.FONT_SIZE_MIN} max={Consts.FONT_SIZE_MAX} value={fontSize} 
-                  ref={(node) => {setFontSizeNode(node)}} 
-                  onChange={handleFontSizeChange}  onStep={handleFontSizeStepChange} onBlur={handleFontSizeBlur} onPressEnter={handleFontSizePressEnter} size='small' style={{ width: 60 , display:'none'}} disabled={!selectionValid} />
-                <Select size='small' value={fontSize} onChange={handleFontSizeChange} style={{width: 64, }} disabled={!selectionValid} options={FontSizeOptions} bordered={false}/>
-              </Tooltip>
               <Tooltip title={<FormattedMessage id='workspace.header.title.fill-color'/>}>
                 <ColorPicker size='small' value={fillColor} trigger='hover' onChange={handleFillColorChange} onChangeComplete={handleFillColorChangeComplete} disabled={!selectionValid}  destroyTooltipOnHide={true}/>
               </Tooltip>
