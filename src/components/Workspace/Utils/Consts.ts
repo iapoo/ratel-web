@@ -1,7 +1,9 @@
+import { EngineUtils, SystemFonts } from "@/components/Engine"
 
 export class Consts {
     public static ZOOM_DEFAULT = 1
 
+    public static FONT_NAME_DEFAULT = EngineUtils.FONT_NAME_DEFAULT
     public static FONT_SIZE_DEFAULT = 14
     public static FONT_SIZE_MIN = 6
     public static FONT_SIZE_MAX = 72
@@ -162,6 +164,10 @@ export class Consts {
     public static EDITOR_CURSOR_CROSSHAIR = 'crosshair'
   
 }
+
+export const FontNameOptions = SystemFonts.map(systemFont=> {
+  return {value: systemFont.fontName, label: systemFont.fontName}
+})
 
 export const FontSizeOptions = [
     {value: 5, label: '5'},

@@ -99,6 +99,38 @@ export abstract class AbstractTextShape extends Shape {
       this.buildLines()
     }
 
+
+    public get fontName() {
+      if(this._endIndex != this._startIndex) {
+        const selectionStyles = this.findSelectionStyles()
+        return selectionStyles[0].typeFaceName
+      } else {
+        if(this._focused) {
+          return this._selectStyle.typeFaceName
+        } else {
+          return this._styles[0].typeFaceName
+        }
+      } 
+    }
+
+    public set fontName(value: string) {
+      if(this._endIndex != this._startIndex) {
+        const selectionStyles = this.findSelectionStyles()
+        selectionStyles.forEach(selectionStyle => {
+          selectionStyle.typeFaceName = value
+        })        
+      } else {
+        this._selectStyle.typeFaceName = value
+        if(!this._focused) {
+          this._styles.forEach(style => {
+            style.typeFaceName = value
+          })
+        }
+      }
+      this.buildFontName()
+      this.buildLines()
+    }
+
     public get fontColor() {
       if(this._endIndex != this._startIndex) {
         const selectionStyles = this.findSelectionStyles()
@@ -681,7 +713,7 @@ export abstract class AbstractTextShape extends Shape {
       for(const glyphList of glyphIDs) {
         const subText = text.substring(index, index + glyphList.length)
         index += glyphList.length
-        if(glyphList[0] > 0) {
+        if(glyphList[0] > 0 || subText.at(0) == '\n') {
           this._selectStyle.typeFaceName = origFontName
           this.insertInternal(subText)
         } else {
@@ -926,6 +958,33 @@ export abstract class AbstractTextShape extends Shape {
         const path = this.getLinesIndicesToPath(startIndex, endIndex)
         this._cursor.path = path
       }
+    }
+
+    private buildFontName() {
+      if(this._text.length <= 0) {
+        return
+      }
+      const newStyles: Array<Style> = []
+      let pos = 0
+      for(const style of this._styles) {
+        const text = this._text.substring(pos, pos + style.length)
+        const glyphIDs = FontUtils.splitGlyphIds(style.typeFaceName, text)
+        let index = 0
+        for(const glyphIDList of glyphIDs) {
+          const subText = text.substring(index, index + glyphIDList.length)
+          index += glyphIDList.length
+          const newStyle = style.clone()
+          newStyle.length = glyphIDList.length
+          if(glyphIDList[0] > 0 || subText.at(0) == '\n') {
+            newStyles.push(newStyle)
+          } else {
+            newStyle.typeFaceName = FontUtils.currentLanguageFont.defaultNonLatinFont
+            newStyles.push(newStyle)
+          }
+        }
+        pos += style.length        
+      }
+      this._styles = newStyles
     }
 
     private buildLines () {

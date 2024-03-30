@@ -1,5 +1,5 @@
 /* eslint-disable max-params */
-import { Color, Colors, FontWeight, FontWidth, FontSlant, Paint, PaintStyle, Rectangle, Rotation, StrokeDashStyle, TextDecoration, TextAlignment, TextDirection, TextVerticalAlignment, MatrixHelper, Matrix, } from './../../../Engine'
+import { Color, Colors, FontWeight, FontWidth, FontSlant, Paint, PaintStyle, Rectangle, Rotation, StrokeDashStyle, TextDecoration, TextAlignment, TextDirection, TextVerticalAlignment, MatrixHelper, Matrix, EngineUtils, } from './../../../Engine'
 import { Connector, } from './Connector'
 import { EntityShape, } from '../../Shapes'
 import { Editor, } from '../../Editor'
@@ -69,7 +69,7 @@ export abstract class Item implements EditorItem {
 
   private _lineWidth: number = 1
 
-  private _fontName: string = ''
+  private _fontName: string = EngineUtils.FONT_NAME_DEFAULT
 
   private _fontSize: number = 14
 
@@ -264,12 +264,14 @@ export abstract class Item implements EditorItem {
   }
 
   public get fontName() {
+    this._fontName  = this._shape.fontName
     return this._fontName
   }
 
   public set fontName(value: string) {
     this._fontName = value
-    this.updateTheme()
+    //this.updateTheme()
+    this._shape.fontName = value 
   }
 
   public get fontColor() {
