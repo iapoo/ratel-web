@@ -1,5 +1,5 @@
 /* eslint-disable max-params */
-import { Color, Colors, Engine, EngineUtils, FontSlant, FontStyle, FontUtils, FontWeight, FontWidth, Graphics, Paint, Path, TextStyle, } from '@/components/Engine'
+import { Color, Colors, Engine, EngineUtils, Font, FontSlant, FontStyle, FontUtils, FontWeight, FontWidth, Graphics, Paint, Path, TextStyle, } from '@/components/Engine'
 import { SystemUtils } from '@/components/Workspace/Utils'
 
 export class CursorMaker {
@@ -134,8 +134,91 @@ export class StyleInfo {
 }
 
 export class Style {
-  public constructor (public length: number = 0, public typeFaceName: string = EngineUtils.FONT_NAME_DEFAULT, public size: number = EngineUtils.FONT_SIZE_DEFAULT, public color: Color = Colors.Black, public bold: boolean = false, public italic: boolean = false, public underline: boolean = false) {
+  private _length: number
+  private _typeFaceName: string
+  private _size: number
+  private _color: Color
+  private _bold: boolean
+  private _italic: boolean
+  private _underline: boolean
+  private _font: Font
 
+  public constructor (length: number = 0, typeFaceName: string = EngineUtils.FONT_NAME_DEFAULT, size: number = EngineUtils.FONT_SIZE_DEFAULT, color: Color = Colors.Black, bold: boolean = false, italic: boolean = false, underline: boolean = false) {
+    this._length = length
+    this._typeFaceName = typeFaceName
+    this._size = size
+    this._color = color
+    this._bold = bold
+    this._italic = italic
+    this._underline = underline
+    this._font = new Font(typeFaceName)
+    this._font.embolden = bold
+    this._font.fontSize = size
+  }
+
+  public get font() {
+    return this._font
+  }
+
+  public get length() {
+    return this._length
+  }
+
+  public set length(value: number) {
+    this._length = value
+  }
+
+  public get typeFaceName() {
+    return this._typeFaceName
+  }
+
+  public set typeFaceName(value: string) {
+    this._typeFaceName = value
+    this._font = new Font(value)
+    this._font.embolden = this.bold
+    this._font.fontSize = this.size
+  }
+
+  public get size() {
+    return this._size
+  }
+
+  public set size(value: number) {
+    this._size = value
+    this._font.fontSize = value
+  }
+
+  public get color() {
+    return this._color
+  }
+
+  public set color(value: Color) {
+    this._color = value
+  }
+
+  public get bold() {
+    return this._bold
+  }
+
+  public set bold(value: boolean) {
+    this._bold = value
+    this._font.embolden = value
+  }
+
+  public get italic() {
+    return this._italic
+  }
+
+  public set italic(value: boolean) {
+    this._italic = value
+  }
+
+  public get underline() {
+    return this._underline
+  }
+
+  public set underline(value: boolean) {
+    this._underline = this.underline
   }
 
   public clone (): Style {
@@ -169,7 +252,7 @@ export class Style {
 
   public makeTextStyle() {
     let textStyle = new TextStyle({
-      fontFamilies: [this.typeFaceName],
+      fontFamilies: [this.typeFaceName,],
       fontSize: this.size,
       fontStyle: new FontStyle({
         weight: this.bold ? FontWeight.BOLD : FontWeight.NORMAL,

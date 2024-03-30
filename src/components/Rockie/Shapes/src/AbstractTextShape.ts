@@ -2,7 +2,7 @@
 /* eslint-disable max-params */
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
 
-import { Color, Colors, Font, FontSlant, FontWeight, GlyphRun, Graphics, Matrix, Paint, Paragraph, ParagraphBuilder, ParagraphDirection, ParagraphStyle, Path, PlaceholderAlignment, Point2, Rectangle, Rotation, RoundRectangle, Shape, ShapedLine, TextAlignment, TextBaseline, TextDecoration, TextDirection, TextStyle, TextVerticalAlignment, } from '@/components/Engine'
+import { Color, Colors, Font, FontSlant, FontUtils, FontWeight, GlyphRun, Graphics, Matrix, Paint, Paragraph, ParagraphBuilder, ParagraphDirection, ParagraphStyle, Path, PlaceholderAlignment, Point2, Rectangle, Rotation, RoundRectangle, Shape, ShapedLine, TextAlignment, TextBaseline, TextDecoration, TextDirection, TextStyle, TextVerticalAlignment, } from '@/components/Engine'
 import { CursorMaker, Style, StyleInfo, } from './EntityUtils'
 
 export abstract class AbstractTextShape extends Shape {
@@ -17,7 +17,7 @@ export abstract class AbstractTextShape extends Shape {
     private _selectStartIndex = 0
     private _selectStyle = new Style()
     private _styles = new Array<Style>(0)
-    private _font = new Font()
+    //private _font = new Font()
     private _runs = new Array<GlyphRun>(0)
     private _paragraphBuilder: ParagraphBuilder
     private _paragraphStyle: ParagraphStyle
@@ -673,7 +673,25 @@ export abstract class AbstractTextShape extends Shape {
       if (this._startIndex != this._endIndex) {
         this.deleteSelection()
       }
+      //this.insertInternal(text)
+      //Need to handle such as chinese if ansi font used here.
+      const glyphIDs = FontUtils.splitGlyphIds(this._selectStyle.typeFaceName, text)
+      const origFontName = this._selectStyle.typeFaceName
+      let index = 0
+      for(const glyphList of glyphIDs) {
+        const subText = text.substring(index, index + glyphList.length)
+        index += glyphList.length
+        if(glyphList[0] > 0) {
+          this._selectStyle.typeFaceName = origFontName
+          this.insertInternal(subText)
+        } else {
+          this._selectStyle.typeFaceName = FontUtils.currentLanguageFont.defaultNonLatinFont
+          this.insertInternal(subText)
+        }
+      }
+  }
 
+    private insertInternal(text: string) {
       // do this before edit the text (we use text.length in an assert)
       const index = this._startIndex
       const [ styleIndex, preLength, ] = this.findStyleIndexAndPrevLength(index, false)
@@ -772,7 +790,6 @@ export abstract class AbstractTextShape extends Shape {
 
       const runs = this._runs
       const styles = this._styles
-      const font = this._font
       const fontPaint = this._fontPaint
 
       let style = styles[0]
@@ -813,8 +830,10 @@ export abstract class AbstractTextShape extends Shape {
         }
 
         //              f.setTypeface(r.typeface); // r.typeface is always null (for now)
-        font.fontSize = run.size
-        font.embolden = style.bold
+        const font = style.font
+        // font.fontSize = run.size
+        // font.embolden = style.bold
+        // font.fontName = style.typeFaceName
         font.skewX = style.italic ? -0.2 : 0
         fontPaint.setColor(style.color)
 
@@ -846,6 +865,7 @@ export abstract class AbstractTextShape extends Shape {
         let startX = this.getTextPaddingX()
         let startY = this.getTextPaddingY()
         //graphics.
+        //const glyphFont = new Font(run.typefaceName, run.size)
         graphics.drawGlyphs(gly, pos, startX, startY, font, fontPaint)
 
         if (style.underline) {
@@ -938,8 +958,9 @@ export abstract class AbstractTextShape extends Shape {
       //  index += block.length
       //})
       this._styles.forEach(style => {
-        this._paragraphBuilder.pushStyle(style.makeTextStyle())
-        this._paragraphBuilder.addText(this._text.substring(index, index + style.length))
+        //this._paragraphBuilder.pushStyle(style.makeTextStyle())
+        //this._paragraphBuilder.addText(this._text.substring(index, index + style.length))
+        this.populateTextStyle(style, index)
         index += style.length
       })
       this._paragraph = this._paragraphBuilder.build()
@@ -967,6 +988,10 @@ export abstract class AbstractTextShape extends Shape {
       }
     }
 
+    private populateTextStyle(style: Style, index: number) {
+      this._paragraphBuilder.pushStyle(style.makeTextStyle())
+      this._paragraphBuilder.addText(this._text.substring(index, index + style.length))
+    }
     private deleteRange (start: number, end: number) {
       if (start === end) {
         return false

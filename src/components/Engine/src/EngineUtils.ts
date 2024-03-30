@@ -4,7 +4,7 @@ import { FontStyle } from './Graphics'
 
 
 export class EngineUtils {
-  public static FONT_NAME_DEFAULT = 'NotoSerifSC'
+  public static FONT_NAME_DEFAULT = 'Roboto'
   //public static FONT_NAME_SANS = 'Sans'
   //public static FONT_NAME_SERIF = 'Serif'
   public static FONT_NAME_ROBOTO = 'Roboto'
@@ -12,7 +12,7 @@ export class EngineUtils {
   public static FONT_SIZE_DEFAULT = 14
 
   public static LANG_EN_US = 'en-US'
-  public static LANG_ZN_CN = 'zh-CN'
+  public static LANG_ZH_CN = 'zh-CN'
 
   public static getCanvasKitWasm = () => {
     return axios.get(`/resources/canvaskit.wasm`, {
@@ -53,15 +53,21 @@ export interface LanguageFont {
   language: string
   defaultLatinFont: string
   defaultNonLatinFont: string
-  fonts: string
+  fonts: string[]
 }
 
-export const LanguageFonts = [
+export const LanguageFonts: LanguageFont[] = [
   {language: EngineUtils.LANG_EN_US, defaultLatinFont: EngineUtils.FONT_NAME_ROBOTO, defaultNonLatinFont: EngineUtils.FONT_NAME_NOTOSERIFSC, 
     fonts: ['Lato', 'Open Sans', 'Source Sans Pro', 'Roboto Slab',]},
-  {language: EngineUtils.LANG_ZN_CN, defaultLatinFont: EngineUtils.FONT_NAME_ROBOTO, defaultNonLatinFont: EngineUtils.FONT_NAME_NOTOSERIFSC, 
+  {language: EngineUtils.LANG_ZH_CN, defaultLatinFont: EngineUtils.FONT_NAME_ROBOTO, defaultNonLatinFont: EngineUtils.FONT_NAME_NOTOSERIFSC, 
     fonts: ['Noto Sans SC']},
 ]
+
+export enum Languages {
+  EN_US,
+  ZH_CN
+}
+
 
 export const SystemFonts = [
   {fontName: EngineUtils.FONT_NAME_ROBOTO, fontUrl: '/fonts/Roboto-Regular.woff2'},
@@ -167,8 +173,14 @@ export class WebFontManager {
 
 }
 
+export class TextFontGlyph {
+  public constructor(public text: string, public fontName: string, public glyph: number[]) {
+  }
+}
+
 export class FontUtils {
   public static webFontManager = new WebFontManager()
+  private static _currentLanguage: string =  EngineUtils.LANG_EN_US
 
   public static async intialize(canvasKit: CanvasKit) {
     FontUtils.webFontManager.initialize(canvasKit)
@@ -179,6 +191,41 @@ export class FontUtils {
     console.log(`Font initialized is done`)
   }
 
+
+  public static get currentLanguage() {
+    return FontUtils._currentLanguage
+  }
+
+  public static set currentLanguage(language: string) {
+    let valid = false
+    for(const languageFont of LanguageFonts) {
+      if(language  == languageFont.language) {
+        valid = true
+      }
+    }
+    if(valid) {
+      FontUtils._currentLanguage = language
+    }
+  }
+
+  public static get currentLanguageFont() {
+    for(let languageFont of LanguageFonts) {
+      if(FontUtils._currentLanguage == languageFont.language) {
+        return languageFont
+      }
+    }
+    return LanguageFonts[0]
+  }
+
+  public static get currentTypeface() {
+    const defaultTypeface = FontUtils.webFontManager.typeFaces.get(FontUtils._currentLanguage)
+    return defaultTypeface!
+  }
+
+  public static get currentNonLatinTypeface() {
+    const defaultTypeface = FontUtils.webFontManager.typeFaces.get(FontUtils._currentLanguage)
+    return defaultTypeface!
+  }
 
   /**
    * Always initialized before be used
@@ -194,6 +241,137 @@ export class FontUtils {
       typeface = null
     }
     return typeface
+  }
+
+  public static getGlyphIDs(fontName: string, text: string) {
+    let typeface = FontUtils.webFontManager.typeFaces.get(fontName)
+    if (typeface) {
+      typeface.getGlyphIDs(text)
+    } else {
+      if(text && text.length > 0) {
+
+      } else {
+        return [0]
+      }
+    }
+  }
+
+  public static hasUnknowGlyphID(fontName: string, text: string) {
+    const typeface = FontUtils.webFontManager.typeFaces.get(fontName)
+    if (typeface) {
+      const glyphIds = typeface.getGlyphIDs(text)
+      let emptyGlyph = false
+      if(glyphIds && glyphIds.length > 0) {
+        glyphIds.forEach(glyphId => {
+          if(glyphId <= 0) {
+            emptyGlyph = true
+          }
+        })
+      }
+      if(emptyGlyph) {
+        return true
+      }
+    } else {
+      return true      
+    }
+    return false
+  }
+
+  public static splitGlyphIds(fontName: string, text: string) {
+    const result: Array<Uint16Array> = []
+    if(!text || text.length <=0 ) {
+      return result
+    }
+    const typeface = FontUtils.webFontManager.typeFaces.get(fontName)
+    if (typeface) {
+      const glyphIDs = typeface.getGlyphIDs(text)
+      let emptyGlyph = false
+      if(glyphIDs && glyphIDs.length > 0) {
+        glyphIDs.forEach(glyphID => {
+          if(glyphID <= 0) {
+            emptyGlyph = true
+          }
+        })
+      }
+      if(!emptyGlyph) {
+        result.push(glyphIDs)
+      } else {
+        let start =  0
+        let end = 0
+        let greatThan0 = (glyphIDs[0] > 0)
+        for(let i = 1; i < glyphIDs.length; i ++) {          
+          if(greatThan0) {
+            if(glyphIDs[i] > 0) {            
+              end = i
+            } else {
+              result.push(glyphIDs.slice(start, i))
+              start = i
+              end = i
+              greatThan0 = false
+            }
+          } else {
+            if(glyphIDs[i] <= 0) {            
+              end = i
+            } else {
+              result.push(glyphIDs.slice(start, i))
+              start = i
+              end = i
+              greatThan0 = true
+            }
+          }
+        }
+        result.push(glyphIDs.slice(start, end + 1))
+      }
+    } else {
+      const glyphIDs = new Uint16Array(text.length)
+      result.push(glyphIDs)
+    }
+    return result
+  }
+
+  public static findGlyphIDs(fontName: string, text: string) {
+    if(!text || text.length <=0 ) {
+      return new Uint16Array(0)
+    }
+    const typeface = FontUtils.webFontManager.typeFaces.get(fontName)
+    if (typeface) {
+      const glyphIds = typeface.getGlyphIDs(text)
+      let emptyGlyph = false
+      if(glyphIds && glyphIds.length > 0) {
+        glyphIds.forEach(glyphId => {
+          if(glyphId <= 0) {
+            emptyGlyph = true
+          }
+        })
+      }
+      if(!emptyGlyph) {
+        return glyphIds
+      } else {
+        const fixGlyphIds = new Uint16Array(1)
+        for(let i = 0; i < glyphIds.length; i ++) {
+          if(glyphIds[i] == 0) {
+            const fixString = text[i]
+            const defaultTypeface = FontUtils.currentTypeface
+            defaultTypeface.getGlyphIDs(fixString, 1, fixGlyphIds)
+            glyphIds[i] = fixGlyphIds[0]
+          }
+        }
+        return glyphIds
+      }
+    } else {
+      const defaultTypeface = FontUtils.currentTypeface
+      const glyphIds = defaultTypeface.getGlyphIDs(text)
+      return glyphIds
+    }
+  }
+
+  public static getDefaultNonLatinFontFamily(language: string) {
+    for(let languageFont of LanguageFonts) {
+      if(language == languageFont.language) {
+        return languageFont.defaultNonLatinFont
+      }
+    }
+    return LanguageFonts[0].defaultNonLatinFont
   }
 
   public static async registerFont (fontName: string, fontUrl: string) {
