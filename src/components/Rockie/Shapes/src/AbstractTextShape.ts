@@ -698,6 +698,10 @@ export abstract class AbstractTextShape extends Shape {
       //this.insertInternal(text)
       //Need to handle such as chinese if ansi font used here.
       const glyphIDs = FontUtils.splitGlyphIds(this._selectStyle.typeFaceName, text)
+      if(glyphIDs.length > 0) {
+        const a = this._selectStyle.font.getGlyphWidths([4])
+        console.log(a)
+      }
       const origFontName = this._selectStyle.typeFaceName
       let index = 0
       for(const glyphList of glyphIDs) {
@@ -1010,11 +1014,16 @@ export abstract class AbstractTextShape extends Shape {
       for (const line of this._lines) {
         for (const run of line.runs) {
           run.indices = []
-          run.offsets.forEach(offset => {
+          run.offsets.forEach((offset: number, index: number) => {
             run.indices.push(startIndex)
+            //replace white space with 'a' and then replace them back in ShapeLines since it will skip whitespace like trim().We get whitespace back  here
+            if(_this.text[startIndex] == ' ' && index < run.offsets.length - 1) {
+              run.glyphs[index] = 4 //whitespace
+            }
             startIndex++
           })
-          startIndex--
+          startIndex--          
+          
           //Repair invisible characters because they are removed after built in shape line.
           //console.log(`${_this._text.length}    ${startIndex + 2} ${_this._text[startIndex]} ${_this._text[startIndex] == '\r'}  ` )
           if(_this._text.length >= startIndex + 2 && _this._text[startIndex] == '\r' && _this._text[startIndex + 1] == '\n'){
@@ -1026,10 +1035,15 @@ export abstract class AbstractTextShape extends Shape {
       }
     }
 
+
+    //replace white space with 'a' and then replace them back in ShapeLines since it will skip whitespace like trim()
     private populateTextStyle(style: Style, index: number) {
+      let subText = this._text.substring(index, index + style.length)
+      subText = subText.replaceAll(' ', 'a')
       this._paragraphBuilder.pushStyle(style.makeTextStyle())
-      this._paragraphBuilder.addText(this._text.substring(index, index + style.length))
+      this._paragraphBuilder.addText(subText)
     }
+
     private deleteRange (start: number, end: number) {
       if (start === end) {
         return false
