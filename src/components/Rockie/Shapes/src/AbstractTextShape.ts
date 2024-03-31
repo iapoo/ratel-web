@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
 
 import { Color, Colors, Font, FontSlant, FontUtils, FontWeight, GlyphRun, Graphics, Matrix, Paint, Paragraph, ParagraphBuilder, ParagraphDirection, ParagraphStyle, Path, PlaceholderAlignment, Point2, Rectangle, Rotation, RoundRectangle, Shape, ShapedLine, TextAlignment, TextBaseline, TextDecoration, TextDirection, TextStyle, TextVerticalAlignment, } from '@/components/Engine'
-import { CursorMaker, Style, StyleInfo, } from './EntityUtils'
+import { TextCursor, Style, StyleInfo, } from './EntityUtils'
 
 export abstract class AbstractTextShape extends Shape {
     public static DEFAULT_TEXT_PADDING = 4
@@ -11,7 +11,7 @@ export abstract class AbstractTextShape extends Shape {
     private _text: string
     private _fontPaint: Paint
     private _lines = new Array<ShapedLine>(0)
-    private _cursor: CursorMaker = new CursorMaker(Colors.Black, Colors.Blue, 0, 0, 0, 750)
+    private _cursor: TextCursor = new TextCursor(Colors.Black, Colors.Blue, 0, 0, 0, 800)
     private _startIndex = 0
     private _endIndex = 0
     private _selectStartIndex = 0
@@ -390,16 +390,6 @@ export abstract class AbstractTextShape extends Shape {
       return super.boundary
     }
 
-    // eslint-disable-next-line accessor-pairs
-    // public set width (width: number) {
-    //  this.boundary = Rectangle.makeLTWH(this.boundary.left, this.boundary.top, width, this.boundary.height)
-    // }
-
-    // eslint-disable-next-line accessor-pairs
-    // public set right (right: number) {
-    //  this.boundary = Rectangle.makeLTWH(this.boundary.left, this.boundary.top, right - this.boundary.left, this.boundary.height)
-    // }
-
     public get lines () {
       return this._lines
     }
@@ -725,11 +715,10 @@ export abstract class AbstractTextShape extends Shape {
     }
 
     private insertInternal(text: string) {
-      // do this before edit the text (we use text.length in an assert)
       const index = this._startIndex
       const [ styleIndex, preLength, ] = this.findStyleIndexAndPrevLength(index, false)
       const style = this._styles[styleIndex]
-      if(style.length == 0) { //Empty yet
+      if(style.length == 0) { //Empty 
         this._styles[styleIndex] = this._selectStyle.clone()         
         this._styles[styleIndex].length += text.length
         this._text = this._text.slice(0, index) + text + this._text.slice(index)
@@ -799,20 +788,6 @@ export abstract class AbstractTextShape extends Shape {
     public render (graphics: Graphics): void {
       super.render(graphics)
 
-        // switch(this._paragraphDirection) {
-        //   case ParagraphDirection.BottomTop:
-        //     graphics.translate(0, this.textWidth)
-        //     graphics.rotate(270, 0, 0)
-        //     break
-        //   case ParagraphDirection.TopBottom:
-        //     graphics.translate(this.textHeight, 0)
-        //     graphics.rotate(90, 0, 0)
-        //     break
-        //   default:
-        //   case ParagraphDirection.LeftRight:
-        //     //Do nothing for default case
-        //     break;
-        // }
       //Apply paragraph direction matrix here
       const matrix = this.getParagraphMatrix()      
       graphics.concat(matrix)
@@ -821,7 +796,7 @@ export abstract class AbstractTextShape extends Shape {
         this._cursor.renderBefore(graphics)
       }
 
-      //Only space will cause empty runs
+      //if only space in text will cause empty runs
       if(this._runs.length <= 0) {
         return
       }
@@ -842,12 +817,11 @@ export abstract class AbstractTextShape extends Shape {
       while (start < this._text.length) {
         while (run.textRange.end <= start) {
           run = runs[++runIndex]
-          if (!run) {
-            // ran out of runs, so the remaining text must just be WS
+          if (!run) { // space
             break
           }
         }
-        if (!run) { 
+        if (!run) { //space
           break 
         }
         while (styleEnd <= start) {

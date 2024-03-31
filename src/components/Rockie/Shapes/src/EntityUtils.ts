@@ -2,29 +2,26 @@
 import { Color, Colors, Engine, EngineUtils, Font, FontSlant, FontStyle, FontUtils, FontWeight, FontWidth, Graphics, Paint, Path, TextStyle, } from '@/components/Engine'
 import { SystemUtils } from '@/components/Workspace/Utils'
 
-export class CursorMaker {
+export class TextCursor {
     private _linePaint: Paint
     private _pathPaint: Paint
-    private _x: number
+    private _left: number
     private _top: number
     private _bottom: number
     private _path: Path | undefined
     private _interval = 2
 
-    public constructor (lineColor: Color, pathColor: Color, x: number, top: number, bottom: number, interval: number) {
+    public constructor (lineColor: Color, pathColor: Color, left: number, top: number, bottom: number, interval: number) {
       this._linePaint = new Paint()
       this._linePaint.setColor(lineColor)
       this._pathPaint = new Paint()
       this._pathPaint.setColor(pathColor)
-      this._x = x
+      this._left = left
       this._top = top
       this._bottom = bottom
       this._interval = interval
     }
 
-    /**
-     * mill seconds to blink
-     */
     public set interval (value: number) {
       this._interval = value
     }
@@ -41,8 +38,8 @@ export class CursorMaker {
       this._path = value
     }
 
-    public place (x: number, top: number, bottom: number) {
-      this._x = x
+    public place (left: number, top: number, bottom: number) {
+      this._left = left
       this._top = top
       this._bottom = bottom
       this._path = undefined
@@ -56,59 +53,10 @@ export class CursorMaker {
 
     public renderAfter (graphics: Graphics) {
       if ((Math.floor(Date.now() / this._interval) & 1)) {
-        graphics.drawLine(this._x, this._top, this._x, this._bottom, this._linePaint)
+        graphics.drawLine(this._left, this._top, this._left, this._bottom, this._linePaint)
       }
     }
 }
-
-export class MouseMaker {
-    private _startX = 0
-    private _startY = 0
-    private _currentX = 0
-    private _currentY = 0
-    private _active = false
-
-    public get active () {
-      return this._active
-    }
-
-    public down (x: number, y: number) {
-      this._startX = this._currentX = x
-      this._startY = this._currentY = y
-      this._active = true
-    }
-
-    public move (x: number, y: number) {
-
-    }
-
-    public up (x: number, y: number) {
-
-    }
-
-    public getPosition (dx: number, dy: number) {
-      return [ this._startX + dx, this._startY + dy, this._currentX + dx, this._currentY + dy, ]
-    }
-}
-
-// export class Block {
-//     private _textStyle : TextStyle
-
-//     public constructor (public typefaceName: string, public length: number, public size: number, public fakeBold: boolean = false, public fakeItalic: boolean = false) {
-//       this._textStyle = new TextStyle({
-//         fontFamilies: [ typefaceName, ],
-//         fontSize: size,
-//       })
-//     }
-
-//     public get textStyle () {
-//       return this._textStyle
-//     }
-
-//     public get typeface () {
-//       return Engine.getTypeFace(this.typefaceName)!
-//     }
-// }
 
 export class StyleInfo {
   public constructor (public length: number = 0, public typeFaceName: string = EngineUtils.FONT_NAME_DEFAULT, public size: number = EngineUtils.FONT_SIZE_DEFAULT, public color: string = '', public bold: boolean = false, public italic: boolean = false, public underline: boolean = false) {

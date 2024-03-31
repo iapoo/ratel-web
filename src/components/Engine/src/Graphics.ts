@@ -785,9 +785,9 @@ export class TextStyle {
     this._fontSize = textStyle.fontSize ? textStyle.fontSize : 14
     this._fontStyle = textStyle.fontStyle ? textStyle.fontStyle : new FontStyle()
     this._foregroundColor = textStyle.foregroundColor ? textStyle.foregroundColor : undefined
-    this._heightMultiplier = textStyle.heightMultiplier ? textStyle.heightMultiplier : 0
+    this._heightMultiplier = textStyle.heightMultiplier ? textStyle.heightMultiplier : 1
     this._halfLeading = textStyle.halfLeading ? textStyle.halfLeading : false
-    this._letterSpacing = textStyle.heightMultiplier ? textStyle.heightMultiplier : 0
+    this._letterSpacing = textStyle.letterSpacing ? textStyle.letterSpacing : 0
     this._locale = textStyle.locale ? textStyle.locale : undefined
     this._shadows = textStyle.shadows ? textStyle.shadows : []
     this._textBaseline = textStyle.textBaseline ? textStyle.textBaseline : TextBaseline.ALPHABETIC
