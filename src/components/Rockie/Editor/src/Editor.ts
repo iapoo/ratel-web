@@ -1231,8 +1231,10 @@ export class Editor extends Painter {
       }
       if (this._targetItem && e.data) {
         this._targetItem.shape.insert(e.data)
+        this.triggerTextEditStyleChange()
       } else if (this._target && e.data) {
         this._target.shape.insert(e.data)
+        this.triggerTextEditStyleChange()
       }
       this._textInputStatus = 'CHAR_TYPING'
     })
@@ -1240,8 +1242,10 @@ export class Editor extends Painter {
       if (this._textInputStatus === 'CHINESE_TYPING') {
         if (this._targetItem) {
           this._targetItem.shape.insert(e.data)
+          this.triggerTextEditStyleChange()
         } else if (this._target) {
           this._target.shape.insert(e.data)
+          this.triggerTextEditStyleChange()
         }
         this._textInputStatus = 'CHAR_TYPING'
       }
@@ -1308,7 +1312,7 @@ export class Editor extends Painter {
       //this._textArea.style.top = (Editor.SHADOW_SIZE + (editorItem.top + y) * this._zoom + this.verticalSpace  + pos.top - scrollContainer.scrollTop) + 'px'
       this._textArea.style.left = (Editor.SHADOW_SIZE + (point.x) * this._zoom  + this.horizontalSpace  - scrollContainer.scrollLeft) + 'px'
       this._textArea.style.top = (Editor.SHADOW_SIZE + (point.y) * this._zoom + this.verticalSpace  - scrollContainer.scrollTop) + 'px'
-      console.log(`'Check left = ${editorItem.left}  x=${x} text.left = ${this._textArea.style.left}  scroll=${scrollContainer.scrollLeft}`)
+      //console.log(`'Check left = ${editorItem.left}  x=${x} text.left = ${this._textArea.style.left}  scroll=${scrollContainer.scrollLeft}`)
     }
   }
 
@@ -2478,7 +2482,7 @@ export class Editor extends Painter {
     this._startEditorItemInfos.length = 0
     let editorItemInfo = OperationHelper.saveEditorItem(editorItem)
     this._startEditorItemInfos.push(editorItemInfo)
-    console.log(`save: ${editorItemInfo}`)
+    //console.log(`save: ${editorItemInfo}`)
   }
 
   private finishOperation(editorItem: EditorItem) {
