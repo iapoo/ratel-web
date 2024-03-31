@@ -431,10 +431,10 @@ export abstract class AbstractTextShape extends Shape {
       const [startStyleIndex, preStartLen, ] = this.findStyleIndexAndPrevLength(this._startIndex, true)
       const [endStyleIndex, preEndLen, ] = this.findStyleIndexAndPrevLength(this._endIndex, false)
       this._selectStyle = this._styles[startStyleIndex].clone()
-      console.log(`text selectting =  ${startStyleIndex}  ${endStyleIndex} ${this._startIndex} ${this._endIndex}`)
-      if(this._startIndex == 3 && this._endIndex == 3) {
-        console.log(`Exception is here`)
-      }
+      // console.log(`text selectting =  ${startStyleIndex}  ${endStyleIndex} ${this._startIndex} ${this._endIndex}`)
+      // if(this._startIndex == 3 && this._endIndex == 3) {
+      //   console.log(`Exception is here`)
+      // }
       this.rebuildSelection()
     }
 
@@ -713,7 +713,7 @@ export abstract class AbstractTextShape extends Shape {
       for(const glyphList of glyphIDs) {
         const subText = text.substring(index, index + glyphList.length)
         index += glyphList.length
-        if(glyphList[0] > 0 || subText.at(0) == '\n') {
+        if(FontUtils.isValidGlyphID(glyphList, 0, subText)) {
           this._selectStyle.typeFaceName = origFontName
           this.insertInternal(subText)
         } else {
@@ -721,7 +721,8 @@ export abstract class AbstractTextShape extends Shape {
           this.insertInternal(subText)
         }
       }
-  }
+      //this._selectStyle.typeFaceName = origFontName
+    }
 
     private insertInternal(text: string) {
       // do this before edit the text (we use text.length in an assert)
@@ -820,6 +821,10 @@ export abstract class AbstractTextShape extends Shape {
         this._cursor.renderBefore(graphics)
       }
 
+      //Only space will cause empty runs
+      if(this._runs.length <= 0) {
+        return
+      }
       const runs = this._runs
       const styles = this._styles
       const fontPaint = this._fontPaint
@@ -975,7 +980,7 @@ export abstract class AbstractTextShape extends Shape {
           index += glyphIDList.length
           const newStyle = style.clone()
           newStyle.length = glyphIDList.length
-          if(glyphIDList[0] > 0 || subText.at(0) == '\n') {
+          if(FontUtils.isValidGlyphID(glyphIDList, 0, subText)) {
             newStyles.push(newStyle)
           } else {
             newStyle.typeFaceName = FontUtils.currentLanguageFont.defaultNonLatinFont

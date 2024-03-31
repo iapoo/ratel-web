@@ -310,7 +310,7 @@ export class FontUtils {
         for(let i = 1; i < glyphIDs.length; i ++) {          
           if(greatThan0) {
             //Some special charactors are also 0
-            if(glyphIDs[i] > 0 || text.at(i) == '\n') {            
+            if(FontUtils.isValidGlyphID(glyphIDs, i, text)) {            
               end = i
             } else {
               result.push(glyphIDs.slice(start, i))
@@ -320,7 +320,7 @@ export class FontUtils {
             }
           } else {
             //Some special charactors are also 0
-            if(glyphIDs[i] > 0 || text.at(i) == '\n') {            
+            if(FontUtils.isValidGlyphID(glyphIDs, i, text)) {            
               result.push(glyphIDs.slice(start, i))
               start = i
               end = i
@@ -337,6 +337,11 @@ export class FontUtils {
       result.push(glyphIDs)
     }
     return result
+  }
+
+  public static isValidGlyphID(glyphIDs: Uint16Array, index: number, sourceText: string) {
+    const valid = glyphIDs[index] > 0 || sourceText.at(index) == '\n'
+    return valid 
   }
 
   public static findGlyphIDs(fontName: string, text: string) {
