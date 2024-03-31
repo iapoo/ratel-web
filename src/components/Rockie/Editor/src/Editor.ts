@@ -2123,8 +2123,14 @@ export class Editor extends Painter {
       const inEditorItem = this.isInEditorItem(editorItem, e.x, e.y)
       //const targetPoint = this.findEditorItemJoint(editorItem, e.x, e.y, inEditorItem)
       if(inEditorItem) {
-        //console.log(` Check here2`)
-        this.updateEditorMode(EditorMode.MOVE)
+        //console.log(` Check here2 ${this._textFocused}`)
+        if(this._textFocused) {
+          //console.log(` Check here21 ${this._textFocused}`)
+          this.updateEditorMode(EditorMode.TEXT)
+        } else {
+          //console.log(` Check here22 ${this._textFocused}`)
+          this.updateEditorMode(EditorMode.MOVE)
+        }
       } else {
         //console.log(` Check here3`)
         this.updateEditorMode(EditorMode.CROSSHAIR)
@@ -2184,12 +2190,16 @@ export class Editor extends Painter {
             const cellPoint = this.findEditorItemPoint(this._targetItem, e.x, e.y)
             this._targetItem.shape.enterTo(cellPoint.x, cellPoint.y)
             this.updateEditorMode(EditorMode.TEXT)
+          } else if(this._targetItem && this._textFocused) {
+            this.updateEditorMode(EditorMode.TEXT)
           } else {
             this.updateEditorMode(EditorMode.MOVE)
           }
         } else if(this._textFocused && this._textSelecting) {
           const targetPoint = this.findEditorItemPoint(editorItem, e.x, e.y)
           editorItem.shape.enterTo(targetPoint.x, targetPoint.y)
+          this.updateEditorMode(EditorMode.TEXT)
+        } else if(this._textFocused) {
           this.updateEditorMode(EditorMode.TEXT)
         } else {
           this.updateEditorMode(EditorMode.MOVE)
