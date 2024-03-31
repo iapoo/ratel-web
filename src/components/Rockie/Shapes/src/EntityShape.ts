@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
 
 import { Colors, Font, GlyphRun, Graphics, Paint, Paragraph, ParagraphBuilder, ParagraphStyle, Path, Point2, Rectangle, Rotation, RoundRectangle, Shape, ShapedLine, } from '@/components/Engine'
-import { CursorMaker, Style, } from './EntityUtils'
+import { TextCursor, Style, } from './EntityUtils'
 import { AbstractTextShape, } from './AbstractTextShape'
 import { ConnectorShape } from './ConnectorShape'
 
