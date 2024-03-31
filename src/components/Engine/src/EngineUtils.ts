@@ -226,12 +226,12 @@ export class FontUtils {
   }
 
   public static get currentTypeface() {
-    const defaultTypeface = FontUtils.webFontManager.typeFaces.get(FontUtils._currentLanguage)
+    const defaultTypeface = FontUtils.webFontManager.typeFaces.get(FontUtils.currentLanguageFont.defaultLatinFont)
     return defaultTypeface!
   }
 
   public static get currentNonLatinTypeface() {
-    const defaultTypeface = FontUtils.webFontManager.typeFaces.get(FontUtils._currentLanguage)
+    const defaultTypeface = FontUtils.webFontManager.typeFaces.get(FontUtils.currentLanguageFont.defaultNonLatinFont)
     return defaultTypeface!
   }
 

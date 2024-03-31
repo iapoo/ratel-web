@@ -1606,6 +1606,19 @@ export class Font {
     top: number, bottom: number): Float32Array {
     return this._source.getGlyphIntercepts(glyphs, positions, top, bottom)
   }
+
+  /**
+     * Retrieves the advanceX measurements for each glyph.
+     * If paint is not null, its stroking, PathEffect, and MaskFilter fields are respected.
+     * One width per glyph is returned in the returned array.
+     * @param glyphs
+     * @param paint
+     * @param output - if provided, the results will be copied into this array.
+     */
+  public getGlyphWidths(glyphs: number[], paint?: Paint | null, output?: Float32Array): Float32Array {
+    return this._source.getGlyphWidths(glyphs, paint?.source, output)
+  }
+
 }
 
 export class Rotation {
