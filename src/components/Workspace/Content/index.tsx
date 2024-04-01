@@ -4,7 +4,7 @@ import React, { useEffect, useState, useRef, FC, MouseEventHandler, SyntheticEve
 import styles from './index.css'
 import { Button, ColorPicker, Divider, Dropdown, FloatButton, Input, InputNumber, InputRef, MenuProps, Select, Space, Tabs, Tooltip, theme, } from 'antd'
 import { Consts, FontSizeOptions, SystemUtils, Utils, } from '../Utils'
-import { Editor, EditorEvent, } from '../../Rockie/Editor'
+import { Editor, EditorEvent, EditorOperationEvent, } from '../../Rockie/Editor'
 
 import { Engine, Rectangle2D, EngineUtils, Line2D, FontWeight, FontSlant, TextDecoration, Point2, } from '../../Engine'
 import { StorageService, } from '../Storage'
@@ -338,6 +338,8 @@ const Content: FC<ContentProps> = ({
     Utils.currentEditor.onTextEditStyleChange(handleTextEditStyleChange)
     oldEditor?.removeEditorModeChange(handleEditorModeChange)
     Utils.currentEditor.onEditorModeChange(handleEditorModeChange)
+    oldEditor?.removeEditorOperationEvent(handleEditorOperationEvent)
+    Utils.currentEditor.onEditorOperationEvent(handleEditorOperationEvent)
   }
 
   const updateScroll = () => {
@@ -453,9 +455,15 @@ const Content: FC<ContentProps> = ({
     Utils.currentEditor.onSelectionResizing(handleSelectionResizing)
     oldEditor?.removeEditorModeChange(handleEditorModeChange)
     Utils.currentEditor.onEditorModeChange(handleEditorModeChange)
+    oldEditor?.removeEditorOperationEvent(handleEditorOperationEvent)
+    Utils.currentEditor.onEditorOperationEvent(handleEditorOperationEvent)
   }
 
   const onTabChange = (newActiveKey: string) => {
+    handleTabChange(newActiveKey, false)
+  }
+
+  const handleTabChange = (newActiveKey: string, isUndo: boolean) => {
     const container = document.getElementById('editor-container')
     setActiveKey(newActiveKey)
     while (container?.hasChildNodes()) {
@@ -476,8 +484,8 @@ const Content: FC<ContentProps> = ({
         setActivePane(pane)
         onEditorChange(oldEditor, Utils.currentEditor)
         
-        if(oldEditor) {
-          let operation = new Operation(oldEditor, OperationType.SELECT_EDITOR, [])
+        if(oldEditor && !isUndo) {
+          let operation = new Operation(Utils.currentEditor, OperationType.SELECT_EDITOR, [], false, [], '', oldEditor, null )
           Utils.currentEditor.operationService.addOperation(operation)
           Utils.currentEditor.triggerOperationChange()
         }
@@ -497,6 +505,8 @@ const Content: FC<ContentProps> = ({
         Utils.currentEditor.onSelectionResizing(handleSelectionResizing)
         oldEditor?.removeEditorModeChange(handleEditorModeChange)
         Utils.currentEditor.onEditorModeChange(handleEditorModeChange)
+        oldEditor?.removeEditorOperationEvent(handleEditorOperationEvent)
+        Utils.currentEditor.onEditorOperationEvent(handleEditorOperationEvent)
       }
     }
     updateEditors(panes)
@@ -733,6 +743,8 @@ const Content: FC<ContentProps> = ({
     Utils.currentEditor.onSelectionResizing(handleSelectionResizing)
     oldEditor?.removeEditorModeChange(handleEditorModeChange)
     Utils.currentEditor.onEditorModeChange(handleEditorModeChange)
+    oldEditor?.removeEditorOperationEvent(handleEditorOperationEvent)
+    Utils.currentEditor.onEditorOperationEvent(handleEditorOperationEvent)
     let operation = new Operation(Utils.currentEditor, OperationType.ADD_EDITOR, [])
     Utils.currentEditor.operationService.addOperation(operation)
     Utils.currentEditor.triggerOperationChange()
@@ -774,6 +786,7 @@ const Content: FC<ContentProps> = ({
       Utils.currentEditor.onSelectionResized(handleSelectionResized)
       Utils.currentEditor.onSelectionResizing(handleSelectionResizing)
       Utils.currentEditor.onEditorModeChange(handleEditorModeChange)
+      Utils.currentEditor.onEditorOperationEvent(handleEditorOperationEvent)
     }
   }
 
@@ -801,6 +814,18 @@ const Content: FC<ContentProps> = ({
       Utils.isModified = modified
     }
 
+  }
+
+  const handleEditorOperationEvent = (event: EditorOperationEvent) => {
+    switch(event.operation.type) {
+      case OperationType.SELECT_EDITOR:
+        if(event.isUndo) {
+          handleUndoSelectEditor(event.operation)
+        }
+        break;
+      default:
+        break;
+    }
   }
 
 
@@ -1319,6 +1344,7 @@ const Content: FC<ContentProps> = ({
           case OperationType.RENAME_EDITOR:
             break;
           case OperationType.SELECT_EDITOR:
+            handleUndoSelectEditor(operation)
             break;
           case OperationType.MOVE_EDITOR:
             break;
@@ -1333,6 +1359,15 @@ const Content: FC<ContentProps> = ({
   const handleRedo = () => {
     if (currentEditor) {
       currentEditor.redo()
+    }
+  }
+
+  const handleUndoSelectEditor = (operation: Operation) => {
+    for (let i = 0; i < panes.length; i++) {
+      const pane = panes[i]
+      if (pane.editor == operation.afterEditor) {    
+        handleTabChange(pane.key,true)
+      }
     }
   }
 

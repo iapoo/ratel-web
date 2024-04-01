@@ -698,10 +698,10 @@ export abstract class AbstractTextShape extends Shape {
       //this.insertInternal(text)
       //Need to handle such as chinese if ansi font used here.
       const glyphIDs = FontUtils.splitGlyphIds(this._selectStyle.typeFaceName, text)
-      if(glyphIDs.length > 0) {
-        const a = this._selectStyle.font.getGlyphWidths([4])
-        console.log(a)
-      }
+      // if(glyphIDs.length > 0) {
+      //   const a = this._selectStyle.font.getGlyphWidths([4])
+      //   console.log(a)
+      // }
       const origFontName = this._selectStyle.typeFaceName
       let index = 0
       for(const glyphList of glyphIDs) {
