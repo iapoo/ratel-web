@@ -22,6 +22,7 @@ import { ConnectorDirection } from '../../Shapes'
 import { TableLayer } from './TableLayer'
 import { DocumentThemeTypes, EditorUtils } from '@/components/Rockie/Theme'
 import { DocumentThemeType } from '../../Theme/DocumentTheme'
+import { EditorOperationEvent } from './EditorOperationEvent'
 
 
 export enum EditorMode {
@@ -118,6 +119,7 @@ export class Editor extends Painter {
   private _tableTextEditStartListeners = new Array<(e: EditorEvent) => void>(0)
   private _tableTextEditEndListeners = new Array<(e: EditorEvent) => void>(0)
   private _editorModeChangeListeners = new Array<(e: EditorEvent) => void>(0)
+  private _editorOperationEventListeners = new Array<(e: EditorOperationEvent) => void>(0)
   private _startEditorItemInfos: EditorItemInfo[] = []
   private _origWidth: number
   private _origHeight: number
@@ -533,6 +535,29 @@ export class Editor extends Painter {
     return index >= 0
   }  
 
+  public get editorOperationEventListeners() {
+    return this._editorOperationEventListeners
+  }
+
+  public onEditorOperationEvent(callback: (e: EditorOperationEvent) => void) {
+    const index = this._editorOperationEventListeners.indexOf(callback)
+    if (index < 0) {
+      this._editorOperationEventListeners.push(callback)
+    }
+  }  
+
+  public removeEditorOperationEvent(callback: (e: EditorOperationEvent) => void) {
+    const index = this._editorOperationEventListeners.indexOf(callback)
+    if (index >= 0) {
+      this._editorOperationEventListeners.splice(index, 1)
+    }
+  }
+  
+  public hasEditorOperationEvent(callback: (e: EditorOperationEvent) => void) {
+    const index = this._editorOperationEventListeners.indexOf(callback)
+    return index >= 0
+  }  
+
   public get textArea() {
     return this._textArea
   }
@@ -778,6 +803,7 @@ export class Editor extends Painter {
           this.handleOperationUndoRemoveSelectionItems(operation.itemInfos)
           break;
         case OperationType.SELECT_EDITOR:
+          this.triggerEditorOperationEvent(operation, true)
           break;
         case OperationType.ADD_EDITOR:
           break;
@@ -821,6 +847,7 @@ export class Editor extends Painter {
           this.handleOperationRedoRemoveSelectionItems(operation.itemInfos)
           break;
         case OperationType.SELECT_EDITOR:
+          this.triggerEditorOperationEvent(operation, false)
           break;
         case OperationType.ADD_EDITOR:
           break;
@@ -1799,6 +1826,13 @@ export class Editor extends Painter {
   public triggerEditorModeChange() {
     this._editorModeChangeListeners.forEach(callback => {
       const event = new EditorEvent(this)
+      callback(event)
+    })
+  }
+
+  public triggerEditorOperationEvent(operation: Operation, isUndo: boolean) {
+    this._editorOperationEventListeners.forEach(callback => {
+      const event = new EditorOperationEvent(this, operation, isUndo)
       callback(event)
     })
   }

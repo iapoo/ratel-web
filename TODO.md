@@ -6,7 +6,7 @@
 4. Temporary working stage
 5. Arrow directions for Connector curve lines (Done)
 6. Add Layer support
-7. Full operation support
+7. Full operation support & Operation support for text edit
 8. Use System Font resource
 9. SVG Generation
 
@@ -18,4 +18,4 @@
 4. Avoid unintentional connector created when mouse down near to edge of shape (Done)
 5. Decrease anchor points for connector line. (Done)
 6. Use SVG for icons
-7. Check rich text copy & paste
+7. Check rich text copy & paste(Done)
