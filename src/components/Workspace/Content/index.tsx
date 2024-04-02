@@ -463,7 +463,7 @@ const Content: FC<ContentProps> = ({
     handleTabChange(newActiveKey, false)
   }
 
-  const handleTabChange = (newActiveKey: string, isUndo: boolean) => {
+  const handleTabChange = (newActiveKey: string, requireOperation: boolean) => {
     const container = document.getElementById('editor-container')
     setActiveKey(newActiveKey)
     while (container?.hasChildNodes()) {
@@ -484,7 +484,7 @@ const Content: FC<ContentProps> = ({
         setActivePane(pane)
         onEditorChange(oldEditor, Utils.currentEditor)
         
-        if(oldEditor && !isUndo) {
+        if(oldEditor && !requireOperation) {
           let operation = new Operation(Utils.currentEditor, OperationType.SELECT_EDITOR, [], false, [], '', oldEditor, null )
           Utils.currentEditor.operationService.addOperation(operation)
           Utils.currentEditor.triggerOperationChange()
@@ -698,21 +698,44 @@ const Content: FC<ContentProps> = ({
     
   }
 
-  const add = () => {
+  const addEditor = (requireOperation: boolean, fromEditor: Editor | null, afterEditor: Editor | null) => {
     const newActiveKey = `${newTabIndex.current++}`
     const newPanes = [ ...panes, ]
-    const pane: Pane = { title: DOCUMENT_PREFIX + newActiveKey, content: DOCUMENT_CONTENT, key: newActiveKey, editor: null, initialized: false, scrollLeft: 0, scrollTop: 0, }
+    const title = fromEditor ? fromEditor.title : DOCUMENT_PREFIX + newActiveKey
+    const pane: Pane = { title: title, content: DOCUMENT_CONTENT, key: newActiveKey, editor: null, initialized: false, scrollLeft: 0, scrollTop: 0, }
+
+    //It may be called multiple times since event is listened by multiple editor
+    let exists = false
+    for (let i = 0; i < panes.length; i++) {
+      const childPane = panes[i]
+      if (childPane.editor == fromEditor) {    
+        exists = true
+      }
+    }
+    
     const canvasId = 'editor-' + pane.key
     const canvas = document.createElement('canvas')
     canvas.width = DEFAULT_PAINTER_WIDTH
     canvas.height = DEFAULT_PAINTER_HEIGHT
     canvas.id = canvasId
-    const editor = new Editor(canvas)
+    const editor = fromEditor ? fromEditor : new Editor(canvas)
     pane.editor = editor
     editor.key = pane.key
     editor.title = pane.title
     editor.start()
-    newPanes.push(pane)
+    if(afterEditor) {
+      if(!exists) {
+        for (let i = 0; i < panes.length; i++) {
+          const childPane = panes[i]
+          if (childPane.editor == afterEditor) {    
+            newPanes.splice(i, 0, pane)
+            break
+          }
+        }
+      }
+    } else {
+      newPanes.push(pane)
+    }
     setPanes(newPanes)
     setActiveKey(newActiveKey)
     setActivePane(pane)
@@ -745,22 +768,39 @@ const Content: FC<ContentProps> = ({
     Utils.currentEditor.onEditorModeChange(handleEditorModeChange)
     oldEditor?.removeEditorOperationEvent(handleEditorOperationEvent)
     Utils.currentEditor.onEditorOperationEvent(handleEditorOperationEvent)
-    let operation = new Operation(Utils.currentEditor, OperationType.ADD_EDITOR, [])
-    Utils.currentEditor.operationService.addOperation(operation)
-    Utils.currentEditor.triggerOperationChange()
+    if(!requireOperation) {
+      let operation = new Operation(Utils.currentEditor, OperationType.ADD_EDITOR, [])
+      Utils.currentEditor.operationService.addOperation(operation)
+      Utils.currentEditor.triggerOperationChange()
+    }
   }
 
-  const remove = (targetKey: string) => {
+  const removeEditor = (targetKey: string | null, requireOperation: boolean, editor: Editor | null) => {
+    let theTargetKey = targetKey
+    let afterTargetKey: string | null = null
+    let afterEditor: Editor | null = null
+    if(!theTargetKey) {
+      for (let i = 0; i < panes.length; i++) {
+        const pane = panes[i]
+        if (pane.editor == editor) {    
+          theTargetKey = pane.key
+          if(i > 0) {
+            afterTargetKey = panes[i - 1].key
+            afterEditor = panes[i - 1].editor
+          }
+        }
+      }
+    }
     let newActiveKey = activeKey
     let lastIndex = -1
     let newActivePane: Pane | null = null
     panes.forEach((pane, i) => {
-      if (pane.key === targetKey) {
+      if (pane.key === theTargetKey) {
         lastIndex = i - 1
       }
     })
-    const newPanes = panes.filter(pane => pane.key !== targetKey)
-    if (newPanes.length && newActiveKey === targetKey) {
+    const newPanes = panes.filter(pane => pane.key !== theTargetKey)
+    if (newPanes.length && newActiveKey === theTargetKey) {
       if (lastIndex >= 0) {
         newActiveKey = newPanes[lastIndex].key
         newActivePane = newPanes[lastIndex]
@@ -774,9 +814,11 @@ const Content: FC<ContentProps> = ({
     setActivePane(newActivePane)
     updateEditors(panes)
     if(Utils.currentEditor) {
-      let operation = new Operation(Utils.currentEditor, OperationType.REMOVE_EDITOR, [])
-      Utils.currentEditor.operationService.addOperation(operation)
-      Utils.currentEditor.triggerOperationChange()
+      if(!requireOperation) {
+        let operation = new Operation(Utils.currentEditor, OperationType.REMOVE_EDITOR, [], false, [], undefined, afterEditor, null)
+        Utils.currentEditor.operationService.addOperation(operation)
+        Utils.currentEditor.triggerOperationChange()
+      }
       //oldEditor?.removeSelectionChange(handleSelectionChange)
       Utils.currentEditor.onSelectionChange(handleSelectionChange)
       Utils.currentEditor.onTextEditStart(handleTextEditStart)
@@ -793,9 +835,9 @@ const Content: FC<ContentProps> = ({
   const onEdit = (targetKey: string, action: 'add' | 'remove') => {
     checkIfDocumentModified(true)
     if (action === 'add') {
-      add()
+      addEditor(false, null, null)
     } else {
-      remove(targetKey)
+      removeEditor(targetKey, false, null)
     }
   }
 
@@ -821,7 +863,29 @@ const Content: FC<ContentProps> = ({
       case OperationType.SELECT_EDITOR:
         if(event.isUndo) {
           handleUndoSelectEditor(event.operation)
+        } else {
+          handleRedoSelectEditor(event.operation)
         }
+        break;
+      case OperationType.ADD_EDITOR:
+        if(event.isUndo) {
+          handleUndoAddEditor(event.operation)
+        } else {
+          handleRedoAddEditor(event.operation)
+        }
+        break;
+      case OperationType.REMOVE_EDITOR:
+        if(event.isUndo) {
+          handleUndoRemoveEditor(event.operation)
+        } else {
+          handleRedoRemoveEditor(event.operation)
+        }
+        break;
+      case OperationType.RENAME_EDITOR:
+        break;
+      case OperationType.ADD_EDITOR:
+        break;
+      case OperationType.MOVE_EDITOR:
         break;
       default:
         break;
@@ -1332,27 +1396,7 @@ const Content: FC<ContentProps> = ({
 
   const handleUndo = () => {
     if (currentEditor) {
-      let operationService = currentEditor.operationService
-      let operation = operationService.getUndoOperation()
-      if (operation) {
-        switch (operation.type) {
-          case OperationType.ADD_EDITOR:
-            removeEditor(operation.editor)
-            break;
-          case OperationType.REMOVE_EDITOR:
-            break;
-          case OperationType.RENAME_EDITOR:
-            break;
-          case OperationType.SELECT_EDITOR:
-            handleUndoSelectEditor(operation)
-            break;
-          case OperationType.MOVE_EDITOR:
-            break;
-          default:
-            break;
-        }
-        currentEditor.undo()
-      }
+      currentEditor.undo()
     }
   }
 
@@ -1371,13 +1415,34 @@ const Content: FC<ContentProps> = ({
     }
   }
 
+  const handleRedoSelectEditor = (operation: Operation) => {
+    for (let i = 0; i < panes.length; i++) {
+      const pane = panes[i]
+      if (pane.editor == operation.editor) {    
+        handleTabChange(pane.key,true)
+      }
+    }
+  }
+
+  const handleUndoAddEditor = (operation: Operation) => {
+    removeEditor(null, true, operation.editor)
+  }
+
+  const handleRedoAddEditor = (operation: Operation) => {
+    addEditor(false, operation.editor, operation.afterEditor)
+  }
+
+  const handleUndoRemoveEditor = (operation: Operation) => {
+    addEditor(false, operation.editor, operation.afterEditor)
+  }
+
+  const handleRedoRemoveEditor = (operation: Operation) => {
+    removeEditor(null, false, operation.editor)
+  }
   const handleDelete = () => {
     if (currentEditor) {
       EditorHelper.deleteSelections(currentEditor)
     }
-  }
-
-  const removeEditor = (editor: Editor) => {
   }
 
   const handleInsertRowBefore = () => {
@@ -1505,6 +1570,16 @@ const Content: FC<ContentProps> = ({
 
   const handlePaneTitleChange = (pane: Pane, titleValue: string) => {
     console.log(`${pane.title}, ${titleValue}`)
+    const newPanes = clonePanes()
+    //pane.title = inputRef.current.input.value
+    //panes[0].title = inputRef.current.input.value
+    //if(pane.editor) {
+    //  pane.editor.title = pane.title
+    //}
+    const newPane = findPane(pane.key, newPanes)
+    newPane.title = titleValue
+    newPane.editor!.title = newPane.title
+    setPanes(newPanes)
   }
 
   const handlePageRename = (pane: Pane, inputRef: any, labelRef: any) => {
@@ -1658,17 +1733,18 @@ const Content: FC<ContentProps> = ({
           )}>
           {
             panes.map(pane => {
-              const inputRef = useRef<any>(undefined)
-              const labelRef = useRef<any>(undefined)
+              //ref={inputRef}
+              //const inputRef = useRef<any>(undefined)
+              //const labelRef = useRef<any>(undefined)
+              //<label style={{display: 'block'}} ref={labelRef} onContextMenu={handleContextTrigger} onDoubleClick={e => handlePageRename(pane, inputRef, labelRef)}>{pane.title}</label>
               const paneTitle = <Dropdown menu={{items: popupType == PopupType.SHAPES ? popupShapeItems : (popupType == PopupType.EDITOR ? popupEditorItems : popupText)}} 
                   trigger={['contextMenu']} >
                     <div>
-                      <Input ref={inputRef} defaultValue={pane.title} size='small' variant='borderless' style={{width: '72px', display: 'none' }} 
+                      <Input defaultValue={pane.title} size='small' variant='borderless' style={{width: '72px', display: 'inline' }} 
                         onChange={e => handlePaneTitleChange(pane, e.target.value)} 
-                        onPressEnter={e => handlePaneTitleChangeCompleted(pane, inputRef, labelRef)} 
-                        onBlur={ e => handlePaneTitleChangeCompleted(pane, inputRef, labelRef)}
+                        //onPressEnter={e => handlePaneTitleChangeCompleted(pane, inputRef, labelRef)} 
+                        //onBlur={ e => handlePaneTitleChangeCompleted(pane, inputRef, labelRef)}
                         />
-                      <label style={{display: 'block'}} ref={labelRef} onContextMenu={handleContextTrigger} onDoubleClick={e => handlePageRename(pane, inputRef, labelRef)}>{pane.title}</label>
                     </div>
                 </Dropdown>
               return <TabPane tab={paneTitle} key={pane.key} />
