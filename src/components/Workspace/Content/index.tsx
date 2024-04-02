@@ -489,7 +489,7 @@ const Content: FC<ContentProps> = ({
         setActivePane(pane)
         onEditorChange(oldEditor, Utils.currentEditor)
         
-        if(oldEditor && !requireOperation) {
+        if(oldEditor && requireOperation) {
           let operation = new Operation(Utils.currentEditor, OperationType.SELECT_EDITOR, [], false, [], '', oldEditor, null )
           Utils.currentEditor.operationService.addOperation(operation)
           Utils.currentEditor.triggerOperationChange()
@@ -791,11 +791,17 @@ const Content: FC<ContentProps> = ({
     let afterTargetKey: string | null = null
     let afterEditor: Editor | null = null
     const panes = panesRef.current
-    if(!theTargetKey) {
+    if(!targetKey) { // for undo addEditorr, only happen on last tab because addEditor is for last tab
       for (let i = 0; i < panes.length; i++) {
         const pane = panes[i]
         if (pane.editor == editor) {    
           theTargetKey = pane.key
+        }
+      }
+    } else {
+      for (let i = 0; i < panes.length; i++) {
+        const pane = panes[i]
+        if (pane.key == theTargetKey) {    
           if(i > 0) {
             afterTargetKey = panes[i - 1].key
             afterEditor = panes[i - 1].editor
@@ -806,13 +812,20 @@ const Content: FC<ContentProps> = ({
     let newActiveKey = activeKey
     let lastIndex = -1
     let newActivePane: Pane | null = null
-    panes.forEach((pane, i) => {
-      if (pane.key === theTargetKey) {
-        lastIndex = i - 1
-      }
-    })
     const newPanes = panes.filter(pane => pane.key !== theTargetKey)
-    if (newPanes.length && newActiveKey === theTargetKey) {
+    newActivePane = newPanes[0]
+    if(!targetKey) {
+      lastIndex = panes.length - 2
+      newActiveKey = panes[lastIndex].key
+      newActivePane = panes[lastIndex]
+    } else {
+      panes.forEach((pane, i) => {
+        if (pane.key === theTargetKey) {
+          lastIndex = i - 1
+        }
+      })
+    }
+    if (newPanes.length > 0 && newActiveKey === theTargetKey) {
       if (lastIndex >= 0) {
         newActiveKey = newPanes[lastIndex].key
         newActivePane = newPanes[lastIndex]
@@ -825,23 +838,42 @@ const Content: FC<ContentProps> = ({
     panesRef.current = newPanes
     setActiveKey(newActiveKey)
     setActivePane(newActivePane)
-    updateEditors(panes)
+
+    let oldEditor = Utils.currentEditor
+    Utils.currentEditor = newActivePane.editor!
+    setCurrentEditor(newActivePane.editor!!)
+    onEditorChange(oldEditor, Utils.currentEditor)
+    updateEditors(newPanes)
+    oldEditor?.removeSelectionChange(handleSelectionChange)
+    Utils.currentEditor.onSelectionChange(handleSelectionChange)
+    oldEditor?.removeTextEditStart(handleTextEditStart)
+    Utils.currentEditor.onTextEditStart(handleTextEditStart)
+    oldEditor?.removeTextEditEnd(handleTextEditEnd)
+    Utils.currentEditor.onTextEditEnd(handleTextEditEnd)
+    oldEditor?.removeTableTextEditStart(handleTableTextEditStart)
+    Utils.currentEditor.onTableTextEditStart(handleTableTextEditStart)
+    oldEditor?.removeTableTextEditEnd(handleTableTextEditEnd)
+    Utils.currentEditor.onTableTextEditEnd(handleTableTextEditEnd)
+    oldEditor?.removeSelectionResized(handleSelectionResized)
+    Utils.currentEditor.onSelectionResized(handleSelectionResized)
+    oldEditor?.removeSelectionResizing(handleSelectionResizing)
+    Utils.currentEditor.onSelectionResizing(handleSelectionResizing)
+    oldEditor?.removeEditorModeChange(handleEditorModeChange)
+    Utils.currentEditor.onEditorModeChange(handleEditorModeChange)
+    oldEditor?.removeEditorOperationEvent(handleEditorOperationEvent)
+    Utils.currentEditor.onEditorOperationEvent(handleEditorOperationEvent)
+
     if(Utils.currentEditor) {
       if(requireOperation) {
         let operation = new Operation(Utils.currentEditor, OperationType.REMOVE_EDITOR, [], false, [], undefined, afterEditor, null)
         Utils.currentEditor.operationService.addOperation(operation)
         Utils.currentEditor.triggerOperationChange()
       }
-      //oldEditor?.removeSelectionChange(handleSelectionChange)
-      Utils.currentEditor.onSelectionChange(handleSelectionChange)
-      Utils.currentEditor.onTextEditStart(handleTextEditStart)
-      Utils.currentEditor.onTextEditEnd(handleTextEditEnd)
-      Utils.currentEditor.onTableTextEditStart(handleTableTextEditStart)
-      Utils.currentEditor.onTableTextEditEnd(handleTableTextEditEnd)
-      Utils.currentEditor.onSelectionResized(handleSelectionResized)
-      Utils.currentEditor.onSelectionResizing(handleSelectionResizing)
-      Utils.currentEditor.onEditorModeChange(handleEditorModeChange)
-      Utils.currentEditor.onEditorOperationEvent(handleEditorOperationEvent)
+    }
+
+    //Canvas didn't update, here to update
+    if(!targetKey) {
+      handleTabChange(newActiveKey, requireOperation)
     }
   }
 
