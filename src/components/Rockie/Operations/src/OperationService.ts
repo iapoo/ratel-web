@@ -2,9 +2,19 @@ import { Editor } from "../../Editor"
 import { Operation } from "./Operation"
 
 export class OperationService {
+    private static operationService: OperationService = new OperationService()
+
     private _editors: Array<Editor> = new Array<Editor>(0)
     private _undoOperations: Array<Operation> = new Array<Operation>(0)
     private _redoOperations: Array<Operation> = new Array<Operation>(0)
+
+    public static get instance() {
+        return OperationService.operationService
+    }
+
+    private constructor() {
+
+    }
 
     public addEditor(editor: Editor) {
         if(this._editors.indexOf(editor) < 0) {
