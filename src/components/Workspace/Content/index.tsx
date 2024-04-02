@@ -120,7 +120,6 @@ const Content: FC<ContentProps> = ({
 
   const [ initialized, setInitialized, ] = useState<boolean>(false)
   const [ activeKey, setActiveKey, ] = useState(initialPanes[0].key)
-  const [ panes, setPanes, ] = useState(initialPanes)
   const [ activePane, setActivePane, ] = useState<Pane | null>(initialPanes[0])
   const [ viewWidth, setViewWidth, ] = useState<number>(300)
   const [ viewHeight, setViewHeight, ] = useState<number>(300)
@@ -155,7 +154,8 @@ const Content: FC<ContentProps> = ({
   const [tableEdittable, setTableEdittable, ] = useState<boolean>(false)
   const [editorCursor, setEditorCursor, ] = useState<string>(Consts.EDITOR_CURSOR_AUTO)
   const newTabIndex = useRef(4)
-
+  //const [ panes, setPanes, ] = useState(initialPanes)
+  const panesRef = useRef(initialPanes)
   const sensor = useSensor(PointerSensor, {activationConstraint: {distance: 10}})
 
   useEffect(() => {
@@ -286,6 +286,7 @@ const Content: FC<ContentProps> = ({
     setInitialized(true)
     await Engine.initialize()
     let firstEditor: Editor | undefined = undefined
+    const panes = panesRef.current
     for (let i = 0; i < panes.length; i++) {
       const pane = panes[i]
       const canvasId = 'editor-' + pane.key
@@ -314,6 +315,7 @@ const Content: FC<ContentProps> = ({
     setCurrentEditor(editor!)
     onEditorChange(oldEditor, Utils.currentEditor)
     updateEditors(panes)
+    panesRef.current = [...panes]
     Utils.updateEditorSize = updateEditorSize
     Utils.loadData = loadData
     Utils.checkIfModified = checkIfDocumentModified
@@ -355,6 +357,7 @@ const Content: FC<ContentProps> = ({
   }
 
   const findCurrentPane = () => {
+    const panes = panesRef.current
     for (let i = 0; i < panes.length; i++) {
       const pane = panes[i]
       if (pane.editor == Utils.currentEditor) {
@@ -421,7 +424,8 @@ const Content: FC<ContentProps> = ({
         activePane = pane
       }
     }
-    setPanes(panes)
+    //setPanes(panes)
+    panesRef.current = panes
     setActiveKey(activeKey)
     setActivePane(activePane)
 
@@ -470,6 +474,7 @@ const Content: FC<ContentProps> = ({
       container?.removeChild(container.lastChild!)
     }
     let currentPane: Pane | null = null
+    const panes = panesRef.current
     for (let i = 0; i < panes.length; i++) {
       const pane = panes[i]
       if (pane.key == newActiveKey) {
@@ -700,7 +705,11 @@ const Content: FC<ContentProps> = ({
 
   const addEditor = (requireOperation: boolean, fromEditor: Editor | null, afterEditor: Editor | null) => {
     const newActiveKey = `${newTabIndex.current++}`
+    const panes = panesRef.current
     const newPanes = [ ...panes, ]
+    //let newPanes: Pane[] = []
+    //newPanes = newPanes.concat(panes)
+
     const title = fromEditor ? fromEditor.title : DOCUMENT_PREFIX + newActiveKey
     const pane: Pane = { title: title, content: DOCUMENT_CONTENT, key: newActiveKey, editor: null, initialized: false, scrollLeft: 0, scrollTop: 0, }
 
@@ -713,8 +722,8 @@ const Content: FC<ContentProps> = ({
       }
     }
     
-    const canvasId = 'editor-' + pane.key
-    const canvas = document.createElement('canvas')
+    const canvasId = fromEditor ? 'editor-' + fromEditor.key : 'editor-' + pane.key
+    const canvas = fromEditor ? fromEditor.canvas! : document.createElement('canvas')
     canvas.width = DEFAULT_PAINTER_WIDTH
     canvas.height = DEFAULT_PAINTER_HEIGHT
     canvas.id = canvasId
@@ -736,7 +745,8 @@ const Content: FC<ContentProps> = ({
     } else {
       newPanes.push(pane)
     }
-    setPanes(newPanes)
+    //setPanes(newPanes)
+    panesRef.current = newPanes
     setActiveKey(newActiveKey)
     setActivePane(pane)
     const container = document.getElementById('editor-container')
@@ -768,17 +778,19 @@ const Content: FC<ContentProps> = ({
     Utils.currentEditor.onEditorModeChange(handleEditorModeChange)
     oldEditor?.removeEditorOperationEvent(handleEditorOperationEvent)
     Utils.currentEditor.onEditorOperationEvent(handleEditorOperationEvent)
-    if(!requireOperation) {
+    if(requireOperation) {
       let operation = new Operation(Utils.currentEditor, OperationType.ADD_EDITOR, [])
       Utils.currentEditor.operationService.addOperation(operation)
       Utils.currentEditor.triggerOperationChange()
     }
   }
 
+  //TODO: FIXME, currently panes is old value if this is triggerred from menu, e.g. undo add new editor. And so we use useRef for panes
   const removeEditor = (targetKey: string | null, requireOperation: boolean, editor: Editor | null) => {
     let theTargetKey = targetKey
     let afterTargetKey: string | null = null
     let afterEditor: Editor | null = null
+    const panes = panesRef.current
     if(!theTargetKey) {
       for (let i = 0; i < panes.length; i++) {
         const pane = panes[i]
@@ -809,12 +821,13 @@ const Content: FC<ContentProps> = ({
         newActivePane = newPanes[0]
       }
     }
-    setPanes(newPanes)
+    //setPanes(newPanes)
+    panesRef.current = newPanes
     setActiveKey(newActiveKey)
     setActivePane(newActivePane)
     updateEditors(panes)
     if(Utils.currentEditor) {
-      if(!requireOperation) {
+      if(requireOperation) {
         let operation = new Operation(Utils.currentEditor, OperationType.REMOVE_EDITOR, [], false, [], undefined, afterEditor, null)
         Utils.currentEditor.operationService.addOperation(operation)
         Utils.currentEditor.triggerOperationChange()
@@ -835,9 +848,9 @@ const Content: FC<ContentProps> = ({
   const onEdit = (targetKey: string, action: 'add' | 'remove') => {
     checkIfDocumentModified(true)
     if (action === 'add') {
-      addEditor(false, null, null)
+      addEditor(true, null, null)
     } else {
-      removeEditor(targetKey, false, null)
+      removeEditor(targetKey, true, null)
     }
   }
 
@@ -869,15 +882,19 @@ const Content: FC<ContentProps> = ({
         break;
       case OperationType.ADD_EDITOR:
         if(event.isUndo) {
+          checkIfDocumentModified(true)
           handleUndoAddEditor(event.operation)
         } else {
+          checkIfDocumentModified(true)
           handleRedoAddEditor(event.operation)
         }
         break;
       case OperationType.REMOVE_EDITOR:
         if(event.isUndo) {
+          checkIfDocumentModified(true)
           handleUndoRemoveEditor(event.operation)
         } else {
+          checkIfDocumentModified(true)
           handleRedoRemoveEditor(event.operation)
         }
         break;
@@ -1407,6 +1424,7 @@ const Content: FC<ContentProps> = ({
   }
 
   const handleUndoSelectEditor = (operation: Operation) => {
+    const panes = panesRef.current
     for (let i = 0; i < panes.length; i++) {
       const pane = panes[i]
       if (pane.editor == operation.afterEditor) {    
@@ -1416,6 +1434,7 @@ const Content: FC<ContentProps> = ({
   }
 
   const handleRedoSelectEditor = (operation: Operation) => {
+    const panes = panesRef.current
     for (let i = 0; i < panes.length; i++) {
       const pane = panes[i]
       if (pane.editor == operation.editor) {    
@@ -1425,7 +1444,7 @@ const Content: FC<ContentProps> = ({
   }
 
   const handleUndoAddEditor = (operation: Operation) => {
-    removeEditor(null, true, operation.editor)
+    removeEditor(null, false, operation.editor)
   }
 
   const handleRedoAddEditor = (operation: Operation) => {
@@ -1526,11 +1545,16 @@ const Content: FC<ContentProps> = ({
 
   const onDragEnd = ({active, over} : DragEndEvent) => {
     if (active.id !== over?.id) {
-      setPanes((prev) => {
-        const activeIndex = prev.findIndex((i) => i.key === active.id);
-        const overIndex = prev.findIndex((i) => i.key === over?.id);
-        return arrayMove(prev, activeIndex, overIndex);
-      });
+      // setPanes((prev) => {
+      //   const activeIndex = prev.findIndex((i) => i.key === active.id);
+      //   const overIndex = prev.findIndex((i) => i.key === over?.id);
+      //   return arrayMove(prev, activeIndex, overIndex);
+      // });
+      let panes = panesRef.current
+      const activeIndex = panes.findIndex((i) => i.key === active.id);
+      const overIndex = panes.findIndex((i) => i.key === over?.id);
+      panes = arrayMove(panes, activeIndex, overIndex);
+      panesRef.current = panes
     }
   }
 
@@ -1546,11 +1570,13 @@ const Content: FC<ContentProps> = ({
     const newPane = findPane(pane.key, newPanes)
     newPane.title = inputRef.current.input.value
     newPane.editor!.title = newPane.title
-    setPanes(newPanes)
+    //setPanes(newPanes)
+    panesRef.current = newPanes
   }
 
   const clonePanes = () => {
     const newPanes: Pane[] = []
+    const panes = panesRef.current
     panes.forEach(pane => {
       const newPane = { title: pane.title, content: pane.content, key: pane.key, editor: pane.editor, initialized: pane.initialized, scrollLeft: pane.scrollLeft, scrollTop: pane.scrollTop, }
       newPanes.push(newPane)
@@ -1579,7 +1605,8 @@ const Content: FC<ContentProps> = ({
     const newPane = findPane(pane.key, newPanes)
     newPane.title = titleValue
     newPane.editor!.title = newPane.title
-    setPanes(newPanes)
+    //setPanes(newPanes)
+    panesRef.current = newPanes
   }
 
   const handlePageRename = (pane: Pane, inputRef: any, labelRef: any) => {
@@ -1720,7 +1747,7 @@ const Content: FC<ContentProps> = ({
         <Tabs type='editable-card' size='small' tabPosition='bottom' onChange={onTabChange} activeKey={activeKey} onEdit = {onEdit} 
           renderTabBar={(tabBarProps: any, DefaultTabBar: any) => (
             <DndContext sensors={[sensor]} onDragEnd={onDragEnd}>
-              <SortableContext items={panes.map((i) => i.key)} strategy={horizontalListSortingStrategy}>
+              <SortableContext items={panesRef.current.map((i) => i.key)} strategy={horizontalListSortingStrategy}>
                 <DefaultTabBar {...tabBarProps} >
                   {(node: any) => (
                     <DraggableTabNode {...node.props} key={node.key}>
@@ -1731,8 +1758,8 @@ const Content: FC<ContentProps> = ({
               </SortableContext>
             </DndContext>
           )}>
-          {
-            panes.map(pane => {
+          {            
+            panesRef.current.map(pane => {
               //ref={inputRef}
               //const inputRef = useRef<any>(undefined)
               //const labelRef = useRef<any>(undefined)

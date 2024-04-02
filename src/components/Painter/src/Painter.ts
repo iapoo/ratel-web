@@ -49,8 +49,13 @@ export class Painter {
     return this._canvasId
   }
 
+  public get canvas() {
+    return this._engine.container
+  }
+
   public start () {
     if (!this._started) {
+      this._started = true
       this._timer = setInterval(() => {
         this.render()
       }, 15)
