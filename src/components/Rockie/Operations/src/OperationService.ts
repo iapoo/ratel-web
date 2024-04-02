@@ -16,23 +16,6 @@ export class OperationService {
 
     }
 
-    public addEditor(editor: Editor) {
-        if(this._editors.indexOf(editor) < 0) {
-            this._editors.push(editor)
-        }
-    }
-
-    public removeEditor(editor: Editor) {
-        const index = this._editors.indexOf(editor)
-        if(index >= 0) {
-            this._editors.splice(index, 1)
-        }
-    }
-
-    public getAllEditors() {
-        return this._editors;
-    }
-
     public addOperation(operation: Operation) {
         this._undoOperations.push(operation)    
         this._redoOperations.length = 0
