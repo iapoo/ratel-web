@@ -806,12 +806,16 @@ export class Editor extends Painter {
           this.triggerEditorOperationEvent(operation, true)
           break;
         case OperationType.ADD_EDITOR:
+          this.triggerEditorOperationEvent(operation, true)
           break;
         case OperationType.REMOVE_EDITOR:
+          this.triggerEditorOperationEvent(operation, true)
           break;
         case OperationType.RENAME_EDITOR:
+          this.triggerEditorOperationEvent(operation, true)
           break;
         case OperationType.MOVE_EDITOR:
+          this.triggerEditorOperationEvent(operation, true)
           break;
         case OperationType.ADD_ITEMS_TO_CONTAINER:
           break;
@@ -850,12 +854,16 @@ export class Editor extends Painter {
           this.triggerEditorOperationEvent(operation, false)
           break;
         case OperationType.ADD_EDITOR:
+          this.triggerEditorOperationEvent(operation, false)
           break;
         case OperationType.REMOVE_EDITOR:
+          this.triggerEditorOperationEvent(operation, false)
           break;
         case OperationType.RENAME_EDITOR:
+          this.triggerEditorOperationEvent(operation, false)
           break;
         case OperationType.MOVE_EDITOR:
+          this.triggerEditorOperationEvent(operation, false)
           break;
         case OperationType.ADD_ITEMS_TO_CONTAINER:
           break;
