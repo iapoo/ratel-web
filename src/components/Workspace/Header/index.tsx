@@ -370,34 +370,10 @@ const Header: FC<HeaderProps> = ({
 
   const handleUndo = () => {
     if (currentEditor) {
-      let operationService = currentEditor.operationService
-      let operation = operationService.getUndoOperation()
-      if (operation) {
-        switch (operation.type) {
-          case OperationType.ADD_EDITOR:
-            removeEditor(operation.editor)
-            break;
-          case OperationType.REMOVE_EDITOR:
-            break;
-          case OperationType.RENAME_EDITOR:
-            break;
-          case OperationType.SELECT_EDITOR:
-            break;
-          case OperationType.MOVE_EDITOR:
-            break;
-          default:
-            break;
-        }
-        currentEditor.undo()
-        refreshOperationInfos()
-      }
+      currentEditor.undo()
+      refreshOperationInfos()
     }
   }
-
-  const removeEditor = (editor: Editor) => {
-
-  }
-  
 
   const handleRedo = () => {
     if (currentEditor) {

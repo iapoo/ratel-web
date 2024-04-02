@@ -285,7 +285,7 @@ const Content: FC<ContentProps> = ({
   const initialize = async () => {
     setInitialized(true)
     await Engine.initialize()
-    let firstEditor: Editor | undefined = undefined
+    //let firstEditor: Editor | undefined = undefined
     const panes = panesRef.current
     for (let i = 0; i < panes.length; i++) {
       const pane = panes[i]
@@ -299,11 +299,11 @@ const Content: FC<ContentProps> = ({
       editor.key = pane.key
       editor.title = pane.title
       editor.start()
-      if(i == 0) {
-        firstEditor = editor
-      } else {        
-        editor.operationService = firstEditor!.operationService
-      }
+      // if(i == 0) {
+      //   firstEditor = editor
+      // } else {        
+      //   editor.operationService = firstEditor!.operationService
+      // }
     }
     const container = document.getElementById('editor-container')
     const editor = panes[0].editor

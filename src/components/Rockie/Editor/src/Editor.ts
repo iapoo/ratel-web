@@ -108,7 +108,7 @@ export class Editor extends Painter {
   private _id: string
   private _modified: boolean
   private _selectionChangeListeners = new Array<(e: EditorEvent) => void>(0) 
-  private _operationService: OperationService = new OperationService()
+  private _operationService: OperationService = OperationService.instance
   private _operationChangeListeners = new Array<(e: EditorEvent) => void>(0)
   private _sizeChangeListeners = new Array<(e: EditorEvent) => void>(0)
   private _textEditStartListeners = new Array<(e: EditorEvent) => void>(0)
@@ -165,7 +165,6 @@ export class Editor extends Painter {
     this._key = ''
     this._id = SystemUtils.generateID()
     this._modified = false
-    this._operationService
     this._origWidth = this.width * this._zoom
     this._origHeight = this.height * this.zoom
     this._showGrid = true
@@ -240,9 +239,9 @@ export class Editor extends Painter {
     return this._operationService
   }
 
-  public set operationService(value: OperationService) {
-    this._operationService = value
-  }
+  // public set operationService(value: OperationService) {
+  //   this._operationService = value
+  // }
 
   public get operationChangeListeners() {
     return this._operationChangeListeners
