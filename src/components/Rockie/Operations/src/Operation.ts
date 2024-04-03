@@ -28,8 +28,12 @@ export class Operation {
     private _afterEditor: Editor | null
     private _afterItemId: string | null
     private _selected: boolean
+    private _beforeEditor: Editor | null
+    private _beforeItemId: string | null
 
-    public constructor(editor: Editor, type: OperationType, itemInfos: Array<EditorItemInfo>, selected: boolean = false, origItemInfos: Array<EditorItemInfo> = [], description: string = '', afterEditor: Editor | null = null, afterItemId: string | null = null) {
+    public constructor(editor: Editor, type: OperationType, itemInfos: Array<EditorItemInfo>, selected: boolean = false, 
+        origItemInfos: Array<EditorItemInfo> = [], description: string = '', afterEditor: Editor | null = null, afterItemId: string | null = null, 
+        beforeEditor: Editor | null = null, beforeItemId: string | null = null) {
         this._editor = editor
         this._type = type
         this._description = description
@@ -38,6 +42,8 @@ export class Operation {
         this._afterEditor = afterEditor
         this._afterItemId = afterItemId
         this._selected = selected
+        this._beforeEditor = beforeEditor
+        this._beforeItemId = beforeItemId
     }
 
     public get editor() {
@@ -70,5 +76,13 @@ export class Operation {
 
     public get selected() {
         return this._selected
+    }
+
+    public get beforeEditor() {
+        return this._beforeEditor
+    }
+
+    public get beforeItemId() {
+        return this._beforeItemId
     }
 }
