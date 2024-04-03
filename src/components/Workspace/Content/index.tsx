@@ -464,7 +464,7 @@ const Content: FC<ContentProps> = ({
   }
 
   const onTabChange = (newActiveKey: string) => {
-    handleTabChange(newActiveKey, false)
+    handleTabChange(newActiveKey, true)
   }
 
   const handleTabChange = (newActiveKey: string, requireOperation: boolean) => {
@@ -483,35 +483,38 @@ const Content: FC<ContentProps> = ({
         container?.append(canvas!)        
         editor?.activate()
         let oldEditor = Utils.currentEditor
-        Utils.currentEditor = editor!
-        setCurrentEditor(editor!)
-        currentPane = pane
-        setActivePane(pane)
-        onEditorChange(oldEditor, Utils.currentEditor)
-        
-        if(oldEditor && requireOperation) {
-          let operation = new Operation(Utils.currentEditor, OperationType.SELECT_EDITOR, [], false, [], '', oldEditor, null )
-          Utils.currentEditor.operationService.addOperation(operation)
-          Utils.currentEditor.triggerOperationChange()
+        //Remove editor will trigger this, and so we need to skip it here
+        if(oldEditor != editor) {
+          Utils.currentEditor = editor!
+          setCurrentEditor(editor!)
+          currentPane = pane
+          setActivePane(pane)
+          onEditorChange(oldEditor, Utils.currentEditor)
+          
+          if(oldEditor && requireOperation) {
+            let operation = new Operation(Utils.currentEditor, OperationType.SELECT_EDITOR, [], false, [], '', oldEditor, null )
+            Utils.currentEditor.operationService.addOperation(operation)
+            Utils.currentEditor.triggerOperationChange()
+          }
+          oldEditor?.removeSelectionChange(handleSelectionChange)
+          Utils.currentEditor.onSelectionChange(handleSelectionChange)
+          oldEditor?.removeTextEditStart(handleTextEditStart)
+          Utils.currentEditor.onTextEditStart(handleTextEditStart)
+          oldEditor?.removeTextEditEnd(handleTextEditEnd)
+          Utils.currentEditor.onTextEditEnd(handleTextEditEnd)
+          oldEditor?.removeTableTextEditStart(handleTableTextEditStart)
+          Utils.currentEditor.onTableTextEditStart(handleTableTextEditStart)
+          oldEditor?.removeTableTextEditEnd(handleTableTextEditEnd)
+          Utils.currentEditor.onTableTextEditEnd(handleTableTextEditEnd)
+          oldEditor?.removeSelectionResized(handleSelectionResized)
+          Utils.currentEditor.onSelectionResized(handleSelectionResized)
+          oldEditor?.removeSelectionResizing(handleSelectionResizing)
+          Utils.currentEditor.onSelectionResizing(handleSelectionResizing)
+          oldEditor?.removeEditorModeChange(handleEditorModeChange)
+          Utils.currentEditor.onEditorModeChange(handleEditorModeChange)
+          oldEditor?.removeEditorOperationEvent(handleEditorOperationEvent)
+          Utils.currentEditor.onEditorOperationEvent(handleEditorOperationEvent)
         }
-        oldEditor?.removeSelectionChange(handleSelectionChange)
-        Utils.currentEditor.onSelectionChange(handleSelectionChange)
-        oldEditor?.removeTextEditStart(handleTextEditStart)
-        Utils.currentEditor.onTextEditStart(handleTextEditStart)
-        oldEditor?.removeTextEditEnd(handleTextEditEnd)
-        Utils.currentEditor.onTextEditEnd(handleTextEditEnd)
-        oldEditor?.removeTableTextEditStart(handleTableTextEditStart)
-        Utils.currentEditor.onTableTextEditStart(handleTableTextEditStart)
-        oldEditor?.removeTableTextEditEnd(handleTableTextEditEnd)
-        Utils.currentEditor.onTableTextEditEnd(handleTableTextEditEnd)
-        oldEditor?.removeSelectionResized(handleSelectionResized)
-        Utils.currentEditor.onSelectionResized(handleSelectionResized)
-        oldEditor?.removeSelectionResizing(handleSelectionResizing)
-        Utils.currentEditor.onSelectionResizing(handleSelectionResizing)
-        oldEditor?.removeEditorModeChange(handleEditorModeChange)
-        Utils.currentEditor.onEditorModeChange(handleEditorModeChange)
-        oldEditor?.removeEditorOperationEvent(handleEditorOperationEvent)
-        Utils.currentEditor.onEditorOperationEvent(handleEditorOperationEvent)
       }
     }
     updateEditors(panes)
@@ -703,7 +706,7 @@ const Content: FC<ContentProps> = ({
     
   }
 
-  const addEditor = (requireOperation: boolean, fromEditor: Editor | null, afterEditor: Editor | null) => {
+  const addEditor = (requireOperation: boolean, fromEditor: Editor | null, afterEditor: Editor | null, beforeEditor: Editor | null) => {
     const newActiveKey = `${newTabIndex.current++}`
     const panes = panesRef.current
     const newPanes = [ ...panes, ]
@@ -737,6 +740,16 @@ const Content: FC<ContentProps> = ({
         for (let i = 0; i < panes.length; i++) {
           const childPane = panes[i]
           if (childPane.editor == afterEditor) {    
+            newPanes.splice(i + 1, 0, pane)
+            break
+          }
+        }
+      }
+    } else if(beforeEditor) {
+      if(!exists) {
+        for (let i = 0; i < panes.length; i++) {
+          const childPane = panes[i]
+          if (childPane.editor == beforeEditor) {    
             newPanes.splice(i, 0, pane)
             break
           }
@@ -759,7 +772,7 @@ const Content: FC<ContentProps> = ({
     Utils.currentEditor = editor!
     setCurrentEditor(editor!)
     onEditorChange(oldEditor, Utils.currentEditor)
-    updateEditors(panes)
+    updateEditors(newPanes)
     oldEditor?.removeSelectionChange(handleSelectionChange)
     Utils.currentEditor.onSelectionChange(handleSelectionChange)
     oldEditor?.removeTextEditStart(handleTextEditStart)
@@ -790,21 +803,29 @@ const Content: FC<ContentProps> = ({
     let theTargetKey = targetKey
     let afterTargetKey: string | null = null
     let afterEditor: Editor | null = null
+    let beforeTargetKey: string | null = null
+    let beforeEditor: Editor | null = null
+    let oldEditor = Utils.currentEditor
     const panes = panesRef.current
     if(!targetKey) { // for undo addEditorr, only happen on last tab because addEditor is for last tab
       for (let i = 0; i < panes.length; i++) {
         const pane = panes[i]
         if (pane.editor == editor) {    
           theTargetKey = pane.key
+          oldEditor = pane.editor!
         }
       }
     } else {
       for (let i = 0; i < panes.length; i++) {
         const pane = panes[i]
         if (pane.key == theTargetKey) {    
+          oldEditor = pane.editor!
           if(i > 0) {
             afterTargetKey = panes[i - 1].key
             afterEditor = panes[i - 1].editor
+          } else {
+            beforeTargetKey = panes[1].key
+            beforeEditor = panes[1].editor
           }
         }
       }
@@ -819,13 +840,30 @@ const Content: FC<ContentProps> = ({
       newActiveKey = panes[lastIndex].key
       newActivePane = panes[lastIndex]
     } else {
-      panes.forEach((pane, i) => {
-        if (pane.key === theTargetKey) {
-          lastIndex = i - 1
-        }
-      })
+      //Try to keep current page , and if current page will be delete then choose previouse page
+      if(activeKey != targetKey) {
+        newPanes.forEach((pane, i) => {
+          if (pane.key === activeKey) {
+            lastIndex = i
+          }
+        })
+      } else {
+        panes.forEach((pane, i) => {
+          if (pane.key === theTargetKey && i > 0) {
+            lastIndex = i - 1
+          } else {
+            lastIndex = 0
+          }
+        })
+        newActiveKey = panes[lastIndex].key
+        newPanes.forEach((pane, i) => {
+          if (pane.key === newActiveKey) {
+            lastIndex = i
+          }
+        })
+      }
     }
-    if (newPanes.length > 0 && newActiveKey === theTargetKey) {
+    if (newPanes.length > 0 && targetKey) {
       if (lastIndex >= 0) {
         newActiveKey = newPanes[lastIndex].key
         newActivePane = newPanes[lastIndex]
@@ -839,7 +877,6 @@ const Content: FC<ContentProps> = ({
     setActiveKey(newActiveKey)
     setActivePane(newActivePane)
 
-    let oldEditor = Utils.currentEditor
     Utils.currentEditor = newActivePane.editor!
     setCurrentEditor(newActivePane.editor!!)
     onEditorChange(oldEditor, Utils.currentEditor)
@@ -865,22 +902,20 @@ const Content: FC<ContentProps> = ({
 
     if(Utils.currentEditor) {
       if(requireOperation) {
-        let operation = new Operation(Utils.currentEditor, OperationType.REMOVE_EDITOR, [], false, [], undefined, afterEditor, null)
+        let operation = new Operation(oldEditor!, OperationType.REMOVE_EDITOR, [], false, [], undefined, afterEditor, null, beforeEditor, null)
         Utils.currentEditor.operationService.addOperation(operation)
         Utils.currentEditor.triggerOperationChange()
       }
     }
 
     //Canvas didn't update, here to update
-    if(!targetKey) {
-      handleTabChange(newActiveKey, requireOperation)
-    }
+    handleTabChange(newActiveKey, requireOperation)
   }
 
   const onEdit = (targetKey: string, action: 'add' | 'remove') => {
     checkIfDocumentModified(true)
     if (action === 'add') {
-      addEditor(true, null, null)
+      addEditor(true, null, null, null)
     } else {
       removeEditor(targetKey, true, null)
     }
@@ -1460,7 +1495,7 @@ const Content: FC<ContentProps> = ({
     for (let i = 0; i < panes.length; i++) {
       const pane = panes[i]
       if (pane.editor == operation.afterEditor) {    
-        handleTabChange(pane.key,true)
+        handleTabChange(pane.key,false)
       }
     }
   }
@@ -1470,7 +1505,7 @@ const Content: FC<ContentProps> = ({
     for (let i = 0; i < panes.length; i++) {
       const pane = panes[i]
       if (pane.editor == operation.editor) {    
-        handleTabChange(pane.key,true)
+        handleTabChange(pane.key,false)
       }
     }
   }
@@ -1480,11 +1515,11 @@ const Content: FC<ContentProps> = ({
   }
 
   const handleRedoAddEditor = (operation: Operation) => {
-    addEditor(false, operation.editor, operation.afterEditor)
+    addEditor(false, operation.editor, operation.afterEditor, operation.beforeEditor)
   }
 
   const handleUndoRemoveEditor = (operation: Operation) => {
-    addEditor(false, operation.editor, operation.afterEditor)
+    addEditor(false, operation.editor, operation.afterEditor, operation.beforeEditor)
   }
 
   const handleRedoRemoveEditor = (operation: Operation) => {

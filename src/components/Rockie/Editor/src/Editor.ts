@@ -1775,9 +1775,14 @@ export class Editor extends Painter {
   }
 
   public triggerOperationChange() {
+    //It can only run once and so need to break immediately
+    let runOnce = false
     this._operationChangeListeners.forEach(callback => {
-      const event = new EditorEvent(this)
-      callback(event)
+      if(!runOnce) {
+        runOnce = true
+        const event = new EditorEvent(this)
+        callback(event)
+      }
     })
   }
 
@@ -1838,9 +1843,14 @@ export class Editor extends Painter {
   }
 
   public triggerEditorOperationEvent(operation: Operation, isUndo: boolean) {
+    //It can only run once and so need to break immediately
+    let runOnce = false
     this._editorOperationEventListeners.forEach(callback => {
-      const event = new EditorOperationEvent(this, operation, isUndo)
-      callback(event)
+      if(!runOnce) {
+        runOnce = true
+        const event = new EditorOperationEvent(this, operation, isUndo)
+        callback(event)
+      }
     })
   }
 
