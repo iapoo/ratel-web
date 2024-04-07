@@ -985,7 +985,8 @@ const Content: FC<ContentProps> = ({
     console.log('font size changed')
     setFontSize(value)
     if (Utils.currentEditor) {
-      let editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
+      const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
+      const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
       editorItems.forEach(editorItem => {
         if(editorItem instanceof TableEntity) {
           if(Utils.currentEditor?.targetItem) {
@@ -997,6 +998,10 @@ const Content: FC<ContentProps> = ({
       })
       Utils.currentEditor.focus()
       Utils.currentEditor.triggerTextEditStyleChange()
+      const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
+      const  operation: Operation = new Operation(Utils.currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
+      Utils.currentEditor.operationService.addOperation(operation)
+      Utils.currentEditor.triggerOperationChange()
     }
     if(fontSizeNode) {
       console.log('font size blue trigger on size change')
@@ -1034,7 +1039,8 @@ const Content: FC<ContentProps> = ({
   const handleFontColorChange = (value: any) => {
     setFontColor(value)
     if (Utils.currentEditor) {
-      let editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
+      const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
+      const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
       editorItems.forEach(editorItem => {
         let color = SystemUtils.parseColorString(value.toHexString())
         if(color) {
@@ -1049,6 +1055,10 @@ const Content: FC<ContentProps> = ({
       })
       Utils.currentEditor.focus()    
       Utils.currentEditor.triggerTextEditStyleChange()
+      const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
+      const  operation: Operation = new Operation(Utils.currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
+      Utils.currentEditor.operationService.addOperation(operation)
+      Utils.currentEditor.triggerOperationChange()
     }
   }
 
@@ -1062,7 +1072,8 @@ const Content: FC<ContentProps> = ({
   const handleBoldChanged = () => {
     setFontBold(!fontBold)
     if(Utils.currentEditor) {
-      let editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
+      const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
+      const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
       editorItems.forEach(editorItem => {
         if(editorItem instanceof TableEntity) {
           if(Utils.currentEditor?.targetItem) {
@@ -1074,13 +1085,18 @@ const Content: FC<ContentProps> = ({
       })
       Utils.currentEditor.focus()    
       Utils.currentEditor.triggerTextEditStyleChange()
+      const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
+      const  operation: Operation = new Operation(Utils.currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
+      Utils.currentEditor.operationService.addOperation(operation)
+      Utils.currentEditor.triggerOperationChange()
     }
   }
 
   const handleItalicChanged = () => {
     setFontItalic(!fontItalic)
     if(Utils.currentEditor) {
-      let editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
+      const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
+      const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
       editorItems.forEach(editorItem => {
         if(editorItem instanceof TableEntity) {
           if(Utils.currentEditor?.targetItem) {
@@ -1090,15 +1106,20 @@ const Content: FC<ContentProps> = ({
           editorItem.fontSlant = fontItalic ? FontSlant.UP_RIGHT : FontSlant.ITALIC
         }
       })
-      Utils.currentEditor.focus()    
+      Utils.currentEditor.focus()
       Utils.currentEditor.triggerTextEditStyleChange()
+      const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
+      const  operation: Operation = new Operation(Utils.currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
+      Utils.currentEditor.operationService.addOperation(operation)
+      Utils.currentEditor.triggerOperationChange()
     }
   }
 
   const handleUnderlineChanged = () => {
     setFontUnderline(!fontUnderline)
     if(Utils.currentEditor) {
-      let editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
+      const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
+      const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
       editorItems.forEach(editorItem => {
         if(editorItem instanceof TableEntity) {
           if(Utils.currentEditor?.targetItem) {
@@ -1110,13 +1131,18 @@ const Content: FC<ContentProps> = ({
       })
       Utils.currentEditor.focus()    
       Utils.currentEditor.triggerTextEditStyleChange()
+      const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
+      const  operation: Operation = new Operation(Utils.currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
+      Utils.currentEditor.operationService.addOperation(operation)
+      Utils.currentEditor.triggerOperationChange()
     }
   }
 
   const handleTextAlignmentChanged = (textAlignment: string) => {
     setTextAlignment(textAlignment)
     if(Utils.currentEditor) {
-      let editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
+      const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
+      const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
       editorItems.forEach(editorItem => {
         if(editorItem instanceof TableEntity) {
           if(Utils.currentEditor?.targetItem) {
@@ -1128,13 +1154,20 @@ const Content: FC<ContentProps> = ({
       })
       Utils.currentEditor.focus()    
       Utils.currentEditor.triggerTextEditStyleChange()
+      Utils.currentEditor.focus()
+      Utils.currentEditor.triggerTextEditStyleChange()
+      const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
+      const  operation: Operation = new Operation(Utils.currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
+      Utils.currentEditor.operationService.addOperation(operation)
+      Utils.currentEditor.triggerOperationChange()
     }
   }
 
   const handleTextVerticalAlignmentChanged = (textVerticalAlignment: string) => {
     setTextVerticalAlignment(textVerticalAlignment)
     if(Utils.currentEditor) {
-      let editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
+      const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
+      const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
       editorItems.forEach(editorItem => {
         if(editorItem instanceof TableEntity) {
           if(Utils.currentEditor?.targetItem) {
@@ -1146,6 +1179,10 @@ const Content: FC<ContentProps> = ({
       })
       Utils.currentEditor.focus()    
       Utils.currentEditor.triggerTextEditStyleChange()
+      const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
+      const  operation: Operation = new Operation(Utils.currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
+      Utils.currentEditor.operationService.addOperation(operation)
+      Utils.currentEditor.triggerOperationChange()
     }
   }
 
