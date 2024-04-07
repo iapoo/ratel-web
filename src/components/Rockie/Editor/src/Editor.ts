@@ -120,6 +120,7 @@ export class Editor extends Painter {
   private _tableTextEditEndListeners = new Array<(e: EditorEvent) => void>(0)
   private _editorModeChangeListeners = new Array<(e: EditorEvent) => void>(0)
   private _editorOperationEventListeners = new Array<(e: EditorOperationEvent) => void>(0)
+  private _operationCompleteListeners = new Array<(e: EditorEvent) => void>(0)
   private _startEditorItemInfos: EditorItemInfo[] = []
   private _origWidth: number
   private _origHeight: number
@@ -304,7 +305,27 @@ export class Editor extends Painter {
     return index >= 0
   }
 
-  public get selectionChangeListeners() {
+
+  public onOperationComplete(callback: (e:EditorEvent) => void) {
+    const index = this._operationCompleteListeners.indexOf(callback)
+    if (index < 0) {
+      this._operationCompleteListeners.push(callback)
+    }
+  }
+
+  public removeOperationComplete(callback: (e: EditorEvent) => void) {
+    const index = this._operationCompleteListeners.indexOf(callback)
+    if (index >= 0) {
+      this._operationCompleteListeners.splice(index, 1)
+    }
+  }
+  
+  public hasOperationComplete(callback: (e: EditorEvent) => void) {
+    const index = this._operationCompleteListeners.indexOf(callback)
+    return index >= 0
+  }
+
+  public get selectionCompleteListeners() {
     return this._selectionChangeListeners
   }
 
@@ -823,7 +844,8 @@ export class Editor extends Painter {
         default:
           break;
       }
-      this._operationService.undo()    
+      this._operationService.undo() 
+      this.triggerOperationComplete()
     }
   }
 
@@ -872,6 +894,7 @@ export class Editor extends Painter {
           break;
       }
       this._operationService.redo()
+      this.triggerOperationComplete()
     }
   }
 
@@ -1784,6 +1807,13 @@ export class Editor extends Painter {
         callback(event)
       }
     })
+  }
+
+  public triggerOperationComplete() {
+    this._operationCompleteListeners.forEach(callback => {
+      const event = new EditorEvent(this)
+      callback(event)
+  })
   }
 
   public triggerTextEditStart() {
