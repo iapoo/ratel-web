@@ -56,6 +56,18 @@ export abstract class AbstractTextShape extends Shape {
       // this.select(7, 7)
     }
 
+    public get startIndex() {
+      return this._startIndex
+    }
+
+    public get endIndex() {
+      return this._endIndex
+    }
+
+    public get cursor() {
+      return this._cursor
+    }
+    
     //public get font() {
     //  return this._font
     //}

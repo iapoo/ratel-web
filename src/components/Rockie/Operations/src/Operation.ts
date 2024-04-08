@@ -35,10 +35,12 @@ export class Operation {
     private _inTextEditting: boolean
     private _textStart: number
     private _textEnd: number
+    private _origTextStart: number
+    private _origTextEnd: number
 
     public constructor(editor: Editor, type: OperationType, itemInfos: Array<EditorItemInfo>, selected: boolean = false, 
         origItemInfos: Array<EditorItemInfo> = [], description: string = '', afterEditor: Editor | null = null, afterItemId: string | null = null, 
-        beforeEditor: Editor | null = null, beforeItemId: string | null = null, inTextEditting: boolean = false, textStart: number = 0, textEnd: number = 0, ) {
+        beforeEditor: Editor | null = null, beforeItemId: string | null = null, inTextEditting: boolean = false, textStart: number = 0, textEnd: number = 0, origTextStart: number = 0, origTextEnd: number = 0,  ) {
         this._editor = editor
         this._type = type
         this._description = description
@@ -52,6 +54,8 @@ export class Operation {
         this._inTextEditting = inTextEditting
         this._textStart = textStart
         this._textEnd = textEnd
+        this._origTextStart = origTextStart
+        this._origTextEnd = origTextEnd
     }
 
     public get editor() {
@@ -104,5 +108,13 @@ export class Operation {
 
     public get textEnd() {
         return this._textEnd
+    }
+    
+    public get origTextStart() {
+        return this._origTextStart
+    }
+
+    public get origTextEnd() {
+        return this._origTextEnd
     }
 }
