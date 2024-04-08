@@ -14,6 +14,8 @@ export enum OperationType {
     REMOVE_EDITOR,
     RENAME_EDITOR,
     MOVE_EDITOR,
+    SHAPE_TEXT_EDIT,
+    TABLE_TEXT_EDIT,
     ADD_ITEMS_TO_CONTAINER,
     REMOVE_ITEMS_FROM_CONTAINER,    
 }
@@ -30,10 +32,13 @@ export class Operation {
     private _selected: boolean
     private _beforeEditor: Editor | null
     private _beforeItemId: string | null
+    private _inTextEditting: boolean
+    private _textStart: number
+    private _textEnd: number
 
     public constructor(editor: Editor, type: OperationType, itemInfos: Array<EditorItemInfo>, selected: boolean = false, 
         origItemInfos: Array<EditorItemInfo> = [], description: string = '', afterEditor: Editor | null = null, afterItemId: string | null = null, 
-        beforeEditor: Editor | null = null, beforeItemId: string | null = null) {
+        beforeEditor: Editor | null = null, beforeItemId: string | null = null, inTextEditting: boolean = false, textStart: number = 0, textEnd: number = 0, ) {
         this._editor = editor
         this._type = type
         this._description = description
@@ -44,6 +49,9 @@ export class Operation {
         this._selected = selected
         this._beforeEditor = beforeEditor
         this._beforeItemId = beforeItemId
+        this._inTextEditting = inTextEditting
+        this._textStart = textStart
+        this._textEnd = textEnd
     }
 
     public get editor() {
@@ -84,5 +92,17 @@ export class Operation {
 
     public get beforeItemId() {
         return this._beforeItemId
+    }
+
+    public get inTextEditting() {
+        return this._inTextEditting
+    }
+
+    public get textStart() {
+        return this._textStart
+    }
+
+    public get textEnd() {
+        return this._textEnd
     }
 }

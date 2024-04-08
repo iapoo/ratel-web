@@ -837,6 +837,12 @@ export class Editor extends Painter {
         case OperationType.MOVE_EDITOR:
           this.triggerEditorOperationEvent(operation, true)
           break;
+        case OperationType.SHAPE_TEXT_EDIT:
+          this.handleOperationUndoShapTextEdit(operation)
+          break;
+        case OperationType.TABLE_TEXT_EDIT:
+          this.handleOperationUndoTableTextEdit(operation)
+          break;
         case OperationType.ADD_ITEMS_TO_CONTAINER:
           break;
         case OperationType.REMOVE_ITEMS_FROM_CONTAINER:
@@ -885,6 +891,12 @@ export class Editor extends Painter {
           break;
         case OperationType.MOVE_EDITOR:
           this.triggerEditorOperationEvent(operation, false)
+          break;
+        case OperationType.SHAPE_TEXT_EDIT:
+          this.handleOperationRedoShapTextEdit(operation)
+          break;
+        case OperationType.TABLE_TEXT_EDIT:
+          this.handleOperationRedoTableTextEdit(operation)
           break;
         case OperationType.ADD_ITEMS_TO_CONTAINER:
           break;
@@ -1287,10 +1299,14 @@ export class Editor extends Painter {
         return
       }
       if (this._targetItem && e.data) {
+        const origEditorItemInfo = this.beginShapeTextEditOperation(this._targetItem)
         this._targetItem.shape.insert(e.data)
+        this.finishShapeTextEditOperation(origEditorItemInfo)
         this.triggerTextEditStyleChange()
       } else if (this._target && e.data) {
+        const origEditorItemInfo = this.beginShapeTextEditOperation(this._target)
         this._target.shape.insert(e.data)
+        this.finishShapeTextEditOperation(origEditorItemInfo)
         this.triggerTextEditStyleChange()
       }
       this._textInputStatus = 'CHAR_TYPING'
@@ -1298,10 +1314,14 @@ export class Editor extends Painter {
     this._textArea.addEventListener('compositionend', (e: CompositionEvent) => {
       if (this._textInputStatus === 'CHINESE_TYPING') {
         if (this._targetItem) {
+          const origEditorItemInfo = this.beginShapeTextEditOperation(this._targetItem)
           this._targetItem.shape.insert(e.data)
+          this.finishShapeTextEditOperation(origEditorItemInfo)
           this.triggerTextEditStyleChange()
         } else if (this._target) {
+          const origEditorItemInfo = this.beginShapeTextEditOperation(this._target)
           this._target.shape.insert(e.data)
+          this.finishShapeTextEditOperation(origEditorItemInfo)
           this.triggerTextEditStyleChange()
         }
         this._textInputStatus = 'CHAR_TYPING'
@@ -1393,9 +1413,13 @@ export class Editor extends Painter {
     }
     if (this._textFocused && e.key === 'Backspace') {
       if (this._targetItem) {
+        const origEditorItemInfo = this.beginShapeTextEditOperation(this._targetItem)
         this._targetItem.shape.handleBackspace()
+        this.finishShapeTextEditOperation(origEditorItemInfo)
       } else if (this._target) {
+        const origEditorItemInfo = this.beginShapeTextEditOperation(this._target)
         this._target.shape.handleBackspace()
+        this.finishShapeTextEditOperation(origEditorItemInfo)
       }
     }
 
@@ -1429,9 +1453,13 @@ export class Editor extends Painter {
     }
     if (this._textFocused && e.key === 'Enter') {
       if (this._targetItem) {
+        const origEditorItemInfo = this.beginShapeTextEditOperation(this._targetItem)
         this._targetItem.shape.handleReturn()
+        this.finishShapeTextEditOperation(origEditorItemInfo)
       } else if (this._target) {
+        const origEditorItemInfo = this.beginShapeTextEditOperation(this._target)
         this._target.shape.handleReturn()
+        this.finishShapeTextEditOperation(origEditorItemInfo)
       }
     }
   }
@@ -1487,6 +1515,37 @@ export class Editor extends Painter {
     return result
   }
 
+  public  findEditorItemById (id: string): EditorItem | undefined {
+    let result
+    const count = this.contentLayer.getEditorItemCount()
+    for (let i = count - 1; i >= 0; i--) {
+      const editorItem = this.contentLayer.getEditorItem(i)
+      if(editorItem.id == id) {
+        return editorItem
+      }
+      result = this.findEditorItemDetailById(editorItem, id)
+      if(result) {
+        break;
+      }
+    }
+    return undefined
+  }
+
+  public  findEditorItemDetailById (editorItem: EditorItem, id: string): EditorItem | undefined {
+    let result
+    const count = editorItem.items.length
+    for (let i = 0; i < count; i ++) {
+      const childEditorItem = editorItem.items[i]
+      if(childEditorItem.id == id){
+        return childEditorItem
+      }
+      result = this.findEditorItemDetailById(childEditorItem, id)
+      if(result) {
+        break;
+      }
+    }
+    return result
+  }
   private findContainerEntity (x: number, y: number): ContainerEntity | undefined {
     let result
     const count = this.contentLayer.getEditorItemCount()
@@ -1946,6 +2005,25 @@ export class Editor extends Painter {
     this.handleAddEditorItem(editorItemInfo)
   }
 
+  private handleShapeTextEdit(operation: Operation, isUndo: boolean) {
+    let editorItemInfo = operation.itemInfos[0]
+    if(!isUndo) {
+      editorItemInfo = operation.origItemInfos[0]
+    }
+    const editorItem = this.findEditorItemById(editorItemInfo.id)
+    if(editorItem) {
+      this.updateEditorItemDetail(editorItem as Item, editorItemInfo)
+    }
+  }
+
+  private handleTableTextEdit(operation: Operation, isUndo: boolean) {
+    if(isUndo) {
+      this.handleUpdateEditorItem(operation.itemInfos[0])
+    } else {
+      this.handleUpdateEditorItem(operation.origItemInfos[0])
+    }
+  }
+
   private removeItemById(item: Item, id: string): boolean {
     let count = item.items.length
     for(let i = count  - 1; i >= 0; i --) {
@@ -2001,6 +2079,14 @@ export class Editor extends Painter {
     })
   }
 
+  private handleOperationUndoShapTextEdit(operation: Operation) {
+    this.handleShapeTextEdit(operation, true)
+  }
+
+  private handleOperationUndoTableTextEdit(operation: Operation) {
+    this.handleTableTextEdit(operation, tue)
+  }
+
   private handleOperationRedoAddItems(items: EditorItemInfo[]) {
     items.forEach(editorItemInfo => {
       this.handleAddEditorItem(editorItemInfo)
@@ -2038,6 +2124,14 @@ export class Editor extends Painter {
       const id = editorItemInfo.id
       this.handleRemoveEditorItem(id)
     })    
+  }
+
+  private handleOperationRedoShapTextEdit(operation: Operation) {
+    this.handleShapeTextEdit(operation, false)
+  }
+
+  private handleOperationRedoTableTextEdit(operation: Operation) {
+    this.handleTableTextEdit(operation, false)
   }
 
   public checkAndStartTextEdit() {
@@ -2566,6 +2660,13 @@ export class Editor extends Painter {
     //console.log(`save: ${editorItemInfo}`)
   }
 
+  private beginShapeTextEditOperation(editorItem: EditorItem) {
+    this._startEditorItemInfos.length = 0
+    const editorItemInfo = OperationHelper.saveEditorItem(editorItem)
+    //console.log(`save: ${editorItemInfo}`)
+    return editorItemInfo
+  }
+
   private finishOperation(editorItem: EditorItem) {
     let origItemInfo = this._startEditorItemInfos[0]
     let editorItemInfo =  OperationHelper.saveEditorItem(editorItem)
@@ -2592,6 +2693,23 @@ export class Editor extends Painter {
       this._operationService.addOperation(operation)
       //console.log(`finish3: ${editorItemInfo}`)
       //console.log(`finish4: ${origItemInfo}`)
+      this.triggerOperationChange()
+      this._startEditorItemInfos.length = 0
+    }
+  }
+
+
+  private finishShapeTextEditOperation(origEditorItemInfo: EditorItemInfo) {
+    if(this._target && this._targetItem) {
+      let editorItemInfo =  OperationHelper.saveEditorItem(this._target)
+      let operation = new Operation(this, OperationType.SHAPE_TEXT_EDIT, [editorItemInfo],true, [origEditorItemInfo])
+      this._operationService.addOperation(operation)
+      this.triggerOperationChange()
+      this._startEditorItemInfos.length = 0
+    } else if(this._target) {
+      let editorItemInfo =  OperationHelper.saveEditorItem(this._target)
+      let operation = new Operation(this, OperationType.SHAPE_TEXT_EDIT, [editorItemInfo],true, [origEditorItemInfo])
+      this._operationService.addOperation(operation)
       this.triggerOperationChange()
       this._startEditorItemInfos.length = 0
     }
