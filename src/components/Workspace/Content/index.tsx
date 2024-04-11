@@ -1492,7 +1492,9 @@ const Content: FC<ContentProps> = ({
   }
 
   const handleSelectAll = () => {
-
+    if(Utils.currentEditor) {
+      Utils.currentEditor.selectAll()
+    }
   }
 
   const handleDuplicate = () => {
