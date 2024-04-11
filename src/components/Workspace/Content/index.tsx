@@ -1503,7 +1503,12 @@ const Content: FC<ContentProps> = ({
   }
 
   const handleLock = () => {
-
+    if(Utils.currentEditor) {
+      Utils.currentEditor.selectionLayer.getAllEditorItems().forEach(editorItem => {
+        editorItem.locked = !editorItem.locked
+      })
+      Utils.currentEditor.invalideHolder()
+    }
   }
 
   const handleToFront = () => {

@@ -20,6 +20,7 @@ export class EditorItemInfo {
     public strokeColor: string | null
     public fillColor: string | null
     public lineWidth: number | null
+    public locked: boolean = false
 
     public constructor (type = 'Shape', category = 'Rectangle', left = 0, top = 0, width = 100, height = 100, text = '' 
         , rotation = 0, styles: StyleInfo[] = [], useTheme = true, strokeColor: string | null = null

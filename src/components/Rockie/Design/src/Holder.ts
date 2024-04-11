@@ -138,7 +138,7 @@ export class Holder extends Control {
     this._endCubicControllerAnchor.target = target    
     this.createOrthogonalAnchors()
     this.layoutAnchors()
-    if (this._inHolder) {
+    if (this._inHolder && !this.target.locked) {
       this.addAnchors()
     }
   }
@@ -352,7 +352,7 @@ export class Holder extends Control {
       }
     }
     this.layoutOrthogonalAnchors()
-    if (this._inHolder) {
+    if (this._inHolder && !this._target.locked) {
       this.addAnchors()
     } else {
       this.removeAnchors()
