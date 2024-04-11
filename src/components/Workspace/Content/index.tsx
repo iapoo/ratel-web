@@ -1496,7 +1496,8 @@ const Content: FC<ContentProps> = ({
   }
 
   const handleDuplicate = () => {
-
+    handleCopy()
+    handlePaste()
   }
 
   const handleLock = () => {
@@ -1756,35 +1757,39 @@ const Content: FC<ContentProps> = ({
 
 
   const popupShapeItems: MenuProps['items'] = [
-    {label: 'Delete', key: '1', onClick: handleDelete, },
+    {label: <FormattedMessage id='workspace.content.popup-shape-delete' />, key: '1', onClick: handleDelete, },
     {type: 'divider' },
-    {label: 'Copy', key: '2', onClick: handleCopy, },
-    {label: 'Cut', key: '3', onClick: handleCut, },
-    {label: 'Paste', key: '4', onClick: handlePaste, },
-    {label: 'Duplicate', key: '5', onClick: handleDuplicate, },
+    {label: <FormattedMessage id='workspace.content.popup-shape-copy' />, key: '2', onClick: handleCopy, },
+    {label: <FormattedMessage id='workspace.content.popup-shape-cut' />, key: '3', onClick: handleCut, },
+    {label: <FormattedMessage id='workspace.content.popup-shape-paste' />, key: '4', onClick: handlePaste, },
+    {label: <FormattedMessage id='workspace.content.popup-shape-duplicate' />, key: '5', onClick: handleDuplicate, },
     {type: 'divider' },
-    {label: 'Lock', key: '6', onClick: handleLock, },
+    {label: <FormattedMessage id='workspace.content.popup-shape-lock' />, key: '6', onClick: handleLock, },
     {type: 'divider' },
-    {label: 'To Front', key: '7', onClick: handleToFront, },
-    {label: 'To Back', key: '8', onClick: handleToBack, },
-    {label: 'Bring Foreward', key: '9', onClick: handleBringForeward, },
-    {label: 'Send Backward', key: '10', onClick: handleSendBackward, },
+    {label: <FormattedMessage id='workspace.content.popup-shape-to-front' />, key: '7', onClick: handleToFront, },
+    {label: <FormattedMessage id='workspace.content.popup-shape-to-back' />, key: '8', onClick: handleToBack, },
+    {label: <FormattedMessage id='workspace.content.popup-shape-bring-foreward' />, key: '9', onClick: handleBringForeward, },
+    {label: <FormattedMessage id='workspace.content.popup-shape-send-backward' />, key: '10', onClick: handleSendBackward, },
   ]
 
   const popupEditorItems: MenuProps['items'] = [
-    {label: 'Undo', key: '1', onClick: handleUndo, },
+    {label: <FormattedMessage id='workspace.content.popup-editor-undo' />, key: '1', onClick: handleUndo, },
+    {label: <FormattedMessage id='workspace.content.popup-editor-redo' />, key: '3', onClick: handlePaste, },
     {type: 'divider' },
-    {label: 'Paste', key: '2', onClick: handlePaste, },
-    {label: 'Paste', key: '3', onClick: handlePaste, },
+    {label: <FormattedMessage id='workspace.content.popup-editor-paste' />, key: '2', onClick: handlePaste, },
     {type: 'divider' },
-    {label: 'Select All', key: '4', onClick: handleSelectAll, },
+    {label: <FormattedMessage id='workspace.content.popup-editor-select-all' />, key: '4', onClick: handleSelectAll, },
   ]
 
   const popupText: MenuProps['items'] = [
-    {label: 'Cut', key: '1', onClick: handleTextCut, },
-    {label: 'Copy', key: '2', onClick: handleTextCopy, },
-    {label: 'Paste', key: '3', onClick: handleTextPaste, },
-    {label: 'Select All', key: '4', onClick: handleSelectAll, },
+    {label: <FormattedMessage id='workspace.content.popup-text-undo' />, key: '1', onClick: handleUndo, },
+    {label: <FormattedMessage id='workspace.content.popup-text-redo' />, key: '2', onClick: handleRedo, },
+    {type: 'divider' },
+    {label: <FormattedMessage id='workspace.content.popup-text-cut' />, key: '3', onClick: handleTextCut, },
+    {label: <FormattedMessage id='workspace.content.popup-text-copy' />, key: '4', onClick: handleTextCopy, },
+    {label: <FormattedMessage id='workspace.content.popup-text-paste' />, key: '4', onClick: handleTextPaste, },
+    {type: 'divider' },
+    {label: <FormattedMessage id='workspace.content.popup-text-select-all' />, key: '4', onClick: handleSelectAll, },
   ]
 
   const popupPaneTitle = (key: string): MenuProps['items'] => {

@@ -2453,6 +2453,7 @@ export class Editor extends Painter {
         let operation = new Operation(this, OperationType.ADD_ITEMS, [editorItemInfo], true, [])
         this._operationService.addOperation(operation)
         this.triggerOperationChange()
+        this.triggerSelectionChange()
       }
       this.controllerLayer.removeAllEditorItems()
       this.controllerLayer.clear()
