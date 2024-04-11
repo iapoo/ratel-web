@@ -2551,6 +2551,9 @@ export class Editor extends Painter {
     const alignMoveY = this.alignToGridSize(moveY)
     for (let i = 0; i < count; i++) {
       const editorItem = theSelectionLayer.getEditorItem(i) as Item
+      if(editorItem.locked) {
+        continue
+      }
       const left = editorItem.left
       const top = editorItem.top
       const sourceConnectorCount = editorItem.getSourceConnectorCount()

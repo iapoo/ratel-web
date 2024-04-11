@@ -60,6 +60,7 @@ export class OperationHelper {
     if (itemInfo.rotation) {
       editorItem.rotation = new Rotation(itemInfo.rotation, itemInfo.width / 2, itemInfo.height / 2)
     }
+    editorItem.locked = itemInfo.locked
     editorItem.useTheme = itemInfo.useTheme
     if(itemInfo.useTheme) {
       if(itemInfo.category == Categories.CONNECTOR) {
@@ -350,6 +351,7 @@ export class OperationHelper {
     editorItemInfo.items.length = 0
     editorItemInfo.useTheme = editorItem.useTheme
     editorItemInfo.themeName = editorItem.themeName
+    editorItemInfo.locked = editorItem.locked
     if(editorItem.useTheme) {
       editorItemInfo.strokeColor = null
       editorItemInfo.fillColor = null

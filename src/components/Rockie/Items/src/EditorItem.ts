@@ -22,6 +22,7 @@ export interface EditorItem {
   readonly worldTransform: Matrix
   readonly worldInverseTransform: Matrix | null
   readonly internalTransform: Matrix
+  locked: boolean
   useTheme: boolean
   themeName: string
   strokeColor: Color 

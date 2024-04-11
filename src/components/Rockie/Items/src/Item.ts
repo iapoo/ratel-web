@@ -101,6 +101,8 @@ export abstract class Item implements EditorItem {
 
   private _parent: Item | undefined = undefined
 
+  private _locked: boolean = false
+
   public constructor (left: number, top: number, width: number, height: number) {
     this._boundary = Rectangle.makeLTWH(left, top, width, height)
     this._shape = new EntityShape('', left, top, width, height)
@@ -117,6 +119,14 @@ export abstract class Item implements EditorItem {
 
   public set id(value: string) {
     this._id = value
+  }
+  
+  public get locked() {
+    return this._locked
+  }
+
+  public set locked(value: boolean) {
+    this._locked = value
   }
   
   public get minWidth (): number {
