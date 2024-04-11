@@ -1473,6 +1473,36 @@ export class Editor extends Painter {
     }
   }
 
+  public toFront(editorItems: EditorItem[]) {
+    editorItems.forEach((editorItem, index) => {
+      this.contentLayer.removeEditorItem(editorItem)
+      this.contentLayer.addEditorItem(editorItem)
+    })
+  }
+
+  public toBack(editorItems: EditorItem[]) {
+    editorItems.forEach((editorItem, index) => {
+      this.contentLayer.removeEditorItem(editorItem)
+      this.contentLayer.addEditorItemAt(editorItem, 0)
+    })
+  }
+
+  public sendBackward(editorItem: EditorItem) {
+    const index = this.contentLayer.getIndexOfEditorItem(editorItem)
+    if(index > 0) {
+      this.contentLayer.removeEditorItem(editorItem)
+      this.contentLayer.addEditorItemAt(editorItem, index - 1)
+    } 
+  }
+
+  public bringForeward(editorItem: EditorItem) {
+    const index = this.contentLayer.getIndexOfEditorItem(editorItem)
+    if(index < this.contentLayer.getEditorItemCount() - 1) {
+      this.contentLayer.removeEditorItem(editorItem)
+      this.contentLayer.addEditorItemAt(editorItem, index + 1)
+    } 
+  }
+
   public isInEditorItem (editorItem: EditorItem, x: number, y: number): boolean {
     const shape = editorItem.shape
     const inClickEditorItem = shape.contains(x, y)
