@@ -1259,6 +1259,13 @@ export class Editor extends Painter {
     this._targetColumnResizing = false
   }
 
+  public selectAll() {
+    this.contentLayer.getAllEditorItems().forEach(editorItem => {
+      this.selectionLayer.addEditorItem(editorItem)
+    })
+    this.triggerSelectionChange()
+  }
+
   public focus() {
     if(this._textFocused) {
       this._textArea.focus()
