@@ -1,5 +1,8 @@
 export default {
   'workspace.content.message-clipboard-not-supported': 'Clipboard functionality cannot work on current browser',
+  'workspace.content.popup-menu-rename-pane-title': '重命名',
+  'workspace.content.popup-menu-duplicate-pane': '克隆',
+  'workspace.content.popup-menu-delete-pane': '删除',
   'workspace.header.alert-failed-ave-document': 'Failed to save document, message: ',
   'workspace.header.button-login-title': 'Login',
   'workspace.header.button-logout-title': 'Logout',
