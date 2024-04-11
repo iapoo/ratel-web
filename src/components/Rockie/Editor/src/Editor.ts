@@ -950,6 +950,8 @@ export class Editor extends Painter {
   public handlePointerDown (e: PointerEvent) {    
     //console.log(`handle Mouse Down ... x = ${e.x}`)
     if(e.mouseCode == MouseCode.RIGHT_MOUSE_DOWN) {
+      //Popup menu require this
+      this.handleMouseRightButtonDown(e)
       return
     }
     this._startPointX = e.x
@@ -1718,6 +1720,59 @@ export class Editor extends Painter {
       }
     }
     return 0
+  }
+
+  private handleMouseRightButtonDown(e: PointerEvent) {
+    this._startPointX = e.x
+    this._startPointY = e.y
+    this._modified = true
+    const clickedEditorItem = this.findEditorItem(e.x, e.y, false)
+    const theSelectionLayer = this.selectionLayer as SelectionLayer
+    if (clickedEditorItem) {
+      if (!theSelectionLayer.hasEditorItem(clickedEditorItem)) {
+        theSelectionLayer.inHolder = true
+        theSelectionLayer.removeAllEditorItems()
+        theSelectionLayer.addEditorItem(clickedEditorItem)
+        this.triggerSelectionChange()
+        this._targetColumnResizing = false
+        this._targetRowResizing = false
+        this.beginOperation(clickedEditorItem)
+        this.checkAndEndTextEdit()
+        this.finishTextEditOperation()
+        this.startMoveOutline(e)
+        if (this._target) {
+          this._target.shape.focused = false
+        }
+        if (this._targetItem) {
+          this._targetItem.shape.focused = false
+        }
+        this._targetItem = undefined
+        this._targetItemIndex = -1
+      } else if(this._textFocused) {
+        const targetPoint = this.findEditorItemPoint(clickedEditorItem, e.x, e.y)
+        this.updateTextCursorLocation(clickedEditorItem, targetPoint.x, targetPoint.y)
+        clickedEditorItem.shape.enter(targetPoint.x, targetPoint.y)
+      }
+    } else {
+      theSelectionLayer.removeAllEditorItems()
+      this.triggerSelectionChange()
+      this.checkAndEndTextEdit()
+      this.finishTextEditOperation()
+      if (this._target) {
+        this._target.shape.focused = false
+      }
+
+      if (this._targetItem) {
+        this._targetItem.shape.focused = false
+      }
+      this._target = undefined
+      this._targetTime = 0
+      this._targetColumnResizing = false
+      this._targetRowResizing = false
+      this._targetItem = undefined
+      this._targetItemIndex = -1
+      this.handleTableActiveCellShape()
+    }
   }
 
   private handlePointMoveinAction (e: PointerEvent, action: Action) {
