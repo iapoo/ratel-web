@@ -45,6 +45,18 @@ export abstract class EditorLayer extends Control {
     this.build()
   }
 
+
+  public addEditorItemAt (editorItem: EditorItem, index: number): void {
+    if (this._editorItems.indexOf(editorItem) < 0) {
+      this._editorItems.splice(index, 0, editorItem)
+      if (this._showEditorItems) {
+        this.addNodeAt(editorItem.shape, index)
+      }
+      this._requireRebuild = true
+      this.build()
+      }
+  }
+
   public removeEditorItem (editorItem: EditorItem) {
     const index = this._editorItems.indexOf(editorItem)
     if (index >= 0) {

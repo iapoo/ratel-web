@@ -1512,19 +1512,35 @@ const Content: FC<ContentProps> = ({
   }
 
   const handleToFront = () => {
-
+    if(Utils.currentEditor) {
+      const selections = Utils.currentEditor.selectionLayer.getAllEditorItems()
+      Utils.currentEditor.toFront(selections)
+    }
   }
 
   const handleToBack = () => {
-
+    if(Utils.currentEditor) {
+      const selections = Utils.currentEditor.selectionLayer.getAllEditorItems()
+      Utils.currentEditor.toBack(selections)
+    }
   }
 
   const handleBringForeward = () => {
-
+    if(Utils.currentEditor) {
+      const selections = Utils.currentEditor.selectionLayer.getAllEditorItems()
+      if(selections.length == 1) {
+        Utils.currentEditor.bringForeward(selections[0])
+      }
+    }
   }
 
   const handleSendBackward = () => {
-
+    if(Utils.currentEditor) {
+      const selections = Utils.currentEditor.selectionLayer.getAllEditorItems()
+      if(selections.length == 1) {
+        Utils.currentEditor.sendBackward(selections[0])
+      }
+    }
   }
 
   const handleUndo = () => {
