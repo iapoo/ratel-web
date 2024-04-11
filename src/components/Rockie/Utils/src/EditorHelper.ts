@@ -10,6 +10,17 @@ export class EditorHelper {
     public static DEFAULT_OFFSET_X = 32
     public static DEFAULT_OFFSET_Y = 32
 
+
+    public static generateEditorItems(editor: Editor):  EditorItemInfo[] {
+        const editorItemInfos: Array<EditorItemInfo> = []
+        const editorItems = editor.contentLayer.getAllEditorItems()
+        editorItems.forEach(editorItem => {
+            let editorItemInfo = OperationHelper.saveEditorItem(editorItem)
+            editorItemInfos.push(editorItemInfo)
+        })
+        return editorItemInfos
+    }
+
     public static generateEditorSelections(editor: Editor):  EditorItemInfo[] {
         const selections: Array<EditorItemInfo> = []
         const editorItems = editor.selectionLayer.getAllEditorItems()

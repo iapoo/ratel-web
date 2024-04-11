@@ -1662,6 +1662,35 @@ const Content: FC<ContentProps> = ({
     }
   }
 
+  const handleRenamePaneTitle = (key: string) => {
+    const element = document.getElementById('pane-title-input-' + activeKey)
+    if(element) {
+      const input = element as HTMLInputElement
+      input.readOnly = false
+      input.focus()
+      setActiveKey(key)
+    }
+  }
+
+  const handleDuplicatePane = (key: string) => {
+    const oldEditor = Utils.currentEditor
+    addEditor(true, null, null, null)
+    if(oldEditor) {
+      const editorItemInfos = EditorHelper.generateEditorItems(oldEditor)
+      if(Utils.currentEditor) {
+        editorItemInfos.forEach(editorItemInfo => {
+          const editorItem = OperationHelper.loadItem(editorItemInfo, Utils.currentEditor!)
+          Utils.currentEditor!.contentLayer.addEditorItem(editorItem)
+        })
+      }
+    }
+
+  }
+
+  const handleDeletePane = (key: string) => {
+    removeEditor(key, true, null)
+  }
+
   const handlePaneTitlePointerEnter = (event: SyntheticEvent<HTMLInputElement>) => {
     if(event.target && event.target.style) {
       event.target.style.cursor = 'move'
@@ -1675,6 +1704,10 @@ const Content: FC<ContentProps> = ({
     event.target.readOnly = false
   }
 
+  const handlePaneTitleClick = (key: string, event: SyntheticEvent<HTMLInputElement>) => {
+    onTabChange(key)
+  }
+
   const handlePaneTitleChangeCompleted = (event: SyntheticEvent<HTMLInputElement>, pane: Pane) => {
     const newPanes = clonePanes()
     const newPane = findPane(pane.key, newPanes)
@@ -1682,6 +1715,8 @@ const Content: FC<ContentProps> = ({
     newPane.editor!.title = newPane.title
     panesRef.current = newPanes
     event.target.style.width = event.target.value.length * 8
+    event.target.readOnly = true
+    event.target.blur()
   }
 
   const clonePanes = () => {
@@ -1745,13 +1780,20 @@ const Content: FC<ContentProps> = ({
     {label: 'Select All', key: '4', onClick: handleSelectAll, },
   ]
 
-
   const popupText: MenuProps['items'] = [
     {label: 'Cut', key: '1', onClick: handleTextCut, },
     {label: 'Copy', key: '2', onClick: handleTextCopy, },
     {label: 'Paste', key: '3', onClick: handleTextPaste, },
     {label: 'Select All', key: '4', onClick: handleSelectAll, },
   ]
+
+  const popupPaneTitle = (key: string): MenuProps['items'] => {
+    return [
+      {label: <FormattedMessage id='workspace.content.popup-menu-rename-pane-title' />, key: '1', onClick: () => handleRenamePaneTitle(key), },
+      {label: <FormattedMessage id='workspace.content.popup-menu-duplicate-pane' />, key: '2', onClick: () => handleDuplicatePane(key), },
+      {label: <FormattedMessage id='workspace.content.popup-menu-delete-pane' />, key: '3', onClick: () => handleDeletePane(key), },
+    ]
+  } 
 
   const textToolbars = <FloatButton.Group style={{left: textToolbarLeft, top: textToolbarTop - 40, height: 32, display: textToolbarVisible ? 'block' : 'none' }}>                  
     <Space direction='horizontal' style={{backgroundColor: 'white', borderColor: 'silver', borderWidth: 1, borderStyle: 'solid', padding: 2}}>
@@ -1879,10 +1921,10 @@ const Content: FC<ContentProps> = ({
           )}>
           {            
             panesRef.current.map(pane => {
-              const paneTitle = <Dropdown menu={{items: popupType == PopupType.SHAPES ? popupShapeItems : (popupType == PopupType.EDITOR ? popupEditorItems : popupText)}} 
+              const paneTitle = <Dropdown menu={{items: popupPaneTitle(pane.key)}}
                   trigger={['contextMenu']} >
                     <div>
-                      <Input defaultValue={pane.title} size='small' variant='borderless' maxLength={32}
+                      <Input id={`pane-title-input-${pane.key}`} defaultValue={pane.title} size='small' variant='borderless' maxLength={32}
                         style={{width: '50px', display: 'inline' }} 
                         onChange={e => handlePaneTitleChange(pane, e.target.value)} 
                         readOnly={true}
@@ -1890,6 +1932,7 @@ const Content: FC<ContentProps> = ({
                         onDoubleClick={handlePaneTitleDoubleClick}
                         onPressEnter={e => handlePaneTitleChangeCompleted(e, pane)} 
                         onBlur={ e => handlePaneTitleChangeCompleted(e, pane)}
+                        onPointerDown={e => handlePaneTitleClick(pane.key, e)}
                         />
                         {/* <label style={{display: 'block'}} ref={editorRef}>{pane.title}</label> */}
                     </div>
