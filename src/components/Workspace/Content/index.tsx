@@ -18,7 +18,7 @@ import type { DragEndEvent } from '@dnd-kit/core'
 import { DndContext, PointerSensor, useSensor } from '@dnd-kit/core'
 import { arrayMove, horizontalListSortingStrategy, SortableContext, useSortable, } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { useEditable, } from 'use-editable'
+import { Position, useEditable, } from 'use-editable'
 
 interface DraggableTabPaneProps extends React.HTMLAttributes<HTMLDivElement> {
   'data-node-key': string;
@@ -117,6 +117,7 @@ const Content: FC<ContentProps> = ({
       return DEFAULT_PAINTER_HEIGHT + 'px'
     }
   }
+
   const [ forceUpdate, setForceUpdate, ] = useState<boolean>(false)
   const [ initialized, setInitialized, ] = useState<boolean>(false)
   const [ activeKey, setActiveKey, ] = useState(initialPanes[0].key)
@@ -155,12 +156,18 @@ const Content: FC<ContentProps> = ({
   const [editorCursor, setEditorCursor, ] = useState<string>(Consts.EDITOR_CURSOR_AUTO)
   const newTabIndex = useRef(4)
   const [ panes, setPanes, ] = useState(initialPanes)
-  //const panesRef = useRef(initialPanes)
+  const panesRef = useRef(initialPanes)
   const sensor = useSensor(PointerSensor, {activationConstraint: {distance: 10}})
-  //const [paneTititle, setPaneTitle, ] = useState<string>('hello')
-  //const editorRef = useRef(null)
+  // const [paneTititle, setPaneTitle, ] = useState<string>('hello')
+  const paneTitleRef = useRef(null)
 
-  //useEditable(editorRef, setPaneTitle)
+  // const handlePaneTitleChange = (text:string, position: Position) => {
+  //   if(activePane) {
+  //     activePane.title = text
+  //   }
+  // }
+  
+  // useEditable(paneTitleRef, handlePaneTitleChange)
 
   useEffect(() => {
     if (!initialized) {
@@ -321,9 +328,10 @@ const Content: FC<ContentProps> = ({
     onEditorChange(oldEditor, Utils.currentEditor)
     updateEditors(newPanes)
     setPanes(newPanes)
-    //panesRef.current = newPanes
+    panesRef.current = newPanes
     setActiveKey(newPanes[0].key)
     setActivePane(newPanes[0])
+    //setPaneTitle(newPanes[0].title)
     Utils.loadData = loadData
     Utils.checkIfModified = checkIfDocumentModified
     updateEditorSize(newPanes)
@@ -435,9 +443,10 @@ const Content: FC<ContentProps> = ({
       }
     }
     setPanes(panes)
-    //panesRef.current = panes
+    panesRef.current = panes
     setActiveKey(activeKey)
     setActivePane(activePane)
+    //setPaneTitle(activePane?.title)
 
     const container = document.getElementById('editor-container')
     while (container?.hasChildNodes()) {
@@ -502,6 +511,7 @@ const Content: FC<ContentProps> = ({
           setCurrentEditor(editor!)
           currentPane = pane
           setActivePane(pane)
+          //setPaneTitle(pane.title)
           onEditorChange(oldEditor, Utils.currentEditor)
           
           if(oldEditor && requireOperation && Utils.currentEditor) {
@@ -534,13 +544,26 @@ const Content: FC<ContentProps> = ({
     }
     updateEditors(panes)
     setPanes(panes)
-    //panesRef.current = panes
+    panesRef.current = panes
   }
 
   const refresh = () => {
     if(Utils.currentEditor)  {
       refreshSelectionInfo(Utils.currentEditor)
+      refreshPaneTitleValues()
     }
+  }
+
+  const refreshPaneTitleValues = () => {
+    //const panes = panesRef.current
+    panes.forEach(pane => {
+      const element = document.getElementById('pane-title-input-' + pane.key)
+      if(element) {
+        const input = element as HTMLInputElement
+        input.value = pane.title
+        input.defaultValue = pane.title
+      }
+    })
   }
 
   const refreshSelectionInfo = (editor: Editor) => {
@@ -776,9 +799,10 @@ const Content: FC<ContentProps> = ({
       newPanes.push(pane)
     }
     setPanes(newPanes)
-    //panesRef.current = newPanes
+    panesRef.current = newPanes
     setActiveKey(newActiveKey)
     setActivePane(pane)
+    //(pane.title)
     const container = document.getElementById('editor-container')
     while (container?.hasChildNodes()) {
       container?.removeChild(container.lastChild!)
@@ -892,9 +916,10 @@ const Content: FC<ContentProps> = ({
       }
     }
     setPanes(newPanes)
-    //panesRef.current = newPanes
+    panesRef.current = newPanes
     setActiveKey(newActiveKey)
     setActivePane(newActivePane)
+    //setPaneTitle(newActivePane.title)
 
     Utils.currentEditor = newActivePane.editor!
     setCurrentEditor(newActivePane.editor!!)
@@ -944,16 +969,17 @@ const Content: FC<ContentProps> = ({
         activatePane = pane
       }
     })
-    const element = document.getElementById('pane-title-input-' + editor.key)
-    if(element) {
-      const input = element as HTMLInputElement
-      input.value = toName
-      input.defaultValue = toName
-    }
-    //panesRef.current = newPanes    
+    // const element = document.getElementById('pane-title-input-' + editor.key)
+    // if(element) {
+    //   const input = element as HTMLInputElement
+    //   input.value = toName
+    //   input.defaultValue = toName
+    // }
+    panesRef.current = newPanes    
     setPanes(newPanes)
     setDocumentModified(true)
     setActivePane(activatePane)
+    //setPaneTitle(activatePane.title)
     setForceUpdate(!forceUpdate)
     editor.triggerOperationChange()
   }
@@ -1760,11 +1786,12 @@ const Content: FC<ContentProps> = ({
       const activeIndex = panes.findIndex((i) => i.key === active.id);
       const overIndex = panes.findIndex((i) => i.key === over?.id);
       panes = arrayMove(panes, activeIndex, overIndex);
-      //panesRef.current = panes
+      panesRef.current = panes
       setPanes(panes)
       setForceUpdate(!forceUpdate)
     }
   }
+
 
   const handleRenamePaneTitle = (key: string) => {
     const element = document.getElementById('pane-title-input-' + activeKey)
@@ -1809,7 +1836,9 @@ const Content: FC<ContentProps> = ({
   }
 
   const handlePaneTitleClick = (key: string, event: SyntheticEvent<HTMLInputElement>) => {
-    onTabChange(key)
+    if(activePane?.key != key) {
+      onTabChange(key)
+    }
   }
 
   const handlePaneTitleChangeCompleted = (event: SyntheticEvent<HTMLInputElement>, pane: Pane) => {
@@ -1819,11 +1848,12 @@ const Content: FC<ContentProps> = ({
     if(newPane.editor) {
       newPane.editor.title = newPane.title
     }
-    //panesRef.current = newPanes
+    panesRef.current = newPanes
     setPanes(newPanes)
     event.target.style.width = event.target.value.length * 8
     event.target.readOnly = true
-    event.target.blur()
+    event.target.value = newPane.title
+    event.target.blur()    
     if(newPane.editor) {
       const operation = new Operation(newPane.editor, OperationType.RENAME_EDITOR, [], false, [], '', null, null, null, null, false, 0, 0, 0, 0, newPane.title, pane.title)
       newPane.editor.operationService.addOperation(operation)
@@ -1834,7 +1864,7 @@ const Content: FC<ContentProps> = ({
 
   const clonePanes = () => {
     const newPanes: Pane[] = []
-    //const panes = panesRef.current
+    const panes = panesRef.current
     panes.forEach(pane => {
       const newPane = { title: pane.title, content: pane.content, key: pane.key, editor: pane.editor, initialized: pane.initialized, scrollLeft: pane.scrollLeft, scrollTop: pane.scrollTop, }
       newPanes.push(newPane)
@@ -1852,13 +1882,16 @@ const Content: FC<ContentProps> = ({
     return newPane
   }
 
-  const handlePaneTitleChange = (pane: Pane, titleValue: string) => {
+  const handlePaneTitleChange = (pane: Pane, titleValue: string, e: any) => {
     console.log(`${pane.title}, ${titleValue}`)
     // const newPanes = clonePanes()
     // const newPane = findPane(pane.key, newPanes)
     // newPane.title = titleValue
     // newPane.editor!.title = newPane.title
     // panesRef.current = newPanes    
+    // setPanes(newPanes)
+    // setActivePane(newPane)
+    // setActiveKey(newPane.key)
   }
 
 
@@ -2035,9 +2068,9 @@ const Content: FC<ContentProps> = ({
               const paneTitle = <Dropdown menu={{items: popupPaneTitle(pane.key)}}
                   trigger={['contextMenu']} >
                     <div>
-                      <Input id={`pane-title-input-${pane.key}`} defaultValue={pane.title} size='small' variant='borderless' maxLength={32}
-                        style={{width: '50px', display: 'inline' }} 
-                        onChange={e => handlePaneTitleChange(pane, e.target.value)} 
+                        <Input id={`pane-title-input-${pane.key}`} defaultValue={pane.title} size='small' variant='borderless' maxLength={32}
+                        style={{width: '50px', display: 'inline'}} 
+                        onChange={e => handlePaneTitleChange(pane, e.target.value, e)} 
                         readOnly={true}
                         onPointerEnter={handlePaneTitlePointerEnter}
                         onDoubleClick={handlePaneTitleDoubleClick}
@@ -2045,7 +2078,7 @@ const Content: FC<ContentProps> = ({
                         onBlur={ e => handlePaneTitleChangeCompleted(e, pane)}
                         onPointerDown={e => handlePaneTitleClick(pane.key, e)}
                         />
-                        <label id={`pane-title-label-${pane.key}`} style={{display: 'block'}}>{pane.title}</label> 
+                        {/* <label style={{display: 'inline'}}>{pane.title}</label>  */}
                     </div>
                 </Dropdown>
               return <TabPane tab={paneTitle} key={pane.key} closable={pane.key == activeKey} />
