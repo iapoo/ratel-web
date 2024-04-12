@@ -257,8 +257,10 @@ export class Editor extends Painter {
   }
 
   public set horizontalSpace(value: number) {
-    this._horizontalSpace = value
-    this.setup(this.zoom, this.origWidth, this.origHeight)
+    if(this._horizontalSpace != value) {
+      this._horizontalSpace = value
+      this.setup(this.zoom, this.origWidth, this.origHeight)
+    }
   }
 
   public get verticalSpace() {
@@ -266,8 +268,10 @@ export class Editor extends Painter {
   }
 
   public set verticalSpace(value: number) {
-    this._verticalSpace = value
-    this.setup(this.zoom, this.origWidth, this.origHeight)
+    if(this._verticalSpace != value) {
+      this._verticalSpace = value
+      this.setup(this.zoom, this.origWidth, this.origHeight)
+    }
   }
 
   public get workWidth(): number {
@@ -679,6 +683,7 @@ export class Editor extends Painter {
   public set zoom (value: number) {
     this._zoom = value    
     this.resize(this._origWidth, this._origHeight)
+    this.triggerSizeChange()
   }
 
   public setup(zoom: number, origWidth: number, origHeight: number) {

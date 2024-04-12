@@ -18,8 +18,6 @@ export class Utils {
 
     public static storageData: StorageData | undefined
 
-    public static updateEditorSize : ()=> void
-
     public static isModified: boolean = false
 
     public static loadData: () => void

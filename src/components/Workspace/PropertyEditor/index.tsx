@@ -252,9 +252,6 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
           setPageCustomized(false)
         }
       }
-      if (Utils.updateEditorSize) {
-        Utils.updateEditorSize()
-      }
     }
   }
 
@@ -262,9 +259,6 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
     if(currentEditor && value) {
       currentEditor.setup(currentEditor.zoom, value, currentEditor.origHeight)
       setPageWidth(value)
-      if (Utils.updateEditorSize) {
-        Utils.updateEditorSize()
-      }
     }
   }
 
@@ -272,9 +266,6 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
     if(currentEditor && value) {
       currentEditor.setup(currentEditor.zoom, currentEditor.origWidth, value)
       setPageHeight(value)
-      if (Utils.updateEditorSize) {
-        Utils.updateEditorSize()
-      }
     }
   }
 
@@ -286,11 +277,7 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
         currentEditor.setup(currentEditor.zoom, pageType.height, pageType.width)
       } else {
         currentEditor.setup(currentEditor.zoom, pageType.width, pageType.height)
-      }
-      if (Utils.updateEditorSize) {
-        Utils.updateEditorSize()
-      }
-    }
+      }    }
   }
 
   const handleEnableFillChange = (e: CheckboxChangeEvent) => {
