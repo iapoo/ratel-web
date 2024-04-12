@@ -127,7 +127,7 @@ const Content: FC<ContentProps> = ({
   const [ contentHeight, setContentHeight, ] = useState<string>(getDefaultContentHeight())
   const [ editorWidth, setEditorWidth, ] = useState<string>(getDefaultEditorWidth())
   const [ editorHeight, setEditorHeight, ] = useState<string>(getDefaultEditorHeight())
-  const [ documentModified, setdocumentModified, ] = useState<boolean>(false)
+  const [ documentModified, setDocumentModified, ] = useState<boolean>(false)
   const [ textToolbarLeft, setTextToolbarLeft, ] = useState<number>(0)
   const [ textToolbarTop, setTextToolbarTop, ] = useState<number>(0)
   const [ textToolbarVisible, setTextToolbarVisible,  ] = useState<boolean>(false)
@@ -916,6 +916,23 @@ const Content: FC<ContentProps> = ({
     handleTabChange(newActiveKey, requireOperation)
   }
 
+  const renameSheet = (editor: Editor, fromName: string, toName: string) => {
+    const panes = clonePanes()
+    let activatePane = panes[0]
+    panes.forEach(pane => {
+      if(pane.key == editor.key) {
+        pane.title = toName
+        editor.title = toName
+        activatePane = pane
+      }
+    })
+    panesRef.current = panes    
+    setDocumentModified(true)
+    setActivePane(activatePane)
+    setForceUpdate(!forceUpdate)
+    editor.triggerOperationChange()
+  }
+
   const onEdit = (targetKey: string, action: 'add' | 'remove') => {
     checkIfDocumentModified(true)
     if (action === 'add') {
@@ -927,7 +944,7 @@ const Content: FC<ContentProps> = ({
 
   const checkIfDocumentModified = (ifModified: boolean)=> {
     if(ifModified) {
-      setdocumentModified(true)
+      setDocumentModified(true)
       Utils.isModified = true
     } else {
       let modified = false
@@ -936,7 +953,7 @@ const Content: FC<ContentProps> = ({
           modified = true
         }
       })
-      setdocumentModified(modified)
+      setDocumentModified(modified)
       Utils.isModified = modified
     }
 
@@ -970,10 +987,22 @@ const Content: FC<ContentProps> = ({
         }
         break;
       case OperationType.RENAME_EDITOR:
-        break;
-      case OperationType.ADD_EDITOR:
+        if(event.isUndo) {
+          checkIfDocumentModified(true)
+          handleUndoRenameEditor(event.operation)
+        } else {
+          checkIfDocumentModified(true)
+          handleRedoRenameEditor(event.operation)
+        }
         break;
       case OperationType.MOVE_EDITOR:
+        if(event.isUndo) {
+          checkIfDocumentModified(true)
+          handleUndoMoveEditor(event.operation)
+        } else {
+          checkIfDocumentModified(true)
+          handleRedoMoveEditor(event.operation)
+        }
         break;
       default:
         break;
@@ -1590,6 +1619,23 @@ const Content: FC<ContentProps> = ({
   const handleRedoRemoveEditor = (operation: Operation) => {
     removeEditor(null, false, operation.editor)
   }
+
+  const handleUndoRenameEditor = (operation: Operation) => {
+    renameSheet(operation.editor, operation.editorTitle, operation.origEditorTitle)
+  }
+
+  const handleRedoRenameEditor = (operation: Operation) => {
+    renameSheet(operation.editor, operation.origEditorTitle, operation.editorTitle)
+  }
+  
+  const handleUndoMoveEditor = (operation: Operation) => {
+    addEditor(false, operation.editor, operation.afterEditor, operation.beforeEditor)
+  }
+
+  const handleRedoMoveEditor = (operation: Operation) => {
+    removeEditor(null, false, operation.editor)
+  }
+
   const handleDelete = () => {
     if (currentEditor) {
       EditorHelper.deleteSelections(currentEditor)
@@ -1741,6 +1787,12 @@ const Content: FC<ContentProps> = ({
     event.target.style.width = event.target.value.length * 8
     event.target.readOnly = true
     event.target.blur()
+    if(pane.editor) {
+      const operation = new Operation(pane.editor, OperationType.RENAME_EDITOR, [], false, [], '', null, null, null, null, false, 0, 0, 0, 0, newPane.title, pane.title)
+      pane.editor.operationService.addOperation(operation)
+      setDocumentModified(true)
+      newPane.editor!.triggerOperationChange()
+    }
   }
 
   const clonePanes = () => {
@@ -1765,17 +1817,11 @@ const Content: FC<ContentProps> = ({
 
   const handlePaneTitleChange = (pane: Pane, titleValue: string) => {
     console.log(`${pane.title}, ${titleValue}`)
-    const newPanes = clonePanes()
-    //pane.title = inputRef.current.input.value
-    //panes[0].title = inputRef.current.input.value
-    //if(pane.editor) {
-    //  pane.editor.title = pane.title
-    //}
-    const newPane = findPane(pane.key, newPanes)
-    newPane.title = titleValue
-    newPane.editor!.title = newPane.title
-    //setPanes(newPanes)
-    panesRef.current = newPanes
+    // const newPanes = clonePanes()
+    // const newPane = findPane(pane.key, newPanes)
+    // newPane.title = titleValue
+    // newPane.editor!.title = newPane.title
+    // panesRef.current = newPanes    
   }
 
 
@@ -1958,7 +2004,7 @@ const Content: FC<ContentProps> = ({
                         readOnly={true}
                         onPointerEnter={handlePaneTitlePointerEnter}
                         onDoubleClick={handlePaneTitleDoubleClick}
-                        onPressEnter={e => handlePaneTitleChangeCompleted(e, pane)} 
+                        //onPressEnter={e => handlePaneTitleChangeCompleted(e, pane)} 
                         onBlur={ e => handlePaneTitleChangeCompleted(e, pane)}
                         onPointerDown={e => handlePaneTitleClick(pane.key, e)}
                         />

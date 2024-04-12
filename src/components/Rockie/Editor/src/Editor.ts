@@ -810,9 +810,6 @@ export class Editor extends Painter {
         case OperationType.REMOVE_ITEMS:
           this.handleOperationUndoRemoveItems(operation.itemInfos)
           break;
-        case OperationType.MOVE_ITEMS:
-          this.handleOperationUndoMoveItems(operation.origItemInfos)
-          break;
         case OperationType.UPDATE_ITEMS:
           this.handleOperationUndoUpdateItems(operation.origItemInfos)
           break;
@@ -864,9 +861,6 @@ export class Editor extends Painter {
           break;
         case OperationType.REMOVE_ITEMS:
           this.handleOperationRedoRemoveItems(operation.itemInfos)
-          break;
-        case OperationType.MOVE_ITEMS:
-          this.handleOperationRedoMoveItems(operation.itemInfos)
           break;
         case OperationType.UPDATE_ITEMS:
           this.handleOperationRedoUpdateItems(operation.itemInfos)
@@ -2162,12 +2156,6 @@ export class Editor extends Painter {
     })
   }
 
-  private handleOperationUndoMoveItems(items: EditorItemInfo[]) {
-    items.forEach(editorItemInfo => {
-      this.handleUpdateEditorItem(editorItemInfo)
-    })
-  }
-
   private handleOperationUndoUpdateItems(items: EditorItemInfo[]) {
     items.forEach(editorItemInfo => {
       this.handleUpdateEditorItem(editorItemInfo)
@@ -2206,12 +2194,6 @@ export class Editor extends Painter {
     items.forEach(editorItemInfo => {
       const id = editorItemInfo.id
       this.handleRemoveEditorItem(id)
-    })
-  }
-
-  private handleOperationRedoMoveItems(items: EditorItemInfo[]) {
-    items.forEach(editorItemInfo => {
-      this.handleUpdateEditorItem(editorItemInfo)
     })
   }
 
