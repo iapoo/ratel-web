@@ -555,7 +555,7 @@ const Content: FC<ContentProps> = ({
   }
 
   const refreshPaneTitleValues = () => {
-    //const panes = panesRef.current
+    const panes = panesRef.current
     panes.forEach(pane => {
       const element = document.getElementById('pane-title-input-' + pane.key)
       if(element) {
@@ -1797,7 +1797,7 @@ const Content: FC<ContentProps> = ({
     const element = document.getElementById('pane-title-input-' + activeKey)
     if(element) {
       const input = element as HTMLInputElement
-      input.readOnly = false
+      //input.readOnly = false
       input.focus()
       setActiveKey(key)
     }
@@ -1828,11 +1828,26 @@ const Content: FC<ContentProps> = ({
     }
   }
 
-  const handlePaneTitleDoubleClick = (event: SyntheticEvent<HTMLInputElement>) => {
+  const handlePaneTitleDoubleClick = (pane: Pane, event: SyntheticEvent<HTMLInputElement>) => {
     if(event.target && event.target.style) {
       event.target.style.cursor = 'text'
     }
     event.target.readOnly = false
+    event.target.defaultValue = pane.title
+    event.target.value = pane.title
+  }
+
+  const handlePaneTitleLabelDoubleClick = (pane: Pane, event: SyntheticEvent<HTMLInputElement>) => {
+    event.target.style.display = 'none'
+    const element = document.getElementById('pane-title-input-' + pane.key)
+    if(element) {
+      const input = element as HTMLInputElement
+      input.defaultValue = pane.title
+      input.value = pane.title
+      input.defaultValue = pane.title
+      input.style.display = 'inline'
+      input.focus()
+    }
   }
 
   const handlePaneTitleClick = (key: string, event: SyntheticEvent<HTMLInputElement>) => {
@@ -1841,7 +1856,7 @@ const Content: FC<ContentProps> = ({
     }
   }
 
-  const handlePaneTitleChangeCompleted = (event: SyntheticEvent<HTMLInputElement>, pane: Pane) => {
+  const handlePaneTitleChangeCompleted = (pane: Pane, event: SyntheticEvent<HTMLInputElement>) => {
     const newPanes = clonePanes()
     const newPane = findPane(pane.key, newPanes)
     newPane.title = event.target.value
@@ -1850,16 +1865,24 @@ const Content: FC<ContentProps> = ({
     }
     panesRef.current = newPanes
     setPanes(newPanes)
+    setActivePane(newPane)
+    setActiveKey(newPane.key)
     event.target.style.width = event.target.value.length * 8
     event.target.readOnly = true
     event.target.value = newPane.title
-    event.target.blur()    
+    //event.target.blur()    
     if(newPane.editor) {
       const operation = new Operation(newPane.editor, OperationType.RENAME_EDITOR, [], false, [], '', null, null, null, null, false, 0, 0, 0, 0, newPane.title, pane.title)
       newPane.editor.operationService.addOperation(operation)
       setDocumentModified(true)
       newPane.editor.triggerOperationChange()
     }
+    // const element = document.getElementById('pane-title-label-' + pane.key)
+    // if(element) {
+    //   const input = element as HTMLInputElement
+    //   input.style.display = 'inline'
+    // }
+    //event.target.style.display = 'none'
   }
 
   const clonePanes = () => {
@@ -2070,15 +2093,22 @@ const Content: FC<ContentProps> = ({
                     <div>
                         <Input id={`pane-title-input-${pane.key}`} defaultValue={pane.title} size='small' variant='borderless' maxLength={32}
                         style={{width: '50px', display: 'inline'}} 
+                        // onCompositionUpdate={e => handlePaneTitleInitialize(pane, e)}
+                        // onCompositionEnd={e => handlePaneTitleInitialize(pane, e)}
+                        // onEnded={e => handlePaneTitleInitialize(pane, e)}
                         onChange={e => handlePaneTitleChange(pane, e.target.value, e)} 
                         readOnly={true}
                         onPointerEnter={handlePaneTitlePointerEnter}
-                        onDoubleClick={handlePaneTitleDoubleClick}
-                        //onPressEnter={e => handlePaneTitleChangeCompleted(e, pane)} 
-                        onBlur={ e => handlePaneTitleChangeCompleted(e, pane)}
+                        onDoubleClick={e => handlePaneTitleDoubleClick(pane, e)}
+                        onPressEnter={e => handlePaneTitleChangeCompleted(pane, e)} 
+                        onBlur={ e => handlePaneTitleChangeCompleted(pane, e)}
+                        //onFocus={e => handlePaneTitleDoubleClick(pane, e)}
                         onPointerDown={e => handlePaneTitleClick(pane.key, e)}
                         />
-                        {/* <label style={{display: 'inline'}}>{pane.title}</label>  */}
+                        {/* <label id={`pane-title-label-${pane.key}`} style={{display: 'inline'}}
+                        onDoubleClick={ e => handlePaneTitleLabelDoubleClick(pane, e)}
+                        onPointerDown={e => handlePaneTitleClick(pane.key, e)}
+                        >{pane.title}</label> */}
                     </div>
                 </Dropdown>
               return <TabPane tab={paneTitle} key={pane.key} closable={pane.key == activeKey} />
