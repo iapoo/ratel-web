@@ -100,7 +100,10 @@ export class EditorHelper {
                 editor.contentLayer.addEditorItem(editorItem)
                 editor.selectionLayer.addEditorItem(editorItem)
             })
-            
+            const newEditorItems = EditorHelper.generateEditorSelections(editor)
+            const operation = new Operation(editor, OperationType.ADD_SELECTION_ITEMS, newEditorItems, true)
+            editor.operationService.addOperation(operation)
+            editor.triggerOperationChange()
         }
     }
 
