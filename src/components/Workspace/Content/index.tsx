@@ -154,8 +154,8 @@ const Content: FC<ContentProps> = ({
   const [tableEdittable, setTableEdittable, ] = useState<boolean>(false)
   const [editorCursor, setEditorCursor, ] = useState<string>(Consts.EDITOR_CURSOR_AUTO)
   const newTabIndex = useRef(4)
-  //const [ panes, setPanes, ] = useState(initialPanes)
-  const panesRef = useRef(initialPanes)
+  const [ panes, setPanes, ] = useState(initialPanes)
+  //const panesRef = useRef(initialPanes)
   const sensor = useSensor(PointerSensor, {activationConstraint: {distance: 10}})
   //const [paneTititle, setPaneTitle, ] = useState<string>('hello')
   //const editorRef = useRef(null)
@@ -188,7 +188,7 @@ const Content: FC<ContentProps> = ({
     }
   })
 
-  const updateEditorSize = () => {
+  const updateEditorSize = (panes: Pane[]) => {
     const contentContainer = document.getElementById('content-container')
     if(contentContainer) {
       const horizontalSpace = contentContainer.clientWidth - MIN_VISUAL_SIZE
@@ -233,7 +233,7 @@ const Content: FC<ContentProps> = ({
         setEditorHeight(newEditorHeight)
       }
     }
-    const currentPane = findCurrentPane()
+    const currentPane = findCurrentPane(panes)
     if(contentContainer && currentPane) {
       if(currentPane.initialized) {
         if(contentContainer.scrollWidth > contentContainer.clientWidth) {
@@ -290,9 +290,10 @@ const Content: FC<ContentProps> = ({
     setInitialized(true)
     await Engine.initialize()
     //let firstEditor: Editor | undefined = undefined
-    const panes = panesRef.current
-    for (let i = 0; i < panes.length; i++) {
-      const pane = panes[i]
+    //const panes = panesRef.current
+    const newPanes = clonePanes()
+    for (let i = 0; i < newPanes.length; i++) {
+      const pane = newPanes[i]
       const canvasId = 'editor-' + pane.key
       const canvas = document.createElement('canvas')
       canvas.width = DEFAULT_PAINTER_WIDTH
@@ -310,7 +311,7 @@ const Content: FC<ContentProps> = ({
       // }
     }
     const container = document.getElementById('editor-container')
-    const editor = panes[0].editor
+    const editor = newPanes[0].editor
     const canvas = editor?.container
     container?.append(canvas!)
     editor?.activate()
@@ -318,12 +319,15 @@ const Content: FC<ContentProps> = ({
     Utils.currentEditor = editor!
     setCurrentEditor(editor!)
     onEditorChange(oldEditor, Utils.currentEditor)
-    updateEditors(panes)
-    panesRef.current = [...panes]
+    updateEditors(newPanes)
+    setPanes(newPanes)
+    //panesRef.current = newPanes
+    setActiveKey(newPanes[0].key)
+    setActivePane(newPanes[0])
     Utils.loadData = loadData
     Utils.checkIfModified = checkIfDocumentModified
+    updateEditorSize(newPanes)
     updateScroll()
-    updateEditorSize()
     checkIfDocumentModified(false)
     oldEditor?.removeSelectionChange(handleSelectionChange)
     Utils.currentEditor.onSelectionChange(handleSelectionChange)
@@ -347,6 +351,7 @@ const Content: FC<ContentProps> = ({
     Utils.currentEditor.onEditorOperationEvent(handleEditorOperationEvent)
     oldEditor?.removeSizeChange(handleEditorSizeChange)
     Utils.currentEditor.onSizeChange(handleEditorSizeChange)
+
   }
 
   const updateScroll = () => {
@@ -361,8 +366,8 @@ const Content: FC<ContentProps> = ({
     }
   }
 
-  const findCurrentPane = () => {
-    const panes = panesRef.current
+  const findCurrentPane = (panes: Pane[]) => {
+    //const panes = panesRef.current
     for (let i = 0; i < panes.length; i++) {
       const pane = panes[i]
       if (pane.editor == Utils.currentEditor) {
@@ -377,7 +382,7 @@ const Content: FC<ContentProps> = ({
     panes.forEach(pane => {
       Utils.editors.push(pane.editor!)
     })
-    updateEditorSize()
+    updateEditorSize(panes)
 
     //Need to hide toolbar & terminate editting operations here
     setTextToolbarVisible(false)
@@ -429,8 +434,8 @@ const Content: FC<ContentProps> = ({
         activePane = pane
       }
     }
-    //setPanes(panes)
-    panesRef.current = panes
+    setPanes(panes)
+    //panesRef.current = panes
     setActiveKey(activeKey)
     setActivePane(activePane)
 
@@ -471,17 +476,18 @@ const Content: FC<ContentProps> = ({
   }
 
   const onTabChange = (newActiveKey: string) => {
-    handleTabChange(newActiveKey, true)
+    handleTabChange(panes, newActiveKey, true)
   }
 
-  const handleTabChange = (newActiveKey: string, requireOperation: boolean) => {
+  const handleTabChange = (panes: Pane[], newActiveKey: string, requireOperation: boolean) => {
     const container = document.getElementById('editor-container')
     setActiveKey(newActiveKey)
     while (container?.hasChildNodes()) {
       container?.removeChild(container.lastChild!)
     }
     let currentPane: Pane | null = null
-    const panes = panesRef.current
+    //const panes = panesRef.current
+    //const panes = clonePanes()
     for (let i = 0; i < panes.length; i++) {
       const pane = panes[i]
       if (pane.key == newActiveKey) {
@@ -498,7 +504,7 @@ const Content: FC<ContentProps> = ({
           setActivePane(pane)
           onEditorChange(oldEditor, Utils.currentEditor)
           
-          if(oldEditor && requireOperation) {
+          if(oldEditor && requireOperation && Utils.currentEditor) {
             let operation = new Operation(Utils.currentEditor, OperationType.SELECT_EDITOR, [], false, [], '', oldEditor, null )
             Utils.currentEditor.operationService.addOperation(operation)
             Utils.currentEditor.triggerOperationChange()
@@ -523,10 +529,12 @@ const Content: FC<ContentProps> = ({
           Utils.currentEditor.onEditorOperationEvent(handleEditorOperationEvent)
           oldEditor?.removeSizeChange(handleEditorSizeChange)
           Utils.currentEditor.onSizeChange(handleEditorSizeChange)
-              }
+        }
       }
     }
     updateEditors(panes)
+    setPanes(panes)
+    //panesRef.current = panes
   }
 
   const refresh = () => {
@@ -717,7 +725,7 @@ const Content: FC<ContentProps> = ({
 
   const addEditor = (requireOperation: boolean, fromEditor: Editor | null, afterEditor: Editor | null, beforeEditor: Editor | null) => {
     const newActiveKey = `${newTabIndex.current++}`
-    const panes = panesRef.current
+    //const panes = panesRef.current
     const newPanes = [ ...panes, ]
     //let newPanes: Pane[] = []
     //newPanes = newPanes.concat(panes)
@@ -767,8 +775,8 @@ const Content: FC<ContentProps> = ({
     } else {
       newPanes.push(pane)
     }
-    //setPanes(newPanes)
-    panesRef.current = newPanes
+    setPanes(newPanes)
+    //panesRef.current = newPanes
     setActiveKey(newActiveKey)
     setActivePane(pane)
     const container = document.getElementById('editor-container')
@@ -817,7 +825,7 @@ const Content: FC<ContentProps> = ({
     let beforeTargetKey: string | null = null
     let beforeEditor: Editor | null = null
     let oldEditor = Utils.currentEditor
-    const panes = panesRef.current
+    //const panes = panesRef.current
     if(!targetKey) { // for undo addEditorr, only happen on last tab because addEditor is for last tab
       for (let i = 0; i < panes.length; i++) {
         const pane = panes[i]
@@ -883,8 +891,8 @@ const Content: FC<ContentProps> = ({
         newActivePane = newPanes[0]
       }
     }
-    //setPanes(newPanes)
-    panesRef.current = newPanes
+    setPanes(newPanes)
+    //panesRef.current = newPanes
     setActiveKey(newActiveKey)
     setActivePane(newActivePane)
 
@@ -922,20 +930,28 @@ const Content: FC<ContentProps> = ({
     }
 
     //Canvas didn't update, here to update
-    handleTabChange(newActiveKey, requireOperation)
+    handleTabChange(newPanes, newActiveKey, requireOperation)
   }
 
   const renameSheet = (editor: Editor, fromName: string, toName: string) => {
-    const panes = clonePanes()
-    let activatePane = panes[0]
-    panes.forEach(pane => {
+    //const newPanes = panes
+    const newPanes = clonePanes()
+    let activatePane = newPanes[0]
+    newPanes.forEach(pane => {
       if(pane.key == editor.key) {
         pane.title = toName
         editor.title = toName
         activatePane = pane
       }
     })
-    panesRef.current = panes    
+    const element = document.getElementById('pane-title-input-' + editor.key)
+    if(element) {
+      const input = element as HTMLInputElement
+      input.value = toName
+      input.defaultValue = toName
+    }
+    //panesRef.current = newPanes    
+    setPanes(newPanes)
     setDocumentModified(true)
     setActivePane(activatePane)
     setForceUpdate(!forceUpdate)
@@ -947,7 +963,9 @@ const Content: FC<ContentProps> = ({
     if (action === 'add') {
       addEditor(true, null, null, null)
     } else {
-      removeEditor(targetKey, true, null)
+      if(panes.length > 1) {
+        removeEditor(targetKey, true, null)
+      }
     }
   }
 
@@ -957,11 +975,13 @@ const Content: FC<ContentProps> = ({
       Utils.isModified = true
     } else {
       let modified = false
-      Utils.editors.forEach( editor => {
-        if(editor.isModified()) {
-          modified = true
-        }
-      })
+      if(Utils.editors.length > 0) {
+        Utils.editors.forEach( editor => {
+          if(editor.isModified()) {
+            modified = true
+          }
+        })
+      }
       setDocumentModified(modified)
       Utils.isModified = modified
     }
@@ -969,7 +989,7 @@ const Content: FC<ContentProps> = ({
   }
 
   const handleEditorSizeChange = (event: EditorEvent) => {
-    updateEditorSize()
+    updateEditorSize(panes)
   }
 
   const handleEditorOperationEvent = (event: EditorOperationEvent) => {
@@ -1598,21 +1618,21 @@ const Content: FC<ContentProps> = ({
   }
 
   const handleUndoSelectEditor = (operation: Operation) => {
-    const panes = panesRef.current
+    //const panes = panesRef.current
     for (let i = 0; i < panes.length; i++) {
       const pane = panes[i]
       if (pane.editor == operation.afterEditor) {    
-        handleTabChange(pane.key,false)
+        handleTabChange(panes, pane.key,false)
       }
     }
   }
 
   const handleRedoSelectEditor = (operation: Operation) => {
-    const panes = panesRef.current
+    //const panes = panesRef.current
     for (let i = 0; i < panes.length; i++) {
       const pane = panes[i]
       if (pane.editor == operation.editor) {    
-        handleTabChange(pane.key,false)
+        handleTabChange(panes, pane.key,false)
       }
     }
   }
@@ -1740,7 +1760,8 @@ const Content: FC<ContentProps> = ({
       const activeIndex = panes.findIndex((i) => i.key === active.id);
       const overIndex = panes.findIndex((i) => i.key === over?.id);
       panes = arrayMove(panes, activeIndex, overIndex);
-      panesRef.current = panes
+      //panesRef.current = panes
+      setPanes(panes)
       setForceUpdate(!forceUpdate)
     }
   }
@@ -1795,22 +1816,25 @@ const Content: FC<ContentProps> = ({
     const newPanes = clonePanes()
     const newPane = findPane(pane.key, newPanes)
     newPane.title = event.target.value
-    newPane.editor!.title = newPane.title
-    panesRef.current = newPanes
+    if(newPane.editor) {
+      newPane.editor.title = newPane.title
+    }
+    //panesRef.current = newPanes
+    setPanes(newPanes)
     event.target.style.width = event.target.value.length * 8
     event.target.readOnly = true
     event.target.blur()
-    if(pane.editor) {
-      const operation = new Operation(pane.editor, OperationType.RENAME_EDITOR, [], false, [], '', null, null, null, null, false, 0, 0, 0, 0, newPane.title, pane.title)
-      pane.editor.operationService.addOperation(operation)
+    if(newPane.editor) {
+      const operation = new Operation(newPane.editor, OperationType.RENAME_EDITOR, [], false, [], '', null, null, null, null, false, 0, 0, 0, 0, newPane.title, pane.title)
+      newPane.editor.operationService.addOperation(operation)
       setDocumentModified(true)
-      newPane.editor!.triggerOperationChange()
+      newPane.editor.triggerOperationChange()
     }
   }
 
   const clonePanes = () => {
     const newPanes: Pane[] = []
-    const panes = panesRef.current
+    //const panes = panesRef.current
     panes.forEach(pane => {
       const newPane = { title: pane.title, content: pane.content, key: pane.key, editor: pane.editor, initialized: pane.initialized, scrollLeft: pane.scrollLeft, scrollTop: pane.scrollTop, }
       newPanes.push(newPane)
@@ -1995,7 +2019,7 @@ const Content: FC<ContentProps> = ({
         <Tabs type='editable-card' size='small' tabPosition='bottom' onChange={onTabChange} activeKey={activeKey} onEdit = {onEdit} 
           renderTabBar={(tabBarProps: any, DefaultTabBar: any) => (
             <DndContext sensors={[sensor]} onDragEnd={onDragEnd}>
-              <SortableContext items={panesRef.current.map((i) => i.key)} strategy={horizontalListSortingStrategy}>
+              <SortableContext items={panes.map((i) => i.key)} strategy={horizontalListSortingStrategy}>
                 <DefaultTabBar {...tabBarProps} >
                   {(node: any) => (
                     <DraggableTabNode {...node.props} key={node.key}>
@@ -2007,7 +2031,7 @@ const Content: FC<ContentProps> = ({
             </DndContext>
           )}>
           {            
-            panesRef.current.map(pane => {
+            panes.map(pane => {
               const paneTitle = <Dropdown menu={{items: popupPaneTitle(pane.key)}}
                   trigger={['contextMenu']} >
                     <div>
@@ -2021,7 +2045,7 @@ const Content: FC<ContentProps> = ({
                         onBlur={ e => handlePaneTitleChangeCompleted(e, pane)}
                         onPointerDown={e => handlePaneTitleClick(pane.key, e)}
                         />
-                        {/* <label style={{display: 'block'}} ref={editorRef}>{pane.title}</label> */}
+                        <label id={`pane-title-label-${pane.key}`} style={{display: 'block'}}>{pane.title}</label> 
                     </div>
                 </Dropdown>
               return <TabPane tab={paneTitle} key={pane.key} closable={pane.key == activeKey} />
