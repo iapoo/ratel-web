@@ -124,17 +124,11 @@ const Navigator: FC<NavigatorProps> = ({
     if (Utils.currentEditor) {
       Utils.currentEditor.resize(800, 800)
     }
-    if (Utils.updateEditorSize) {
-      Utils.updateEditorSize()
-    }
   }
 
   const zoom = () => {
     if (Utils.currentEditor) {
       Utils.currentEditor.zoom = 1.5
-    }
-    if (Utils.updateEditorSize) {
-      Utils.updateEditorSize()
     }
   }
 

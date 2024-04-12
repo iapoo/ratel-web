@@ -320,7 +320,6 @@ const Content: FC<ContentProps> = ({
     onEditorChange(oldEditor, Utils.currentEditor)
     updateEditors(panes)
     panesRef.current = [...panes]
-    Utils.updateEditorSize = updateEditorSize
     Utils.loadData = loadData
     Utils.checkIfModified = checkIfDocumentModified
     updateScroll()
@@ -346,6 +345,8 @@ const Content: FC<ContentProps> = ({
     Utils.currentEditor.onEditorModeChange(handleEditorModeChange)
     oldEditor?.removeEditorOperationEvent(handleEditorOperationEvent)
     Utils.currentEditor.onEditorOperationEvent(handleEditorOperationEvent)
+    oldEditor?.removeSizeChange(handleEditorSizeChange)
+    Utils.currentEditor.onSizeChange(handleEditorSizeChange)
   }
 
   const updateScroll = () => {
@@ -465,6 +466,8 @@ const Content: FC<ContentProps> = ({
     Utils.currentEditor.onEditorModeChange(handleEditorModeChange)
     oldEditor?.removeEditorOperationEvent(handleEditorOperationEvent)
     Utils.currentEditor.onEditorOperationEvent(handleEditorOperationEvent)
+    oldEditor?.removeSizeChange(handleEditorSizeChange)
+    Utils.currentEditor.onSizeChange(handleEditorSizeChange)
   }
 
   const onTabChange = (newActiveKey: string) => {
@@ -518,7 +521,9 @@ const Content: FC<ContentProps> = ({
           Utils.currentEditor.onEditorModeChange(handleEditorModeChange)
           oldEditor?.removeEditorOperationEvent(handleEditorOperationEvent)
           Utils.currentEditor.onEditorOperationEvent(handleEditorOperationEvent)
-        }
+          oldEditor?.removeSizeChange(handleEditorSizeChange)
+          Utils.currentEditor.onSizeChange(handleEditorSizeChange)
+              }
       }
     }
     updateEditors(panes)
@@ -795,6 +800,8 @@ const Content: FC<ContentProps> = ({
     Utils.currentEditor.onEditorModeChange(handleEditorModeChange)
     oldEditor?.removeEditorOperationEvent(handleEditorOperationEvent)
     Utils.currentEditor.onEditorOperationEvent(handleEditorOperationEvent)
+    oldEditor?.removeSizeChange(handleEditorSizeChange)
+    Utils.currentEditor.onSizeChange(handleEditorSizeChange)
     if(requireOperation) {
       let operation = new Operation(Utils.currentEditor, OperationType.ADD_EDITOR, [])
       Utils.currentEditor.operationService.addOperation(operation)
@@ -903,6 +910,8 @@ const Content: FC<ContentProps> = ({
     Utils.currentEditor.onEditorModeChange(handleEditorModeChange)
     oldEditor?.removeEditorOperationEvent(handleEditorOperationEvent)
     Utils.currentEditor.onEditorOperationEvent(handleEditorOperationEvent)
+    oldEditor?.removeSizeChange(handleEditorSizeChange)
+    Utils.currentEditor.onSizeChange(handleEditorSizeChange)
 
     if(Utils.currentEditor) {
       if(requireOperation) {
@@ -957,6 +966,10 @@ const Content: FC<ContentProps> = ({
       Utils.isModified = modified
     }
 
+  }
+
+  const handleEditorSizeChange = (event: EditorEvent) => {
+    updateEditorSize()
   }
 
   const handleEditorOperationEvent = (event: EditorOperationEvent) => {
