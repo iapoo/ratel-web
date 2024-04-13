@@ -748,7 +748,7 @@ const Content: FC<ContentProps> = ({
 
   const addEditor = (requireOperation: boolean, fromEditor: Editor | null, afterEditor: Editor | null, beforeEditor: Editor | null) => {
     const newActiveKey = `${newTabIndex.current++}`
-    //const panes = panesRef.current
+    const panes = panesRef.current
     const newPanes = [ ...panes, ]
     //let newPanes: Pane[] = []
     //newPanes = newPanes.concat(panes)
@@ -849,7 +849,7 @@ const Content: FC<ContentProps> = ({
     let beforeTargetKey: string | null = null
     let beforeEditor: Editor | null = null
     let oldEditor = Utils.currentEditor
-    //const panes = panesRef.current
+    const panes = panesRef.current
     if(!targetKey) { // for undo addEditorr, only happen on last tab because addEditor is for last tab
       for (let i = 0; i < panes.length; i++) {
         const pane = panes[i]
@@ -876,7 +876,8 @@ const Content: FC<ContentProps> = ({
     let newActiveKey = activeKey
     let lastIndex = -1
     let newActivePane: Pane | null = null
-    const newPanes = panes.filter(pane => pane.key !== theTargetKey)
+    let newPanes = panes.filter(pane => pane.key !== theTargetKey)
+    newPanes = [...newPanes]
     newActivePane = newPanes[0]
     if(!targetKey) {
       lastIndex = panes.length - 2
