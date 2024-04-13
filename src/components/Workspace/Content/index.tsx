@@ -1688,11 +1688,15 @@ const Content: FC<ContentProps> = ({
   }
   
   const handleUndoMoveEditor = (operation: Operation) => {
-    addEditor(false, operation.editor, operation.afterEditor, operation.beforeEditor)
+    if(operation.origEditor) {
+      handleMoveEditor(operation.origEditor.key, operation.editor.key, false)
+    }
   }
 
   const handleRedoMoveEditor = (operation: Operation) => {
-    removeEditor(null, false, operation.editor)
+    if(operation.origEditor) {
+      handleMoveEditor(operation.editor.key, operation.origEditor.key, false)
+    }
   }
 
   const handleDelete = () => {
@@ -1781,17 +1785,31 @@ const Content: FC<ContentProps> = ({
   }
 
   const onDragEnd = ({active, over} : DragEndEvent) => {
-    if (active.id !== over?.id) {
+    if(over) {
+      handleMoveEditor(active.id, over.id, true)
+    }
+  }
+
+  const handleMoveEditor = (fromKey: string, toKey: string, requireOperation: boolean) => {
+    if (fromKey !== toKey) {
       let panes = clonePanes()
-      const activeIndex = panes.findIndex((i) => i.key === active.id);
-      const overIndex = panes.findIndex((i) => i.key === over?.id);
+      const activeIndex = panes.findIndex((i) => i.key === fromKey);
+      const activePane = panes[activeIndex]
+      const overIndex = panes.findIndex((i) => i.key === toKey);
+      const origPane = panes[overIndex]
       panes = arrayMove(panes, activeIndex, overIndex);
       panesRef.current = panes
       setPanes(panes)
       setForceUpdate(!forceUpdate)
+      if(activePane.editor && requireOperation) {
+        const operation = new Operation(activePane.editor, OperationType.MOVE_EDITOR, [], false, [], '', null, null, null, null, false, 0, 0, 0, 0, '', '', origPane.editor)
+        activePane.editor.operationService.addOperation(operation)
+      }
+      if(Utils.currentEditor)  {
+        Utils.currentEditor.triggerOperationChange()
+      }
     }
   }
-
 
   const handleRenamePaneTitle = (key: string) => {
     const element = document.getElementById('pane-title-input-' + activeKey)
@@ -1855,6 +1873,16 @@ const Content: FC<ContentProps> = ({
       onTabChange(key)
     }
   }
+
+
+
+  const handlePaneTitleChangeBlur = (pane: Pane, event: SyntheticEvent<HTMLInputElement>) => {
+    if(!event.target.readOnly) {
+      handlePaneTitleChangeCompleted(pane, event)
+    }
+    
+  }
+
 
   const handlePaneTitleChangeCompleted = (pane: Pane, event: SyntheticEvent<HTMLInputElement>) => {
     const newPanes = clonePanes()
@@ -2101,7 +2129,7 @@ const Content: FC<ContentProps> = ({
                         onPointerEnter={handlePaneTitlePointerEnter}
                         onDoubleClick={e => handlePaneTitleDoubleClick(pane, e)}
                         onPressEnter={e => handlePaneTitleChangeCompleted(pane, e)} 
-                        onBlur={ e => handlePaneTitleChangeCompleted(pane, e)}
+                        onBlur={ e => handlePaneTitleChangeBlur(pane, e)}
                         //onFocus={e => handlePaneTitleDoubleClick(pane, e)}
                         onPointerDown={e => handlePaneTitleClick(pane.key, e)}
                         />
