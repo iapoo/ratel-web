@@ -1023,13 +1023,13 @@ export class Editor extends Painter {
           const targetPoint = this.findEditorItemPoint(clickedEditorItem, e.x, e.y)
           const [ targetRow, targetRowIndex, ] = this.isTableRowtResizable(clickedEditorItem, targetPoint.x, targetPoint.y)
           const [ targetColumn, targetColumnIndex, ] = this.isTableColumnResizable(clickedEditorItem, targetPoint.x, targetPoint.y)
+          this._target = clickedEditorItem
           if (targetRow) {
             // console.log('========1')
             this.checkAndEndTextEdit()
             this.finishTextEditOperation()
             this._targetRowResizing = true
             this._targetRowIndex = targetRowIndex
-            this._target = clickedEditorItem
             if (this._targetItem) {
               this._targetItem.shape.focused = false
             }
@@ -1044,7 +1044,6 @@ export class Editor extends Painter {
             this.finishTextEditOperation()
             this._targetColumnResizing = targetColumn
             this._targetColumnIndex = targetColumnIndex
-            this._target = clickedEditorItem
             if (this._targetItem) {
               this._targetItem.shape.focused = false
             }
@@ -1306,8 +1305,8 @@ export class Editor extends Painter {
       if (this._textInputStatus === 'CHINESE_TYPING') {
         return
       }
-      if (this._targetItem && e.data) {
-        const [origEditorItemInfo, startIndex, endIndex] = this.beginShapeTextEditOperation(this._targetItem)
+      if (this._target && this._targetItem && e.data) {
+        const [origEditorItemInfo, startIndex, endIndex] = this.beginShapeTextEditOperation(this._target)
         this._targetItem.shape.insert(e.data)
         this.finishShapeTextEditOperation(origEditorItemInfo, startIndex, endIndex)
         this.triggerTextEditStyleChange()
@@ -1321,8 +1320,8 @@ export class Editor extends Painter {
     })
     this._textArea.addEventListener('compositionend', (e: CompositionEvent) => {
       if (this._textInputStatus === 'CHINESE_TYPING') {
-        if (this._targetItem) {
-          const [origEditorItemInfo, startIndex, endIndex] = this.beginShapeTextEditOperation(this._targetItem)
+        if (this._target && this._targetItem) {
+          const [origEditorItemInfo, startIndex, endIndex] = this.beginShapeTextEditOperation(this._target)
           this._targetItem.shape.insert(e.data)
           this.finishShapeTextEditOperation(origEditorItemInfo, startIndex, endIndex)
           this.triggerTextEditStyleChange()
@@ -1420,8 +1419,8 @@ export class Editor extends Painter {
       return
     }
     if (this._textFocused && e.key === 'Backspace') {
-      if (this._targetItem) {
-        const [origEditorItemInfo, startIndex, endIndex] = this.beginShapeTextEditOperation(this._targetItem)
+      if (this._target && this._targetItem) {
+        const [origEditorItemInfo, startIndex, endIndex] = this.beginShapeTextEditOperation(this._target)
         this._targetItem.shape.handleBackspace()
         this.finishShapeTextEditOperation(origEditorItemInfo, startIndex, endIndex)
       } else if (this._target) {
@@ -1460,14 +1459,14 @@ export class Editor extends Painter {
       }
     }
     if (this._textFocused && e.key === 'Enter') {
-      if (this._targetItem) {
-        const [origEditorItemInfo, startIndex, endIndex] = this.beginShapeTextEditOperation(this._targetItem)
+      if (this._target && this._targetItem) {
+        const [origEditorItemInfo, startIndex, endIndex] = this.beginShapeTextEditOperation(this._target)
         this._targetItem.shape.handleReturn()
-        this.finishShapeTextEditOperation(origEditorItemInfo)
+        this.finishShapeTextEditOperation(origEditorItemInfo, startIndex, endIndex)
       } else if (this._target) {
         const [origEditorItemInfo, startIndex, endIndex] = this.beginShapeTextEditOperation(this._target)
         this._target.shape.handleReturn()
-        this.finishShapeTextEditOperation(origEditorItemInfo)
+        this.finishShapeTextEditOperation(origEditorItemInfo, startIndex, endIndex)
       }
     }
   }
@@ -2124,6 +2123,36 @@ export class Editor extends Painter {
   }
 
   private handleTableTextEdit(operation: Operation, isUndo: boolean) {
+    let editorItemInfo = operation.origItemInfos[0]
+    let startIndex = operation.origTextStart
+    let endIndex = operation.origTextEnd
+    let tableCellIndex = operation.tableCellIndex
+    if(!isUndo) {
+      editorItemInfo = operation.itemInfos[0]
+      startIndex = operation.textStart
+      endIndex =  operation.textEnd
+    }
+    const editorItem = this.findEditorItemById(editorItemInfo.id)
+    if(editorItem) {
+      const newEditorItem =  this.updateEditorItemDetail(editorItem as Item, editorItemInfo)
+      const newTableEntity = newEditorItem as TableEntity
+      const tableCell = newTableEntity.items[tableCellIndex]
+      this.selectionLayer.removeAllEditorItems()
+      this.selectionLayer.addEditorItem(newEditorItem)
+      this._target = newEditorItem
+      this._targetItem = tableCell
+      this._targetItemIndex = tableCellIndex
+      this._textArea.focus()
+      this.checkAndStartTextEdit()
+      tableCell.shape.focused = true
+      tableCell.shape.select(startIndex, endIndex)
+      //editorItem.shape.enter(150, 150)
+      //this.updateTextCursorLocation(editorItem, 380, 280)            
+      this._textArea.textContent = ''
+    }
+  }
+
+  private handleTableTextEditOld(operation: Operation, isUndo: boolean) {
     if(isUndo) {
       this.handleUpdateEditorItem(operation.itemInfos[0])
     } else {
@@ -2760,8 +2789,13 @@ export class Editor extends Painter {
   }
 
   private beginShapeTextEditOperation(editorItem: EditorItem): [EditorItemInfo, number, number] {
-    const editorItemInfo = OperationHelper.saveEditorItem(editorItem)    
-    return [editorItemInfo, editorItem.shape.startIndex, editorItem.shape.endIndex]
+    if(this._target && this._targetItem) {
+      const editorItemInfo = OperationHelper.saveEditorItem(editorItem)    
+      return [editorItemInfo, this._targetItem.shape.startIndex, this._targetItem.shape.endIndex]
+    } else {
+      const editorItemInfo = OperationHelper.saveEditorItem(editorItem)    
+      return [editorItemInfo, editorItem.shape.startIndex, editorItem.shape.endIndex]
+    }
   }
 
   private finishOperation(editorItem: EditorItem) {
@@ -2798,7 +2832,7 @@ export class Editor extends Painter {
   private finishShapeTextEditOperation(origEditorItemInfo: EditorItemInfo, startIndex: number, endIndex: number) {
     if(this._target && this._targetItem) {
       let editorItemInfo =  OperationHelper.saveEditorItem(this._target)
-      let operation = new Operation(this, OperationType.SHAPE_TEXT_EDIT, [editorItemInfo],true, [origEditorItemInfo], '', null, null, null, null, true, this._target.shape.startIndex, this._target.shape.endIndex, endIndex, startIndex, endIndex)
+      let operation = new Operation(this, OperationType.TABLE_TEXT_EDIT, [editorItemInfo],true, [origEditorItemInfo], '', null, null, null, null, true, this._targetItem.shape.startIndex, this._targetItem.shape.endIndex, startIndex, endIndex, '', '', null, this._targetItemIndex)
       this._operationService.addOperation(operation)
       this.triggerOperationChange()
       this._startEditorItemInfos.length = 0
