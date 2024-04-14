@@ -49,6 +49,7 @@ const Header: FC<HeaderProps> = ({
   const ON_LOGIN_OPEN = 'Open'
   const ON_LOGIN_NONE = 'None'
 
+  const [forceUpdate, setForceUpdate, ] = useState<boolean>(false)
   const [initialized, setInitialized,] = useState<boolean>(false)
   const [online, setOnline,] = useState<boolean>(false)
   const [userInfo, setUserInfo,] = useState<UserInfo | null>(null)
@@ -90,6 +91,7 @@ const Header: FC<HeaderProps> = ({
   const [ connectorLineStartArrow, setConnectorLineStartArrow, ] = useState<string>(ConnectorArrowTypes[0].name)
   const [ connectorLineEndArrow, setConnectorLineEndArrow, ] = useState<string>(ConnectorArrowTypes[0].name)
   const [ connectorSelected, setConnectorSelected, ] = useState<boolean>(false)
+  const timerCountRef = useRef(0)
 
   useEffect(() => {
     if (!initialized) {
@@ -111,17 +113,25 @@ const Header: FC<HeaderProps> = ({
       }
       setDocumentModifiedText(modifiedText)
       const onlineResult = await RequestUtils.isOnline()
+      //console.log(`online is ${onlineResult} ${timerCountRef.current} ${forceUpdate}` )
       setOnline(onlineResult)
       setUserInfo(RequestUtils.userInfo)
+      // if(timerCountRef.current >= 30) {
+      //   timerCountRef.current = 0
+      // } else {
+        timerCountRef.current = timerCountRef.current + 1
+//      }
+      setForceUpdate(old => {
+        return !old
+      })
     }, 2000)
 
-    const autoSaveTimer = setInterval(async () => {
-      handleAutoSave()
-    }, 60000)
+    // const autoSaveTimer = setInterval(async () => {
+    // }, 60000)
 
     return () => {
       clearInterval(timer)
-      clearInterval(autoSaveTimer)
+      // clearInterval(autoSaveTimer)
     }
   }
 
@@ -419,9 +429,13 @@ const Header: FC<HeaderProps> = ({
     setDisableFileName(false)
   }
 
-  const handleAutoSave = async () => {
-    if (online) {
-      doHandleFileSave()
+  const handleAutoSave = () => {
+    //console.log(`Autosave is started`)
+    //console.log(`online is ${online} ${timerCountRef.current}, ${forceUpdate},  ${selectedDocumentId}, ${selectedDocumentName}, ${selectedFolderId}` )
+    //const online = await RequestUtils.isOnline()
+    if (online && timerCountRef.current >= 300 && selectedDocumentId) {
+      timerCountRef.current = 0
+      doHandleAutoFileSave(selectedDocumentId, selectedDocumentName, selectedFolderId)
     } else {
       // messageApi.open({
       //   type: 'warning',
@@ -429,6 +443,33 @@ const Header: FC<HeaderProps> = ({
       // })
     }
   }
+
+  //UI & Timer will call here and so some state need to be provided first
+  const doHandleAutoFileSave = (selectedDocumentId: number, selectedDocumentName: string, selectedFolderId: number | null) => {
+    const storage = new StorageService()
+    storage.editors = Utils.editors
+    storage.save()
+    const documentData = storage.storageData
+    const documentContent = JSON.stringify(documentData)
+    console.log(documentContent)
+    const saveDocumentData = async () => {
+      let documentData = null
+      documentData = await RequestUtils.updateDocument(selectedDocumentId, selectedDocumentName, documentContent, selectedFolderId)
+      if (documentData.data?.success) {
+        console.log('Save document with data: ', documentData.data.data)
+        Utils.editors.forEach(editor => {
+          editor.resetModified()
+        })
+      } else {
+        console.log('Save document with error: ', documentData.data)
+        alert(`${intl.formatMessage({ id: 'workspace.header.alert-failed-ave-document' })} ${documentData.data.message}`)
+      }
+    }
+    saveDocumentData()
+  }
+
+  handleAutoSave()
+
 
   const handleFileSave = () => {
     if (online) {
@@ -446,28 +487,10 @@ const Header: FC<HeaderProps> = ({
         Utils.checkIfModified(false)
       }
     } else {
-      const storage = new StorageService()
-      storage.editors = Utils.editors
-      storage.save()
-      const documentData = storage.storageData
-      const documentContent = JSON.stringify(documentData)
-      console.log(documentContent)
-      const saveDocumentData = async () => {
-        let documentData = null
-        documentData = await RequestUtils.updateDocument(selectedDocumentId, selectedDocumentName, documentContent, selectedFolderId)
-        if (documentData.data?.success) {
-          console.log('Save document wwith data: ', documentData.data.data)
-          Utils.editors.forEach(editor => {
-            editor.resetModified()
-          })
-        } else {
-          console.log('Save document with error: ', documentData.data)
-          alert(`${intl.formatMessage({ id: 'workspace.header.alert-failed-ave-document' })} ${documentData.data.message}`)
-        }
-      }
-      saveDocumentData()
+      doHandleAutoFileSave(selectedDocumentId, selectedDocumentName, selectedFolderId)
     }
   }
+
 
   const handleExport = () => {
     if (Utils.currentEditor) {
