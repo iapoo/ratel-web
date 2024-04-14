@@ -1284,7 +1284,7 @@ export class Editor extends Painter {
 
   public invalideHolder() {
     this._selectionLayer.invalidateLayer()
-    //this._hoverLayer.invalidateLayer()
+    this._hoverLayer.invalidateLayer()
   }
 
   private initializeTextArea () {
@@ -2045,7 +2045,7 @@ export class Editor extends Painter {
       if(found) {
         break;
       }
-    }
+    }    
   }
 
   private handleAddEditorItem(editorItemInfo: EditorItemInfo) {
@@ -2149,6 +2149,7 @@ export class Editor extends Painter {
       //editorItem.shape.enter(150, 150)
       //this.updateTextCursorLocation(editorItem, 380, 280)            
       this._textArea.textContent = ''
+      this.handleTableActiveCellShape()
     }
   }
 
@@ -2181,12 +2182,20 @@ export class Editor extends Painter {
       const id = editorItemInfo.id
       this.handleRemoveEditorItem(id)
     })
+    this.selectionLayer.removeAllEditorItems()
+    this.triggerSelectionChange()
+    this.checkAndEndTextEdit()
+    this._target = undefined
+    this._targetItem = undefined
+    this.handleTableActiveCellShape()
   }
 
 
   private handleOperationUndoRemoveItems(items: EditorItemInfo[]) {
     items.forEach(editorItemInfo => {
-      this.handleAddEditorItem(editorItemInfo)
+      const editorItem = this.handleAddEditorItem(editorItemInfo)
+      this.selectionLayer.addEditorItem(editorItem)
+      this.triggerSelectionChange()
     })
   }
 
@@ -2219,7 +2228,9 @@ export class Editor extends Painter {
 
   private handleOperationRedoAddItems(items: EditorItemInfo[]) {
     items.forEach(editorItemInfo => {
-      this.handleAddEditorItem(editorItemInfo)
+      const editorItem = this.handleAddEditorItem(editorItemInfo)
+      this.selectionLayer.addEditorItem(editorItem)
+      this.triggerSelectionChange()
     })
   }
 
@@ -2229,6 +2240,12 @@ export class Editor extends Painter {
       const id = editorItemInfo.id
       this.handleRemoveEditorItem(id)
     })
+    this.selectionLayer.removeAllEditorItems()
+    this.triggerSelectionChange()
+    this.checkAndEndTextEdit()
+    this._target = undefined
+    this._targetItem = undefined
+    this.handleTableActiveCellShape()
   }
 
   private handleOperationRedoUpdateItems(items: EditorItemInfo[]) {
