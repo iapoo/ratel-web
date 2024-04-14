@@ -49,6 +49,7 @@ export function isDocument(source:  Folder | Document | undefined ): source is D
 export class RequestUtils {
 
     private static online_: boolean = false
+    private static checkTime_: number = 0
     private static userName_: string = ''
     private static password_: string = ''
     private static token_: string = ''
@@ -183,22 +184,43 @@ export class RequestUtils {
         const nowTime = moment().valueOf()
         const token = localStorage.getItem('auth.token')
         RequestUtils.token = token == null ? '' : token
+        console.log(`isOnlie == ${RequestUtils.token}`)
         if(!RequestUtils.token) {
+            console.log(`isOnlie == checkpoint = 1`)
             return false
         }
         if(nowTime - RequestUtils.lastCheckTime_ > RequestUtils.checkTimeInterval_) {
             RequestUtils.lastCheckTime_ = nowTime
             const online = await RequestUtils.checkOnline()
             if(online) {
+                RequestUtils.checkTime_ = 0
+                console.log(`isOnlie == checkpoint = 2`)
                 return true;
             } else {
+                console.log(`isOnlie == checkpoint = 3`)
                 return false;
             }
         } else {
             if(RequestUtils.online_) {
+                console.log(`isOnlie == checkpoint = 4`)
                 return true
+            } else if(RequestUtils.checkTime_ < 5) {
+                RequestUtils.checkTime_ = RequestUtils.checkTime_ + 1
+                const online = await RequestUtils.checkOnline()
+                if(online) {
+                    RequestUtils.checkTime_ = 0
+                    console.log(`isOnlie == checkpoint = 5`)
+                    return true;
+                } else {
+                    console.log(`isOnlie == checkpoint = 6`)
+                    return false;
+                }
+            } else {
+                console.log(`isOnlie == checkpoint = 7`)
+                return false
             }
         }
+        console.log(`isOnlie == checkpoint = 8`)
         return false
     }
 
