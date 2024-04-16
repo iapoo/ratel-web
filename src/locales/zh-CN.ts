@@ -28,6 +28,7 @@ export default {
   'workspace.header.alert-failed-save-document': '文件保存失败, 消息: ',
   'workspace.header.button-login-title': '登录',
   'workspace.header.button-logout-title': '退出',
+  'workspace.header.button-register-title': '注册',
   'workspace.header.document-modified-text-yes': '[已修改]',
   'workspace.header.document-modified-text-no': '[未修改]',
   'workspace.header.menu-edit': '编辑',
