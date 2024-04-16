@@ -49,6 +49,10 @@ const Header: FC<HeaderProps> = ({
   const ON_LOGIN_OPEN = 'Open'
   const ON_LOGIN_NONE = 'None'
 
+  const STAGING_DOCUMENT_ID = 'stagingDocumentId'
+  const STAGING_DOCUMENT_NAME = 'stagingDocumentName'
+  const STAGING_FOLDER_ID = 'stagingFolderId'
+
   const [forceUpdate, setForceUpdate, ] = useState<boolean>(false)
   const [initialized, setInitialized,] = useState<boolean>(false)
   const [online, setOnline,] = useState<boolean>(false)
@@ -102,7 +106,7 @@ const Header: FC<HeaderProps> = ({
 
   const initialize = () => {
     setInitialized(true)
-    refreshNewDocumentName()
+    refreshNewDocumentName()    
     const timer = setInterval(async () => {
       if (Utils.checkIfModified) {
         Utils.checkIfModified(false)
@@ -129,12 +133,28 @@ const Header: FC<HeaderProps> = ({
     // const autoSaveTimer = setInterval(async () => {
     // }, 60000)
 
+    const delayTimer = setTimeout(() => {
+      loadStagingDocument()
+    }, 2000)
     return () => {
       clearInterval(timer)
+      clearTimeout(delayTimer)
       // clearInterval(autoSaveTimer)
     }
   }
 
+  const loadStagingDocument = async () => {
+    const onlineResult = await RequestUtils.isOnline()
+    const documentId = localStorage.getItem(STAGING_DOCUMENT_ID)
+    const documentName = localStorage.getItem(STAGING_DOCUMENT_NAME)
+    let folderId: string | number | null = localStorage.getItem(STAGING_FOLDER_ID)
+    if(folderId && folderId != 'null') {
+      folderId = parseInt(folderId)
+    }
+    if(onlineResult &&  documentId ) {
+      handleOpenFileWindowOk(parseInt(documentId), documentName, folderId as number)
+    }    
+  }
   const refresh = () => {
     if (previousEditor) {
       previousEditor.removeSelectionChange(handleSelectionChange)
@@ -372,6 +392,9 @@ const Header: FC<HeaderProps> = ({
           setSelectedDocumentId(documentId)
           setSelectedFolderId(documentData.data.data.folderId)
           setSelectedDocumentName(documentData.data.data.documentName)
+          localStorage.setItem(STAGING_DOCUMENT_ID, `${documentId}`)
+          localStorage.setItem(STAGING_FOLDER_ID, `${documentData.data.data.folderId}`)
+          localStorage.setItem(STAGING_DOCUMENT_NAME, `${documentData.data.data.documentName}`)
         } else {
           console.log(`Load document failed: documentId = ${documentId}`)
         }
