@@ -7,7 +7,7 @@ import { setInterval } from 'timers'
 import { UserInfo } from '../Utils/RequestUtils'
 import LoginFormWindow from './LoginFormWindow'
 import NewFileWindow from './NewFileWindow';
-import { AlignCenterOutlined, AlignLeftOutlined, AlignRightOutlined, BoldOutlined, CheckOutlined, DownloadOutlined, FileAddOutlined, FileOutlined, FileTextOutlined, FolderOpenOutlined, FormOutlined, ItalicOutlined, RedoOutlined, SaveOutlined, SearchOutlined, SettingOutlined, SolutionOutlined, UnderlineOutlined, UndoOutlined, VerticalAlignBottomOutlined, VerticalAlignMiddleOutlined, VerticalAlignTopOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons';
+import { AlignCenterOutlined, AlignLeftOutlined, AlignRightOutlined, BoldOutlined, CheckOutlined, DownloadOutlined, FileAddOutlined, FileOutlined, FileTextOutlined, FolderOpenOutlined, FormOutlined, ItalicOutlined, RedoOutlined, SaveOutlined, SearchOutlined, SettingOutlined, SolutionOutlined, UnderlineOutlined, UndoOutlined, UserOutlined, VerticalAlignBottomOutlined, VerticalAlignMiddleOutlined, VerticalAlignTopOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons';
 import OpenFileWindow from './OpenFileWindow';
 import { StorageService } from '../Storage';
 import { Rectangle } from '@/components/Resource/LargeIcons';
@@ -29,6 +29,7 @@ import { FlowChartShapeTypes } from '@/components/Rockie/CustomItems/FlowChart/s
 import { FlowChartShapes } from '@/components/Rockie/CustomItems/FlowChart';
 import { DocumentThemeTypes } from '@/components/Rockie/Theme';
 import { EditorHelper } from '@/components/Rockie/Utils';
+import RegisterFormWindowPage from './RegisterFormWindow';
 
 interface HeaderProps {
   previousEditor: Editor | undefined
@@ -59,6 +60,7 @@ const Header: FC<HeaderProps> = ({
   const [userInfo, setUserInfo,] = useState<UserInfo | null>(null)
   const [documentModifiedText, setDocumentModifiedText] = useState<string>(DOCUMENT_MODIFIED_TEXT_NO)
   const [loginFormWindowVisible, setLoginFormWindowVisible,] = useState<boolean>(false)
+  const [registerFormWindowVisible, setRegisterFormWindowVisible,] = useState<boolean>(false)
   const [newFileWindowVisible, setNewFileWindowVisible,] = useState<boolean>(false)
   const [openFileWindowVisible, setOpenFileWindowVisible,] = useState<boolean>(false)
   const [selectedDocumentName, setSelectedDocumentName,] = useState<string>(DOCUMENT_NEW_NAME_PREFIX)
@@ -317,6 +319,10 @@ const Header: FC<HeaderProps> = ({
   const login = (onLogin: string) => {
     setOnLoginFormWindowOk(onLogin)
     setLoginFormWindowVisible(!loginFormWindowVisible)
+  }
+
+  const register = () => {
+    setRegisterFormWindowVisible(!registerFormWindowVisible)
   }
 
   const handleLoginFormWindowCancel = () => {
@@ -1549,6 +1555,15 @@ const Header: FC<HeaderProps> = ({
     { key: 'Export', label: 'Export', },
   ];
 
+  const userProfileMenu: MenuProps['items'] = [
+    { key: 'New', label: 'New', },
+    { key: 'OpenFrom', label: 'OpenFrom', },
+    { key: 'Open', label: 'Open', },
+    { key: 'Save', label: 'Save', },
+    { key: 'SaveAs', label: 'SaveAs', },
+    { key: 'Logout', label: <FormattedMessage id='workspace.header.button-logout-title'/>, onClick: logout},
+  ]
+
   return (
     <div style={{ position: 'absolute', top: '0px', height: `${Utils.HEADER_HEIGHT}px`, width: '100%' }}>
       {contextHolder}
@@ -1584,8 +1599,12 @@ const Header: FC<HeaderProps> = ({
           <div style={{ float: 'right', display: 'table', height: '100%', marginRight: '8px' }}>
             <div style={{ display: 'table-cell', verticalAlign: 'middle', }}>
               {online ? intl.formatMessage({ id: 'workspace.header.welcome' }) + ' ' + userInfo?.customerName + ' ' : " "}
-              <Button type='primary' style={{ display: online ? 'inline' : 'none' }} onClick={logout}><FormattedMessage id='workspace.header.button-logout-title' /></Button>
-              <Button type='primary' style={{ display: online ? 'none' : 'inline' }} hidden={!online} onClick={() => login(ON_LOGIN_NONE)}><FormattedMessage id='workspace.header.button-login-title' /></Button>
+              <Button type='text' style={{ display: online ? 'inline' : 'none' }} onClick={logout}><FormattedMessage id='workspace.header.button-logout-title' /></Button>
+              <Dropdown menu={{items: userProfileMenu}}>
+                <Button shape='circle' icon={<UserOutlined/>} style={{ display: online ? 'inline' : 'none' }} />
+              </Dropdown>
+              <Button type='text' style={{ display: online ? 'none' : 'inline', marginLeft: '8px'}} hidden={!online} onClick={() => login(ON_LOGIN_NONE)}><FormattedMessage id='workspace.header.button-login-title' /></Button>
+              <Button type='primary' style={{ display: online ? 'none' : 'inline' }} hidden={!online} onClick={() => register()}><FormattedMessage id='workspace.header.button-register-title' /></Button>
             </div>
           </div>
         </div>
@@ -1699,6 +1718,7 @@ const Header: FC<HeaderProps> = ({
         </div>
       </div>
       <LoginFormWindow visible={loginFormWindowVisible} x={60} y={60} onWindowCancel={handleLoginFormWindowCancel} onWindowOk={handleLoginFormWindowOk} />
+      <RegisterFormWindowPage visible={registerFormWindowVisible} x={60} y={60} onWindowCancel={handleLoginFormWindowCancel} onWindowOk={handleLoginFormWindowOk} />
       <NewFileWindow visible={newFileWindowVisible} x={60} y={60} onWindowCancel={handleNewFileWindowCancel} onWindowOk={handleNewFileWindowOk} />
       <OpenFileWindow visible={openFileWindowVisible} x={60} y={60} onWindowCancel={handleOpenFileWindowCancel} onWindowOk={handleOpenFileWindowOk} disableFileName={disableFileName} selectedFolderId={selectedFolderId} selectedDocumentId={selectedDocumentId} selectedDocumentName={selectedDocumentName} />
       <Modal title="Modal" centered open={discardModifiedDocumentWindowVisible} onOk={confirmDiscardModifiedDocument} onCancel={cancelDiscardModifiedDocument} okText="确认" cancelText="取消" >
