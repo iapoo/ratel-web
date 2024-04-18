@@ -6,6 +6,8 @@ import type { DraggableData, DraggableEvent } from 'react-draggable';
 import Draggable from 'react-draggable';
 import axios from 'axios'
 import Avatar from 'antd/lib/avatar/avatar'
+import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
 
 interface LoginFormWindowProps {
   visible: boolean;
@@ -18,6 +20,7 @@ interface LoginFormWindowProps {
 const LoginFormWindowPage: FC<LoginFormWindowProps> = ({
   visible, x, y, onWindowCancel, onWindowOk,
 }) => {
+  const intl = useIntl();
   const [dataLoading, setDataLoading,] = useState<boolean>(false)
   const [modalX, setModalX,] = useState<number>(0)
   const [modalY, setModalY,] = useState<number>(0)
@@ -28,6 +31,7 @@ const LoginFormWindowPage: FC<LoginFormWindowProps> = ({
   const draggleRef = useRef<HTMLDivElement>(null);
   const [loginForm,] = Form.useForm()
   const [errorVisible, setErrorVisible,] = useState<boolean>(false)
+  const [errorMessage, setErrorMessage, ] = useState<string>('')
   const [bounds, setBounds, ] = useState({left: 0, top: 0, bottom: 0, right: 0})
 
   if (origModalX != x) {
@@ -112,11 +116,13 @@ const LoginFormWindowPage: FC<LoginFormWindowProps> = ({
         } else if (response.status == 200 && !response.data.success) {
           console.log('Login failed')
           setErrorVisible(true)
+          setErrorMessage(response.data.message)
         }
         console.log('Login data: ', response.data)
       })
       .catch(error => {
         console.log('Login error: ', error)
+        setErrorMessage('System error internally')
       })
   }
 
@@ -139,7 +145,7 @@ const LoginFormWindowPage: FC<LoginFormWindowProps> = ({
             onBlur={() => {}}
             // end
           >
-            Login
+            <FormattedMessage id='workspace.header.login-form-window.window-title' />
           </div>
         }
         centered
@@ -162,25 +168,25 @@ const LoginFormWindowPage: FC<LoginFormWindowProps> = ({
             name='LoginFormWindow'
             form={loginForm}
             className='login-form'
-            initialValues={{ userName: 'Admin', userPassword: 'Password1', remember: true, }}
+            // initialValues={{ userName: 'Admin', userPassword: 'Password1', remember: true, }}
             onFinish={onFinish}
             style={{ maxWidth: '100%', }}
           >
-            <Form.Item name='userName' rules={[{ message: '请输入账号名称!', },]} style={{ marginBottom: '4px', }} >
+            <Form.Item name='userName' rules={[{ required: true, message: <FormattedMessage id='workspace.header.login-form-window.user-name-message' />, },]} style={{ marginBottom: '4px', }} >
               <Input
-                prefix={<Avatar size='small' src='/login/login-user.png' />}
-                placeholder='请输入账号'
+                prefix={<UserOutlined/>}
+                placeholder={intl.formatMessage({ id: 'workspace.header.login-form-window.user-name-placeholder'})}
                 size='middle'
                 bordered={false}
                 style={{ width: '100%', }}
               />
             </Form.Item>
             <div style={{ marginLeft: '40px', width: '280px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', }} />
-            <Form.Item name='userPassword' rules={[{ required: false, message: '请输入账号密码!', },]} style={{ marginBottom: '4px', }}>
+            <Form.Item name='userPassword' rules={[{ required: true, message: <FormattedMessage id='workspace.header.login-form-window.user-password-message' />, },]} style={{ marginBottom: '4px', }}>
               <Input.Password
-                prefix={<Avatar size='small' src='/login/login-password.png' />}
+                prefix={<LockOutlined/>}
                 type='password'
-                placeholder='请输入密码'
+                placeholder={intl.formatMessage({ id: 'workspace.header.login-form-window.user-password-placeholder'})}
                 size='middle'
                 bordered={false}
                 style={{ width: '100%', }}
@@ -188,10 +194,10 @@ const LoginFormWindowPage: FC<LoginFormWindowProps> = ({
             </Form.Item>
             <div style={{ marginLeft: '40px', width: '280px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', }} />
             <Form.Item name='remember' valuePropName='checked' style={{ marginBottom: '4px', }}>
-              <Checkbox style={{ float: 'right', fontSize: '14px', }}>记住密码</Checkbox>
+              <Checkbox style={{ float: 'right', fontSize: '14px', }}><FormattedMessage id='workspace.header.login-form-window.remember-account-title' /></Checkbox>
             </Form.Item>
             {errorVisible && (
-              <Alert message="Alert Message Text" type="success" closable/>
+              <Alert message={errorMessage} type="error" closable/>
             )}
           </Form>
         </div>

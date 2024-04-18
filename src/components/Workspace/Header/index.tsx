@@ -358,6 +358,22 @@ const Header: FC<HeaderProps> = ({
     setRegisterFormWindowVisible(false)
   }
 
+  const handlePasswordFormWindowCancel = () => {
+    setPasswordFormWindowVisible(false)
+  }
+
+  const handlePasswordFormWindowOk = () => {
+    setPasswordFormWindowVisible(false)
+  }
+
+  const handleProfileFormWindowCancel = () => {
+    setProfileFormWindowVisible(false)
+  }
+
+  const handleProfileFormWindowOk = () => {
+    setProfileFormWindowVisible(false)
+  }
+
   const handleNewFileWindowCancel = () => {
     setNewFileWindowVisible(false)
   }
@@ -427,11 +443,11 @@ const Header: FC<HeaderProps> = ({
   }
 
   const handleUpdatePassword = () => {
-
+    setPasswordFormWindowVisible(true)
   }
 
   const handleUpdateProfile = () => {
-
+    setProfileFormWindowVisible(true)
   }
 
   const handleUpdateDocumentName = (e: any) => {
@@ -1576,8 +1592,8 @@ const Header: FC<HeaderProps> = ({
   ];
 
   const userProfileMenu: MenuProps['items'] = [
-    { key: 'UpdatePassword', label: <FormattedMessage id='workspace.header.button-logout-title'/>, onClick: handleUpdatePassword },
-    { key: 'UpdateProfile', label: <FormattedMessage id='workspace.header.button-logout-title'/>, onClick: handleUpdateProfile},
+    { key: 'UpdatePassword', label: <FormattedMessage id='workspace.header.user-profile-update-password-title'/>, onClick: handleUpdatePassword },
+    { key: 'UpdateProfile', label: <FormattedMessage id='workspace.header.user-profile-update-profile-title'/>, onClick: handleUpdateProfile},
     { key: 'Logout', label: <FormattedMessage id='workspace.header.button-logout-title'/>, onClick: logout},
   ]
 
@@ -1621,7 +1637,7 @@ const Header: FC<HeaderProps> = ({
                 <Button shape='circle' icon={<UserOutlined/>} style={{ display: online ? 'inline' : 'none' }} />
               </Dropdown>
               <Button type='text' style={{ display: online ? 'none' : 'inline', marginLeft: '8px'}} hidden={!online} onClick={() => login(ON_LOGIN_NONE)}><FormattedMessage id='workspace.header.button-login-title' /></Button>
-              <Button type='primary' style={{ display: online ? 'none' : 'inline' }} hidden={!online} onClick={() => register()}><FormattedMessage id='workspace.header.button-register-title' /></Button>
+              <Button type='primary' style={{ display: online ? 'none' : 'inline', marginLeft: '8px' }} hidden={!online} onClick={() => register()}><FormattedMessage id='workspace.header.button-register-title' /></Button>
             </div>
           </div>
         </div>
@@ -1736,8 +1752,8 @@ const Header: FC<HeaderProps> = ({
       </div>
       <LoginFormWindow visible={loginFormWindowVisible} x={60} y={60} onWindowCancel={handleLoginFormWindowCancel} onWindowOk={handleLoginFormWindowOk} />
       <RegisterFormWindowPage visible={registerFormWindowVisible} x={60} y={60} onWindowCancel={handleRegisterFormWindowCancel} onWindowOk={handleRegisterFormWindowOk} />
-      <PasswordFormWindowPage visible={registerFormWindowVisible} x={60} y={60} onWindowCancel={handleRegisterFormWindowCancel} onWindowOk={handleRegisterFormWindowOk} />
-      <ProfileFormWindowPage visible={registerFormWindowVisible} x={60} y={60} onWindowCancel={handleRegisterFormWindowCancel} onWindowOk={handleRegisterFormWindowOk} />
+      <PasswordFormWindowPage visible={passwordFormWindowVisible} x={60} y={60} onWindowCancel={handlePasswordFormWindowCancel} onWindowOk={handlePasswordFormWindowOk} />
+      <ProfileFormWindowPage visible={profileFormWindowVisible} x={60} y={60} onWindowCancel={handleProfileFormWindowCancel} onWindowOk={handleProfileFormWindowOk} />
       <NewFileWindow visible={newFileWindowVisible} x={60} y={60} onWindowCancel={handleNewFileWindowCancel} onWindowOk={handleNewFileWindowOk} />
       <OpenFileWindow visible={openFileWindowVisible} x={60} y={60} onWindowCancel={handleOpenFileWindowCancel} onWindowOk={handleOpenFileWindowOk} disableFileName={disableFileName} selectedFolderId={selectedFolderId} selectedDocumentId={selectedDocumentId} selectedDocumentName={selectedDocumentName} />
       <Modal title="Modal" centered open={discardModifiedDocumentWindowVisible} onOk={confirmDiscardModifiedDocument} onCancel={cancelDiscardModifiedDocument} okText="确认" cancelText="取消" >
