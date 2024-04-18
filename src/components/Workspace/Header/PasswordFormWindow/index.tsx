@@ -29,7 +29,7 @@ const PasswordFormWindowPage: FC<PasswordFormWindowProps> = ({
   const [origModalY, setOrigModalY,] = useState<number>(0)
   const [windowVisible, setWindowVisible,] = useState<boolean>(false)
   const draggleRef = useRef<HTMLDivElement>(null);
-  const [registerForm,] = Form.useForm()
+  const [profileForm,] = Form.useForm()
   const [errorVisible, setErrorVisible,] = useState<boolean>(false)
   const [errorMessage, setErrorMessage, ] = useState<string>('')
   const [bounds, setBounds, ] = useState({left: 0, top: 0, bottom: 0, right: 0})
@@ -77,7 +77,7 @@ const PasswordFormWindowPage: FC<PasswordFormWindowProps> = ({
   }
 
   const onOk = () => {
-    registerForm.submit()
+    profileForm.submit()
   }
 
   const onCancel = () => {
@@ -88,42 +88,40 @@ const PasswordFormWindowPage: FC<PasswordFormWindowProps> = ({
 
   const onFinish = (values: any) => {
     console.log('Receive values:', values)
-    const { userName, userPassword, userPasswordConfirmation, alias, email } = values
+    const { oldUserPassword, newUserPassword, } = values
     const data = {
-      'customerName': userName,
-      'password': userPassword, //CryptoJs.SHA1(password).toString()
-      'userPasswordConfirmation': userPasswordConfirmation,
-      'nickName': alias,
-      'email': email,
+      'oldPassword': oldUserPassword, //CryptoJs.SHA1(password).toString()
+      'newPassword': newUserPassword,
     }
     const config = {
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Token': RequestUtils.token
       }
     }
     setErrorVisible(false)
-    axios.post(`${RequestUtils.serverAddress}/register`, data, config)
+    axios.post(`${RequestUtils.serverAddress}/updatePassword`, data, config)
       .then(response => {
         if (response.status == 200 && response.data.success) {
-          console.log('Password succeed')
+          console.log('Update password succeed')
           if (onWindowOk) {
             onWindowOk()
           }
         } else if (response.status == 200 && !response.data.success) {
-          console.log('Password failed')
+          console.log('Update password failed')
           setErrorVisible(true)
           setErrorMessage(response.data.message)
         }
-        console.log('Password data: ', response.data)
+        console.log('Update password data: ', response.data)
       })
       .catch(error => {
-        console.log('Password error: ', error)
+        console.log('Update password error: ', error)
         setErrorMessage('System error internally')
       })
   }
 
   const sendValidationCode = ()=> {
-    const form = registerForm.getFieldValue('validation')
+    const form = profileForm.getFieldValue('validation')
     console.log(`${form}`)
   }
 
@@ -146,7 +144,7 @@ const PasswordFormWindowPage: FC<PasswordFormWindowProps> = ({
             onBlur={() => {}}
             // end
           >
-            <FormattedMessage id='workspace.header.register-form-window.window-title' />
+            <FormattedMessage id='workspace.header.password-form-window.window-title' />
           </div>
         }
         centered
@@ -167,49 +165,52 @@ const PasswordFormWindowPage: FC<PasswordFormWindowProps> = ({
         <div style={{ paddingTop: '32px', }}>
           <Form
             name='PasswordFormWindow'
-            form={registerForm}
-            className='register-form'
+            form={profileForm}
+            className='profile-form'
             initialValues={{ userName: 'Admin', userPassword: 'Password1', remember: true, }}
             onFinish={onFinish}
             style={{ maxWidth: '100%', }}
           >
-            <Form.Item name='userName' rules={[{ required: true, message: <FormattedMessage id='workspace.header.register-form-window.user-name-message' />, },]} style={{ marginBottom: '4px', }} >
-              <Input
-                prefix={<UserOutlined/>}
-                placeholder={intl.formatMessage({ id: 'workspace.header.register-form-window.user-name-placeholder'})}
+            <Form.Item name='oldUserPassword' 
+                rules={[{required: true, message:  <FormattedMessage id='workspace.header.password-form-window.old-password-message' />, },]} 
+                style={{ marginBottom: '4px', }}>
+              <Input.Password
+                prefix={<LockOutlined/>}
+                type='password'
+                placeholder={intl.formatMessage({ id: 'workspace.header.password-form-window.old-password-placeholder'})}
                 size='small'
                 bordered={false}
                 style={{ width: '100%', }}
               />
             </Form.Item>
             <div style={{ marginLeft: '40px', width: '280px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', }} />
-            <Form.Item name='userPassword' 
+            <Form.Item name='newUserPassword' 
                 hasFeedback 
                 rules={[
-                  { required: true, message:  <FormattedMessage id='workspace.header.register-form-window.user-password-message' />, },
-                  { pattern:  /^(?![A-Za-z]+$)(?![A-Z\d]+$)(?![A-Z\W]+$)(?![a-z\d]+$)(?![a-z\W]+$)(?![\d\W]+$)\S{8,32}$/, message:  <FormattedMessage id='workspace.header.register-form-window.user-password-message' />, },
+                  { required: true, message:  <FormattedMessage id='workspace.header.password-form-window.new-password-message' />, },
+                  { pattern:  /^(?![A-Za-z]+$)(?![A-Z\d]+$)(?![A-Z\W]+$)(?![a-z\d]+$)(?![a-z\W]+$)(?![\d\W]+$)\S{8,32}$/, message:  <FormattedMessage id='workspace.header.password-form-window.new-password-message' />, },
                 ]} 
                 style={{ marginBottom: '4px', }}>
               <Input.Password
                 prefix={<LockOutlined/>}
                 type='password'
-                placeholder={intl.formatMessage({ id: 'workspace.header.register-form-window.user-password-placeholder'})}
+                placeholder={intl.formatMessage({ id: 'workspace.header.password-form-window.new-password-placeholder'})}
                 size='small'
                 bordered={false}
                 style={{ width: '100%', }}
               />
             </Form.Item>
             <div style={{ marginLeft: '40px', width: '280px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', }} />
-            <Form.Item name='userPasswordConfirmation' 
-                dependencies={['userPassword']} hasFeedback
+            <Form.Item name='newUserPasswordConfirmation' 
+                dependencies={['newUserPassword']} hasFeedback
                 rules={[
-                  {required: true, message:  <FormattedMessage id='workspace.header.register-form-window.user-password-confirmation-message' />, },
+                  {required: true, message:  <FormattedMessage id='workspace.header.password-form-window.new-password-confirmation-message' />, },
                   ({getFieldValue}) => ({
                     validator(_, value) {
-                      if(!value || getFieldValue('userPassword') === value) {
+                      if(!value || getFieldValue('newUserPassword') === value) {
                         return Promise.resolve()
                       }
-                      return Promise.reject(new Error(intl.formatMessage({ id: 'workspace.header.register-form-window.user-password-confirmation-placeholder'})))
+                      return Promise.reject(new Error(intl.formatMessage({ id: 'workspace.header.password-form-window.new-password-confirmation-message'})))
                     }
                   })
                 ]} 
@@ -217,44 +218,12 @@ const PasswordFormWindowPage: FC<PasswordFormWindowProps> = ({
               <Input.Password
                 prefix={<LockOutlined/>}
                 type='password'
-                placeholder={intl.formatMessage({ id: 'workspace.header.register-form-window.user-password-confirmation-placeholder'})}
+                placeholder={intl.formatMessage({ id: 'workspace.header.password-form-window.new-password-confirmation-placeholder'})}
                 size='small'
                 bordered={false}
                 style={{ width: '100%', }}
               />
             </Form.Item>
-            <div style={{ marginLeft: '40px', width: '280px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', }} />
-            <Form.Item name='alias' rules={[{required: true, message: <FormattedMessage id='workspace.header.register-form-window.alias-message' />, },]} style={{ marginBottom: '4px', }} >
-              <Input
-                prefix={<UserOutlined/>}
-                placeholder={intl.formatMessage({ id: 'workspace.header.register-form-window.alias-placeholder'})}
-                size='small'
-                bordered={false}
-                style={{ width: '100%', }}
-              />
-            </Form.Item>
-            <div style={{ marginLeft: '40px', width: '280px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', }} />
-            <Form.Item name='email' rules={[{ message: <FormattedMessage id='workspace.header.register-form-window.email-message' />, },]} style={{ marginBottom: '4px', }} >
-              <Input
-                prefix={<MailOutlined/>}
-                placeholder={intl.formatMessage({required: true, id: 'workspace.header.register-form-window.email-placeholder'})}
-                size='small'
-                bordered={false}
-                style={{ width: '100%', }}
-              />
-            </Form.Item>
-            <div style={{ marginLeft: '40px', width: '280px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', }} />
-            <Space>
-              <Button type='primary' size='middle' onClick={sendValidationCode}><FormattedMessage id='workspace.header.register-form-window.email-validation-button-title' /></Button>
-              <Form.Item name='validation' rules={[{ message: <FormattedMessage id='workspace.header.register-form-window.email-validation-message' />, },]} style={{ marginBottom: '4px', }} >
-                <Input
-                  prefix={<CodeOutlined/>}
-                  placeholder={intl.formatMessage({required: true, id: 'workspace.header.register-form-window.email-validation-placeholder'})}
-                  size='small'
-                  bordered={false}
-                />
-              </Form.Item>
-            </Space>
             <div style={{ marginLeft: '40px', width: '280px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', }} />
             {errorVisible && (<Alert message={errorMessage} type="error" closable/> )}
           </Form>

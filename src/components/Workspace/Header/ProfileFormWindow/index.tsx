@@ -5,7 +5,6 @@ import { RequestUtils, Utils, } from '../../Utils'
 import type { DraggableData, DraggableEvent } from 'react-draggable';
 import Draggable from 'react-draggable';
 import axios from 'axios'
-import Avatar from 'antd/lib/avatar/avatar'
 import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
 import { CodeFilled, CodeOutlined, LockOutlined, MailFilled, MailOutlined, SolutionOutlined, UserOutlined } from '@ant-design/icons';
 
@@ -29,7 +28,7 @@ const ProfileFormWindowPage: FC<ProfileFormWindowProps> = ({
   const [origModalY, setOrigModalY,] = useState<number>(0)
   const [windowVisible, setWindowVisible,] = useState<boolean>(false)
   const draggleRef = useRef<HTMLDivElement>(null);
-  const [registerForm,] = Form.useForm()
+  const [profileForm,] = Form.useForm()
   const [errorVisible, setErrorVisible,] = useState<boolean>(false)
   const [errorMessage, setErrorMessage, ] = useState<string>('')
   const [bounds, setBounds, ] = useState({left: 0, top: 0, bottom: 0, right: 0})
@@ -77,7 +76,7 @@ const ProfileFormWindowPage: FC<ProfileFormWindowProps> = ({
   }
 
   const onOk = () => {
-    registerForm.submit()
+    profileForm.submit()
   }
 
   const onCancel = () => {
@@ -98,11 +97,12 @@ const ProfileFormWindowPage: FC<ProfileFormWindowProps> = ({
     }
     const config = {
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Token': RequestUtils.token
       }
     }
     setErrorVisible(false)
-    axios.post(`${RequestUtils.serverAddress}/register`, data, config)
+    axios.post(`${RequestUtils.serverAddress}/profile`, data, config)
       .then(response => {
         if (response.status == 200 && response.data.success) {
           console.log('Profile succeed')
@@ -123,7 +123,7 @@ const ProfileFormWindowPage: FC<ProfileFormWindowProps> = ({
   }
 
   const sendValidationCode = ()=> {
-    const form = registerForm.getFieldValue('validation')
+    const form = profileForm.getFieldValue('validation')
     console.log(`${form}`)
   }
 
@@ -146,7 +146,7 @@ const ProfileFormWindowPage: FC<ProfileFormWindowProps> = ({
             onBlur={() => {}}
             // end
           >
-            <FormattedMessage id='workspace.header.register-form-window.window-title' />
+            <FormattedMessage id='workspace.header.profile-form-window.window-title' />
           </div>
         }
         centered
@@ -167,77 +167,26 @@ const ProfileFormWindowPage: FC<ProfileFormWindowProps> = ({
         <div style={{ paddingTop: '32px', }}>
           <Form
             name='ProfileFormWindow'
-            form={registerForm}
-            className='register-form'
-            initialValues={{ userName: 'Admin', userPassword: 'Password1', remember: true, }}
+            form={profileForm}
+            className='profile-form'
+            // initialValues={{ userName: 'Admin', userPassword: 'Password1', remember: true, }}
             onFinish={onFinish}
             style={{ maxWidth: '100%', }}
           >
-            <Form.Item name='userName' rules={[{ required: true, message: <FormattedMessage id='workspace.header.register-form-window.user-name-message' />, },]} style={{ marginBottom: '4px', }} >
+            <Form.Item name='alias' rules={[{required: true, message: <FormattedMessage id='workspace.header.profile-form-window.alias-message' />, },]} style={{ marginBottom: '4px', }} >
               <Input
                 prefix={<UserOutlined/>}
-                placeholder={intl.formatMessage({ id: 'workspace.header.register-form-window.user-name-placeholder'})}
+                placeholder={intl.formatMessage({ id: 'workspace.header.profile-form-window.alias-placeholder'})}
                 size='small'
                 bordered={false}
                 style={{ width: '100%', }}
               />
             </Form.Item>
             <div style={{ marginLeft: '40px', width: '280px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', }} />
-            <Form.Item name='userPassword' 
-                hasFeedback 
-                rules={[
-                  { required: true, message:  <FormattedMessage id='workspace.header.register-form-window.user-password-message' />, },
-                  { pattern:  /^(?![A-Za-z]+$)(?![A-Z\d]+$)(?![A-Z\W]+$)(?![a-z\d]+$)(?![a-z\W]+$)(?![\d\W]+$)\S{8,32}$/, message:  <FormattedMessage id='workspace.header.register-form-window.user-password-message' />, },
-                ]} 
-                style={{ marginBottom: '4px', }}>
-              <Input.Password
-                prefix={<LockOutlined/>}
-                type='password'
-                placeholder={intl.formatMessage({ id: 'workspace.header.register-form-window.user-password-placeholder'})}
-                size='small'
-                bordered={false}
-                style={{ width: '100%', }}
-              />
-            </Form.Item>
-            <div style={{ marginLeft: '40px', width: '280px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', }} />
-            <Form.Item name='userPasswordConfirmation' 
-                dependencies={['userPassword']} hasFeedback
-                rules={[
-                  {required: true, message:  <FormattedMessage id='workspace.header.register-form-window.user-password-confirmation-message' />, },
-                  ({getFieldValue}) => ({
-                    validator(_, value) {
-                      if(!value || getFieldValue('userPassword') === value) {
-                        return Promise.resolve()
-                      }
-                      return Promise.reject(new Error(intl.formatMessage({ id: 'workspace.header.register-form-window.user-password-confirmation-placeholder'})))
-                    }
-                  })
-                ]} 
-                style={{ marginBottom: '4px', }}>
-              <Input.Password
-                prefix={<LockOutlined/>}
-                type='password'
-                placeholder={intl.formatMessage({ id: 'workspace.header.register-form-window.user-password-confirmation-placeholder'})}
-                size='small'
-                bordered={false}
-                style={{ width: '100%', }}
-              />
-            </Form.Item>
-            <div style={{ marginLeft: '40px', width: '280px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', }} />
-            <Form.Item name='alias' rules={[{required: true, message: <FormattedMessage id='workspace.header.register-form-window.alias-message' />, },]} style={{ marginBottom: '4px', }} >
-              <Input
-                prefix={<UserOutlined/>}
-                placeholder={intl.formatMessage({ id: 'workspace.header.register-form-window.alias-placeholder'})}
-                size='small'
-                bordered={false}
-                style={{ width: '100%', }}
-              />
-            </Form.Item>
-            <div style={{ marginLeft: '40px', width: '280px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', }} />
-            <Form.Item name='email' rules={[{ message: <FormattedMessage id='workspace.header.register-form-window.email-message' />, },]} style={{ marginBottom: '4px', }} >
+            <Form.Item name='email' rules={[{ message: <FormattedMessage id='workspace.header.profile-form-window.email-message' />, },]} style={{ marginBottom: '4px', }} >
               <Input
                 prefix={<MailOutlined/>}
-                placeholder={intl.formatMessage({required: true, id: 'workspace.header.register-form-window.email-placeholder'})}
+                placeholder={intl.formatMessage({required: true, id: 'workspace.header.profile-form-window.email-placeholder'})}
                 size='small'
                 bordered={false}
                 style={{ width: '100%', }}
@@ -245,11 +194,11 @@ const ProfileFormWindowPage: FC<ProfileFormWindowProps> = ({
             </Form.Item>
             <div style={{ marginLeft: '40px', width: '280px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', }} />
             <Space>
-              <Button type='primary' size='middle' onClick={sendValidationCode}><FormattedMessage id='workspace.header.register-form-window.email-validation-button-title' /></Button>
-              <Form.Item name='validation' rules={[{ message: <FormattedMessage id='workspace.header.register-form-window.email-validation-message' />, },]} style={{ marginBottom: '4px', }} >
+              <Button type='primary' size='middle' onClick={sendValidationCode}><FormattedMessage id='workspace.header.profile-form-window.email-validation-button-title' /></Button>
+              <Form.Item name='validation' rules={[{ message: <FormattedMessage id='workspace.header.profile-form-window.email-validation-message' />, },]} style={{ marginBottom: '4px', }} >
                 <Input
                   prefix={<CodeOutlined/>}
-                  placeholder={intl.formatMessage({required: true, id: 'workspace.header.register-form-window.email-validation-placeholder'})}
+                  placeholder={intl.formatMessage({required: true, id: 'workspace.header.profile-form-window.email-validation-placeholder'})}
                   size='small'
                   bordered={false}
                 />
