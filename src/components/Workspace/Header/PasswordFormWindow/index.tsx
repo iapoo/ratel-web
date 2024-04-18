@@ -9,7 +9,7 @@ import Avatar from 'antd/lib/avatar/avatar'
 import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
 import { CodeFilled, CodeOutlined, LockOutlined, MailFilled, MailOutlined, SolutionOutlined, UserOutlined } from '@ant-design/icons';
 
-interface RegisterFormWindowProps {
+interface PasswordFormWindowProps {
   visible: boolean;
   x: number;
   y: number;
@@ -17,7 +17,7 @@ interface RegisterFormWindowProps {
   onWindowOk: () => void
 }
 
-const RegisterFormWindowPage: FC<RegisterFormWindowProps> = ({
+const PasswordFormWindowPage: FC<PasswordFormWindowProps> = ({
   visible, x, y, onWindowCancel, onWindowOk,
 }) => {
   const intl = useIntl();
@@ -105,19 +105,19 @@ const RegisterFormWindowPage: FC<RegisterFormWindowProps> = ({
     axios.post(`${RequestUtils.serverAddress}/register`, data, config)
       .then(response => {
         if (response.status == 200 && response.data.success) {
-          console.log('Register succeed')
+          console.log('Password succeed')
           if (onWindowOk) {
             onWindowOk()
           }
         } else if (response.status == 200 && !response.data.success) {
-          console.log('Register failed')
+          console.log('Password failed')
           setErrorVisible(true)
           setErrorMessage(response.data.message)
         }
-        console.log('Register data: ', response.data)
+        console.log('Password data: ', response.data)
       })
       .catch(error => {
-        console.log('Register error: ', error)
+        console.log('Password error: ', error)
         setErrorMessage('System error internally')
       })
   }
@@ -166,7 +166,7 @@ const RegisterFormWindowPage: FC<RegisterFormWindowProps> = ({
       >
         <div style={{ paddingTop: '32px', }}>
           <Form
-            name='RegisterFormWindow'
+            name='PasswordFormWindow'
             form={registerForm}
             className='register-form'
             initialValues={{ userName: 'Admin', userPassword: 'Password1', remember: true, }}
@@ -264,4 +264,4 @@ const RegisterFormWindowPage: FC<RegisterFormWindowProps> = ({
   )
 }
 
-export default RegisterFormWindowPage
+export default PasswordFormWindowPage
