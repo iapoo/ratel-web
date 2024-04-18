@@ -30,6 +30,8 @@ import { FlowChartShapes } from '@/components/Rockie/CustomItems/FlowChart';
 import { DocumentThemeTypes } from '@/components/Rockie/Theme';
 import { EditorHelper } from '@/components/Rockie/Utils';
 import RegisterFormWindowPage from './RegisterFormWindow';
+import PasswordFormWindowPage from './PasswordFormWindow';
+import ProfileFormWindowPage from './ProfileFormWindow';
 
 interface HeaderProps {
   previousEditor: Editor | undefined
@@ -61,6 +63,8 @@ const Header: FC<HeaderProps> = ({
   const [documentModifiedText, setDocumentModifiedText] = useState<string>(DOCUMENT_MODIFIED_TEXT_NO)
   const [loginFormWindowVisible, setLoginFormWindowVisible,] = useState<boolean>(false)
   const [registerFormWindowVisible, setRegisterFormWindowVisible,] = useState<boolean>(false)
+  const [passwordFormWindowVisible, setPasswordFormWindowVisible, ] = useState<boolean>(false)
+  const [profileFormWindowVisible, setProfileFormWindowVisible, ] = useState<boolean>(false)
   const [newFileWindowVisible, setNewFileWindowVisible,] = useState<boolean>(false)
   const [openFileWindowVisible, setOpenFileWindowVisible,] = useState<boolean>(false)
   const [selectedDocumentName, setSelectedDocumentName,] = useState<string>(DOCUMENT_NEW_NAME_PREFIX)
@@ -346,6 +350,14 @@ const Header: FC<HeaderProps> = ({
     }
   }
 
+  const handleRegisterFormWindowCancel = () => {
+    setRegisterFormWindowVisible(false)
+  }
+
+  const handleRegisterFormWindowOk = () => {
+    setRegisterFormWindowVisible(false)
+  }
+
   const handleNewFileWindowCancel = () => {
     setNewFileWindowVisible(false)
   }
@@ -412,6 +424,14 @@ const Header: FC<HeaderProps> = ({
 
   const logout = () => {
     RequestUtils.logout()
+  }
+
+  const handleUpdatePassword = () => {
+
+  }
+
+  const handleUpdateProfile = () => {
+
   }
 
   const handleUpdateDocumentName = (e: any) => {
@@ -1556,11 +1576,8 @@ const Header: FC<HeaderProps> = ({
   ];
 
   const userProfileMenu: MenuProps['items'] = [
-    { key: 'New', label: 'New', },
-    { key: 'OpenFrom', label: 'OpenFrom', },
-    { key: 'Open', label: 'Open', },
-    { key: 'Save', label: 'Save', },
-    { key: 'SaveAs', label: 'SaveAs', },
+    { key: 'UpdatePassword', label: <FormattedMessage id='workspace.header.button-logout-title'/>, onClick: handleUpdatePassword },
+    { key: 'UpdateProfile', label: <FormattedMessage id='workspace.header.button-logout-title'/>, onClick: handleUpdateProfile},
     { key: 'Logout', label: <FormattedMessage id='workspace.header.button-logout-title'/>, onClick: logout},
   ]
 
@@ -1598,8 +1615,8 @@ const Header: FC<HeaderProps> = ({
         <div style={{ position: 'absolute', height: '50%', width: '240px', right: '0px' }}>
           <div style={{ float: 'right', display: 'table', height: '100%', marginRight: '8px' }}>
             <div style={{ display: 'table-cell', verticalAlign: 'middle', }}>
-              {online ? intl.formatMessage({ id: 'workspace.header.welcome' }) + ' ' + userInfo?.customerName + ' ' : " "}
-              <Button type='text' style={{ display: online ? 'inline' : 'none' }} onClick={logout}><FormattedMessage id='workspace.header.button-logout-title' /></Button>
+              {/* {online ? intl.formatMessage({ id: 'workspace.header.welcome' }) + ' ' + userInfo?.customerName + ' ' : " "} */}
+              {/* <Button type='text' style={{ display: online ? 'inline' : 'none' }} onClick={logout}><FormattedMessage id='workspace.header.button-logout-title' /></Button> */}
               <Dropdown menu={{items: userProfileMenu}}>
                 <Button shape='circle' icon={<UserOutlined/>} style={{ display: online ? 'inline' : 'none' }} />
               </Dropdown>
@@ -1718,7 +1735,9 @@ const Header: FC<HeaderProps> = ({
         </div>
       </div>
       <LoginFormWindow visible={loginFormWindowVisible} x={60} y={60} onWindowCancel={handleLoginFormWindowCancel} onWindowOk={handleLoginFormWindowOk} />
-      <RegisterFormWindowPage visible={registerFormWindowVisible} x={60} y={60} onWindowCancel={handleLoginFormWindowCancel} onWindowOk={handleLoginFormWindowOk} />
+      <RegisterFormWindowPage visible={registerFormWindowVisible} x={60} y={60} onWindowCancel={handleRegisterFormWindowCancel} onWindowOk={handleRegisterFormWindowOk} />
+      <PasswordFormWindowPage visible={registerFormWindowVisible} x={60} y={60} onWindowCancel={handleRegisterFormWindowCancel} onWindowOk={handleRegisterFormWindowOk} />
+      <ProfileFormWindowPage visible={registerFormWindowVisible} x={60} y={60} onWindowCancel={handleRegisterFormWindowCancel} onWindowOk={handleRegisterFormWindowOk} />
       <NewFileWindow visible={newFileWindowVisible} x={60} y={60} onWindowCancel={handleNewFileWindowCancel} onWindowOk={handleNewFileWindowOk} />
       <OpenFileWindow visible={openFileWindowVisible} x={60} y={60} onWindowCancel={handleOpenFileWindowCancel} onWindowOk={handleOpenFileWindowOk} disableFileName={disableFileName} selectedFolderId={selectedFolderId} selectedDocumentId={selectedDocumentId} selectedDocumentName={selectedDocumentName} />
       <Modal title="Modal" centered open={discardModifiedDocumentWindowVisible} onOk={confirmDiscardModifiedDocument} onCancel={cancelDiscardModifiedDocument} okText="确认" cancelText="取消" >
