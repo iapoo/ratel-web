@@ -243,6 +243,16 @@ export class RequestUtils {
         }
     }
 
+    public static info() {       
+        return axios.post(`${RequestUtils.serverAddress}/info`, {            
+            }, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Token': RequestUtils.token
+            },
+            })        
+    }
+
     public static getFolders = (parentId: number | null)=> {
         const data = {
             parentId: parentId

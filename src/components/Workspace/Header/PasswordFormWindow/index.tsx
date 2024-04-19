@@ -21,6 +21,7 @@ const PasswordFormWindowPage: FC<PasswordFormWindowProps> = ({
   visible, x, y, onWindowCancel, onWindowOk,
 }) => {
   const intl = useIntl();
+  const [messageApi, contextHolder, ] = message.useMessage()
   const [dataLoading, setDataLoading,] = useState<boolean>(false)
   const [modalX, setModalX,] = useState<number>(0)
   const [modalY, setModalY,] = useState<number>(0)
@@ -103,6 +104,10 @@ const PasswordFormWindowPage: FC<PasswordFormWindowProps> = ({
     axios.post(`${RequestUtils.serverAddress}/updatePassword`, data, config)
       .then(response => {
         if (response.status == 200 && response.data.success) {
+          messageApi.open({
+            type: 'success',
+            content: intl.formatMessage({ id: 'workspace.header.password-form-window.window-success-message'}) 
+          })
           console.log('Update password succeed')
           if (onWindowOk) {
             onWindowOk()
@@ -127,6 +132,7 @@ const PasswordFormWindowPage: FC<PasswordFormWindowProps> = ({
 
   return (
     <div>
+    {contextHolder}
       <Modal
         title={
           <div style={{ width: '100%', cursor: 'move', }}
@@ -167,7 +173,6 @@ const PasswordFormWindowPage: FC<PasswordFormWindowProps> = ({
             name='PasswordFormWindow'
             form={profileForm}
             className='profile-form'
-            initialValues={{ userName: 'Admin', userPassword: 'Password1', remember: true, }}
             onFinish={onFinish}
             style={{ maxWidth: '100%', }}
           >

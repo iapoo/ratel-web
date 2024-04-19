@@ -21,6 +21,7 @@ const RegisterFormWindowPage: FC<RegisterFormWindowProps> = ({
   visible, x, y, onWindowCancel, onWindowOk,
 }) => {
   const intl = useIntl();
+  const [messageApi, contextHolder, ] = message.useMessage()
   const [dataLoading, setDataLoading,] = useState<boolean>(false)
   const [modalX, setModalX,] = useState<number>(0)
   const [modalY, setModalY,] = useState<number>(0)
@@ -105,6 +106,10 @@ const RegisterFormWindowPage: FC<RegisterFormWindowProps> = ({
     axios.post(`${RequestUtils.serverAddress}/register`, data, config)
       .then(response => {
         if (response.status == 200 && response.data.success) {
+          messageApi.open({
+            type: 'success',
+            content: intl.formatMessage({ id: 'workspace.header.register-form-window.window-success-message'}) 
+          })
           console.log('Register succeed')
           if (onWindowOk) {
             onWindowOk()
@@ -129,6 +134,7 @@ const RegisterFormWindowPage: FC<RegisterFormWindowProps> = ({
 
   return (
     <div>
+    {contextHolder}
       <Modal
         title={
           <div style={{ width: '100%', cursor: 'move', }}
@@ -169,7 +175,6 @@ const RegisterFormWindowPage: FC<RegisterFormWindowProps> = ({
             name='RegisterFormWindow'
             form={registerForm}
             className='register-form'
-            initialValues={{ userName: 'Admin', userPassword: 'Password1', remember: true, }}
             onFinish={onFinish}
             style={{ maxWidth: '100%', }}
           >
@@ -234,7 +239,11 @@ const RegisterFormWindowPage: FC<RegisterFormWindowProps> = ({
               />
             </Form.Item>
             <div style={{ marginLeft: '40px', width: '280px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', }} />
-            <Form.Item name='email' rules={[{ message: <FormattedMessage id='workspace.header.register-form-window.email-message' />, },]} style={{ marginBottom: '4px', }} >
+            <Form.Item name='email' hasFeedback
+              rules={[
+                { type: 'email', message: <FormattedMessage id='workspace.header.register-form-window.email-message' />, },
+              ]} 
+              style={{ marginBottom: '4px', }} >
               <Input
                 prefix={<MailOutlined/>}
                 placeholder={intl.formatMessage({required: true, id: 'workspace.header.register-form-window.email-placeholder'})}
