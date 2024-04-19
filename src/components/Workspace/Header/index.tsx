@@ -41,8 +41,9 @@ interface HeaderProps {
 const Header: FC<HeaderProps> = ({
   previousEditor, currentEditor
 }) => {
-  const [messageApi, contextHolder] = message.useMessage();
   const intl = useIntl();
+  const [messageApi, contextHolder] = message.useMessage();
+  const {confirm} = Modal
 
   const DOCUMENT_MODIFIED_TEXT_NO = intl.formatMessage({ id: 'workspace.header.document-modified-text-no', });
   const DOCUMENT_MODIFIED_TEXT_YES = intl.formatMessage({ id: 'workspace.header.document-modified-text-yes', });
@@ -439,7 +440,23 @@ const Header: FC<HeaderProps> = ({
   }
 
   const logout = () => {
-    RequestUtils.logout()
+    if(Utils.isModified) {
+      confirm({
+        title: intl.formatMessage({id: 'workspace.header.logout-confirm-title'}),
+        type: 'warning',
+        content: intl.formatMessage({id: 'workspace.header.logout-confirm-message'}),
+        onOk() {
+          RequestUtils.logout()
+          handleNewFileWindowOk()
+        },
+        onCancel() {
+
+        }
+      })
+    } else {
+      RequestUtils.logout()
+      handleNewFileWindowOk()
+    }
   }
 
   const handleUpdatePassword = () => {

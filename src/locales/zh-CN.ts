@@ -54,6 +54,8 @@ export default {
   'workspace.header.login-form-window.user-password-placeholder': '请输入密码',
   'workspace.header.login-form-window.window-success-message': '登录成功',
   'workspace.header.login-form-window.window-title': '登录',
+  'workspace.header.logout-confirm-title': '注销',
+  'workspace.header.logout-confirm-message': '文档已被修改，您确定继续注销吗?',
   'workspace.header.register-form-window.alias-message': '昵称为必填项',
   'workspace.header.register-form-window.alias-placeholder': '请输入昵称',
   'workspace.header.register-form-window.email-message': '请提供有效邮箱地址',
