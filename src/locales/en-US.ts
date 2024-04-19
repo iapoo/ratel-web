@@ -54,6 +54,8 @@ export default {
   'workspace.header.login-form-window.user-password-placeholder': 'Please enter the password',
   'workspace.header.login-form-window.window-title': 'Sign in',
   'workspace.header.login-form-window.window-success-message': 'Sign in successfully',
+  'workspace.header.logout-confirm-title': 'Sign out',
+  'workspace.header.logout-confirm-message': 'Document is modified, are you sure to continue signing out?',
   'workspace.header.register-form-window.alias-message': 'Alias is required ',
   'workspace.header.register-form-window.alias-placeholder': 'Please enter an alias for you',
   'workspace.header.register-form-window.email-message': 'Please provide valid email address',
