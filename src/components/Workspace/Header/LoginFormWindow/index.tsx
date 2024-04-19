@@ -197,10 +197,10 @@ const LoginFormWindowPage: FC<LoginFormWindowProps> = ({
                 style={{ width: '100%', }}
               />
             </Form.Item>
-            <div style={{ marginLeft: '40px', width: '280px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', }} />
+            {/* <div style={{ marginLeft: '40px', width: '280px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', }} />
             <Form.Item name='remember' valuePropName='checked' style={{ marginBottom: '4px', }}>
               <Checkbox style={{ float: 'right', fontSize: '14px', }}><FormattedMessage id='workspace.header.login-form-window.remember-account-title' /></Checkbox>
-            </Form.Item>
+            </Form.Item> */}
             {errorVisible && (
               <Alert message={errorMessage} type="error" closable/>
             )}
