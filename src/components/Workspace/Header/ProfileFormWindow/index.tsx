@@ -7,6 +7,7 @@ import Draggable from 'react-draggable';
 import axios from 'axios'
 import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
 import { CodeFilled, CodeOutlined, LockOutlined, MailFilled, MailOutlined, SolutionOutlined, UserOutlined } from '@ant-design/icons';
+import { UserInfo } from '../../Utils/RequestUtils';
 
 interface ProfileFormWindowProps {
   visible: boolean;
@@ -20,6 +21,7 @@ const ProfileFormWindowPage: FC<ProfileFormWindowProps> = ({
   visible, x, y, onWindowCancel, onWindowOk,
 }) => {
   const intl = useIntl();
+  const [messageApi, contextHolder, ] = message.useMessage()
   const [dataLoading, setDataLoading,] = useState<boolean>(false)
   const [modalX, setModalX,] = useState<number>(0)
   const [modalY, setModalY,] = useState<number>(0)
@@ -32,6 +34,11 @@ const ProfileFormWindowPage: FC<ProfileFormWindowProps> = ({
   const [errorVisible, setErrorVisible,] = useState<boolean>(false)
   const [errorMessage, setErrorMessage, ] = useState<string>('')
   const [bounds, setBounds, ] = useState({left: 0, top: 0, bottom: 0, right: 0})
+  // const [userInfo, setUserInfo, ] = useState<UserInfo>({
+  //   customerName:  '',
+  //   customerId: 0,
+  //   nickName: ''
+  // })
 
   if (origModalX != x) {
     setOrigModalX(x)
@@ -51,12 +58,23 @@ const ProfileFormWindowPage: FC<ProfileFormWindowProps> = ({
 
   useEffect(() => {
     if (!dataLoading) {
-      setDataLoading(true)
-      setErrorVisible(false)
-      const fetchData = async () => {
-
+      const fetchInfoData = async () => {
+        setDataLoading(true)
+        const infoData = await RequestUtils.info()
+        if (infoData.status == 200 && infoData.data.success) {
+          setErrorVisible(false)
+          // setUserInfo(infoData.data.data)
+          // profileForm.setFieldsValue({...infoData.data.data})
+          profileForm.setFieldValue('alias', infoData.data.data.nickName)
+          profileForm.setFieldValue('email', infoData.data.data.email)
+        } else if (infoData.status == 200 && !infoData.data.success) {
+          setErrorVisible(false)
+          setErrorMessage(infoData.data.message)
+        } else {
+          setErrorMessage('System error internally, please contact to administrator')
+        }
       }
-      fetchData()
+      fetchInfoData()
     }
   })
 
@@ -87,11 +105,8 @@ const ProfileFormWindowPage: FC<ProfileFormWindowProps> = ({
 
   const onFinish = (values: any) => {
     console.log('Receive values:', values)
-    const { userName, userPassword, userPasswordConfirmation, alias, email } = values
+    const { alias, email } = values
     const data = {
-      'customerName': userName,
-      'password': userPassword, //CryptoJs.SHA1(password).toString()
-      'userPasswordConfirmation': userPasswordConfirmation,
       'nickName': alias,
       'email': email,
     }
@@ -102,9 +117,13 @@ const ProfileFormWindowPage: FC<ProfileFormWindowProps> = ({
       }
     }
     setErrorVisible(false)
-    axios.post(`${RequestUtils.serverAddress}/profile`, data, config)
+    axios.post(`${RequestUtils.serverAddress}/update`, data, config)
       .then(response => {
         if (response.status == 200 && response.data.success) {
+          messageApi.open({
+            type: 'success',
+            content: intl.formatMessage({ id: 'workspace.header.profile-form-window.window-success-message'}) 
+          })
           console.log('Profile succeed')
           if (onWindowOk) {
             onWindowOk()
@@ -129,6 +148,7 @@ const ProfileFormWindowPage: FC<ProfileFormWindowProps> = ({
 
   return (
     <div>
+      {contextHolder}
       <Modal
         title={
           <div style={{ width: '100%', cursor: 'move', }}
@@ -169,7 +189,6 @@ const ProfileFormWindowPage: FC<ProfileFormWindowProps> = ({
             name='ProfileFormWindow'
             form={profileForm}
             className='profile-form'
-            // initialValues={{ userName: 'Admin', userPassword: 'Password1', remember: true, }}
             onFinish={onFinish}
             style={{ maxWidth: '100%', }}
           >
@@ -183,7 +202,11 @@ const ProfileFormWindowPage: FC<ProfileFormWindowProps> = ({
               />
             </Form.Item>
             <div style={{ marginLeft: '40px', width: '280px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', }} />
-            <Form.Item name='email' rules={[{ message: <FormattedMessage id='workspace.header.profile-form-window.email-message' />, },]} style={{ marginBottom: '4px', }} >
+            <Form.Item name='email' hasFeedback
+              rules={[
+                { type: 'email', message: <FormattedMessage id='workspace.header.profile-form-window.email-message' />, },
+              ]} 
+              style={{ marginBottom: '4px', }} >
               <Input
                 prefix={<MailOutlined/>}
                 placeholder={intl.formatMessage({required: true, id: 'workspace.header.profile-form-window.email-placeholder'})}

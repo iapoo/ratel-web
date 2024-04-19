@@ -21,6 +21,7 @@ const LoginFormWindowPage: FC<LoginFormWindowProps> = ({
   visible, x, y, onWindowCancel, onWindowOk,
 }) => {
   const intl = useIntl();
+  const [messageApi, contextHolder, ] = message.useMessage()
   const [dataLoading, setDataLoading,] = useState<boolean>(false)
   const [modalX, setModalX,] = useState<number>(0)
   const [modalY, setModalY,] = useState<number>(0)
@@ -103,6 +104,10 @@ const LoginFormWindowPage: FC<LoginFormWindowProps> = ({
     axios.post(`${RequestUtils.serverAddress}/login`, data, config)
       .then(response => {
         if (response.status == 200 && response.data.success) {
+          messageApi.open({
+            type: 'success',
+            content: intl.formatMessage({ id: 'workspace.header.login-form-window.window-success-message'}) 
+          })
           console.log('Login succeed')
           RequestUtils.token = response.data.data
           RequestUtils.userName = userName
@@ -128,6 +133,7 @@ const LoginFormWindowPage: FC<LoginFormWindowProps> = ({
 
   return (
     <div>
+    {contextHolder}
       <Modal
         title={
           <div style={{ width: '100%', cursor: 'move', }}
@@ -168,7 +174,6 @@ const LoginFormWindowPage: FC<LoginFormWindowProps> = ({
             name='LoginFormWindow'
             form={loginForm}
             className='login-form'
-            // initialValues={{ userName: 'Admin', userPassword: 'Password1', remember: true, }}
             onFinish={onFinish}
             style={{ maxWidth: '100%', }}
           >
