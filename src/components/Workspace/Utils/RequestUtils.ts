@@ -237,9 +237,11 @@ export class RequestUtils {
         //console.log(response.data)
         if(response?.data?.success) {
             RequestUtils.userInfo_ = response.data.data
+            RequestUtils.online_ = true
             return true
         } else {
             RequestUtils.userInfo_ = null
+            RequestUtils.online_ = false
             return false;
         }
     }

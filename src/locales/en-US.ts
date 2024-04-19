@@ -25,7 +25,7 @@ export default {
   'workspace.content.popup-menu-rename-pane-title': 'Rename',
   'workspace.content.popup-menu-duplicate-pane': 'Duplicate',
   'workspace.content.popup-menu-delete-pane': 'Delete',
-  'workspace.header.alert-failed-ave-document': 'Failed to save document, message: ',
+  'workspace.header.alert-failed-save-document': 'Failed to save document, message: ',
   'workspace.header.button-login-title': 'Sign in',
   'workspace.header.button-logout-title': 'Sign out',
   'workspace.header.button-register-title': 'Sign up',

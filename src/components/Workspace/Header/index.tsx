@@ -513,11 +513,13 @@ const Header: FC<HeaderProps> = ({
 
   const handleAutoSave = () => {
     //console.log(`Autosave is started`)
-    //console.log(`online is ${online} ${timerCountRef.current}, ${forceUpdate},  ${selectedDocumentId}, ${selectedDocumentName}, ${selectedFolderId}` )
+    console.log(`online is ${online} ${timerCountRef.current}, ${forceUpdate},  ${selectedDocumentId}, ${selectedDocumentName}, ${selectedFolderId}` )
     //const online = await RequestUtils.isOnline()
-    if (online && timerCountRef.current >= 300 && selectedDocumentId) {
+    if (online && timerCountRef.current >= 50 && selectedDocumentId && Utils.isModified) {
       timerCountRef.current = 0
       doHandleAutoFileSave(selectedDocumentId, selectedDocumentName, selectedFolderId)
+    } else if (timerCountRef.current >= 50) {
+      timerCountRef.current = 0
     } else {
       // messageApi.open({
       //   type: 'warning',
@@ -544,7 +546,12 @@ const Header: FC<HeaderProps> = ({
         })
       } else {
         console.log('Save document with error: ', documentData.data)
-        alert(`${intl.formatMessage({ id: 'workspace.header.alert-failed-ave-document' })} ${documentData.data.message}`)
+        //alert(`${intl.formatMessage({ id: 'workspace.header.alert-failed-save-document' })} ${documentData.data.message}`)
+        const errorMessage = `${intl.formatMessage({ id: 'workspace.header.alert-failed-save-document' })} ${documentData.data.message}`
+        messageApi.open({
+          type: 'error',
+          content: errorMessage
+        })
       }
     }
     saveDocumentData()

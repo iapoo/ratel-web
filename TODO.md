@@ -21,3 +21,4 @@
 5. Decrease anchor points for connector line. (Done)
 6. Use SVG for icons
 7. Check rich text copy & paste(Done)
+8. Token may expire, need to check
