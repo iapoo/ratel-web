@@ -1020,6 +1020,7 @@ const Content: FC<ContentProps> = ({
   }
 
   const handleEditorOperationEvent = (event: EditorOperationEvent) => {
+    checkIfDocumentModified(true)
     switch(event.operation.type) {
       case OperationType.SELECT_EDITOR:
         if(event.isUndo) {
@@ -1030,37 +1031,29 @@ const Content: FC<ContentProps> = ({
         break;
       case OperationType.ADD_EDITOR:
         if(event.isUndo) {
-          checkIfDocumentModified(true)
           handleUndoAddEditor(event.operation)
         } else {
           checkIfDocumentModified(true)
-          handleRedoAddEditor(event.operation)
         }
         break;
       case OperationType.REMOVE_EDITOR:
         if(event.isUndo) {
-          checkIfDocumentModified(true)
           handleUndoRemoveEditor(event.operation)
         } else {
-          checkIfDocumentModified(true)
           handleRedoRemoveEditor(event.operation)
         }
         break;
       case OperationType.RENAME_EDITOR:
         if(event.isUndo) {
-          checkIfDocumentModified(true)
           handleUndoRenameEditor(event.operation)
         } else {
-          checkIfDocumentModified(true)
           handleRedoRenameEditor(event.operation)
         }
         break;
       case OperationType.MOVE_EDITOR:
         if(event.isUndo) {
-          checkIfDocumentModified(true)
           handleUndoMoveEditor(event.operation)
         } else {
-          checkIfDocumentModified(true)
           handleRedoMoveEditor(event.operation)
         }
         break;

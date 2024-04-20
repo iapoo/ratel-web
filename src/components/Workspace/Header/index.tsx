@@ -515,10 +515,10 @@ const Header: FC<HeaderProps> = ({
     //console.log(`Autosave is started`)
     console.log(`online is ${online} ${timerCountRef.current}, ${forceUpdate},  ${selectedDocumentId}, ${selectedDocumentName}, ${selectedFolderId}` )
     //const online = await RequestUtils.isOnline()
-    if (online && timerCountRef.current >= 50 && selectedDocumentId && Utils.isModified) {
+    if (online && timerCountRef.current >= 300 && selectedDocumentId && Utils.isModified) {
       timerCountRef.current = 0
       doHandleAutoFileSave(selectedDocumentId, selectedDocumentName, selectedFolderId)
-    } else if (timerCountRef.current >= 50) {
+    } else if (timerCountRef.current >= 300) {
       timerCountRef.current = 0
     } else {
       // messageApi.open({
