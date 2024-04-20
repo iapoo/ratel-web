@@ -1971,9 +1971,9 @@ const Content: FC<ContentProps> = ({
     {type: 'divider' },
     {label: <FormattedMessage id='workspace.content.popup-text-cut' />, key: '3', onClick: handleTextCut, },
     {label: <FormattedMessage id='workspace.content.popup-text-copy' />, key: '4', onClick: handleTextCopy, },
-    {label: <FormattedMessage id='workspace.content.popup-text-paste' />, key: '4', onClick: handleTextPaste, },
+    {label: <FormattedMessage id='workspace.content.popup-text-paste' />, key: '5', onClick: handleTextPaste, },
     {type: 'divider' },
-    {label: <FormattedMessage id='workspace.content.popup-text-select-all' />, key: '4', onClick: handleSelectAll, },
+    {label: <FormattedMessage id='workspace.content.popup-text-select-all' />, key: '6', onClick: handleSelectAll, },
   ]
 
   const popupPaneTitle = (key: string): MenuProps['items'] => {
