@@ -1784,9 +1784,11 @@ export class Editor extends Painter {
         this._targetItem = undefined
         this._targetItemIndex = -1
       } else if(this._textFocused) {
-        const targetPoint = this.findEditorItemPoint(clickedEditorItem, e.x, e.y)
-        this.updateTextCursorLocation(clickedEditorItem, targetPoint.x, targetPoint.y)
-        clickedEditorItem.shape.enter(targetPoint.x, targetPoint.y)
+        if(clickedEditorItem.shape.selection.length == 0) {
+          const targetPoint = this.findEditorItemPoint(clickedEditorItem, e.x, e.y)
+          this.updateTextCursorLocation(clickedEditorItem, targetPoint.x, targetPoint.y)
+          clickedEditorItem.shape.enter(targetPoint.x, targetPoint.y)
+        }
       }
     } else {
       theSelectionLayer.removeAllEditorItems()
