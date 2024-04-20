@@ -7,11 +7,12 @@ import { TextCursor, Style, StyleInfo, } from './EntityUtils'
 
 export abstract class AbstractTextShape extends Shape {
     public static DEFAULT_TEXT_PADDING = 4
-
+    public static CURSOR_LINE_COLOR = Colors.Black
+    public static CURSOR_PATH_COLOR = Colors.SkyBlue
     private _text: string
     private _fontPaint: Paint
     private _lines = new Array<ShapedLine>(0)
-    private _cursor: TextCursor = new TextCursor(Colors.Black, Colors.Blue, 0, 0, 0, 800)
+    private _cursor: TextCursor = new TextCursor(AbstractTextShape.CURSOR_LINE_COLOR, AbstractTextShape.CURSOR_PATH_COLOR, 0, 0, 0, 800)
     private _startIndex = 0
     private _endIndex = 0
     private _selectStartIndex = 0
