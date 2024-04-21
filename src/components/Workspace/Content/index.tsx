@@ -1592,10 +1592,16 @@ const Content: FC<ContentProps> = ({
 
   const handleLock = () => {
     if(Utils.currentEditor) {
-      Utils.currentEditor.selectionLayer.getAllEditorItems().forEach(editorItem => {
+      const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
+      const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
+      editorItems.forEach(editorItem => {
         editorItem.locked = !editorItem.locked
       })
       Utils.currentEditor.invalideHolder()
+      const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
+      const  operation: Operation = new Operation(Utils.currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
+      Utils.currentEditor.operationService.addOperation(operation)
+      Utils.currentEditor.triggerOperationChange()
     }
   }
 

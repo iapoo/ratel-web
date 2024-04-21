@@ -16,7 +16,7 @@ export enum OperationType {
     SHAPE_TEXT_EDIT,
     TABLE_TEXT_EDIT,
     ADD_ITEMS_TO_CONTAINER,
-    REMOVE_ITEMS_FROM_CONTAINER,    
+    REMOVE_ITEMS_FROM_CONTAINER,
 }
 
 export class Operation {
