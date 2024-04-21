@@ -601,7 +601,7 @@ const Content: FC<ContentProps> = ({
     let tableSelected = false
     if(Utils.currentEditor && e.source.selectionLayer.getEditorItemCount() == 1 ) {
       let item = e.source.selectionLayer.getEditorItem(0) as Item
-      if(item instanceof TableEntity) {
+      if(item instanceof TableEntity && item.customizable) {
         let container = document.getElementById('editor-container')
         let postion = getElementAbsolutePosition(container)
         const [scrollLeft, scrollTop] = findEditorScrollPosition()
@@ -640,7 +640,7 @@ const Content: FC<ContentProps> = ({
       let top = point.y * Utils.currentEditor.zoom - scrollTop
       //let left = item.left * Utils.currentEditor.zoom
       //let top = item.top * Utils.currentEditor.zoom
-      if(item instanceof TableEntity) {
+      if(item instanceof TableEntity && item.customizable) {
         setTableToolbarLeft(left + postion.left)
         setTableToolbarTop(top + postion.top)
         setTableToolbarVisible(true)
@@ -649,7 +649,13 @@ const Content: FC<ContentProps> = ({
           setTextToolbarTop(top + postion.top)
           setTextToolbarVisible(true)
         }
-      } else if(item instanceof ShapeEntity && e.source.isTextEditting) {
+      } else if(item instanceof TableEntity) {
+        if(Utils.currentEditor.targetItem) {
+          setTextToolbarLeft(left + postion.left)
+          setTextToolbarTop(top + postion.top)
+          setTextToolbarVisible(true)
+        }
+    } else if(item instanceof ShapeEntity && e.source.isTextEditting) {
         setTextToolbarLeft(left + postion.left)
         setTextToolbarTop(top + postion.top)
         setTextToolbarVisible(true)
