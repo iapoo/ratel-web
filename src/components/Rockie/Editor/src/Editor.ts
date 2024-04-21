@@ -1020,82 +1020,86 @@ export class Editor extends Painter {
           this._targetItemIndex = -1
           this._inMoving = true
         } else if (clickedEditorItem instanceof TableEntity) {
-          const targetPoint = this.findEditorItemPoint(clickedEditorItem, e.x, e.y)
-          const [ targetRow, targetRowIndex, ] = this.isTableRowtResizable(clickedEditorItem, targetPoint.x, targetPoint.y)
-          const [ targetColumn, targetColumnIndex, ] = this.isTableColumnResizable(clickedEditorItem, targetPoint.x, targetPoint.y)
-          this._target = clickedEditorItem
-          if (targetRow) {
-            // console.log('========1')
-            this.checkAndEndTextEdit()
-            this.finishTextEditOperation()
-            this._targetRowResizing = true
-            this._targetRowIndex = targetRowIndex
-            if (this._targetItem) {
-              this._targetItem.shape.focused = false
-            }
-            this._targetItem = undefined
-            this._targetItemIndex = -1
-            this.handleTableActiveCellShape()
-            this._inMoving = true
-            this.startMoveOutline(e)
-          } else if (targetColumn) {
-            // console.log('========0')
-            this.checkAndEndTextEdit()
-            this.finishTextEditOperation()
-            this._targetColumnResizing = targetColumn
-            this._targetColumnIndex = targetColumnIndex
-            if (this._targetItem) {
-              this._targetItem.shape.focused = false
-            }
-            this._targetItem = undefined
-            this.handleTableActiveCellShape()
-            this._targetItemIndex = -1
-            this._inMoving = true
-            this.startMoveOutline(e)
-          } else {
-            const itemIndex = this.findTableItemIndex(clickedEditorItem, targetPoint.x, targetPoint.y)
-            if(this._targetItemIndex != itemIndex) {
-              this._targetItemIndex = itemIndex
+          if(!clickedEditorItem.locked) {
+            const targetPoint = this.findEditorItemPoint(clickedEditorItem, e.x, e.y)
+            const [ targetRow, targetRowIndex, ] = this.isTableRowtResizable(clickedEditorItem, targetPoint.x, targetPoint.y)
+            const [ targetColumn, targetColumnIndex, ] = this.isTableColumnResizable(clickedEditorItem, targetPoint.x, targetPoint.y)
+            this._target = clickedEditorItem
+            if (targetRow) {
+              // console.log('========1')
+              this.checkAndEndTextEdit()
+              this.finishTextEditOperation()
+              this._targetRowResizing = true
+              this._targetRowIndex = targetRowIndex
               if (this._targetItem) {
                 this._targetItem.shape.focused = false
               }
-              this._targetItem = clickedEditorItem.items[itemIndex]
-              this._targetItem.shape.focused = true
+              this._targetItem = undefined
+              this._targetItemIndex = -1
               this.handleTableActiveCellShape()
               this._inMoving = true
-              this.checkAndStartTextEdit()
-              this.beginTextEditOperation(clickedEditorItem)
               this.startMoveOutline(e)
-              const cellPoint = this.findEditorItemPoint(this._targetItem, e.x, e.y)
-              this.updateTextCursorLocation(this._targetItem, cellPoint.x, cellPoint.y)
-              this._targetItem.shape.enter(cellPoint.x, cellPoint.y)
-              this._textSelecting = true
+            } else if (targetColumn) {
+              // console.log('========0')
+              this.checkAndEndTextEdit()
+              this.finishTextEditOperation()
+              this._targetColumnResizing = targetColumn
+              this._targetColumnIndex = targetColumnIndex
+              if (this._targetItem) {
+                this._targetItem.shape.focused = false
+              }
+              this._targetItem = undefined
+              this.handleTableActiveCellShape()
+              this._targetItemIndex = -1
+              this._inMoving = true
+              this.startMoveOutline(e)
             } else {
-              //In text Editting 
-              if(this.isTextEditting && this._targetItem) {
-                this._inMoving = false
+              const itemIndex = this.findTableItemIndex(clickedEditorItem, targetPoint.x, targetPoint.y)
+              if(this._targetItemIndex != itemIndex) {
+                this._targetItemIndex = itemIndex
+                if (this._targetItem) {
+                  this._targetItem.shape.focused = false
+                }
+                this._targetItem = clickedEditorItem.items[itemIndex]
+                this._targetItem.shape.focused = true
+                this.handleTableActiveCellShape()
+                this._inMoving = true
+                this.checkAndStartTextEdit()
+                this.beginTextEditOperation(clickedEditorItem)
+                this.startMoveOutline(e)
                 const cellPoint = this.findEditorItemPoint(this._targetItem, e.x, e.y)
                 this.updateTextCursorLocation(this._targetItem, cellPoint.x, cellPoint.y)
                 this._targetItem.shape.enter(cellPoint.x, cellPoint.y)
                 this._textSelecting = true
               } else {
-                this._inMoving = true
-                this.checkAndEndTextEdit()
-                this.finishTextEditOperation()
-                this.startMoveOutline(e)
+                //In text Editting 
+                if(this.isTextEditting && this._targetItem) {
+                  this._inMoving = false
+                  const cellPoint = this.findEditorItemPoint(this._targetItem, e.x, e.y)
+                  this.updateTextCursorLocation(this._targetItem, cellPoint.x, cellPoint.y)
+                  this._targetItem.shape.enter(cellPoint.x, cellPoint.y)
+                  this._textSelecting = true
+                } else {
+                  this._inMoving = true
+                  this.checkAndEndTextEdit()
+                  this.finishTextEditOperation()
+                  this.startMoveOutline(e)
+                }
               }
             }
+            this.beginOperation(clickedEditorItem)
           }
-          this.beginOperation(clickedEditorItem)
         } else if(this._textFocused) {
           const targetPoint = this.findEditorItemPoint(clickedEditorItem, e.x, e.y)
           this.updateTextCursorLocation(clickedEditorItem, targetPoint.x, targetPoint.y)
           clickedEditorItem.shape.enter(targetPoint.x, targetPoint.y)
           this._textSelecting = true
         } else {
-          this.beginOperation(clickedEditorItem)
-          this._inMoving = true
-          this.startMoveOutline(e)
+          if(!clickedEditorItem.locked) {
+            this.beginOperation(clickedEditorItem)
+            this._inMoving = true
+            this.startMoveOutline(e)
+          }
         }
       } else {
         theSelectionLayer.removeAllEditorItems()
@@ -1180,61 +1184,65 @@ export class Editor extends Painter {
           this._targetTime = Date.now()
         } else {
           if (clickedEditorItem instanceof TableEntity) {
-            const itemIndex = this.findTableItemIndex(clickedEditorItem, targetPoint.x, targetPoint.y)
-            if (itemIndex === this._targetItemIndex && this._targetItem) {
-              const cellPoint = this.findEditorItemPoint(this._targetItem, e.x, e.y)
+            if(!clickedEditorItem.locked) {
+              const itemIndex = this.findTableItemIndex(clickedEditorItem, targetPoint.x, targetPoint.y)
+              if (itemIndex === this._targetItemIndex && this._targetItem) {
+                const cellPoint = this.findEditorItemPoint(this._targetItem, e.x, e.y)
+                const nowTime = Date.now()
+                if (this._targetItem.shape.focused) {
+                  this._textArea.focus()
+                  this.updateTextCursorLocation(this._targetItem, cellPoint.x, cellPoint.y)
+                  this._targetItem.shape.enterTo(cellPoint.x, cellPoint.y)
+                  this._textSelecting = false
+                  this.triggerTextEditStyleChange()
+                } else {
+                  // Check double click
+                  if (nowTime - this._targetTime < Editor.DOUBLE_CLICK_TIME) {
+                    // console.log('Double click is detected')
+                    // this.handleDoubleClick(e)
+                    this._textArea.focus()
+                    this._targetItem.shape.enter(cellPoint.x, cellPoint.y)
+                    this.checkAndStartTextEdit()
+                    if (this._targetItem) {
+                      this._targetItem.shape.focused = true
+                    }
+                    this._textArea.textContent = ''
+                    this.updateTextCursorLocation(this._targetItem, cellPoint.x, cellPoint.y)
+                    this.triggerTextEditStyleChange()
+                    this.beginTextEditOperation(clickedEditorItem)
+                  }
+                }
+                this._targetTime = nowTime
+              }
+            }
+          } else {
+            if(!clickedEditorItem.locked) {
               const nowTime = Date.now()
-              if (this._targetItem.shape.focused) {
+              if (this._target.shape.focused) {
                 this._textArea.focus()
-                this.updateTextCursorLocation(this._targetItem, cellPoint.x, cellPoint.y)
-                this._targetItem.shape.enterTo(cellPoint.x, cellPoint.y)
-                this._textSelecting = false
+                this.updateTextCursorLocation(clickedEditorItem, targetPoint.x, targetPoint.y)
+                this._target.shape.enterTo(targetPoint.x, targetPoint.y)
+                this._textSelecting = false              
                 this.triggerTextEditStyleChange()
               } else {
                 // Check double click
                 if (nowTime - this._targetTime < Editor.DOUBLE_CLICK_TIME) {
-                  // console.log('Double click is detected')
+                  //console.log('Double click is detected')
                   // this.handleDoubleClick(e)
                   this._textArea.focus()
-                  this._targetItem.shape.enter(cellPoint.x, cellPoint.y)
-                  this.checkAndStartTextEdit()
-                  if (this._targetItem) {
-                    this._targetItem.shape.focused = true
+                  this._target.shape.enter(targetPoint.x, targetPoint.y)
+                  this.checkAndStartTextEdit()              
+                  if (this._target) {
+                    this._target.shape.focused = true
                   }
                   this._textArea.textContent = ''
-                  this.updateTextCursorLocation(this._targetItem, cellPoint.x, cellPoint.y)
+                  this.updateTextCursorLocation(clickedEditorItem, targetPoint.x, targetPoint.y)
                   this.triggerTextEditStyleChange()
-                  this.beginTextEditOperation(clickedEditorItem)
+                  this.beginTextEditOperation(this._target)
                 }
               }
               this._targetTime = nowTime
             }
-          } else {
-            const nowTime = Date.now()
-            if (this._target.shape.focused) {
-              this._textArea.focus()
-              this.updateTextCursorLocation(clickedEditorItem, targetPoint.x, targetPoint.y)
-              this._target.shape.enterTo(targetPoint.x, targetPoint.y)
-              this._textSelecting = false              
-              this.triggerTextEditStyleChange()
-            } else {
-              // Check double click
-              if (nowTime - this._targetTime < Editor.DOUBLE_CLICK_TIME) {
-                //console.log('Double click is detected')
-                // this.handleDoubleClick(e)
-                this._textArea.focus()
-                this._target.shape.enter(targetPoint.x, targetPoint.y)
-                this.checkAndStartTextEdit()              
-                if (this._target) {
-                  this._target.shape.focused = true
-                }
-                this._textArea.textContent = ''
-                this.updateTextCursorLocation(clickedEditorItem, targetPoint.x, targetPoint.y)
-                this.triggerTextEditStyleChange()
-                this.beginTextEditOperation(this._target)
-              }
-            }
-            this._targetTime = nowTime
           }
         }
       }
@@ -2442,26 +2450,28 @@ export class Editor extends Painter {
     //console.log(` Find editor item edge = ${isEdge}`)
     if (editorItem && isEdge) {
       //console.log(` Check here1`)
-      const inEditorItem = this.isInEditorItem(editorItem, e.x, e.y)
-      //const targetPoint = this.findEditorItemJoint(editorItem, e.x, e.y, inEditorItem)
-      if(inEditorItem) {
-        //console.log(` Check here2 ${this._textFocused}`)
-        if(this._textFocused) {
-          //console.log(` Check here21 ${this._textFocused}`)
-          this.updateEditorMode(EditorMode.TEXT)
+      if(!editorItem.locked) {
+        const inEditorItem = this.isInEditorItem(editorItem, e.x, e.y)
+        //const targetPoint = this.findEditorItemJoint(editorItem, e.x, e.y, inEditorItem)
+        if(inEditorItem) {
+          //console.log(` Check here2 ${this._textFocused}`)
+          if(this._textFocused) {
+            //console.log(` Check here21 ${this._textFocused}`)
+            this.updateEditorMode(EditorMode.TEXT)
+          } else {
+            //console.log(` Check here22 ${this._textFocused}`)
+            this.updateEditorMode(EditorMode.MOVE)
+          }
         } else {
-          //console.log(` Check here22 ${this._textFocused}`)
-          this.updateEditorMode(EditorMode.MOVE)
+          //console.log(` Check here3`)
+          this.updateEditorMode(EditorMode.CROSSHAIR)
         }
-      } else {
-        //console.log(` Check here3`)
-        this.updateEditorMode(EditorMode.CROSSHAIR)
+        //if (targetPoint) {
+        //  console.log(`Find editor item joint: x = ${targetPoint.x} y = ${targetPoint.y} `)
+        //} else {
+        //  console.log(`It shouldn't be here`)
+        //}
       }
-      //if (targetPoint) {
-      //  console.log(`Find editor item joint: x = ${targetPoint.x} y = ${targetPoint.y} `)
-      //} else {
-      //  console.log(`It shouldn't be here`)
-      //}
     } else if (editorItem !== null && editorItem !== undefined) {
       // DO hover but not include those selected
       if (!theSelectionLayer.hasEditorItem(editorItem)) {
@@ -2476,46 +2486,52 @@ export class Editor extends Painter {
           theHoverLayer.invalidateLayer()
         }
         if (editorItem instanceof TableEntity) {
-          const targetPoint = this.findEditorItemPoint(editorItem, e.x, e.y)
-          const [ targetRow, targetRowIndex, ] = this.isTableRowtResizable(editorItem, targetPoint.x, targetPoint.y)
-          const [ targetColumn, targetColumnIndex, ] = this.isTableColumnResizable(editorItem, targetPoint.x, targetPoint.y)
-          if (targetRow) {
-            this.updateEditorMode(EditorMode.ROW_RESIZE)
-          } else if (targetColumn) {
-            this.updateEditorMode(EditorMode.COL_RESIZE)
-          } else if(this._targetItem && this._textFocused && this._textSelecting) {
-            this.updateEditorMode(EditorMode.TEXT)
-          } else {
-            this.updateEditorMode(EditorMode.MOVE)
+          if(!editorItem.locked)  {
+            const targetPoint = this.findEditorItemPoint(editorItem, e.x, e.y)
+            const [ targetRow, targetRowIndex, ] = this.isTableRowtResizable(editorItem, targetPoint.x, targetPoint.y)
+            const [ targetColumn, targetColumnIndex, ] = this.isTableColumnResizable(editorItem, targetPoint.x, targetPoint.y)
+            if (targetRow) {
+              this.updateEditorMode(EditorMode.ROW_RESIZE)
+            } else if (targetColumn) {
+              this.updateEditorMode(EditorMode.COL_RESIZE)
+            } else if(this._targetItem && this._textFocused && this._textSelecting) {
+              this.updateEditorMode(EditorMode.TEXT)
+            } else {
+              this.updateEditorMode(EditorMode.MOVE)
+            }
           }
         } else if(this._textFocused && this._textSelecting) {
           this.updateEditorMode(EditorMode.TEXT)
         } else {
-          this.updateEditorMode(EditorMode.MOVE)
+          if(!editorItem.locked) {
+            this.updateEditorMode(EditorMode.MOVE)
+          }
         }
       } else {
         if (editorItem instanceof TableEntity) {
-          const targetPoint = this.findEditorItemPoint(editorItem, e.x, e.y)
-          const [ targetRow, targetRowIndex, ] = this.isTableRowtResizable(editorItem, targetPoint.x, targetPoint.y)
-          const [ targetColumn, targetColumnIndex, ] = this.isTableColumnResizable(editorItem, targetPoint.x, targetPoint.y)
-          if (targetRow) {
-            // console.log('========2')
-            // this._targetRow = true
-            // this._targetRowIndex = targetRowIndex
-            this.updateEditorMode(EditorMode.ROW_RESIZE)
-          } else if (targetColumn) {
-            // console.log('========3')
-            // this._targetColumn = targetColumn
-            // this._targetColumnIndex = targetColumnIndex
-            this.updateEditorMode(EditorMode.COL_RESIZE)
-          } else if(this._targetItem && this._textFocused && this._textSelecting) {
-            const cellPoint = this.findEditorItemPoint(this._targetItem, e.x, e.y)
-            this._targetItem.shape.enterTo(cellPoint.x, cellPoint.y)
-            this.updateEditorMode(EditorMode.TEXT)
-          } else if(this._targetItem && this._textFocused) {
-            this.updateEditorMode(EditorMode.TEXT)
-          } else {
-            this.updateEditorMode(EditorMode.MOVE)
+          if(!editorItem.locked) {
+            const targetPoint = this.findEditorItemPoint(editorItem, e.x, e.y)
+            const [ targetRow, targetRowIndex, ] = this.isTableRowtResizable(editorItem, targetPoint.x, targetPoint.y)
+            const [ targetColumn, targetColumnIndex, ] = this.isTableColumnResizable(editorItem, targetPoint.x, targetPoint.y)
+            if (targetRow) {
+              // console.log('========2')
+              // this._targetRow = true
+              // this._targetRowIndex = targetRowIndex
+              this.updateEditorMode(EditorMode.ROW_RESIZE)
+            } else if (targetColumn) {
+              // console.log('========3')
+              // this._targetColumn = targetColumn
+              // this._targetColumnIndex = targetColumnIndex
+              this.updateEditorMode(EditorMode.COL_RESIZE)
+            } else if(this._targetItem && this._textFocused && this._textSelecting) {
+              const cellPoint = this.findEditorItemPoint(this._targetItem, e.x, e.y)
+              this._targetItem.shape.enterTo(cellPoint.x, cellPoint.y)
+              this.updateEditorMode(EditorMode.TEXT)
+            } else if(this._targetItem && this._textFocused) {
+              this.updateEditorMode(EditorMode.TEXT)
+            } else {
+              this.updateEditorMode(EditorMode.MOVE)
+            }
           }
         } else if(this._textFocused && this._textSelecting) {
           const targetPoint = this.findEditorItemPoint(editorItem, e.x, e.y)
@@ -2524,7 +2540,9 @@ export class Editor extends Painter {
         } else if(this._textFocused) {
           this.updateEditorMode(EditorMode.TEXT)
         } else {
-          this.updateEditorMode(EditorMode.MOVE)
+          if(!editorItem.locked) {
+            this.updateEditorMode(EditorMode.MOVE)
+          }
         }
       }
     } else {
