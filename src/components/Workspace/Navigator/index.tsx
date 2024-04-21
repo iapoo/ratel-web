@@ -3,7 +3,7 @@ import styles from './index.css'
 import { Button, Collapse, CollapseProps, Divider, Image, Popover, Space, Tooltip, message, } from 'antd'
 import { Utils, RequestUtils, } from '../Utils'
 import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
-import { ConnectorAction, ContainerAction, CustomShapeAction, ImageContainerAction, SvgContainerAction, LineAction, ShapeAction, TableAction, } from '../../Rockie/Actions'
+import { ConnectorAction, ContainerAction, CustomShapeAction, ImageContainerAction, SvgContainerAction, LineAction, ShapeAction, TableAction, CustomTableAction, } from '../../Rockie/Actions'
 import { StorageService, } from '../Storage'
 import {
   Rectangle, RoundRectangle, Text, Ellipse, Square, Circle, Process, Diamond, Parallelogram, Hexagon, Triangle,
@@ -150,6 +150,12 @@ const Navigator: FC<NavigatorProps> = ({
     console.log(str)
   }
 
+  const addCustomTable = () => {
+    if (Utils.currentEditor) {
+      Utils.currentEditor.action = new CustomTableAction(Utils.currentEditor)
+    }
+  }
+
   const login = () => {
     //RequestUtils.login()
   }
@@ -220,6 +226,12 @@ const Navigator: FC<NavigatorProps> = ({
 
   const table = <Popover title={'Table'} placement='right' content={getPopoverContent('Table', 128, 128)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 180, width: 180,}}>
   <Button type='text' onClick={() => addTable()} style={{padding: 2, display: 'table'}}>
+    <img src={`/shapes/Table.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+  </Button>
+  </Popover>
+
+  const customTable = <Popover title={'Table'} placement='right' content={getPopoverContent('Table', 128, 128)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 180, width: 180,}}>
+  <Button type='text' onClick={() => addCustomTable()} style={{padding: 2, display: 'table'}}>
     <img src={`/shapes/Table.png`} width={28} height={28} style={{display: 'table-cell'}}/>
   </Button>
   </Popover>
@@ -346,6 +358,7 @@ const Navigator: FC<NavigatorProps> = ({
       {aliyunShapes}
       {awsShapes}
       {customShapeFlowChartShapes}
+      {customTable}
     </Space>,
     },
     {

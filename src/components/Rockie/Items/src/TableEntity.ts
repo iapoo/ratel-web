@@ -23,6 +23,10 @@ export class TableEntity extends ContainerEntity {
     this.refreshTable()
   }
 
+  public get customizable() {
+    return true
+  }
+  
   public get rowCount() {
     return this._rowCount
   }

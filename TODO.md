@@ -23,3 +23,5 @@
 7. Check rich text copy & paste(Done)
 8. Token may expire, need to check
 9. Undo may make document unmodified.
+10. Text Style have issue sometimes
+11. New document with template
