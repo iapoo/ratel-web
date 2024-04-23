@@ -28,12 +28,16 @@ export abstract class AbstractTextShape extends Shape {
     private _textVerticalAlignment: TextVerticalAlignment
     private _textWidth: number
     private _textHeight: number
+    private _textLeft: number
+    private _textTop: number
     private _paragraphDirection: ParagraphDirection
 
     constructor (text = '', left = 0, top = 0, width = 100, height = 100) {
       super(left, top, width, height)
       // this.filled = false
       this.clipped = false
+      this._textLeft = 0
+      this._textTop = 0
       this._textWidth = width
       this._textHeight = height
       this._textMargin = AbstractTextShape.DEFAULT_TEXT_PADDING
@@ -101,8 +105,26 @@ export abstract class AbstractTextShape extends Shape {
     public set textHeight(value: number) {
       this._textHeight = value
       this.buildLines()
+    }    
+
+    public get textLeft() {
+      return this._textLeft
     }
-    
+
+    public set textLeft(value: number) {
+      this._textLeft = value
+      this.buildLines()
+    }
+
+    public get textTop() {
+      return this._textTop
+    }
+
+    public set textTop(value: number) {
+      this._textTop = value
+      this.buildLines()
+    }
+
     public get paragraphDirection() {
       return this._paragraphDirection
     }
@@ -350,7 +372,7 @@ export abstract class AbstractTextShape extends Shape {
     public get selectionStyle() {
       return this._selectStyle
     }
-    
+
     public set styles(value: Style[]) {
       this._styles = value
       this.buildLines()
@@ -1233,11 +1255,11 @@ export abstract class AbstractTextShape extends Shape {
     }
 
     private getTextPaddingX() {
-      return this._textMargin
+      return this._textMargin + this._textLeft
     }
 
     private getTextPaddingY() {
-      let startY = this._textMargin
+      let startY = this._textMargin + this._textTop
       let paragraphHeight = this._paragraph.getHeight()
       if(paragraphHeight == 0) {
         //Empty text and so we assume height is font size x 140%
@@ -1245,14 +1267,14 @@ export abstract class AbstractTextShape extends Shape {
       }
       switch(this._textVerticalAlignment) {
         case TextVerticalAlignment.TOP:
-          startY = this._textMargin
+          startY = this._textMargin + this._textTop
           break;
         case TextVerticalAlignment.BOTTOM:
-          startY = this.textHeight - this._textMargin - paragraphHeight
+          startY = this.textTop + this.textHeight - this._textMargin - paragraphHeight
           break;
         case TextVerticalAlignment.MIDDLE:
         default:            
-          startY = this._textMargin + (this.textHeight - this._textMargin * 2  - paragraphHeight) / 2
+          startY = this._textMargin + (this.textTop + this.textHeight - this._textMargin * 2  - paragraphHeight) / 2
           break;
       }
       return startY
