@@ -251,6 +251,8 @@ export class EntityShape extends AbstractTextShape {
       this.path.addOval(Rectangle.makeLTWH(0, 0, this.width, this.height))
       break
     case EntityShapeType.Process:
+      this.textLeft = modifierWidth
+      this.textWidth = this.width - modifierWidth * 2
       this.path.addRectangle(Rectangle.makeLTWH(0, 0, this.width, this.height))
       this.path.moveTo(modifierWidth + 1, 0)
       this.path.lineTo(modifierWidth + 1, this.height)
@@ -316,6 +318,8 @@ export class EntityShape extends AbstractTextShape {
       break
     case EntityShapeType.Document: {
       modifierHeight = this.height - modifierHeight
+      //Special textHeight to make it natural
+      this.textHeight = this.height - modifierHeight
       let k = modifierHeight / 0.35
       //this.path.addRectangle(Rectangle.makeLTWH(0, 0, this.width, this.height))
       this.path.moveTo(0, 0)
@@ -328,6 +332,10 @@ export class EntityShape extends AbstractTextShape {
       break
     }
     case EntityShapeType.InternalStorage:
+      this.textLeft = modifierWidth
+      this.textTop = modifierHeight
+      this.textWidth = this.width - modifierWidth
+      this.textHeight = this.height - modifierHeight
       // TODO: FIX 1 Offset
       this.path.addRectangle(Rectangle.makeLTWH(0, 0, this.width, this.height))
       this.path.moveTo(modifierWidth + 1, 0)
@@ -336,6 +344,10 @@ export class EntityShape extends AbstractTextShape {
       this.path.lineTo(this.width, modifierHeight + 1)
       break
     case EntityShapeType.Cube:
+      this.textLeft = modifierWidth
+      this.textTop = modifierHeight
+      this.textWidth = this.width - modifierWidth
+      this.textHeight = this.height - modifierHeight
       this.path.moveTo(0, 0)
       this.path.lineTo(0, this.height - modifierHeight)
       this.path.lineTo(modifierWidth, this.height)
@@ -348,6 +360,8 @@ export class EntityShape extends AbstractTextShape {
       this.path.addRectangle(Rectangle.makeLTWH(modifierWidth, modifierHeight, this.width - modifierWidth, this.height - modifierHeight))
       break
     case EntityShapeType.Step:
+      this.textLeft = modifierWidth
+      this.textWidth = this.width - modifierWidth * 2
       this.path.moveTo(0, 0)
       this.path.lineTo(modifierWidth, this.height /2)
       this.path.lineTo(0, this.height)
@@ -364,6 +378,8 @@ export class EntityShape extends AbstractTextShape {
       this.path.lineTo(modifierWidth, 0)
       break
     case EntityShapeType.Tape: {
+      this.textTop = modifierHeight * 2
+      this.textHeight = this.height - modifierHeight * 4
       let k = modifierHeight / 0.35
       //this.path.addRectangle(Rectangle.makeLTWH(0, 0, this.width, this.height))
       this.path.moveTo(0, modifierHeight)
@@ -399,6 +415,7 @@ export class EntityShape extends AbstractTextShape {
       this.path.lineTo(0, modifierHeight)
       break
     case EntityShapeType.Callout:
+      this.textHeight = adapterHeight
       this.path.moveTo(0, 0)
       this.path.lineTo(0, adapterHeight)
       this.path.lineTo(adapterWidth, adapterHeight)

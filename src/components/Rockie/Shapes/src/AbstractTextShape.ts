@@ -1045,7 +1045,7 @@ export abstract class AbstractTextShape extends Shape {
         index += style.length
       })
       this._paragraph = this._paragraphBuilder.build()
-      this._paragraph.layout(this.textWidth - this.getTextPaddingX() * 2)
+      this._paragraph.layout(this.textWidth - this._textMargin * 2)
       this._lines = this._paragraph.getShapedLines()
       this._runs.length = 0
       let startIndex = 0
@@ -1273,8 +1273,9 @@ export abstract class AbstractTextShape extends Shape {
           startY = this.textTop + this.textHeight - this._textMargin - paragraphHeight
           break;
         case TextVerticalAlignment.MIDDLE:
-        default:            
-          startY = this._textMargin + (this.textTop + this.textHeight - this._textMargin * 2  - paragraphHeight) / 2
+        default:       
+          //TODO: FIXME for 2 offset     
+          startY = this.textTop + (this.textHeight - paragraphHeight) / 2 + 2
           break;
       }
       return startY
