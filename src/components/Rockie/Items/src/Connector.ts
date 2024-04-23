@@ -50,10 +50,10 @@ export const ConnectorArrowTypes = [
   {name: 'Triangle-7-1', description: 'Triangle', type: ConnectorArrowDisplayType.Triangle, height: 12, width: 12, modifier: 0.3, count: 2, outline: false, close: true, displayMode: ConnectorArrowDisplayMode.Full, },
   {name: 'Triangle-8-1', description: 'Triangle', type: ConnectorArrowDisplayType.Triangle, height: 12, width: 12, modifier: 0.3, count: 2, outline: true, close: true, displayMode: ConnectorArrowDisplayMode.Full, },
 
-  {name: 'Diamond-1', description: 'Diamond', type: ConnectorArrowDisplayType.Diamond, height: 12, width: 12, modifier: 0, count: 1, outline: false, close: true, displayMode: ConnectorArrowDisplayMode.Full, },
-  {name: 'Diamond-2', description: 'Diamond', type: ConnectorArrowDisplayType.Diamond, height: 12, width: 12, modifier: 0, count: 1, outline: true, close: true, displayMode: ConnectorArrowDisplayMode.Full, },
-  {name: 'Diamond-3', description: 'Diamond', type: ConnectorArrowDisplayType.Diamond, height: 12, width: 12, modifier: 0, count: 2, outline: false, close: true, displayMode: ConnectorArrowDisplayMode.Full, },
-  {name: 'Diamond-4', description: 'Diamond', type: ConnectorArrowDisplayType.Diamond, height: 12, width: 12, modifier: 0, count: 2, outline: true, close: true, displayMode: ConnectorArrowDisplayMode.Full, },
+  {name: 'Diamond-1', description: 'Diamond', type: ConnectorArrowDisplayType.Diamond, height: 12, width: 24, modifier: 0, count: 1, outline: false, close: true, displayMode: ConnectorArrowDisplayMode.Full, },
+  {name: 'Diamond-2', description: 'Diamond', type: ConnectorArrowDisplayType.Diamond, height: 12, width: 24, modifier: 0, count: 1, outline: true, close: true, displayMode: ConnectorArrowDisplayMode.Full, },
+  {name: 'Diamond-3', description: 'Diamond', type: ConnectorArrowDisplayType.Diamond, height: 12, width: 24, modifier: 0, count: 2, outline: false, close: true, displayMode: ConnectorArrowDisplayMode.Full, },
+  {name: 'Diamond-4', description: 'Diamond', type: ConnectorArrowDisplayType.Diamond, height: 12, width: 24, modifier: 0, count: 2, outline: true, close: true, displayMode: ConnectorArrowDisplayMode.Full, },
 
   {name: 'Ellipse-1', description: 'Ellipse', type: ConnectorArrowDisplayType.Ellipse, height: 12, width: 12, modifier: 0, count: 1, outline: false, close: true, displayMode: ConnectorArrowDisplayMode.Full, },
   {name: 'Ellipse-2', description: 'Ellipse', type: ConnectorArrowDisplayType.Ellipse, height: 12, width: 12, modifier: 0, count: 1, outline: true, close: true, displayMode: ConnectorArrowDisplayMode.Full, },
