@@ -217,6 +217,8 @@ export class EntityShape extends AbstractTextShape {
     }
     let modifierWidth = this.modifier.x + this.typeInfo.modifierStart.x * this.width
     let modifierHeight = this.modifier.y + this.typeInfo.modifierStart.y * this.height
+    let controllerWidth = this.controller.x + this.typeInfo.controllerStart.x * this.width
+    let controllerHeight = this.controller.y + this.typeInfo.controllerStart.y * this.height
     let adapterWidth = this.adapter.x + this.typeInfo.adapterStart.x * this.width
     let adapterHeight = this.adapter.y + this.typeInfo.adapterStart.y * this.height
     let adapterSizeX = this.adapterSize
@@ -224,6 +226,10 @@ export class EntityShape extends AbstractTextShape {
     if(this._typeInfo?.modifyInPercent) {
       modifierWidth = this.width * this.modifier.x * (this.typeInfo.modifierEnd.x - this.typeInfo.modifierStart.x) + this.typeInfo.modifierStart.x * this.width
       modifierHeight = this.height * this.modifier.y * (this.typeInfo.modifierEnd.y - this.typeInfo.modifierStart.y) + this.typeInfo.modifierStart.y * this.height
+    }
+    if(this.typeInfo.controlInPercent) {
+      controllerWidth = this.width * this.controller.x * (this.typeInfo.controllerEnd.x - this.typeInfo.controllerStart.x) + this.typeInfo.controllerStart.x * this.width
+      controllerHeight = this.height * this.controller.y * (this.typeInfo.controllerEnd.y - this.typeInfo.controllerStart.y) + this.typeInfo.controllerStart.y * this.height
     }
     if(this._typeInfo?.adaptInPercent) {
       adapterWidth = this.width * this.adapter.x * (this.typeInfo.adapterEnd.x - this.typeInfo.adapterStart.x) + this.typeInfo.adapterStart.x * this.width
@@ -444,17 +450,16 @@ export class EntityShape extends AbstractTextShape {
       this.path.addRectangle(Rectangle.makeLTWH(0, 0, this.width, this.height))
       break
     case EntityShapeType.HorizontalContainer:
-      this.path.addRectangle(Rectangle.makeLTWH(0, 0, this.width, this.height))
-      this.path.moveTo(modifierWidth + 1, 0)
-      this.path.lineTo(modifierWidth + 1, this.height)
-      this.textWidth = this.height
+      this.path.addRectangle(Rectangle.makeLTWH(0, controllerHeight, modifierWidth, this.height - controllerHeight))
+      this.path.addRectangle(Rectangle.makeLTWH(modifierWidth, 0, this.width - modifierWidth, this.height))
+      this.textLeft = - controllerHeight
+      this.textWidth = this.height - controllerHeight
       this.textHeight = modifierWidth
       break
     case EntityShapeType.VerticalContainer:
-      this.path.addRectangle(Rectangle.makeLTWH(0, 0, this.width, this.height))
-      this.path.moveTo(0, modifierHeight + 1)
-      this.path.lineTo(this.width, modifierHeight + 1)
-      this.textWidth = this.width
+      this.path.addRectangle(Rectangle.makeLTWH(0, 0, controllerWidth, modifierHeight))
+      this.path.addRectangle(Rectangle.makeLTWH(0, modifierHeight, this.width, this.height - modifierHeight))
+      this.textWidth = controllerWidth
       this.textHeight = modifierHeight
       break
     case EntityShapeType.Rectangle:
