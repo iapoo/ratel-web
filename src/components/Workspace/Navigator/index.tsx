@@ -17,6 +17,7 @@ import { Arrows } from '@/components/Rockie/CustomItems/Arrows';
 import { AliyunShapes } from '@/components/Rockie/CustomItems/Aliyun';
 import { AwsShapes } from '@/components/Rockie/CustomItems/Aws';
 import { FlowChartShapes } from '@/components/Rockie/CustomItems/FlowChart';
+import { UMLShapes } from '@/components/Rockie/CustomItems/UML';
 
 interface NavigatorProps {
   navigatorWidth: number
@@ -150,9 +151,9 @@ const Navigator: FC<NavigatorProps> = ({
     console.log(str)
   }
 
-  const addCustomTable = () => {
+  const addCustomTable = (typeName: string) => {
     if (Utils.currentEditor) {
-      Utils.currentEditor.action = new CustomTableAction(Utils.currentEditor)
+      Utils.currentEditor.action = new CustomTableAction(Utils.currentEditor, typeName)
     }
   }
 
@@ -231,7 +232,7 @@ const Navigator: FC<NavigatorProps> = ({
   </Popover>
 
   const customTable = <Popover title={'Table'} placement='right' content={getPopoverContent('Table', 128, 128)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 180, width: 180,}}>
-  <Button type='text' onClick={() => addCustomTable()} style={{padding: 2, display: 'table'}}>
+  <Button type='text' onClick={() => addCustomTable('Interface')} style={{padding: 2, display: 'table'}}>
     <img src={`/shapes/Table.png`} width={28} height={28} style={{display: 'table-cell'}}/>
   </Button>
   </Popover>
@@ -344,6 +345,17 @@ const Navigator: FC<NavigatorProps> = ({
     }
   )
 
+
+  const umlShapes = UMLShapes.map(
+    shapeType => {
+      return <Popover title={shapeType.name} placement='right' content={getCustomShapeAwsPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
+      <Button type='text' onClick={() => addCustomTable(shapeType.name)} style={{padding: 2, display: 'table'}}>
+        <img src={`/custom-shapes/aws/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+      </Button>
+    </Popover>
+    }
+  )
+
   const items: CollapseProps['items'] = [
     {
       key: '1',
@@ -359,6 +371,7 @@ const Navigator: FC<NavigatorProps> = ({
       {awsShapes}
       {customShapeFlowChartShapes}
       {customTable}
+      {umlShapes}
     </Space>,
     },
     {

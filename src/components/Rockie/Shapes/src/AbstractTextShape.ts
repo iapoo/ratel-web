@@ -347,6 +347,10 @@ export abstract class AbstractTextShape extends Shape {
       return this._styles
     }
 
+    public get selectionStyle() {
+      return this._selectStyle
+    }
+    
     public set styles(value: Style[]) {
       this._styles = value
       this.buildLines()

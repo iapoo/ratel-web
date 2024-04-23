@@ -186,7 +186,7 @@ export class TableEntity extends ContainerEntity {
     const cellHeight = this.height / this.rowCount
     for (let rowIndex = 0; rowIndex < this._rowCount; rowIndex++) {
       for (let columnIndex = 0; columnIndex < this._columnCount; columnIndex++) {
-        const cell = new CellEntity(columnIndex * cellWidth, rowIndex * cellHeight, cellWidth, cellHeight)
+        const cell = new CellEntity(Math.round(columnIndex * cellWidth), Math.round(rowIndex * cellHeight), Math.round(cellWidth), Math.round(cellHeight))
         // console.log(cell)
         // const paint = new Paint()
         // if (rowIndex == 0) {

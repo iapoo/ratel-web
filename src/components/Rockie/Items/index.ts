@@ -6,6 +6,7 @@ export { ContainerEntity, ContainerTypes, Containers } from './src/ContainerEnti
 export { ContainerInfo } from './src/ContainerInfo'
 export { CustomEntity} from './src/CustomEntity'
 export { CustomShapeInfo} from './src/CustomShapeInfo'
+export { CustomTableEntity} from './src/CustomTableEntity'
 export { Entity } from './src/Entity'
 export { EditorItem } from './src/EditorItem'
 export { EditorItemInfo, } from './src/EditorItemInfo'
