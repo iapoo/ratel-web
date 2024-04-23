@@ -26,3 +26,4 @@
 10. Text Style have issue sometimes
 11. New document with template
 12. Make lock undoable & redoable (Done)
+13. Regenerate Arrows for UML
