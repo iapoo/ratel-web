@@ -1230,7 +1230,12 @@ export class Editor extends Painter {
                   //console.log('Double click is detected')
                   // this.handleDoubleClick(e)
                   if(this._target instanceof Connector) {
+                    let origItemInfo = OperationHelper.saveEditorItem(this._target)
                     this.createTextBoxInConnector(this._target, targetPoint.x, targetPoint.y)
+                    let editorItemInfo =  OperationHelper.saveEditorItem(this._target)
+                    let operation = new Operation(this, OperationType.UPDATE_ITEMS, [editorItemInfo],true, [origItemInfo])
+                    this._operationService.addOperation(operation)
+                    this.triggerOperationChange()
                   } else {
                     this._textArea.focus()
                     this._target.shape.enter(targetPoint.x, targetPoint.y)
@@ -2056,7 +2061,7 @@ export class Editor extends Painter {
         this._contentLayer.removeEditorItemAt(i)
         break;
       }
-      let found = this.removeItemById(editorItem, editorItem.id)      
+      let found = this.removeItemById(editorItem, id)      
       if(found) {
         break;
       }
@@ -2067,6 +2072,15 @@ export class Editor extends Painter {
     let editorItem = OperationHelper.loadItem(editorItemInfo, this)
     this._contentLayer.addEditorItem(editorItem)
     return editorItem
+  }
+
+  private handleAddEditorItemIntoEditorItem(editorItemInfo: EditorItemInfo, parentId: string) {
+    let parent = this.findEditorItemById(parentId)
+    if(parent) {
+      const parentItem = parent as Item
+      let editorItem = OperationHelper.loadItem(editorItemInfo, this)
+      parentItem.addItem(editorItem)
+    }
   }
 
   private handleUpdateEditorItem(editorItemInfo: EditorItemInfo): boolean {
@@ -2248,7 +2262,6 @@ export class Editor extends Painter {
       this.triggerSelectionChange()
     })
   }
-
 
   private handleOperationRedoRemoveItems(items: EditorItemInfo[]) {
     items.forEach(editorItemInfo => {
@@ -2889,6 +2902,7 @@ export class Editor extends Painter {
 
   private createTextBoxInConnector(connector: Connector, x: number, y: number) {
     const textBox = new ShapeEntity(x - 70, y  - 15, 80, 30)
+    textBox.text = 'text'
     textBox.fillColor = Colors.Transparent
     textBox.strokeColor = Colors.Transparent
     connector.addItem(textBox)
