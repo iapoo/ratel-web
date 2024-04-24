@@ -35,6 +35,7 @@ export enum EntityShapeType {
   HorizontalContainer,
   VerticalContainer,
   CustomShape,
+  Table,
 }
 
 export enum EntityShapeFreezeType {
@@ -461,6 +462,9 @@ export class EntityShape extends AbstractTextShape {
       this.path.addRectangle(Rectangle.makeLTWH(0, modifierHeight, this.width, this.height - modifierHeight))
       this.textWidth = controllerWidth
       this.textHeight = modifierHeight
+      break
+    case EntityShapeType.Table:
+      //this.path.addRectangle(Rectangle.makeLTWH(0, 0, this.width, this.height))
       break
     case EntityShapeType.Rectangle:
     default:

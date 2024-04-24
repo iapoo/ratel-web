@@ -1,4 +1,4 @@
-import { FontSlant, FontWeight, Graphics, ParagraphDirection, Rectangle, TextAlignment } from '@/components/Engine'
+import { Colors, FontSlant, FontWeight, Graphics, ParagraphDirection, Rectangle, TextAlignment, TextVerticalAlignment } from '@/components/Engine'
 import { EntityShapeType } from '../../../Shapes/src/EntityShape'
 import { CustomShape } from '../../../Shapes'
 import { CustomEntity, CustomTableEntity, Shapes, TableEntity } from '../../../Items'
@@ -32,6 +32,15 @@ const TEXT_GRID_SHAPE_INTERFACE_2 = 'Interface 2'
 const TYPE_GRID_SHAPE_INTERFACE_3 = 'Interface 3'
 const DESC_GRID_SHAPE_INTERFACE_3 = 'Interface 3'
 const TEXT_GRID_SHAPE_INTERFACE_3 = 'Interface 3'
+const TYPE_GRID_SHAPE_PACKAGE = 'Package'
+const DESC_GRID_SHAPE_PACKAGE = 'Package'
+const TEXT_GRID_SHAPE_PACKAGE = 'Package'
+const TYPE_GRID_SHAPE_PACKAGE_2 = 'Package 2'
+const DESC_GRID_SHAPE_PACKAGE_2 = 'Package 2'
+const TEXT_GRID_SHAPE_PACKAGE_2 = 'Package 2'
+const TYPE_GRID_SHAPE_PACKAGE_3 = 'Package 3'
+const DESC_GRID_SHAPE_PACKAGE_3 = 'Package 3'
+const TEXT_GRID_SHAPE_PACKAGE_3 = 'Package 3'
 
 
 export interface CustomTableType {
@@ -91,13 +100,13 @@ export const UMLGridShapeTypes = [
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
-  { name: TYPE_GRID_SHAPE_CLASS_4, description: DESC_GRID_SHAPE_CLASS_4, freeze: Shapes.FREEZE_NONE, text: TEXT_GRID_SHAPE_CLASS_4, left: 0, top: 0, width: 250, height: 160, enableMask: false, 
+  { name: TYPE_GRID_SHAPE_CLASS_4, description: DESC_GRID_SHAPE_CLASS_4, freeze: Shapes.FREEZE_NONE, text: TEXT_GRID_SHAPE_CLASS_4, left: 0, top: 0, width: 120, height: 80, enableMask: false, 
     rowCount: 3, columnCount: 1, fixedFirstRow: true, firstRowHeight: 32, fixedFirstColumn: false, firstColumnWidth: 0,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: false, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
-  { name: TYPE_GRID_SHAPE_CLASS_5, description: DESC_GRID_SHAPE_CLASS_5, freeze: Shapes.FREEZE_NONE, text: TEXT_GRID_SHAPE_CLASS_5, left: 0, top: 0, width: 250, height: 90, enableMask: false, 
+  { name: TYPE_GRID_SHAPE_CLASS_5, description: DESC_GRID_SHAPE_CLASS_5, freeze: Shapes.FREEZE_NONE, text: TEXT_GRID_SHAPE_CLASS_5, left: 0, top: 0, width: 120, height: 80, enableMask: false, 
     rowCount: 2, columnCount: 1, fixedFirstRow: true, firstRowHeight: 32, fixedFirstColumn: false, firstColumnWidth: 0,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: false, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
@@ -127,7 +136,26 @@ export const UMLGridShapeTypes = [
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
+  { name: TYPE_GRID_SHAPE_PACKAGE, description: DESC_GRID_SHAPE_PACKAGE, freeze: Shapes.FREEZE_NONE, text: TEXT_GRID_SHAPE_PACKAGE, left: 0, top: 0, width: 120, height: 100, enableMask: false, 
+    rowCount: 2, columnCount: 1, fixedFirstRow: true, firstRowHeight: 32, fixedFirstColumn: false, firstColumnWidth: 0,
+    modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: false, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  { name: TYPE_GRID_SHAPE_PACKAGE_2, description: DESC_GRID_SHAPE_PACKAGE_2, freeze: Shapes.FREEZE_NONE, text: TEXT_GRID_SHAPE_PACKAGE_2, left: 0, top: 0, width: 120, height: 100, enableMask: false, 
+    rowCount: 2, columnCount: 1, fixedFirstRow: true, firstRowHeight: 32, fixedFirstColumn: false, firstColumnWidth: 0,
+    modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: false, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  { name: TYPE_GRID_SHAPE_PACKAGE_3, description: DESC_GRID_SHAPE_PACKAGE_3, freeze: Shapes.FREEZE_NONE, text: TEXT_GRID_SHAPE_PACKAGE_3, left: 0, top: 0, width: 120, height: 100, enableMask: false, 
+    rowCount: 2, columnCount: 1, fixedFirstRow: true, firstRowHeight: 32, fixedFirstColumn: false, firstColumnWidth: 0,
+    modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: false, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
 ]
+
 export class UMLGridShape extends CustomTableEntity {
   private _customGridType: CustomTableType
   public constructor(left: number, top: number, width: number, height: number, gridShapeType: string) {
@@ -136,7 +164,7 @@ export class UMLGridShape extends CustomTableEntity {
     this.buildShape()
   }
 
-  public buildShape() {
+  public buildShape() {    
     for(let i = 0; i < this._customGridType.rowCount - 1; i ++) {
       this.insertRowAfter(this.rowCount - 1)
     }
@@ -202,6 +230,31 @@ export class UMLGridShape extends CustomTableEntity {
         this.items[0].shape.insert('Interface')
         break;
       }
+      case TYPE_GRID_SHAPE_PACKAGE: {
+        this.items[0].boundary = Rectangle.makeLTWH(this.items[0].left, this.items[0].top, 90, this.items[0].height)
+        this.items[0].shape.selectionStyle.bold = true
+        this.items[0].shape.text = 'Package'
+        this.items[1].textAlignment = TextAlignment.LEFT
+        this.items[1].textVerticalAlignment = TextVerticalAlignment.TOP
+        break;
+      }
+      case TYPE_GRID_SHAPE_PACKAGE_2: {
+        this.items[0].boundary = Rectangle.makeLTWH(this.items[0].left, this.items[0].top, 90, this.items[0].height)
+        this.items[0].shape.selectionStyle.bold = true
+        this.items[1].shape.selectionStyle.bold = true
+        this.items[1].shape.text = 'Package'
+        this.items[1].textVerticalAlignment = TextVerticalAlignment.TOP
+        break;
+      }
+      case TYPE_GRID_SHAPE_PACKAGE_3: {
+        this.items[0].boundary = Rectangle.makeLTWH(this.items[0].left, this.items[0].top, 90, this.items[0].height)
+        this.items[0].shape.selectionStyle.bold = true
+        this.items[0].shape.text = 'Package'
+        this.items[1].textAlignment = TextAlignment.LEFT
+        this.items[1].shape.text = 'Attributes'
+        this.items[1].textVerticalAlignment = TextVerticalAlignment.TOP
+        break;
+      }
       case TYPE_GRID_SHAPE_CLASS: 
       default: {
         this.items[0].shape.selectionStyle.bold = true
@@ -215,6 +268,11 @@ export class UMLGridShape extends CustomTableEntity {
     }
 
   }
+
+  protected parseEntityShapeType(type: string): EntityShapeType {
+    let shapeType = EntityShapeType.Table
+    return shapeType
+  } 
 
   public parseTableTypeInfo(gridShapeTypeName: string): CustomTableType {
     let result: CustomTableType = UMLGridShapeTypes[0]
