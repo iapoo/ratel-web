@@ -3,7 +3,7 @@ import styles from './index.css'
 import { Button, Collapse, CollapseProps, Divider, Image, Popover, Space, Tooltip, message, } from 'antd'
 import { Utils, RequestUtils, } from '../Utils'
 import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
-import { ConnectorAction, ContainerAction, CustomShapeAction, ImageContainerAction, SvgContainerAction, LineAction, ShapeAction, TableAction, CustomTableAction, } from '../../Rockie/Actions'
+import { ConnectorAction, ContainerAction, CustomShapeAction, ImageContainerAction, SvgContainerAction, LineAction, ShapeAction, TableAction, CustomTableAction, UMLContainerAction, } from '../../Rockie/Actions'
 import { StorageService, } from '../Storage'
 import {
   Rectangle, RoundRectangle, Text, Ellipse, Square, Circle, Process, Diamond, Parallelogram, Hexagon, Triangle,
@@ -17,7 +17,7 @@ import { Arrows } from '@/components/Rockie/CustomItems/Arrows';
 import { AliyunShapes } from '@/components/Rockie/CustomItems/Aliyun';
 import { AwsShapes } from '@/components/Rockie/CustomItems/Aws';
 import { FlowChartShapes } from '@/components/Rockie/CustomItems/FlowChart';
-import { UMLShapes } from '@/components/Rockie/CustomItems/UML';
+import { UMLContainerShapes, UMLGridShapes } from '@/components/Rockie/CustomItems/UML';
 
 interface NavigatorProps {
   navigatorWidth: number
@@ -154,6 +154,12 @@ const Navigator: FC<NavigatorProps> = ({
   const addCustomTable = (typeName: string) => {
     if (Utils.currentEditor) {
       Utils.currentEditor.action = new CustomTableAction(Utils.currentEditor, typeName)
+    }
+  }
+
+  const addUMLContainerShape = (typeName: string) => {
+    if (Utils.currentEditor) {
+      Utils.currentEditor.action = new UMLContainerAction(Utils.currentEditor, typeName)
     }
   }
 
@@ -346,10 +352,20 @@ const Navigator: FC<NavigatorProps> = ({
   )
 
 
-  const umlShapes = UMLShapes.map(
+  const umlGridShapes = UMLGridShapes.map(
     shapeType => {
       return <Popover title={shapeType.name} placement='right' content={getCustomShapeAwsPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
       <Button type='text' onClick={() => addCustomTable(shapeType.name)} style={{padding: 2, display: 'table'}}>
+        <img src={`/custom-shapes/aws/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+      </Button>
+    </Popover>
+    }
+  )
+
+  const umlContainerShapes = UMLContainerShapes.map(
+    shapeType => {
+      return <Popover title={shapeType.name} placement='right' content={getCustomShapeAwsPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
+      <Button type='text' onClick={() => addUMLContainerShape(shapeType.name)} style={{padding: 2, display: 'table'}}>
         <img src={`/custom-shapes/aws/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
       </Button>
     </Popover>
@@ -371,7 +387,8 @@ const Navigator: FC<NavigatorProps> = ({
       {awsShapes}
       {customShapeFlowChartShapes}
       {customTable}
-      {umlShapes}
+      {umlGridShapes}
+      {umlContainerShapes}
     </Space>,
     },
     {
