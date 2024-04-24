@@ -1229,16 +1229,20 @@ export class Editor extends Painter {
                 if (nowTime - this._targetTime < Editor.DOUBLE_CLICK_TIME) {
                   //console.log('Double click is detected')
                   // this.handleDoubleClick(e)
-                  this._textArea.focus()
-                  this._target.shape.enter(targetPoint.x, targetPoint.y)
-                  this.checkAndStartTextEdit()              
-                  if (this._target) {
-                    this._target.shape.focused = true
+                  if(this._target instanceof Connector) {
+                    this.createTextBoxInConnector(this._target, targetPoint.x, targetPoint.y)
+                  } else {
+                    this._textArea.focus()
+                    this._target.shape.enter(targetPoint.x, targetPoint.y)
+                    this.checkAndStartTextEdit()              
+                    if (this._target) {
+                      this._target.shape.focused = true
+                    }
+                    this._textArea.textContent = ''
+                    this.updateTextCursorLocation(clickedEditorItem, targetPoint.x, targetPoint.y)
+                    this.triggerTextEditStyleChange()
+                    this.beginTextEditOperation(this._target)
                   }
-                  this._textArea.textContent = ''
-                  this.updateTextCursorLocation(clickedEditorItem, targetPoint.x, targetPoint.y)
-                  this.triggerTextEditStyleChange()
-                  this.beginTextEditOperation(this._target)
                 }
               }
               this._targetTime = nowTime
@@ -1591,6 +1595,7 @@ export class Editor extends Painter {
     }
     return result
   }
+  
   private findContainerEntity (x: number, y: number): ContainerEntity | undefined {
     let result
     const count = this.contentLayer.getEditorItemCount()
@@ -2739,7 +2744,7 @@ export class Editor extends Painter {
       const firstSelection = this.selectionLayer.getEditorItem(0) as Item
       if(firstSelection.parent) {
         const parent = firstSelection.parent
-        if(left > parent.left && top > parent.top && right < parent.right && bottom < parent.bottom) {
+        if((left > parent.left && top > parent.top && right < parent.right && bottom < parent.bottom) || !(parent instanceof ContainerEntity)) {
           requireRemove = false
         } else {
           requireRemove = true
@@ -2880,6 +2885,12 @@ export class Editor extends Painter {
       this.triggerOperationChange()
       this._startEditorItemInfos.length = 0
     }
+  }
 
+  private createTextBoxInConnector(connector: Connector, x: number, y: number) {
+    const textBox = new ShapeEntity(x - 70, y  - 15, 80, 30)
+    textBox.fillColor = Colors.Transparent
+    textBox.strokeColor = Colors.Transparent
+    connector.addItem(textBox)
   }
 }
