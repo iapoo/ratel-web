@@ -49,8 +49,8 @@ export const ContainerTypes = [
 ]
 export class ContainerEntity extends ShapeEntity {
 
-    public constructor(left: number, top: number, width: number, height: number, shapeOptions: ShapeOptions = { shapeType: Containers.TYPE_CONTAINER }) {
-      super(left, top, width, height, shapeOptions, ContainerTypes)
+    public constructor(left: number, top: number, width: number, height: number, shapeOptions: ShapeOptions = { shapeType: Containers.TYPE_CONTAINER }, shapeTypes: ShapeType[] = ContainerTypes) {
+      super(left, top, width, height, shapeOptions, shapeTypes)
       switch (shapeOptions.shapeType) {
         case Containers.TYPE_HORIZONTAL_CONTAINER:
         case Containers.TYPE_HORIZONTAL_CONTAINER_2:

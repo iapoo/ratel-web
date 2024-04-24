@@ -8,6 +8,31 @@ import { EditorItemInfo } from './EditorItemInfo'
 import { Editor } from '../../Editor'
 import { TableInfo } from './TableInfo'
 import { CellEntity } from './CellEntity'
+import { EntityShapeType } from '../../Shapes/src/EntityShape'
+
+
+export class Tables {
+  public static TYPE_TABLE = 'Table'
+
+  public static DESC_TABLE = 'Table'
+
+  public static FREEZE_NONE = 'None'
+  public static FREEZE_WIDTH = 'Width'
+  public static FREEZE_WIDTH_HEIGHT =  'WidthHeight'
+  public static FREEZE_HEIGHT = 'Height'
+  public static FREEZE_ASPECT_RATIO = 'AspectRatio'
+
+  public static ADAPTER_DIRECTION_X = 'X'
+  public static ADAPTER_DIRECTION_Y = 'Y'
+
+}
+
+export const TableTypes = [
+  { name: Tables.TYPE_TABLE, description: Tables.DESC_TABLE, freeze: Tables.FREEZE_NONE, text: '', left: 0, top: 0, width: 200, height: 200, enableMask: true, 
+    modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true  },
+]
 
 export class TableEntity extends ContainerEntity {
   public static TABLE_TYPE_TABLE = 'Table'
@@ -16,7 +41,7 @@ export class TableEntity extends ContainerEntity {
   private _columnCount: number
 
   public constructor(left: number, top: number, width: number, height: number, rowCount = 3, columnCount = 3) {
-    super(left, top, width, height, { shapeType: TableEntity.TABLE_TYPE_TABLE, })
+    super(left, top, width, height, { shapeType: TableEntity.TABLE_TYPE_TABLE, }, TableTypes)
     this._rowCount = rowCount
     this._columnCount = columnCount
     this.type = TableEntity.TABLE_TYPE_TABLE
@@ -179,6 +204,11 @@ export class TableEntity extends ContainerEntity {
   protected load(data: EditorItemInfo, editor: Editor): void {
 
   }
+
+  protected parseEntityShapeType(type: string): EntityShapeType {
+    let shapeType = EntityShapeType.Table
+    return shapeType
+  } 
 
   private refreshTable() {
     this.removeAllItems()
