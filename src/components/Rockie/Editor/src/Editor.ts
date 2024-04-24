@@ -2831,9 +2831,16 @@ export class Editor extends Painter {
   }
 
   private beginOperation(editorItem: EditorItem) {
-    this._startEditorItemInfos.length = 0
-    let editorItemInfo = OperationHelper.saveEditorItem(editorItem)
-    this._startEditorItemInfos.push(editorItemInfo)
+    const theItem = editorItem as Item
+    if(theItem.parent) {
+      this._startEditorItemInfos.length = 0
+      let editorItemInfo = OperationHelper.saveEditorItem(theItem.parent)
+      this._startEditorItemInfos.push(editorItemInfo)
+    } else {
+      this._startEditorItemInfos.length = 0
+      let editorItemInfo = OperationHelper.saveEditorItem(editorItem)
+      this._startEditorItemInfos.push(editorItemInfo)
+    }
   }
 
   private beginTextEditOperation(editorItem: EditorItem) {
@@ -2854,12 +2861,22 @@ export class Editor extends Painter {
   }
 
   private finishOperation(editorItem: EditorItem) {
-    let origItemInfo = this._startEditorItemInfos[0]
-    let editorItemInfo =  OperationHelper.saveEditorItem(editorItem)
-    let operation = new Operation(this, OperationType.UPDATE_ITEMS, [editorItemInfo],true, [origItemInfo])
-    this._operationService.addOperation(operation)
-    this.triggerOperationChange()
-    this._startEditorItemInfos.length = 0
+    const theItem = editorItem as Item
+    if(theItem.parent) {
+      let origItemInfo = this._startEditorItemInfos[0]
+      let editorItemInfo =  OperationHelper.saveEditorItem(theItem.parent)
+      let operation = new Operation(this, OperationType.UPDATE_ITEMS, [editorItemInfo],true, [origItemInfo])
+      this._operationService.addOperation(operation)
+      this.triggerOperationChange()
+      this._startEditorItemInfos.length = 0
+    } else {
+      let origItemInfo = this._startEditorItemInfos[0]
+      let editorItemInfo =  OperationHelper.saveEditorItem(editorItem)
+      let operation = new Operation(this, OperationType.UPDATE_ITEMS, [editorItemInfo],true, [origItemInfo])
+      this._operationService.addOperation(operation)
+      this.triggerOperationChange()
+      this._startEditorItemInfos.length = 0
+    }
   }
 
   private finishTextEditOperation() {
