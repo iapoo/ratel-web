@@ -10,7 +10,6 @@ export class EditorHelper {
     public static DEFAULT_OFFSET_X = 32
     public static DEFAULT_OFFSET_Y = 32
 
-
     public static generateEditorItems(editor: Editor):  EditorItemInfo[] {
         const editorItemInfos: Array<EditorItemInfo> = []
         const editorItems = editor.contentLayer.getAllEditorItems()
@@ -109,15 +108,39 @@ export class EditorHelper {
 
     public static deleteSelections(editor: Editor) {
         const editorItems = editor.selectionLayer.getAllEditorItems()
-        const selections = EditorHelper.generateEditorSelections(editor)
-        editorItems.forEach(editorItem => {
-            editor.contentLayer.removeEditorItem(editorItem)
-        })
-        EditorHelper.exportEditorSelections(editor)
-        editor.selectionLayer.removeAllEditorItems()
-        const operation = new Operation(editor, OperationType.REMOVE_SELECTION_ITEMS, selections, true)
-        editor.operationService.addOperation(operation)
-        editor.triggerOperationChange()
+        let deleteChildItem: boolean = false        
+        let parentItem: Item | undefined = undefined
+        for(let i = 0; i < editorItems.length; i ++) {
+            const editorItem = editorItems[i]
+            const item = editorItem as Item
+            if(item.parent) {
+                deleteChildItem = true
+                parentItem = item.parent
+            }
+        }
+        if(deleteChildItem && parentItem) {
+            const origEditItemInfo = OperationHelper.saveEditorItem(parentItem)
+            for(let i = 0; i < editorItems.length; i ++) {
+                const editorItem = editorItems[i]
+                parentItem.removeItem(editorItem)
+            }
+            const editorItemInfo = OperationHelper.saveEditorItem(parentItem)
+            editor.selectionLayer.removeAllEditorItems()
+            const operation = new Operation(editor, OperationType.UPDATE_ITEMS, [editorItemInfo], true, [origEditItemInfo])
+            editor.operationService.addOperation(operation)
+            editor.triggerOperationChange()
+        } else {
+            const selections = EditorHelper.generateEditorSelections(editor)
+            for(let i = 0; i < editorItems.length; i ++) {
+                const editorItem = editorItems[i]
+                editor.contentLayer.removeEditorItem(editorItem)
+            }
+            EditorHelper.exportEditorSelections(editor)
+            editor.selectionLayer.removeAllEditorItems()
+            const operation = new Operation(editor, OperationType.REMOVE_SELECTION_ITEMS, selections, true)
+            editor.operationService.addOperation(operation)
+            editor.triggerOperationChange()
+        }
     }
 
     private static refreshSelections(selection: EditorItemInfo, editorItems: EditorItem[]) {
