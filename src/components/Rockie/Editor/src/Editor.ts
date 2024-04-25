@@ -2918,7 +2918,7 @@ export class Editor extends Painter {
   }
 
   private createTextBoxInConnector(connector: Connector, x: number, y: number) {
-    const textBox = new ShapeEntity(x - 70, y  - 15, 80, 30)
+    const textBox = new ShapeEntity(x - 40, y  - 15, 80, 30)
     textBox.text = 'text'
     textBox.fillColor = Colors.Transparent
     textBox.strokeColor = Colors.Transparent
