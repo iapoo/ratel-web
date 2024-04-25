@@ -1116,7 +1116,7 @@ export class ConnectorShape extends EntityShape {
     this.path.cubicTo(startModifier.x, startModifier.y, endModifier.x, endModifier.y, end.x, end.y)
     
     //TODO: FIX ME, unclose path casue white background, we duplicate points so make path so close and them remove strznge white background
-    this.path.cubicTo(endModifier.x, endModifier.y, startModifier.x, startModifier.y, start.x, start.y)
+    //this.path.cubicTo(endModifier.x, endModifier.y, startModifier.x, startModifier.y, start.x, start.y)
   }
 
   private updateStraightLinePath() {
@@ -1383,8 +1383,8 @@ export class ConnectorShape extends EntityShape {
         }
         //TODO: FIX ME, unclose path casue white background, we duplicate points so make path so close and them remove strznge white background
         for(let i = count - 1; i >= 0; i --) {
-          const point = this._orthogonalPoints[i]
-          this.path.lineTo(Math.round(point.x), Math.round(point.y))
+          //const point = this._orthogonalPoints[i]
+          //this.path.lineTo(Math.round(point.x), Math.round(point.y))
         }
         break;
       }    
