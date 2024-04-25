@@ -50,6 +50,15 @@ export const ConnectorArrowTypes = [
   {name: 'Triangle-7-1', description: 'Triangle', type: ConnectorArrowDisplayType.Triangle, height: 12, width: 12, modifier: 0.3, count: 2, outline: false, close: true, displayMode: ConnectorArrowDisplayMode.Full, },
   {name: 'Triangle-8-1', description: 'Triangle', type: ConnectorArrowDisplayType.Triangle, height: 12, width: 12, modifier: 0.3, count: 2, outline: true, close: true, displayMode: ConnectorArrowDisplayMode.Full, },
 
+  {name: 'Triangle-1-2', description: 'Triangle', type: ConnectorArrowDisplayType.Triangle, height: 12, width: 12, modifier: 0.9, count: 1, outline: false, close: true, displayMode: ConnectorArrowDisplayMode.Full, },
+  {name: 'Triangle-2-2', description: 'Triangle', type: ConnectorArrowDisplayType.Triangle, height: 12, width: 12, modifier: 0.9, count: 1, outline: false, close: true, displayMode: ConnectorArrowDisplayMode.Top, },
+  {name: 'Triangle-3-2', description: 'Triangle', type: ConnectorArrowDisplayType.Triangle, height: 12, width: 12, modifier: 0.9, count: 1, outline: false, close: true, displayMode: ConnectorArrowDisplayMode.Bottom, },
+  {name: 'Triangle-4-2', description: 'Triangle', type: ConnectorArrowDisplayType.Triangle, height: 12, width: 12, modifier: 0.9, count: 1, outline: true, close: true, displayMode: ConnectorArrowDisplayMode.Full, },
+  {name: 'Triangle-5-2', description: 'Triangle', type: ConnectorArrowDisplayType.Triangle, height: 12, width: 12, modifier: 0.9, count: 1, outline: true, close: true, displayMode: ConnectorArrowDisplayMode.Top, },
+  {name: 'Triangle-6-2', description: 'Triangle', type: ConnectorArrowDisplayType.Triangle, height: 12, width: 12, modifier: 0.9, count: 1, outline: true, close: true, displayMode: ConnectorArrowDisplayMode.Bottom, },
+  {name: 'Triangle-7-2', description: 'Triangle', type: ConnectorArrowDisplayType.Triangle, height: 12, width: 12, modifier: 0.9, count: 2, outline: false, close: true, displayMode: ConnectorArrowDisplayMode.Full, },
+  {name: 'Triangle-8-2', description: 'Triangle', type: ConnectorArrowDisplayType.Triangle, height: 12, width: 12, modifier: 0.9, count: 2, outline: true, close: true, displayMode: ConnectorArrowDisplayMode.Full, },
+
   {name: 'Diamond-1', description: 'Diamond', type: ConnectorArrowDisplayType.Diamond, height: 12, width: 24, modifier: 0, count: 1, outline: false, close: true, displayMode: ConnectorArrowDisplayMode.Full, },
   {name: 'Diamond-2', description: 'Diamond', type: ConnectorArrowDisplayType.Diamond, height: 12, width: 24, modifier: 0, count: 1, outline: true, close: true, displayMode: ConnectorArrowDisplayMode.Full, },
   {name: 'Diamond-3', description: 'Diamond', type: ConnectorArrowDisplayType.Diamond, height: 12, width: 24, modifier: 0, count: 2, outline: false, close: true, displayMode: ConnectorArrowDisplayMode.Full, },

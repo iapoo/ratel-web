@@ -9,7 +9,7 @@ import {
   Rectangle, RoundRectangle, Text, Ellipse, Square, Circle, Process, Diamond, Parallelogram, Hexagon, Triangle,
   Cylinder, Cloud, Document, InternalStorage, Cube, Step, Trapezoid, Tape, Note, Card, Callout, Actor, Container
 } from '@/components/Resource/LargeIcons'
-import { ContainerEntity, ContainerTypes, Containers, CustomEntity, ShapeTypes, Shapes } from '@/components/Rockie/Items'
+import { ContainerEntity, ContainerTypes, Containers, CustomConnector, CustomConnectorTypeInfo, CustomEntity, ShapeTypes, Shapes } from '@/components/Rockie/Items'
 import { BasicShapes } from '@/components/Rockie/CustomItems/BasicShapes';
 import { ShapeTypeInfo } from '@/components/Rockie/Shapes/src/EntityShape';
 import { ShapeEntity, ShapeType } from '@/components/Rockie/Items/src/ShapeEntity';
@@ -17,8 +17,9 @@ import { Arrows } from '@/components/Rockie/CustomItems/Arrows';
 import { AliyunShapes } from '@/components/Rockie/CustomItems/Aliyun';
 import { AwsShapes } from '@/components/Rockie/CustomItems/Aws';
 import { FlowChartShapes } from '@/components/Rockie/CustomItems/FlowChart';
-import { UMLContainerShapes, UMLGridShapes, UMLShapes } from '@/components/Rockie/CustomItems/UML';
+import { UMLConnectors, UMLContainerShapes, UMLGridShapes, UMLShapes } from '@/components/Rockie/CustomItems/UML';
 import { UMLBasicShapeTypes } from '@/components/Rockie/CustomItems/UML/src/UMLShape';
+import { CustomConnectorAction } from '@/components/Rockie/Actions/src/CustomConnectorAction';
 
 interface NavigatorProps {
   navigatorWidth: number
@@ -167,6 +168,12 @@ const Navigator: FC<NavigatorProps> = ({
   const addExtendedShape = (type: string, classType: typeof ShapeEntity, shapeType: ShapeType) => {
     if (Utils.currentEditor) {
       Utils.currentEditor.action = new ExtendedShapeAction(Utils.currentEditor, type, classType, shapeType)
+    }
+  }
+
+  const addCustomConnector = (type: string, classType: typeof CustomConnector, customConnectorTypeInfos: CustomConnectorTypeInfo) => {
+    if (Utils.currentEditor) {
+      Utils.currentEditor.action = new CustomConnectorAction(Utils.currentEditor, type, classType, customConnectorTypeInfos)
     }
   }
 
@@ -389,6 +396,16 @@ const Navigator: FC<NavigatorProps> = ({
     }
   )
 
+  const umlConnectors = UMLConnectors.map(
+    shapeType => {
+      return <Popover title={shapeType.name} placement='right' content={getCustomShapeAwsPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
+      <Button type='text' onClick={() => addCustomConnector(shapeType.name, shapeType.type, shapeType.typeInfo)} style={{padding: 2, display: 'table'}}>
+        <img src={`/custom-shapes/aws/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+      </Button>
+    </Popover>
+    }
+  )
+
   const items: CollapseProps['items'] = [
     {
       key: '1',
@@ -407,6 +424,7 @@ const Navigator: FC<NavigatorProps> = ({
       {umlGridShapes}
       {umlContainerShapes}
       {umlBasicShapes}
+      {umlConnectors}
     </Space>,
     },
     {
