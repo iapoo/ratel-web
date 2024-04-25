@@ -1,5 +1,6 @@
 import { UMLContainerShape, UMLContainerTypes } from './src/UMLContainerShape'
 import { UMLGridShape, UMLGridShapeTypes, } from './src/UMLGridShape'
+import { UMLBasicShape, UMLBasicShapeTypes, UMLBasicShapes } from './src/UMLShape'
 
 export  {UMLGridShapeTypes, UMLGridShape} from './src/UMLGridShape'
 
@@ -21,4 +22,8 @@ export const UMLGridShapes = [
 
 export const UMLContainerShapes = [
     {name: UMLContainerTypes[0].name, type: UMLContainerShape, typeInfo:  UMLContainerTypes[0] },
+]
+
+export const UMLShapes = [
+    {name: UMLBasicShapeTypes[0].name, type: UMLBasicShape, typeInfo:  UMLBasicShapeTypes[0] },
 ]

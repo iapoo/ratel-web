@@ -3,21 +3,22 @@ import styles from './index.css'
 import { Button, Collapse, CollapseProps, Divider, Image, Popover, Space, Tooltip, message, } from 'antd'
 import { Utils, RequestUtils, } from '../Utils'
 import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
-import { ConnectorAction, ContainerAction, CustomShapeAction, ImageContainerAction, SvgContainerAction, LineAction, ShapeAction, TableAction, CustomTableAction, UMLContainerAction, } from '../../Rockie/Actions'
+import { ConnectorAction, ContainerAction, CustomShapeAction, ImageContainerAction, SvgContainerAction, LineAction, ShapeAction, TableAction, CustomTableAction, UMLContainerAction, ExtendedShapeAction, ExtendedContainerAction, } from '../../Rockie/Actions'
 import { StorageService, } from '../Storage'
 import {
   Rectangle, RoundRectangle, Text, Ellipse, Square, Circle, Process, Diamond, Parallelogram, Hexagon, Triangle,
   Cylinder, Cloud, Document, InternalStorage, Cube, Step, Trapezoid, Tape, Note, Card, Callout, Actor, Container
 } from '@/components/Resource/LargeIcons'
-import { ContainerTypes, Containers, CustomEntity, ShapeTypes, Shapes } from '@/components/Rockie/Items'
+import { ContainerEntity, ContainerTypes, Containers, CustomEntity, ShapeTypes, Shapes } from '@/components/Rockie/Items'
 import { BasicShapes } from '@/components/Rockie/CustomItems/BasicShapes';
 import { ShapeTypeInfo } from '@/components/Rockie/Shapes/src/EntityShape';
-import { ShapeType } from '@/components/Rockie/Items/src/ShapeEntity';
+import { ShapeEntity, ShapeType } from '@/components/Rockie/Items/src/ShapeEntity';
 import { Arrows } from '@/components/Rockie/CustomItems/Arrows';
 import { AliyunShapes } from '@/components/Rockie/CustomItems/Aliyun';
 import { AwsShapes } from '@/components/Rockie/CustomItems/Aws';
 import { FlowChartShapes } from '@/components/Rockie/CustomItems/FlowChart';
-import { UMLContainerShapes, UMLGridShapes } from '@/components/Rockie/CustomItems/UML';
+import { UMLContainerShapes, UMLGridShapes, UMLShapes } from '@/components/Rockie/CustomItems/UML';
+import { UMLBasicShapeTypes } from '@/components/Rockie/CustomItems/UML/src/UMLShape';
 
 interface NavigatorProps {
   navigatorWidth: number
@@ -157,9 +158,15 @@ const Navigator: FC<NavigatorProps> = ({
     }
   }
 
-  const addUMLContainerShape = (typeName: string) => {
+  const addExtendedContainer = (typeName: string, classType: typeof ContainerEntity, shapeType: ShapeType) => {
     if (Utils.currentEditor) {
-      Utils.currentEditor.action = new UMLContainerAction(Utils.currentEditor, typeName)
+      Utils.currentEditor.action = new ExtendedContainerAction(Utils.currentEditor, typeName, classType, shapeType)
+    }
+  }
+
+  const addExtendedShape = (type: string, classType: typeof ShapeEntity, shapeType: ShapeType) => {
+    if (Utils.currentEditor) {
+      Utils.currentEditor.action = new ExtendedShapeAction(Utils.currentEditor, type, classType, shapeType)
     }
   }
 
@@ -365,7 +372,17 @@ const Navigator: FC<NavigatorProps> = ({
   const umlContainerShapes = UMLContainerShapes.map(
     shapeType => {
       return <Popover title={shapeType.name} placement='right' content={getCustomShapeAwsPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
-      <Button type='text' onClick={() => addUMLContainerShape(shapeType.name)} style={{padding: 2, display: 'table'}}>
+      <Button type='text' onClick={() => addExtendedContainer(shapeType.name, shapeType.type, shapeType.typeInfo)} style={{padding: 2, display: 'table'}}>
+        <img src={`/custom-shapes/aws/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+      </Button>
+    </Popover>
+    }
+  )
+
+  const umlBasicShapes = UMLShapes.map(
+    shapeType => {
+      return <Popover title={shapeType.name} placement='right' content={getCustomShapeAwsPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
+      <Button type='text' onClick={() => addExtendedShape(shapeType.name, shapeType.type, shapeType.typeInfo)} style={{padding: 2, display: 'table'}}>
         <img src={`/custom-shapes/aws/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
       </Button>
     </Popover>
@@ -389,6 +406,7 @@ const Navigator: FC<NavigatorProps> = ({
       {customTable}
       {umlGridShapes}
       {umlContainerShapes}
+      {umlBasicShapes}
     </Space>,
     },
     {
