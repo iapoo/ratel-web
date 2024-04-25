@@ -1,4 +1,4 @@
-import { Colors, Line2D, MathUtils, Point2, Rectangle, Rectangle2D, } from '@/components/Engine'
+import { Color, Colors, Line2D, MathUtils, Point2, Rectangle, Rectangle2D, } from '@/components/Engine'
 import { ConnectorArrowDisplayMode, ConnectorArrowDisplayType, ConnectorDirection, ConnectorMode, ConnectorShape, ConnectorType, } from '../../Shapes'
 import { Entity, } from './Entity'
 import { Categories, Item, Type, } from './Item'

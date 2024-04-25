@@ -1,6 +1,6 @@
 import { Graphics, MathUtils, ParagraphDirection, Point2, Rectangle, StrokeDashStyle } from '@/components/Engine'
 import { EntityShapeType } from '../../../Shapes/src/EntityShape'
-import { ConnectorDirection, CustomShape } from '../../../Shapes'
+import { ConnectorDirection, ConnectorType, CustomShape } from '../../../Shapes'
 import { Connector, CustomEntity, ShapeEntity, Shapes } from '../../../Items'
 import { Categories, Type } from '../../../Items/src/Item'
 import { ShapeOptions, ShapeType } from '@/components/Rockie/Items/src/ShapeEntity'
@@ -34,19 +34,19 @@ export class UMLConnectors {
 
 export const UMLConnectorTypeInfos: CustomConnectorTypeInfo[] = [
   { name: UMLConnectors.TYPE_INHERITANCE, description: UMLConnectors.DESC_INHERITANCE, text: UMLConnectors.TEXT_INHERITANCE, 
-    startX: 30, startY: 30, endX: 150, endY: 30, startArrowTypeName: 'None', endArrowTypeName: 'Triangle-4', strokeDashStyle: StrokeDashStyle.SOLID },
+    startX: 30, startY: 30, endX: 190, endY: 30, startArrowTypeName: 'None', endArrowTypeName: 'Triangle-4', strokeDashStyle: StrokeDashStyle.SOLID, connectorType: ConnectorType.Orthogonal },
   { name: UMLConnectors.TYPE_REALIZATION, description: UMLConnectors.DESC_REALIZATION, text: UMLConnectors.TEXT_REALIZATION, 
-    startX: 30, startY: 30, endX: 150, endY: 30, startArrowTypeName: 'None', endArrowTypeName: 'Triangle-4', strokeDashStyle: StrokeDashStyle.DASH  },
+    startX: 30, startY: 30, endX: 190, endY: 30, startArrowTypeName: 'None', endArrowTypeName: 'Triangle-4', strokeDashStyle: StrokeDashStyle.DASH, connectorType: ConnectorType.Orthogonal },
   { name: UMLConnectors.TYPE_ASSOCIATION, description: UMLConnectors.DESC_ASSOCIATION, text: UMLConnectors.TEXT_ASSOCIATION, 
-    startX: 30, startY: 30, endX: 150, endY: 30, startArrowTypeName: 'None', endArrowTypeName: 'None', strokeDashStyle: StrokeDashStyle.SOLID  },
-  { name: UMLConnectors.TYPE_DIRECTED_ASSOCIATION, description: UMLConnectors.DESC_DIRECTED_ASSOCIATION, text: UMLConnectors.TEXT_RDIRECTED_ASSOCIATION, 
-    startX: 30, startY: 30, endX: 150, endY: 30, startArrowTypeName: 'None', endArrowTypeName: 'Triangle-1-2', strokeDashStyle: StrokeDashStyle.DASH  },
-  { name: UMLConnectors.TYPE_AGGREGATION, description: UMLConnectors.DESC_AGGREGATION, text: UMLConnectors.TEXT_AGGREGATION, 
-    startX: 30, startY: 30, endX: 150, endY: 30, startArrowTypeName: 'None', endArrowTypeName: 'Triangle-1-2', strokeDashStyle: StrokeDashStyle.SOLID  },
-  { name: UMLConnectors.TYPE_COMPOSITION, description: UMLConnectors.DESC_COMPOSITION, text: UMLConnectors.TEXT_COMPOSITION, 
-    startX: 30, startY: 30, endX: 150, endY: 30, startArrowTypeName: 'Diamond-1', endArrowTypeName: 'None', strokeDashStyle: StrokeDashStyle.SOLID  },
+    startX: 30, startY: 30, endX: 190, endY: 30, startArrowTypeName: 'None', endArrowTypeName: 'None', strokeDashStyle: StrokeDashStyle.SOLID, connectorType: ConnectorType.Orthogonal },
   { name: UMLConnectors.TYPE_DEPENDENCY, description: UMLConnectors.DESC_DEPENDENCY, text: UMLConnectors.TEXT_DEPENDENCY, 
-    startX: 30, startY: 30, endX: 150, endY: 30, startArrowTypeName: 'Diamond-2', endArrowTypeName: 'None', strokeDashStyle: StrokeDashStyle.SOLID  },
+    startX: 30, startY: 30, endX: 190, endY: 30, startArrowTypeName: 'None', endArrowTypeName: 'Triangle-1-2', strokeDashStyle: StrokeDashStyle.DASH, connectorType: ConnectorType.Orthogonal },
+  { name: UMLConnectors.TYPE_DIRECTED_ASSOCIATION, description: UMLConnectors.DESC_DIRECTED_ASSOCIATION, text: UMLConnectors.TEXT_RDIRECTED_ASSOCIATION, 
+    startX: 30, startY: 30, endX: 190, endY: 30, startArrowTypeName: 'None', endArrowTypeName: 'Triangle-1-2', strokeDashStyle: StrokeDashStyle.SOLID, connectorType: ConnectorType.Orthogonal },
+  { name: UMLConnectors.TYPE_COMPOSITION, description: UMLConnectors.DESC_COMPOSITION, text: UMLConnectors.TEXT_COMPOSITION, 
+    startX: 30, startY: 30, endX: 190, endY: 30, startArrowTypeName: 'Diamond-1', endArrowTypeName: 'None', strokeDashStyle: StrokeDashStyle.SOLID, connectorType: ConnectorType.Orthogonal },
+  { name: UMLConnectors.TYPE_AGGREGATION, description: UMLConnectors.DESC_AGGREGATION, text: UMLConnectors.TEXT_AGGREGATION, 
+    startX: 30, startY: 30, endX: 190, endY: 30, startArrowTypeName: 'Diamond-2', endArrowTypeName: 'None', strokeDashStyle: StrokeDashStyle.SOLID, connectorType: ConnectorType.Orthogonal },
 ]
 
 export class UMLConnector extends CustomConnector {
