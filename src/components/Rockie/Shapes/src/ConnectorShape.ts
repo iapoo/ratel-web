@@ -1,7 +1,7 @@
 /* eslint-disable max-params */
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
 
-import { Color, Colors, FillType, Graphics, MathUtils, Matrix, Paint, PaintStyle, Path, PathOp, Point2, Rectangle, Rotation, Shape, } from '@/components/Engine'
+import { Color, Colors, FillType, Graphics, MathUtils, Matrix, Paint, PaintStyle, Path, PathOp, Point2, Rectangle, Rotation, Shape, StrokeDashStyle, } from '@/components/Engine'
 import { Line, Cubic, } from '@antv/g-math'
 import { EntityShape, } from './EntityShape'
 import { Consts, SystemUtils } from '@/components/Workspace/Utils'
@@ -83,6 +83,7 @@ export class ConnectorShape extends EntityShape {
   private _endArrowPath: Path
   private _arrowStroke: Paint
   private _arrowFill: Paint
+  private _arrowOutline: Paint
   private _connectorDoubleLineGap: number
   private _connectorDoubleLineArrowLength: number
   private _connectorDoubleLineArrowDistance: number
@@ -136,6 +137,7 @@ export class ConnectorShape extends EntityShape {
     this._endArrowPath = new Path()
     this._arrowStroke = new Paint()
     this._arrowFill = new Paint()
+    this._arrowOutline = new Paint()
     this._connectorDoubleLineGap = Consts.DOUBLE_LINE_GAP_DEFAULT
     this._connectorDoubleLineArrowLength = Consts.DOUBLE_LINE_ARROW_LENGTH_DEFAULT
     this._connectorDoubleLineArrowDistance = Consts.DOUBLE_LINE_ARROW_DISTANCE_DEFAULT
@@ -392,7 +394,7 @@ export class ConnectorShape extends EntityShape {
             graphics.drawPath(this._startArrowPath, this._arrowStroke)
           }
         }
-        graphics.drawPath(this._startArrowPath, this.stroke)
+        graphics.drawPath(this._startArrowPath, this._arrowOutline)
       }
       if(this._endArrow.type != ConnectorArrowDisplayType.None) {
         if(this._endArrow.close) {
@@ -402,7 +404,7 @@ export class ConnectorShape extends EntityShape {
             graphics.drawPath(this._endArrowPath, this._arrowStroke)
           }
         }
-        graphics.drawPath(this._endArrowPath, this.stroke)
+        graphics.drawPath(this._endArrowPath, this._arrowOutline)
       }
     }
   }
@@ -465,12 +467,17 @@ export class ConnectorShape extends EntityShape {
       this._arrowFill.setColor(this.fill.getColor())
       this._arrowStroke.setPaintStyle(PaintStyle.FILL)
       this._arrowStroke.setColor(this.stroke.getColor())
+      this._arrowOutline.setPaintStyle(PaintStyle.STROKE)
+      this._arrowOutline.setColor(this.stroke.getColor())
+      this._arrowOutline.setStrokeWidth(this.stroke.getStroketWidth())
       this._connectorDoubleLinePaint.setStrokeWidth(this.stroke.getStroketWidth())
       this._connectorDoubleLinePaint.setPaintStyle(PaintStyle.STROKE)
       this._connectorDoubleLinePaint.setColor(this.stroke.getColor())
+      this._connectorDoubleLinePaint.setStrokeDashStyle(this.stroke.getStrokeDashStyle())
       this._connectorDoubleLineStroke.setStrokeWidth(this.stroke.getStroketWidth() * 2  + this._connectorDoubleLineGap)
       this._connectorDoubleLineStroke.setPaintStyle(PaintStyle.STROKE)
       this._connectorDoubleLineStroke.setColor(this.stroke.getColor())
+      this._connectorDoubleLineStroke.setStrokeDashStyle(this.stroke.getStrokeDashStyle())
       this._connectorDoubleLineFill.setStrokeWidth(this._connectorDoubleLineGap)
       this._connectorDoubleLineFill.setPaintStyle(PaintStyle.STROKE)
       this._connectorDoubleLineFill.setColor(this.fill.getColor())
