@@ -1,5 +1,6 @@
 import { Graphics, MathUtils, ParagraphDirection, Point2, Rectangle, StrokeDashStyle } from '@/components/Engine'
 import { Connector, ConnectorArrowTypes } from '@/components/Rockie/Items/src/Connector'
+import { ConnectorType } from '../../Shapes'
 
 export class CustomConnectors {
   public static TYPE_INHERITANCE = 'CustomConnector'
@@ -18,11 +19,12 @@ export interface CustomConnectorTypeInfo {
   startArrowTypeName: string
   endArrowTypeName: string
   strokeDashStyle: StrokeDashStyle
+  connectorType: ConnectorType
 }
 
 const CustomConnectorTypes: CustomConnectorTypeInfo[] = [
   { name: CustomConnectors.TYPE_INHERITANCE, description: CustomConnectors.DESC_INHERITANCE, text: CustomConnectors.TEXT_INHERITANCE, 
-    startX: 30, startY: 30, endX: 150, endY: 30, startArrowTypeName: 'None', endArrowTypeName: 'Triangle-4', strokeDashStyle: StrokeDashStyle.SOLID },
+    startX: 30, startY: 30, endX: 190, endY: 30, startArrowTypeName: 'None', endArrowTypeName: 'Triangle-4', strokeDashStyle: StrokeDashStyle.SOLID, connectorType: ConnectorType.StraightLine },
 ]
 
 export class CustomConnector extends Connector {
@@ -44,6 +46,7 @@ export class CustomConnector extends Connector {
         }
       })
       this.strokeDashStyle = this._connectorTypeInfo.strokeDashStyle
+      this.connectorType = this._connectorTypeInfo.connectorType
     }
 
     private findConnectorTypeInfo(connectorTypeInfoName: string) {
