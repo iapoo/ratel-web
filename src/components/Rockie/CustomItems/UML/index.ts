@@ -1,3 +1,4 @@
+import { UMLConnector, UMLConnectorTypeInfos,} from './src/UMLConnector'
 import { UMLContainerShape, UMLContainerTypes } from './src/UMLContainerShape'
 import { UMLGridShape, UMLGridShapeTypes, } from './src/UMLGridShape'
 import { UMLBasicShape, UMLBasicShapeTypes, UMLBasicShapes } from './src/UMLShape'
@@ -26,4 +27,14 @@ export const UMLContainerShapes = [
 
 export const UMLShapes = [
     {name: UMLBasicShapeTypes[0].name, type: UMLBasicShape, typeInfo:  UMLBasicShapeTypes[0] },
+]
+
+export const UMLConnectors = [
+    {name: UMLConnectorTypeInfos[0].name, type: UMLConnector, typeInfo:  UMLConnectorTypeInfos[0] },
+    {name: UMLConnectorTypeInfos[1].name, type: UMLConnector, typeInfo:  UMLConnectorTypeInfos[1] },
+    {name: UMLConnectorTypeInfos[2].name, type: UMLConnector, typeInfo:  UMLConnectorTypeInfos[2] },
+    {name: UMLConnectorTypeInfos[3].name, type: UMLConnector, typeInfo:  UMLConnectorTypeInfos[3] },
+    {name: UMLConnectorTypeInfos[4].name, type: UMLConnector, typeInfo:  UMLConnectorTypeInfos[4] },
+    {name: UMLConnectorTypeInfos[5].name, type: UMLConnector, typeInfo:  UMLConnectorTypeInfos[5] },
+    {name: UMLConnectorTypeInfos[6].name, type: UMLConnector, typeInfo:  UMLConnectorTypeInfos[6] },
 ]
