@@ -9,7 +9,7 @@ import {
   Rectangle, RoundRectangle, Text, Ellipse, Square, Circle, Process, Diamond, Parallelogram, Hexagon, Triangle,
   Cylinder, Cloud, Document, InternalStorage, Cube, Step, Trapezoid, Tape, Note, Card, Callout, Actor, Container
 } from '@/components/Resource/LargeIcons'
-import { ContainerEntity, ContainerTypes, Containers, CustomConnector, CustomConnectorTypeInfo, CustomEntity, ShapeTypes, Shapes } from '@/components/Rockie/Items'
+import { ContainerEntity, ContainerTypes, Containers, CustomConnector, CustomConnectorTypeInfo, CustomEntity, CustomTableEntity, ShapeTypes, Shapes } from '@/components/Rockie/Items'
 import { BasicShapes } from '@/components/Rockie/CustomItems/BasicShapes';
 import { ShapeTypeInfo } from '@/components/Rockie/Shapes/src/EntityShape';
 import { ShapeEntity, ShapeType } from '@/components/Rockie/Items/src/ShapeEntity';
@@ -17,7 +17,7 @@ import { Arrows } from '@/components/Rockie/CustomItems/Arrows';
 import { AliyunShapes } from '@/components/Rockie/CustomItems/Aliyun';
 import { AwsShapes } from '@/components/Rockie/CustomItems/Aws';
 import { FlowChartShapes } from '@/components/Rockie/CustomItems/FlowChart';
-import { UMLConnectors, UMLContainerShapes, UMLGridShapes, UMLShapes } from '@/components/Rockie/CustomItems/UML';
+import { UMLBasicShapesForClass, UMLConnectors, UMLConnectorsForClass, UMLContainerShapes, UMLContainerShapesForClass, UMLGridShapes, UMLGridShapesForClass, UMLShapes } from '@/components/Rockie/CustomItems/UML';
 import { UMLBasicShapeTypes } from '@/components/Rockie/CustomItems/UML/src/UMLShape';
 import { CustomConnectorAction } from '@/components/Rockie/Actions/src/CustomConnectorAction';
 
@@ -174,6 +174,21 @@ const Navigator: FC<NavigatorProps> = ({
   const addCustomConnector = (type: string, classType: typeof CustomConnector, customConnectorTypeInfos: CustomConnectorTypeInfo) => {
     if (Utils.currentEditor) {
       Utils.currentEditor.action = new CustomConnectorAction(Utils.currentEditor, type, classType, customConnectorTypeInfos)
+    }
+  }
+
+
+  const addGenericShape = (typeName: string, classType: typeof ShapeEntity, typeInfo: any) => {
+    if (Utils.currentEditor) {
+      if(classType.prototype instanceof CustomTableEntity) {
+        Utils.currentEditor.action = new CustomTableAction(Utils.currentEditor, typeName)
+      } else if(classType.prototype instanceof ContainerEntity) {
+        Utils.currentEditor.action = new ExtendedContainerAction(Utils.currentEditor, typeName, classType, typeInfo)
+      } else if(classType.prototype instanceof CustomConnector) {
+        Utils.currentEditor.action = new CustomConnectorAction(Utils.currentEditor, typeName, classType, typeInfo)
+      } else {
+        Utils.currentEditor.action = new ExtendedShapeAction(Utils.currentEditor, typeName, classType, typeInfo)
+      }
     }
   }
 
@@ -365,7 +380,6 @@ const Navigator: FC<NavigatorProps> = ({
     }
   )
 
-
   const umlGridShapes = UMLGridShapes.map(
     shapeType => {
       return <Popover title={shapeType.name} placement='right' content={getCustomShapeAwsPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
@@ -406,6 +420,46 @@ const Navigator: FC<NavigatorProps> = ({
     }
   )
 
+  const umlGridShapesForClass = UMLGridShapesForClass.map(
+    shapeType => {
+      return <Popover title={shapeType.name} placement='right' content={getCustomShapeAwsPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
+      <Button type='text' onClick={() => addCustomTable(shapeType.name)} style={{padding: 2, display: 'table'}}>
+        <img src={`/custom-shapes/aws/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+      </Button>
+    </Popover>
+    }
+  )
+
+  const umlContainerShapesForClass = UMLContainerShapesForClass.map(
+    shapeType => {
+      return <Popover title={shapeType.name} placement='right' content={getCustomShapeAwsPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
+      <Button type='text' onClick={() => addExtendedContainer(shapeType.name, shapeType.type, shapeType.typeInfo)} style={{padding: 2, display: 'table'}}>
+        <img src={`/custom-shapes/aws/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+      </Button>
+    </Popover>
+    }
+  )
+
+  const umlBasicShapesForClass = UMLBasicShapesForClass.map(
+    shapeType => {
+      return <Popover title={shapeType.name} placement='right' content={getCustomShapeAwsPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
+      <Button type='text' onClick={() => addExtendedShape(shapeType.name, shapeType.type, shapeType.typeInfo)} style={{padding: 2, display: 'table'}}>
+        <img src={`/custom-shapes/aws/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+      </Button>
+    </Popover>
+    }
+  )
+
+  const umlConnectorsForClass = UMLConnectorsForClass.map(
+    shapeType => {
+      return <Popover title={shapeType.name} placement='right' content={getCustomShapeAwsPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
+      <Button type='text' onClick={() => addCustomConnector(shapeType.name, shapeType.type, shapeType.typeInfo)} style={{padding: 2, display: 'table'}}>
+        <img src={`/custom-shapes/aws/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+      </Button>
+    </Popover>
+    }
+  )
+
   const items: CollapseProps['items'] = [
     {
       key: '1',
@@ -431,6 +485,10 @@ const Navigator: FC<NavigatorProps> = ({
       key: '2',
       label: <div style={{fontWeight: 'bolder'}}><FormattedMessage id='workspace.navigator.panel.advanced'/></div>,
       children: <Space size={2} wrap>
+      {umlGridShapesForClass}
+      {umlContainerShapesForClass}
+      {umlBasicShapesForClass}
+      {umlConnectorsForClass}
       </Space>,
     },
     {

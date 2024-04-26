@@ -49,6 +49,10 @@ export class CustomConnector extends Connector {
       this.connectorType = this._connectorTypeInfo.connectorType
     }
 
+    public get connectorTypeInfo() {
+      return this._connectorTypeInfo
+    }
+    
     private findConnectorTypeInfo(connectorTypeInfoName: string) {
       let result = this._connectorTypeInfos[0]
       this._connectorTypeInfos.forEach(connectorTypeInfo => {
