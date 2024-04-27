@@ -86,7 +86,7 @@ export class UMLConnector extends CustomConnector {
       const height = Math.abs(this.start.y - this.end.y)
       switch(this.connectorTypeInfo.name) {
         case UMLConnectors.TYPE_INCLUDE: {
-          const textBox = new ShapeEntity(width / 2 - 60, height / 2 - 25, 100, 30)
+          const textBox = new ShapeEntity(width / 2 - 50, height / 2 - 25, 100, 30)
           textBox.text = '<<include>>'
           textBox.fillColor = Colors.Transparent
           textBox.strokeColor = Colors.Transparent
@@ -94,7 +94,7 @@ export class UMLConnector extends CustomConnector {
           break;
         }
         case UMLConnectors.TYPE_EXTEND: {
-          const textBox = new ShapeEntity(width / 2 - 60, height / 2 - 25, 100, 30)
+          const textBox = new ShapeEntity(width / 2 - 50, height / 2 - 25, 100, 30)
           textBox.text = '<<extend>>'
           textBox.fillColor = Colors.Transparent
           textBox.strokeColor = Colors.Transparent

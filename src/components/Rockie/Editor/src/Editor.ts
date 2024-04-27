@@ -1836,15 +1836,19 @@ export class Editor extends Painter {
     }
     const controllerItem = this.controllerLayer.getEditorItem(0)
     // console.log(`Moving... x = ${e.x} width=${controllerItem.width} `)
-    const width = this.alignToGridSize(controllerItem.width)
-    const height = this.alignToGridSize(controllerItem.height)
     const ex = (e.x - this.horizontalSpace) / this._zoom 
     const ey = (e.y - this.verticalSpace) / this._zoom
-    controllerItem.boundary = Rectangle.makeLTWH(this.alignToGridSize(ex - width / 2), this.alignToGridSize(ey - height / 2), width, height)
+    const width = this.alignToGridSize(controllerItem.width)
+    const height = this.alignToGridSize(controllerItem.height)
+
     if (controllerItem instanceof Connector) {
-       controllerItem.start = new Point2(this.alignToGridSize(ex - width / 2), this.alignToGridSize(ey - height / 2))
-       controllerItem.end = new Point2(this.alignToGridSize(ex + width / 2), this.alignToGridSize(ey + height / 2))
+      // const targetPoint = this.findEditorItemPoint(controllerItem, e.x, e.y)
+      // controllerItem.start = new Point2(ex + controllerItem.start.x, ey + controllerItem.start.y)
+      // controllerItem.end = new Point2(ex + controllerItem.end.x, ey + controllerItem.end.y)
+      controllerItem.start = new Point2(ex - width / 2, ey - height / 2)
+      controllerItem.end = new Point2(ex + width / 2, ey + height / 2)
     } else if (controllerItem instanceof Entity) {
+      controllerItem.boundary = Rectangle.makeLTWH(this.alignToGridSize(ex - width / 2), this.alignToGridSize(ey - height / 2), width, height)
     }
 
     //console.log(`Moving... x = ${e.x}  start=${controllerItem.left} end=${controllerItem.top} width=${controllerItem.width}  height=${controllerItem.height}`)
