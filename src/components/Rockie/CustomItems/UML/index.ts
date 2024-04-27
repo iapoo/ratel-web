@@ -20,6 +20,8 @@ export const UMLGridShapes = [
     {name: UMLGridShapeTypes[9].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[9] },
     {name: UMLGridShapeTypes[10].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[10] },
     {name: UMLGridShapeTypes[11].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[11] },
+    {name: UMLGridShapeTypes[12].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[12] },
+    {name: UMLGridShapeTypes[13].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[13] },
 ]
 
 export const UMLContainerShapes = [
@@ -69,6 +71,8 @@ export const UMLGridShapesForClass = [
     {name: UMLGridShapeTypes[9].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[9] },
     {name: UMLGridShapeTypes[10].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[10] },
     {name: UMLGridShapeTypes[11].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[11] },
+    {name: UMLGridShapeTypes[12].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[12] },
+    {name: UMLGridShapeTypes[13].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[13] },
 ]
 
 export const UMLBasicShapesForClass = [

@@ -515,6 +515,18 @@ const Navigator: FC<NavigatorProps> = ({
       key: '2',
       label: <div style={{fontWeight: 'bolder'}}><FormattedMessage id='workspace.navigator.panel.advanced'/></div>,
       children: <Space size={2} wrap>
+      </Space>,
+    },
+    {
+      key: '3',
+      label: <div style={{fontWeight: 'bolder'}}><FormattedMessage id='workspace.navigator.panel.arrows'/></div>,
+      children: <Space size={2} wrap>
+      </Space>,
+    },
+    {
+      key: '4',
+      label: <div style={{fontWeight: 'bolder'}}><FormattedMessage id='workspace.navigator.panel.uml-class'/></div>,
+      children: <Space size={2} wrap>
       {umlGridShapesForClass}
       {umlContainerShapesForClass}
       {umlBasicShapesForClass}
@@ -522,12 +534,30 @@ const Navigator: FC<NavigatorProps> = ({
       </Space>,
     },
     {
-      key: '3',
-      label: <div style={{fontWeight: 'bolder'}}><FormattedMessage id='workspace.navigator.panel.arrows'/></div>,
+      key: '5',
+      label: <div style={{fontWeight: 'bolder'}}><FormattedMessage id='workspace.navigator.panel.uml-use-case'/></div>,
       children: <Space size={2} wrap>
       {umlContainerShapesForUseCase}
       {umlBasicShapesForUseCase}
       {umlConnectorsForUseCase}
+      </Space>,
+    },
+    {
+      key: '6',
+      label: <div style={{fontWeight: 'bolder'}}><FormattedMessage id='workspace.navigator.panel.uml-activity'/></div>,
+      children: <Space size={2} wrap>
+      </Space>,
+    },
+    {
+      key: '7',
+      label: <div style={{fontWeight: 'bolder'}}><FormattedMessage id='workspace.navigator.panel.uml-state-machine'/></div>,
+      children: <Space size={2} wrap>
+      </Space>,
+    },
+    {
+      key: '8',
+      label: <div style={{fontWeight: 'bolder'}}><FormattedMessage id='workspace.navigator.panel.uml-sequence'/></div>,
+      children: <Space size={2} wrap>
       </Space>,
     },
   ]

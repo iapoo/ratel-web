@@ -23,6 +23,12 @@ const TEXT_GRID_SHAPE_CLASS_5 = 'Class 5'
 const TYPE_GRID_SHAPE_OBJECT = 'Object'
 const DESC_GRID_SHAPE_OBJECT = 'Object'
 const TEXT_GRID_SHAPE_OBJECT = 'Object'
+const TYPE_GRID_SHAPE_OBJECT_2 = 'Object 2'
+const DESC_GRID_SHAPE_OBJECT_2 = 'Object 2'
+const TEXT_GRID_SHAPE_OBJECT_2 = 'Object 2'
+const TYPE_GRID_SHAPE_OBJECT_3 = 'Object 3'
+const DESC_GRID_SHAPE_OBJECT_3 = 'Object 3'
+const TEXT_GRID_SHAPE_OBJECT_3 = 'Object 3'
 const TYPE_GRID_SHAPE_INTERFACE = 'Interface'
 const DESC_GRID_SHAPE_INTERFACE = 'Interface'
 const TEXT_GRID_SHAPE_INTERFACE = 'Interface'
@@ -130,8 +136,20 @@ export const UMLGridShapeTypes = [
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
-  { name: TYPE_GRID_SHAPE_OBJECT, description: DESC_GRID_SHAPE_OBJECT, freeze: Shapes.FREEZE_NONE, text: TEXT_GRID_SHAPE_OBJECT, left: 0, top: 0, width: 120, height: 60, enableMask: false, 
+  { name: TYPE_GRID_SHAPE_OBJECT, description: DESC_GRID_SHAPE_OBJECT, freeze: Shapes.FREEZE_NONE, text: TEXT_GRID_SHAPE_OBJECT, left: 0, top: 0, width: 140, height: 60, enableMask: false, 
     rowCount: 1, columnCount: 1, fixedFirstRow: false, firstRowHeight: 0, fixedFirstColumn: false, firstColumnWidth: 0,
+    modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: false, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  { name: TYPE_GRID_SHAPE_OBJECT_2, description: DESC_GRID_SHAPE_OBJECT_2, freeze: Shapes.FREEZE_NONE, text: TEXT_GRID_SHAPE_OBJECT_2, left: 0, top: 0, width: 140, height: 80, enableMask: false, 
+    rowCount: 2, columnCount: 1, fixedFirstRow: true, firstRowHeight: 50, fixedFirstColumn: false, firstColumnWidth: 0,
+    modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: false, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  { name: TYPE_GRID_SHAPE_OBJECT_3, description: DESC_GRID_SHAPE_OBJECT_3, freeze: Shapes.FREEZE_NONE, text: TEXT_GRID_SHAPE_OBJECT_2, left: 0, top: 0, width: 140, height: 80, enableMask: false, 
+    rowCount: 2, columnCount: 1, fixedFirstRow: true, firstRowHeight: 50, fixedFirstColumn: false, firstColumnWidth: 0,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: false, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
@@ -197,7 +215,23 @@ export class UMLGridShape extends CustomTableEntity {
         break;
       }
       case TYPE_GRID_SHAPE_OBJECT: {
-        this.items[0].shape.text = 'Object'
+        this.items[0].shape.selectionStyle.underline = true
+        this.items[0].shape.selectionStyle.bold = true
+        this.items[0].shape.text = 'Object:Class'
+        break;
+      }
+      case TYPE_GRID_SHAPE_OBJECT_2: {
+        this.items[0].shape.selectionStyle.underline = true
+        this.items[0].shape.selectionStyle.bold = true
+        this.items[0].shape.text = 'Object:Class'
+        break;
+      }
+      case TYPE_GRID_SHAPE_OBJECT_3: {
+        this.items[0].shape.selectionStyle.underline = true
+        this.items[0].shape.selectionStyle.bold = true
+        this.items[0].shape.text = 'Object:Class'
+        this.items[1].textAlignment = TextAlignment.LEFT
+        this.items[1].shape.text = ' + attribute = data'
         break;
       }
       case TYPE_GRID_SHAPE_INTERFACE: {
