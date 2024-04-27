@@ -17,7 +17,7 @@ import { Arrows } from '@/components/Rockie/CustomItems/Arrows';
 import { AliyunShapes } from '@/components/Rockie/CustomItems/Aliyun';
 import { AwsShapes } from '@/components/Rockie/CustomItems/Aws';
 import { FlowChartShapes } from '@/components/Rockie/CustomItems/FlowChart';
-import { UMLBasicShapesForClass, UMLConnectors, UMLConnectorsForClass, UMLContainerShapes, UMLContainerShapesForClass, UMLGridShapes, UMLGridShapesForClass, UMLShapes } from '@/components/Rockie/CustomItems/UML';
+import { UMLBasicShapesForClass, UMLBasicShapesForUseCase, UMLConnectors, UMLConnectorsForClass, UMLConnectorsForUseCase, UMLContainerShapes, UMLContainerShapesForClass, UMLContainerShapesForUseCase, UMLGridShapes, UMLGridShapesForClass, UMLShapes } from '@/components/Rockie/CustomItems/UML';
 import { UMLBasicShapeTypes } from '@/components/Rockie/CustomItems/UML/src/UMLShape';
 import { CustomConnectorAction } from '@/components/Rockie/Actions/src/CustomConnectorAction';
 
@@ -460,6 +460,36 @@ const Navigator: FC<NavigatorProps> = ({
     }
   )
 
+  const umlContainerShapesForUseCase = UMLContainerShapesForUseCase.map(
+    shapeType => {
+      return <Popover title={shapeType.name} placement='right' content={getCustomShapeAwsPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
+      <Button type='text' onClick={() => addExtendedContainer(shapeType.name, shapeType.type, shapeType.typeInfo)} style={{padding: 2, display: 'table'}}>
+        <img src={`/custom-shapes/aws/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+      </Button>
+    </Popover>
+    }
+  )
+
+  const umlBasicShapesForUseCase = UMLBasicShapesForUseCase.map(
+    shapeType => {
+      return <Popover title={shapeType.name} placement='right' content={getCustomShapeAwsPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
+      <Button type='text' onClick={() => addExtendedShape(shapeType.name, shapeType.type, shapeType.typeInfo)} style={{padding: 2, display: 'table'}}>
+        <img src={`/custom-shapes/aws/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+      </Button>
+    </Popover>
+    }
+  )
+
+  const umlConnectorsForUseCase = UMLConnectorsForUseCase.map(
+    shapeType => {
+      return <Popover title={shapeType.name} placement='right' content={getCustomShapeAwsPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
+      <Button type='text' onClick={() => addCustomConnector(shapeType.name, shapeType.type, shapeType.typeInfo)} style={{padding: 2, display: 'table'}}>
+        <img src={`/custom-shapes/aws/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+      </Button>
+    </Popover>
+    }
+  )
+
   const items: CollapseProps['items'] = [
     {
       key: '1',
@@ -494,7 +524,11 @@ const Navigator: FC<NavigatorProps> = ({
     {
       key: '3',
       label: <div style={{fontWeight: 'bolder'}}><FormattedMessage id='workspace.navigator.panel.arrows'/></div>,
-      children: <p></p>,
+      children: <Space size={2} wrap>
+      {umlContainerShapesForUseCase}
+      {umlBasicShapesForUseCase}
+      {umlConnectorsForUseCase}
+      </Space>,
     },
   ]
 
