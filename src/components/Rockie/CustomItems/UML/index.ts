@@ -121,4 +121,6 @@ export const UMLConnectorsForUseCase = [
 
 export const UMLCustomShapesForSequence = [
     {name: UMLCustomShapeTypes[0].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[0] },
+    {name: UMLCustomShapeTypes[1].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[1] },
+    {name: UMLCustomShapeTypes[2].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[2] },
 ]

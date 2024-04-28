@@ -556,7 +556,6 @@ const Navigator: FC<NavigatorProps> = ({
       key: '6',
       label: <div style={{fontWeight: 'bolder'}}><FormattedMessage id='workspace.navigator.panel.uml-activity'/></div>,
       children: <Space size={2} wrap>
-        {umlCustomShapesForSequence}
       </Space>,
     },
     {
@@ -569,12 +568,13 @@ const Navigator: FC<NavigatorProps> = ({
       key: '8',
       label: <div style={{fontWeight: 'bolder'}}><FormattedMessage id='workspace.navigator.panel.uml-sequence'/></div>,
       children: <Space size={2} wrap>
+        {umlCustomShapesForSequence}
       </Space>,
     },
   ]
 
   return (
-    <div style={{ position: 'absolute', top: '0px', bottom: '0px', left: '0px', width: navigatorWidth, }} >
+    <div style={{ position: 'absolute', top: '0px', bottom: '0px', left: '0px', width: navigatorWidth, overflow: 'auto', scrollbarWidth: 'thin'}} >
       <Collapse items={items} defaultActiveKey={['1', '2',]} onChange={onChange} size='small'/>
     </div>
   )
