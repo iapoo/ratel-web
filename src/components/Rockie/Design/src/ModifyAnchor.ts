@@ -74,14 +74,14 @@ export class ModifyAnchor extends Anchor {
       if(shapeType.modifyInLine) {
         let newModifierPoint = MathUtils.getNearestPointOfPointToLine(newModifierX, newModifierY, startX, startY, endX, endY)
         //let newModifierValue = Math.sqrt((newModifierPoint.x - startX) * (newModifierPoint.x - startX) + (newModifierPoint.y - startY) * (newModifierPoint.y - startY))
-        let newModifierXValue = newModifierPoint.x //< startX ? startX : (newModifierPoint.x > endX ? endX : newModifierPoint.x)
-        let newModifierYValue = newModifierPoint.y //< startY ? startY : (newModifierPoint.y > endY ? endY : newModifierPoint.y)
+        let newModifierXValue = newModifierPoint.x - startX //< startX ? startX : (newModifierPoint.x > endX ? endX : newModifierPoint.x)
+        let newModifierYValue = newModifierPoint.y - startY //< startY ? startY : (newModifierPoint.y > endY ? endY : newModifierPoint.y)
         //console.log(newModifierPoint)
         if(shapeType.modifyInPercent) {
           //newModifierValue = Math.sqrt((newModifierPoint.x - startX) * (newModifierPoint.x - startX) + (newModifierPoint.y - startY) * (newModifierPoint.y - startY)) /
           //Math.sqrt((endX - startX) * (endX - startX) + (endY - startX) * (endY - startX))
-          newModifierXValue = Math.abs(endX - startX) > 0 ? (newModifierXValue - startX) / (endX - startX) : 0
-          newModifierYValue = Math.abs(endY - startY) > 0 ? (newModifierYValue - startY) / (endY - startY) : 0
+          newModifierXValue = Math.abs(endX - startX) > 0 ? (newModifierPoint.x - startX) / (endX - startX) : 0
+          newModifierYValue = Math.abs(endY - startY) > 0 ? (newModifierPoint.y - startY) / (endY - startY) : 0
           newModifierXValue = newModifierXValue < 0 ? 0 : (newModifierXValue > 1 ? 1 : newModifierXValue)
           newModifierYValue = newModifierYValue < 0 ? 0 : (newModifierYValue > 1 ? 1 : newModifierYValue)
         }  

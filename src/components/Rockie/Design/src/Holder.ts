@@ -273,7 +273,7 @@ export class Holder extends Control {
       }
       this._modifyAnchor.left = x - Holder.ANCHOR_RADIUS
       this._modifyAnchor.top = y - Holder.ANCHOR_RADIUS
-      //console.log(`Modify Anchor left= ${this._modifyAnchor.left} top = ${this._modifyAnchor.top}`)
+      console.log(`Modify Anchor left= ${this._modifyAnchor.left} top = ${this._modifyAnchor.top}`)
       let controllerStartX = shapeType.controllerStartX * this.target.width
       let controllerStartY = shapeType.controllerStartY * this.target.height
       let controllerEndX = shapeType.controllerEndX * this.target.width
