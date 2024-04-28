@@ -3,13 +3,13 @@ import styles from './index.css'
 import { Button, Collapse, CollapseProps, Divider, Image, Popover, Space, Tooltip, message, } from 'antd'
 import { Utils, RequestUtils, } from '../Utils'
 import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
-import { ConnectorAction, ContainerAction, CustomShapeAction, ImageContainerAction, SvgContainerAction, LineAction, ShapeAction, TableAction, CustomTableAction, UMLContainerAction, ExtendedShapeAction, ExtendedContainerAction, } from '../../Rockie/Actions'
+import { ConnectorAction, ContainerAction, CustomShapeAction, ImageContainerAction, SvgContainerAction, LineAction, ShapeAction, TableAction, CustomTableAction, UMLContainerAction, ExtendedShapeAction, ExtendedContainerAction, FrameAction, } from '../../Rockie/Actions'
 import { StorageService, } from '../Storage'
 import {
   Rectangle, RoundRectangle, Text, Ellipse, Square, Circle, Process, Diamond, Parallelogram, Hexagon, Triangle,
   Cylinder, Cloud, Document, InternalStorage, Cube, Step, Trapezoid, Tape, Note, Card, Callout, Actor, Container
 } from '@/components/Resource/LargeIcons'
-import { ContainerEntity, ContainerTypes, Containers, CustomConnector, CustomConnectorTypeInfo, CustomEntity, CustomTableEntity, ShapeTypes, Shapes } from '@/components/Rockie/Items'
+import { ContainerEntity, ContainerTypes, Containers, CustomConnector, CustomConnectorTypeInfo, CustomEntity, CustomTableEntity, FrameEntity, ShapeTypes, Shapes } from '@/components/Rockie/Items'
 import { BasicShapes } from '@/components/Rockie/CustomItems/BasicShapes';
 import { ShapeTypeInfo } from '@/components/Rockie/Shapes/src/EntityShape';
 import { ShapeEntity, ShapeType } from '@/components/Rockie/Items/src/ShapeEntity';
@@ -17,7 +17,7 @@ import { Arrows } from '@/components/Rockie/CustomItems/Arrows';
 import { AliyunShapes } from '@/components/Rockie/CustomItems/Aliyun';
 import { AwsShapes } from '@/components/Rockie/CustomItems/Aws';
 import { FlowChartShapes } from '@/components/Rockie/CustomItems/FlowChart';
-import { UMLBasicShapesForClass, UMLBasicShapesForUseCase, UMLConnectors, UMLConnectorsForClass, UMLConnectorsForUseCase, UMLContainerShapes, UMLContainerShapesForClass, UMLContainerShapesForUseCase, UMLCustomShapesForSequence, UMLGridShapes, UMLGridShapesForClass, UMLShapes } from '@/components/Rockie/CustomItems/UML';
+import { UMLBasicShapesForClass, UMLBasicShapesForUseCase, UMLConnectors, UMLConnectorsForClass, UMLConnectorsForUseCase, UMLContainerShapes, UMLContainerShapesForClass, UMLContainerShapesForUseCase, UMLCustomShapesForSequence, UMLFrameShapesForSequence, UMLGridShapes, UMLGridShapesForClass, UMLShapes } from '@/components/Rockie/CustomItems/UML';
 import { UMLBasicShapeTypes } from '@/components/Rockie/CustomItems/UML/src/UMLShape';
 import { CustomConnectorAction } from '@/components/Rockie/Actions/src/CustomConnectorAction';
 
@@ -79,6 +79,12 @@ const Navigator: FC<NavigatorProps> = ({
   const addCustomShape = (type: string, classType: typeof CustomEntity, shapeType: ShapeType) => {
     if(Utils.currentEditor) {
       Utils.currentEditor.action = new CustomShapeAction(Utils.currentEditor, type, classType, shapeType)
+    }
+  }
+
+  const addFrame = (type: string, classType: typeof FrameEntity, shapeType: ShapeType) => {
+    if(Utils.currentEditor) {
+      Utils.currentEditor.action = new FrameAction(Utils.currentEditor, type, classType, shapeType)
     }
   }
 
@@ -500,6 +506,16 @@ const Navigator: FC<NavigatorProps> = ({
     }
   )
 
+  const umlFrameShapesForSequence = UMLFrameShapesForSequence.map(
+    shapeType => {
+      return <Popover title={shapeType.name} placement='right' content={getCustomShapeAwsPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
+      <Button type='text' onClick={() => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo)} style={{padding: 2, display: 'table'}}>
+        <img src={`/custom-shapes/aws/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+      </Button>
+    </Popover>
+    }
+  )
+
   const items: CollapseProps['items'] = [
     {
       key: '1',
@@ -569,6 +585,7 @@ const Navigator: FC<NavigatorProps> = ({
       label: <div style={{fontWeight: 'bolder'}}><FormattedMessage id='workspace.navigator.panel.uml-sequence'/></div>,
       children: <Space size={2} wrap>
         {umlCustomShapesForSequence}
+        {umlFrameShapesForSequence}
       </Space>,
     },
   ]

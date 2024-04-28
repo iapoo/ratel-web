@@ -57,7 +57,7 @@ export class FrameEntity extends ShapeEntity {
       shapeTypes: ShapeType[] = FrameEntityTypes) {
     super(left, top, width, height, shapeOptions, shapeTypes)
     const customTypeInfo = this.parseTypeInfo(shapeOptions)
-    this._shape = new FrameShape(left, top, width, height, this.buildShape, customTypeInfo)
+    this._shape = new FrameShape(left, top, width, height, this, this.buildShape, customTypeInfo)
   }
   public get types(): Type[] {
     return FrameEntityTypes
@@ -67,7 +67,7 @@ export class FrameEntity extends ShapeEntity {
     return Categories.FRAME
   }
 
-  public buildShape(theThis: FrameShape) {
+  public buildShape(theThis: FrameShape, entity: any) {
     theThis.path.reset()
     theThis.path.addOval(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
   }
