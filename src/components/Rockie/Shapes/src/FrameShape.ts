@@ -10,15 +10,17 @@ import { ConnectorDirection } from './ConnectorShape'
 
 export class FrameShape extends EntityShape {
 
-  private _buildShape: (theThis: FrameShape)=> void
+  private _buildShape: (theThis: FrameShape, entity: any)=> void
   private _secondPath: Path
   private _secondFill: Paint
   private _secondStroke: Paint
   private _secondFilled: boolean
   private _secondStroked: boolean
-  
-  public constructor (left: number, top: number, width: number, height: number, buildShape: (_this: FrameShape)=> void, shapeTypeInfo: ShapeTypeInfo) {
+  private _entity: any
+
+  public constructor (left: number, top: number, width: number, height: number, entity: any, buildShape: (_this: FrameShape, entity: any)=> void, shapeTypeInfo: ShapeTypeInfo) {
     super('', left, top, width, height, shapeTypeInfo)    
+    this._entity = entity
     this._secondPath = new Path()
     this._secondStroke = new Paint()
     this._secondStroke.setPaintStyle(PaintStyle.STROKE)
@@ -57,7 +59,7 @@ export class FrameShape extends EntityShape {
     super.update()
     this._secondStroke.setColor(this.stroke.getColor())
     this._secondFill.setColor(this.fill.getColor())
-    this._buildShape(this)
+    this._buildShape(this, this._entity)
   }
 
 }
