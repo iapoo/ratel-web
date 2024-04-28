@@ -45,6 +45,18 @@ export class UMLConnectors {
   public static TYPE_EXTEND = 'Extend'
   public static DESC_EXTEND = 'Extend'
   public static TEXT_EXTEND = 'Extend'
+  public static TYPE_MESSAGE = 'Message'
+  public static DESC_MESSAGE = 'Message'
+  public static TEXT_MESSAGE = 'Message'
+  public static TYPE_ASYNCHRONIZED_MESSAGE = 'Asynchronized Message'
+  public static DESC_ASYNCHRONIZED_MESSAGE = 'Asynchronized Message'
+  public static TEXT_ASYNCHRONIZED_MESSAGE = 'Asynchronized Message'
+  public static TYPE_SELF_MESSAGE = 'Self Message'
+  public static DESC_SELF_MESSAGE = 'Self Message'
+  public static TEXT_SELF_MESSAGE = 'Self Message'
+  public static TYPE_RETURN_MESSAGE = 'Return Message'
+  public static DESC_RETURN_MESSAGE = 'Return Message'
+  public static TEXT_RETURN_MESSAGE = 'Return Message'
 }
 
 export const UMLConnectorTypeInfos: CustomConnectorTypeInfo[] = [
@@ -72,6 +84,14 @@ export const UMLConnectorTypeInfos: CustomConnectorTypeInfo[] = [
     startX: 30, startY: 30, endX: 190, endY: 30, startArrowTypeName: 'None', endArrowTypeName: 'Triangle-1-2', strokeDashStyle: StrokeDashStyle.DASH, connectorType: ConnectorType.StraightLine },
   { name: UMLConnectors.TYPE_EXTEND, description: UMLConnectors.DESC_EXTEND, text: UMLConnectors.TEXT_EXTEND, 
     startX: 30, startY: 30, endX: 190, endY: 30, startArrowTypeName: 'None', endArrowTypeName: 'Triangle-1-2', strokeDashStyle: StrokeDashStyle.DASH, connectorType: ConnectorType.StraightLine },
+  { name: UMLConnectors.TYPE_MESSAGE, description: UMLConnectors.DESC_MESSAGE, text: UMLConnectors.TEXT_MESSAGE, 
+    startX: 30, startY: 30, endX: 190, endY: 30, startArrowTypeName: 'None', endArrowTypeName: 'Triangle-1', strokeDashStyle: StrokeDashStyle.SOLID, connectorType: ConnectorType.StraightLine },
+  { name: UMLConnectors.TYPE_ASYNCHRONIZED_MESSAGE, description: UMLConnectors.DESC_ASYNCHRONIZED_MESSAGE, text: UMLConnectors.TEXT_ASYNCHRONIZED_MESSAGE, 
+    startX: 30, startY: 30, endX: 190, endY: 30, startArrowTypeName: 'None', endArrowTypeName: 'Triangle-1-2', strokeDashStyle: StrokeDashStyle.SOLID, connectorType: ConnectorType.StraightLine },
+  { name: UMLConnectors.TYPE_SELF_MESSAGE, description: UMLConnectors.DESC_SELF_MESSAGE, text: UMLConnectors.TEXT_SELF_MESSAGE, 
+    startX: 30, startY: 30, endX: 30, endY: 70, startArrowTypeName: 'None', endArrowTypeName: 'Triangle-1-2', strokeDashStyle: StrokeDashStyle.SOLID, connectorType: ConnectorType.Orthogonal },
+  { name: UMLConnectors.TYPE_RETURN_MESSAGE, description: UMLConnectors.DESC_RETURN_MESSAGE, text: UMLConnectors.TEXT_RETURN_MESSAGE, 
+    startX: 30, startY: 30, endX: 190, endY: 30, startArrowTypeName: 'Triangle-1-2', endArrowTypeName: 'None', strokeDashStyle: StrokeDashStyle.DASH, connectorType: ConnectorType.StraightLine },
 ]
 
 export class UMLConnector extends CustomConnector {
@@ -99,6 +119,12 @@ export class UMLConnector extends CustomConnector {
           textBox.fillColor = Colors.Transparent
           textBox.strokeColor = Colors.Transparent
           this.addItem(textBox)
+          break;
+        }
+        case UMLConnectors.TYPE_SELF_MESSAGE: {
+          this.startDirection = ConnectorDirection.Right
+          this.endDirection = ConnectorDirection.Right
+          this.orthogonalPoints = [new Point2(0, 0), new Point2(12, 0), new Point2(40, 0), new Point2(40, 40), new Point2(12, 40), new Point2(0, 40), ]
           break;
         }
       } 

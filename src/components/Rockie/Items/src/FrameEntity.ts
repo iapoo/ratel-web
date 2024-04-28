@@ -2,14 +2,14 @@ import { Graphics, ParagraphDirection, Rectangle } from '@/components/Engine'
 import { EntityShapeType } from '../../Shapes/src/EntityShape'
 import { Categories, Type } from './Item'
 import { ShapeEntity, ShapeOptions, ShapeType, Shapes, } from './ShapeEntity'
-import { CustomShape } from '../../Shapes'
+import { FrameShape } from '../../Shapes'
 
-export class CustomEntities {
-  public static TYPE_CUSTOM_SHAPE = 'CustomShape'
-  public static DESC_CUSTOM_SHAPE = 'CustomShape'
+export class FrameEntities {
+  public static TYPE_FRAME_SHAPE = 'FrameShape'
+  public static DESC_FRAME_SHAPE = 'FrameShape'
 }
 
-export interface CustomEntityType {
+export interface FrameEntityType {
   name: string
   description: string
   freeze: string
@@ -41,8 +41,8 @@ export interface CustomEntityType {
   adaptInPercent: boolean
 }
 
-export const CustomEntityTypes = [{ name: CustomEntities.TYPE_CUSTOM_SHAPE, description: CustomEntities.DESC_CUSTOM_SHAPE, 
-    freeze: Shapes.FREEZE_NONE, text: 'Custom Shape', left: 0, top: 0, width: 200, height: 200, enableMask: false, 
+export const FrameEntityTypes = [{ name: FrameEntities.TYPE_FRAME_SHAPE, description: FrameEntities.DESC_FRAME_SHAPE, 
+    freeze: Shapes.FREEZE_NONE, text: 'Frame Shape', left: 0, top: 0, width: 200, height: 200, enableMask: false, 
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, 
     modifierEndY: 0, modifyInLine: true, modifyInPercent: true, adaptable: false, adapterX: 0, adapterY: 0,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
@@ -50,30 +50,30 @@ export const CustomEntityTypes = [{ name: CustomEntities.TYPE_CUSTOM_SHAPE, desc
     adaptInLine: true, adaptInPercent: true
 }]
 
-export class CustomEntity extends ShapeEntity {
+export class FrameEntity extends ShapeEntity {
   
   public constructor(left: number, top: number, width: number, height: number, name: string = '',
-      shapeOptions: ShapeOptions = { shapeType: CustomEntities.TYPE_CUSTOM_SHAPE },
-      shapeTypes: ShapeType[] = CustomEntityTypes) {
+      shapeOptions: ShapeOptions = { shapeType: FrameEntities.TYPE_FRAME_SHAPE },
+      shapeTypes: ShapeType[] = FrameEntityTypes) {
     super(left, top, width, height, shapeOptions, shapeTypes)
     const customTypeInfo = this.parseTypeInfo(shapeOptions)
-    this._shape = new CustomShape(left, top, width, height, this.buildShape, customTypeInfo)
+    this._shape = new FrameShape(left, top, width, height, this.buildShape, customTypeInfo)
   }
   public get types(): Type[] {
-    return CustomEntityTypes
+    return FrameEntityTypes
   }
 
   public get category(): string {
-    return Categories.CUSTOM_SHAPE
+    return Categories.FRAME
   }
 
-  public buildShape(theThis: CustomShape) {
+  public buildShape(theThis: FrameShape) {
     theThis.path.reset()
     theThis.path.addOval(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
   }
 
   protected parseEntityShapeType(type: string): EntityShapeType {
-    let shapeType = EntityShapeType.CustomShape
+    let shapeType = EntityShapeType.Frame
     return shapeType
   } 
 }

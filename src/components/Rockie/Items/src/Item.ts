@@ -19,6 +19,8 @@ export class Categories {
   public static SHAPE = 'Shape'
   public static CONTAINER = 'Container'
   public static TABLE = 'Table'
+  public static FRAME = 'Frame'
+  public static GROUP = 'Group'
   public static CUSTOM_SHAPE = 'CustomShape'
   public static CUSTOM_SVG_SHAPE = 'CustomSvgShape'
   public static CUSTOM_IMAGE_SHAPE = 'CustomImageShape'
