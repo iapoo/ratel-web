@@ -14,6 +14,9 @@ export class UMLCustomShapes {
   public static TYPE_ACTIVATION = 'Activation'
   public static DESC_ACTIVATION = 'Activation'
   public static TEXT_ACTIVATION = 'Activation'
+  public static TYPE_LOOP = 'Loop'
+  public static DESC_LOOP = 'Loop'
+  public static TEXT_LOOP = 'Parameters'
 }
 
 export const UMLCustomShapeTypes = [
@@ -29,7 +32,11 @@ export const UMLCustomShapeTypes = [
   modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
   controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
   adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true},
-]
+  { name: UMLCustomShapes.TYPE_LOOP, description: UMLCustomShapes.DESC_LOOP, freeze: Shapes.FREEZE_NONE, text: UMLCustomShapes.TEXT_LOOP, left: 0, top: 0, width: 10, height: 80, enableMask: false, 
+    modifiable: true, modifierX: 90, modifierY: 30, modifierStartX: 0, modifierStartY: 0, modifierEndX: 1, modifierEndY: 1, modifyInLine: false, modifyInPercent: false,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true},
+  ]
 
 export class UMLCustomShape extends CustomEntity {
   
@@ -99,6 +106,14 @@ export class UMLCustomShape extends CustomEntity {
       }
       case UMLCustomShapes.TYPE_ACTIVATION: {
         theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
+        break;
+      }
+      case UMLCustomShapes.TYPE_LOOP: {
+        theThis.textHeight = modifierHeight
+        theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, modifierHeight))
+        theThis.secondStroke.setStrokeDashStyle(StrokeDashStyle.DASH)
+        theThis.secondPath.moveTo(theThis.width / 2, modifierHeight)
+        theThis.secondPath.lineTo(theThis.width / 2, theThis.height)
         break;
       }
     }

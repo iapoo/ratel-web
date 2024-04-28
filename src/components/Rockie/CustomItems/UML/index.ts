@@ -57,6 +57,12 @@ export const UMLConnectors = [
     {name: UMLConnectorTypeInfos[9].name, type: UMLConnector, typeInfo:  UMLConnectorTypeInfos[9] },
     {name: UMLConnectorTypeInfos[10].name, type: UMLConnector, typeInfo:  UMLConnectorTypeInfos[10] },
     {name: UMLConnectorTypeInfos[11].name, type: UMLConnector, typeInfo:  UMLConnectorTypeInfos[11] },
+
+    // Sequence
+    {name: UMLConnectorTypeInfos[12].name, type: UMLConnector, typeInfo:  UMLConnectorTypeInfos[12] },
+    {name: UMLConnectorTypeInfos[13].name, type: UMLConnector, typeInfo:  UMLConnectorTypeInfos[13] },
+    {name: UMLConnectorTypeInfos[14].name, type: UMLConnector, typeInfo:  UMLConnectorTypeInfos[14] },
+    {name: UMLConnectorTypeInfos[15].name, type: UMLConnector, typeInfo:  UMLConnectorTypeInfos[15] },
 ]
 
 export const UMLCustomShapes = [
