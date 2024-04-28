@@ -18,7 +18,7 @@ export class UMLCustomShapes {
 
 export const UMLCustomShapeTypes = [
   { name: UMLCustomShapes.TYPE_ACTOR_LIFELINE, description: UMLCustomShapes.DESC_ACTOR_LIFELINE, freeze: Shapes.FREEZE_NONE, text: UMLCustomShapes.TEXT_ACTOR_LIFELINE, left: 0, top: 0, width: 80, height: 200, enableMask: false, 
-  modifiable: true, modifierX: 0, modifierY: 30, modifierStartX: 0.5, modifierStartY: 0.02, modifierEndX: 0.5, modifierEndY: 1, modifyInLine: true, modifyInPercent: false,
+  modifiable: true, modifierX: 0, modifierY: 30, modifierStartX: 0.5, modifierStartY: 0, modifierEndX: 0.5, modifierEndY: 1, modifyInLine: true, modifyInPercent: false,
   controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
   adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true},
 ]

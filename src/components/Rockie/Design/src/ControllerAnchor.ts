@@ -74,14 +74,14 @@ export class ControllerAnchor extends Anchor {
       if(shapeType.controlInLine) {
         let newControllerPoint = MathUtils.getNearestPointOfPointToLine(newControllerX, newControllerY, startX, startY, endX, endY)
         //let newControllerValue = Math.sqrt((newControllerPoint.x - startX) * (newControllerPoint.x - startX) + (newControllerPoint.y - startY) * (newControllerPoint.y - startY))
-        let newControllerXValue = newControllerPoint.x //< startX ? startX : (newControllerPoint.x > endX ? endX : newControllerPoint.x)
-        let newControllerYValue = newControllerPoint.y //< startY ? startY : (newControllerPoint.y > endY ? endY : newControllerPoint.y)
+        let newControllerXValue = newControllerPoint.x - startX//< startX ? startX : (newControllerPoint.x > endX ? endX : newControllerPoint.x)
+        let newControllerYValue = newControllerPoint.y - startY //< startY ? startY : (newControllerPoint.y > endY ? endY : newControllerPoint.y)
         //console.log(newControllerPoint)
         if(shapeType.controlInPercent) {
           //newControllerValue = Math.sqrt((newControllerPoint.x - startX) * (newControllerPoint.x - startX) + (newControllerPoint.y - startY) * (newControllerPoint.y - startY)) /
           //Math.sqrt((endX - startX) * (endX - startX) + (endY - startX) * (endY - startX))
-          newControllerXValue = Math.abs(endX - startX) > 0 ? (newControllerXValue - startX) / (endX - startX) : 0
-          newControllerYValue = Math.abs(endY - startY) > 0 ? (newControllerYValue - startY) / (endY - startY) : 0
+          newControllerXValue = Math.abs(endX - startX) > 0 ? (newControllerPoint.x - startX) / (endX - startX) : 0
+          newControllerYValue = Math.abs(endY - startY) > 0 ? (newControllerPoint.y - startY) / (endY - startY) : 0
           newControllerXValue = newControllerXValue < 0 ? 0 : (newControllerXValue > 1 ? 1 : newControllerXValue)
           newControllerYValue = newControllerYValue < 0 ? 0 : (newControllerYValue > 1 ? 1 : newControllerYValue)
         }  
