@@ -74,6 +74,10 @@ export const UMLCustomShapes = [
 export const UMLFrameShapes = [
     // Sequence
     {name: UMLFrameShapeTypes[0].name, type: UMLFrameShape, typeInfo:  UMLFrameShapeTypes[0] },
+    {name: UMLFrameShapeTypes[1].name, type: UMLFrameShape, typeInfo:  UMLFrameShapeTypes[1] },
+    {name: UMLFrameShapeTypes[2].name, type: UMLFrameShape, typeInfo:  UMLFrameShapeTypes[2] },
+    {name: UMLFrameShapeTypes[3].name, type: UMLFrameShape, typeInfo:  UMLFrameShapeTypes[3] },
+    {name: UMLFrameShapeTypes[4].name, type: UMLFrameShape, typeInfo:  UMLFrameShapeTypes[4] },
 ]
 
 export const UMLGridShapesForClass = [
@@ -140,4 +144,15 @@ export const UMLCustomShapesForSequence = [
 
 export const UMLFrameShapesForSequence = [
     {name: UMLFrameShapeTypes[0].name, type: UMLFrameShape, typeInfo:  UMLFrameShapeTypes[0] },
+    {name: UMLFrameShapeTypes[1].name, type: UMLFrameShape, typeInfo:  UMLFrameShapeTypes[1] },
+    {name: UMLFrameShapeTypes[2].name, type: UMLFrameShape, typeInfo:  UMLFrameShapeTypes[2] },
+    {name: UMLFrameShapeTypes[3].name, type: UMLFrameShape, typeInfo:  UMLFrameShapeTypes[3] },
+    {name: UMLFrameShapeTypes[4].name, type: UMLFrameShape, typeInfo:  UMLFrameShapeTypes[4] },
+]
+
+export const UMLConnectorsForSequence = [
+    {name: UMLConnectorTypeInfos[12].name, type: UMLConnector, typeInfo:  UMLConnectorTypeInfos[12] },
+    {name: UMLConnectorTypeInfos[13].name, type: UMLConnector, typeInfo:  UMLConnectorTypeInfos[13] },
+    {name: UMLConnectorTypeInfos[14].name, type: UMLConnector, typeInfo:  UMLConnectorTypeInfos[14] },
+    {name: UMLConnectorTypeInfos[15].name, type: UMLConnector, typeInfo:  UMLConnectorTypeInfos[15] },
 ]
