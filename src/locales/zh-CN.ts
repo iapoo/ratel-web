@@ -135,6 +135,7 @@ export default {
   'workspace.navigator.panel.uml-activity': 'UML活动图',
   'workspace.navigator.panel.uml-state-machine': 'UML状态机图',
   'workspace.navigator.panel.uml-sequence': 'UML时序图',
+  'workspace.navigator.panel.uml-others': 'UML其他',
   'workspace.navigator.panel.general-Rectangle': 'Rectangle',
   'workspace.navigator.panel.general-Round Rectangle': 'Round Rectangle',
   'workspace.navigator.panel.general-Text': 'Text',
