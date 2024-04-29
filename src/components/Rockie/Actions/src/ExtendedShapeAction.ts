@@ -3,7 +3,7 @@ import { Theme, Themes, } from '@/components/Rockie/Theme'
 import { Item, ShapeEntity, Shapes, } from '../../Items'
 import { Action, } from './Action'
 import { ShapeType, ShapeTypes } from '../../Items/src/ShapeEntity'
-import { UMLBasicShape, UMLBasicShapeTypes, UMLBasicShapes } from '../../CustomItems/UML/src/UMLShape'
+import { UMLBasicShape, UMLBasicShapeTypes, UMLBasicShapes } from '../../CustomItems/UML/src/UMLBasicShape'
 import { Editor } from '../../Editor'
 
 export class ExtendedShapeAction extends Action {
