@@ -25,7 +25,7 @@ export const UMLCustomShapeTypes = [
   modifiable: true, modifierX: 0, modifierY: 40, modifierStartX: 0.5, modifierStartY: 0, modifierEndX: 0.5, modifierEndY: 1, modifyInLine: true, modifyInPercent: false,
   controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
   adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true},
-  { name: UMLCustomShapes.TYPE_ACTIVATION, description: UMLCustomShapes.DESC_ACTIVATION, freeze: Shapes.FREEZE_NONE, text: UMLCustomShapes.TEXT_ACTIVATION, left: 0, top: 0, width: 10, height: 80, enableMask: false, 
+  { name: UMLCustomShapes.TYPE_ACTIVATION, description: UMLCustomShapes.DESC_ACTIVATION, freeze: Shapes.FREEZE_NONE, text: UMLCustomShapes.TEXT_ACTIVATION, left: 0, top: 0, width: 20, height: 80, enableMask: false, 
   modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
   controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
   adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true},
@@ -38,10 +38,26 @@ export class UMLCustomShape extends CustomEntity {
     const customTypeInfo = this.parseTypeInfo({shapeType: typeName})
     this._shape = new CustomShape(left, top, width, height, this.buildShape, customTypeInfo)
     this.initializeTheme()
+    this.initializeShape()
   }
 
   public get types(): Type[] {
     return UMLCustomShapeTypes
+  }
+
+  private initializeShape() {
+    switch(this._shape.typeInfo.name) {
+      case UMLCustomShapes.TYPE_ACTOR_LIFELINE: {        
+        break;
+      }
+      case UMLCustomShapes.TYPE_OBJECT_LIFELINE: {
+        this.text = 'Object'
+        break;
+      }
+      case UMLCustomShapes.TYPE_ACTIVATION: {
+        break;
+      }
+    }
   }
 
   public buildShape(theThis: CustomShape) {
