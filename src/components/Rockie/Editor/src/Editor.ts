@@ -5,7 +5,7 @@ import { Painter, } from '@/components/Painter'
 import { Engine, Point2, Rectangle2D, Rotation, Shape, Line2D, Node, Rectangle, Graphics, Colors, MouseEvent, MouseCode, PointerEvent as UniPointerEvent, Control, PointerEvent, Path, Scale, KeyEvent, Color, Paint, StrokeDashStyle, Matrix, } from '../../../Engine'
 import { Action, } from '../../Actions'
 import { Holder, } from '../../Design'
-import { CellEntity, Connector, ContainerEntity, EditorItem, EditorItemInfo, Entity, Item, ShapeEntity, TableEntity, } from '../../Items'
+import { CellEntity, Connector, ContainerEntity, EditorItem, EditorItemInfo, Entity, FrameEntity, Item, ShapeEntity, TableEntity, } from '../../Items'
 import { ContentLayer, } from './ContentLayer'
 import { ControllerLayer, } from './ControllerLayer'
 import { EditorLayer, } from './EditorLayer'
@@ -1018,7 +1018,9 @@ export class Editor extends Painter {
           }
           this._targetItem = undefined
           this._targetItemIndex = -1
-          this._inMoving = true
+          if(!((clickedEditorItem as Item).parent instanceof FrameEntity)) {
+            this._inMoving = true
+          }
         } else if (clickedEditorItem instanceof TableEntity) {
           if(!clickedEditorItem.locked) {
             const targetPoint = this.findEditorItemPoint(clickedEditorItem, e.x, e.y)
@@ -1096,9 +1098,11 @@ export class Editor extends Painter {
           this._textSelecting = true
         } else {
           if(!clickedEditorItem.locked) {
-            this.beginOperation(clickedEditorItem)
-            this._inMoving = true
-            this.startMoveOutline(e)
+            if(!((clickedEditorItem as Item).parent instanceof FrameEntity)) {
+              this.beginOperation(clickedEditorItem)
+              this._inMoving = true
+              this.startMoveOutline(e)
+            }
           }
         }
       } else {
@@ -1551,6 +1555,8 @@ export class Editor extends Painter {
     //}
     if(editorItem instanceof Connector && excludeConnector) {
       result = undefined
+    // } else if((editorItem as Item).parent instanceof FrameEntity) {
+    //   result = undefined
     } else {
       if (shape.intersects(x - Editor.TEST_RADIUS, y - Editor.TEST_RADIUS, Editor.TEST_SIZE, Editor.TEST_SIZE)) {
         result = editorItem
