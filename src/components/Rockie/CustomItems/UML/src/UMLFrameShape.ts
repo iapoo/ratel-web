@@ -68,6 +68,7 @@ export class UMLFrameShape extends FrameEntity {
       case UMLFrameShapes.TYPE_OPT:
       case UMLFrameShapes.TYPE_PAR:
       case UMLFrameShapes.TYPE_OTHER: {
+        // this._label.locked = true
         this.textVerticalAlignment = TextVerticalAlignment.TOP
         this.textAlignment = TextAlignment.LEFT
         this.text = 'Parameters'

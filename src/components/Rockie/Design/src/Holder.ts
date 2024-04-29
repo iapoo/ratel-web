@@ -6,7 +6,7 @@ import { ResizeAnchor, ResizeType, } from './ResizeAnchor'
 import { RotationAnchor, } from './RotationAnchor'
 import { ModifyAnchor, } from './ModifyAnchor'
 import { Colors, Control, Line2D, Point2, Rectangle, Scale, StrokeDashStyle, } from '@/components/Engine'
-import { Connector, Item, LineEntity, LineType, Shapes, } from '../../Items'
+import { Connector, FrameEntity, Item, LineEntity, LineType, Shapes, } from '../../Items'
 import { Editor, } from '../../Editor/src/Editor'
 import { PointAnchor, } from './PointAnchor'
 import { ShapeEntity, ShapeTypes } from '../../Items/src/ShapeEntity'
@@ -480,30 +480,32 @@ export class Holder extends Control {
       this.addNode(this._sourceConnectionAnchor)
       this.addNode(this._targetConnectionAnchor)
     } else {
-      this.addNode(this._leftResizeAnchor)
-      this.addNode(this._leftTopResizeAnchor)
-      this.addNode(this._topResizeAnchor)
-      this.addNode(this._rightTopResizeAnchor)
-      this.addNode(this._rightResizeAnchor)
-      this.addNode(this._rightBottomResizeAnchor)
-      this.addNode(this._bottomResizeAnchor)
-      this.addNode(this._leftBottomResizeAnchor)
-      if (this._inSelection) {
-        this.addNode(this._leftCreationAnchor)
-        this.addNode(this._topCreationAnchor)
-        this.addNode(this._rightCreationAnchor)
-        this.addNode(this._bottomCreationAnchor)
-        this.addNode(this._rotationAnchor)
-        if(this._target instanceof ShapeEntity) {
-          if (this._target.shapeType.modifiable) {
-            this.addNode(this._modifyAnchor)
-          }
-          if(this._target.shapeType.controllable) {
-            this.addNode(this._controllerAnchor)
-          }
-          if(this._target.shapeType.adaptable) {
-            this.addNode(this._endAdapterAnchor)
-            this.addNode(this._startAdapterAnchor)
+      if(!(this._target.parent instanceof FrameEntity)) {
+        this.addNode(this._leftResizeAnchor)
+        this.addNode(this._leftTopResizeAnchor)
+        this.addNode(this._topResizeAnchor)
+        this.addNode(this._rightTopResizeAnchor)
+        this.addNode(this._rightResizeAnchor)
+        this.addNode(this._rightBottomResizeAnchor)
+        this.addNode(this._bottomResizeAnchor)
+        this.addNode(this._leftBottomResizeAnchor)
+        if (this._inSelection) {
+          this.addNode(this._leftCreationAnchor)
+          this.addNode(this._topCreationAnchor)
+          this.addNode(this._rightCreationAnchor)
+          this.addNode(this._bottomCreationAnchor)
+          this.addNode(this._rotationAnchor)
+          if(this._target instanceof ShapeEntity) {
+            if (this._target.shapeType.modifiable) {
+              this.addNode(this._modifyAnchor)
+            }
+            if(this._target.shapeType.controllable) {
+              this.addNode(this._controllerAnchor)
+            }
+            if(this._target.shapeType.adaptable) {
+              this.addNode(this._endAdapterAnchor)
+              this.addNode(this._startAdapterAnchor)
+            }
           }
         }
       }
