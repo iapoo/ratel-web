@@ -135,6 +135,7 @@ export default {
   'workspace.navigator.panel.uml-activity': 'UML Activity',
   'workspace.navigator.panel.uml-state-machine': 'UML State Machine',
   'workspace.navigator.panel.uml-sequence': 'UML Sequence',
+  'workspace.navigator.panel.uml-others': 'UML Others',
   'workspace.navigator.panel.general-Rectangle': 'Rectangle',
   'workspace.navigator.panel.general-Round Rectangle': 'Round Rectangle',
   'workspace.navigator.panel.general-Text': 'Text',
