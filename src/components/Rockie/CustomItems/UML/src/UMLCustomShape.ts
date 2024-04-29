@@ -1,4 +1,4 @@
-import { Colors, FontSlant, FontWeight, Graphics, ParagraphDirection, Rectangle, StrokeDashStyle } from '@/components/Engine'
+import { Colors, FontSlant, FontWeight, Graphics, ParagraphDirection, Rectangle, StrokeDashStyle, TextDecoration } from '@/components/Engine'
 import { EntityShapeType } from '../../../Shapes/src/EntityShape'
 import { CustomShape } from '../../../Shapes'
 import { CustomEntity, Shapes } from '../../../Items'
@@ -88,6 +88,7 @@ export class UMLCustomShape extends CustomEntity {
       }
       case UMLCustomShapes.TYPE_NODE_2: {
         this.fontWeight = FontWeight.BOLD
+        this.textDecoration = TextDecoration.UNDERLINE
         this.text = this._shape.typeInfo.text
         break;
       }

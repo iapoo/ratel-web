@@ -166,7 +166,7 @@ export class Style {
   }
 
   public set underline(value: boolean) {
-    this._underline = this.underline
+    this._underline = value
   }
 
   public clone (): Style {

@@ -303,13 +303,14 @@ export abstract class AbstractTextShape extends Shape {
       if(this._endIndex != this._startIndex) {
         const selectionStyles = this.findSelectionStyles()
         selectionStyles.forEach(selectionStyle => {
-          selectionStyle.underline = value == TextDecoration.UNDERLINE
+          selectionStyle.underline = (value == TextDecoration.UNDERLINE)
         })        
       } else {
-        this._selectStyle.underline = value == TextDecoration.UNDERLINE
+        // console.log(`${value}   ${TextDecoration.UNDERLINE}   ${value == TextDecoration.UNDERLINE}`)
+        this._selectStyle.underline = (value == TextDecoration.UNDERLINE)
         if(!this._focused) {
           this._styles.forEach(style => {
-            style.underline = value == TextDecoration.UNDERLINE
+            style.underline = (value == TextDecoration.UNDERLINE)
           })
         }
       }
