@@ -57,6 +57,12 @@ export class UMLConnectors {
   public static TYPE_RETURN_MESSAGE = 'Return Message'
   public static DESC_RETURN_MESSAGE = 'Return Message'
   public static TEXT_RETURN_MESSAGE = 'Return Message'
+  public static TYPE_CONTROL_STREAM = 'Control Stream'
+  public static DESC_CONTROL_STREAM = 'Control Stream'
+  public static TEXT_CONTROL_STREAM = 'Control Stream'
+  public static TYPE_CONTROL_STREAM_2 = 'Control Stream 2'
+  public static DESC_CONTROL_STREAM_2 = 'Control Stream 2'
+  public static TEXT_CONTROL_STREAM_2 = 'Control Stream 2'
 }
 
 export const UMLConnectorTypeInfos: CustomConnectorTypeInfo[] = [
@@ -92,6 +98,10 @@ export const UMLConnectorTypeInfos: CustomConnectorTypeInfo[] = [
     startX: 30, startY: 30, endX: 30, endY: 70, startArrowTypeName: 'None', endArrowTypeName: 'Triangle-1-2', strokeDashStyle: StrokeDashStyle.SOLID, connectorType: ConnectorType.Orthogonal },
   { name: UMLConnectors.TYPE_RETURN_MESSAGE, description: UMLConnectors.DESC_RETURN_MESSAGE, text: UMLConnectors.TEXT_RETURN_MESSAGE, 
     startX: 30, startY: 30, endX: 190, endY: 30, startArrowTypeName: 'Triangle-1-2', endArrowTypeName: 'None', strokeDashStyle: StrokeDashStyle.DASH, connectorType: ConnectorType.StraightLine },
+  { name: UMLConnectors.TYPE_CONTROL_STREAM, description: UMLConnectors.DESC_CONTROL_STREAM, text: UMLConnectors.TEXT_CONTROL_STREAM, 
+    startX: 30, startY: 30, endX: 190, endY: 30, startArrowTypeName: 'None', endArrowTypeName: 'Triangle-1-2', strokeDashStyle: StrokeDashStyle.SOLID, connectorType: ConnectorType.StraightLine },
+  { name: UMLConnectors.TYPE_CONTROL_STREAM_2, description: UMLConnectors.DESC_CONTROL_STREAM_2, text: UMLConnectors.TEXT_CONTROL_STREAM_2, 
+    startX: 0, startY: 0, endX: 120, endY: 120, startArrowTypeName: 'None', endArrowTypeName: 'Triangle-1-2', strokeDashStyle: StrokeDashStyle.SOLID, connectorType: ConnectorType.Orthogonal },
 ]
 
 export class UMLConnector extends CustomConnector {

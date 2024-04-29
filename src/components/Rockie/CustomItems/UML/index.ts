@@ -68,11 +68,19 @@ export const UMLConnectors = [
     {name: UMLConnectorTypeInfos[13].name, type: UMLConnector, typeInfo:  UMLConnectorTypeInfos[13] },
     {name: UMLConnectorTypeInfos[14].name, type: UMLConnector, typeInfo:  UMLConnectorTypeInfos[14] },
     {name: UMLConnectorTypeInfos[15].name, type: UMLConnector, typeInfo:  UMLConnectorTypeInfos[15] },
+
+    // Activity
+    {name: UMLConnectorTypeInfos[16].name, type: UMLConnector, typeInfo:  UMLConnectorTypeInfos[16] },
+    {name: UMLConnectorTypeInfos[17].name, type: UMLConnector, typeInfo:  UMLConnectorTypeInfos[17] },
 ]
 
 export const UMLCustomShapes = [
     // Sequence
     {name: UMLCustomShapeTypes[0].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[0] },
+    {name: UMLCustomShapeTypes[1].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[1] },
+    {name: UMLCustomShapeTypes[2].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[2] },
+    // Activity
+    {name: UMLCustomShapeTypes[3].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[3] },
 ]
 
 export const UMLFrameShapes = [
@@ -166,3 +174,13 @@ export const UMLBasicShapesForActivity = [
     {name: UMLBasicShapeTypes[4].name, type: UMLBasicShape, typeInfo:  UMLBasicShapeTypes[4] },
     {name: UMLBasicShapeTypes[5].name, type: UMLBasicShape, typeInfo:  UMLBasicShapeTypes[5] },
 ]
+
+export const UMLCustomShapesForActivity = [
+    {name: UMLCustomShapeTypes[3].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[3] },
+]
+
+export const UMLConnectorsForActivity = [
+    {name: UMLConnectorTypeInfos[16].name, type: UMLConnector, typeInfo:  UMLConnectorTypeInfos[16] },
+    {name: UMLConnectorTypeInfos[17].name, type: UMLConnector, typeInfo:  UMLConnectorTypeInfos[17] },
+]
+
