@@ -24,6 +24,9 @@ export class UMLBasicShapes {
   public static TYPE_DECISION = 'Decision'
   public static DESC_DECISION = 'Decision'
   public static TEXT_DECISION = ''
+  public static TYPE_OBJECT = 'Object'
+  public static DESC_OBJECT = 'Object'
+  public static TEXT_OBJECT = 'Object'
 }
 
 export const UMLBasicShapeTypes = [
@@ -35,23 +38,27 @@ export const UMLBasicShapeTypes = [
     modifiable: true, modifierX: 0.6, modifierY: 0.4, modifierStartX: 0.5, modifierStartY: 0, modifierEndX: 1, modifierEndY: 0.5, modifyInLine: false, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true  },
-    { name: UMLBasicShapes.TYPE_ACTOR, description: UMLBasicShapes.DESC_ACTOR, freeze: Shapes.FREEZE_NONE, text: UMLBasicShapes.TEXT_ACTOR, left: 0, top: 0, width: 30, height: 60,  enableMask: true,
+  { name: UMLBasicShapes.TYPE_ACTOR, description: UMLBasicShapes.DESC_ACTOR, freeze: Shapes.FREEZE_NONE, text: UMLBasicShapes.TEXT_ACTOR, left: 0, top: 0, width: 30, height: 60,  enableMask: true,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true },
-    { name: UMLBasicShapes.TYPE_ACTION, description: UMLBasicShapes.DESC_ACTION, freeze: Shapes.FREEZE_NONE, text: UMLBasicShapes.TEXT_ACTION, left: 0, top: 0, width: 120, height: 60,  enableMask: false,
+  { name: UMLBasicShapes.TYPE_ACTION, description: UMLBasicShapes.DESC_ACTION, freeze: Shapes.FREEZE_NONE, text: UMLBasicShapes.TEXT_ACTION, left: 0, top: 0, width: 120, height: 60,  enableMask: false,
     modifiable: true, modifierX: 0.2,modifierY: 0.2,  modifierStartX: 0, modifierStartY: 0, modifierEndX: 0.5, modifierEndY: 0.5, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true  },
-    { name: UMLBasicShapes.TYPE_INTIAL_NODE, description: UMLBasicShapes.DESC_INTIAL_NODE, freeze: Shapes.FREEZE_ASPECT_RATIO , text: UMLBasicShapes.TEXT_INTIAL_NODE, left: 0, top: 0, width: 40, height: 40,  enableMask: false,
+  { name: UMLBasicShapes.TYPE_INTIAL_NODE, description: UMLBasicShapes.DESC_INTIAL_NODE, freeze: Shapes.FREEZE_ASPECT_RATIO , text: UMLBasicShapes.TEXT_INTIAL_NODE, left: 0, top: 0, width: 40, height: 40,  enableMask: false,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true },
-    { name: UMLBasicShapes.TYPE_DECISION, description: UMLBasicShapes.DESC_DECISION, freeze: Shapes.FREEZE_NONE, text: UMLBasicShapes.TEXT_DECISION, left: 0, top: 0, width: 60, height: 60,  enableMask: false,
+  { name: UMLBasicShapes.TYPE_DECISION, description: UMLBasicShapes.DESC_DECISION, freeze: Shapes.FREEZE_NONE, text: UMLBasicShapes.TEXT_DECISION, left: 0, top: 0, width: 60, height: 60,  enableMask: false,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true  },
-]
+  { name: UMLBasicShapes.TYPE_OBJECT, description: UMLBasicShapes.DESC_OBJECT, freeze: Shapes.FREEZE_NONE, text: UMLBasicShapes.TEXT_OBJECT, left: 0, top: 0, width: 120, height: 60, enableMask: false,
+    modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true  },
+  ]
 
 export class UMLBasicShape extends ShapeEntity {
 
@@ -83,6 +90,8 @@ export class UMLBasicShape extends ShapeEntity {
           break;
         case UMLBasicShapes.TYPE_DECISION:
           break;
+        case UMLBasicShapes.TYPE_OBJECT:
+          break;
       }
     }
     protected parseEntityShapeType(type: string): EntityShapeType {
@@ -105,6 +114,9 @@ export class UMLBasicShape extends ShapeEntity {
           break;
         case UMLBasicShapes.TYPE_DECISION:
           shapeType = EntityShapeType.Diamond
+          break;
+        case UMLBasicShapes.TYPE_OBJECT:
+          shapeType = EntityShapeType.Rectangle
           break;
       }
       return shapeType

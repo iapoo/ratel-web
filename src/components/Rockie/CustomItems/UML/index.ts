@@ -3,7 +3,7 @@ import { UMLContainerShape, UMLContainerTypes } from './src/UMLContainerShape'
 import { UMLCustomShape, UMLCustomShapeTypes } from './src/UMLCustomShape'
 import { UMLFrameShape, UMLFrameShapeTypes } from './src/UMLFrameShape'
 import { UMLGridShape, UMLGridShapeTypes, } from './src/UMLGridShape'
-import { UMLBasicShape, UMLBasicShapeTypes, UMLBasicShapes } from './src/UMLShape'
+import { UMLBasicShape, UMLBasicShapeTypes, } from './src/UMLBasicShape'
 
 export  {UMLGridShapeTypes, UMLGridShape} from './src/UMLGridShape'
 
@@ -29,21 +29,26 @@ export const UMLGridShapes = [
 export const UMLContainerShapes = [
     //Class
     {name: UMLContainerTypes[0].name, type: UMLContainerShape, typeInfo:  UMLContainerTypes[0] },
-    //Use Case
+    //Use Case & Activity State
     {name: UMLContainerTypes[1].name, type: UMLContainerShape, typeInfo:  UMLContainerTypes[1] },
+    //Activity & State
+    {name: UMLContainerTypes[2].name, type: UMLContainerShape, typeInfo:  UMLContainerTypes[2] },
+    {name: UMLContainerTypes[3].name, type: UMLContainerShape, typeInfo:  UMLContainerTypes[3] },
 ]
 
-export const UMLShapes = [
+export const UMLBasicShapes = [
     //Use case
     {name: UMLBasicShapeTypes[0].name, type: UMLBasicShape, typeInfo:  UMLBasicShapeTypes[0] },
     //Use case & Class & all others: Note
     {name: UMLBasicShapeTypes[1].name, type: UMLBasicShape, typeInfo:  UMLBasicShapeTypes[1] },
     //Use Case
     {name: UMLBasicShapeTypes[2].name, type: UMLBasicShape, typeInfo:  UMLBasicShapeTypes[2] },
-    //Activity
+    //Activity State
     {name: UMLBasicShapeTypes[3].name, type: UMLBasicShape, typeInfo:  UMLBasicShapeTypes[3] },
     {name: UMLBasicShapeTypes[4].name, type: UMLBasicShape, typeInfo:  UMLBasicShapeTypes[4] },
     {name: UMLBasicShapeTypes[5].name, type: UMLBasicShape, typeInfo:  UMLBasicShapeTypes[5] },
+    //Others
+    {name: UMLBasicShapeTypes[6].name, type: UMLBasicShape, typeInfo:  UMLBasicShapeTypes[6] },
 ]
 
 export const UMLConnectors = [
@@ -69,7 +74,7 @@ export const UMLConnectors = [
     {name: UMLConnectorTypeInfos[14].name, type: UMLConnector, typeInfo:  UMLConnectorTypeInfos[14] },
     {name: UMLConnectorTypeInfos[15].name, type: UMLConnector, typeInfo:  UMLConnectorTypeInfos[15] },
 
-    // Activity
+    // Activity State
     {name: UMLConnectorTypeInfos[16].name, type: UMLConnector, typeInfo:  UMLConnectorTypeInfos[16] },
     {name: UMLConnectorTypeInfos[17].name, type: UMLConnector, typeInfo:  UMLConnectorTypeInfos[17] },
 ]
@@ -79,8 +84,11 @@ export const UMLCustomShapes = [
     {name: UMLCustomShapeTypes[0].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[0] },
     {name: UMLCustomShapeTypes[1].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[1] },
     {name: UMLCustomShapeTypes[2].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[2] },
-    // Activity
+    // Activity State
     {name: UMLCustomShapeTypes[3].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[3] },
+    // Other
+    {name: UMLCustomShapeTypes[4].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[4] },
+    {name: UMLCustomShapeTypes[5].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[5] },
 ]
 
 export const UMLFrameShapes = [
@@ -169,18 +177,32 @@ export const UMLConnectorsForSequence = [
     {name: UMLConnectorTypeInfos[15].name, type: UMLConnector, typeInfo:  UMLConnectorTypeInfos[15] },
 ]
 
-export const UMLBasicShapesForActivity = [
+export const UMLBasicShapesForActivityState = [
     {name: UMLBasicShapeTypes[3].name, type: UMLBasicShape, typeInfo:  UMLBasicShapeTypes[3] },
     {name: UMLBasicShapeTypes[4].name, type: UMLBasicShape, typeInfo:  UMLBasicShapeTypes[4] },
     {name: UMLBasicShapeTypes[5].name, type: UMLBasicShape, typeInfo:  UMLBasicShapeTypes[5] },
 ]
 
-export const UMLCustomShapesForActivity = [
+export const UMLCustomShapesForActivityState = [
     {name: UMLCustomShapeTypes[3].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[3] },
 ]
 
-export const UMLConnectorsForActivity = [
+export const UMLConnectorsForActivityState = [
     {name: UMLConnectorTypeInfos[16].name, type: UMLConnector, typeInfo:  UMLConnectorTypeInfos[16] },
     {name: UMLConnectorTypeInfos[17].name, type: UMLConnector, typeInfo:  UMLConnectorTypeInfos[17] },
 ]
 
+export const UMLContainerShapesForActivityState = [
+    {name: UMLContainerTypes[1].name, type: UMLContainerShape, typeInfo:  UMLContainerTypes[1] },
+    {name: UMLContainerTypes[2].name, type: UMLContainerShape, typeInfo:  UMLContainerTypes[2] },
+    {name: UMLContainerTypes[3].name, type: UMLContainerShape, typeInfo:  UMLContainerTypes[3] },
+]
+
+export const UMLBasicShapesForOther = [
+    {name: UMLBasicShapeTypes[6].name, type: UMLBasicShape, typeInfo:  UMLBasicShapeTypes[6] },
+]
+
+export const UMLCustomShapesForOther = [
+    {name: UMLCustomShapeTypes[4].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[4] },
+    {name: UMLCustomShapeTypes[5].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[5] },
+]

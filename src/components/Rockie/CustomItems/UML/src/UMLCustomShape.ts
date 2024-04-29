@@ -1,4 +1,4 @@
-import { Colors, Graphics, ParagraphDirection, Rectangle, StrokeDashStyle } from '@/components/Engine'
+import { Colors, FontSlant, FontWeight, Graphics, ParagraphDirection, Rectangle, StrokeDashStyle } from '@/components/Engine'
 import { EntityShapeType } from '../../../Shapes/src/EntityShape'
 import { CustomShape } from '../../../Shapes'
 import { CustomEntity, Shapes } from '../../../Items'
@@ -10,13 +10,19 @@ export class UMLCustomShapes {
   public static TEXT_ACTOR_LIFELINE = 'Actor Lifeline'
   public static TYPE_OBJECT_LIFELINE = 'Object Lifeline'
   public static DESC_OBJECT_LIFELINE = 'Object Lifeline'
-  public static TEXT_OBJECT_LIFELINE = 'Object Lifeline'
+  public static TEXT_OBJECT_LIFELINE = 'Object'
   public static TYPE_ACTIVATION = 'Activation'
   public static DESC_ACTIVATION = 'Activation'
   public static TEXT_ACTIVATION = 'Activation'
   public static TYPE_FINAL_NODE = 'Final Node'
   public static DESC_FINAL_NODE = 'Final Node'
   public static TEXT_FINAL_NODE = ''
+  public static TYPE_NODE = 'Node'
+  public static DESC_NODE = 'Node'
+  public static TEXT_NODE = 'Node'
+  public static TYPE_NODE_2 = 'Node 2'
+  public static DESC_NODE_2 = 'Node 2'
+  public static TEXT_NODE_2 = 'Node'
 }
 
 export const UMLCustomShapeTypes = [
@@ -36,7 +42,15 @@ export const UMLCustomShapeTypes = [
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true },
-  ]
+  { name: UMLCustomShapes.TYPE_NODE, description: UMLCustomShapes.DESC_NODE, freeze: Shapes.FREEZE_NONE, text: UMLCustomShapes.TEXT_NODE, left: 0, top: 0, width: 120, height: 100, enableMask: false,
+    modifiable: true, modifierX: 0.85, modifierY: 0.15, modifierStartX: 0, modifierStartY: 0, modifierEndX: 1, modifierEndY: 1, modifyInLine: false, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true  },
+  { name: UMLCustomShapes.TYPE_NODE_2, description: UMLCustomShapes.DESC_NODE_2, freeze: Shapes.FREEZE_NONE, text: UMLCustomShapes.TEXT_NODE_2, left: 0, top: 0, width: 120, height: 100,  enableMask: false,
+    modifiable: true, modifierX: 0.85, modifierY: 0.15, modifierStartX: 0, modifierStartY: 0, modifierEndX: 1, modifierEndY: 1, modifyInLine: false, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true  },
+]
 
 export class UMLCustomShape extends CustomEntity {
   
@@ -58,13 +72,23 @@ export class UMLCustomShape extends CustomEntity {
         break;
       }
       case UMLCustomShapes.TYPE_OBJECT_LIFELINE: {
-        this.text = 'Object'
+        this.text = this._shape.typeInfo.text
         break;
       }
       case UMLCustomShapes.TYPE_ACTIVATION: {
         break;
       }
       case UMLCustomShapes.TYPE_FINAL_NODE: {
+        break;
+      }
+      case UMLCustomShapes.TYPE_NODE: {
+        this.fontWeight = FontWeight.BOLD
+        this.text = this._shape.typeInfo.text
+        break;
+      }
+      case UMLCustomShapes.TYPE_NODE_2: {
+        this.fontWeight = FontWeight.BOLD
+        this.text = this._shape.typeInfo.text
         break;
       }
     }
@@ -132,8 +156,22 @@ export class UMLCustomShape extends CustomEntity {
         theThis.path.addOval(Rectangle.makeLTWH(theThis.width * 0.1, theThis.width * 0.1, theThis.width * 0.8, theThis.height * 0.8))
         break;
       }
+      case UMLCustomShapes.TYPE_NODE_2:
+      case UMLCustomShapes.TYPE_NODE: {
+        theThis.textTop = modifierHeight
+        theThis.textWidth = modifierWidth
+        theThis.textHeight = this.height - modifierHeight
+        theThis.path.moveTo(0, modifierHeight)
+        theThis.path.lineTo(theThis.width - modifierWidth, 0)
+        theThis.path.lineTo(theThis.width, 0)
+        theThis.path.lineTo(modifierWidth, modifierHeight)
+        theThis.path.lineTo(modifierWidth, theThis.height)
+        theThis.path.lineTo(theThis.width, theThis.height - modifierHeight)
+        theThis.path.lineTo(theThis.width, 0)
+        theThis.path.addRectangle(Rectangle.makeLTWH(0, modifierHeight, modifierWidth, this.height - modifierHeight))
+        break;
+      }
     }
-    theThis.path.close()
   }
 
   protected parseEntityShapeType(type: string): EntityShapeType {
