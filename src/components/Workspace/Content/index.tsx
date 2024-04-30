@@ -1716,7 +1716,7 @@ const Content: FC<ContentProps> = ({
       const tableEntity = currentEditor.selectionLayer.getEditorItem(0) as TableEntity
       const targetItemIndex = currentEditor.targetItemIndex
       const rowIndex = Math.floor(targetItemIndex / tableEntity.columnCount)
-      tableEntity.insertRowBefore(rowIndex)
+      tableEntity.insertRowBefore(rowIndex, true)
       currentEditor.invalideHolder()
       currentEditor.triggerSelectionResized()
     }
@@ -1728,7 +1728,7 @@ const Content: FC<ContentProps> = ({
       const tableEntity = currentEditor.selectionLayer.getEditorItem(0) as TableEntity
       const targetItemIndex = currentEditor.targetItemIndex
       const rowIndex = Math.floor(targetItemIndex / tableEntity.columnCount)
-      tableEntity.insertRowAfter(rowIndex)
+      tableEntity.insertRowAfter(rowIndex, true)
       currentEditor.invalideHolder()
       currentEditor.triggerSelectionResized()
     }
@@ -1740,7 +1740,7 @@ const Content: FC<ContentProps> = ({
       const tableEntity = currentEditor.selectionLayer.getEditorItem(0) as TableEntity
       const targetItemIndex = currentEditor.targetItemIndex
       const columnIndex = targetItemIndex % tableEntity.columnCount
-      tableEntity.insertColumnBefore(columnIndex)
+      tableEntity.insertColumnBefore(columnIndex, true)
       currentEditor.invalideHolder()
       currentEditor.triggerSelectionResized()
     }
@@ -1752,7 +1752,7 @@ const Content: FC<ContentProps> = ({
       const tableEntity = currentEditor.selectionLayer.getEditorItem(0) as TableEntity
       const targetItemIndex = currentEditor.targetItemIndex
       const columnIndex = targetItemIndex % tableEntity.columnCount
-      tableEntity.insertColumnAfter(columnIndex)
+      tableEntity.insertColumnAfter(columnIndex, true)
       currentEditor.invalideHolder()
       currentEditor.triggerSelectionResized()
     }

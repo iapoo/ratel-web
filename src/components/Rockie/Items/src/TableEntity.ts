@@ -68,7 +68,7 @@ export class TableEntity extends ContainerEntity {
     const oldWidth = this.width
     const oldHeight = this.height
     super.boundary = value
-    this.updateTableBoundary(oldWidth, oldHeight)
+    // this.updateTableBoundary(oldWidth, oldHeight)
   }
 
   public getAllTypes(): Type[] {
@@ -79,7 +79,7 @@ export class TableEntity extends ContainerEntity {
     return Categories.TABLE
   }
 
-  public insertRowBefore(rowIndex: number) {
+  public insertRowBefore(rowIndex: number, refreshBoundary: boolean) {
     if(rowIndex >= 0 && rowIndex < this._rowCount) {      
       for(let i = 0; i < this._columnCount; i ++) {
         const beforeCell = this.items[rowIndex * this._columnCount + i * 2]
@@ -94,12 +94,14 @@ export class TableEntity extends ContainerEntity {
         }
       }
       this._rowCount ++
-      this.boundary = Rectangle.makeLTWH(this.left, this.top, this.width, this.height +  this.items[rowIndex * this.columnCount].height)
+      if(refreshBoundary) {
+        this.boundary = Rectangle.makeLTWH(this.left, this.top, this.width, this.height +  this.items[rowIndex * this.columnCount].height)
+      }
     }
   }
 
 
-  public insertRowAfter(rowIndex: number) {
+  public insertRowAfter(rowIndex: number, refreshBoundary: boolean) {
     if(rowIndex >= 0 && rowIndex < this._rowCount) {      
       for(let i = 0; i < this._columnCount; i ++) {
         const beforeCell = this.items[rowIndex * this._columnCount + i]
@@ -114,12 +116,14 @@ export class TableEntity extends ContainerEntity {
         }
       }
       this._rowCount ++
-      this.boundary = Rectangle.makeLTWH(this.left, this.top, this.width, this.height +  this.items[rowIndex * this.columnCount].height)
+      if(refreshBoundary) {
+        this.boundary = Rectangle.makeLTWH(this.left, this.top, this.width, this.height +  this.items[rowIndex * this.columnCount].height)
+      }
     }
   }
 
 
-  public insertColumnBefore(columnIndex: number) {
+  public insertColumnBefore(columnIndex: number, refreshBoundary: boolean) {
     if(columnIndex >= 0 && columnIndex < this._columnCount) {      
       for(let i = 0; i < this._rowCount; i ++) {
         const beforeCell = this.items[i * this._columnCount + columnIndex +  i]
@@ -134,12 +138,14 @@ export class TableEntity extends ContainerEntity {
         }
       }
       this._columnCount ++
-      this.boundary = Rectangle.makeLTWH(this.left, this.top, this.width +  this.items[columnIndex].width, this.height)
+      if(refreshBoundary) {
+        this.boundary = Rectangle.makeLTWH(this.left, this.top, this.width +  this.items[columnIndex].width, this.height)
+      }
     }
   }
 
 
-  public insertColumnAfter(columnIndex: number) {
+  public insertColumnAfter(columnIndex: number, refreshBoundary: boolean) {
     if(columnIndex >= 0 && columnIndex < this._columnCount) {      
       for(let i = 0; i < this._rowCount; i ++) {
         const beforeCell = this.items[i * this._columnCount + columnIndex +  i]
@@ -154,7 +160,9 @@ export class TableEntity extends ContainerEntity {
         }
       }
       this._columnCount ++
-      this.boundary = Rectangle.makeLTWH(this.left, this.top, this.width +  this.items[columnIndex].width, this.height)
+      if(refreshBoundary) {
+        this.boundary = Rectangle.makeLTWH(this.left, this.top, this.width +  this.items[columnIndex].width, this.height)
+      }
     }
   }
 
@@ -192,6 +200,18 @@ export class TableEntity extends ContainerEntity {
       this._columnCount --
     }
   }
+
+  public recalculateTableBoundary(oldWidth: number, oldHeight: number) {
+    const widthRatio =  this.width / oldWidth
+    const heightRatio =  this.height / oldHeight
+    for (let rowIndex = 0; rowIndex < this._rowCount; rowIndex++) {
+      for (let columnIndex = 0; columnIndex < this._columnCount; columnIndex++) {
+        const cell = this.items[rowIndex * this._columnCount + columnIndex]
+        cell.boundary =  Rectangle.makeLTWH(cell.left * widthRatio, cell.top * heightRatio, cell.width * widthRatio, cell.height * heightRatio)
+      }
+    }
+  }
+  
   // public clone(): EditorItem {
   //   let tableEntity = new TableEntity(this.left, this.top, this.width, this.height)
   //   return tableEntity
@@ -232,14 +252,4 @@ export class TableEntity extends ContainerEntity {
     }
   }
 
-  private updateTableBoundary(oldWidth: number, oldHeight: number) {
-    const widthRatio =  this.width / oldWidth
-    const heightRatio =  this.height / oldHeight
-    for (let rowIndex = 0; rowIndex < this._rowCount; rowIndex++) {
-      for (let columnIndex = 0; columnIndex < this._columnCount; columnIndex++) {
-        const cell = this.items[rowIndex * this._columnCount + columnIndex]
-        cell.boundary =  Rectangle.makeLTWH(cell.left * widthRatio, cell.top * heightRatio, cell.width * widthRatio, cell.height * heightRatio)
-      }
-    }
-  }
 }

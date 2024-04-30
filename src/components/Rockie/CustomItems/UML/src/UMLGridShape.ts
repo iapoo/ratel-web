@@ -3,6 +3,7 @@ import { EntityShapeType } from '../../../Shapes/src/EntityShape'
 import { CustomShape } from '../../../Shapes'
 import { CustomEntity, CustomTableEntity, Shapes, TableEntity } from '../../../Items'
 import { Type } from '../../../Items/src/Item'
+import { CustomTableType } from '@/components/Rockie/Items/src/CustomTableEntity'
 
 
 const TYPE_GRID_SHAPE_CLASS = 'Class'
@@ -49,45 +50,7 @@ const DESC_GRID_SHAPE_PACKAGE_3 = 'Package 3'
 const TEXT_GRID_SHAPE_PACKAGE_3 = 'Package 3'
 
 
-export interface CustomTableType {
-  name: string
-  description: string
-  freeze: string
-  text: string
-  left: number 
-  top: number
-  width: number
-  height: number 
-  rowCount: number
-  columnCount: number
-  fixedFirstRow: boolean
-  firstRowHeight: number
-  fixedFirstColumn: boolean
-  firstColumnWidth: number
-  enableMask: boolean
-  modifiable: boolean
-  modifierX: number
-  modifierY: number
-  modifierStartX: number
-  modifierStartY: number
-  modifierEndX: number
-  modifierEndY: number
-  modifyInLine: boolean
-  modifyInPercent: boolean
-  adaptable: boolean
-  adapterX: number
-  adapterY: number 
-  adapterDirection: string
-  adapterSize: number
-  adapterStartX: number
-  adapterStartY: number
-  adapterEndX: number
-  adapterEndY: number
-  adaptInLine: boolean
-  adaptInPercent: boolean
-}
-
-export const UMLGridShapeTypes = [
+export const UMLGridShapeTypes: CustomTableType[] = [
   { name: TYPE_GRID_SHAPE_CLASS, description: DESC_GRID_SHAPE_CLASS, freeze: Shapes.FREEZE_NONE, text: TEXT_GRID_SHAPE_CLASS, left: 0, top: 0, width: 250, height: 160, enableMask: false, 
     rowCount: 3, columnCount: 1, fixedFirstRow: true, firstRowHeight: 32, fixedFirstColumn: false, firstColumnWidth: 0,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: false, modifyInPercent: true,
@@ -176,20 +139,22 @@ export const UMLGridShapeTypes = [
 
 export class UMLGridShape extends CustomTableEntity {
   private _customGridType: CustomTableType
-  public constructor(left: number, top: number, width: number, height: number, gridShapeType: string) {
-    super(left, top, width, height, 1, 1)
+  private _customGridTypeInfos: CustomTableType[]
+  public constructor(left: number, top: number, width: number, height: number, gridShapeType: string, shapeTypeInfos: CustomTableType[]) {
+    super(left, top, width, height, gridShapeType, shapeTypeInfos, 1, 1)
+    this._customGridTypeInfos = shapeTypeInfos
     this._customGridType = this.parseTableTypeInfo(gridShapeType)
     this.buildShape()
   }
 
   public buildShape() {    
     for(let i = 0; i < this._customGridType.rowCount - 1; i ++) {
-      this.insertRowAfter(this.rowCount - 1)
+      this.insertRowAfter(this.rowCount - 1, false)
     }
     for(let i = 0; i < this._customGridType.columnCount - 1; i ++) {
-      this.insertColumnAfter(this.columnCount - 1)
+      this.insertColumnAfter(this.columnCount - 1, false)
     }
-    this.boundary =  Rectangle.makeLTWH(0, 0, this._customGridType.width, this._customGridType.height)
+    //this.boundary =  Rectangle.makeLTWH(0, 0, this.width, this.height)
     this.refreshGrid()
     switch(this._customGridType.name) {
       case TYPE_GRID_SHAPE_CLASS_2: {   
@@ -308,9 +273,9 @@ export class UMLGridShape extends CustomTableEntity {
     return shapeType
   } 
 
-  public parseTableTypeInfo(gridShapeTypeName: string): CustomTableType {
-    let result: CustomTableType = UMLGridShapeTypes[0]
-    UMLGridShapeTypes.forEach((gridShapeType: CustomTableType) => {
+  public parseTableTypeInfo(gridShapeTypeName: string): CustomTableType {    
+    let result: CustomTableType = this._customGridTypeInfos[0]
+    this._customGridTypeInfos.forEach((gridShapeType: CustomTableType) => {
       if(gridShapeType.name  == gridShapeTypeName) {
         result = gridShapeType
       }
