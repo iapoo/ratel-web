@@ -7,8 +7,8 @@ import { ShapeOptions, ShapeType } from '@/components/Rockie/Items/src/ShapeEnti
 
 
 export class UMLContainers {
-  public static TYPE_PACKAGE = 'Package'
-  public static DESC_PACKAGE = 'Package'
+  public static TYPE_PACKAGE = 'Package Container'
+  public static DESC_PACKAGE = 'Package Container'
   public static TEXT_PACKAGE = 'Package'
   public static TYPE_CONTAINER = 'Container'
   public static DESC_CONTAINER = 'Container'

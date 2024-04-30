@@ -3,13 +3,13 @@ import styles from './index.css'
 import { Button, Collapse, CollapseProps, Divider, Image, Popover, Space, Tooltip, message, } from 'antd'
 import { Utils, RequestUtils, } from '../Utils'
 import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
-import { ConnectorAction, ContainerAction, CustomShapeAction, ImageContainerAction, SvgContainerAction, LineAction, ShapeAction, TableAction, CustomTableAction, UMLContainerAction, ExtendedShapeAction, ExtendedContainerAction, FrameAction, } from '../../Rockie/Actions'
+import { ConnectorAction, ContainerAction, CustomShapeAction, ImageContainerAction, SvgContainerAction, LineAction, ShapeAction, TableAction, CustomTableAction, ExtendedShapeAction, ExtendedContainerAction, FrameAction, } from '../../Rockie/Actions'
 import { StorageService, } from '../Storage'
 import {
   Rectangle, RoundRectangle, Text, Ellipse, Square, Circle, Process, Diamond, Parallelogram, Hexagon, Triangle,
   Cylinder, Cloud, Document, InternalStorage, Cube, Step, Trapezoid, Tape, Note, Card, Callout, Actor, Container
 } from '@/components/Resource/LargeIcons'
-import { ContainerEntity, ContainerTypes, Containers, CustomConnector, CustomConnectorTypeInfo, CustomEntity, CustomTableEntity, FrameEntity, ShapeTypes, Shapes } from '@/components/Rockie/Items'
+import { ContainerEntity, ContainerTypes, Containers, CustomConnector, CustomEntity, CustomTableEntity, FrameEntity, ShapeTypes, Shapes } from '@/components/Rockie/Items'
 import { BasicShapes } from '@/components/Rockie/CustomItems/BasicShapes';
 import { ShapeTypeInfo } from '@/components/Rockie/Shapes/src/EntityShape';
 import { ShapeEntity, ShapeType } from '@/components/Rockie/Items/src/ShapeEntity';
@@ -17,10 +17,9 @@ import { Arrows } from '@/components/Rockie/CustomItems/Arrows';
 import { AliyunShapes } from '@/components/Rockie/CustomItems/Aliyun';
 import { AwsShapes } from '@/components/Rockie/CustomItems/Aws';
 import { FlowChartShapes } from '@/components/Rockie/CustomItems/FlowChart';
-import { UMLBasicShapesForActivityState, UMLBasicShapesForClass, UMLBasicShapesForUseCase, UMLConnectors, UMLConnectorsForActivityState, UMLConnectorsForClass, UMLConnectorsForSequence, UMLConnectorsForUseCase, UMLContainerShapes, UMLContainerShapesForActivityState, UMLContainerShapesForClass, UMLContainerShapesForUseCase, UMLCustomShapesForActivityState, UMLCustomShapesForSequence, UMLFrameShapesForSequence, UMLGridShapes, UMLGridShapesForClass, UMLBasicShapes, UMLBasicShapesForOther, UMLCustomShapesForOther } from '@/components/Rockie/CustomItems/UML';
+import { UMLBasicShapesForActivityState, UMLBasicShapesForClass, UMLBasicShapesForUseCase, UMLConnectors, UMLConnectorsForActivityState, UMLConnectorsForClass, UMLConnectorsForSequence, UMLConnectorsForUseCase, UMLContainerShapes, UMLContainerShapesForActivityState, UMLContainerShapesForClass, UMLContainerShapesForUseCase, UMLCustomShapesForActivityState, UMLCustomShapesForSequence, UMLFrameShapesForSequence, UMLGridShapes, UMLGridShapesForClass, UMLBasicShapes, UMLCustomShapesForOther, UMLGridShapesForOther } from '@/components/Rockie/CustomItems/UML';
 import { UMLBasicShapeTypes } from '@/components/Rockie/CustomItems/UML/src/UMLBasicShape';
 import { CustomConnectorAction } from '@/components/Rockie/Actions/src/CustomConnectorAction';
-import { CustomTableType } from '@/components/Rockie/CustomItems/UML/src/UMLGridShape';
 
 interface NavigatorProps {
   navigatorWidth: number
@@ -251,6 +250,15 @@ const Navigator: FC<NavigatorProps> = ({
       </div>
   }
 
+
+  const getUMLContainerPopoverContent = (name: string, width: number, height: number) => {
+    return <div style={{width: width * 1.25, display: 'table'}}>
+        <div style={{display: 'table-cell', textAlign: 'center', verticalAlign: 'middle', borderTop: '0px solid gray', padding: '2px'}}>
+          <img src={`/custom-shapes-large/uml/${name}.png`} />
+        </div>
+      </div>
+  }
+
   const line = <Popover title={'Line'} placement='right' content={getPopoverContent('Line', 128, 128)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 180, width: 180,}}>
     <Button type='text' onClick={() => addLine()} style={{padding: 2, display: 'table'}}>
       <img src={`/shapes/Line.png`} width={28} height={28} style={{display: 'table-cell'}}/>
@@ -389,7 +397,7 @@ const Navigator: FC<NavigatorProps> = ({
 
   const umlContainerShapes = UMLContainerShapes.map(
     shapeType => {
-      return <Popover title={shapeType.name} placement='right' content={getCustomShapeAwsPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
+      return <Popover title={shapeType.name} placement='right' content={getUMLContainerPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
       <Button type='text' onClick={() => addExtendedContainer(shapeType.name, shapeType.type, shapeType.typeInfo)} style={{padding: 2, display: 'table'}}>
         <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
       </Button>
@@ -399,7 +407,7 @@ const Navigator: FC<NavigatorProps> = ({
 
   const umlBasicShapes = UMLBasicShapes.map(
     shapeType => {
-      return <Popover title={shapeType.name} placement='right' content={getCustomShapeAwsPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
+      return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
       <Button type='text' onClick={() => addExtendedShape(shapeType.name, shapeType.type, shapeType.typeInfo)} style={{padding: 2, display: 'table'}}>
         <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
       </Button>
@@ -409,7 +417,7 @@ const Navigator: FC<NavigatorProps> = ({
 
   const umlConnectors = UMLConnectors.map(
     shapeType => {
-      return <Popover title={shapeType.name} placement='right' content={getCustomShapeAwsPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
+      return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
       <Button type='text' onClick={() => addCustomConnector(shapeType.name, shapeType.type, shapeType.typeInfo)} style={{padding: 2, display: 'table'}}>
         <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
       </Button>
@@ -429,7 +437,7 @@ const Navigator: FC<NavigatorProps> = ({
 
   const umlContainerShapesForClass = UMLContainerShapesForClass.map(
     shapeType => {
-      return <Popover title={shapeType.name} placement='right' content={getCustomShapeAwsPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
+      return <Popover title={shapeType.name} placement='right' content={getUMLContainerPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
       <Button type='text' onClick={() => addExtendedContainer(shapeType.name, shapeType.type, shapeType.typeInfo)} style={{padding: 2, display: 'table'}}>
         <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
       </Button>
@@ -439,7 +447,7 @@ const Navigator: FC<NavigatorProps> = ({
 
   const umlBasicShapesForClass = UMLBasicShapesForClass.map(
     shapeType => {
-      return <Popover title={shapeType.name} placement='right' content={getCustomShapeAwsPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
+      return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
       <Button type='text' onClick={() => addExtendedShape(shapeType.name, shapeType.type, shapeType.typeInfo)} style={{padding: 2, display: 'table'}}>
         <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
       </Button>
@@ -449,7 +457,7 @@ const Navigator: FC<NavigatorProps> = ({
 
   const umlConnectorsForClass = UMLConnectorsForClass.map(
     shapeType => {
-      return <Popover title={shapeType.name} placement='right' content={getCustomShapeAwsPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
+      return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
       <Button type='text' onClick={() => addCustomConnector(shapeType.name, shapeType.type, shapeType.typeInfo)} style={{padding: 2, display: 'table'}}>
         <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
       </Button>
@@ -459,7 +467,7 @@ const Navigator: FC<NavigatorProps> = ({
 
   const umlContainerShapesForUseCase = UMLContainerShapesForUseCase.map(
     shapeType => {
-      return <Popover title={shapeType.name} placement='right' content={getCustomShapeAwsPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
+      return <Popover title={shapeType.name} placement='right' content={getUMLContainerPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
       <Button type='text' onClick={() => addExtendedContainer(shapeType.name, shapeType.type, shapeType.typeInfo)} style={{padding: 2, display: 'table'}}>
         <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
       </Button>
@@ -469,7 +477,7 @@ const Navigator: FC<NavigatorProps> = ({
 
   const umlBasicShapesForUseCase = UMLBasicShapesForUseCase.map(
     shapeType => {
-      return <Popover title={shapeType.name} placement='right' content={getCustomShapeAwsPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
+      return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
       <Button type='text' onClick={() => addExtendedShape(shapeType.name, shapeType.type, shapeType.typeInfo)} style={{padding: 2, display: 'table'}}>
         <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
       </Button>
@@ -479,7 +487,7 @@ const Navigator: FC<NavigatorProps> = ({
 
   const umlConnectorsForUseCase = UMLConnectorsForUseCase.map(
     shapeType => {
-      return <Popover title={shapeType.name} placement='right' content={getCustomShapeAwsPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
+      return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
       <Button type='text' onClick={() => addCustomConnector(shapeType.name, shapeType.type, shapeType.typeInfo)} style={{padding: 2, display: 'table'}}>
         <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
       </Button>
@@ -489,7 +497,7 @@ const Navigator: FC<NavigatorProps> = ({
 
   const umlBasicShapesForActivityState = UMLBasicShapesForActivityState.map(
     shapeType => {
-      return <Popover title={shapeType.name} placement='right' content={getCustomShapeAwsPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
+      return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
       <Button type='text' onClick={() => addExtendedShape(shapeType.name, shapeType.type, shapeType.typeInfo)} style={{padding: 2, display: 'table'}}>
         <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
       </Button>
@@ -499,7 +507,7 @@ const Navigator: FC<NavigatorProps> = ({
 
   const umlCustomShapesForActivityState = UMLCustomShapesForActivityState.map(
     shapeType => {
-      return <Popover title={shapeType.name} placement='right' content={getCustomShapeAwsPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
+      return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
       <Button type='text' onClick={() => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo)} style={{padding: 2, display: 'table'}}>
         <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
       </Button>
@@ -509,7 +517,7 @@ const Navigator: FC<NavigatorProps> = ({
 
   const umlConnectorsForActivityState = UMLConnectorsForActivityState.map(
     shapeType => {
-      return <Popover title={shapeType.name} placement='right' content={getCustomShapeAwsPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
+      return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
       <Button type='text' onClick={() => addCustomConnector(shapeType.name, shapeType.type, shapeType.typeInfo)} style={{padding: 2, display: 'table'}}>
         <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
       </Button>
@@ -519,7 +527,7 @@ const Navigator: FC<NavigatorProps> = ({
 
   const umlContainerShapesForActivityState = UMLContainerShapesForActivityState.map(
     shapeType => {
-      return <Popover title={shapeType.name} placement='right' content={getCustomShapeAwsPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
+      return <Popover title={shapeType.name} placement='right' content={getUMLContainerPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
       <Button type='text' onClick={() => addExtendedContainer(shapeType.name, shapeType.type, shapeType.typeInfo)} style={{padding: 2, display: 'table'}}>
         <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
       </Button>
@@ -530,7 +538,7 @@ const Navigator: FC<NavigatorProps> = ({
 
   const umlCustomShapesForSequence = UMLCustomShapesForSequence.map(
     shapeType => {
-      return <Popover title={shapeType.name} placement='right' content={getCustomShapeAwsPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
+      return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
       <Button type='text' onClick={() => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo)} style={{padding: 2, display: 'table'}}>
         <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
       </Button>
@@ -540,7 +548,7 @@ const Navigator: FC<NavigatorProps> = ({
 
   const umlFrameShapesForSequence = UMLFrameShapesForSequence.map(
     shapeType => {
-      return <Popover title={shapeType.name} placement='right' content={getCustomShapeAwsPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
+      return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
       <Button type='text' onClick={() => addFrame(shapeType.name, shapeType.type, shapeType.typeInfo)} style={{padding: 2, display: 'table'}}>
         <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
       </Button>
@@ -550,7 +558,7 @@ const Navigator: FC<NavigatorProps> = ({
 
   const umlConnectorsForSequence = UMLConnectorsForSequence.map(
     shapeType => {
-      return <Popover title={shapeType.name} placement='right' content={getCustomShapeAwsPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
+      return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
       <Button type='text' onClick={() => addCustomConnector(shapeType.name, shapeType.type, shapeType.typeInfo)} style={{padding: 2, display: 'table'}}>
         <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
       </Button>
@@ -558,20 +566,19 @@ const Navigator: FC<NavigatorProps> = ({
     }
   )
 
-  const umlBasicShapesForOther = UMLBasicShapesForOther.map(
+  const umlGridShapesForOther = UMLGridShapesForOther.map(
     shapeType => {
-      return <Popover title={shapeType.name} placement='right' content={getCustomShapeAwsPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
-      <Button type='text' onClick={() => addExtendedShape(shapeType.name, shapeType.type, shapeType.typeInfo)} style={{padding: 2, display: 'table'}}>
+      return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
+      <Button type='text' onClick={() => addCustomTable(shapeType.name, shapeType.type, shapeType.typeInfo)} style={{padding: 2, display: 'table'}}>
         <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
       </Button>
     </Popover>
     }
   )
 
-
   const umlCustomShapesForOther = UMLCustomShapesForOther.map(
     shapeType => {
-      return <Popover title={shapeType.name} placement='right' content={getCustomShapeAwsPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
+      return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
       <Button type='text' onClick={() => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo)} style={{padding: 2, display: 'table'}}>
         <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
       </Button>
@@ -654,7 +661,7 @@ const Navigator: FC<NavigatorProps> = ({
       key: '8',
       label: <div style={{fontWeight: 'bolder'}}><FormattedMessage id='workspace.navigator.panel.uml-others'/></div>,
       children: <Space size={2} wrap>
-        {umlBasicShapesForOther}
+        {umlGridShapesForOther}
         {umlCustomShapesForOther}
       </Space>,
     },

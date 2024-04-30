@@ -24,9 +24,6 @@ export class UMLBasicShapes {
   public static TYPE_DECISION = 'Decision'
   public static DESC_DECISION = 'Decision'
   public static TEXT_DECISION = ''
-  public static TYPE_OBJECT = 'Object'
-  public static DESC_OBJECT = 'Object'
-  public static TEXT_OBJECT = 'Object'
 }
 
 export const UMLBasicShapeTypes = [
@@ -51,10 +48,6 @@ export const UMLBasicShapeTypes = [
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true },
   { name: UMLBasicShapes.TYPE_DECISION, description: UMLBasicShapes.DESC_DECISION, freeze: Shapes.FREEZE_NONE, text: UMLBasicShapes.TEXT_DECISION, left: 0, top: 0, width: 60, height: 60,  enableMask: false,
-    modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
-    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true  },
-  { name: UMLBasicShapes.TYPE_OBJECT, description: UMLBasicShapes.DESC_OBJECT, freeze: Shapes.FREEZE_NONE, text: UMLBasicShapes.TEXT_OBJECT, left: 0, top: 0, width: 120, height: 60, enableMask: false,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true  },
@@ -90,8 +83,6 @@ export class UMLBasicShape extends ShapeEntity {
           break;
         case UMLBasicShapes.TYPE_DECISION:
           break;
-        case UMLBasicShapes.TYPE_OBJECT:
-          break;
       }
     }
     protected parseEntityShapeType(type: string): EntityShapeType {
@@ -114,9 +105,6 @@ export class UMLBasicShape extends ShapeEntity {
           break;
         case UMLBasicShapes.TYPE_DECISION:
           shapeType = EntityShapeType.Diamond
-          break;
-        case UMLBasicShapes.TYPE_OBJECT:
-          shapeType = EntityShapeType.Rectangle
           break;
       }
       return shapeType
