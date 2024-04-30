@@ -15,7 +15,7 @@ export const UMLGridShapes = [
     {name: UMLGridShapeTypes[2].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[2] },
     {name: UMLGridShapeTypes[3].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[3] },
     {name: UMLGridShapeTypes[4].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[4] },
-    {name: UMLGridShapeTypes[5].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[5] },
+    {name: UMLGridShapeTypes[5].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[5] }, // For other too
     {name: UMLGridShapeTypes[6].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[6] },
     {name: UMLGridShapeTypes[7].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[7] },
     {name: UMLGridShapeTypes[8].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[8] },
@@ -47,8 +47,6 @@ export const UMLBasicShapes = [
     {name: UMLBasicShapeTypes[3].name, type: UMLBasicShape, typeInfo:  UMLBasicShapeTypes[3] },
     {name: UMLBasicShapeTypes[4].name, type: UMLBasicShape, typeInfo:  UMLBasicShapeTypes[4] },
     {name: UMLBasicShapeTypes[5].name, type: UMLBasicShape, typeInfo:  UMLBasicShapeTypes[5] },
-    //Others
-    {name: UMLBasicShapeTypes[6].name, type: UMLBasicShape, typeInfo:  UMLBasicShapeTypes[6] },
 ]
 
 export const UMLConnectors = [
@@ -198,8 +196,8 @@ export const UMLContainerShapesForActivityState = [
     {name: UMLContainerTypes[3].name, type: UMLContainerShape, typeInfo:  UMLContainerTypes[3] },
 ]
 
-export const UMLBasicShapesForOther = [
-    {name: UMLBasicShapeTypes[6].name, type: UMLBasicShape, typeInfo:  UMLBasicShapeTypes[6] },
+export const UMLGridShapesForOther = [
+    {name: UMLGridShapeTypes[8].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[8] }, // For other too
 ]
 
 export const UMLCustomShapesForOther = [
