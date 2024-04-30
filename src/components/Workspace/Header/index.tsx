@@ -32,6 +32,7 @@ import { EditorHelper } from '@/components/Rockie/Utils';
 import RegisterFormWindowPage from './RegisterFormWindow';
 import PasswordFormWindowPage from './PasswordFormWindow';
 import ProfileFormWindowPage from './ProfileFormWindow';
+import { UMLGridShapeTypes, UMLGridShapes } from '@/components/Rockie/CustomItems/UML';
 
 interface HeaderProps {
   previousEditor: Editor | undefined
@@ -1128,7 +1129,7 @@ const Header: FC<HeaderProps> = ({
 
   }
 
-  const handleTest = () => {
+  const handleContainerShapesLarge = () => {
     if(currentEditor) {
       let count = ContainerTypes.length
       for(let i = 0; i < count; i ++) {
@@ -1138,6 +1139,7 @@ const Header: FC<HeaderProps> = ({
         let fontFactor = 1 //0.5
         let sizeFactor = 1 //0.25
         let modifierFactor = 1 //0.25
+        let controllerFactor = 1 //0.25
         currentEditor.contentLayer.removeAllEditorItems()
         let left = shapeType.left + margin
         if(shapeType.width < shapeType.height) {
@@ -1148,6 +1150,46 @@ const Header: FC<HeaderProps> = ({
         shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
         if(!shapeType.modifyInPercent) {
           shapeEntity.shape.modifier = new Point2(Math.round(shapeEntity.shape.modifier.x * modifierFactor), Math.round(shapeEntity.shape.modifier.y * modifierFactor))
+        }
+        if(!shapeType.controlInPercent) {
+          shapeEntity.shape.controller = new Point2(Math.round(shapeEntity.shape.controller.x * controllerFactor), Math.round(shapeEntity.shape.controller.y * controllerFactor))
+        }
+        if(shapeType.width < shapeType.height) {
+          currentEditor.resize(shapeType.height * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+        } else {
+          currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+        }
+        currentEditor.contentLayer.addEditorItem(shapeEntity)
+        const data = currentEditor.export()
+        SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
+      }
+    }
+  }
+
+  const handleContainerShapesSmall = () => {
+    if(currentEditor) {
+      let count = ContainerTypes.length
+      for(let i = 0; i < count; i ++) {
+        let shapeType = ContainerTypes[i]
+        let margin = 2
+        let lineFactor = 1
+        let fontFactor = 0.1
+        let sizeFactor = 0.13
+        let modifierFactor = 0.2
+        let controllerFactor = 0.2
+        currentEditor.contentLayer.removeAllEditorItems()
+        let left = shapeType.left + margin
+        if(shapeType.width < shapeType.height) {
+          left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
+        }
+        let shapeEntity = new ContainerEntity(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, {shapeType: shapeType.name})
+        shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
+        shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
+        if(!shapeType.modifyInPercent) {
+          shapeEntity.shape.modifier = new Point2(Math.round(shapeEntity.shape.modifier.x * modifierFactor), Math.round(shapeEntity.shape.modifier.y * modifierFactor))
+        }
+        if(!shapeType.controlInPercent) {
+          shapeEntity.shape.controller = new Point2(Math.round(shapeEntity.shape.controller.x * controllerFactor), Math.round(shapeEntity.shape.controller.y * controllerFactor))
         }
         if(shapeType.width < shapeType.height) {
           currentEditor.resize(shapeType.height * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
@@ -1482,6 +1524,93 @@ const Header: FC<HeaderProps> = ({
     }
   }
 
+  const handleTestUMLGridShapeLarge = () => {
+    if(currentEditor) {
+      let count = UMLGridShapeTypes.length
+      for(let i = 0; i < count; i ++) {
+        const margin = 2        
+        let lineFactor = 1
+        let fontFactor = 1
+        let sizeFactor = 1
+        let modifierFactor = 1
+        let controllerFactor = 1
+        let firstRowHeightFactor = 1
+        currentEditor.contentLayer.removeAllEditorItems()
+        const customShapeInfo = UMLGridShapes[i].typeInfo
+        customShapeInfo.firstRowHeight = customShapeInfo.firstRowHeight * firstRowHeightFactor
+        let left = customShapeInfo.left + margin
+        if(customShapeInfo.width < customShapeInfo.height) {
+          left = Math.round(customShapeInfo.left + (customShapeInfo.height - customShapeInfo.width) * sizeFactor * 0.5) + margin
+        }
+        const customShapeTypeName = UMLGridShapes[i].name
+        const customEntity = new UMLGridShapes[i].type(left, customShapeInfo.top + margin, customShapeInfo.width * sizeFactor, customShapeInfo.height * sizeFactor, customShapeTypeName,[customShapeInfo])
+        customEntity.lineWidth = customEntity.lineWidth * lineFactor
+        customEntity.fontSize = customEntity.fontSize * fontFactor
+        customEntity.items.forEach(item=> {
+          item.fontSize =  customEntity.fontSize * fontFactor
+        })
+        if(!customShapeInfo.modifyInPercent) {
+          customEntity.shape.modifier = new Point2(Math.round(customEntity.shape.modifier.x * modifierFactor), Math.round(customEntity.shape.modifier.y * modifierFactor))
+        }
+        if(!customShapeInfo.controlInPercent) {
+          customEntity.shape.controller = new Point2(Math.round(customEntity.shape.controller.x * controllerFactor), Math.round(customEntity.shape.controller.y * controllerFactor))
+        }
+        currentEditor.contentLayer.addEditorItem(customEntity)
+        if(customShapeInfo.width < customShapeInfo.height) {
+          currentEditor.resize(customShapeInfo.height * sizeFactor + margin * 2, customShapeInfo.height * sizeFactor + margin * 2)
+        } else {
+          currentEditor.resize(customShapeInfo.width * sizeFactor + margin * 2, customShapeInfo.height * sizeFactor + margin * 2)
+        }
+        const data = currentEditor.export()
+        console.log(`download file = ${customShapeInfo.name}.png`)
+        SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.png`)
+      }
+    }
+  }
+
+  const handleTestUMLGridShapeSmall = () => {
+    if(currentEditor) {
+      let count = UMLGridShapes.length
+      for(let i = 0; i < count; i ++) {
+        const margin = 2        
+        let lineFactor = 1
+        let fontFactor = 0.15
+        let sizeFactor = 0.20
+        let modifierFactor = 0.20
+        let controllerFactor = 0.20
+        let firstRowHeightFactor = 0.20
+        currentEditor.contentLayer.removeAllEditorItems()
+        const customShapeInfo = UMLGridShapes[i].typeInfo
+        customShapeInfo.firstRowHeight = customShapeInfo.firstRowHeight * firstRowHeightFactor
+        let left = customShapeInfo.left + margin
+        if(customShapeInfo.width < customShapeInfo.height) {
+          left = Math.round(customShapeInfo.left + (customShapeInfo.height - customShapeInfo.width) * sizeFactor * 0.5) + margin
+        }
+        const customShapeTypeName = UMLGridShapes[i].name
+        const customEntity = new UMLGridShapes[i].type(left, customShapeInfo.top + margin, customShapeInfo.width * sizeFactor, customShapeInfo.height * sizeFactor, customShapeTypeName,[customShapeInfo])
+        customEntity.lineWidth = customEntity.lineWidth * lineFactor
+        customEntity.fontSize = customEntity.fontSize * fontFactor
+        customEntity.items.forEach(item=> {
+          item.fontSize =  customEntity.fontSize * fontFactor
+        })
+        if(!customShapeInfo.modifyInPercent) {
+          customEntity.shape.modifier = new Point2(Math.round(customEntity.shape.modifier.x * modifierFactor), Math.round(customEntity.shape.modifier.y * modifierFactor))
+        }
+        if(!customShapeInfo.controlInPercent) {
+          customEntity.shape.controller = new Point2(Math.round(customEntity.shape.controller.x * controllerFactor), Math.round(customEntity.shape.controller.y * controllerFactor))
+        }
+        currentEditor.contentLayer.addEditorItem(customEntity)
+        if(customShapeInfo.width < customShapeInfo.height) {
+          currentEditor.resize(customShapeInfo.height * sizeFactor + margin * 2, customShapeInfo.height * sizeFactor + margin * 2)
+        } else {
+          currentEditor.resize(customShapeInfo.width * sizeFactor + margin * 2, customShapeInfo.height * sizeFactor + margin * 2)
+        }
+        const data = currentEditor.export()
+        console.log(`download file = ${customShapeInfo.name}.png`)
+        SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.png`)
+      }
+    }
+  }
   const handleTestStyle  = () => {
     if(currentEditor) {
       let count = DocumentThemeTypes.length
@@ -1590,7 +1719,9 @@ const Header: FC<HeaderProps> = ({
     { key: 'Open', label: 'Open', },
     { key: 'Save', label: 'Save', },
     { key: 'SaveAs', label: 'SaveAs', onClick: handleTestCode },
-    { key: 'Test Shapes', label: 'Test Shapes', onClick: handleTest, },
+    { key: 'Test Shapes', label: 'Test Shapes', onClick: handleContainerShapesLarge, },
+    { key: 'Test Container Shapes Large', label: 'Test Container Shapes Large', onClick: handleContainerShapesLarge, },
+    { key: 'Test Container Shapes Small', label: 'Test Container Shapes Small', onClick: handleContainerShapesSmall, },
     { key: 'Test Start Arrows', label: 'Test Start Arrows', onClick: handleTest3, },
     { key: 'Test End Arrows', label: 'Test End Arrows', onClick: handleTest4, },
     { key: 'Test Custom Shapes Large', label: 'Test Custom Shapes Large', onClick: handleTest5, },
@@ -1603,6 +1734,8 @@ const Header: FC<HeaderProps> = ({
     { key: 'Test Custom Shapes Image Small', label: 'Test Custom Shapes Image Small', onClick: handleTestImageShapesSmall, },
     { key: 'Test Custom Shapes FlowChart Large', label: 'Test Custom Shapes FlowChart Large', onClick: handleTestFlowChartShapes, },
     { key: 'Test Custom Shapes FlowChart Small', label: 'Test Custom Shapes FlowChart Small', onClick: handleTestFlowChartShapesSmall, },
+    { key: 'Test UML GridShape Large', label: 'Test UML GridShape Large', onClick: handleTestUMLGridShapeLarge, },
+    { key: 'Test UML GridShape Small', label: 'Test UML GridShape Small', onClick: handleTestUMLGridShapeSmall, },
     { key: 'Test Style', label: 'Test Style', onClick: handleTestStyle, },
   ];
 

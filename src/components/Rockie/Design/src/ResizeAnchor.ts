@@ -6,7 +6,7 @@ import { SelectionLayer, } from '../../Editor/src/SelectionLayer'
 import { Anchor, } from './Anchor'
 import { Holder, } from './Holder'
 import { EntityShapeFreezeType } from '../../Shapes/src/EntityShape'
-import { EditorItem } from '../../Items'
+import { EditorItem, TableEntity } from '../../Items'
 import { EditorUtils } from '../../Theme'
 
 export enum ResizeType {
@@ -376,11 +376,16 @@ export class ResizeAnchor extends Anchor {
   }
 
   private updateItemBoundary(item: EditorItem, newLeft: number, newTop: number, newWidth: number, newHeight: number) {
+    const oldWidth = item.width
+    const oldHeight = item.height
     item.boundary = Rectangle.makeLTWH(newLeft, newTop, newWidth, newHeight)
     const count = item.items.length
     for(let i = 0; i < count; i ++) {
       const child = item.items[i]
       //this.updateItemBoundary(child, )
+    }
+    if(item instanceof TableEntity) {
+      item.recalculateTableBoundary(oldWidth, oldHeight)
     }
   }
 

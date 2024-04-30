@@ -25,7 +25,7 @@ export const ContainerTypes = [
     modifiable: true, modifierX: 32, modifierY: 0,  modifierStartX: 0, modifierStartY: 0, modifierEndX: 0.5, modifierEndY: 0, modifyInLine: true, modifyInPercent: false,
     controllable: true, controllerX: 0, controllerY: 0, controllerStartX: 0.05, controllerStartY: 0, controllerEndX: 0.05, controllerEndY: 1, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true  },
-    { name: Containers.TYPE_HORIZONTAL_CONTAINER_2, description: Containers.DESC_HORIZONTAL_CONTAINER, freeze: Shapes.FREEZE_NONE, text: 'Container', left: 0, top: 0, width: 200, height: 200, enableMask: false, 
+  { name: Containers.TYPE_HORIZONTAL_CONTAINER_2, description: Containers.DESC_HORIZONTAL_CONTAINER, freeze: Shapes.FREEZE_NONE, text: 'Container', left: 0, top: 0, width: 200, height: 200, enableMask: false, 
     modifiable: true, modifierX: 32, modifierY: 0,  modifierStartX: 0, modifierStartY: 0, modifierEndX: 0.5, modifierEndY: 0, modifyInLine: true, modifyInPercent: false,
     controllable: true, controllerX: 0, controllerY: 90, controllerStartX: 0.05, controllerStartY: 0, controllerEndX: 0.05, controllerEndY: 1, controlInLine: true, controlInPercent: false,
     adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true  },

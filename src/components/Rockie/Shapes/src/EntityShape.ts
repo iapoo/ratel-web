@@ -184,6 +184,7 @@ export class EntityShape extends AbstractTextShape {
     if (this.dirty) {
       this._maskPath.reset()
       this._maskPath.addRectangle(Rectangle.makeLTWH(0, 0, this.width, this.height))
+      // console.log(`update is called with width=${this.width} height = ${this.height}`)
     }
   }
 
