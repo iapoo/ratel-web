@@ -3,6 +3,7 @@ import { EntityShapeType } from '../../../Shapes/src/EntityShape'
 import { FrameShape } from '../../../Shapes'
 import { FrameEntity, ShapeEntity, Shapes } from '../../../Items'
 import { Type } from '../../../Items/src/Item'
+import { ShapeOptions, ShapeType } from '@/components/Rockie/Items/src/ShapeEntity'
 
 export class UMLFrameShapes {
   public static TYPE_LOOP = 'Loop'
@@ -22,7 +23,7 @@ export class UMLFrameShapes {
   public static TEXT_OTHER = 'Other'
 }
 
-export const UMLFrameShapeTypes = [
+export const UMLFrameShapeTypes: ShapeType[] = [
   { name: UMLFrameShapes.TYPE_LOOP, description: UMLFrameShapes.DESC_LOOP, freeze: Shapes.FREEZE_NONE, text: UMLFrameShapes.TEXT_LOOP, left: 0, top: 0, width: 200, height: 200, enableMask: false, 
     modifiable: true, modifierX: 70, modifierY: 30, modifierStartX: 0, modifierStartY: 0, modifierEndX: 1, modifierEndY: 1, modifyInLine: false, modifyInPercent: false,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
@@ -48,18 +49,18 @@ export const UMLFrameShapeTypes = [
 export class UMLFrameShape extends FrameEntity {
   private _label: ShapeEntity
 
-  public constructor(left: number, top: number, width: number, height: number, typeName: string) {
-    super(left, top, width, height, '', {shapeType: typeName}, UMLFrameShapeTypes)
-    const frameTypeInfo = this.parseTypeInfo({shapeType: typeName})
+  public constructor(left: number, top: number, width: number, height: number, shapeOptions: ShapeOptions ,frameShapeTypes: ShapeType[]) {
+    super(left, top, width, height, shapeOptions, frameShapeTypes)
+    const frameTypeInfo = this.parseTypeInfo({shapeType: shapeOptions.shapeType})
     this._shape = new FrameShape(left, top, width, height, this, this.buildShape, frameTypeInfo)
     this._label = new ShapeEntity(0, 0, 120, 30)
     this.initializeTheme()
     this.initializeShape()
   }
 
-  public get types(): Type[] {
-    return UMLFrameShapeTypes
-  }
+  // public get types(): Type[] {
+  //   return this._frameShapeTypes
+  // }
 
   private initializeShape() {
     switch(this._shape.typeInfo.name) {
@@ -118,8 +119,8 @@ export class UMLFrameShape extends FrameEntity {
         theThis.path.moveTo(0, 0)
         theThis.path.lineTo(0, modifierHeight)
         theThis.path.lineTo(modifierWidth, modifierHeight)
-        theThis.path.lineTo(modifierWidth + (modifierHeight - 16), 16)
-        theThis.path.lineTo(modifierWidth + (modifierHeight - 16), 0)
+        theThis.path.lineTo(modifierWidth + modifierHeight * 0.4, modifierHeight * 0.6)
+        theThis.path.lineTo(modifierWidth + modifierHeight * 0.4, 0)
         theThis.path.close()
         break;
       }
@@ -131,8 +132,8 @@ export class UMLFrameShape extends FrameEntity {
         theThis.path.moveTo(0, 0)
         theThis.path.lineTo(0, modifierHeight)
         theThis.path.lineTo(modifierWidth, modifierHeight)
-        theThis.path.lineTo(modifierWidth + (modifierHeight - 16), 16)
-        theThis.path.lineTo(modifierWidth + (modifierHeight - 16), 0)
+        theThis.path.lineTo(modifierWidth + modifierHeight * 0.4, modifierHeight * 0.6)
+        theThis.path.lineTo(modifierWidth + modifierHeight * 0.4, 0)
         theThis.path.close()
         break;
       }
@@ -144,8 +145,8 @@ export class UMLFrameShape extends FrameEntity {
         theThis.path.moveTo(0, 0)
         theThis.path.lineTo(0, modifierHeight)
         theThis.path.lineTo(modifierWidth, modifierHeight)
-        theThis.path.lineTo(modifierWidth + (modifierHeight - 16), 16)
-        theThis.path.lineTo(modifierWidth + (modifierHeight - 16), 0)
+        theThis.path.lineTo(modifierWidth + modifierHeight * 0.4, modifierHeight * 0.6)
+        theThis.path.lineTo(modifierWidth + modifierHeight * 0.4, 0)
         theThis.path.close()
         break;
       }
@@ -157,8 +158,8 @@ export class UMLFrameShape extends FrameEntity {
         theThis.path.moveTo(0, 0)
         theThis.path.lineTo(0, modifierHeight)
         theThis.path.lineTo(modifierWidth, modifierHeight)
-        theThis.path.lineTo(modifierWidth + (modifierHeight - 16), 16)
-        theThis.path.lineTo(modifierWidth + (modifierHeight - 16), 0)
+        theThis.path.lineTo(modifierWidth + modifierHeight * 0.4, modifierHeight * 0.6)
+        theThis.path.lineTo(modifierWidth + modifierHeight * 0.4, 0)
         theThis.path.close()
         break;
       }
@@ -170,8 +171,8 @@ export class UMLFrameShape extends FrameEntity {
         theThis.path.moveTo(0, 0)
         theThis.path.lineTo(0, modifierHeight)
         theThis.path.lineTo(modifierWidth, modifierHeight)
-        theThis.path.lineTo(modifierWidth + (modifierHeight - 16), 16)
-        theThis.path.lineTo(modifierWidth + (modifierHeight - 16), 0)
+        theThis.path.lineTo(modifierWidth + modifierHeight * 0.4, modifierHeight * 0.6)
+        theThis.path.lineTo(modifierWidth + modifierHeight * 0.4, 0)
         theThis.path.close()
         break;
       }
