@@ -72,7 +72,7 @@ const Body: FC<BodyProps> = ({
       <Draggable
         axis='x'
         handle='.handle'
-        defaultPosition={{ x: 200, y: 0, }}
+        defaultPosition={{ x: navigatorWidth, y: 0, }}
         // position={{ x: segmentTracePosition, y: 0, }}
         // grid={[ segmentTraceGrid, segmentTraceGrid, ]}
         scale={1}
@@ -80,7 +80,7 @@ const Body: FC<BodyProps> = ({
         onStart={handleDragStart}
         onDrag={handleDragDrag}
         onStop={handleDragStop}>
-        <div className='handle' style={{ position: 'absolute', top: '0px', bottom: '0px', left: `${navigatorWidth} + px`, width: `${Utils.DEFAULT_DIVIDER_WIDTH}px`, zIndex: 999, }} />
+        <div className='handle' style={{ position: 'absolute', top: '0px', bottom: '0px', left: `${navigatorWidth} + px`, width: `${Utils.DEFAULT_DIVIDER_WIDTH}px`, cursor: 'ew-resize', zIndex: 999, }} />
       </Draggable>
       <Content onEditorChange={handleEditorChange}  x={`${navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH}px`} y= {`${enablePropertyEditor ? '220px' : '0px'} `}/>
       <Drawer placement='right' mask={false} closable={false}  open={enablePropertyEditor} getContainer={false} bodyStyle={{padding: 16}} width={220} >
