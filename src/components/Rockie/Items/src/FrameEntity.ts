@@ -52,16 +52,16 @@ export const FrameEntityTypes = [{ name: FrameEntities.TYPE_FRAME_SHAPE, descrip
 
 export class FrameEntity extends ShapeEntity {
   
-  public constructor(left: number, top: number, width: number, height: number, name: string = '',
+  public constructor(left: number, top: number, width: number, height: number,
       shapeOptions: ShapeOptions = { shapeType: FrameEntities.TYPE_FRAME_SHAPE },
       shapeTypes: ShapeType[] = FrameEntityTypes) {
     super(left, top, width, height, shapeOptions, shapeTypes)
     const customTypeInfo = this.parseTypeInfo(shapeOptions)
     this._shape = new FrameShape(left, top, width, height, this, this.buildShape, customTypeInfo)
   }
-  public get types(): Type[] {
-    return FrameEntityTypes
-  }
+  // public get types(): Type[] {
+  //   return FrameEntityTypes
+  // }
 
   public get category(): string {
     return Categories.FRAME
