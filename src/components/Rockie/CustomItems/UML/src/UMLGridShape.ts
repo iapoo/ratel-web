@@ -182,7 +182,7 @@ export class UMLGridShape extends CustomTableEntity {
       case TYPE_GRID_SHAPE_OBJECT: {
         this.items[0].shape.selectionStyle.underline = true
         this.items[0].shape.selectionStyle.bold = true
-        this.items[0].shape.text = 'Object:Class'
+        this.items[0].shape.text = 'Object'
         break;
       }
       case TYPE_GRID_SHAPE_OBJECT_2: {
