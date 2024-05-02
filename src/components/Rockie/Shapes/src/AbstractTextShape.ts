@@ -832,8 +832,9 @@ export abstract class AbstractTextShape extends Shape {
     public render (graphics: Graphics): void {
       super.render(graphics)
 
+      //Save matrix before update
       //Apply paragraph direction matrix here
-      const matrix = this.getParagraphMatrix()      
+      const matrix = this.getParagraphMatrix()
       graphics.concat(matrix)
 
       if (this._focused) {
@@ -948,6 +949,13 @@ export abstract class AbstractTextShape extends Shape {
       if (this._focused) {
         this._cursor.renderAfter(graphics)
       }
+
+      //Restore matrix
+      const reverseMatrix = this.getParagraphReverseMatrix()
+      if(reverseMatrix) {
+        graphics.concat(reverseMatrix)
+      }
+
     }
 
     public update () {
