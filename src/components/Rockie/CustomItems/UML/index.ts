@@ -87,6 +87,8 @@ export const UMLCustomShapes = [
     // Other
     {name: UMLCustomShapeTypes[4].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[4] },
     {name: UMLCustomShapeTypes[5].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[5] },
+    {name: UMLCustomShapeTypes[6].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[6] },
+    {name: UMLCustomShapeTypes[7].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[7] },
 ]
 
 export const UMLFrameShapes = [
@@ -203,4 +205,8 @@ export const UMLGridShapesForOther = [
 export const UMLCustomShapesForOther = [
     {name: UMLCustomShapeTypes[4].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[4] },
     {name: UMLCustomShapeTypes[5].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[5] },
+    {name: UMLCustomShapeTypes[6].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[6] },
+    {name: UMLCustomShapeTypes[7].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[7] },
+    {name: UMLCustomShapeTypes[8].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[8] },
+    {name: UMLCustomShapeTypes[9].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[9] },
 ]

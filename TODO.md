@@ -27,3 +27,5 @@
 11. New document with template
 12. Make lock undoable & redoable (Done)
 13. Regenerate Arrows for UML
+14. Make UML Object lifeline as container for activiation
+

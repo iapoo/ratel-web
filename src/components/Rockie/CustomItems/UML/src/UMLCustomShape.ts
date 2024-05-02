@@ -23,6 +23,18 @@ export class UMLCustomShapes {
   public static TYPE_NODE_2 = 'Node 2'
   public static DESC_NODE_2 = 'Node 2'
   public static TEXT_NODE_2 = 'Node'
+  public static TYPE_MODULE = 'Module'
+  public static DESC_MODULE = 'Module'
+  public static TEXT_MODULE = 'Module'
+  public static TYPE_COMPONENT = 'Component'
+  public static DESC_COMPONENT = 'Component'
+  public static TEXT_COMPONENT = 'Component'
+  public static TYPE_LOLLIPOP_NOTATION = 'Lollipop Notation'
+  public static DESC_LOLLIPOP_NOTATION = 'Lollipop Notation'
+  public static TEXT_LOLLIPOP_NOTATION = 'Lollipop Notation'
+  public static TYPE_REQUIRED_INTERFACE = 'Required Interface'
+  public static DESC_REQUIRED_INTERFACE = 'Required Interface'
+  public static TEXT_REQUIRED_INTERFACE = 'Required Interface'
 }
 
 export const UMLCustomShapeTypes = [
@@ -50,6 +62,22 @@ export const UMLCustomShapeTypes = [
     modifiable: true, modifierX: 0.85, modifierY: 0.15, modifierStartX: 0, modifierStartY: 0, modifierEndX: 1, modifierEndY: 1, modifyInLine: false, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true  },
+  { name: UMLCustomShapes.TYPE_MODULE, description: UMLCustomShapes.DESC_MODULE, freeze: Shapes.FREEZE_ASPECT_RATIO , text: UMLCustomShapes.TEXT_MODULE, left: 0, top: 0, width: 120, height: 60,  enableMask: false,
+    modifiable: true, modifierX: 0.2, modifierY: 0.5, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0.5, modifierEndY: 1, modifyInLine: false, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true },
+  { name: UMLCustomShapes.TYPE_COMPONENT, description: UMLCustomShapes.DESC_COMPONENT, freeze: Shapes.FREEZE_ASPECT_RATIO , text: UMLCustomShapes.TEXT_COMPONENT, left: 0, top: 0, width: 180, height: 100,  enableMask: false,
+    modifiable: true, modifierX: 0.5, modifierY: 0.5, modifierStartX: 0.5, modifierStartY: 0, modifierEndX: 1, modifierEndY: 0.5, modifyInLine: false, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true },
+  { name: UMLCustomShapes.TYPE_LOLLIPOP_NOTATION, description: UMLCustomShapes.DESC_LOLLIPOP_NOTATION, freeze: Shapes.FREEZE_NONE, text: UMLCustomShapes.TEXT_LOLLIPOP_NOTATION, left: 0, top: 0, width: 80, height: 40, enableMask: true, 
+    modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true},
+  { name: UMLCustomShapes.TYPE_REQUIRED_INTERFACE, description: UMLCustomShapes.DESC_REQUIRED_INTERFACE, freeze: Shapes.FREEZE_NONE, text: UMLCustomShapes.TEXT_REQUIRED_INTERFACE, left: 0, top: 0, width: 60, height: 40, enableMask: true, 
+    modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true},
 ]
 
 export class UMLCustomShape extends CustomEntity {
@@ -90,6 +118,19 @@ export class UMLCustomShape extends CustomEntity {
         this.fontWeight = FontWeight.BOLD
         this.textDecoration = TextDecoration.UNDERLINE
         this.text = this._shape.typeInfo.text
+        break;
+      }
+      case UMLCustomShapes.TYPE_MODULE: {
+        this.fontWeight = FontWeight.BOLD
+        this.text = this._shape.typeInfo.text
+        break;
+      }
+      case UMLCustomShapes.TYPE_COMPONENT: {
+        this.shape.selectionStyle.italic = true
+        this.shape.insert('<<Annotation>>\r\n')
+        this.shape.selectionStyle.italic = false
+        this.shape.selectionStyle.bold = true
+        this.shape.insert('Component')
         break;
       }
     }
@@ -170,6 +211,91 @@ export class UMLCustomShape extends CustomEntity {
         theThis.path.lineTo(theThis.width, theThis.height - modifierHeight)
         theThis.path.lineTo(theThis.width, 0)
         theThis.path.addRectangle(Rectangle.makeLTWH(0, modifierHeight, modifierWidth, this.height - modifierHeight))
+        break;
+      }
+      case UMLCustomShapes.TYPE_MODULE: {
+        theThis.textLeft = modifierWidth * 2
+        theThis.textWidth = this.width - modifierWidth * 2
+        const top =  modifierHeight <= this.height / 2 ? modifierHeight * 0.4 : this.height - (this.height - modifierHeight) * 0.4 * 4
+        const height = modifierHeight <= this.height / 2 ? modifierHeight * 0.4 : (this.height - modifierHeight) * 0.4
+        theThis.path.addRectangle(Rectangle.makeLTWH(0, top, modifierWidth * 2, height))
+        theThis.path.addRectangle(Rectangle.makeLTWH(0, top + height * 2, modifierWidth * 2, height))
+        theThis.path.moveTo(modifierWidth, 0)
+        theThis.path.lineTo(modifierWidth, top)
+        theThis.path.moveTo(modifierWidth, top + height)
+        theThis.path.lineTo(modifierWidth, top + height * 2)
+        theThis.path.moveTo(modifierWidth, top + height * 3)
+        theThis.path.lineTo(modifierWidth, this.height)
+        theThis.path.lineTo(this.width, this.height)
+        theThis.path.lineTo(this.width, 0)
+        theThis.path.lineTo(modifierWidth, 0)
+        break;
+      }
+      case UMLCustomShapes.TYPE_COMPONENT: {
+        theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, this.width , this.height))
+        const moduleLeft = modifierWidth + (this.width - modifierWidth) * 0.1
+        const moduleTop = modifierHeight * 0.2
+        const moduleWidth = (this.width - modifierWidth) * 0.8
+        const moduleHeight = modifierHeight * 0.8
+        const height = moduleHeight * 0.2
+        const width = moduleWidth * 0.2
+        // theThis.path.addRectangle(Rectangle.makeLTWH(moduleLeft + width * 0.5, moduleTop, moduleWidth  - width * 0.5 , moduleHeight))
+        theThis.path.addRectangle(Rectangle.makeLTWH(moduleLeft, moduleTop + height, width, height))
+        theThis.path.addRectangle(Rectangle.makeLTWH(moduleLeft, moduleTop + height * 3, width, height))
+        theThis.path.moveTo(moduleLeft + width * 0.5, moduleTop)
+        theThis.path.lineTo(moduleLeft + width * 0.5, moduleTop + height)
+        theThis.path.moveTo(moduleLeft + width * 0.5, moduleTop + height * 2)
+        theThis.path.lineTo(moduleLeft + width * 0.5, moduleTop + height * 3)
+        theThis.path.moveTo(moduleLeft + width * 0.5, moduleTop + height * 4)
+        theThis.path.lineTo(moduleLeft + width * 0.5, moduleTop + moduleHeight)
+        theThis.path.lineTo(moduleLeft + moduleWidth,  moduleTop + moduleHeight)
+        theThis.path.lineTo(moduleLeft + moduleWidth, moduleTop)
+        theThis.path.lineTo(moduleLeft + width * 0.5, moduleTop)
+        break;
+      }
+      case UMLCustomShapes.TYPE_LOLLIPOP_NOTATION: {
+        if(this.width > this.height) {
+          theThis.path.addOval(Rectangle.makeLTWH(theThis.width * 0.5 - theThis.height * 0.25, theThis.height * 0.25, theThis.height * 0.5, theThis.height * 0.5))
+          theThis.path.addArc(Rectangle.makeLTWH(this.width * 0.5 - theThis.height * 0.5, 0, theThis.height, theThis.height), 270, 180)
+          theThis.path.moveTo(0, theThis.height * 0.5)
+          theThis.path.lineTo(theThis.width * 0.5 - theThis.height * 0.25, theThis.height * 0.5)
+          theThis.path.moveTo(theThis.width * 0.5 + theThis.height * 0.5, theThis.height * 0.5)
+          theThis.path.lineTo(theThis.width, theThis.height * 0.5)
+        } else if(this.width > this.height * 0.5) {
+          theThis.path.addOval(Rectangle.makeLTWH(theThis.width * 0.5 - theThis.height * 0.25, theThis.height * 0.25, theThis.height * 0.5, theThis.height * 0.5))
+          theThis.path.moveTo(0, theThis.height * 0.5)
+          theThis.path.lineTo(theThis.width * 0.5 - theThis.height * 0.25, theThis.height * 0.5)
+          //Ref to: https://www.ibashu.cn/news/show_261576.html
+          //Ref to: https://blog.csdn.net/jeremyjone/article/details/102069294
+          let k = this.width  * 0.5 / 0.75
+          theThis.path.moveTo(this.width * 0.5, 0)
+          theThis.path.cubicTo(this.width *  0.5 + k, 0, this.width * 0.5 + k, this.height, this.width * 0.5, this.height)
+        } else {
+          theThis.path.addOval(Rectangle.makeLTWH(0, theThis.height * 0.25, theThis.width, theThis.height * 0.5))
+          //Ref to: https://www.ibashu.cn/news/show_261576.html
+          //Ref to: https://blog.csdn.net/jeremyjone/article/details/102069294
+          let k = this.width  * 0.5 / 0.75
+          theThis.path.moveTo(this.width * 0.5, 0)
+          theThis.path.cubicTo(this.width *  0.5 + k, 0, this.width * 0.5 + k, this.height, this.width * 0.5, this.height)
+        }
+        break;
+      }
+      case UMLCustomShapes.TYPE_REQUIRED_INTERFACE: {
+        if (this.width > this.height * 0.5) {
+          theThis.path.moveTo(theThis.height * 0.5, theThis.height * 0.5)
+          theThis.path.lineTo(theThis.width, theThis.height * 0.5)
+          //Ref to: https://www.ibashu.cn/news/show_261576.html
+          //Ref to: https://blog.csdn.net/jeremyjone/article/details/102069294
+          let k = this.height * 0.5 / 0.75
+          theThis.path.moveTo(0, 0)
+          theThis.path.cubicTo(k, 0, k, this.height, 0, this.height)
+        } else {
+          //Ref to: https://www.ibashu.cn/news/show_261576.html
+          //Ref to: https://blog.csdn.net/jeremyjone/article/details/102069294
+          let k = this.width / 0.75
+          theThis.path.moveTo(0, 0)
+          theThis.path.cubicTo(k, 0, k, this.height, 0, this.height)
+        }
         break;
       }
     }
