@@ -682,10 +682,10 @@ const Navigator: FC<NavigatorProps> = ({
       key: '7',
       label: <div style={{fontWeight: 'bolder'}}><FormattedMessage id='workspace.navigator.panel.uml-sequence'/></div>,
       children: <Space size={2} wrap>
+        {umlCustomContainersForSequence}
         {umlCustomShapesForSequence}
         {umlFrameShapesForSequence}
         {umlConnectorsForSequence}
-        {umlCustomContainersForSequence}
       </Space>,
     },
     {

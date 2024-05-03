@@ -47,11 +47,11 @@ export interface CustomContainerEntityType {
 }
 
 export const CustomContainerEntityTypes = [
-  { name: CustomContainerEntities.TYPE_ACTOR_LIFELINE, description: CustomContainerEntities.DESC_ACTOR_LIFELINE, freeze: Shapes.FREEZE_NONE, text: CustomContainerEntities.TEXT_ACTOR_LIFELINE, left: 0, top: 0, width: 160, height: 300, enableMask: false, 
+  { name: CustomContainerEntities.TYPE_ACTOR_LIFELINE, description: CustomContainerEntities.DESC_ACTOR_LIFELINE, freeze: Shapes.FREEZE_NONE, text: CustomContainerEntities.TEXT_ACTOR_LIFELINE, left: 0, top: 0, width: 160, height: 300, enableMask: true, 
     modifiable: true, modifierX: 0, modifierY: 40,  modifierStartX: 0.5, modifierStartY: 0, modifierEndX: 0.5, modifierEndY: 0.5, modifyInLine: true, modifyInPercent: false,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true  },
-  { name: CustomContainerEntities.TYPE_OBJECT_LIFELINE, description: CustomContainerEntities.DESC_OBJECT_LIFELINE, freeze: Shapes.FREEZE_NONE, text: CustomContainerEntities.TEXT_OBJECT_LIFELINE, left: 0, top: 0, width: 160, height: 300, enableMask: false, 
+  { name: CustomContainerEntities.TYPE_OBJECT_LIFELINE, description: CustomContainerEntities.DESC_OBJECT_LIFELINE, freeze: Shapes.FREEZE_NONE, text: CustomContainerEntities.TEXT_OBJECT_LIFELINE, left: 0, top: 0, width: 160, height: 300, enableMask: true, 
     modifiable: true, modifierX: 0, modifierY: 40,  modifierStartX: 0.5, modifierStartY: 0, modifierEndX: 0.5, modifierEndY: 0.5, modifyInLine: true, modifyInPercent: false,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true  },
