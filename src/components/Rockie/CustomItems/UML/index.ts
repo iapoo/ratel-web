@@ -4,6 +4,7 @@ import { UMLCustomShape, UMLCustomShapeTypes } from './src/UMLCustomShape'
 import { UMLFrameShape, UMLFrameShapeTypes } from './src/UMLFrameShape'
 import { UMLGridShape, UMLGridShapeTypes, } from './src/UMLGridShape'
 import { UMLBasicShape, UMLBasicShapeTypes, } from './src/UMLBasicShape'
+import { UMLCustomContainer, UMLCustomContainerTypes } from './src/UMLCustomContainer'
 
 export  {UMLGridShapeTypes, UMLGridShape} from './src/UMLGridShape'
 
@@ -100,6 +101,12 @@ export const UMLFrameShapes = [
     {name: UMLFrameShapeTypes[4].name, type: UMLFrameShape, typeInfo:  UMLFrameShapeTypes[4] },
 ]
 
+export const UMLCustomContainers = [
+    // Sequence
+    {name: UMLCustomContainerTypes[0].name, type: UMLCustomContainer, typeInfo:  UMLCustomContainerTypes[0] },
+    {name: UMLCustomContainerTypes[1].name, type: UMLCustomContainer, typeInfo:  UMLCustomContainerTypes[1] },
+]
+
 export const UMLGridShapesForClass = [
     {name: UMLGridShapeTypes[0].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[0] },
     {name: UMLGridShapeTypes[1].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[1] },
@@ -154,6 +161,12 @@ export const UMLConnectorsForUseCase = [
     {name: UMLConnectorTypeInfos[9].name, type: UMLConnector, typeInfo:  UMLConnectorTypeInfos[9] },
     {name: UMLConnectorTypeInfos[10].name, type: UMLConnector, typeInfo:  UMLConnectorTypeInfos[10] },
     {name: UMLConnectorTypeInfos[11].name, type: UMLConnector, typeInfo:  UMLConnectorTypeInfos[11] },
+]
+
+export const UMLCustomContainersForSequence = [
+    // Sequence
+    {name: UMLCustomContainerTypes[0].name, type: UMLCustomContainer, typeInfo:  UMLCustomContainerTypes[0] },
+    {name: UMLCustomContainerTypes[1].name, type: UMLCustomContainer, typeInfo:  UMLCustomContainerTypes[1] },
 ]
 
 export const UMLCustomShapesForSequence = [

@@ -35,6 +35,7 @@ export enum EntityShapeType {
   HorizontalContainer,
   VerticalContainer,
   CustomShape,
+  CustomContainer,
   Table,
   Frame,
   Group,
