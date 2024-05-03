@@ -3,7 +3,7 @@ import styles from './index.css'
 import { Button, Collapse, CollapseProps, Divider, Image, Popover, Space, Tooltip, message, } from 'antd'
 import { Utils, RequestUtils, } from '../Utils'
 import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
-import { ConnectorAction, ContainerAction, CustomShapeAction, ImageContainerAction, SvgContainerAction, LineAction, ShapeAction, TableAction, CustomTableAction, ExtendedShapeAction, ExtendedContainerAction, FrameAction, } from '../../Rockie/Actions'
+import { ConnectorAction, ContainerAction, CustomShapeAction, ImageContainerAction, SvgContainerAction, LineAction, ShapeAction, TableAction, CustomTableAction, ExtendedShapeAction, ExtendedContainerAction, FrameAction, CustomContainerAction, } from '../../Rockie/Actions'
 import { StorageService, } from '../Storage'
 import {
   Rectangle, RoundRectangle, Text, Ellipse, Square, Circle, Process, Diamond, Parallelogram, Hexagon, Triangle,
@@ -17,9 +17,10 @@ import { Arrows } from '@/components/Rockie/CustomItems/Arrows';
 import { AliyunShapes } from '@/components/Rockie/CustomItems/Aliyun';
 import { AwsShapes } from '@/components/Rockie/CustomItems/Aws';
 import { FlowChartShapes } from '@/components/Rockie/CustomItems/FlowChart';
-import { UMLBasicShapesForActivityState, UMLBasicShapesForClass, UMLBasicShapesForUseCase, UMLConnectors, UMLConnectorsForActivityState, UMLConnectorsForClass, UMLConnectorsForSequence, UMLConnectorsForUseCase, UMLContainerShapes, UMLContainerShapesForActivityState, UMLContainerShapesForClass, UMLContainerShapesForUseCase, UMLCustomShapesForActivityState, UMLCustomShapesForSequence, UMLFrameShapesForSequence, UMLGridShapes, UMLGridShapesForClass, UMLBasicShapes, UMLCustomShapesForOther, UMLGridShapesForOther } from '@/components/Rockie/CustomItems/UML';
+import { UMLBasicShapesForActivityState, UMLBasicShapesForClass, UMLBasicShapesForUseCase, UMLConnectors, UMLConnectorsForActivityState, UMLConnectorsForClass, UMLConnectorsForSequence, UMLConnectorsForUseCase, UMLContainerShapes, UMLContainerShapesForActivityState, UMLContainerShapesForClass, UMLContainerShapesForUseCase, UMLCustomShapesForActivityState, UMLCustomShapesForSequence, UMLFrameShapesForSequence, UMLGridShapes, UMLGridShapesForClass, UMLBasicShapes, UMLCustomShapesForOther, UMLGridShapesForOther, UMLCustomContainersForSequence } from '@/components/Rockie/CustomItems/UML';
 import { UMLBasicShapeTypes } from '@/components/Rockie/CustomItems/UML/src/UMLBasicShape';
 import { CustomConnectorAction } from '@/components/Rockie/Actions/src/CustomConnectorAction';
+import { CustomContainerEntity } from '@/components/Rockie/Items/src/CustomContainerEntity';
 
 interface NavigatorProps {
   navigatorWidth: number
@@ -79,6 +80,12 @@ const Navigator: FC<NavigatorProps> = ({
   const addCustomShape = (type: string, classType: typeof CustomEntity, shapeType: ShapeType) => {
     if(Utils.currentEditor) {
       Utils.currentEditor.action = new CustomShapeAction(Utils.currentEditor, type, classType, shapeType)
+    }
+  }
+
+  const addCustomContainer = (type: string, classType: typeof CustomContainerEntity, shapeType: ShapeType) => {
+    if(Utils.currentEditor) {
+      Utils.currentEditor.action = new CustomContainerAction(Utils.currentEditor, type, classType, shapeType)
     }
   }
 
@@ -538,6 +545,19 @@ const Navigator: FC<NavigatorProps> = ({
   )
 
 
+
+  const umlCustomContainersForSequence = UMLCustomContainersForSequence.map(
+    shapeType => {
+      const iconWidth = shapeType.typeInfo.width >= shapeType.typeInfo.height ? 28 : 28 * shapeType.typeInfo.width / shapeType.typeInfo.height
+      const iconheight = shapeType.typeInfo.width >= shapeType.typeInfo.height ? 28 * shapeType.typeInfo.height / shapeType.typeInfo.width : 28
+      return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: shapeType.typeInfo.width + 60, width: shapeType.typeInfo.height + 60,}}>
+      <Button type='text' onClick={() => addCustomContainer(shapeType.name, shapeType.type, shapeType.typeInfo)} style={{padding: 2, display: 'table'}}>
+        <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={iconWidth} height={iconheight} style={{display: 'table-cell'}}/>
+      </Button>
+    </Popover>
+    }
+  )
+
   const umlCustomShapesForSequence = UMLCustomShapesForSequence.map(
     shapeType => {
       const iconWidth = shapeType.typeInfo.width >= shapeType.typeInfo.height ? 28 : 28 * shapeType.typeInfo.width / shapeType.typeInfo.height
@@ -665,6 +685,7 @@ const Navigator: FC<NavigatorProps> = ({
         {umlCustomShapesForSequence}
         {umlFrameShapesForSequence}
         {umlConnectorsForSequence}
+        {umlCustomContainersForSequence}
       </Space>,
     },
     {
