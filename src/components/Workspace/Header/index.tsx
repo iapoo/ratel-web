@@ -1662,10 +1662,11 @@ const Header: FC<HeaderProps> = ({
         let shapeType = UMLContainerTypes[i]
         let margin = 2
         let lineFactor = 1
-        let fontFactor = 0.1
-        let sizeFactor = 0.13
-        let modifierFactor = 0.2
-        let controllerFactor = 0.2
+        const factor =  shapeType.width >= shapeType.height ? shapeType.width  : shapeType.height
+        let fontFactor = 28 / factor
+        let sizeFactor = 28 / factor
+        let modifierFactor = 28 / factor
+        let controllerFactor = 28 / factor
         currentEditor.contentLayer.removeAllEditorItems()
         let left = shapeType.left + margin
         if(shapeType.width < shapeType.height) {
@@ -1911,6 +1912,7 @@ const Header: FC<HeaderProps> = ({
         currentEditor.contentLayer.addEditorItem(shapeEntity)
         const data = currentEditor.export()
         SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
+
       }
     }
   }
@@ -1922,10 +1924,11 @@ const Header: FC<HeaderProps> = ({
         let shapeType = UMLCustomShapeTypes[i]
         let margin = 2
         let lineFactor = 1
-        let fontFactor = 0.25
-        let sizeFactor = 0.25
-        let modifierFactor = 0.25
-        let controllerFactor = 0.25
+        const factor =  shapeType.width >= shapeType.height ? shapeType.width  : shapeType.height
+        let fontFactor = 28 / factor
+        let sizeFactor = 28 / factor
+        let modifierFactor = 28 / factor
+        let controllerFactor = 28 / factor
         currentEditor.contentLayer.removeAllEditorItems()
         let left = shapeType.left + margin
         if(shapeType.width < shapeType.height) {
@@ -1951,6 +1954,7 @@ const Header: FC<HeaderProps> = ({
       }
     }
   }
+
 
   const handleTestUMLFrameShapeLarge = () => {
     if(currentEditor) {

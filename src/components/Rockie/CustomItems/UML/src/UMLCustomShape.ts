@@ -133,6 +133,8 @@ export class UMLCustomShape extends CustomEntity {
         this.shape.insert('Component')
         break;
       }
+      default:
+        break;
     }
   }
 
