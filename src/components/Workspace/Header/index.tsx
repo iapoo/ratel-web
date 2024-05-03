@@ -1631,9 +1631,9 @@ const Header: FC<HeaderProps> = ({
         let controllerFactor = 1
         currentEditor.contentLayer.removeAllEditorItems()
         let left = shapeType.left + margin
-        if(shapeType.width < shapeType.height) {
-          left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
-        }
+        // if(shapeType.width < shapeType.height) {
+        //   left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
+        // }
         let shapeEntity = new UMLContainerShape(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, {shapeType: shapeType.name})
         shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
         shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
@@ -1643,11 +1643,12 @@ const Header: FC<HeaderProps> = ({
         if(!shapeType.controlInPercent) {
           shapeEntity.shape.controller = new Point2(Math.round(shapeEntity.shape.controller.x * controllerFactor), Math.round(shapeEntity.shape.controller.y * controllerFactor))
         }
-        if(shapeType.width < shapeType.height) {
-          currentEditor.resize(shapeType.height * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
-        } else {
-          currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
-        }
+        currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+        // if(shapeType.width < shapeType.height) {
+        //   currentEditor.resize(shapeType.height * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+        // } else {
+        //   currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+        // }
         currentEditor.contentLayer.addEditorItem(shapeEntity)
         const data = currentEditor.export()
         SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
@@ -1892,9 +1893,9 @@ const Header: FC<HeaderProps> = ({
         let controllerFactor = 1
         currentEditor.contentLayer.removeAllEditorItems()
         let left = shapeType.left + margin
-        if(shapeType.width < shapeType.height) {
-          left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
-        }
+        // if(shapeType.width < shapeType.height) {
+        //   left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
+        // }
         let shapeEntity = new UMLCustomShape(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, shapeType.name)
         shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
         shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
@@ -1904,11 +1905,12 @@ const Header: FC<HeaderProps> = ({
         if(!shapeType.controlInPercent) {
           shapeEntity.shape.controller = new Point2(Math.round(shapeEntity.shape.controller.x * controllerFactor), Math.round(shapeEntity.shape.controller.y * controllerFactor))
         }
-        if(shapeType.width < shapeType.height) {
-          currentEditor.resize(shapeType.height * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
-        } else {
-          currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
-        }
+        currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+        // if(shapeType.width < shapeType.height) {
+        //   currentEditor.resize(shapeType.height * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+        // } else {
+        //   currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+        // }
         currentEditor.contentLayer.addEditorItem(shapeEntity)
         const data = currentEditor.export()
         SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
