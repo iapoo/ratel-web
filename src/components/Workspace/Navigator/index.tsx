@@ -535,10 +535,11 @@ const Navigator: FC<NavigatorProps> = ({
   const umlContainerShapesForActivityState = UMLContainerShapesForActivityState.map(
     shapeType => {
       const iconWidth = shapeType.typeInfo.width >= shapeType.typeInfo.height ? 28 : 28 * shapeType.typeInfo.width / shapeType.typeInfo.height
-      const iconheight = shapeType.typeInfo.width >= shapeType.typeInfo.height ? 28 * shapeType.typeInfo.height / shapeType.typeInfo.width : 28      
+      const iconheight = shapeType.typeInfo.width >= shapeType.typeInfo.height ? 28 * shapeType.typeInfo.height / shapeType.typeInfo.width : 28    
+      const iconSize = iconWidth >= iconheight ?  iconWidth :  iconheight
       return <Popover title={shapeType.name} placement='right' content={getUMLContainerPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: shapeType.typeInfo.width + 60, width: shapeType.typeInfo.width + 60,}}>
       <Button type='text' onClick={() => addExtendedContainer(shapeType.name, shapeType.type, shapeType.typeInfo)} style={{padding: 2, display: 'table'}}>
-        <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={iconWidth} height={iconheight} style={{display: 'table-cell'}}/>
+        <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={iconSize} height={iconSize} style={{display: 'table-cell'}}/>
       </Button>
     </Popover>
     }
@@ -550,9 +551,10 @@ const Navigator: FC<NavigatorProps> = ({
     shapeType => {
       const iconWidth = shapeType.typeInfo.width >= shapeType.typeInfo.height ? 28 : 28 * shapeType.typeInfo.width / shapeType.typeInfo.height
       const iconheight = shapeType.typeInfo.width >= shapeType.typeInfo.height ? 28 * shapeType.typeInfo.height / shapeType.typeInfo.width : 28
+      const iconSize = iconWidth >= iconheight ?  iconWidth :  iconheight
       return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: shapeType.typeInfo.width + 60, width: shapeType.typeInfo.height + 60,}}>
       <Button type='text' onClick={() => addCustomContainer(shapeType.name, shapeType.type, shapeType.typeInfo)} style={{padding: 2, display: 'table'}}>
-        <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={iconWidth} height={iconheight} style={{display: 'table-cell'}}/>
+        <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={iconSize} height={iconSize} style={{display: 'table-cell'}}/>
       </Button>
     </Popover>
     }
@@ -562,9 +564,10 @@ const Navigator: FC<NavigatorProps> = ({
     shapeType => {
       const iconWidth = shapeType.typeInfo.width >= shapeType.typeInfo.height ? 28 : 28 * shapeType.typeInfo.width / shapeType.typeInfo.height
       const iconheight = shapeType.typeInfo.width >= shapeType.typeInfo.height ? 28 * shapeType.typeInfo.height / shapeType.typeInfo.width : 28
+      const iconSize = iconWidth >= iconheight ?  iconWidth :  iconheight
       return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: shapeType.typeInfo.width + 60, width: shapeType.typeInfo.height + 60,}}>
       <Button type='text' onClick={() => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo)} style={{padding: 2, display: 'table'}}>
-        <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={iconWidth} height={iconheight} style={{display: 'table-cell'}}/>
+        <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={iconSize} height={iconSize} style={{display: 'table-cell'}}/>
       </Button>
     </Popover>
     }
@@ -574,9 +577,10 @@ const Navigator: FC<NavigatorProps> = ({
     shapeType => {
       const iconWidth = shapeType.typeInfo.width >= shapeType.typeInfo.height ? 28 : 28 * shapeType.typeInfo.width / shapeType.typeInfo.height
       const iconheight = shapeType.typeInfo.width >= shapeType.typeInfo.height ? 28 * shapeType.typeInfo.height / shapeType.typeInfo.width : 28
+      const iconSize = iconWidth >= iconheight ?  iconWidth :  iconheight
       return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: shapeType.typeInfo.width + 60, width: shapeType.typeInfo.height + 60,}}>
       <Button type='text' onClick={() => addFrame(shapeType.name, shapeType.type, shapeType.typeInfo)} style={{padding: 2, display: 'table'}}>
-        <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={iconWidth} height={iconheight} style={{display: 'table-cell'}}/>
+        <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={iconSize} height={iconSize} style={{display: 'table-cell'}}/>
       </Button>
     </Popover>
     }
@@ -596,9 +600,10 @@ const Navigator: FC<NavigatorProps> = ({
     shapeType => {
       const iconWidth = shapeType.typeInfo.width >= shapeType.typeInfo.height ? 28 : 28 * shapeType.typeInfo.width / shapeType.typeInfo.height
       const iconheight = shapeType.typeInfo.width >= shapeType.typeInfo.height ? 28 * shapeType.typeInfo.height / shapeType.typeInfo.width : 28
+      const iconSize = iconWidth >= iconheight ?  iconWidth :  iconheight
       return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: shapeType.typeInfo.width + 60, width: shapeType.typeInfo.height + 60,}}>
       <Button type='text' onClick={() => addCustomTable(shapeType.name, shapeType.type, shapeType.typeInfo)} style={{padding: 2, display: 'table'}}>
-        <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={iconWidth} height={iconheight} style={{display: 'table-cell'}}/>
+        <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={iconSize} height={iconSize} style={{display: 'table-cell'}}/>
       </Button>
     </Popover>
     }
@@ -608,9 +613,10 @@ const Navigator: FC<NavigatorProps> = ({
     shapeType => {
       const iconWidth = shapeType.typeInfo.width >= shapeType.typeInfo.height ? 28 : 28 * shapeType.typeInfo.width / shapeType.typeInfo.height
       const iconheight = shapeType.typeInfo.width >= shapeType.typeInfo.height ? 28 * shapeType.typeInfo.height / shapeType.typeInfo.width : 28
+      const iconSize = iconWidth >= iconheight ?  iconWidth :  iconheight
       return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: shapeType.typeInfo.width + 60, width: shapeType.typeInfo.height + 60,}}>
       <Button type='text' onClick={() => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo)} style={{padding: 2, display: 'table'}}>
-        <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={iconWidth} height={iconheight} style={{display: 'table-cell'}}/>
+        <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={iconSize} height={iconSize} style={{display: 'table-cell'}}/>
       </Button>
     </Popover>
     }
