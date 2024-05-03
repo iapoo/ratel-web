@@ -19,12 +19,6 @@ export class UMLContainers {
   public static TYPE_VERTICAL_POOL = 'Vertical Pool'
   public static DESC_VERTICAL_POOL = 'Vertical Pool'
   public static TEXT_VERTICAL_POOL = 'Pool'
-  public static TYPE_ACTOR_LIFELINE = 'Actor Lifeline'
-  public static DESC_ACTOR_LIFELINE = 'Actor Lifeline'
-  public static TEXT_ACTOR_LIFELINE = 'Actor Lifeline'
-  public static TYPE_OBJECT_LIFELINE = 'Object Lifeline'
-  public static DESC_OBJECT_LIFELINE = 'Object Lifeline'
-  public static TEXT_OBJECT_LIFELINE = 'Object'
 }
 
 export const UMLContainerTypes = [
@@ -43,14 +37,6 @@ export const UMLContainerTypes = [
   { name: UMLContainers.TYPE_VERTICAL_POOL, description: UMLContainers.DESC_VERTICAL_POOL, freeze: Shapes.FREEZE_NONE, text: UMLContainers.TEXT_VERTICAL_POOL, left: 0, top: 0, width: 160, height: 300, enableMask: false, 
     modifiable: true, modifierX: 0, modifierY: 32,  modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0.5, modifyInLine: true, modifyInPercent: false,
     controllable: true, controllerX: 1, controllerY: 0, controllerStartX: 0, controllerStartY: 0.05, controllerEndX: 1, controllerEndY: 0.05, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true  },
-  { name: UMLContainers.TYPE_ACTOR_LIFELINE, description: UMLContainers.DESC_ACTOR_LIFELINE, freeze: Shapes.FREEZE_NONE, text: UMLContainers.TEXT_ACTOR_LIFELINE, left: 0, top: 0, width: 160, height: 300, enableMask: false, 
-    modifiable: true, modifierX: 0, modifierY: 40,  modifierStartX: 0.5, modifierStartY: 0, modifierEndX: 0.5, modifierEndY: 0.5, modifyInLine: true, modifyInPercent: false,
-    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true  },
-  { name: UMLContainers.TYPE_OBJECT_LIFELINE, description: UMLContainers.DESC_OBJECT_LIFELINE, freeze: Shapes.FREEZE_NONE, text: UMLContainers.TEXT_OBJECT_LIFELINE, left: 0, top: 0, width: 160, height: 300, enableMask: false, 
-    modifiable: true, modifierX: 0, modifierY: 40,  modifierStartX: 0.5, modifierStartY: 0, modifierEndX: 0.5, modifierEndY: 0.5, modifyInLine: true, modifyInPercent: false,
-    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true  },
 ]
 

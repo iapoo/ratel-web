@@ -5,12 +5,6 @@ import { CustomEntity, Shapes } from '../../../Items'
 import { Type } from '../../../Items/src/Item'
 
 export class UMLCustomShapes {
-  public static TYPE_ACTOR_LIFELINE = 'Actor Lifeline'
-  public static DESC_ACTOR_LIFELINE = 'Actor Lifeline'
-  public static TEXT_ACTOR_LIFELINE = 'Actor Lifeline'
-  public static TYPE_OBJECT_LIFELINE = 'Object Lifeline'
-  public static DESC_OBJECT_LIFELINE = 'Object Lifeline'
-  public static TEXT_OBJECT_LIFELINE = 'Object'
   public static TYPE_ACTIVATION = 'Activation'
   public static DESC_ACTIVATION = 'Activation'
   public static TEXT_ACTIVATION = 'Activation'
@@ -38,14 +32,6 @@ export class UMLCustomShapes {
 }
 
 export const UMLCustomShapeTypes = [
-  { name: UMLCustomShapes.TYPE_ACTOR_LIFELINE, description: UMLCustomShapes.DESC_ACTOR_LIFELINE, freeze: Shapes.FREEZE_NONE, text: UMLCustomShapes.TEXT_ACTOR_LIFELINE, left: 0, top: 0, width: 20, height: 200, enableMask: true, 
-    modifiable: true, modifierX: 0, modifierY: 40, modifierStartX: 0.5, modifierStartY: 0, modifierEndX: 0.5, modifierEndY: 1, modifyInLine: true, modifyInPercent: false,
-    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true},
-  { name: UMLCustomShapes.TYPE_OBJECT_LIFELINE, description: UMLCustomShapes.DESC_OBJECT_LIFELINE, freeze: Shapes.FREEZE_NONE, text: UMLCustomShapes.TEXT_OBJECT_LIFELINE, left: 0, top: 0, width: 80, height: 200, enableMask: false, 
-    modifiable: true, modifierX: 0, modifierY: 40, modifierStartX: 0.5, modifierStartY: 0, modifierEndX: 0.5, modifierEndY: 1, modifyInLine: true, modifyInPercent: false,
-    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true},
   { name: UMLCustomShapes.TYPE_ACTIVATION, description: UMLCustomShapes.DESC_ACTIVATION, freeze: Shapes.FREEZE_NONE, text: UMLCustomShapes.TEXT_ACTIVATION, left: 0, top: 0, width: 20, height: 80, enableMask: false, 
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
@@ -96,13 +82,6 @@ export class UMLCustomShape extends CustomEntity {
 
   private initializeShape() {
     switch(this._shape.typeInfo.name) {
-      case UMLCustomShapes.TYPE_ACTOR_LIFELINE: {        
-        break;
-      }
-      case UMLCustomShapes.TYPE_OBJECT_LIFELINE: {
-        this.text = this._shape.typeInfo.text
-        break;
-      }
       case UMLCustomShapes.TYPE_ACTIVATION: {
         break;
       }
@@ -164,33 +143,6 @@ export class UMLCustomShape extends CustomEntity {
     theThis.path.reset()
     theThis.secondPath.reset()
     switch(theThis.typeInfo.name) {
-      case UMLCustomShapes.TYPE_ACTOR_LIFELINE: {
-        theThis.textHeight = modifierHeight
-        theThis.path.addOval(Rectangle.makeLTWH(theThis.width * 0.25, 0, theThis.width * 0.5, modifierHeight * 0.25))
-        theThis.path.moveTo(0, modifierHeight / 3)
-        theThis.path.lineTo(theThis.width, modifierHeight / 3)
-        theThis.path.close()
-        theThis.path.moveTo(theThis.width * 0.5, modifierHeight * 0.25)
-        theThis.path.lineTo(theThis.width * 0.5, modifierHeight * 2 / 3)
-        theThis.path.close()
-        theThis.path.moveTo(0, modifierHeight)
-        theThis.path.lineTo(theThis.width * 0.5, modifierHeight * 2 / 3)
-        theThis.path.lineTo(theThis.width, modifierHeight)
-        theThis.path.lineTo(theThis.width * 0.5, modifierHeight * 2 / 3)
-        theThis.path.lineTo(0, modifierHeight)
-        theThis.secondStroke.setStrokeDashStyle(StrokeDashStyle.DASH)
-        theThis.secondPath.moveTo(theThis.width / 2, modifierHeight)
-        theThis.secondPath.lineTo(theThis.width / 2, theThis.height)
-        break;
-      }
-      case UMLCustomShapes.TYPE_OBJECT_LIFELINE: {
-        theThis.textHeight = modifierHeight
-        theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, modifierHeight))
-        theThis.secondStroke.setStrokeDashStyle(StrokeDashStyle.DASH)
-        theThis.secondPath.moveTo(theThis.width / 2, modifierHeight)
-        theThis.secondPath.lineTo(theThis.width / 2, theThis.height)
-        break;
-      }
       case UMLCustomShapes.TYPE_ACTIVATION: {
         theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
         break;

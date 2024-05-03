@@ -81,11 +81,11 @@ export const UMLConnectors = [
 export const UMLCustomShapes = [
     // Sequence
     {name: UMLCustomShapeTypes[0].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[0] },
-    {name: UMLCustomShapeTypes[1].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[1] },
-    {name: UMLCustomShapeTypes[2].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[2] },
     // Activity State
-    {name: UMLCustomShapeTypes[3].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[3] },
+    {name: UMLCustomShapeTypes[1].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[1] },
     // Other
+    {name: UMLCustomShapeTypes[2].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[2] },
+    {name: UMLCustomShapeTypes[3].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[3] },
     {name: UMLCustomShapeTypes[4].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[4] },
     {name: UMLCustomShapeTypes[5].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[5] },
     {name: UMLCustomShapeTypes[6].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[6] },
@@ -171,8 +171,6 @@ export const UMLCustomContainersForSequence = [
 
 export const UMLCustomShapesForSequence = [
     {name: UMLCustomShapeTypes[0].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[0] },
-    {name: UMLCustomShapeTypes[1].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[1] },
-    {name: UMLCustomShapeTypes[2].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[2] },
 ]
 
 export const UMLFrameShapesForSequence = [
@@ -197,7 +195,7 @@ export const UMLBasicShapesForActivityState = [
 ]
 
 export const UMLCustomShapesForActivityState = [
-    {name: UMLCustomShapeTypes[3].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[3] },
+    {name: UMLCustomShapeTypes[1].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[1] },
 ]
 
 export const UMLConnectorsForActivityState = [
@@ -216,10 +214,10 @@ export const UMLGridShapesForOther = [
 ]
 
 export const UMLCustomShapesForOther = [
+    {name: UMLCustomShapeTypes[2].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[2] },
+    {name: UMLCustomShapeTypes[3].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[3] },
     {name: UMLCustomShapeTypes[4].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[4] },
     {name: UMLCustomShapeTypes[5].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[5] },
     {name: UMLCustomShapeTypes[6].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[6] },
     {name: UMLCustomShapeTypes[7].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[7] },
-    {name: UMLCustomShapeTypes[8].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[8] },
-    {name: UMLCustomShapeTypes[9].name, type: UMLCustomShape, typeInfo:  UMLCustomShapeTypes[9] },
 ]

@@ -1614,6 +1614,7 @@ export class Editor extends Painter {
       const editorItem = this.contentLayer.getEditorItem(i)
       const shape = editorItem.shape      
       // console.log(`Finding items ${x}    ${y}    ==== ${shape.position.x}    ${shape.position.y}`)
+      console.log(`check container: ${editorItem instanceof ContainerEntity}`)
       if (editorItem instanceof ContainerEntity && (!(editorItem instanceof TableEntity)) && shape.intersects(x - Editor.TEST_RADIUS, y - Editor.TEST_RADIUS, Editor.TEST_SIZE, Editor.TEST_SIZE)) {
         let inSelection = false
         const selectionCount = this.selectionLayer.getEditorItemCount()
