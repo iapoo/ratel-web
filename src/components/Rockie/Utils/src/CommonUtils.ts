@@ -1,8 +1,12 @@
 import { Arrows } from "../../CustomItems/Arrows";
 import { BasicShapes } from "../../CustomItems/BasicShapes";
 import { FlowChartShapes } from "../../CustomItems/FlowChart";
-import { CustomEntity } from "../../Items";
-import { ShapeType } from "../../Items/src/ShapeEntity";
+import { UMLBasicShapes, UMLConnectors, UMLContainerShapes, UMLCustomContainers, UMLCustomShapes, UMLCustomTables, UMLFrameShapes, } from "../../CustomItems/UML";
+import { ContainerEntity, CustomConnector, CustomEntity, CustomTableEntity, FrameEntity } from "../../Items";
+import { CustomConnectorTypeInfo } from "../../Items/src/CustomConnector";
+import { CustomContainerEntity } from "../../Items/src/CustomContainerEntity";
+import { CustomTableType } from "../../Items/src/CustomTableEntity";
+import { ShapeEntity, ShapeType } from "../../Items/src/ShapeEntity";
 import { ConnectorType } from "../../Shapes";
 
 export interface CustomShapeType {
@@ -10,12 +14,70 @@ export interface CustomShapeType {
     shapeType: ShapeType
 }
 
+export interface CustomTableShapeType {
+    type: typeof CustomTableEntity
+    shapeType: CustomTableType
+}
+
+export interface ContainerShapeType {
+    type: typeof ContainerEntity
+    shapeType: ShapeType
+}
+
+export interface ExtendedShapeType {
+    type: typeof ShapeEntity
+    shapeType: ShapeType
+}
+
+export interface ExtendedConnectorType {
+    type: typeof CustomConnector
+    shapeType: CustomConnectorTypeInfo
+}
+
+export interface FrameShapeType {
+    type: typeof FrameEntity
+    shapeType: ShapeType
+}
+
+export interface CustomContainerType {
+    type: typeof CustomContainerEntity
+    shapeType: ShapeType
+}
+
+
+
 //FIXME, Move it to better place
 export const CustomShapes = [
     ...BasicShapes,
     ...Arrows,
-    ...FlowChartShapes
+    ...FlowChartShapes,
+    ...UMLCustomShapes
   ]
+
+export const CustomTableShapes = [
+    ...UMLCustomTables
+]
+
+export const ExtendedContainerTypes = [
+    ...UMLContainerShapes
+]
+
+export const ExtendedShapes = [
+    ...UMLBasicShapes
+]
+
+export const ExtendConnectors = [
+    ...UMLConnectors
+]
+
+export const FrameShapes = [
+    ...UMLFrameShapes
+]
+
+export const CustomContainers = [
+    ...UMLCustomContainers
+]
+
 
 export class CommonUtils {
     public static CONNECTOR_TYPE_STRAIGHT_LINE = 'StraightLine'

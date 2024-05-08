@@ -25,6 +25,10 @@ export class Categories {
   public static CUSTOM_SVG_SHAPE = 'CustomSvgShape'
   public static CUSTOM_IMAGE_SHAPE = 'CustomImageShape'
   public static CUSTOM_TABLE = 'CustomTable'
+  public static EXTENDED_CONTAINER = 'ExtendedContainer'
+  public static EXTENDED_SHAPE = 'ExtendedShape'
+  public static EXTENDED_CONNECTOR = 'ExtendedConnector'
+  public static CUSTOM_CONTAINER = 'CustomContainer'
 }
 
 export abstract class Item implements EditorItem {

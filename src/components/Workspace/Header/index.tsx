@@ -32,7 +32,7 @@ import { EditorHelper } from '@/components/Rockie/Utils';
 import RegisterFormWindowPage from './RegisterFormWindow';
 import PasswordFormWindowPage from './PasswordFormWindow';
 import ProfileFormWindowPage from './ProfileFormWindow';
-import { UMLConnectors, UMLGridShapeTypes, UMLGridShapes } from '@/components/Rockie/CustomItems/UML';
+import { UMLConnectors, UMLCustomTableTypes, UMLCustomTables } from '@/components/Rockie/CustomItems/UML';
 import { UMLContainerShape, UMLContainerTypes } from '@/components/Rockie/CustomItems/UML/src/UMLContainerShape';
 import { UMLBasicShape, UMLBasicShapeTypes } from '@/components/Rockie/CustomItems/UML/src/UMLBasicShape';
 import { UMLConnector } from '@/components/Rockie/CustomItems/UML/src/UMLConnector';
@@ -519,7 +519,7 @@ const Header: FC<HeaderProps> = ({
 
   const handleAutoSave = () => {
     //console.log(`Autosave is started`)
-    console.log(`online is ${online} ${timerCountRef.current}, ${forceUpdate},  ${selectedDocumentId}, ${selectedDocumentName}, ${selectedFolderId}` )
+    //console.log(`online is ${online} ${timerCountRef.current}, ${forceUpdate},  ${selectedDocumentId}, ${selectedDocumentName}, ${selectedFolderId}` )
     //const online = await RequestUtils.isOnline()
     if (online && timerCountRef.current >= 300 && selectedDocumentId && Utils.isModified) {
       timerCountRef.current = 0
@@ -1529,9 +1529,9 @@ const Header: FC<HeaderProps> = ({
     }
   }
 
-  const handleTestUMLGridShapeLarge = () => {
+  const handleTestUMLCustomTableLarge = () => {
     if(currentEditor) {
-      let count = UMLGridShapeTypes.length
+      let count = UMLCustomTableTypes.length
       for(let i = 0; i < count; i ++) {
         const margin = 2        
         let lineFactor = 1
@@ -1541,14 +1541,14 @@ const Header: FC<HeaderProps> = ({
         let controllerFactor = 1
         let firstRowHeightFactor = 1
         currentEditor.contentLayer.removeAllEditorItems()
-        const customShapeInfo = UMLGridShapes[i].typeInfo
+        const customShapeInfo = UMLCustomTables[i].typeInfo
         customShapeInfo.firstRowHeight = customShapeInfo.firstRowHeight * firstRowHeightFactor
         let left = customShapeInfo.left + margin
         if(customShapeInfo.width < customShapeInfo.height) {
           left = Math.round(customShapeInfo.left + (customShapeInfo.height - customShapeInfo.width) * sizeFactor * 0.5) + margin
         }
-        const customShapeTypeName = UMLGridShapes[i].name
-        const customEntity = new UMLGridShapes[i].type(left, customShapeInfo.top + margin, customShapeInfo.width * sizeFactor, customShapeInfo.height * sizeFactor, customShapeTypeName,[customShapeInfo])
+        const customShapeTypeName = UMLCustomTables[i].name
+        const customEntity = new UMLCustomTables[i].type(left, customShapeInfo.top + margin, customShapeInfo.width * sizeFactor, customShapeInfo.height * sizeFactor, customShapeTypeName,[customShapeInfo])
         customEntity.lineWidth = customEntity.lineWidth * lineFactor
         customEntity.fontSize = customEntity.fontSize * fontFactor
         customEntity.items.forEach(item=> {
@@ -1573,9 +1573,9 @@ const Header: FC<HeaderProps> = ({
     }
   }
 
-  const handleTestUMLGridShapeSmall = () => {
+  const handleTestUMLCustomTableSmall = () => {
     if(currentEditor) {
-      let count = UMLGridShapes.length
+      let count = UMLCustomTables.length
       for(let i = 0; i < count; i ++) {
         const margin = 2        
         let lineFactor = 1
@@ -1585,14 +1585,14 @@ const Header: FC<HeaderProps> = ({
         let controllerFactor = 0.20
         let firstRowHeightFactor = 0.20
         currentEditor.contentLayer.removeAllEditorItems()
-        const customShapeInfo = UMLGridShapes[i].typeInfo
+        const customShapeInfo = UMLCustomTables[i].typeInfo
         customShapeInfo.firstRowHeight = customShapeInfo.firstRowHeight * firstRowHeightFactor
         let left = customShapeInfo.left + margin
         if(customShapeInfo.width < customShapeInfo.height) {
           left = Math.round(customShapeInfo.left + (customShapeInfo.height - customShapeInfo.width) * sizeFactor * 0.5) + margin
         }
-        const customShapeTypeName = UMLGridShapes[i].name
-        const customEntity = new UMLGridShapes[i].type(left, customShapeInfo.top + margin, customShapeInfo.width * sizeFactor, customShapeInfo.height * sizeFactor, customShapeTypeName,[customShapeInfo])
+        const customShapeTypeName = UMLCustomTables[i].name
+        const customEntity = new UMLCustomTables[i].type(left, customShapeInfo.top + margin, customShapeInfo.width * sizeFactor, customShapeInfo.height * sizeFactor, customShapeTypeName,[customShapeInfo])
         customEntity.lineWidth = customEntity.lineWidth * lineFactor
         customEntity.fontSize = customEntity.fontSize * fontFactor
         customEntity.items.forEach(item=> {
@@ -2118,8 +2118,8 @@ const Header: FC<HeaderProps> = ({
     { key: 'Test Custom Shapes Image Small', label: 'Test Custom Shapes Image Small', onClick: handleTestImageShapesSmall, },
     { key: 'Test Custom Shapes FlowChart Large', label: 'Test Custom Shapes FlowChart Large', onClick: handleTestFlowChartShapes, },
     { key: 'Test Custom Shapes FlowChart Small', label: 'Test Custom Shapes FlowChart Small', onClick: handleTestFlowChartShapesSmall, },
-    { key: 'Test UML GridShape Large', label: 'Test UML GridShape Large', onClick: handleTestUMLGridShapeLarge, },
-    { key: 'Test UML GridShape Small', label: 'Test UML GridShape Small', onClick: handleTestUMLGridShapeSmall, },
+    { key: 'Test UML CustomTable Large', label: 'Test UML CustomTable Large', onClick: handleTestUMLCustomTableLarge, },
+    { key: 'Test UML CustomTable Small', label: 'Test UML CustomTable Small', onClick: handleTestUMLCustomTableSmall, },
     { key: 'Test UML Container Large', label: 'Test UML Container Large', onClick: handleTestUMLContainerShapeLarge, },
     { key: 'Test UML Container Small', label: 'Test UML Container Small', onClick: handleTestUMLContainerShapeSmall, },
     { key: 'Test UML Basic Shape Large', label: 'Test UML Basic Shape Large', onClick: handleTestUMLBasicShapeLarge, },
