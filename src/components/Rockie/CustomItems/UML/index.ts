@@ -2,29 +2,29 @@ import { UMLConnector, UMLConnectorTypeInfos,} from './src/UMLConnector'
 import { UMLContainerShape, UMLContainerTypes } from './src/UMLContainerShape'
 import { UMLCustomShape, UMLCustomShapeTypes } from './src/UMLCustomShape'
 import { UMLFrameShape, UMLFrameShapeTypes } from './src/UMLFrameShape'
-import { UMLGridShape, UMLGridShapeTypes, } from './src/UMLGridShape'
+import { UMLCustomTable, UMLCustomTableTypes, } from './src/UMLCustomTable'
 import { UMLBasicShape, UMLBasicShapeTypes, } from './src/UMLBasicShape'
 import { UMLCustomContainer, UMLCustomContainerTypes } from './src/UMLCustomContainer'
 
-export  {UMLGridShapeTypes, UMLGridShape} from './src/UMLGridShape'
+export  {UMLCustomTableTypes, UMLCustomTable} from './src/UMLCustomTable'
 
 
-export const UMLGridShapes = [
+export const UMLCustomTables = [
     //Class
-    {name: UMLGridShapeTypes[0].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[0] },
-    {name: UMLGridShapeTypes[1].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[1] },
-    {name: UMLGridShapeTypes[2].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[2] },
-    {name: UMLGridShapeTypes[3].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[3] },
-    {name: UMLGridShapeTypes[4].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[4] },
-    {name: UMLGridShapeTypes[5].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[5] }, // For other too
-    {name: UMLGridShapeTypes[6].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[6] },
-    {name: UMLGridShapeTypes[7].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[7] },
-    {name: UMLGridShapeTypes[8].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[8] },
-    {name: UMLGridShapeTypes[9].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[9] },
-    {name: UMLGridShapeTypes[10].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[10] },
-    {name: UMLGridShapeTypes[11].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[11] },
-    {name: UMLGridShapeTypes[12].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[12] },
-    {name: UMLGridShapeTypes[13].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[13] },
+    {name: UMLCustomTableTypes[0].name, type: UMLCustomTable, typeInfo:  UMLCustomTableTypes[0] },
+    {name: UMLCustomTableTypes[1].name, type: UMLCustomTable, typeInfo:  UMLCustomTableTypes[1] },
+    {name: UMLCustomTableTypes[2].name, type: UMLCustomTable, typeInfo:  UMLCustomTableTypes[2] },
+    {name: UMLCustomTableTypes[3].name, type: UMLCustomTable, typeInfo:  UMLCustomTableTypes[3] },
+    {name: UMLCustomTableTypes[4].name, type: UMLCustomTable, typeInfo:  UMLCustomTableTypes[4] },
+    {name: UMLCustomTableTypes[5].name, type: UMLCustomTable, typeInfo:  UMLCustomTableTypes[5] }, // For other too
+    {name: UMLCustomTableTypes[6].name, type: UMLCustomTable, typeInfo:  UMLCustomTableTypes[6] },
+    {name: UMLCustomTableTypes[7].name, type: UMLCustomTable, typeInfo:  UMLCustomTableTypes[7] },
+    {name: UMLCustomTableTypes[8].name, type: UMLCustomTable, typeInfo:  UMLCustomTableTypes[8] },
+    {name: UMLCustomTableTypes[9].name, type: UMLCustomTable, typeInfo:  UMLCustomTableTypes[9] },
+    {name: UMLCustomTableTypes[10].name, type: UMLCustomTable, typeInfo:  UMLCustomTableTypes[10] },
+    {name: UMLCustomTableTypes[11].name, type: UMLCustomTable, typeInfo:  UMLCustomTableTypes[11] },
+    {name: UMLCustomTableTypes[12].name, type: UMLCustomTable, typeInfo:  UMLCustomTableTypes[12] },
+    {name: UMLCustomTableTypes[13].name, type: UMLCustomTable, typeInfo:  UMLCustomTableTypes[13] },
 ]
 
 export const UMLContainerShapes = [
@@ -108,20 +108,20 @@ export const UMLCustomContainers = [
 ]
 
 export const UMLGridShapesForClass = [
-    {name: UMLGridShapeTypes[0].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[0] },
-    {name: UMLGridShapeTypes[1].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[1] },
-    {name: UMLGridShapeTypes[2].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[2] },
-    {name: UMLGridShapeTypes[3].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[3] },
-    {name: UMLGridShapeTypes[4].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[4] },
-    {name: UMLGridShapeTypes[5].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[5] },
-    {name: UMLGridShapeTypes[6].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[6] },
-    {name: UMLGridShapeTypes[7].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[7] },
-    {name: UMLGridShapeTypes[8].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[8] },
-    {name: UMLGridShapeTypes[9].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[9] },
-    {name: UMLGridShapeTypes[10].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[10] },
-    {name: UMLGridShapeTypes[11].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[11] },
-    {name: UMLGridShapeTypes[12].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[12] },
-    {name: UMLGridShapeTypes[13].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[13] },
+    {name: UMLCustomTableTypes[0].name, type: UMLCustomTable, typeInfo:  UMLCustomTableTypes[0] },
+    {name: UMLCustomTableTypes[1].name, type: UMLCustomTable, typeInfo:  UMLCustomTableTypes[1] },
+    {name: UMLCustomTableTypes[2].name, type: UMLCustomTable, typeInfo:  UMLCustomTableTypes[2] },
+    {name: UMLCustomTableTypes[3].name, type: UMLCustomTable, typeInfo:  UMLCustomTableTypes[3] },
+    {name: UMLCustomTableTypes[4].name, type: UMLCustomTable, typeInfo:  UMLCustomTableTypes[4] },
+    {name: UMLCustomTableTypes[5].name, type: UMLCustomTable, typeInfo:  UMLCustomTableTypes[5] },
+    {name: UMLCustomTableTypes[6].name, type: UMLCustomTable, typeInfo:  UMLCustomTableTypes[6] },
+    {name: UMLCustomTableTypes[7].name, type: UMLCustomTable, typeInfo:  UMLCustomTableTypes[7] },
+    {name: UMLCustomTableTypes[8].name, type: UMLCustomTable, typeInfo:  UMLCustomTableTypes[8] },
+    {name: UMLCustomTableTypes[9].name, type: UMLCustomTable, typeInfo:  UMLCustomTableTypes[9] },
+    {name: UMLCustomTableTypes[10].name, type: UMLCustomTable, typeInfo:  UMLCustomTableTypes[10] },
+    {name: UMLCustomTableTypes[11].name, type: UMLCustomTable, typeInfo:  UMLCustomTableTypes[11] },
+    {name: UMLCustomTableTypes[12].name, type: UMLCustomTable, typeInfo:  UMLCustomTableTypes[12] },
+    {name: UMLCustomTableTypes[13].name, type: UMLCustomTable, typeInfo:  UMLCustomTableTypes[13] },
 ]
 
 export const UMLBasicShapesForClass = [
@@ -210,7 +210,7 @@ export const UMLContainerShapesForActivityState = [
 ]
 
 export const UMLGridShapesForOther = [
-    {name: UMLGridShapeTypes[8].name, type: UMLGridShape, typeInfo:  UMLGridShapeTypes[8] }, // For other too
+    {name: UMLCustomTableTypes[8].name, type: UMLCustomTable, typeInfo:  UMLCustomTableTypes[8] }, // For other too
 ]
 
 export const UMLCustomShapesForOther = [

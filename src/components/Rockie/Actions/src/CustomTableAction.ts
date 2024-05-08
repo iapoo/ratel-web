@@ -1,7 +1,6 @@
 import { Point2, } from '@/components/Engine'
 import { CustomTableEntity, Item, TableEntity, } from '../../Items'
 import { Action, } from './Action'
-import { UMLGridShape } from '../../CustomItems/UML'
 import { Editor } from '../../Editor'
 import { CustomTableType } from '../../Items/src/CustomTableEntity'
 
@@ -27,6 +26,6 @@ export class CustomTableAction extends Action {
       return customEntity
     } 
 
-    return new CustomTableEntity(100, 100, 240, 120, this.type!, [this._shapeType])
+    return new CustomTableEntity(100, 100, 240, 120)
   }
 }

@@ -1,9 +1,11 @@
 import { Categories, Type } from './Item'
+import { Shapes } from './ShapeEntity'
 import { TableEntity } from './TableEntity'
 
 export class CustomTableEntities {
   public static TYPE_CUSTOMER_TABLE = 'CustomTable'
   public static DESC_CUSTOMER_TABLE = 'CustomTable'
+  public static TEXT_CUSTOMER_TABLE = 'CustomTable'
 }
 
 export interface CustomTableType {
@@ -53,10 +55,38 @@ export interface CustomTableType {
   adaptInPercent: boolean
 }
 
+
+
+const CustomTableTypes: CustomTableType[] = [
+  { name: CustomTableEntities.TYPE_CUSTOMER_TABLE, description: CustomTableEntities.DESC_CUSTOMER_TABLE, freeze: Shapes.FREEZE_NONE, text: CustomTableEntities.TEXT_CUSTOMER_TABLE, left: 0, top: 0, width: 250, height: 160, enableMask: false, 
+    rowCount: 3, columnCount: 1, fixedFirstRow: true, firstRowHeight: 32, fixedFirstColumn: false, firstColumnWidth: 0,
+    modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: false, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+]
+
 export class CustomTableEntity extends TableEntity {
-  
-  public constructor(left: number, top: number, width: number, height: number, shapeType: string, shapeTypeInfos: CustomTableType[], rowCount = 2, columnCount = 1) {
+  private _customTableTypeName: string
+  private _customTableTypeInfos:  CustomTableType[]  
+  private _customTableType: CustomTableType
+  public constructor(left: number, top: number, width: number, height: number, customTableeTypeName: string = CustomTableEntities.TYPE_CUSTOMER_TABLE, customTableTypeInfos: CustomTableType[] = CustomTableTypes, rowCount = 2, columnCount = 1) {
     super(left, top, width, height, rowCount, columnCount)
+    this._customTableTypeName =  customTableeTypeName
+    this._customTableTypeInfos = customTableTypeInfos
+    this._customTableType = this.parseTableTypeInfo(customTableeTypeName)
+  }
+
+  public get customTableeType() {
+    return this._customTableType
+  }
+
+  public get customTableTypeName() {
+    return this._customTableTypeName
+  }
+
+  public get customTableTypeInfos() {
+    return this._customTableTypeInfos
   }
   
   public get customizable() {
@@ -71,5 +101,14 @@ export class CustomTableEntity extends TableEntity {
     return Categories.CUSTOM_TABLE
   }
 
+  private parseTableTypeInfo(customTableTypeName: string): CustomTableType {    
+    let result: CustomTableType = this._customTableTypeInfos[0]
+    this._customTableTypeInfos.forEach((customTableType: CustomTableType) => {
+      if(customTableType.name  == customTableTypeName) {
+        result = customTableType
+      }
+    })
+    return result 
+  }
 
 }

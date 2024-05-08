@@ -43,7 +43,7 @@ export class EditorHelper {
             selections = JSON.parse(data)
             if (selections instanceof Array) {
                 selections.forEach(selection => {
-                    if (selection.type && selection.category && selection.id && selection.items instanceof Array) {
+                    if (selection.category && selection.id && selection.items instanceof Array) {
                         validation = true
                     } else {
                         validation = false

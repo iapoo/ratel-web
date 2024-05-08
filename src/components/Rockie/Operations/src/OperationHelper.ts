@@ -1,7 +1,7 @@
 /* eslint-disable max-params */
 
 import { SystemUtils } from "@/components/Workspace/Utils"
-import { Categories, CellEntity, Connector, ConnectorArrowInfo, ContainerEntity, ContainerInfo, CustomEntity, CustomShapeInfo, EditorItem, EditorItemInfo, Entity, ImageContainer, ImageContainerInfo, Item, LineEntity, ShapeEntity, SvgContainer, SvgContainerInfo, TableEntity } from "../../Items"
+import { Categories, CellEntity, Connector, ConnectorArrowInfo, ContainerEntity, ContainerInfo, CustomEntity, CustomShapeInfo, CustomTableEntity, CustomTableInfo, EditorItem, EditorItemInfo, Entity, FrameEntity, FrameEntityInfo, GroupEntity, ImageContainer, ImageContainerInfo, Item, LineEntity, ShapeEntity, SvgContainer, SvgContainerInfo, TableEntity } from "../../Items"
 import { ConnectorInfo } from "../../Items/src/ConnectorInfo"
 import { LineInfo } from "../../Items/src/LineInfo"
 import { Rotation } from "@/components/Engine"
@@ -12,11 +12,19 @@ import { ConnectorMode, ConnectorType } from "../../Shapes"
 import { TableInfo } from "../../Items/src/TableInfo"
 import { ThemeUtils } from "@/components/Rockie/Theme"
 import { Editor } from "../../Editor"
-import { CustomShapeType, CustomShapes } from "../../Utils/src/CommonUtils"
+import { ContainerShapeType, ExtendedContainerTypes, CustomContainerType, CustomContainers, CustomTableShapeType, CustomTableShapes, CustomShapeType, CustomShapes, ExtendConnectors, ExtendedConnectorType, ExtendedShapeType, ExtendedShapes, FrameShapeType, FrameShapes } from "../../Utils/src/CommonUtils"
+import { CustomContainerEntity } from "../../Items/src/CustomContainerEntity"
 
 export class OperationHelper {
 
+  private static initialized = false
   private static customShapes = new Map<string, CustomShapeType>()
+  private static customTableShapes = new Map<string, CustomTableShapeType>()
+  private static extendedContainerTypes = new Map<string, ContainerShapeType>()
+  private static extendedShapeTypes = new Map<string, ExtendedShapeType>()
+  private static extendedConnectorTypes = new Map<string, ExtendedConnectorType>()
+  private static frameShapeTypes = new Map<string, FrameShapeType>()
+  private static customContainerTypes = new Map<string, CustomContainerType>()
 
   public static loadItem(itemInfo: EditorItemInfo, editor: Editor): EditorItem {
     let editorItem: Item
@@ -33,6 +41,15 @@ export class OperationHelper {
       case Categories.TABLE:
         editorItem = this.loadTableEntity(itemInfo)
         break
+      case Categories.CUSTOM_TABLE:
+        editorItem = this.loadCustomTable(itemInfo)
+        break
+      case Categories.FRAME:
+        editorItem = this.loadFrame(itemInfo)
+        break
+      case Categories.GROUP:
+        editorItem = this.loadGroup(itemInfo)
+        break
       case Categories.CUSTOM_SHAPE:
         editorItem = this.loadCustomEntity(itemInfo)
         break
@@ -41,6 +58,18 @@ export class OperationHelper {
         break
       case Categories.CUSTOM_IMAGE_SHAPE:
         editorItem = this.loadImageContainer(itemInfo)
+        break
+      case Categories.EXTENDED_CONTAINER:
+        editorItem = this.loadExtendedContainerEntity(itemInfo)
+        break
+      case Categories.EXTENDED_SHAPE:
+        editorItem = this.loadExtendedShapeEntity(itemInfo)
+        break
+      case Categories.EXTENDED_CONNECTOR:
+        editorItem = this.loadExtendedConnector(itemInfo, editor)
+        break
+      case Categories.CUSTOM_CONTAINER:
+        editorItem = this.loadCustomContainerEntity(itemInfo)
         break
       case Categories.SHAPE:
       default:
@@ -170,6 +199,43 @@ export class OperationHelper {
     return connector
   }
 
+  public static loadExtendedConnector(itemInfo: EditorItemInfo, editor: Editor): Connector {
+    if(!OperationHelper.initialized) {
+      OperationHelper.initializeCustomEntities()
+    }
+    let connectorInfo = itemInfo as ConnectorInfo
+    let start = SystemUtils.parsePointString(connectorInfo.start)
+    let end = SystemUtils.parsePointString(connectorInfo.end)
+    let connector = new Connector(start, end)
+    connector.connectorType = connectorInfo.connectorType ? CommonUtils.parseConnectorTypeString(connectorInfo.connectorType) : ConnectorType.Orthogonal
+    if(connectorInfo.source) {
+      //connector.source = connectorInfo.source
+    }
+    if(connectorInfo.target) {
+
+    }
+    if(connectorInfo.sourceJoint) {
+      connector.sourceJoint = SystemUtils.parsePointString(connectorInfo.sourceJoint)
+    }
+    if(connectorInfo.targetJoint) {
+      connector.targetJoint = SystemUtils.parsePointString(connectorInfo.targetJoint)
+    }
+    connector.id = connectorInfo.id
+    connector.text = connectorInfo.text
+    connector.startArrow = SystemUtils.parseConnectorArrow(connectorInfo.startArrow!)
+    connector.endArrow = SystemUtils.parseConnectorArrow(connectorInfo.endArrow!)
+    connector.curveStartModifier = SystemUtils.parsePointString(connectorInfo.curveStartModifier)
+    connector.curveEndModifier = SystemUtils.parsePointString(connectorInfo.curveEndModifier)
+    connector.startDirection = SystemUtils.parseConnectorDirection(connectorInfo.startDirection)
+    connector.endDirection = SystemUtils.parseConnectorDirection(connectorInfo.endDirection)
+    connector.orthogonalPoints = SystemUtils.parsePointsString(connectorInfo.orthogonalPoints)
+    connector.connectorMode = connectorInfo.connectorMode ? SystemUtils.parseConnectorMode(connectorInfo.connectorMode) : ConnectorMode.Single
+    connector.connectorDoubleLineGap = connectorInfo.connectorDoubleLineGap
+    connector.connectorDoubleLineArrowLength = connectorInfo.connectorDoubleLineArrowLength
+    connector.connectorDoubleLineArrowDistance = connectorInfo.connectorDoubleLineArrowDistance
+    return connector
+  }
+
   public static loadShapeEntity(itemInfo: EditorItemInfo): ShapeEntity {
     let shapeInfo = itemInfo as ShapeInfo
     const shapeEntity = new ShapeEntity(shapeInfo.left, shapeInfo.top, shapeInfo.width, shapeInfo.height, {shapeType: shapeInfo.type})
@@ -186,15 +252,95 @@ export class OperationHelper {
     return shapeEntity
   }
 
+  public static loadExtendedShapeEntity(itemInfo: EditorItemInfo): ShapeEntity {
+    if(!OperationHelper.initialized) {
+      OperationHelper.initializeCustomEntities()
+    }
+    let shapeInfo = itemInfo as ShapeInfo
+    const shapeEntity = new ShapeEntity(shapeInfo.left, shapeInfo.top, shapeInfo.width, shapeInfo.height, {shapeType: shapeInfo.type})
+    shapeEntity.type = shapeInfo.type
+    shapeEntity.text = shapeInfo.text
+    shapeEntity.id = shapeInfo.id
+    if (shapeInfo.rotation) {
+      shapeEntity.rotation = new Rotation(shapeInfo.rotation, shapeEntity.width / 2, shapeEntity.height / 2)
+    }
+    shapeEntity.shape.modifier = SystemUtils.parsePointString(shapeInfo.modifier)
+    shapeEntity.shape.controller  = SystemUtils.parsePointString(shapeInfo.controller)
+    shapeEntity.shape.adapter = SystemUtils.parsePointString(shapeInfo.adapter)
+    shapeEntity.shape.adapterSize = shapeInfo.adapterSize
+    return shapeEntity
+  }
+
+  public static loadFrame(itemInfo: EditorItemInfo): ShapeEntity {
+    if(!OperationHelper.initialized) {
+      OperationHelper.initializeCustomEntities()
+    }
+    const frameInfo = itemInfo as FrameEntityInfo
+    const containerEntity = new FrameEntity(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, {shapeType: frameInfo.type})
+    containerEntity.id = frameInfo.id
+    if (frameInfo.rotation) {
+      containerEntity.rotation = new Rotation(frameInfo.rotation, frameInfo.width / 2, frameInfo.height / 2)
+    }
+    containerEntity.shape.modifier = SystemUtils.parsePointString(frameInfo.modifier)
+    containerEntity.shape.adapter = SystemUtils.parsePointString(frameInfo.adapter)
+    containerEntity.shape.adapterSize = frameInfo.adapterSize
+
+    containerEntity.removeAllItems()
+    itemInfo.items.forEach(childItemInfo => {
+      let childItem = OperationHelper.loadTableCellEntity(childItemInfo)
+      containerEntity.addItem(childItem)
+    })
+    return containerEntity
+  }
+
+  public static loadGroup(itemInfo: EditorItemInfo): ShapeEntity {
+    if(!OperationHelper.initialized) {
+      OperationHelper.initializeCustomEntities()
+    }
+    const containerInfo = itemInfo as ContainerInfo
+    const containerEntity = new ContainerEntity(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, {shapeType: containerInfo.type})
+    containerEntity.id = containerInfo.id
+    if (containerInfo.rotation) {
+      containerEntity.rotation = new Rotation(containerInfo.rotation, containerInfo.width / 2, containerInfo.height / 2)
+    }
+    containerEntity.shape.modifier = SystemUtils.parsePointString(containerInfo.modifier)
+    containerEntity.shape.adapter = SystemUtils.parsePointString(containerInfo.adapter)
+    containerEntity.shape.adapterSize = containerInfo.adapterSize
+
+    containerEntity.removeAllItems()
+    itemInfo.items.forEach(childItemInfo => {
+      let childItem = OperationHelper.loadTableCellEntity(childItemInfo)
+      containerEntity.addItem(childItem)
+    })
+    return containerEntity
+  }
 
   private static initializeCustomEntities() {
     CustomShapes.forEach(customShape => {
       OperationHelper.customShapes.set(customShape.name, {type: customShape.type, shapeType: customShape.typeInfo})
     })
+    CustomTableShapes.forEach(customShape => {
+      OperationHelper.customTableShapes.set(customShape.name,{type: customShape.type, shapeType: customShape.typeInfo})
+    })
+    ExtendedContainerTypes.forEach(customShape => {
+      OperationHelper.extendedContainerTypes.set(customShape.name,{type: customShape.type, shapeType: customShape.typeInfo})
+    })
+    ExtendedShapes.forEach(customShape => {
+      OperationHelper.extendedShapeTypes.set(customShape.name,{type: customShape.type, shapeType: customShape.typeInfo})
+    })
+    ExtendConnectors.forEach(customShape => {
+      OperationHelper.extendedConnectorTypes.set(customShape.name, {type: customShape.type, shapeType: customShape.typeInfo})
+    })
+    FrameShapes.forEach(customShape => {
+      OperationHelper.frameShapeTypes.set(customShape.name, {type: customShape.type, shapeType: customShape.typeInfo})
+    })
+    CustomContainers.forEach(customShape => {
+      OperationHelper.customContainerTypes.set(customShape.name, {type: customShape.type, shapeType: customShape.typeInfo})
+    })
   }
 
   public static loadCustomEntity(itemInfo: EditorItemInfo): ShapeEntity {
-    if(OperationHelper.customShapes.size == 0) {
+    if(!OperationHelper.initialized) {
       OperationHelper.initializeCustomEntities()
     }
     let shapeInfo = itemInfo as CustomShapeInfo
@@ -287,6 +433,51 @@ export class OperationHelper {
     return containerEntity
   }
 
+  public static loadExtendedContainerEntity(itemInfo: EditorItemInfo): ContainerEntity {
+    if(!OperationHelper.initialized) {
+      OperationHelper.initializeCustomEntities()
+    }
+    const containerInfo = itemInfo as ContainerInfo
+    const containerEntity = new ContainerEntity(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, {shapeType: containerInfo.type})
+    containerEntity.id = containerInfo.id
+    if (containerInfo.rotation) {
+      containerEntity.rotation = new Rotation(containerInfo.rotation, containerInfo.width / 2, containerInfo.height / 2)
+    }
+    containerEntity.shape.modifier = SystemUtils.parsePointString(containerInfo.modifier)
+    containerEntity.shape.adapter = SystemUtils.parsePointString(containerInfo.adapter)
+    containerEntity.shape.adapterSize = containerInfo.adapterSize
+
+    containerEntity.removeAllItems()
+    itemInfo.items.forEach(childItemInfo => {
+      let childItem = OperationHelper.loadTableCellEntity(childItemInfo)
+      containerEntity.addItem(childItem)
+    })
+    return containerEntity
+  }
+
+
+  public static loadCustomContainerEntity(itemInfo: EditorItemInfo): ContainerEntity {
+    if(!OperationHelper.initialized) {
+      OperationHelper.initializeCustomEntities()
+    }
+    const containerInfo = itemInfo as ContainerInfo
+    const containerEntity = new ContainerEntity(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, {shapeType: containerInfo.type})
+    containerEntity.id = containerInfo.id
+    if (containerInfo.rotation) {
+      containerEntity.rotation = new Rotation(containerInfo.rotation, containerInfo.width / 2, containerInfo.height / 2)
+    }
+    containerEntity.shape.modifier = SystemUtils.parsePointString(containerInfo.modifier)
+    containerEntity.shape.adapter = SystemUtils.parsePointString(containerInfo.adapter)
+    containerEntity.shape.adapterSize = containerInfo.adapterSize
+
+    containerEntity.removeAllItems()
+    itemInfo.items.forEach(childItemInfo => {
+      let childItem = OperationHelper.loadTableCellEntity(childItemInfo)
+      containerEntity.addItem(childItem)
+    })
+    return containerEntity
+  }
+
   public static loadTableEntity(itemInfo: EditorItemInfo): TableEntity {
     const tableInfo = itemInfo as TableInfo
     const tableEntity = new TableEntity(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, tableInfo.rowCount, tableInfo.columnCount)
@@ -300,6 +491,41 @@ export class OperationHelper {
       tableEntity.addItem(childItem)
     })
     return tableEntity
+  }
+  
+  public static loadCustomTable(itemInfo: EditorItemInfo): CustomTableEntity {
+    if(!OperationHelper.initialized) {
+      OperationHelper.initializeCustomEntities()
+    }
+    const customTableInfo = itemInfo as CustomTableInfo
+    const customTableTypeInfo = OperationHelper.customTableShapes.get(customTableInfo.type)
+    let customTableTypeInfos: CustomTableShapeType[] = []
+    if(customTableTypeInfo) {
+      customTableTypeInfos.push(customTableTypeInfo)
+      const customTableEntity = new customTableTypeInfo.type(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, customTableInfo.customTableTypeName, [], customTableInfo.rowCount, customTableInfo.columnCount)
+      customTableEntity.id = customTableInfo.id
+      if (customTableInfo.rotation) {
+        customTableEntity.rotation = new Rotation(customTableInfo.rotation, customTableInfo.width / 2, customTableInfo.height / 2)
+      }
+      customTableEntity.removeAllItems()
+      itemInfo.items.forEach(childItemInfo => {
+        let childItem = OperationHelper.loadTableCellEntity(childItemInfo)
+        customTableEntity.addItem(childItem)
+      })
+      return customTableEntity
+      } else {
+      const customTableEntity = new CustomTableEntity(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, customTableInfo.customTableTypeName, [], customTableInfo.rowCount, customTableInfo.columnCount)
+      customTableEntity.id = customTableInfo.id
+      if (customTableInfo.rotation) {
+        customTableEntity.rotation = new Rotation(customTableInfo.rotation, customTableInfo.width / 2, customTableInfo.height / 2)
+      }
+      customTableEntity.removeAllItems()
+      itemInfo.items.forEach(childItemInfo => {
+        let childItem = OperationHelper.loadTableCellEntity(childItemInfo)
+        customTableEntity.addItem(childItem)
+      })
+      return customTableEntity
+    }
   }
   
   public static loadTableCellEntity(itemInfo: EditorItemInfo): CellEntity {
@@ -331,7 +557,13 @@ export class OperationHelper {
         editorItemInfo = this.saveTable(editorItem as TableEntity)
         break;
       case Categories.CONTAINER:
-        editorItemInfo = this.saveContainer(editorItem as TableEntity)
+        editorItemInfo = this.saveContainer(editorItem as ContainerEntity)
+        break;
+      case Categories.FRAME:
+        editorItemInfo = this.saveFrame(editorItem as FrameEntity)
+        break;
+      case Categories.GROUP:
+        editorItemInfo = this.saveGroup(editorItem as GroupEntity)
         break;
       case Categories.CUSTOM_SHAPE:
         editorItemInfo = this.saveCustomShape(editorItem as CustomEntity)
@@ -341,6 +573,21 @@ export class OperationHelper {
         break;
       case Categories.CUSTOM_IMAGE_SHAPE:
         editorItemInfo = this.saveCustomImageShape(editorItem as ImageContainer)
+        break;
+      case Categories.EXTENDED_CONTAINER:
+        editorItemInfo = this.saveExtendedContainer(editorItem as CustomContainerEntity)
+        break;
+      case Categories.EXTENDED_SHAPE:
+        editorItemInfo = this.saveExtendedShape(editorItem as ShapeEntity)
+        break;
+      case Categories.EXTENDED_CONNECTOR:
+        editorItemInfo = this.saveExtendedConnector(editorItem as Connector)
+        break;
+      case Categories.CUSTOM_CONTAINER:
+        editorItemInfo = this.saveCustomContainer(editorItem as ContainerEntity)
+        break;
+      case Categories.CUSTOM_TABLE:
+        editorItemInfo = this.saveCustomTable(editorItem as CustomTableEntity)
         break;
       case Categories.SHAPE:
       default:
@@ -395,6 +642,18 @@ export class OperationHelper {
     return shapeinfo
   }
 
+  public static  saveExtendedShape(customEntity: ShapeEntity) : EditorItemInfo {
+    let styleInfos: StyleInfo[] = Style.makeStyleInfos(customEntity.shape.styles)
+    let shapeinfo = new ShapeInfo(customEntity.type, customEntity.category, customEntity.left, customEntity.top, customEntity.width, customEntity.height, customEntity.text, customEntity.rotation.radius, styleInfos)
+    shapeinfo.rotation = customEntity.rotation.radius
+    shapeinfo.modifier = customEntity.shape.modifier.x + ',' + customEntity.shape.modifier.y
+    shapeinfo.controller = customEntity.shape.controller.x + ',' + customEntity.shape.controller.y
+    shapeinfo.adapter = customEntity.shape.adapter.x + ',' + customEntity.shape.adapter.y
+    shapeinfo.adapterSize = customEntity.shape.adapterSize
+
+    return shapeinfo
+  }
+
   public static  saveCustomSvgShape(svgContainer: SvgContainer) : EditorItemInfo {
     let styleInfos: StyleInfo[] = Style.makeStyleInfos(svgContainer.shape.styles)
     let svgContainerInfo = new SvgContainerInfo(svgContainer.type, svgContainer.category, svgContainer.left, svgContainer.top, svgContainer.width, svgContainer.height, svgContainer.text, svgContainer.rotation.radius, styleInfos)
@@ -430,6 +689,12 @@ export class OperationHelper {
     return tableInfo
   }
 
+  public static  saveCustomTable(customTableEntity: CustomTableEntity) : EditorItemInfo {
+    let styleInfos: StyleInfo[] = Style.makeStyleInfos(customTableEntity.shape.styles)
+    let tableInfo = new CustomTableInfo(customTableEntity.left, customTableEntity.top, customTableEntity.width, customTableEntity.height,customTableEntity.customTableTypeName, customTableEntity.rowCount, customTableEntity.columnCount, customTableEntity.rotation.radius, styleInfos)
+
+    return tableInfo
+  }
 
   public static  saveContainer(container: ContainerEntity) : EditorItemInfo {
     let styleInfos: StyleInfo[] = Style.makeStyleInfos(container.shape.styles)
@@ -442,6 +707,49 @@ export class OperationHelper {
     return containerInfo
   }
 
+  public static  saveCustomContainer(container: ContainerEntity) : EditorItemInfo {
+    let styleInfos: StyleInfo[] = Style.makeStyleInfos(container.shape.styles)
+    let containerInfo = new ContainerInfo(container.type, container.category, container.left, container.top, container.width, container.height, container.text,  container.rotation.radius, styleInfos)
+    containerInfo.rotation = container.rotation.radius
+    containerInfo.modifier = container.shape.modifier.x + ',' + container.shape.modifier.y
+    containerInfo.adapter = container.shape.adapter.x + ',' + container.shape.adapter.y
+    containerInfo.adapterSize = container.shape.adapterSize
+
+    return containerInfo
+  }
+
+  public static  saveExtendedContainer(customContainer: CustomContainerEntity) : EditorItemInfo {
+    let styleInfos: StyleInfo[] = Style.makeStyleInfos(customContainer.shape.styles)
+    let containerInfo = new ContainerInfo(customContainer.type, customContainer.category, customContainer.left, customContainer.top, customContainer.width, customContainer.height, customContainer.text,  customContainer.rotation.radius, styleInfos)
+    containerInfo.rotation = customContainer.rotation.radius
+    containerInfo.modifier = customContainer.shape.modifier.x + ',' + customContainer.shape.modifier.y
+    containerInfo.adapter = customContainer.shape.adapter.x + ',' + customContainer.shape.adapter.y
+    containerInfo.adapterSize = customContainer.shape.adapterSize
+
+    return containerInfo
+  }
+
+  public static  saveFrame(frame: FrameEntity) : EditorItemInfo {
+    let styleInfos: StyleInfo[] = Style.makeStyleInfos(frame.shape.styles)
+    let frameEntityInfo = new FrameEntityInfo(frame.type, frame.category, frame.left, frame.top, frame.width, frame.height, frame.text,  frame.rotation.radius, styleInfos)
+    frameEntityInfo.rotation = frame.rotation.radius
+    frameEntityInfo.modifier = frame.shape.modifier.x + ',' + frame.shape.modifier.y
+    frameEntityInfo.adapter = frame.shape.adapter.x + ',' + frame.shape.adapter.y
+    frameEntityInfo.adapterSize = frame.shape.adapterSize
+
+    return frameEntityInfo
+  }
+
+  public static  saveGroup(container: GroupEntity) : EditorItemInfo {
+    let styleInfos: StyleInfo[] = Style.makeStyleInfos(container.shape.styles)
+    let containerInfo = new ContainerInfo(container.type, container.category, container.left, container.top, container.width, container.height, container.text,  container.rotation.radius, styleInfos)
+    containerInfo.rotation = container.rotation.radius
+    containerInfo.modifier = container.shape.modifier.x + ',' + container.shape.modifier.y
+    containerInfo.adapter = container.shape.adapter.x + ',' + container.shape.adapter.y
+    containerInfo.adapterSize = container.shape.adapterSize
+
+    return containerInfo
+  }
 
   public static  saveLine(lineEntity: LineEntity) : EditorItemInfo {
     let styleInfos: StyleInfo[] = Style.makeStyleInfos(lineEntity.shape.styles)
@@ -483,6 +791,39 @@ export class OperationHelper {
     return connectorInfo
   }
 
+
+  public static  saveExtendedConnector(connector: Connector) : EditorItemInfo {
+    let styleInfos: StyleInfo[] = Style.makeStyleInfos(connector.shape.styles)
+    let connectorInfo = new ConnectorInfo(connector.start.x, connector.start.y, connector.end.x, connector.end.y, connector.text, connector.rotation.radius, styleInfos)
+    if(connector.source) {
+      connectorInfo.source = connector.source.id
+    }
+    if(connector.target) {
+      connectorInfo.target = connector.target.id
+    }
+    if(connector.sourceJoint) {
+      connectorInfo.sourceJoint = SystemUtils.generatePointString(connector.sourceJoint)
+    }
+    if(connector.targetJoint) {
+        connectorInfo.targetJoint = SystemUtils.generatePointString(connector.targetJoint)
+    }
+    
+    connectorInfo.text = connector.text
+    connectorInfo.connectorType = connector.connectorType ?  CommonUtils.parseConnectorType(connector.connectorType) : null
+    connectorInfo.startArrow = SystemUtils.generateConnectorArrow(connector.startArrow)
+    connectorInfo.endArrow = SystemUtils.generateConnectorArrow(connector.endArrow)
+    connectorInfo.curveStartModifier = SystemUtils.generatePointString(connector.curveStartModifier)
+    connectorInfo.curveEndModifier = SystemUtils.generatePointString(connector.curveEndModifier)
+    connectorInfo.startDirection = SystemUtils.generateConnectorDirection(connector.startDirection)
+    connectorInfo.endDirection = SystemUtils.generateConnectorDirection(connector.endDirection)
+    connectorInfo.orthogonalPoints = SystemUtils.generatePointsString(connector.orthogonalPoints)
+    connectorInfo.connectorMode = SystemUtils.generateConnectorMode(connector.connectorMode)
+    connectorInfo.connectorDoubleLineGap = connector.connectorDoubleLineGap
+    connectorInfo.connectorDoubleLineArrowLength = connector.connectorDoubleLineArrowLength
+    connectorInfo.connectorDoubleLineArrowDistance = connector.connectorDoubleLineArrowDistance
+
+    return connectorInfo
+  }
 
   private static fixStyleInfo(editorItemInfo: EditorItemInfo) {
     let count = editorItemInfo.styles.length
