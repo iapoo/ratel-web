@@ -14,6 +14,7 @@ import { ThemeUtils } from "@/components/Rockie/Theme"
 import { Editor } from "../../Editor"
 import { ContainerShapeType, ExtendedContainerTypes, CustomContainerType, CustomContainers, CustomTableShapeType, CustomTableShapes, CustomShapeType, CustomShapes, ExtendConnectors, ExtendedConnectorType, ExtendedShapeType, ExtendedShapes, FrameShapeType, FrameShapes } from "../../Utils/src/CommonUtils"
 import { CustomContainerEntity } from "../../Items/src/CustomContainerEntity"
+import { ShapeType } from "../../Items/src/ShapeEntity"
 
 export class OperationHelper {
 
@@ -115,6 +116,11 @@ export class OperationHelper {
         editorItem.lineWidth = itemInfo.lineWidth
       }
     }
+    editorItem.textAlignment = SystemUtils.parseTextAlignment(itemInfo.textAlignment)
+    editorItem.textVerticalAlignment = SystemUtils.parseTextVerticalAligment(itemInfo.textVerticalAlignment)
+    editorItem.stroked = itemInfo.stroked
+    editorItem.filled = itemInfo.filled
+    // editorItem.fontW
 
     //TODO: FIXME : Some cleanup or intializeation
     if(editorItem instanceof SvgContainer) {
@@ -276,21 +282,42 @@ export class OperationHelper {
       OperationHelper.initializeCustomEntities()
     }
     const frameInfo = itemInfo as FrameEntityInfo
-    const containerEntity = new FrameEntity(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, {shapeType: frameInfo.type})
-    containerEntity.id = frameInfo.id
-    if (frameInfo.rotation) {
-      containerEntity.rotation = new Rotation(frameInfo.rotation, frameInfo.width / 2, frameInfo.height / 2)
+    const frameTypeInfo = OperationHelper.frameShapeTypes.get(frameInfo.type)
+    const shapeTypes: ShapeType[] = []
+    if(frameTypeInfo) {
+      shapeTypes.push(frameTypeInfo.shapeType)
+      const containerEntity = new frameTypeInfo.type(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, {shapeType: frameInfo.type}, shapeTypes)
+      containerEntity.id = frameInfo.id
+      if (frameInfo.rotation) {
+        containerEntity.rotation = new Rotation(frameInfo.rotation, frameInfo.width / 2, frameInfo.height / 2)
+      }
+      containerEntity.shape.modifier = SystemUtils.parsePointString(frameInfo.modifier)
+      containerEntity.shape.adapter = SystemUtils.parsePointString(frameInfo.adapter)
+      containerEntity.shape.adapterSize = frameInfo.adapterSize
+  
+      containerEntity.removeAllItems()
+      itemInfo.items.forEach(childItemInfo => {
+        let childItem = OperationHelper.loadTableCellEntity(childItemInfo)
+        containerEntity.addItem(childItem)
+      })
+      return containerEntity
+    } else {
+      const containerEntity = new FrameEntity(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, {shapeType: frameInfo.type}, shapeTypes)
+      containerEntity.id = frameInfo.id
+      if (frameInfo.rotation) {
+        containerEntity.rotation = new Rotation(frameInfo.rotation, frameInfo.width / 2, frameInfo.height / 2)
+      }
+      containerEntity.shape.modifier = SystemUtils.parsePointString(frameInfo.modifier)
+      containerEntity.shape.adapter = SystemUtils.parsePointString(frameInfo.adapter)
+      containerEntity.shape.adapterSize = frameInfo.adapterSize
+  
+      containerEntity.removeAllItems()
+      itemInfo.items.forEach(childItemInfo => {
+        let childItem = OperationHelper.loadTableCellEntity(childItemInfo)
+        containerEntity.addItem(childItem)
+      })
+      return containerEntity
     }
-    containerEntity.shape.modifier = SystemUtils.parsePointString(frameInfo.modifier)
-    containerEntity.shape.adapter = SystemUtils.parsePointString(frameInfo.adapter)
-    containerEntity.shape.adapterSize = frameInfo.adapterSize
-
-    containerEntity.removeAllItems()
-    itemInfo.items.forEach(childItemInfo => {
-      let childItem = OperationHelper.loadTableCellEntity(childItemInfo)
-      containerEntity.addItem(childItem)
-    })
-    return containerEntity
   }
 
   public static loadGroup(itemInfo: EditorItemInfo): ShapeEntity {
@@ -437,22 +464,41 @@ export class OperationHelper {
     if(!OperationHelper.initialized) {
       OperationHelper.initializeCustomEntities()
     }
-    const containerInfo = itemInfo as ContainerInfo
-    const containerEntity = new ContainerEntity(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, {shapeType: containerInfo.type})
-    containerEntity.id = containerInfo.id
-    if (containerInfo.rotation) {
-      containerEntity.rotation = new Rotation(containerInfo.rotation, containerInfo.width / 2, containerInfo.height / 2)
+    const extendedContainerInfo = itemInfo as ContainerInfo
+    const extendedContainerTypeInfo = OperationHelper.extendedContainerTypes.get(extendedContainerInfo.type)
+    if(extendedContainerTypeInfo) {
+      const containerEntity = new extendedContainerTypeInfo.type(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, {shapeType: extendedContainerInfo.type}, [extendedContainerTypeInfo.shapeType])
+      containerEntity.id = extendedContainerInfo.id
+      if (extendedContainerInfo.rotation) {
+        containerEntity.rotation = new Rotation(extendedContainerInfo.rotation, extendedContainerInfo.width / 2, extendedContainerInfo.height / 2)
+      }
+      containerEntity.shape.modifier = SystemUtils.parsePointString(extendedContainerInfo.modifier)
+      containerEntity.shape.adapter = SystemUtils.parsePointString(extendedContainerInfo.adapter)
+      containerEntity.shape.adapterSize = extendedContainerInfo.adapterSize
+  
+      containerEntity.removeAllItems()
+      itemInfo.items.forEach(childItemInfo => {
+        let childItem = OperationHelper.loadTableCellEntity(childItemInfo)
+        containerEntity.addItem(childItem)
+      })
+      return containerEntity
+    } else {
+      const containerEntity = new ContainerEntity(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, {shapeType: extendedContainerInfo.type})
+      containerEntity.id = extendedContainerInfo.id
+      if (extendedContainerInfo.rotation) {
+        containerEntity.rotation = new Rotation(extendedContainerInfo.rotation, extendedContainerInfo.width / 2, extendedContainerInfo.height / 2)
+      }
+      containerEntity.shape.modifier = SystemUtils.parsePointString(extendedContainerInfo.modifier)
+      containerEntity.shape.adapter = SystemUtils.parsePointString(extendedContainerInfo.adapter)
+      containerEntity.shape.adapterSize = extendedContainerInfo.adapterSize
+  
+      containerEntity.removeAllItems()
+      itemInfo.items.forEach(childItemInfo => {
+        let childItem = OperationHelper.loadTableCellEntity(childItemInfo)
+        containerEntity.addItem(childItem)
+      })
+      return containerEntity
     }
-    containerEntity.shape.modifier = SystemUtils.parsePointString(containerInfo.modifier)
-    containerEntity.shape.adapter = SystemUtils.parsePointString(containerInfo.adapter)
-    containerEntity.shape.adapterSize = containerInfo.adapterSize
-
-    containerEntity.removeAllItems()
-    itemInfo.items.forEach(childItemInfo => {
-      let childItem = OperationHelper.loadTableCellEntity(childItemInfo)
-      containerEntity.addItem(childItem)
-    })
-    return containerEntity
   }
 
 
@@ -609,6 +655,10 @@ export class OperationHelper {
       editorItemInfo.lineWidth = editorItem.lineWidth
     }
 
+    editorItemInfo.textAlignment = SystemUtils.generateTextAlignment(editorItem.textAlignment)
+    editorItemInfo.textVerticalAlignment = SystemUtils.generateTextVerticalAligment(editorItem.textVerticalAlignment)
+    editorItemInfo.stroked = editorItem.stroked
+    editorItemInfo.filled = editorItem.filled
     const itemCount = editorItem.items.length
     for (let i = 0; i < itemCount; i++) {
       const childItem = editorItem.items[i]
