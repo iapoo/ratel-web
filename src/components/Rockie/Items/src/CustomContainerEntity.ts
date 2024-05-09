@@ -66,12 +66,13 @@ export class CustomContainerEntity extends ContainerEntity {
     const customTypeInfo = this.parseTypeInfo(shapeOptions)
     this._shape = new CustomContainerShape(left, top, width, height, this.buildShape, customTypeInfo)
   }
+
   public get types(): Type[] {
     return CustomContainerEntityTypes
   }
 
   public get category(): string {
-    return Categories.CUSTOM_SHAPE
+    return Categories.CUSTOM_CONTAINER
   }
 
   public buildShape(theThis: CustomContainerShape) {

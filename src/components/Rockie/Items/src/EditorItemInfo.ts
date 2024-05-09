@@ -1,5 +1,6 @@
 /* eslint-disable max-params */
 
+import { TextAlignment, TextVerticalAlignment } from "@/components/Engine"
 import { StyleInfo } from "../../Shapes/src/EntityUtils"
 
 export class EditorItemInfo {
@@ -21,6 +22,10 @@ export class EditorItemInfo {
     public fillColor: string | null
     public lineWidth: number | null
     public locked: boolean = false
+    public textAlignment: string = ''
+    public textVerticalAlignment: string = ''
+    public stroked: boolean = true
+    public filled: boolean  = true
 
     public constructor (type = 'Shape', category = 'Rectangle', left = 0, top = 0, width = 100, height = 100, text = '' 
         , rotation = 0, styles: StyleInfo[] = [], useTheme = true, strokeColor: string | null = null

@@ -62,7 +62,7 @@ export class UMLContainerShape extends ContainerEntity {
     }
 
     public get category(): string {
-      return Categories.CONTAINER
+      return Categories.EXTENDED_CONTAINER
     }   
 
     protected parseEntityShapeType(type: string): EntityShapeType {
