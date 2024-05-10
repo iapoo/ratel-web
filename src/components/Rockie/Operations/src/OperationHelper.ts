@@ -47,7 +47,7 @@ export class OperationHelper {
         editorItem = this.loadCustomTable(itemInfo)
         break
       case Categories.FRAME:
-        editorItem = this.loadFrame(itemInfo)
+        editorItem = this.loadFrame(itemInfo, editor)
         break
       case Categories.GROUP:
         editorItem = this.loadGroup(itemInfo)
@@ -81,7 +81,7 @@ export class OperationHelper {
     //Need to use correct StyleInfo    
     OperationHelper.fixStyleInfo(itemInfo)    
     editorItem.shape.styles = StyleInfo.makeStyles(itemInfo.styles)
-    if(itemInfo.category != Categories.TABLE) {
+    if(itemInfo.category != Categories.TABLE && itemInfo.category != Categories.FRAME) {
       itemInfo.items.forEach(childItemInfo => {
         let childItem = OperationHelper.loadItem(childItemInfo, editor)
         editorItem.addItem(childItem)
@@ -292,34 +292,35 @@ export class OperationHelper {
     return shapeEntity
 }
 
-  public static loadFrame(itemInfo: EditorItemInfo): ShapeEntity {
+  public static loadFrame(itemInfo: EditorItemInfo, editor: Editor): ShapeEntity {
     if(!OperationHelper.initialized) {
       OperationHelper.initializeCustomEntities()
     }
     const frameInfo = itemInfo as FrameEntityInfo
     const frameTypeInfo = OperationHelper.frameShapeTypes.get(frameInfo.type)
     const shapeTypes: ShapeType[] = []
-    let containerEntity: FrameEntity
+    let frameEntity: FrameEntity
     if(frameTypeInfo) {
       shapeTypes.push(frameTypeInfo.shapeType)
-      containerEntity = new frameTypeInfo.type(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, {shapeType: frameInfo.type}, shapeTypes)
+      frameEntity = new frameTypeInfo.type(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, {shapeType: frameInfo.type}, shapeTypes)
     } else {
-      containerEntity = new FrameEntity(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, {shapeType: frameInfo.type}, shapeTypes)
+      frameEntity = new FrameEntity(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, {shapeType: frameInfo.type}, shapeTypes)
     }
-    containerEntity.id = frameInfo.id
+    frameEntity.id = frameInfo.id
     if (frameInfo.rotation) {
-      containerEntity.rotation = new Rotation(frameInfo.rotation, frameInfo.width / 2, frameInfo.height / 2)
+      frameEntity.rotation = new Rotation(frameInfo.rotation, frameInfo.width / 2, frameInfo.height / 2)
     }
-    containerEntity.shape.modifier = SystemUtils.parsePointString(frameInfo.modifier)
-    containerEntity.shape.adapter = SystemUtils.parsePointString(frameInfo.adapter)
-    containerEntity.shape.adapterSize = frameInfo.adapterSize
+    frameEntity.text = frameInfo.text
+    frameEntity.shape.modifier = SystemUtils.parsePointString(frameInfo.modifier)
+    frameEntity.shape.adapter = SystemUtils.parsePointString(frameInfo.adapter)
+    frameEntity.shape.adapterSize = frameInfo.adapterSize
 
-    containerEntity.removeAllItems()
+    frameEntity.removeAllItems()
     itemInfo.items.forEach(childItemInfo => {
-      let childItem = OperationHelper.loadTableCellEntity(childItemInfo)
-      containerEntity.addItem(childItem)
+      let childItem = OperationHelper.loadItem(childItemInfo, editor)
+      frameEntity.addItem(childItem)
     })
-    return containerEntity
+    return frameEntity
   }
 
   public static loadGroup(itemInfo: EditorItemInfo): ShapeEntity {
