@@ -65,7 +65,7 @@ export class UMLBasicShape extends ShapeEntity {
     }
 
     public get category(): string {
-      return Categories.SHAPE
+      return Categories.EXTENDED_SHAPE
     }   
 
     private initializeShape() {

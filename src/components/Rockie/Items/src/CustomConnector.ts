@@ -1,6 +1,7 @@
 import { Graphics, MathUtils, ParagraphDirection, Point2, Rectangle, StrokeDashStyle } from '@/components/Engine'
 import { Connector, ConnectorArrowTypes } from '@/components/Rockie/Items/src/Connector'
 import { ConnectorType } from '../../Shapes'
+import { Categories } from './Item'
 
 export class CustomConnectors {
   public static TYPE_INHERITANCE = 'CustomConnector'
@@ -51,6 +52,10 @@ export class CustomConnector extends Connector {
 
     public get connectorTypeInfo() {
       return this._connectorTypeInfo
+    }
+
+    public get category() {
+      return Categories.CUSTOM_CONNECTOR
     }
     
     private findConnectorTypeInfo(connectorTypeInfoName: string) {

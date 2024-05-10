@@ -4,6 +4,7 @@ import { CustomContainerShape } from '../../../Shapes'
 import { CustomEntity, Shapes } from '../../../Items'
 import { Type } from '../../../Items/src/Item'
 import { CustomContainerEntity } from '@/components/Rockie/Items/src/CustomContainerEntity'
+import { ShapeType } from '@/components/Rockie/Items/src/ShapeEntity'
 
 export class UMLCustomContainers {
   public static TYPE_ACTOR_LIFELINE = 'Actor Lifeline'
@@ -27,8 +28,8 @@ export const UMLCustomContainerTypes = [
 
 export class UMLCustomContainer extends CustomContainerEntity {
   
-  public constructor(left: number, top: number, width: number, height: number, typeName: string) {
-    super(left, top, width, height, '', {shapeType: typeName}, UMLCustomContainerTypes)
+  public constructor(left: number, top: number, width: number, height: number, typeName: string, shapeTypes: ShapeType[] = UMLCustomContainerTypes) {
+    super(left, top, width, height, typeName, shapeTypes)
     const customTypeInfo = this.parseTypeInfo({shapeType: typeName})
     this._shape = new CustomContainerShape(left, top, width, height, this.buildShape, customTypeInfo)
     this.initializeTheme()

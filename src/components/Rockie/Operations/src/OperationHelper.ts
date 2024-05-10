@@ -1,7 +1,7 @@
 /* eslint-disable max-params */
 
 import { SystemUtils } from "@/components/Workspace/Utils"
-import { Categories, CellEntity, Connector, ConnectorArrowInfo, ContainerEntity, ContainerInfo, CustomEntity, CustomShapeInfo, CustomTableEntity, CustomTableInfo, EditorItem, EditorItemInfo, Entity, FrameEntity, FrameEntityInfo, GroupEntity, ImageContainer, ImageContainerInfo, Item, LineEntity, ShapeEntity, SvgContainer, SvgContainerInfo, TableEntity } from "../../Items"
+import { Categories, CellEntity, Connector, ConnectorArrowInfo, ContainerEntity, ContainerInfo, CustomConnector, CustomConnectorInfo, CustomEntity, CustomShapeInfo, CustomTableEntity, CustomTableInfo, EditorItem, EditorItemInfo, Entity, FrameEntity, FrameEntityInfo, GroupEntity, ImageContainer, ImageContainerInfo, Item, LineEntity, ShapeEntity, SvgContainer, SvgContainerInfo, TableEntity } from "../../Items"
 import { ConnectorInfo } from "../../Items/src/ConnectorInfo"
 import { LineInfo } from "../../Items/src/LineInfo"
 import { Rotation } from "@/components/Engine"
@@ -12,9 +12,10 @@ import { ConnectorMode, ConnectorType } from "../../Shapes"
 import { TableInfo } from "../../Items/src/TableInfo"
 import { ThemeUtils } from "@/components/Rockie/Theme"
 import { Editor } from "../../Editor"
-import { ContainerShapeType, ExtendedContainerTypes, CustomContainerType, CustomContainers, CustomTableShapeType, CustomTableShapes, CustomShapeType, CustomShapes, ExtendConnectors, ExtendedConnectorType, ExtendedShapeType, ExtendedShapes, FrameShapeType, FrameShapes } from "../../Utils/src/CommonUtils"
+import { ContainerShapeType, ExtendedContainerTypes, CustomContainerType, CustomContainers, CustomTableShapeType, CustomTableShapes, CustomShapeType, CustomShapes, CustomConnectors, CustomConnectorType, ExtendedShapeType, ExtendedShapes, FrameShapeType, FrameShapes } from "../../Utils/src/CommonUtils"
 import { CustomContainerEntity } from "../../Items/src/CustomContainerEntity"
 import { ShapeType } from "../../Items/src/ShapeEntity"
+import { CustomConnectorTypeInfo } from "../../Items/src/CustomConnector"
 
 export class OperationHelper {
 
@@ -23,7 +24,7 @@ export class OperationHelper {
   private static customTableShapes = new Map<string, CustomTableShapeType>()
   private static extendedContainerTypes = new Map<string, ContainerShapeType>()
   private static extendedShapeTypes = new Map<string, ExtendedShapeType>()
-  private static extendedConnectorTypes = new Map<string, ExtendedConnectorType>()
+  private static CustomConnectorTypes = new Map<string, CustomConnectorType>()
   private static frameShapeTypes = new Map<string, FrameShapeType>()
   private static customContainerTypes = new Map<string, CustomContainerType>()
 
@@ -66,8 +67,8 @@ export class OperationHelper {
       case Categories.EXTENDED_SHAPE:
         editorItem = this.loadExtendedShapeEntity(itemInfo)
         break
-      case Categories.EXTENDED_CONNECTOR:
-        editorItem = this.loadExtendedConnector(itemInfo, editor)
+      case Categories.CUSTOM_CONNECTOR:
+        editorItem = this.loadCustomConnector(itemInfo, editor)
         break
       case Categories.CUSTOM_CONTAINER:
         editorItem = this.loadCustomContainerEntity(itemInfo)
@@ -205,40 +206,46 @@ export class OperationHelper {
     return connector
   }
 
-  public static loadExtendedConnector(itemInfo: EditorItemInfo, editor: Editor): Connector {
+  public static loadCustomConnector(itemInfo: EditorItemInfo, editor: Editor): Connector {
     if(!OperationHelper.initialized) {
       OperationHelper.initializeCustomEntities()
     }
-    let connectorInfo = itemInfo as ConnectorInfo
-    let start = SystemUtils.parsePointString(connectorInfo.start)
-    let end = SystemUtils.parsePointString(connectorInfo.end)
+    const customConnectorInfo = itemInfo as CustomConnectorInfo
+    const customConnectorTypeInfo = OperationHelper.CustomConnectorTypes.get(customConnectorInfo.type)    
+    let start = SystemUtils.parsePointString(customConnectorInfo.start)
+    let end = SystemUtils.parsePointString(customConnectorInfo.end)
+    const customConnectorTypeInfos: CustomConnectorTypeInfo[] = []
     let connector = new Connector(start, end)
-    connector.connectorType = connectorInfo.connectorType ? CommonUtils.parseConnectorTypeString(connectorInfo.connectorType) : ConnectorType.Orthogonal
-    if(connectorInfo.source) {
+    if(customConnectorTypeInfo) {
+      customConnectorTypeInfos.push(customConnectorTypeInfo.shapeType)
+      connector = new customConnectorTypeInfo.type(start, end, customConnectorTypeInfo.shapeType.name, customConnectorTypeInfos)
+    }
+    connector.connectorType = customConnectorInfo.connectorType ? CommonUtils.parseConnectorTypeString(customConnectorInfo.connectorType) : ConnectorType.Orthogonal
+    if(customConnectorInfo.source) {
       //connector.source = connectorInfo.source
     }
-    if(connectorInfo.target) {
+    if(customConnectorInfo.target) {
 
     }
-    if(connectorInfo.sourceJoint) {
-      connector.sourceJoint = SystemUtils.parsePointString(connectorInfo.sourceJoint)
+    if(customConnectorInfo.sourceJoint) {
+      connector.sourceJoint = SystemUtils.parsePointString(customConnectorInfo.sourceJoint)
     }
-    if(connectorInfo.targetJoint) {
-      connector.targetJoint = SystemUtils.parsePointString(connectorInfo.targetJoint)
+    if(customConnectorInfo.targetJoint) {
+      connector.targetJoint = SystemUtils.parsePointString(customConnectorInfo.targetJoint)
     }
-    connector.id = connectorInfo.id
-    connector.text = connectorInfo.text
-    connector.startArrow = SystemUtils.parseConnectorArrow(connectorInfo.startArrow!)
-    connector.endArrow = SystemUtils.parseConnectorArrow(connectorInfo.endArrow!)
-    connector.curveStartModifier = SystemUtils.parsePointString(connectorInfo.curveStartModifier)
-    connector.curveEndModifier = SystemUtils.parsePointString(connectorInfo.curveEndModifier)
-    connector.startDirection = SystemUtils.parseConnectorDirection(connectorInfo.startDirection)
-    connector.endDirection = SystemUtils.parseConnectorDirection(connectorInfo.endDirection)
-    connector.orthogonalPoints = SystemUtils.parsePointsString(connectorInfo.orthogonalPoints)
-    connector.connectorMode = connectorInfo.connectorMode ? SystemUtils.parseConnectorMode(connectorInfo.connectorMode) : ConnectorMode.Single
-    connector.connectorDoubleLineGap = connectorInfo.connectorDoubleLineGap
-    connector.connectorDoubleLineArrowLength = connectorInfo.connectorDoubleLineArrowLength
-    connector.connectorDoubleLineArrowDistance = connectorInfo.connectorDoubleLineArrowDistance
+    connector.id = customConnectorInfo.id
+    connector.text = customConnectorInfo.text
+    connector.startArrow = SystemUtils.parseConnectorArrow(customConnectorInfo.startArrow!)
+    connector.endArrow = SystemUtils.parseConnectorArrow(customConnectorInfo.endArrow!)
+    connector.curveStartModifier = SystemUtils.parsePointString(customConnectorInfo.curveStartModifier)
+    connector.curveEndModifier = SystemUtils.parsePointString(customConnectorInfo.curveEndModifier)
+    connector.startDirection = SystemUtils.parseConnectorDirection(customConnectorInfo.startDirection)
+    connector.endDirection = SystemUtils.parseConnectorDirection(customConnectorInfo.endDirection)
+    connector.orthogonalPoints = SystemUtils.parsePointsString(customConnectorInfo.orthogonalPoints)
+    connector.connectorMode = customConnectorInfo.connectorMode ? SystemUtils.parseConnectorMode(customConnectorInfo.connectorMode) : ConnectorMode.Single
+    connector.connectorDoubleLineGap = customConnectorInfo.connectorDoubleLineGap
+    connector.connectorDoubleLineArrowLength = customConnectorInfo.connectorDoubleLineArrowLength
+    connector.connectorDoubleLineArrowDistance = customConnectorInfo.connectorDoubleLineArrowDistance
     return connector
   }
 
@@ -262,19 +269,37 @@ export class OperationHelper {
     if(!OperationHelper.initialized) {
       OperationHelper.initializeCustomEntities()
     }
-    let shapeInfo = itemInfo as ShapeInfo
-    const shapeEntity = new ShapeEntity(shapeInfo.left, shapeInfo.top, shapeInfo.width, shapeInfo.height, {shapeType: shapeInfo.type})
-    shapeEntity.type = shapeInfo.type
-    shapeEntity.text = shapeInfo.text
-    shapeEntity.id = shapeInfo.id
-    if (shapeInfo.rotation) {
-      shapeEntity.rotation = new Rotation(shapeInfo.rotation, shapeEntity.width / 2, shapeEntity.height / 2)
+    let extendedShapeInfo = itemInfo as CustomShapeInfo
+    const extendedShapeTypeInfo = OperationHelper.extendedShapeTypes.get(extendedShapeInfo.type)
+    const extendedShapeTypeInfos: ShapeType[] = []
+    if(extendedShapeTypeInfo) {
+      extendedShapeTypeInfos.push(extendedShapeTypeInfo.shapeType)
+      const shapeEntity = new extendedShapeTypeInfo.type(extendedShapeInfo.left, extendedShapeInfo.top, extendedShapeInfo.width, extendedShapeInfo.height, {shapeType: extendedShapeInfo.type}, extendedShapeTypeInfos)
+      shapeEntity.type = extendedShapeInfo.type
+      shapeEntity.text = extendedShapeInfo.text
+      shapeEntity.id = extendedShapeInfo.id
+      if (extendedShapeInfo.rotation) {
+        shapeEntity.rotation = new Rotation(extendedShapeInfo.rotation, shapeEntity.width / 2, shapeEntity.height / 2)
+      }
+      shapeEntity.shape.modifier = SystemUtils.parsePointString(extendedShapeInfo.modifier)
+      shapeEntity.shape.controller  = SystemUtils.parsePointString(extendedShapeInfo.controller)
+      shapeEntity.shape.adapter = SystemUtils.parsePointString(extendedShapeInfo.adapter)
+      shapeEntity.shape.adapterSize = extendedShapeInfo.adapterSize
+      return shapeEntity
+    } else {
+      const shapeEntity = new ShapeEntity(extendedShapeInfo.left, extendedShapeInfo.top, extendedShapeInfo.width, extendedShapeInfo.height, {shapeType: extendedShapeInfo.type})
+      shapeEntity.type = extendedShapeInfo.type
+      shapeEntity.text = extendedShapeInfo.text
+      shapeEntity.id = extendedShapeInfo.id
+      if (extendedShapeInfo.rotation) {
+        shapeEntity.rotation = new Rotation(extendedShapeInfo.rotation, shapeEntity.width / 2, shapeEntity.height / 2)
+      }
+      shapeEntity.shape.modifier = SystemUtils.parsePointString(extendedShapeInfo.modifier)
+      shapeEntity.shape.controller  = SystemUtils.parsePointString(extendedShapeInfo.controller)
+      shapeEntity.shape.adapter = SystemUtils.parsePointString(extendedShapeInfo.adapter)
+      shapeEntity.shape.adapterSize = extendedShapeInfo.adapterSize
+      return shapeEntity
     }
-    shapeEntity.shape.modifier = SystemUtils.parsePointString(shapeInfo.modifier)
-    shapeEntity.shape.controller  = SystemUtils.parsePointString(shapeInfo.controller)
-    shapeEntity.shape.adapter = SystemUtils.parsePointString(shapeInfo.adapter)
-    shapeEntity.shape.adapterSize = shapeInfo.adapterSize
-    return shapeEntity
   }
 
   public static loadFrame(itemInfo: EditorItemInfo): ShapeEntity {
@@ -355,8 +380,8 @@ export class OperationHelper {
     ExtendedShapes.forEach(customShape => {
       OperationHelper.extendedShapeTypes.set(customShape.name,{type: customShape.type, shapeType: customShape.typeInfo})
     })
-    ExtendConnectors.forEach(customShape => {
-      OperationHelper.extendedConnectorTypes.set(customShape.name, {type: customShape.type, shapeType: customShape.typeInfo})
+    CustomConnectors.forEach(customShape => {
+      OperationHelper.CustomConnectorTypes.set(customShape.name, {type: customShape.type, shapeType: customShape.typeInfo})
     })
     FrameShapes.forEach(customShape => {
       OperationHelper.frameShapeTypes.set(customShape.name, {type: customShape.type, shapeType: customShape.typeInfo})
@@ -502,26 +527,45 @@ export class OperationHelper {
   }
 
 
-  public static loadCustomContainerEntity(itemInfo: EditorItemInfo): ContainerEntity {
+  public static loadCustomContainerEntity(itemInfo: EditorItemInfo): CustomContainerEntity {
     if(!OperationHelper.initialized) {
       OperationHelper.initializeCustomEntities()
     }
-    const containerInfo = itemInfo as ContainerInfo
-    const containerEntity = new ContainerEntity(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, {shapeType: containerInfo.type})
-    containerEntity.id = containerInfo.id
-    if (containerInfo.rotation) {
-      containerEntity.rotation = new Rotation(containerInfo.rotation, containerInfo.width / 2, containerInfo.height / 2)
+    const extendedContainerInfo = itemInfo as ContainerInfo
+    const extendedContainerTypeInfo = OperationHelper.customContainerTypes.get(extendedContainerInfo.type)
+    if(extendedContainerTypeInfo) {
+      const containerEntity = new extendedContainerTypeInfo.type(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, extendedContainerInfo.type, [extendedContainerTypeInfo.shapeType])
+      containerEntity.id = extendedContainerInfo.id
+      if (extendedContainerInfo.rotation) {
+        containerEntity.rotation = new Rotation(extendedContainerInfo.rotation, extendedContainerInfo.width / 2, extendedContainerInfo.height / 2)
+      }
+      containerEntity.shape.modifier = SystemUtils.parsePointString(extendedContainerInfo.modifier)
+      containerEntity.shape.adapter = SystemUtils.parsePointString(extendedContainerInfo.adapter)
+      containerEntity.shape.adapterSize = extendedContainerInfo.adapterSize
+  
+      containerEntity.removeAllItems()
+      itemInfo.items.forEach(childItemInfo => {
+        let childItem = OperationHelper.loadTableCellEntity(childItemInfo)
+        containerEntity.addItem(childItem)
+      })
+      return containerEntity
+    } else {
+      const containerEntity = new CustomContainerEntity(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, extendedContainerInfo.type)
+      containerEntity.id = extendedContainerInfo.id
+      if (extendedContainerInfo.rotation) {
+        containerEntity.rotation = new Rotation(extendedContainerInfo.rotation, extendedContainerInfo.width / 2, extendedContainerInfo.height / 2)
+      }
+      containerEntity.shape.modifier = SystemUtils.parsePointString(extendedContainerInfo.modifier)
+      containerEntity.shape.adapter = SystemUtils.parsePointString(extendedContainerInfo.adapter)
+      containerEntity.shape.adapterSize = extendedContainerInfo.adapterSize
+  
+      containerEntity.removeAllItems()
+      itemInfo.items.forEach(childItemInfo => {
+        let childItem = OperationHelper.loadTableCellEntity(childItemInfo)
+        containerEntity.addItem(childItem)
+      })
+      return containerEntity
     }
-    containerEntity.shape.modifier = SystemUtils.parsePointString(containerInfo.modifier)
-    containerEntity.shape.adapter = SystemUtils.parsePointString(containerInfo.adapter)
-    containerEntity.shape.adapterSize = containerInfo.adapterSize
-
-    containerEntity.removeAllItems()
-    itemInfo.items.forEach(childItemInfo => {
-      let childItem = OperationHelper.loadTableCellEntity(childItemInfo)
-      containerEntity.addItem(childItem)
-    })
-    return containerEntity
   }
 
   public static loadTableEntity(itemInfo: EditorItemInfo): TableEntity {
@@ -626,11 +670,11 @@ export class OperationHelper {
       case Categories.EXTENDED_SHAPE:
         editorItemInfo = this.saveExtendedShape(editorItem as ShapeEntity)
         break;
-      case Categories.EXTENDED_CONNECTOR:
-        editorItemInfo = this.saveExtendedConnector(editorItem as Connector)
+      case Categories.CUSTOM_CONNECTOR:
+        editorItemInfo = this.saveCustomConnector(editorItem as CustomConnector)
         break;
       case Categories.CUSTOM_CONTAINER:
-        editorItemInfo = this.saveCustomContainer(editorItem as ContainerEntity)
+        editorItemInfo = this.saveCustomContainer(editorItem as CustomContainerEntity)
         break;
       case Categories.CUSTOM_TABLE:
         editorItemInfo = this.saveCustomTable(editorItem as CustomTableEntity)
@@ -694,7 +738,7 @@ export class OperationHelper {
 
   public static  saveExtendedShape(customEntity: ShapeEntity) : EditorItemInfo {
     let styleInfos: StyleInfo[] = Style.makeStyleInfos(customEntity.shape.styles)
-    let shapeinfo = new ShapeInfo(customEntity.type, customEntity.category, customEntity.left, customEntity.top, customEntity.width, customEntity.height, customEntity.text, customEntity.rotation.radius, styleInfos)
+    let shapeinfo = new CustomShapeInfo(customEntity.type, customEntity.category, customEntity.left, customEntity.top, customEntity.width, customEntity.height, customEntity.text, customEntity.rotation.radius, styleInfos)
     shapeinfo.rotation = customEntity.rotation.radius
     shapeinfo.modifier = customEntity.shape.modifier.x + ',' + customEntity.shape.modifier.y
     shapeinfo.controller = customEntity.shape.controller.x + ',' + customEntity.shape.controller.y
@@ -757,7 +801,7 @@ export class OperationHelper {
     return containerInfo
   }
 
-  public static  saveCustomContainer(container: ContainerEntity) : EditorItemInfo {
+  public static  saveCustomContainer(container: CustomContainerEntity) : EditorItemInfo {
     let styleInfos: StyleInfo[] = Style.makeStyleInfos(container.shape.styles)
     let containerInfo = new ContainerInfo(container.type, container.category, container.left, container.top, container.width, container.height, container.text,  container.rotation.radius, styleInfos)
     containerInfo.rotation = container.rotation.radius
@@ -842,35 +886,35 @@ export class OperationHelper {
   }
 
 
-  public static  saveExtendedConnector(connector: Connector) : EditorItemInfo {
-    let styleInfos: StyleInfo[] = Style.makeStyleInfos(connector.shape.styles)
-    let connectorInfo = new ConnectorInfo(connector.start.x, connector.start.y, connector.end.x, connector.end.y, connector.text, connector.rotation.radius, styleInfos)
-    if(connector.source) {
-      connectorInfo.source = connector.source.id
+  public static  saveCustomConnector(customConnector: CustomConnector) : EditorItemInfo {
+    let styleInfos: StyleInfo[] = Style.makeStyleInfos(customConnector.shape.styles)
+    let connectorInfo = new CustomConnectorInfo(customConnector.connectorTypeInfo.name, customConnector.start.x, customConnector.start.y, customConnector.end.x, customConnector.end.y, customConnector.text, customConnector.rotation.radius, styleInfos)
+    if(customConnector.source) {
+      connectorInfo.source = customConnector.source.id
     }
-    if(connector.target) {
-      connectorInfo.target = connector.target.id
+    if(customConnector.target) {
+      connectorInfo.target = customConnector.target.id
     }
-    if(connector.sourceJoint) {
-      connectorInfo.sourceJoint = SystemUtils.generatePointString(connector.sourceJoint)
+    if(customConnector.sourceJoint) {
+      connectorInfo.sourceJoint = SystemUtils.generatePointString(customConnector.sourceJoint)
     }
-    if(connector.targetJoint) {
-        connectorInfo.targetJoint = SystemUtils.generatePointString(connector.targetJoint)
+    if(customConnector.targetJoint) {
+        connectorInfo.targetJoint = SystemUtils.generatePointString(customConnector.targetJoint)
     }
     
-    connectorInfo.text = connector.text
-    connectorInfo.connectorType = connector.connectorType ?  CommonUtils.parseConnectorType(connector.connectorType) : null
-    connectorInfo.startArrow = SystemUtils.generateConnectorArrow(connector.startArrow)
-    connectorInfo.endArrow = SystemUtils.generateConnectorArrow(connector.endArrow)
-    connectorInfo.curveStartModifier = SystemUtils.generatePointString(connector.curveStartModifier)
-    connectorInfo.curveEndModifier = SystemUtils.generatePointString(connector.curveEndModifier)
-    connectorInfo.startDirection = SystemUtils.generateConnectorDirection(connector.startDirection)
-    connectorInfo.endDirection = SystemUtils.generateConnectorDirection(connector.endDirection)
-    connectorInfo.orthogonalPoints = SystemUtils.generatePointsString(connector.orthogonalPoints)
-    connectorInfo.connectorMode = SystemUtils.generateConnectorMode(connector.connectorMode)
-    connectorInfo.connectorDoubleLineGap = connector.connectorDoubleLineGap
-    connectorInfo.connectorDoubleLineArrowLength = connector.connectorDoubleLineArrowLength
-    connectorInfo.connectorDoubleLineArrowDistance = connector.connectorDoubleLineArrowDistance
+    connectorInfo.text = customConnector.text
+    connectorInfo.connectorType = customConnector.connectorType ?  CommonUtils.parseConnectorType(customConnector.connectorType) : null
+    connectorInfo.startArrow = SystemUtils.generateConnectorArrow(customConnector.startArrow)
+    connectorInfo.endArrow = SystemUtils.generateConnectorArrow(customConnector.endArrow)
+    connectorInfo.curveStartModifier = SystemUtils.generatePointString(customConnector.curveStartModifier)
+    connectorInfo.curveEndModifier = SystemUtils.generatePointString(customConnector.curveEndModifier)
+    connectorInfo.startDirection = SystemUtils.generateConnectorDirection(customConnector.startDirection)
+    connectorInfo.endDirection = SystemUtils.generateConnectorDirection(customConnector.endDirection)
+    connectorInfo.orthogonalPoints = SystemUtils.generatePointsString(customConnector.orthogonalPoints)
+    connectorInfo.connectorMode = SystemUtils.generateConnectorMode(customConnector.connectorMode)
+    connectorInfo.connectorDoubleLineGap = customConnector.connectorDoubleLineGap
+    connectorInfo.connectorDoubleLineArrowLength = customConnector.connectorDoubleLineArrowLength
+    connectorInfo.connectorDoubleLineArrowDistance = customConnector.connectorDoubleLineArrowDistance
 
     return connectorInfo
   }

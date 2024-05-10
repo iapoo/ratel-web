@@ -29,7 +29,7 @@ export interface ExtendedShapeType {
     shapeType: ShapeType
 }
 
-export interface ExtendedConnectorType {
+export interface CustomConnectorType {
     type: typeof CustomConnector
     shapeType: CustomConnectorTypeInfo
 }
@@ -66,7 +66,7 @@ export const ExtendedShapes = [
     ...UMLBasicShapes
 ]
 
-export const ExtendConnectors = [
+export const CustomConnectors = [
     ...UMLConnectors
 ]
 

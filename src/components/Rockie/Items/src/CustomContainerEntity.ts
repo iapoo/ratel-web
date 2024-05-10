@@ -59,10 +59,10 @@ export const CustomContainerEntityTypes = [
 
 export class CustomContainerEntity extends ContainerEntity {
   
-  public constructor(left: number, top: number, width: number, height: number, name: string = '',
-      shapeOptions: ShapeOptions = { shapeType: CustomContainerEntities.TYPE_OBJECT_LIFELINE },
+  public constructor(left: number, top: number, width: number, height: number, name: string = CustomContainerEntities.TYPE_OBJECT_LIFELINE,
       shapeTypes: ShapeType[] = CustomContainerEntityTypes) {
-    super(left, top, width, height, shapeOptions, shapeTypes)
+    super(left, top, width, height, { shapeType: name }, shapeTypes)
+    const shapeOptions = { shapeType: name }
     const customTypeInfo = this.parseTypeInfo(shapeOptions)
     this._shape = new CustomContainerShape(left, top, width, height, this.buildShape, customTypeInfo)
   }
