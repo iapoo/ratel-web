@@ -112,6 +112,7 @@ export class Connector extends Item {
   private _connectorDoubleLineGap: number
   private _connectorDoubleLineArrowLength: number
   private _connectorDoubleLineArrowDistance: number
+  private _autoRefreshLines: boolean
 
   public constructor (start: Point2, end: Point2, startDirection: ConnectorDirection = ConnectorDirection.Right, endDirection: ConnectorDirection = ConnectorDirection.Left) {
     super(Math.min(start.x, end.x), Math.min(start.y, end.y), Math.abs(start.x - end.x), Math.abs(start.y - end.y))
@@ -136,12 +137,21 @@ export class Connector extends Item {
     //}
     this._startDirection = startDirection
     this._endDirection = endDirection
+    this._autoRefreshLines = true
     this.initializeCurveModifiers()
     this._connectorShape.orthogonalPoints = this._orthogonalPoints
     this._connectorDoubleLineGap = Consts.DOUBLE_LINE_GAP_DEFAULT
     this._connectorDoubleLineArrowLength = Consts.DOUBLE_LINE_ARROW_LENGTH_DEFAULT
     this._connectorDoubleLineArrowDistance = Consts.DOUBLE_LINE_ARROW_DISTANCE_DEFAULT
     this.updateTheme()
+  }
+
+  public get autoRefreshLines() {
+    return this._autoRefreshLines
+  }
+
+  public set autoRefreshLines(value: boolean) {
+    this._autoRefreshLines = value
   }
 
   public get source (): Entity | undefined {
@@ -318,9 +328,11 @@ export class Connector extends Item {
     this._start = value
     this._connectorShape.start = value
     this.boundary = Rectangle.makeLTWH(Math.min(this._start.x, this._end.x), Math.min(this._start.y, this._end.y), Math.abs(this._start.x - this._end.x), Math.abs(this._start.y - this._end.y))
-    this._orthogonalPoints = this.initializeOrthogonalPoints()
-    this._connectorShape.orthogonalPoints = this._orthogonalPoints    
-    this.initializeCurveModifiers()
+    if(this._autoRefreshLines) {
+      this._orthogonalPoints = this.initializeOrthogonalPoints()
+      this._connectorShape.orthogonalPoints = this._orthogonalPoints    
+      this.initializeCurveModifiers()
+    }
   }
 
   public get end (): Point2 {
@@ -331,9 +343,11 @@ export class Connector extends Item {
     this._end = value
     this._connectorShape.end = value
     this.boundary = Rectangle.makeLTWH(Math.min(this._start.x, this._end.x), Math.min(this._start.y, this._end.y), Math.abs(this._start.x - this._end.x), Math.abs(this._start.y - this._end.y))
-    this._orthogonalPoints = this.initializeOrthogonalPoints()
-    this._connectorShape.orthogonalPoints = this._orthogonalPoints   
-    this.initializeCurveModifiers()
+    if(this._autoRefreshLines) {
+      this._orthogonalPoints = this.initializeOrthogonalPoints()
+      this._connectorShape.orthogonalPoints = this._orthogonalPoints   
+      this.initializeCurveModifiers()
+    }
   }
 
   public get target (): Entity | undefined {
