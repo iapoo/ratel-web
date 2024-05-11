@@ -961,7 +961,7 @@ export class Editor extends Painter {
     } else {
       const clickedEditorItem = this.findEditorItem(e.x, e.y, false)
       const theSelectionLayer = this.selectionLayer as SelectionLayer
-      const isEdge = clickedEditorItem ? this.hasEditorItemJoint(clickedEditorItem, e.x, e.y) : false
+      const isEdge = clickedEditorItem ? this.hasEditorItemJoint(clickedEditorItem, e.x, e.y) && !this.checkParentType(clickedEditorItem, FrameEntity)  : false
       const inClickEditorItem = clickedEditorItem ? this.isInEditorItem(clickedEditorItem, e.x, e.y) : false      
       if (clickedEditorItem && isEdge && !inClickEditorItem) { //Create connector
         const targetPoint = this.findEditorItemJoint(clickedEditorItem, e.x, e.y, false)
@@ -1561,6 +1561,7 @@ export class Editor extends Painter {
       if (shape.intersects(x - Editor.TEST_RADIUS, y - Editor.TEST_RADIUS, Editor.TEST_SIZE, Editor.TEST_SIZE)) {
         result = editorItem
       }
+      // if(!(editorItem instanceof TableEntity) && !(editorItem instanceof FrameEntity)) {
       if(!(editorItem instanceof TableEntity)) {
         for (let i = count - 1; i >= 0; i--) {
           const child = editorItem.items[i]
@@ -1887,7 +1888,7 @@ export class Editor extends Painter {
     const theControllerLayer = this.controllerLayer as ControllerLayer
     const connector = theControllerLayer.getEditorItem(0) as Connector
     const editorItem = this.findEditorItem(e.x, e.y, false)
-    const isEdge = editorItem ? this.hasEditorItemJoint(editorItem, e.x, e.y) : false
+    const isEdge = editorItem ? this.hasEditorItemJoint(editorItem, e.x, e.y) && !this.checkParentType(editorItem, FrameEntity) : false
     //console.log(`create connector ...1 ${editorItem !== connector.source} ${isEdge}`)
     if (editorItem && isEdge) { // && editorItem !== connector.source) {
       //console.log(`create connector ...2`)
@@ -2475,7 +2476,7 @@ export class Editor extends Painter {
     const theSelectionLayer: SelectionLayer = this.selectionLayer as SelectionLayer
     const editorItem = this.findEditorItem(e.x, e.y, false)
     //console.log(`Finding ...... ${editorItem}`)
-    const isEdge = editorItem ? this.hasEditorItemJoint(editorItem, e.x, e.y) : false
+    const isEdge = editorItem ? this.hasEditorItemJoint(editorItem, e.x, e.y) && !this.checkParentType(editorItem, FrameEntity)  : false
     //console.log(` Find editor item edge = ${isEdge}`)
     if (editorItem && isEdge) {
       //console.log(` Check here1`)
@@ -2934,5 +2935,19 @@ export class Editor extends Painter {
     textBox.fillColor = Colors.Transparent
     textBox.strokeColor = Colors.Transparent
     connector.addItem(textBox)
+  }
+
+  private checkParentType(editorItem: EditorItem, parentType: typeof  Item): boolean {
+    let result = false
+    const item = editorItem as Item
+    console.log(`check parent = ${item.parent instanceof parentType}   == ${item.parent}`)
+    let checkItem: Item = item
+    while(checkItem.parent) {
+      if(checkItem.parent instanceof parentType){
+        return true
+      }
+      checkItem = checkItem.parent
+    }
+    return result
   }
 }
