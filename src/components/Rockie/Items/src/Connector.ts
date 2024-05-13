@@ -112,13 +112,16 @@ export class Connector extends Item {
   private _connectorDoubleLineGap: number
   private _connectorDoubleLineArrowLength: number
   private _connectorDoubleLineArrowDistance: number
-  private _autoRefreshLines: boolean
+  private _autoRefreshOrthogonalPoints: boolean
+  private _orthogonalPointsModified: boolean
+  private _orthogonalPointsStartModified: boolean
+  private _orthogonalPointsEndModified: boolean
 
   public constructor (start: Point2, end: Point2, startDirection: ConnectorDirection = ConnectorDirection.Right, endDirection: ConnectorDirection = ConnectorDirection.Left) {
     super(Math.min(start.x, end.x), Math.min(start.y, end.y), Math.abs(start.x - end.x), Math.abs(start.y - end.y))
     this._start = start
     this._end = end
-    this._orthogonalPoints = this.initializeOrthogonalPoints()
+    this._orthogonalPoints = this.initializeOrthogonalPoints(true, true)
     this._shape = new ConnectorShape(start.x, start.y, end.x, end.y, startDirection, endDirection, this._orthogonalPoints)
     this._connectorShape = this._shape as ConnectorShape
     this.type = Connector.CONNECTOR_TYPE_CONNECTOR
@@ -137,7 +140,10 @@ export class Connector extends Item {
     //}
     this._startDirection = startDirection
     this._endDirection = endDirection
-    this._autoRefreshLines = true
+    this._autoRefreshOrthogonalPoints = true
+    this._orthogonalPointsModified = false
+    this._orthogonalPointsStartModified = false
+    this._orthogonalPointsEndModified = false
     this.initializeCurveModifiers()
     this._connectorShape.orthogonalPoints = this._orthogonalPoints
     this._connectorDoubleLineGap = Consts.DOUBLE_LINE_GAP_DEFAULT
@@ -146,12 +152,39 @@ export class Connector extends Item {
     this.updateTheme()
   }
 
-  public get autoRefreshLines() {
-    return this._autoRefreshLines
+  public get autoRefreshOrthogonalPoints() {
+    return this._autoRefreshOrthogonalPoints
   }
 
-  public set autoRefreshLines(value: boolean) {
-    this._autoRefreshLines = value
+  /**
+   * Need this to prevent refresh points while moving 
+   */
+  public set autoRefreshOrthogonalPoints(value: boolean) {
+    this._autoRefreshOrthogonalPoints = value
+  }
+
+  public get orthogonalPointsModified() {
+    return this._orthogonalPointsModified
+  }
+  /**
+   *  Check if user has modified orthogonalPoints
+   */
+  public markOrthogonalPointsModified() {
+    this._orthogonalPointsModified = true
+    this._orthogonalPointsStartModified = false
+    this._orthogonalPointsEndModified = false
+  }
+
+
+  /**
+   *  Reset user has modified start of orthogonalPoints
+   */
+  public get orthogonalPointsStartModified() {
+    return this._orthogonalPointsModified
+  }
+
+  public get orthogonalPointsEndModified() {
+    return this._orthogonalPointsEndModified
   }
 
   public get source (): Entity | undefined {
@@ -328,8 +361,8 @@ export class Connector extends Item {
     this._start = value
     this._connectorShape.start = value
     this.boundary = Rectangle.makeLTWH(Math.min(this._start.x, this._end.x), Math.min(this._start.y, this._end.y), Math.abs(this._start.x - this._end.x), Math.abs(this._start.y - this._end.y))
-    if(this._autoRefreshLines) {
-      this._orthogonalPoints = this.initializeOrthogonalPoints()
+    if(this._autoRefreshOrthogonalPoints) {
+      this._orthogonalPoints = this.initializeOrthogonalPoints(true, false)
       this._connectorShape.orthogonalPoints = this._orthogonalPoints    
       this.initializeCurveModifiers()
     }
@@ -343,8 +376,8 @@ export class Connector extends Item {
     this._end = value
     this._connectorShape.end = value
     this.boundary = Rectangle.makeLTWH(Math.min(this._start.x, this._end.x), Math.min(this._start.y, this._end.y), Math.abs(this._start.x - this._end.x), Math.abs(this._start.y - this._end.y))
-    if(this._autoRefreshLines) {
-      this._orthogonalPoints = this.initializeOrthogonalPoints()
+    if(this._autoRefreshOrthogonalPoints) {
+      this._orthogonalPoints = this.initializeOrthogonalPoints(false, true)
       this._connectorShape.orthogonalPoints = this._orthogonalPoints   
       this.initializeCurveModifiers()
     }
@@ -367,7 +400,7 @@ export class Connector extends Item {
     if (value && this._source && this._sourceJoint) {
       this._start = this._source.worldTransform.makePoint(value)
       this._connectorShape.start = this._start
-      this._orthogonalPoints = this.initializeOrthogonalPoints()
+      this._orthogonalPoints = this.initializeOrthogonalPoints(true, false)
       this._connectorShape.orthogonalPoints = this._orthogonalPoints
       this.boundary = Rectangle.makeLTWH(Math.min(this._start.x, this._end.x), Math.min(this._start.y, this._end.y), Math.abs(this._start.x - this._end.x), Math.abs(this._start.y - this._end.y))
       this.initializeCurveModifiers()
@@ -400,7 +433,7 @@ export class Connector extends Item {
     if (value && this._target && this._targetJoint) {
       this._end = this._target.worldTransform.makePoint(value)
       this._connectorShape.end = this._end
-      this._orthogonalPoints = this.initializeOrthogonalPoints()
+      this._orthogonalPoints = this.initializeOrthogonalPoints(false, true)
       this._connectorShape.orthogonalPoints = this._orthogonalPoints
       this.boundary = Rectangle.makeLTWH(Math.min(this._start.x, this._end.x), Math.min(this._start.y, this._end.y), Math.abs(this._start.x - this._end.x), Math.abs(this._start.y - this._end.y))
       this.initializeCurveModifiers()
@@ -494,7 +527,119 @@ export class Connector extends Item {
     }
   }
 
-  private initializeOrthogonalPoints(): Point2[] {   
+  private initializeOrthogonalPoints(initStart: boolean, initEnd: boolean): Point2[] {   
+    //Default initStart = true, initEnd = true. And we ignore booth initStart and initEnd are false
+    if(this._orthogonalPointsModified && initStart && !initEnd) {
+      return this.initializeOrthogonalPointsWithStart()
+    } else if(this._orthogonalPointsModified && !initStart && initEnd) {
+      return this.initializeOrthogonalPointsWithEnd()
+    } else {
+      return this.initializeOrthogonalPointsWithDefault()
+    }
+  }
+
+  private initializeOrthogonalPointsWithStart(): Point2[] {   
+    const start = new Point2(this.start.x - this.left, this.start.y - this.top)
+    const oldEnd = new Point2(this.end.x - this.left, this.end.y - this.top)
+    let position = this._orthogonalPointsStartModified ? 5 : 2
+    // if(this._orthogonalPointsStartModified) {
+    //   console.log(`aa`)
+    // }
+    this._orthogonalPointsStartModified = true
+    let newEnd = this._orthogonalPoints[position]
+    const offsetX = oldEnd.x - this._orthogonalPoints[this._orthogonalPoints.length - 1].x
+    const offsety = oldEnd.y - this._orthogonalPoints[this._orthogonalPoints.length - 1].y
+    newEnd = new Point2(newEnd.x + offsetX, newEnd.y + offsety)
+    const targetPosition = this.findTargetPositionWithStart()
+    const points: Point2[] = []
+    points.push(new Point2(start.x, start.y))
+    //console.log(`${this.startDirection}`)
+    if (this._source) {
+      switch(this.startDirection) {
+        case ConnectorDirection.Left: {
+          this.initializeOrthogonalPointsLeftWithoutTarget(targetPosition, points, start, newEnd)
+          break
+        }
+        case ConnectorDirection.Top:{
+          this.initializeOrthogonalPointsTopWithoutTarget(targetPosition, points, start, newEnd)
+          break
+        }
+        case ConnectorDirection.Bottom:{
+          this.initializeOrthogonalPointsBottomWithoutTarget(targetPosition, points, start, newEnd)
+          break
+        }
+        case ConnectorDirection.Right:
+        default:{
+          this.initializeOrthogonalPointsRightWithoutTarget(targetPosition, points, start, newEnd)
+          break
+        }
+      } 
+    } else {
+      //console.log(`Exception is here `)
+      this.initializeOrthogonalPointsWithoutSourceTarget(targetPosition, points, start, newEnd)
+    }
+    //console.log(`source = ${this._source} target = ${this._target} equal = ${this._source == this._target}`)
+    points.push(new Point2(newEnd.x, newEnd.y))
+    // if(points.length == 2) {
+    //   console.log(`Exception is here`)
+    // }   
+    const endPoints  = this._orthogonalPoints.slice(position + 1)
+    for(let i = 0; i < endPoints.length; i ++) {
+      endPoints[i] = new Point2(endPoints[i].x + offsetX, endPoints[i].y + offsety)
+    }
+    const result = points.concat(endPoints)
+    return result
+  }
+
+  private initializeOrthogonalPointsWithEnd(): Point2[] {   
+    // const start = new Point2(this.start.x - this.left, this.start.y - this.top)
+    const end = new Point2(this.end.x - this.left, this.end.y - this.top)
+    let position = this._orthogonalPointsEndModified ? this._orthogonalPoints.length - 6 : this._orthogonalPoints.length - 3
+    this._orthogonalPointsEndModified = true
+    const newStart = this._orthogonalPoints[position]
+    //console.log(`init start x= ${start.x} y = ${start.y} end x = ${end.x} y = ${end.y}`)
+    const targetPosition = this.findTargetPositionWithEnd()
+    const points: Point2[] = []
+    points.push(new Point2(newStart.x, newStart.y))
+    //console.log(`${this.startDirection}`)
+    if (this._target) {
+      switch(this.endDirection) {
+        case ConnectorDirection.Left: {
+          this.initializeOrthogonalPointsLeftWithoutSource(targetPosition, points, newStart, end)
+          break
+        }
+        case ConnectorDirection.Top:{
+          this.initializeOrthogonalPointsTopWithoutSource(targetPosition, points, newStart, end)
+          break
+        }
+        case ConnectorDirection.Bottom:{
+          this.initializeOrthogonalPointsBottomWithoutSource(targetPosition, points, newStart, end)
+          break
+        }
+        case ConnectorDirection.Right:
+        default:{
+          this.initializeOrthogonalPointsRightWithoutSource(targetPosition, points, newStart, end)
+          break
+        }
+      } 
+    } else {
+      //console.log(`Exception is here `)
+      this.initializeOrthogonalPointsWithoutSourceTarget(targetPosition, points, newStart, end)
+    }
+    //console.log(`source = ${this._source} target = ${this._target} equal = ${this._source == this._target}`)
+    points.push(new Point2(end.x, end.y))
+    // if(points.length == 2) {
+    //   console.log(`Exception is here`)
+    // }
+    const endPoints  = this._orthogonalPoints.slice(0, position)
+    // for(let i = 0; i < endPoints.length; i ++) {
+    //   endPoints[i] = new Point2(endPoints[i].x + offsetX, endPoints[i].y + offsety)
+    // }
+    const result = endPoints.concat(points)
+    return result
+  }
+
+  private initializeOrthogonalPointsWithDefault(): Point2[] {   
     const start = new Point2(this.start.x - this.left, this.start.y - this.top)
     const end = new Point2(this.end.x - this.left, this.end.y - this.top)
     //console.log(`init start x= ${start.x} y = ${start.y} end x = ${end.x} y = ${end.y}`)
@@ -600,6 +745,7 @@ export class Connector extends Item {
     return points
   }
 
+
   private findTargetPosition(): TargetPosition {
     let result = TargetPosition.None
     if(this._target && this._source) {
@@ -623,6 +769,42 @@ export class Connector extends Item {
         result = TargetPosition.Bottom
       }
     } else if(this._target) {
+      if(this._start.x < this._target.left) {
+        result = TargetPosition.Left
+      } else if(this._start.y < this._target.top) {
+        result = TargetPosition.Top
+      } else if(this._start.x > this._target.left + this._target.width) {
+        result = TargetPosition.Right
+      } else if(this._start.y > this._target.top + this._target.height) {
+        result = TargetPosition.Bottom
+      }
+    } else {
+      result = TargetPosition.None
+    }
+    return result
+  }
+
+  private findTargetPositionWithStart(): TargetPosition {
+    let result = TargetPosition.None
+    if(this._source) {
+      if(this._end.x < this._source.left) {
+        result = TargetPosition.Left
+      } else if(this._end.y < this._source.top) {
+        result = TargetPosition.Top
+      } else if(this._end.x > this._source.left + this._source.width) {
+        result = TargetPosition.Right
+      } else if(this._end.y > this._source.top + this._source.height) {
+        result = TargetPosition.Bottom
+      }
+    } else {
+      result = TargetPosition.None
+    }
+    return result
+  }
+
+  private findTargetPositionWithEnd(): TargetPosition {
+    let result = TargetPosition.None
+    if(this._target) {
       if(this._start.x < this._target.left) {
         result = TargetPosition.Left
       } else if(this._start.y < this._target.top) {

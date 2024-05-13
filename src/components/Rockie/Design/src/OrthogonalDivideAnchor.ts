@@ -75,6 +75,11 @@ export class OrthogonalDivideAnchor extends Anchor {
       return;
     }
     const theSelectionLayer = this.editor.selectionLayer as SelectionLayer
+    const moveX = x - this._startX
+    const moveY = y - this._startY
+    if(this.target instanceof Connector && (moveX != 0 || moveY != 0)) {
+      this.target.markOrthogonalPointsModified()
+    }
     if (!theSelectionLayer.hasEditorItem(this.target)) {
       theSelectionLayer.inHolder = true
       theSelectionLayer.removeAllEditorItems()
@@ -82,7 +87,7 @@ export class OrthogonalDivideAnchor extends Anchor {
     }
     this.editor.triggerSelectionChange()
     this._moving = false
-  }
+}
   public handlePointerMove (x: number, y: number) {
     if (!this.target) {
       console.log(`'anchor Pointer moving bad target' x=${x} y =${y}`)
