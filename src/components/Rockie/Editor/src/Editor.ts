@@ -1853,10 +1853,10 @@ export class Editor extends Painter {
       // const targetPoint = this.findEditorItemPoint(controllerItem, e.x, e.y)
       // controllerItem.start = new Point2(ex + controllerItem.start.x, ey + controllerItem.start.y)
       // controllerItem.end = new Point2(ex + controllerItem.end.x, ey + controllerItem.end.y)
-      controllerItem.autoRefreshLines = false
+      controllerItem.autoRefreshOrthogonalPoints = false
       controllerItem.start = new Point2(ex - width / 2, ey - height / 2)
       controllerItem.end = new Point2(ex + width / 2, ey + height / 2)
-      controllerItem.autoRefreshLines = true
+      controllerItem.autoRefreshOrthogonalPoints = true
     } else if (controllerItem instanceof Entity) {
       controllerItem.boundary = Rectangle.makeLTWH(this.alignToGridSize(ex - width / 2), this.alignToGridSize(ey - height / 2), width, height)
     }
@@ -2686,14 +2686,14 @@ export class Editor extends Painter {
         const startY = editorItem.start.y + alignMoveY
         const endX = editorItem.end.x + alignMoveX
         const endY = editorItem.end.y + alignMoveY
-        editorItem.autoRefreshLines = false
+        editorItem.autoRefreshOrthogonalPoints = false
         if(!editorItem.source) {
           editorItem.start = new Point2(startX, startY)
         }
         if(!editorItem.target) {
           editorItem.end = new Point2(endX, endY)
         }
-        editorItem.autoRefreshLines = true
+        editorItem.autoRefreshOrthogonalPoints = true
         //console.log(`startx = ${startX} start.y=${startY} end.x = ${endX} end.y = ${endY}`)
       } else if (editorItem instanceof Entity) {
       }
