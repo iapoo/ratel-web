@@ -6,7 +6,7 @@ import { EditorItem } from './EditorItem'
 import { EditorItemInfo } from './EditorItemInfo'
 import { Editor } from '../../Editor'
 import { ConnectorInfo } from './ConnectorInfo'
-import { Consts } from '@/components/Workspace/Utils'
+import { Consts, SystemUtils } from '@/components/Workspace/Utils'
 
 export interface ConnectorArrowType {
   name: string
@@ -116,6 +116,8 @@ export class Connector extends Item {
   private _orthogonalPointsModified: boolean
   private _orthogonalPointsStartModified: boolean
   private _orthogonalPointsEndModified: boolean
+  private _orthogonalPointsStartLength: number
+  private _orthogonalPointsEndLength: number
 
   public constructor (start: Point2, end: Point2, startDirection: ConnectorDirection = ConnectorDirection.Right, endDirection: ConnectorDirection = ConnectorDirection.Left) {
     super(Math.min(start.x, end.x), Math.min(start.y, end.y), Math.abs(start.x - end.x), Math.abs(start.y - end.y))
@@ -144,6 +146,8 @@ export class Connector extends Item {
     this._orthogonalPointsModified = false
     this._orthogonalPointsStartModified = false
     this._orthogonalPointsEndModified = false
+    this._orthogonalPointsStartLength = 0
+    this._orthogonalPointsEndLength = 0
     this.initializeCurveModifiers()
     this._connectorShape.orthogonalPoints = this._orthogonalPoints
     this._connectorDoubleLineGap = Consts.DOUBLE_LINE_GAP_DEFAULT
@@ -541,19 +545,22 @@ export class Connector extends Item {
   private initializeOrthogonalPointsWithStart(): Point2[] {   
     const start = new Point2(this.start.x - this.left, this.start.y - this.top)
     const oldEnd = new Point2(this.end.x - this.left, this.end.y - this.top)
-    let position = this._orthogonalPointsStartModified ? 5 : 2
+    let position = this._orthogonalPointsStartModified ? this._orthogonalPointsStartLength : 2
     // if(this._orthogonalPointsStartModified) {
     //   console.log(`aa`)
     // }
     this._orthogonalPointsStartModified = true
     let newEnd = this._orthogonalPoints[position]
     const offsetX = oldEnd.x - this._orthogonalPoints[this._orthogonalPoints.length - 1].x
-    const offsety = oldEnd.y - this._orthogonalPoints[this._orthogonalPoints.length - 1].y
-    newEnd = new Point2(newEnd.x + offsetX, newEnd.y + offsety)
+    const offsetY = oldEnd.y - this._orthogonalPoints[this._orthogonalPoints.length - 1].y
+    // if(!newEnd) {
+    //   console.log(`exception is here`)
+    // }
+    newEnd = new Point2(newEnd.x + offsetX, newEnd.y + offsetY)
     const targetPosition = this.findTargetPositionWithStart()
     const points: Point2[] = []
     points.push(new Point2(start.x, start.y))
-    //console.log(`${this.startDirection}`)
+    // console.log(`${this.startDirection}  ${targetPosition}`)
     if (this._source) {
       switch(this.startDirection) {
         case ConnectorDirection.Left: {
@@ -585,18 +592,41 @@ export class Connector extends Item {
     // }   
     const endPoints  = this._orthogonalPoints.slice(position + 1)
     for(let i = 0; i < endPoints.length; i ++) {
-      endPoints[i] = new Point2(endPoints[i].x + offsetX, endPoints[i].y + offsety)
+      endPoints[i] = new Point2(endPoints[i].x + offsetX, endPoints[i].y + offsetY)
     }
+    //Remove middle one if last 3 points in same axis
+    if(points.length >= 3  
+      && ((points[points.length - 1].x == points[points.length - 2].x && points[points.length - 1].x == points[points.length - 3].x) 
+        || (points[points.length - 1].y == points[points.length - 2].y && points[points.length - 1].y == points[points.length - 3].y))) {
+      points.splice(points.length - 2, 1)
+    }
+    this._orthogonalPointsStartLength = points.length - 1
     const result = points.concat(endPoints)
+    //Connector.cleanOrthogonalPoints(result)
+    // console.log(`points length = ${result.length}`)
+    // if(result.length < 8 && this._orthogonalPointsStartModified) {
+    //   console.log(`Exception is here`)
+    // }
     return result
   }
 
   private initializeOrthogonalPointsWithEnd(): Point2[] {   
-    // const start = new Point2(this.start.x - this.left, this.start.y - this.top)
+    const oldStart = new Point2(this.start.x - this.left, this.start.y - this.top)
     const end = new Point2(this.end.x - this.left, this.end.y - this.top)
-    let position = this._orthogonalPointsEndModified ? this._orthogonalPoints.length - 6 : this._orthogonalPoints.length - 3
+    const length = this._orthogonalPoints.length
+    let initPosition = length - 2
+    if((this._orthogonalPoints[length - 3].x == this._orthogonalPoints[length - 2].x && this._orthogonalPoints[length - 3].x == this._orthogonalPoints[length - 1].x)
+      || (this._orthogonalPoints[length - 3].y == this._orthogonalPoints[length - 2].y && this._orthogonalPoints[length - 3].y == this._orthogonalPoints[length - 1].y)) {
+      initPosition = this._orthogonalPoints.length - 3
+    }
+    let position = this._orthogonalPointsEndModified ? this._orthogonalPointsEndLength : initPosition
     this._orthogonalPointsEndModified = true
-    const newStart = this._orthogonalPoints[position]
+    let newStart = this._orthogonalPoints[position]
+    const offsetX = oldStart.x - this._orthogonalPoints[0].x
+    const offsetY = oldStart.y - this._orthogonalPoints[0].y
+    newStart = new Point2(newStart.x + offsetX, newStart.y + offsetY)
+    // console.log(`===`)
+    // SystemUtils.debugPoints(this._orthogonalPoints)
     //console.log(`init start x= ${start.x} y = ${start.y} end x = ${end.x} y = ${end.y}`)
     const targetPosition = this.findTargetPositionWithEnd()
     const points: Point2[] = []
@@ -631,11 +661,18 @@ export class Connector extends Item {
     // if(points.length == 2) {
     //   console.log(`Exception is here`)
     // }
+    // SystemUtils.debugPoints(points)
+    if(points.length >= 3 && ((points[0].x == points[1].x && points[0].x == points[2].x) || (points[0].y == points[1].y && points[0].y == points[2].y))) {
+      points.splice(1, 1)
+    }
     const endPoints  = this._orthogonalPoints.slice(0, position)
-    // for(let i = 0; i < endPoints.length; i ++) {
-    //   endPoints[i] = new Point2(endPoints[i].x + offsetX, endPoints[i].y + offsety)
-    // }
+    for(let i = 0; i < endPoints.length; i ++) {
+      endPoints[i] = new Point2(endPoints[i].x + offsetX, endPoints[i].y + offsetY)
+    }
     const result = endPoints.concat(points)
+    // SystemUtils.debugPoints(result)
+    this._orthogonalPointsEndLength = position
+    //Connector.cleanOrthogonalPoints(result)
     return result
   }
 
@@ -3841,4 +3878,17 @@ export class Connector extends Item {
     }
   }
 
+
+  public static cleanOrthogonalPoints(points: Point2[]) {
+    const count = points.length
+    let index = count - 2
+    while(index > 0) {
+        if(index > 2 && points[index].x == points[index -1].x && points[index].x == points[index - 2].x) {
+            points.splice(index - 1,1)
+        } else if(index > 2 && points[index].y == points[index -1].y && points[index].y == points[index - 2].y) {
+            points.splice(index - 1,1)
+        }
+        index --
+    }
+}
 }
