@@ -2618,8 +2618,9 @@ export class Editor extends Painter {
       const clickedEditorItem = this.findEditorItem(e.x, e.y, false)
       if(clickedEditorItem && clickedEditorItem instanceof ContainerEntity && (!(clickedEditorItem instanceof TableEntity))) {
         let point = this.findEditorItemPoint(clickedEditorItem, e.x, e.y)
-        let x = Math.round(point.x / this._zoom - this._action.item.width / 2)
-        let y = Math.round(point.y / this._zoom - this._action.item.height / 2)
+        let x = this.alignToGridSize(point.x / this._zoom - this._action.item.width / 2)
+        let y = this.alignToGridSize(point.y / this._zoom - this._action.item.height / 2)
+
         this._action.item.boundary = Rectangle.makeLTWH(x, y, this._action.item.width, this._action.item.height)
         clickedEditorItem.addItem(this._action.item)
       } else {
