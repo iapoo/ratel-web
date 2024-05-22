@@ -2,7 +2,7 @@
 /* eslint-disable max-params */
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
 
-import { Color, Colors, Font, FontSlant, FontUtils, FontWeight, GlyphRun, Graphics, Matrix, Paint, Paragraph, ParagraphBuilder, ParagraphDirection, ParagraphStyle, Path, PlaceholderAlignment, Point2, Rectangle, Rotation, RoundRectangle, Shape, ShapedLine, TextAlignment, TextBaseline, TextDecoration, TextDirection, TextStyle, TextVerticalAlignment, } from '@/components/Engine'
+import { Color, Colors, Font, Range, FontSlant, FontUtils, FontWeight, GlyphRun, Graphics, Matrix, Paint, Paragraph, ParagraphBuilder, ParagraphDirection, ParagraphStyle, Path, PlaceholderAlignment, Point2, Rectangle, Rotation, RoundRectangle, Shape, ShapedLine, TextAlignment, TextBaseline, TextDecoration, TextDirection, TextStyle, TextVerticalAlignment, TextRange, } from '@/components/Engine'
 import { TextCursor, Style, StyleInfo, } from './EntityUtils'
 
 export abstract class AbstractTextShape extends Shape {
@@ -450,14 +450,22 @@ export abstract class AbstractTextShape extends Shape {
     }
 
     public select (start: number, end: number) {
-      if(start == this._startIndex && end == this._endIndex) {
+      let newStart = start 
+      let newEnd = end
+      // if(start == end) {
+      //   newStart = this._text[start] == '\n' ? start - 1 : start
+      // } else {
+      //   this._text[start] == '\r' ? start - 1 : start
+      //   this._text[end] == '\r' ? end + 1  : end
+      // }
+      if(newStart == this._startIndex && newEnd == this._endIndex) {
         return
       }
-      if(start == end) {
-        this._selectStartIndex = start
+      if(newStart == newEnd) {
+        this._selectStartIndex = newStart
       }
-      this._startIndex = Math.min(start, end)
-      this._endIndex = Math.max(start, end)
+      this._startIndex = Math.min(newStart, newEnd)
+      this._endIndex = Math.max(newStart, newEnd)
       const [startStyleIndex, preStartLen, ] = this.findStyleIndexAndPrevLength(this._startIndex, true)
       const [endStyleIndex, preEndLen, ] = this.findStyleIndexAndPrevLength(this._endIndex, false)
       this._selectStyle = this._styles[startStyleIndex].clone()
@@ -484,8 +492,7 @@ export abstract class AbstractTextShape extends Shape {
       const firstLine = this._lines[0]
       const lastLine = this._lines[this._lines.length - 1]
       if(firstLine.top > newY - this.getTextPaddingY()) {
-        const firstRun = firstLine.runs[0]
-        const lastRun = firstLine.runs[firstLine.runs.length - 1]
+        const [firstRun, lastRun] = this.findFirstRunAndLastRunOfLine(firstLine)
         if(newX - this.getTextPaddingX() < firstRun.positions[0] ) {
           this.select(firstRun.indices[0], firstRun.indices[0])
         } else if(newX - this.getTextPaddingX() >= lastRun.positions[lastRun.indices.length * 2 - 2 ]) {
@@ -501,8 +508,7 @@ export abstract class AbstractTextShape extends Shape {
           }
         }        
       } else if(lastLine.bottom < newY -this.getTextPaddingY()) {
-        const firstRun = lastLine.runs[0]
-        const lastRun = lastLine.runs[lastLine.runs.length - 1]
+        const [firstRun, lastRun] = this.findFirstRunAndLastRunOfLine(lastLine)
         if(newX - this.getTextPaddingX() < firstRun.positions[0] ) {
           this.select(firstRun.indices[0], firstRun.indices[0])
         } else if(newX - this.getTextPaddingX() >= lastRun.positions[lastRun.indices.length * 2 - 2 ]) {
@@ -522,8 +528,7 @@ export abstract class AbstractTextShape extends Shape {
           const line = this._lines[lineIndex]
           let selected = false
           if(line.top <= newY - this.getTextPaddingY() && line.bottom >= newY - this.getTextPaddingY()) {
-            const firstRun = line.runs[0]
-            const lastRun = line.runs[line.runs.length - 1]
+            const [firstRun, lastRun] = this.findFirstRunAndLastRunOfLine(line)
             if(newX - this.getTextPaddingX() < firstRun.positions[0] ) {
               this.select(firstRun.indices[0], firstRun.indices[0])
             } else if(newX - this.getTextPaddingX() >= lastRun.positions[lastRun.indices.length * 2 - 2 ]) {
@@ -560,8 +565,7 @@ export abstract class AbstractTextShape extends Shape {
       const firstLine = this._lines[0]
       const lastLine = this._lines[this._lines.length - 1]
       if(firstLine.top > newY - this.getTextPaddingY()) {
-        const firstRun = firstLine.runs[0]
-        const lastRun = firstLine.runs[firstLine.runs.length - 1]
+        const [firstRun, lastRun] = this.findFirstRunAndLastRunOfLine(firstLine)
         if(newX - this.getTextPaddingX() < firstRun.positions[0] ) {
           this.selectTo(firstRun.indices[0])
         } else if(newX - this.getTextPaddingX() >= lastRun.positions[lastRun.indices.length * 2 - 2 ]) {
@@ -577,8 +581,7 @@ export abstract class AbstractTextShape extends Shape {
           }
         }        
       } else if(lastLine.bottom < newY -this.getTextPaddingY()) {
-        const firstRun = lastLine.runs[0]
-        const lastRun = lastLine.runs[lastLine.runs.length - 1]
+        const [firstRun, lastRun] = this.findFirstRunAndLastRunOfLine(lastLine)
         if(newX - this.getTextPaddingX() < firstRun.positions[0] ) {
           this.selectTo(firstRun.indices[0])
         } else if(newX - this.getTextPaddingX() >= lastRun.positions[lastRun.indices.length * 2 - 2 ]) {
@@ -598,8 +601,7 @@ export abstract class AbstractTextShape extends Shape {
           const line = this._lines[lineIndex]
           let selected = false
           if(line.top <= newY - this.getTextPaddingY() && line.bottom >= newY - this.getTextPaddingY()) {
-            const firstRun = line.runs[0]
-            const lastRun = line.runs[line.runs.length - 1]
+            const [firstRun, lastRun] = this.findFirstRunAndLastRunOfLine(line)
             if(newX - this.getTextPaddingX() < firstRun.positions[0] ) {
               this.selectTo(firstRun.indices[0])
             } else if(newX - this.getTextPaddingX() >= lastRun.positions[lastRun.indices.length * 2 - 2 ]) {
@@ -624,9 +626,70 @@ export abstract class AbstractTextShape extends Shape {
       }    
     }
 
+    private findFirstRunAndLastRunOfLine(line: ShapedLine) {
+      if(line.runs.length == 1) {
+        let firstRun = line.runs[0]
+        let lastRun = line.runs[0]
+        return [firstRun, lastRun]
+      } else if(line.runs.length == 2) {
+        let firstRun = line.runs[0]
+        let lastRun = line.runs[1]
+        if(firstRun.isEnter) {
+          if(lastRun.isReturn) {
+            firstRun = line.runs[1]
+            lastRun = line.runs[1]
+          } else {
+            firstRun = line.runs[1]
+            lastRun = line.runs[1]
+          }
+        } else {
+          if(lastRun.isReturn) {
+            lastRun = line.runs[0]
+          }
+        }
+        return [firstRun, lastRun]
+      } else {
+        let firstRun = line.runs[0]
+        let lastRun = line.runs[line.runs.length - 1]
+        if(firstRun.isEnter) {
+          firstRun = line.runs[1]
+          if(lastRun.isReturn) {
+            lastRun = line.runs[line.runs.length - 2]
+          }
+        } else {
+          if(lastRun.isReturn) {
+            lastRun = line.runs[line.runs.length - 2]
+          }
+        }
+        return [firstRun, lastRun]
+      }
+    }
     public moveColumns (columnCount: number) {
       if (this._startIndex == this._endIndex) {
-        const index = Math.max(Math.min(this._startIndex + columnCount, this._text.length), 0)
+        let count = 0
+        let index = this._startIndex
+        if(columnCount > 0) {
+          for(let i = this._startIndex; i < this._text.length; i ++) {
+            if(this._text[i] != '\r') { // Skip \r here
+              count ++
+            }
+            index = i + 1
+            if(count == columnCount) {
+              break
+            }
+          }
+        } else {
+          for(let i = this._startIndex - 1; i >=0; i --) {
+            if(this._text[i] != '\n') { // Skip \r here
+              count --
+            }
+            index = i
+            if(count == columnCount) {
+              break
+            }
+          }
+        }
+        // let index = Math.max(Math.min(this._startIndex + columnCount, this._text.length), 0)
         this.select(index, index)
       } else {
         const index = columnCount < 0 ? this._startIndex : this._endIndex
@@ -843,8 +906,11 @@ export abstract class AbstractTextShape extends Shape {
 
       //if only space in text will cause empty runs
       if(this._runs.length <= 0) {
-        return
+        //return
       }
+      // if(this._runs.length <= 0 && this._text.length > 0) {
+      //   console.log(`Exception is here for case only whitespace`)
+      // }
       const runs = this._runs
       const styles = this._styles
       const fontPaint = this._fontPaint
@@ -860,6 +926,9 @@ export abstract class AbstractTextShape extends Shape {
       let start = 0
       let end = 0
       while (start < this._text.length) {
+        if (!run) { // just R&L in text
+          break 
+        }
         while (run.textRange.end <= start) {
           run = runs[++runIndex]
           if (!run) { // space
@@ -1056,6 +1125,7 @@ export abstract class AbstractTextShape extends Shape {
       this._paragraph = this._paragraphBuilder.build()
       this._paragraph.layout(this.textWidth - this._textMargin * 2)
       this._lines = this._paragraph.getShapedLines()
+      this.repairLines()
       this._runs.length = 0
       let startIndex = 0
       let _this = this
@@ -1074,9 +1144,15 @@ export abstract class AbstractTextShape extends Shape {
           
           //Repair invisible characters because they are removed after built in shape line.
           //console.log(`${_this._text.length}    ${startIndex + 2} ${_this._text[startIndex]} ${_this._text[startIndex] == '\r'}  ` )
-          if(_this._text.length >= startIndex + 2 && _this._text[startIndex] == '\r' && _this._text[startIndex + 1] == '\n'){
-            startIndex = startIndex + 2
-          }
+          // if(_this._text.length >= startIndex + 2 && _this._text[startIndex] == '\r' && _this._text[startIndex + 1] == '\n'){
+          //   startIndex = startIndex + 2
+          // }
+          // const start = run.indices[0]
+          // let end = run.indices[run.indices.length - 1]
+          // if(_this._text.length >= startIndex + 2 && _this._text[startIndex] == '\r' && _this._text[startIndex + 1] == '\n'){
+          //   startIndex = startIndex + 2
+          // }
+
           run.textRange = { start: run.indices[0], end: run.indices[run.indices.length - 1], }
           _this._runs.push(run)
         }
@@ -1088,8 +1164,78 @@ export abstract class AbstractTextShape extends Shape {
     private populateTextStyle(style: Style, index: number) {
       let subText = this._text.substring(index, index + style.length)
       subText = subText.replaceAll(' ', 'a')
+      // subText = subText.replaceAll('\r\n', '\r\nb')
       this._paragraphBuilder.pushStyle(style.makeTextStyle())
       this._paragraphBuilder.addText(subText)
+    }
+
+    // Repair some spacial characters. e.g. Return &Enter Key
+    private repairLines() {
+      let lineNumber = 0
+      if(this._text.length < 2) {
+        return
+      }
+      for(let i = 0; i < this._text.length - 1; i ++) {
+        if(this._text[i] == '\r' && this._text[i + 1] == '\n') {          
+          if(i == 0) { //Begin of file
+            const line = this.prepareShapedLine(i, null, true, true, false)
+            this._lines.splice(lineNumber, 0, line)
+          }
+          if(i > 0 && i < this._text.length - 2) {
+            const fromLine = this._lines[lineNumber]
+            this.prepareShapedLine(i, fromLine, false, true, false)
+            if(this._text[i + 2] == '\r') {
+              const fromLine2 = this._lines[lineNumber ]
+              const line2= this.prepareShapedLine(i + 1, fromLine2, true, false, true)
+              this._lines.splice(lineNumber + 1, 0, line2)
+            } else {
+              const fromLine2 = this._lines[lineNumber + 1]
+              this.prepareShapedLine(i + 1, fromLine2, false, false, true)
+            }
+          }
+          if(i == this._text.length - 2) { // End of File
+            if(i > 0) {
+              const fromLine = this._lines[lineNumber]
+              this.prepareShapedLine(i, fromLine, false, true, false)
+            }
+            const fromLine = this._lines[lineNumber]
+            const line = this.prepareShapedLine(i + 1, fromLine, true, false, true)
+            this._lines.splice(lineNumber + 1, 0, line)
+          }
+          lineNumber ++
+        }
+      }
+    }
+
+    private prepareShapedLine(start: number, fromLine: ShapedLine | null, newLine: boolean, isReturn: boolean, isEnter: boolean): ShapedLine {
+      const [startIndex, _, ] = this.findStyleIndexAndPrevLength(start, false)
+      const style = this._styles[startIndex]
+      const top = fromLine ? (newLine ? fromLine.bottom : fromLine.top) : 0
+      const left = fromLine ? (newLine ? this.getTextLeft(): (isEnter ? fromLine.runs[0].positions[0] : fromLine.runs[fromLine.runs.length - 1].positions[fromLine.runs[fromLine.runs.length - 1].positions.length - 2])) : this.getTextLeft()
+      const width = isReturn ? 8 : 0
+      const bottom = style.font.fontSize + top
+      const baseline = bottom - 3
+      const range: Range = new Range(start,start + 1)
+      const textRange: TextRange = new TextRange(start, start + 1)
+      const glyphs = new Uint16Array([4])
+      const positions = new Float32Array([left, baseline, left + width, baseline])
+      const offsets = new Uint32Array([start, start + 1])
+      const indices: number[] = [start, start + 1]
+      const run: GlyphRun = new GlyphRun(style.typeFaceName, style.size, style.bold, style.italic, glyphs, positions,offsets,3, textRange, indices, isReturn, isEnter)
+      const runs: GlyphRun[] = [run]
+      if(fromLine && !newLine) {
+        if(isReturn) {
+          fromLine.runs.push(run)
+          fromLine.textRange.last  = fromLine.textRange.last + 1
+        } else {
+          fromLine.runs.splice(0, 0, run)
+          fromLine.textRange.first  = fromLine.textRange.first - 1
+        }
+        return fromLine
+      } else {
+        const line: ShapedLine = new ShapedLine(range, top, bottom, baseline, runs)
+        return line
+      }
     }
 
     private deleteRange (start: number, end: number) {
@@ -1189,9 +1335,12 @@ export abstract class AbstractTextShape extends Shape {
 
     private getRunsIndexToRun (line: ShapedLine, index: number) {
       for (const run of line.runs) {
-        if (index <= run.indices[run.indices.length - 1]) {
+        if (index <= run.indices[run.indices.length - 1] && !run.isReturn && !run.isEnter) {
           return run
         }
+      }
+      if(line.runs.length == 2 && line.runs[0].isEnter && line.runs[1].isReturn) {
+        return line.runs[0]
       }
       return line.runs[line.runs.length - 1]
     }
@@ -1252,7 +1401,11 @@ export abstract class AbstractTextShape extends Shape {
           if (x < run.positions[i * 2]) {
             const mid = (run.positions[i * 2 - 2] + run.positions[i * 2]) * 0.5
             if (x <= mid) {
-              return run.indices[i - 1]
+              if(i == 1 && run.isEnter) {
+                return run.indices[i]
+              } else {
+                return run.indices[i - 1]
+              }
             } else {
               return run.indices[i]
             }
@@ -1265,6 +1418,23 @@ export abstract class AbstractTextShape extends Shape {
 
     private getTextPaddingX() {
       return this._textMargin + this._textLeft
+    }
+
+    private getTextLeft() {
+      let newLeft = 0
+      switch(this.textAlignment){
+        case TextAlignment.RIGHT:
+          newLeft = this.width - this.getTextPaddingX()
+          break;
+        case TextAlignment.CENTER:
+          newLeft = this.width / 2  - this.getTextPaddingX()
+          break;
+        case TextAlignment.LEFT:
+        default:
+          newLeft = 0
+          break;
+      }
+      return newLeft
     }
 
     private getTextPaddingY() {
@@ -1329,7 +1499,7 @@ export abstract class AbstractTextShape extends Shape {
   }
 
   private updateCursorWithEmptyText() {
-    //Empty text and so we assume height is font size x 140%
+    //Empty text and so we assume height is font size x 100%
     let newLeft = this.getTextPaddingX()
     switch(this.textAlignment){
       case TextAlignment.RIGHT:
@@ -1343,7 +1513,7 @@ export abstract class AbstractTextShape extends Shape {
         newLeft = this.getTextPaddingX()
         break;
     }
-    this._cursor.place(newLeft, this.getTextPaddingY() , this.getTextPaddingY() + this.fontSize * 1.4)
+    this._cursor.place(newLeft, this.getTextPaddingY() , this.getTextPaddingY() + this.fontSize * 1)
   }
 
   private splitStylesByIndex(start: number) {

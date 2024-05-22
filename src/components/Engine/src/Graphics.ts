@@ -2192,7 +2192,9 @@ export class TextRange {
   }
 }
 export class GlyphRun {
-  public constructor (public typefaceName: string, public size: number, public fakeBold: boolean, public fakeItalic: boolean, public glyphs: Uint16Array, public positions: Float32Array, public offsets: Uint32Array, public flags: number, public textRange: TextRange, public indices: number[]) {
+  public constructor (public typefaceName: string, public size: number, public fakeBold: boolean, public fakeItalic: boolean, 
+    public glyphs: Uint16Array, public positions: Float32Array, public offsets: Uint32Array, public flags: number, public textRange: TextRange, 
+    public indices: number[], public isReturn: boolean = false, public isEnter: boolean = false) {
 
   }
 
@@ -2204,6 +2206,14 @@ export class GlyphRun {
 export class ShapedLine {
   public constructor (public textRange: Range, public top: number, public bottom: number, public baseline: number, public runs: GlyphRun[]) {
 
+  }
+
+  public hasReturn() {
+    return this.runs.length > 0 && this.runs[this.runs.length - 1].isReturn
+  }
+
+  public hasEnter() {
+    return this.runs.length > 0 && this.runs[0].isEnter
   }
 }
 
