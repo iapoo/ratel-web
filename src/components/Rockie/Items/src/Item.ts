@@ -447,6 +447,8 @@ export abstract class Item implements EditorItem {
       //this._shape.textAlignment = this._textAlignment
       //this._shape.textVerticalAlignment = this._textVerticalAlignment
     }
+    // Direct update of shape stroke or fill may not cause shape update. Here force it
+    this._shape.markDirty()
   }
 
   public initializeTheme() {
