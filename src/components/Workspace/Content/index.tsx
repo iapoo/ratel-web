@@ -1278,12 +1278,16 @@ const Content: FC<ContentProps> = ({
     if(event.key == 'Delete') {
       event.preventDefault()
       handleDelete()
-}
+    }
     if(event.metaKey || event.ctrlKey) {
       switch(event.key) {
+        case 'a':
+          event.preventDefault()
+          handleSelectAll()
+          break;
         case 'z':
           event.preventDefault()
-          handleUndo()          
+          handleUndo()
           break;
         case 'y':
           event.preventDefault()
@@ -1707,7 +1711,16 @@ const Content: FC<ContentProps> = ({
 
   const handleDelete = () => {
     if (currentEditor) {
-      EditorHelper.deleteSelections(currentEditor)
+      if(currentEditor.isTextEditting) {
+        // Editor already handle this
+        // if(currentEditor.targetItem) {
+        //  currentEditor.targetItem.shape.handleDelete()
+        // } else if(currentEditor.target) {
+        //   currentEditor.target.shape.handleDelete()
+        // }
+      } else {
+        EditorHelper.deleteSelections(currentEditor)
+      }
     }
   }
 

@@ -438,6 +438,20 @@ export abstract class AbstractTextShape extends Shape {
       this.deleteSelection()
     }
 
+    public handleDelete () {
+      let start = this._startIndex
+      let end = this._endIndex
+      if(start != end) {
+        this.deleteRange(start, end)
+      }
+      if(start < this._text.length) {
+        this.deleteRange(start, start + 1)
+      }
+      this._startIndex = this._endIndex = start            
+      this.buildLines()
+      this.rebuildSelection()
+    }
+
     /**
      * Skia will fail if no space here
      */

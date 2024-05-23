@@ -668,6 +668,10 @@ export class Editor extends Painter {
     return this._hoverLayer
   }
 
+  public get target(): EditorItem | undefined  {
+    return this._target
+  }
+
   public get targetItem(): EditorItem | undefined {
     return this._targetItem
   }
@@ -1439,6 +1443,7 @@ export class Editor extends Painter {
       }
       return
     }
+
     if (this._textFocused && e.key === 'Backspace') {
       if (this._target && this._targetItem) {
         const [origEditorItemInfo, startIndex, endIndex] = this.beginShapeTextEditOperation(this._target)
@@ -1447,6 +1452,18 @@ export class Editor extends Painter {
       } else if (this._target) {
         const [origEditorItemInfo, startIndex, endIndex] = this.beginShapeTextEditOperation(this._target)
         this._target.shape.handleBackspace()
+        this.finishShapeTextEditOperation(origEditorItemInfo, startIndex, endIndex)
+      }
+    }
+
+    if (this._textFocused && e.key === 'Delete') {
+      if (this._target && this._targetItem) {
+        const [origEditorItemInfo, startIndex, endIndex] = this.beginShapeTextEditOperation(this._target)
+        this._targetItem.shape.handleDelete()
+        this.finishShapeTextEditOperation(origEditorItemInfo, startIndex, endIndex)
+      } else if (this._target) {
+        const [origEditorItemInfo, startIndex, endIndex] = this.beginShapeTextEditOperation(this._target)
+        this._target.shape.handleDelete()
         this.finishShapeTextEditOperation(origEditorItemInfo, startIndex, endIndex)
       }
     }
