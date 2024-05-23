@@ -1184,6 +1184,9 @@ export abstract class AbstractTextShape extends Shape {
               const fromLine2 = this._lines[lineNumber ]
               const line2= this.prepareShapedLine(i + 1, fromLine2, true, false, true)
               this._lines.splice(lineNumber + 1, 0, line2)
+            } else if(this._text.length > 2) {
+              const fromLine2 = this._lines[lineNumber + 1]
+              this.prepareShapedLine(i + 1, fromLine2, false, false, true)
             }
           }
           if(i > 0 && i < this._text.length - 2) {
