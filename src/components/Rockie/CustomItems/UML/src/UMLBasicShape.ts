@@ -18,9 +18,6 @@ export class UMLBasicShapes {
   public static TYPE_ACTION = 'Action'
   public static DESC_ACTION = 'Action'
   public static TEXT_ACTION = 'Action'
-  public static TYPE_INTIAL_NODE = 'Initial Node'
-  public static DESC_INTIAL_NODE = 'Initial Node'
-  public static TEXT_INTIAL_NODE = ''
   public static TYPE_DECISION = 'Decision'
   public static DESC_DECISION = 'Decision'
   public static TEXT_DECISION = ''
@@ -43,10 +40,6 @@ export const UMLBasicShapeTypes = [
     modifiable: true, modifierX: 0.2,modifierY: 0.2,  modifierStartX: 0, modifierStartY: 0, modifierEndX: 0.5, modifierEndY: 0.5, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true  },
-  { name: UMLBasicShapes.TYPE_INTIAL_NODE, description: UMLBasicShapes.DESC_INTIAL_NODE, freeze: Shapes.FREEZE_ASPECT_RATIO , text: UMLBasicShapes.TEXT_INTIAL_NODE, left: 0, top: 0, width: 40, height: 40,  enableMask: false,
-    modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
-    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true },
   { name: UMLBasicShapes.TYPE_DECISION, description: UMLBasicShapes.DESC_DECISION, freeze: Shapes.FREEZE_NONE, text: UMLBasicShapes.TEXT_DECISION, left: 0, top: 0, width: 60, height: 60,  enableMask: false,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
@@ -78,9 +71,6 @@ export class UMLBasicShape extends ShapeEntity {
           break;
         case UMLBasicShapes.TYPE_ACTION:
           break;
-        case UMLBasicShapes.TYPE_INTIAL_NODE:
-          this.fillColor = this.strokeColor
-          break;
         case UMLBasicShapes.TYPE_DECISION:
           break;
       }
@@ -99,9 +89,6 @@ export class UMLBasicShape extends ShapeEntity {
           break;
         case UMLBasicShapes.TYPE_ACTION:
           shapeType = EntityShapeType.RoundRectangle
-          break;
-        case UMLBasicShapes.TYPE_INTIAL_NODE:
-          shapeType = EntityShapeType.Circle          
           break;
         case UMLBasicShapes.TYPE_DECISION:
           shapeType = EntityShapeType.Diamond

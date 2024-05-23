@@ -8,6 +8,9 @@ export class UMLCustomShapes {
   public static TYPE_ACTIVATION = 'Activation'
   public static DESC_ACTIVATION = 'Activation'
   public static TEXT_ACTIVATION = 'Activation'
+  public static TYPE_INITIAL_NODE = 'Initial Node'
+  public static DESC_INITIAL_NODE = 'Initial Node'
+  public static TEXT_INITIAL_NODE = ''
   public static TYPE_FINAL_NODE = 'Final Node'
   public static DESC_FINAL_NODE = 'Final Node'
   public static TEXT_FINAL_NODE = ''
@@ -64,6 +67,10 @@ export const UMLCustomShapeTypes = [
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true},
+  { name: UMLCustomShapes.TYPE_INITIAL_NODE, description: UMLCustomShapes.DESC_INITIAL_NODE, freeze: Shapes.FREEZE_ASPECT_RATIO , text: UMLCustomShapes.TEXT_INITIAL_NODE, left: 0, top: 0, width: 40, height: 40,  enableMask: false,
+    modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true },
 ]
 
 export class UMLCustomShape extends CustomEntity {
@@ -83,6 +90,9 @@ export class UMLCustomShape extends CustomEntity {
   private initializeShape() {
     switch(this._shape.typeInfo.name) {
       case UMLCustomShapes.TYPE_ACTIVATION: {
+        break;
+      }
+      case UMLCustomShapes.TYPE_INITIAL_NODE: {
         break;
       }
       case UMLCustomShapes.TYPE_FINAL_NODE: {
@@ -147,9 +157,16 @@ export class UMLCustomShape extends CustomEntity {
         theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
         break;
       }
-      case UMLCustomShapes.TYPE_FINAL_NODE: {
+      case UMLCustomShapes.TYPE_INITIAL_NODE: {
+        theThis.secondFill.setColor(theThis.stroke.getColor())
         theThis.path.addOval(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
-        theThis.path.addOval(Rectangle.makeLTWH(theThis.width * 0.1, theThis.width * 0.1, theThis.width * 0.8, theThis.height * 0.8))
+        theThis.secondPath.addOval(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
+        break;
+      }
+      case UMLCustomShapes.TYPE_FINAL_NODE: {
+        theThis.secondFill.setColor(theThis.stroke.getColor())
+        theThis.path.addOval(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))        
+        theThis.secondPath.addOval(Rectangle.makeLTWH(theThis.width * 0.1, theThis.width * 0.1, theThis.width * 0.8, theThis.height * 0.8))
         break;
       }
       case UMLCustomShapes.TYPE_NODE_2:
