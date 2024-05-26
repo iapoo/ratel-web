@@ -28,4 +28,5 @@
 12. Make lock undoable & redoable (Done)
 13. Regenerate Arrows for UML
 14. Make UML Object lifeline as container for activiation
+15. Clip seems doesnt always works.
 

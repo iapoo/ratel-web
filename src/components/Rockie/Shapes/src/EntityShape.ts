@@ -135,6 +135,10 @@ export class EntityShape extends AbstractTextShape {
     this._maskPath = new Path()
   }
 
+  public set clipped (clipped: boolean) {
+    super.clipped = clipped
+  }
+
   public get modifier() {
     return this._modifier
   }
@@ -473,6 +477,7 @@ export class EntityShape extends AbstractTextShape {
     case EntityShapeType.Rectangle:
     default:
       this.path.addRectangle(Rectangle.makeLTWH(0, 0, this.width, this.height))
+      // this.path.addRectangle(Rectangle.makeLTWH(0, 20, this.width + 20, this.height))
       break
     }
   }

@@ -154,6 +154,13 @@ export class Painter {
         this._graphics.concat(node.internalTransform)
         if (node.clipped) {
           this._graphics.clipPath(node.clip)
+          if(node instanceof Shape && node.width >= 119 && node.width <= 131) {
+            // console.log(`clip test = ${node.clip.contains(50, 50)}  = ${node.clip.contains(500, 500)}`)
+            // this._graphics.drawRectangle( Rectangle.makeLTWH(0, 0, 300, 300), node.stroke)
+            // this._graphics.clipPath(node.clip)
+            //  this._graphics.clipRectangle(Rectangle.makeLTWH(0, 0, 6, 6))
+          }
+          //this._graphics.clipRectangle(Rectangle.makeLTWH(0, 0, 60, 60))
         }
         node.render(this._graphics)
         const count = node.children.length
