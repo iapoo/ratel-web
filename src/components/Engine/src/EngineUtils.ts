@@ -340,8 +340,26 @@ export class FontUtils {
   }
 
   public static isValidGlyphID(glyphIDs: Uint16Array, index: number, sourceText: string) {
-    const valid = glyphIDs[index] > 0 || sourceText.at(index) == '\n'
+    const valid = glyphIDs[index] > 0 || sourceText.at(index) == '\n' || sourceText.at(index) == '\r'
     return valid 
+  }
+
+  /**
+   * 
+   * @param char Shoud be one char
+   * @param fontName 
+   * @returns 
+   */
+  public static getFirstGlyphID(char: string, fontName: string) {
+    const typeface = FontUtils.webFontManager.typeFaces.get(fontName)
+    if (typeface) {
+      const glyphIds = typeface.getGlyphIDs(char)
+      if(glyphIds && glyphIds.length > 0) {
+        const glyphId = glyphIds[0]
+        return glyphId
+      }
+    }
+    return 0
   }
 
   public static findGlyphIDs(fontName: string, text: string) {

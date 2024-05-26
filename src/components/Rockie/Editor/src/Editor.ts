@@ -1496,6 +1496,20 @@ export class Editor extends Painter {
         this._target.shape.moveRows(1)
       }
     }
+    if (this._textFocused && e.key === 'Home') {
+      if (this._targetItem) {
+        this._targetItem.shape.moveColumnsToHome()
+      } else if (this._target) {
+        this._target.shape.moveColumnsToHome()
+      }
+    }
+    if (this._textFocused && e.key === 'End') {
+      if (this._targetItem) {
+        this._targetItem.shape.moveColumnsToEnd()
+      } else if (this._target) {
+        this._target.shape.moveColumnsToEnd()
+      }
+    }
     if (this._textFocused && e.key === 'Enter') {
       if (this._target && this._targetItem) {
         const [origEditorItemInfo, startIndex, endIndex] = this.beginShapeTextEditOperation(this._target)
