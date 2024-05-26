@@ -2962,7 +2962,7 @@ export class Editor extends Painter {
   private checkParentType(editorItem: EditorItem, parentType: typeof  Item): boolean {
     let result = false
     const item = editorItem as Item
-    console.log(`check parent = ${item.parent instanceof parentType}   == ${item.parent}`)
+    //console.log(`check parent = ${item.parent instanceof parentType}   == ${item.parent}`)
     let checkItem: Item = item
     while(checkItem.parent) {
       if(checkItem.parent instanceof parentType){

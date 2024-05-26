@@ -20,6 +20,7 @@ export class FrameShape extends EntityShape {
 
   public constructor (left: number, top: number, width: number, height: number, entity: any, buildShape: (_this: FrameShape, entity: any)=> void, shapeTypeInfo: ShapeTypeInfo) {
     super('', left, top, width, height, shapeTypeInfo)    
+    this.clipped = true
     this._entity = entity
     this._secondPath = new Path()
     this._secondStroke = new Paint()
