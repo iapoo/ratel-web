@@ -2,11 +2,14 @@
 /* eslint-disable max-params */
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
 
-import { Color, Colors, Font, Range, FontSlant, FontUtils, FontWeight, GlyphRun, Graphics, Matrix, Paint, Paragraph, ParagraphBuilder, ParagraphDirection, ParagraphStyle, Path, PlaceholderAlignment, Point2, Rectangle, Rotation, RoundRectangle, Shape, ShapedLine, TextAlignment, TextBaseline, TextDecoration, TextDirection, TextStyle, TextVerticalAlignment, TextRange, } from '@/components/Engine'
+import { Color, Colors, Font, Range, FontSlant, FontUtils, FontWeight, GlyphRun, Graphics, Matrix, Paint, Paragraph, ParagraphBuilder, ParagraphDirection, ParagraphStyle, Path, PlaceholderAlignment, Point2, Rectangle, Rotation, RoundRectangle, Shape, ShapedLine, TextAlignment, TextBaseline, TextDecoration, TextDirection, TextStyle, TextVerticalAlignment, TextRange, EngineUtils, } from '@/components/Engine'
 import { TextCursor, Style, StyleInfo, } from './EntityUtils'
 
-export abstract class AbstractTextShape extends Shape {
+export abstract class AbstractTextShape extends Shape {  
+    public static CHAR_SPACE = ' '
+    public static CHAR_SPACE_REPLACE = 'a'
     public static DEFAULT_TEXT_PADDING = 4
+    public static TYPE_RICHTEXT = 'richtext'
     public static CURSOR_LINE_COLOR = Colors.Black
     public static CURSOR_PATH_COLOR = Colors.SkyBlue
     private _text: string
@@ -389,7 +392,7 @@ export abstract class AbstractTextShape extends Shape {
         styleInfos.push(styleInfo)
       })
       let data = {
-        type: 'richtext',
+        type: AbstractTextShape.TYPE_RICHTEXT,
         text: text,
         styles: styleInfos
       }
@@ -406,7 +409,7 @@ export abstract class AbstractTextShape extends Shape {
         styleInfos.push(styleInfo)
       })
       let data = {
-        type: 'richtext',
+        type: AbstractTextShape.TYPE_RICHTEXT,
         text: text,
         styles: styleInfos
       }
@@ -711,6 +714,28 @@ export abstract class AbstractTextShape extends Shape {
       }
     }
 
+    public moveColumnsToHome () {
+      let index = this._startIndex
+      for(let i = this._startIndex - 1; i >= 0; i --) {
+        if(this._text[i] == '\n') {
+          break
+        }
+        index = i
+      }
+      this.select(index, index)
+    }
+
+    public moveColumnsToEnd () {
+        let index = this._startIndex
+        for(let i = this._startIndex; i < this._text.length; i ++) {
+          if(this._text[i] == '\r') { // Skip \r here
+            break
+          }
+          index = i + 1
+        }
+        this.select(index, index)
+    }
+
     public moveRows (rowCount: number) {
       let index = (rowCount < 0) ? this._startIndex : this._endIndex
       const lineIndex = this.getLinesIndexToLineIndex(index)
@@ -744,7 +769,7 @@ export abstract class AbstractTextShape extends Shape {
 
     public insertRichText(richText: string) {
       let data = JSON.parse(richText)
-      if(data.type !== 'richtext') {
+      if(data.type !== AbstractTextShape.TYPE_RICHTEXT) {
         console.log(`unknow rich text detected: ${richText}`)
         return
       }
@@ -1149,7 +1174,7 @@ export abstract class AbstractTextShape extends Shape {
           run.offsets.forEach((offset: number, index: number) => {
             run.indices.push(startIndex)
             //replace white space with 'a' and then replace them back in ShapeLines since it will skip whitespace like trim().We get whitespace back  here
-            if(_this.text[startIndex] == ' ' && index < run.offsets.length - 1) {
+            if(_this.text[startIndex] == AbstractTextShape.CHAR_SPACE && index < run.offsets.length - 1) {
               run.glyphs[index] = 4 //whitespace
             }
             startIndex++
@@ -1177,7 +1202,7 @@ export abstract class AbstractTextShape extends Shape {
     //replace white space with 'a' and then replace them back in ShapeLines since it will skip whitespace like trim()
     private populateTextStyle(style: Style, index: number) {
       let subText = this._text.substring(index, index + style.length)
-      subText = subText.replaceAll(' ', 'a')
+      subText = subText.replaceAll(AbstractTextShape.CHAR_SPACE, AbstractTextShape.CHAR_SPACE_REPLACE)
       // subText = subText.replaceAll('\r\n', '\r\nb')
       this._paragraphBuilder.pushStyle(style.makeTextStyle())
       this._paragraphBuilder.addText(subText)
@@ -1239,7 +1264,8 @@ export abstract class AbstractTextShape extends Shape {
       const baseline = bottom - 3
       const range: Range = new Range(start,start + 1)
       const textRange: TextRange = new TextRange(start, start + 1)
-      const glyphs = new Uint16Array([4])
+      const glyphId = FontUtils.getFirstGlyphID(' ', style.typeFaceName )
+      const glyphs = new Uint16Array([glyphId])
       const positions = new Float32Array([left, baseline, left + width, baseline])
       const offsets = new Uint32Array([start, start + 1])
       const indices: number[] = [start, start + 1]
@@ -1429,13 +1455,15 @@ export abstract class AbstractTextShape extends Shape {
                 return run.indices[i - 1]
               }
             } else {
-              return run.indices[i]
+              const index = run.isReturn ? i - 1 : i
+              return  run.indices[index]
             }
           }
         }
       }
       const run = line.runs[line.runs.length - 1]
-      return run.indices[run.indices.length - 1]
+      const index = run.isReturn ? run.indices.length - 2 : run.indices.length - 1
+      return run.indices[index]
     }
 
     private getTextPaddingX() {
