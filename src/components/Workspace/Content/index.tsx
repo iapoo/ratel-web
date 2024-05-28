@@ -1964,6 +1964,13 @@ const Content: FC<ContentProps> = ({
     // setActiveKey(newPane.key)
   }
 
+  const handleAddToMyShapes = () => {
+    if (Utils.currentEditor) {
+      const data = EditorHelper.exportSelected(Utils.currentEditor, 'png', true)
+      SystemUtils.generateDownloadFile(data, 'test.png')
+    }
+  }
+
 
   const popupShapeItems: MenuProps['items'] = [
     {label: <FormattedMessage id='workspace.content.popup-shape-delete' />, key: '1', onClick: handleDelete, },
@@ -1979,6 +1986,8 @@ const Content: FC<ContentProps> = ({
     {label: <FormattedMessage id='workspace.content.popup-shape-to-back' />, key: '8', onClick: handleToBack, },
     {label: <FormattedMessage id='workspace.content.popup-shape-bring-foreward' />, key: '9', onClick: handleBringForeward, },
     {label: <FormattedMessage id='workspace.content.popup-shape-send-backward' />, key: '10', onClick: handleSendBackward, },
+    {type: 'divider' },
+    {label: <FormattedMessage id='workspace.content.popup-shape-add-to-my-shapes' />, key: '116', onClick: handleAddToMyShapes, },
   ]
 
   const popupEditorItems: MenuProps['items'] = [

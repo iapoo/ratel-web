@@ -586,10 +586,16 @@ const Header: FC<HeaderProps> = ({
     }
   }
 
-
   const handleExport = () => {
     if (Utils.currentEditor) {
-      const data = Utils.currentEditor.export()
+      const data = EditorHelper.export(Utils.currentEditor)
+      SystemUtils.generateDownloadFile(data, 'test.png')
+    }
+  }
+
+  const handleExport2 = () => {
+    if (Utils.currentEditor) {
+      const data = EditorHelper.exportSelected(Utils.currentEditor)
       SystemUtils.generateDownloadFile(data, 'test.png')
     }
   }

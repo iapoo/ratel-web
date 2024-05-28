@@ -83,6 +83,7 @@ export class Editor extends Painter {
   private _moveLayer: EditorLayer
   private _containerLayer: EditorLayer
   private _tableLayer: EditorLayer
+  private _exportLayer: EditorLayer 
   private _zoom = 1.00;
   private _inMoving = false;
   private _moved = false; //Check if movement already started
@@ -153,6 +154,7 @@ export class Editor extends Painter {
     this._moveLayer = new MaskLayer(this.horizontalSpace, this.verticalSpace, this.workWidth, this.workHeight)
     this._containerLayer = new ContainerLayer(this.horizontalSpace, this.verticalSpace, this.workWidth, this.workHeight)
     this._tableLayer = new TableLayer(0, 0, this.width, this.height)
+    this._exportLayer = new ContentLayer(this.horizontalSpace, this.verticalSpace, this.workWidth, this.workHeight)
     this._contentLayer.editor = this
     this._controllerLayer.editor = this
     this._hoverLayer.editor = this
@@ -162,6 +164,7 @@ export class Editor extends Painter {
     this._rangeLayer.editor = this
     this._containerLayer.editor = this
     this._tableLayer.editor = this
+    this._exportLayer.editor = this
     this._title = ''
     this._key = ''
     this._id = SystemUtils.generateID()
@@ -192,6 +195,7 @@ export class Editor extends Painter {
     this._tableLayer.addNode(this._tableActiveCellShape)
     this.root.addNode(this._backgroundLayer)
     this.root.addNode(this._contentLayer)
+    this.root.addNode(this._exportLayer)
     this.root.addNode(this._controllerLayer)
     this.root.addNode(this._rangeLayer)
     this.root.addNode(this._containerLayer)
@@ -652,6 +656,14 @@ export class Editor extends Painter {
     return this._contentLayer
   }
 
+  public get exportLayer (): EditorLayer {
+    return this._exportLayer
+  }
+
+  public get backgroundLayer (): EditorLayer {
+    return this._backgroundLayer
+  }
+
   public get controllerLayer (): EditorLayer {
     return this._controllerLayer
   }
@@ -759,6 +771,7 @@ export class Editor extends Painter {
     const newFullBoundary = new Rectangle(0, 0, this.width, this.height)
     this._backgroundLayer.boundary = newBoundary
     this._contentLayer.boundary = newBoundary
+    this._exportLayer.boundary = newBoundary
     this._controllerLayer.boundary = newBoundary
     this._hoverLayer.boundary = newFullBoundary
     this._selectionLayer.boundary = newFullBoundary
@@ -782,6 +795,7 @@ export class Editor extends Painter {
   // render
   public render () {
     this._contentLayer.scale = new Scale(this._zoom, this._zoom)
+    this._exportLayer.scale = new Scale(this._zoom, this._zoom)
     //this._selectionLayer.scale = new Scale(this._zoom, this._zoom)
     this._controllerLayer.scale = new Scale(this._zoom, this._zoom)
     //this._hoverLayer.scale = new Scale(this._zoom, this._zoom)
@@ -789,24 +803,6 @@ export class Editor extends Painter {
     //this._moveLayer.scale = new Scale(this._zoom, this._zoom)
     //this._containerLayer.scale = new Scale(this._zoom, this._zoom)
     super.render()
-  }
-
-  public export(format: 'png' | 'jpg' = 'png'): any {
-    try {
-        this._backgroundLayer.visible = false
-        this._selectionLayer.visible = false
-        this.render()
-        const image = this.engine.surface.makeImageSnapshot([this.horizontalSpace, this.verticalSpace, this.workWidth + this.horizontalSpace, this.workHeight + this.verticalSpace])
-        const data = image.encodeToBytes()
-        let encoded = ''
-        if(data) {
-          //encoded = Buffer.from(data).toString('base64');
-        }
-        return data
-    } finally{
-      this._backgroundLayer.visible = true
-      this._selectionLayer.visible = true
-    }
   }
 
   public undo() {
@@ -2449,7 +2445,7 @@ export class Editor extends Painter {
     }
   }
 
-  private getSelectionBoundary():[number, number, number, number] {
+  public getSelectionBoundary():[number, number, number, number] {
     let left = 0
     let top = 0
     let right = 0

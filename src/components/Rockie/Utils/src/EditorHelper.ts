@@ -10,7 +10,7 @@ export class EditorHelper {
     public static DEFAULT_OFFSET_X = 32
     public static DEFAULT_OFFSET_Y = 32
 
-    public static generateEditorItems(editor: Editor):  EditorItemInfo[] {
+    public static generateEditorItems(editor: Editor): EditorItemInfo[] {
         const editorItemInfos: Array<EditorItemInfo> = []
         const editorItems = editor.contentLayer.getAllEditorItems()
         editorItems.forEach(editorItem => {
@@ -20,7 +20,7 @@ export class EditorHelper {
         return editorItemInfos
     }
 
-    public static generateEditorSelections(editor: Editor):  EditorItemInfo[] {
+    public static generateEditorSelections(editor: Editor): EditorItemInfo[] {
         const selections: Array<EditorItemInfo> = []
         const editorItems = editor.selectionLayer.getAllEditorItems()
         editorItems.forEach(editorItem => {
@@ -77,12 +77,12 @@ export class EditorHelper {
             let editorItems: Array<EditorItem> = []
             selections.forEach(selection => {
                 let editorItem = OperationHelper.loadItem(selection, editor)
-                if(editorItem instanceof Connector &&  editorItem.start && editorItem.end) {
+                if (editorItem instanceof Connector && editorItem.start && editorItem.end) {
                     const start = editorItem.start
                     const end = editorItem.end
                     editorItem.start = new Point2(start.x + offsetX, start.y + offsetY)
                     editorItem.end = new Point2(end.x + offsetX, end.y + offsetY)
-                } else if(editorItem instanceof Item) {
+                } else if (editorItem instanceof Item) {
                     editorItem.boundary = Rectangle.makeLTWH(editorItem.left + offsetX, editorItem.top + offsetY, editorItem.width, editorItem.height)
                 }
                 editorItems.push(editorItem)
@@ -108,19 +108,19 @@ export class EditorHelper {
 
     public static deleteSelections(editor: Editor) {
         const editorItems = editor.selectionLayer.getAllEditorItems()
-        let deleteChildItem: boolean = false        
+        let deleteChildItem: boolean = false
         let parentItem: Item | undefined = undefined
-        for(let i = 0; i < editorItems.length; i ++) {
+        for (let i = 0; i < editorItems.length; i++) {
             const editorItem = editorItems[i]
             const item = editorItem as Item
-            if(item.parent) {
+            if (item.parent) {
                 deleteChildItem = true
                 parentItem = item.parent
             }
         }
-        if(deleteChildItem && parentItem) {
+        if (deleteChildItem && parentItem) {
             const origEditItemInfo = OperationHelper.saveEditorItem(parentItem)
-            for(let i = 0; i < editorItems.length; i ++) {
+            for (let i = 0; i < editorItems.length; i++) {
                 const editorItem = editorItems[i]
                 parentItem.removeItem(editorItem)
             }
@@ -131,7 +131,7 @@ export class EditorHelper {
             editor.triggerOperationChange()
         } else {
             const selections = EditorHelper.generateEditorSelections(editor)
-            for(let i = 0; i < editorItems.length; i ++) {
+            for (let i = 0; i < editorItems.length; i++) {
                 const editorItem = editorItems[i]
                 editor.contentLayer.removeEditorItem(editorItem)
             }
@@ -188,4 +188,85 @@ export class EditorHelper {
             EditorHelper.refreshEditorItem(childItem)
         })
     }
+
+    public static exportSelected(editor: Editor, format: 'png' | 'jpg' = 'png', forIcon: boolean = false): any {
+        try {
+            const left = editor.horizontalSpace
+            const top = editor.verticalSpace
+            const right = editor.workWidth + editor.horizontalSpace
+            const bottom = editor.workHeight + editor.verticalSpace
+            const [selectionLeft, selectionTop, selectionRight, selectionBottom] = editor.getSelectionBoundary()
+            const width = selectionRight - selectionLeft
+            const height = selectionBottom - selectionTop
+            const iconWidth = 32
+            const iconHeight = 32
+            const fontSizeFactor = 1
+            const lineWidthFactor = width / iconWidth > height / iconHeight ? width / iconWidth : height / iconHeight
+            const selections: Array<EditorItemInfo> = []
+            const allEditorItems = editor.selectionLayer.getAllEditorItems()
+            const editorItems: Array<EditorItem> = []
+            editor.exportLayer.removeAllEditorItems()
+            allEditorItems.forEach(editorItem => {
+                let editorItemInfo = OperationHelper.saveEditorItem(editorItem)
+                selections.push(editorItemInfo)
+            })
+            selections.forEach(selection => {
+                let editorItem = OperationHelper.loadItem(selection, editor)
+                if (editorItem instanceof Connector && editorItem.start && editorItem.end) {
+                    const start = editorItem.start
+                    const end = editorItem.end
+                    editorItem.start = new Point2(start.x, start.y)
+                    editorItem.end = new Point2(end.x, end.y)
+                } else if (editorItem instanceof Item) {
+                    editorItem.boundary = Rectangle.makeLTWH(editorItem.left, editorItem.top, editorItem.width, editorItem.height)
+                }
+                if(forIcon) {
+                    editorItem.lineWidth = 0.5 * editorItem.lineWidth * lineWidthFactor 
+                    editorItem.fontSize = editorItem.fontSize * fontSizeFactor
+                    editorItem.items.forEach(item => {
+                        item.lineWidth = 0.5 * item.lineWidth * lineWidthFactor 
+                        item.fontSize = item.fontSize * fontSizeFactor
+                    })
+                }
+                editorItems.push(editorItem)
+            })
+            editorItems.forEach(editorItem => {
+                editor.exportLayer.addEditorItem(editorItem)
+            })
+            editor.backgroundLayer.visible = false
+            editor.selectionLayer.visible = false
+            editor.contentLayer.visible = false
+            editor.render()
+            const image = editor.engine.surface.makeImageSnapshot([left + selectionLeft - 10, top + selectionTop - 10, left + selectionRight+ 10, top + selectionBottom + 10])
+            const data = image.encodeToBytes()
+            if (data) {
+                //encoded = Buffer.from(data).toString('base64');
+            }
+            return data
+        } finally {
+            editor.backgroundLayer.visible = true
+            editor.selectionLayer.visible = true
+            editor.contentLayer.visible = true
+            editor.exportLayer.removeAllEditorItems()
+        }
+    }
+
+    public static export(editor: Editor, format: 'png' | 'jpg' = 'png'): any {
+        try {
+            editor.backgroundLayer.visible = false
+            editor.selectionLayer.visible = false
+            editor.render()
+            const image = editor.engine.surface.makeImageSnapshot([editor.horizontalSpace, editor.verticalSpace, editor.workWidth + editor.horizontalSpace, editor.workHeight + editor.verticalSpace])
+            const data = image.encodeToBytes()
+            let encoded = ''
+            if (data) {
+                //encoded = Buffer.from(data).toString('base64');
+            }
+            return data
+        } finally {
+            editor.backgroundLayer.visible = true
+            editor.selectionLayer.visible = true
+        }
+    }
+
 }

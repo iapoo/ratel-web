@@ -16,6 +16,7 @@ export default {
   'workspace.content.popup-shape-bring-foreward': 'Bring Foreward',
   'workspace.content.popup-shape-send-backward': 'Send Backward',
   'workspace.content.popup-shape-lock': 'Lock/Unlock',
+  'workspace.content.popup-shape-add-to-my-shapes': 'Add to My Shapes',
   'workspace.content.popup-text-undo': 'Undo',
   'workspace.content.popup-text-redo': 'Redo',
   'workspace.content.popup-text-cut': 'Cut',
