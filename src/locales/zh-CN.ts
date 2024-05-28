@@ -16,6 +16,7 @@ export default {
   'workspace.content.popup-shape-bring-foreward': '前移一层',
   'workspace.content.popup-shape-send-backward': '后移一层',
   'workspace.content.popup-shape-lock': '锁定/解锁',
+  'workspace.content.popup-shape-add-to-my-shapes': '增加到我的图形库',
   'workspace.content.popup-text-undo': '恢复',
   'workspace.content.popup-text-redo': '重做',
   'workspace.content.popup-text-cut': '剪切',
