@@ -21,7 +21,7 @@ import { UMLBasicShapesForActivityState, UMLBasicShapesForClass, UMLBasicShapesF
 import { UMLBasicShapeTypes } from '@/components/Rockie/CustomItems/UML/src/UMLBasicShape';
 import { CustomConnectorAction } from '@/components/Rockie/Actions/src/CustomConnectorAction';
 import { CustomContainerEntity } from '@/components/Rockie/Items/src/CustomContainerEntity';
-import { MyShapes } from '../Utils/RequestUtils';
+import { MyShape, MyShapes } from '../Utils/RequestUtils';
 
 interface NavigatorProps {
   navigatorWidth: number
@@ -32,8 +32,7 @@ const Navigator: FC<NavigatorProps> = ({
 }) => {
 
   const [initialized, setInitialized,] = useState<boolean>(false)
-  const [myShapesInfo, setMyShapesInfo, ] = useState<string>('')
-  const [myShapesImages, setMyShapesImages, ] = useState<string>('')
+  const [myShapes, setMyShapes, ] = useState<string>('')
   useEffect(() => {
     if (!initialized) {
       initialize()
@@ -45,15 +44,13 @@ const Navigator: FC<NavigatorProps> = ({
     const fetchSettingsData = async () => {
       const settingsData = await RequestUtils.getSettings()
       if(settingsData.status == 200 && settingsData.data.success) {
-        const data = settingsData.data.data
-        const myShapes: MyShapes = data ? JSON.parse(data) : {}
-        setMyShapesInfo(myShapes.info)
-        setMyShapesImages(myShapes.image)
+        const data = settingsData.data.data.settings
+        setMyShapes(data)
       } else {
-        setMyShapesInfo('')
-        setMyShapesImages('')
+        setMyShapes('')
       }
     }
+    await RequestUtils.isOnline()
     fetchSettingsData()   
   }
 
@@ -638,19 +635,24 @@ const Navigator: FC<NavigatorProps> = ({
   )
 
   //const myShapeInfos: EditorItemInfo[] = settings ? JSON.parse('') : []
-  // const myShapes = myShapeInfos.forEach(myShapeInfo => {
+  const newMyShapes: MyShapes = myShapes ? JSON.parse(myShapes) : {shapes:[]}
+  let newShapes: MyShape[] = []
+  if(newMyShapes) {
+    newShapes = newMyShapes.shapes
+  }
 
-  // })
-  const myShapes = <Button type='text' style={{padding: 2, display: 'table'}}>
-    <img src={`${myShapesImages}`} width={32} height={32} style={{display: 'table-cell'}}/>
-  </Button>
+  const myShapeItems = newShapes.map(myShape => {
+    return <Button type='text' style={{padding: 2, display: 'table'}}>
+    <img src={`${myShape.image}`} width={28} height={28} style={{display: 'table-cell'}}/>
+    </Button>
+  })
 
   const items: CollapseProps['items'] = [
     {
       key: '1',
       label: <div style={{fontWeight: 'bolder'}}><FormattedMessage id='workspace.navigator.panel.general' /></div>,
       children: <Space size={2} wrap>
-      {myShapes}    
+      {myShapeItems}    
     </Space>,
     },
     {
@@ -736,7 +738,7 @@ const Navigator: FC<NavigatorProps> = ({
 
   return (
     <div style={{ position: 'absolute', top: '0px', bottom: '0px', left: '0px', width: navigatorWidth, overflow: 'auto', scrollbarWidth: 'thin'}} >
-      <Collapse items={items} defaultActiveKey={['1', ]} onChange={onChange} size='small'/>
+      <Collapse items={items} defaultActiveKey={['1', '2' ]} onChange={onChange} size='small'/>
     </div>
   )
 }

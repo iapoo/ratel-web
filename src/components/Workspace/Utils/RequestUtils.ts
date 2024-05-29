@@ -33,6 +33,11 @@ export interface Document {
 }
 
 export interface MyShapes {
+    shapes: MyShape[]
+}
+
+
+export interface MyShape {
     image: string
     info: string
 }
