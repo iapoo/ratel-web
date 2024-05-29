@@ -131,6 +131,7 @@ export default {
   'workspace.navigator.panel.arrows': 'Arrows',
   'workspace.navigator.panel.basic': 'Basic',
   'workspace.navigator.panel.general': 'General',
+  'workspace.navigator.panel.my-shapes': '我的图形库',
   'workspace.navigator.panel.uml-class': 'UML Class',
   'workspace.navigator.panel.uml-use-case': 'UML Use Case',
   'workspace.navigator.panel.uml-activity-state': 'UML Activity/State Machine',
