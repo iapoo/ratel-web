@@ -2,9 +2,10 @@ import { Point2, Rectangle } from "@/components/Engine";
 import { Editor } from "../../Editor";
 import { Categories, Connector, ConnectorInfo, EditorItem, EditorItemInfo, Entity, Item, ShapeEntity } from "../../Items";
 import { Operation, OperationHelper, OperationType } from "../../Operations";
-import { SystemUtils } from "@/components/Workspace/Utils";
+import { RequestUtils, SystemUtils } from "@/components/Workspace/Utils";
 import { Style, StyleInfo } from "../../Shapes/src/EntityUtils";
 import { ImageUtils } from "./ImageUtils";
+import { MyShapes } from "@/components/Workspace/Utils/RequestUtils";
 
 export class EditorHelper {
 
@@ -268,6 +269,40 @@ export class EditorHelper {
         } finally {
             editor.backgroundLayer.visible = true
             editor.selectionLayer.visible = true
+        }
+    }
+
+    public static async addToMyShapes(editor: Editor) {
+        const settingData = await RequestUtils.getSettings()
+        if(settingData.status == 200 && settingData.data.success) {
+            console.log(`Succeed to get settings`)
+            const settings = settingData.data.data.settings
+            let myShapes: MyShapes = settings ? JSON.parse(settings) : {}
+            const selectionInfos = EditorHelper.generateEditorSelections(editor)
+            const data = EditorHelper.exportSelected(editor, 'png', true)
+            const imageData = 'data:image/png;base64,' +data
+            const imageInfo = JSON.stringify(selectionInfos)
+            if(!myShapes || ! myShapes.shapes) {
+                myShapes = {
+                    shapes: [
+                        {image: imageData, info: imageInfo}
+                        ]
+                  }
+            } else {
+                myShapes.shapes.push({image: imageData, info: imageInfo})
+            }
+            
+            const myShapesInfo = JSON.stringify(myShapes)      
+            // console.log(`myShapesInfo= ${myShapes}`)
+            const updateSettingsData = await RequestUtils.updateSettings(myShapesInfo)
+            if(updateSettingsData.status == 200 && updateSettingsData.data.success) {
+              console.log(`Succeed to update settings`)
+            } else {
+              console.log(`Fail to update settings`)
+            }
+            // SystemUtils.generateDownloadFile(data, 'test.png')
+        } else {
+            console.log(`Fail to get settings`)
         }
     }
 

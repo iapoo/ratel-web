@@ -1965,25 +1965,8 @@ const Content: FC<ContentProps> = ({
   }
 
   const handleAddToMyShapes = async () => {
-    if (Utils.currentEditor) {
-      const selectionInfos = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      const data = EditorHelper.exportSelected(Utils.currentEditor, 'png', true)
-      const imageData = 'data:image/png;base64,' +data
-      const imageInfo = JSON.stringify(selectionInfos)
-      const myShapes = {
-        image: imageData,
-        info: imageInfo
-      }
-      const myShapesInfo = JSON.stringify(myShapes)
-
-      console.log(`imageData= ${imageData}`)
-      const settingsData = await RequestUtils.updateSettings(myShapesInfo)
-      if(settingsData.status == 200 && settingsData.data.success) {
-        console.log(`Succeed to update settings`)
-      } else {
-        console.log(`Fail to update settings`)
-      }
-      // SystemUtils.generateDownloadFile(data, 'test.png')
+    if(Utils.currentEditor) {
+      EditorHelper.addToMyShapes(Utils.currentEditor)
     }
   }
 
