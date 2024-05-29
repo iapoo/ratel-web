@@ -56,6 +56,7 @@ interface Pane {
 
 interface ContentProps {
   onEditorChange: (oldEditor: Editor | undefined, newEditor: Editor | undefined) => void
+  onMyShapesUpdated: () => void
   x: string
   y: string
 }
@@ -83,7 +84,7 @@ enum PopupType {
 }
 
 const Content: FC<ContentProps> = ({
-  onEditorChange, x, y
+  onEditorChange, onMyShapesUpdated, x, y
 }) => {
   //const { token, } =  useToken()
   const intl = useIntl();
@@ -1966,7 +1967,10 @@ const Content: FC<ContentProps> = ({
 
   const handleAddToMyShapes = async () => {
     if(Utils.currentEditor) {
-      EditorHelper.addToMyShapes(Utils.currentEditor)
+      await EditorHelper.addToMyShapes(Utils.currentEditor)
+      if(onMyShapesUpdated) {
+        onMyShapesUpdated()
+      }
     }
   }
 
