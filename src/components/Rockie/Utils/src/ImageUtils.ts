@@ -41,4 +41,24 @@ export class ImageUtils {
             return undefined
         }
     }
+
+    /**
+     * 示例：创建Uint8Array并转换为Base64
+     * const uint8Array = new Uint8Array([72, 101, 108, 108, 111]);
+     * const base64 = uint8ArrayToBase64(uint8Array);
+     * console.log(base64); // 输出: SGVsbG8=
+     * @param u8Array 
+     * @returns 
+     */
+    public static convertUint8ArrayToBase64(u8Array: Uint8Array) {
+        const CHUNK_SIZE = 0x8000; // 32K chunks
+        let base64 = '';
+        for (let i = 0; i < u8Array.length; i += CHUNK_SIZE) {
+            const chunk = u8Array.subarray(i, i + CHUNK_SIZE);
+            const chunkBase64 = btoa(String.fromCharCode.apply(null, chunk));
+            base64 += chunkBase64.match(/.{2}/g).join('');
+        }
+        return base64;
+    }
+ 
 }

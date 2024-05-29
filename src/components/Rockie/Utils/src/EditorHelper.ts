@@ -4,6 +4,7 @@ import { Categories, Connector, ConnectorInfo, EditorItem, EditorItemInfo, Entit
 import { Operation, OperationHelper, OperationType } from "../../Operations";
 import { SystemUtils } from "@/components/Workspace/Utils";
 import { Style, StyleInfo } from "../../Shapes/src/EntityUtils";
+import { ImageUtils } from "./ImageUtils";
 
 export class EditorHelper {
 
@@ -239,10 +240,11 @@ export class EditorHelper {
             editor.render()
             const image = editor.engine.surface.makeImageSnapshot([left + selectionLeft - 10, top + selectionTop - 10, left + selectionRight+ 10, top + selectionBottom + 10])
             const data = image.encodeToBytes()
-            if (data) {
-                //encoded = Buffer.from(data).toString('base64');
+            let base64Data = ''
+            if(data) {
+                base64Data = ImageUtils.convertUint8ArrayToBase64(data)
             }
-            return data
+            return base64Data
         } finally {
             editor.backgroundLayer.visible = true
             editor.selectionLayer.visible = true

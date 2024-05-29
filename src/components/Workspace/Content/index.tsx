@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useRef, FC, MouseEventHandler, SyntheticEvent, UIEvent, KeyboardEvent, ChangeEvent, Ref, MutableRefObject, } from 'react'
 import styles from './index.css'
 import { Button, ColorPicker, ConfigProvider, Divider, Dropdown, FloatButton, Input, InputNumber, InputRef, MenuProps, Select, Space, Tabs, Tooltip, theme, } from 'antd'
-import { Consts, FontSizeOptions, SystemUtils, Utils, } from '../Utils'
+import { Consts, FontSizeOptions, RequestUtils, SystemUtils, Utils, } from '../Utils'
 import { Editor, EditorEvent, EditorOperationEvent, } from '../../Rockie/Editor'
 
 import { Engine, Rectangle2D, EngineUtils, Line2D, FontWeight, FontSlant, TextDecoration, Point2, } from '../../Engine'
@@ -1964,10 +1964,26 @@ const Content: FC<ContentProps> = ({
     // setActiveKey(newPane.key)
   }
 
-  const handleAddToMyShapes = () => {
+  const handleAddToMyShapes = async () => {
     if (Utils.currentEditor) {
+      const selectionInfos = EditorHelper.generateEditorSelections(Utils.currentEditor)
       const data = EditorHelper.exportSelected(Utils.currentEditor, 'png', true)
-      SystemUtils.generateDownloadFile(data, 'test.png')
+      const imageData = 'data:image/png;base64,' +data
+      const imageInfo = JSON.stringify(selectionInfos)
+      const myShapes = {
+        image: imageData,
+        info: imageInfo
+      }
+      const myShapesInfo = JSON.stringify(myShapes)
+
+      console.log(`imageData= ${imageData}`)
+      const settingsData = await RequestUtils.updateSettings(myShapesInfo)
+      if(settingsData.status == 200 && settingsData.data.success) {
+        console.log(`Succeed to update settings`)
+      } else {
+        console.log(`Fail to update settings`)
+      }
+      // SystemUtils.generateDownloadFile(data, 'test.png')
     }
   }
 

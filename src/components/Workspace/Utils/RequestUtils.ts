@@ -32,6 +32,11 @@ export interface Document {
     folderId: number | null;
 }
 
+export interface MyShapes {
+    image: string
+    info: string
+}
+
 export function isFolder(source:  Folder | Document | undefined ): source is Folder {
     if( source == undefined) {
         return false
@@ -248,6 +253,27 @@ export class RequestUtils {
 
     public static info() {       
         return axios.post(`${RequestUtils.serverAddress}/info`, {            
+            }, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Token': RequestUtils.token
+            },
+            })        
+    }
+
+    public static getSettings() {       
+        return axios.post(`${RequestUtils.serverAddress}/settings`, {            
+            }, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Token': RequestUtils.token
+            },
+            })        
+    }
+
+    public static updateSettings(settings: string) {       
+        return axios.post(`${RequestUtils.serverAddress}/updateSettings`, {   
+                'settings':  settings       
             }, {
             headers: {
                 'Content-Type': 'application/json',

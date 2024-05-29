@@ -9,7 +9,7 @@ import {
   Rectangle, RoundRectangle, Text, Ellipse, Square, Circle, Process, Diamond, Parallelogram, Hexagon, Triangle,
   Cylinder, Cloud, Document, InternalStorage, Cube, Step, Trapezoid, Tape, Note, Card, Callout, Actor, Container
 } from '@/components/Resource/LargeIcons'
-import { ContainerEntity, ContainerTypes, Containers, CustomConnector, CustomEntity, CustomTableEntity, FrameEntity, ShapeTypes, Shapes } from '@/components/Rockie/Items'
+import { ContainerEntity, ContainerTypes, Containers, CustomConnector, CustomEntity, CustomTableEntity, EditorItemInfo, FrameEntity, ShapeTypes, Shapes } from '@/components/Rockie/Items'
 import { BasicShapes } from '@/components/Rockie/CustomItems/BasicShapes';
 import { ShapeTypeInfo } from '@/components/Rockie/Shapes/src/EntityShape';
 import { ShapeEntity, ShapeType } from '@/components/Rockie/Items/src/ShapeEntity';
@@ -21,6 +21,7 @@ import { UMLBasicShapesForActivityState, UMLBasicShapesForClass, UMLBasicShapesF
 import { UMLBasicShapeTypes } from '@/components/Rockie/CustomItems/UML/src/UMLBasicShape';
 import { CustomConnectorAction } from '@/components/Rockie/Actions/src/CustomConnectorAction';
 import { CustomContainerEntity } from '@/components/Rockie/Items/src/CustomContainerEntity';
+import { MyShapes } from '../Utils/RequestUtils';
 
 interface NavigatorProps {
   navigatorWidth: number
@@ -31,7 +32,8 @@ const Navigator: FC<NavigatorProps> = ({
 }) => {
 
   const [initialized, setInitialized,] = useState<boolean>(false)
-
+  const [myShapesInfo, setMyShapesInfo, ] = useState<string>('')
+  const [myShapesImages, setMyShapesImages, ] = useState<string>('')
   useEffect(() => {
     if (!initialized) {
       initialize()
@@ -40,6 +42,19 @@ const Navigator: FC<NavigatorProps> = ({
 
   const initialize = async () => {
     setInitialized(true)
+    const fetchSettingsData = async () => {
+      const settingsData = await RequestUtils.getSettings()
+      if(settingsData.status == 200 && settingsData.data.success) {
+        const data = settingsData.data.data
+        const myShapes: MyShapes = data ? JSON.parse(data) : {}
+        setMyShapesInfo(myShapes.info)
+        setMyShapesImages(myShapes.image)
+      } else {
+        setMyShapesInfo('')
+        setMyShapesImages('')
+      }
+    }
+    fetchSettingsData()   
   }
 
   const onChange = (key: string | string[]) => {
@@ -622,9 +637,24 @@ const Navigator: FC<NavigatorProps> = ({
     }
   )
 
+  //const myShapeInfos: EditorItemInfo[] = settings ? JSON.parse('') : []
+  // const myShapes = myShapeInfos.forEach(myShapeInfo => {
+
+  // })
+  const myShapes = <Button type='text' style={{padding: 2, display: 'table'}}>
+    <img src={`${myShapesImages}`} width={32} height={32} style={{display: 'table-cell'}}/>
+  </Button>
+
   const items: CollapseProps['items'] = [
     {
       key: '1',
+      label: <div style={{fontWeight: 'bolder'}}><FormattedMessage id='workspace.navigator.panel.general' /></div>,
+      children: <Space size={2} wrap>
+      {myShapes}    
+    </Space>,
+    },
+    {
+      key: '2',
       label: <div style={{fontWeight: 'bolder'}}><FormattedMessage id='workspace.navigator.panel.general' /></div>,
       children: <Space size={2} wrap>
       {shapes}    
@@ -639,7 +669,7 @@ const Navigator: FC<NavigatorProps> = ({
     </Space>,
     },
     {
-      key: '2',
+      key: '3',
       label: <div style={{fontWeight: 'bolder'}}><FormattedMessage id='workspace.navigator.panel.advanced'/></div>,
       children: <Space size={2} wrap>
       {aliyunShapes}
@@ -649,14 +679,14 @@ const Navigator: FC<NavigatorProps> = ({
       </Space>,
     },
     {
-      key: '3',
+      key: '4',
       label: <div style={{fontWeight: 'bolder'}}><FormattedMessage id='workspace.navigator.panel.arrows'/></div>,
       children: <Space size={2} wrap>
       {customShapeArrows}
       </Space>,
     },
     {
-      key: '4',
+      key: '5',
       label: <div style={{fontWeight: 'bolder'}}><FormattedMessage id='workspace.navigator.panel.uml-class'/></div>,
       children: <Space size={2} wrap>
       {umlGridShapesForClass}
@@ -666,7 +696,7 @@ const Navigator: FC<NavigatorProps> = ({
       </Space>,
     },
     {
-      key: '5',
+      key: '6',
       label: <div style={{fontWeight: 'bolder'}}><FormattedMessage id='workspace.navigator.panel.uml-use-case'/></div>,
       children: <Space size={2} wrap>
       {umlContainerShapesForUseCase}
@@ -675,7 +705,7 @@ const Navigator: FC<NavigatorProps> = ({
       </Space>,
     },
     {
-      key: '6',
+      key: '7',
       label: <div style={{fontWeight: 'bolder'}}><FormattedMessage id='workspace.navigator.panel.uml-activity-state'/></div>,
       children: <Space size={2} wrap>
         {umlBasicShapesForActivityState}
@@ -685,7 +715,7 @@ const Navigator: FC<NavigatorProps> = ({
       </Space>,
     },
     {
-      key: '7',
+      key: '8',
       label: <div style={{fontWeight: 'bolder'}}><FormattedMessage id='workspace.navigator.panel.uml-sequence'/></div>,
       children: <Space size={2} wrap>
         {umlCustomContainersForSequence}
@@ -695,7 +725,7 @@ const Navigator: FC<NavigatorProps> = ({
       </Space>,
     },
     {
-      key: '8',
+      key: '9',
       label: <div style={{fontWeight: 'bolder'}}><FormattedMessage id='workspace.navigator.panel.uml-others'/></div>,
       children: <Space size={2} wrap>
         {umlGridShapesForOther}
