@@ -25,15 +25,20 @@ import { MyShape, MyShapes } from '../Utils/RequestUtils';
 
 interface NavigatorProps {
   navigatorWidth: number
+  onMyShapesLoaded: () => void
+  myShapesUpdated: boolean
 }
 
 const Navigator: FC<NavigatorProps> = ({
-  navigatorWidth
+  navigatorWidth, myShapesUpdated, onMyShapesLoaded
 }) => {
 
   const [initialized, setInitialized,] = useState<boolean>(false)
-  const [myShapes, setMyShapes, ] = useState<string>('')
+  const [myShapes, setMyShapes, ] = useState<MyShape[]>([])
   useEffect(() => {
+    if(myShapesUpdated || !initialized) {
+      refreshMyShapes()
+    }
     if (!initialized) {
       initialize()
     }
@@ -41,17 +46,28 @@ const Navigator: FC<NavigatorProps> = ({
 
   const initialize = async () => {
     setInitialized(true)
+  }
+
+  const refreshMyShapes = async () => {
     const fetchSettingsData = async () => {
       const settingsData = await RequestUtils.getSettings()
       if(settingsData.status == 200 && settingsData.data.success) {
         const data = settingsData.data.data.settings
-        setMyShapes(data)
+        const newMyShapes: MyShapes = data ? JSON.parse(data) : []
+        if(newMyShapes) {
+          setMyShapes(newMyShapes.shapes)
+        } else {
+          setMyShapes([])
+        }
       } else {
-        setMyShapes('')
+        setMyShapes([])
+      }
+      if(onMyShapesLoaded) {
+        onMyShapesLoaded()
       }
     }
     await RequestUtils.isOnline()
-    fetchSettingsData()   
+    fetchSettingsData()
   }
 
   const onChange = (key: string | string[]) => {
@@ -634,16 +650,9 @@ const Navigator: FC<NavigatorProps> = ({
     }
   )
 
-  //const myShapeInfos: EditorItemInfo[] = settings ? JSON.parse('') : []
-  const newMyShapes: MyShapes = myShapes ? JSON.parse(myShapes) : {shapes:[]}
-  let newShapes: MyShape[] = []
-  if(newMyShapes) {
-    newShapes = newMyShapes.shapes
-  }
-
-  const myShapeItems = newShapes.map(myShape => {
+  const myShapeItems = myShapes.map(myShape => {
     return <Button type='text' style={{padding: 2, display: 'table'}}>
-    <img src={`${myShape.image}`} width={28} height={28} style={{display: 'table-cell'}}/>
+    <img src={`${myShape.image}`} width={32} height={32} style={{display: 'table-cell'}}/>
     </Button>
   })
 
@@ -738,7 +747,7 @@ const Navigator: FC<NavigatorProps> = ({
 
   return (
     <div style={{ position: 'absolute', top: '0px', bottom: '0px', left: '0px', width: navigatorWidth, overflow: 'auto', scrollbarWidth: 'thin'}} >
-      <Collapse items={items} defaultActiveKey={['1', '2' ]} onChange={onChange} size='small'/>
+      <Collapse items={items} defaultActiveKey={['1','2' ]} onChange={onChange} size='small'/>
     </div>
   )
 }
