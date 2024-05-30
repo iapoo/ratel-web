@@ -1967,7 +1967,11 @@ const Content: FC<ContentProps> = ({
 
   const handleAddToMyShapes = async () => {
     if(Utils.currentEditor) {
-      await EditorHelper.addToMyShapes(Utils.currentEditor, onMyShapesUpdated)
+      if(RequestUtils.online) {
+        await EditorHelper.addToMyShapes(Utils.currentEditor, onMyShapesUpdated)
+      } else {
+        SystemUtils.handleInternalError(intl.formatMessage({ id: 'workspace.content.message-login-is-required' }))
+      }
     }
   }
 

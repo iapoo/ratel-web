@@ -1,5 +1,6 @@
 export default {
   'workspace.content.message-clipboard-not-supported': '当前浏览器的剪贴板功能支持不完善',
+  'workspace.content.message-login-is-required': '当前功能需要登录',
   'workspace.content.popup-editor-undo': '恢复',
   'workspace.content.popup-editor-redo': '重做',
   'workspace.content.popup-editor-paste': '粘贴',
