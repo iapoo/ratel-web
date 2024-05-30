@@ -42,10 +42,12 @@ import { UMLFrameShape, UMLFrameShapeTypes } from '@/components/Rockie/CustomIte
 interface HeaderProps {
   previousEditor: Editor | undefined
   currentEditor: Editor | undefined
+  onLogin: () => void
+  onLogout: () => void
 }
 
 const Header: FC<HeaderProps> = ({
-  previousEditor, currentEditor
+  previousEditor, currentEditor, onLogin, onLogout
 }) => {
   const intl = useIntl();
   const [messageApi, contextHolder] = message.useMessage();
@@ -355,6 +357,9 @@ const Header: FC<HeaderProps> = ({
       default:
         break;
     }
+    if(onLogin) {
+      onLogin()
+    }
   }
 
   const handleRegisterFormWindowCancel = () => {
@@ -461,7 +466,10 @@ const Header: FC<HeaderProps> = ({
       })
     } else {
       RequestUtils.logout()
-      handleNewFileWindowOk()
+      handleNewFileWindowOk()      
+    }
+    if(onLogout) {
+      onLogout()
     }
   }
 
