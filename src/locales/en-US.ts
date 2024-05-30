@@ -1,5 +1,6 @@
 export default {
   'workspace.content.message-clipboard-not-supported': 'Clipboard functionality cannot work on current browser',
+  'workspace.content.message-login-is-required': 'Login is required',
   'workspace.content.popup-editor-undo': 'Undo',
   'workspace.content.popup-editor-redo': 'Redo',
   'workspace.content.popup-editor-paste': 'Paste',
