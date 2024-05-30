@@ -5,7 +5,7 @@ import { Engine, Rectangle2D, EngineUtils, Line2D, } from '../Engine'
 import { Player, } from '../Player'
 import { Editor, } from '../Rockie/Editor'
 import { ShapeAction, } from '../Rockie/Actions'
-import { Utils, } from './Utils'
+import { RequestUtils, Utils, } from './Utils'
 import Header from './Header'
 import Footer from './Footer'
 import Body from './Body'
@@ -19,6 +19,8 @@ export default (props: any) => {
   const [ ready, setReady, ] = useState<boolean>(false)
   const [ currentEditor, setCurrentEditor, ] = useState<Editor | undefined>(undefined)
   const [ previousEditor, setPreviousEditor, ] = useState<Editor | undefined>(undefined)
+  const [ loginCompleted, setLoginCompleted] = useState<boolean>(false)
+  const [ logoutCompleted, setLogoutCompleted] = useState<boolean>(false)
 
   useEffect(() => {
     if (!initialized) {
@@ -44,6 +46,8 @@ export default (props: any) => {
     // newEditor.start()
     // setEditor(newEditor)
     setReady(true)
+    const online = await RequestUtils.isOnline()
+    setLoginCompleted(online)
   }
 
   const handleEditorChange = (oldEditor: Editor | undefined, newEditor: Editor | undefined)=> {
@@ -54,11 +58,25 @@ export default (props: any) => {
     }
   }
 
+  const handleLogin = () => {
+    setLoginCompleted(true)
+    setLogoutCompleted(false)
+  }
+
+  const handleLogout = () => {
+    setLogoutCompleted(true)
+    setLoginCompleted(false)
+  }
+
+  const handleMyShapesNotified = () => {
+    setLogoutCompleted(false)
+    setLoginCompleted(false)
+  }
 
   return (
     <div style={{ width: '100%', height: '100%', }}>
-      <Header previousEditor={previousEditor} currentEditor={currentEditor}/>
-      <Body onEditorChange={handleEditorChange}  previousEditor={previousEditor} currentEditor={currentEditor}/>
+      <Header previousEditor={previousEditor} currentEditor={currentEditor} onLogin={handleLogin} onLogout={handleLogout}/>
+      <Body onEditorChange={handleEditorChange}  previousEditor={previousEditor} currentEditor={currentEditor} loginCompleted={loginCompleted} logoutCompleted={logoutCompleted} onMyShapesNotified={handleMyShapesNotified}/>
       <Footer/>
     </div>
 

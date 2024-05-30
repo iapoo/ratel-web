@@ -14,19 +14,27 @@ interface BodyProps {
   previousEditor: Editor | undefined
   currentEditor: Editor | undefined
   onEditorChange: (oldEditor: Editor | undefined, newEditor: Editor | undefined) => void
+  onMyShapesNotified: () => void
+  loginCompleted: boolean
+  logoutCompleted: boolean
 }
 
 const Body: FC<BodyProps> = ({
-  previousEditor, currentEditor, onEditorChange
+  previousEditor, currentEditor, onEditorChange, onMyShapesNotified, loginCompleted, logoutCompleted
 }) => {
   const [ initialized, setInitialized, ] = useState<boolean>(false)
   const [ navigatorWidth, setNavigatorWidth, ] = useState<number>(Utils.DEFAULT_NAVIGATOR_WIDTH)
   const [ enablePropertyEditor, setEnablePropertyEditor] = useState<boolean>(false)
   const [ myShapesUpdated, setMyShapesUpdated, ] = useState<boolean>(false)
-
   useEffect(() => {
     if (!initialized) {
       initialize()
+    }
+    if(loginCompleted || logoutCompleted) {
+      setMyShapesUpdated(true)
+      if(onMyShapesNotified) {
+        onMyShapesNotified()
+      }
     }
   })
 
@@ -76,6 +84,7 @@ const Body: FC<BodyProps> = ({
     setMyShapesUpdated(false)
   }
 
+  console.log(`Check myShapesUpdated = ${myShapesUpdated}`)
   return (
     <div style={{ position: 'absolute', top: `${Utils.HEADER_HEIGHT}px`, bottom: `${Utils.FOOTER_HEIGHT}px`, right: '0px', left: '0px', }} >
       <Navigator navigatorWidth={navigatorWidth} myShapesUpdated={myShapesUpdated} onMyShapesLoaded={handleMyShapesLoaded}/>

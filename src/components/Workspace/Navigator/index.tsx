@@ -27,14 +27,17 @@ interface NavigatorProps {
   navigatorWidth: number
   onMyShapesLoaded: () => void
   myShapesUpdated: boolean
+  // loginCompleted: boolean
+  // logoutCompleted: boolean
 }
 
 const Navigator: FC<NavigatorProps> = ({
-  navigatorWidth, myShapesUpdated, onMyShapesLoaded
+  navigatorWidth, myShapesUpdated, onMyShapesLoaded //, loginCompleted, logoutCompleted
 }) => {
 
   const [initialized, setInitialized,] = useState<boolean>(false)
   const [myShapes, setMyShapes, ] = useState<MyShape[]>([])
+
   useEffect(() => {
     if(myShapesUpdated || !initialized) {
       refreshMyShapes()
@@ -42,11 +45,35 @@ const Navigator: FC<NavigatorProps> = ({
     if (!initialized) {
       initialize()
     }
+    // if(!myShapesUpdated && myShapes.length > 0) {
+    //   setMyShapes([])
+    // }
   })
 
   const initialize = async () => {
     setInitialized(true)
   }
+
+  // const checkAndRefreshMyShapes = async () => {
+  //   const online = await RequestUtils.isOnline()
+  //   if(myShapesUpdated) {
+  //     if(online) {
+  //       await refreshMyShapes()
+  //     } else {
+  //       setMyShapes([])
+  //     }
+  //   }
+  //   // if(!logoutCompleted) {
+  //   //   if(loginCompleted || myShapesUpdated) {
+  //   //     await refreshMyShapes()
+  //   //   } else {
+  //   //     const online = await RequestUtils.isOnline()
+  //   //     if(online) {
+  //   //       await refreshMyShapes()
+  //   //     }
+  //   //   }
+  //   // }
+  // }
 
   const refreshMyShapes = async () => {
     const fetchSettingsData = async () => {

@@ -272,7 +272,7 @@ export class EditorHelper {
         }
     }
 
-    public static async addToMyShapes(editor: Editor) {
+    public static async addToMyShapes(editor: Editor, callback: ()=> void) {
         const settingData = await RequestUtils.getSettings()
         if(settingData.status == 200 && settingData.data.success) {
             console.log(`Succeed to get settings`)
@@ -301,6 +301,9 @@ export class EditorHelper {
               console.log(`Fail to update settings`)
             }
             // SystemUtils.generateDownloadFile(data, 'test.png')
+            if(callback) {
+                callback()
+            }
         } else {
             console.log(`Fail to get settings`)
         }

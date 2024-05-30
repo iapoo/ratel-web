@@ -1967,10 +1967,7 @@ const Content: FC<ContentProps> = ({
 
   const handleAddToMyShapes = async () => {
     if(Utils.currentEditor) {
-      await EditorHelper.addToMyShapes(Utils.currentEditor)
-      if(onMyShapesUpdated) {
-        onMyShapesUpdated()
-      }
+      await EditorHelper.addToMyShapes(Utils.currentEditor, onMyShapesUpdated)
     }
   }
 
