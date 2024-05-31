@@ -36,10 +36,18 @@ export interface MyShapes {
     shapes: MyShape[]
 }
 
+export enum MyShapeType {
+    SELECTION = 0,
+    SVG = 1,
+    IMAGE = 2
+}
 
 export interface MyShape {
+    id: string
+    name: string
     image: string
     info: string
+    type: MyShapeType
 }
 
 export function isFolder(source:  Folder | Document | undefined ): source is Folder {

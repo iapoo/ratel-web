@@ -5,7 +5,7 @@ import { Operation, OperationHelper, OperationType } from "../../Operations";
 import { RequestUtils, SystemUtils } from "@/components/Workspace/Utils";
 import { Style, StyleInfo } from "../../Shapes/src/EntityUtils";
 import { ImageUtils } from "./ImageUtils";
-import { MyShapes } from "@/components/Workspace/Utils/RequestUtils";
+import { MyShapeType, MyShapes } from "@/components/Workspace/Utils/RequestUtils";
 
 export class EditorHelper {
 
@@ -282,14 +282,15 @@ export class EditorHelper {
             const data = EditorHelper.exportSelected(editor, 'png', true)
             const imageData = 'data:image/png;base64,' +data
             const imageInfo = JSON.stringify(selectionInfos)
+            const id =  SystemUtils.generateID()
             if(!myShapes || ! myShapes.shapes) {
                 myShapes = {
                     shapes: [
-                        {image: imageData, info: imageInfo}
+                        {image: imageData, info: imageInfo, type: MyShapeType.SELECTION, name: 'Custom Shape', id: id}
                         ]
                   }
             } else {
-                myShapes.shapes.push({image: imageData, info: imageInfo})
+                myShapes.shapes.push({image: imageData, info: imageInfo, type: MyShapeType.SELECTION, name: 'Custom Shape', id: id})
             }
             
             const myShapesInfo = JSON.stringify(myShapes)      
