@@ -22,6 +22,8 @@ import { UMLBasicShapeTypes } from '@/components/Rockie/CustomItems/UML/src/UMLB
 import { CustomConnectorAction } from '@/components/Rockie/Actions/src/CustomConnectorAction';
 import { CustomContainerEntity } from '@/components/Rockie/Items/src/CustomContainerEntity';
 import { MyShape, MyShapes } from '../Utils/RequestUtils';
+import { EditOutlined } from '@ant-design/icons';
+import MyShapesWindowPage from './MyShapesWindow';
 
 interface NavigatorProps {
   navigatorWidth: number
@@ -37,9 +39,11 @@ const Navigator: FC<NavigatorProps> = ({
 
   const [initialized, setInitialized,] = useState<boolean>(false)
   const [myShapes, setMyShapes, ] = useState<MyShape[]>([])
+  const [myShapesWindowVisiible, setMyShapesWindowVisible, ] = useState<boolean>(false)
+  const [myShapesChanged, setMyShapesChanged, ] = useState<boolean>(false)
 
   useEffect(() => {
-    if(myShapesUpdated || !initialized) {
+    if(myShapesChanged || myShapesUpdated || !initialized) {
       refreshMyShapes()
     }
     if (!initialized) {
@@ -92,6 +96,7 @@ const Navigator: FC<NavigatorProps> = ({
       if(onMyShapesLoaded) {
         onMyShapesLoaded()
       }
+      setMyShapesChanged(false)
     }
     await RequestUtils.isOnline()
     fetchSettingsData()
@@ -683,13 +688,31 @@ const Navigator: FC<NavigatorProps> = ({
     </Button>
   })
 
+  const handleModifyMyShapes = (event: MouseEvent) => {
+    setMyShapesWindowVisible(!myShapesWindowVisiible)
+    event.stopPropagation()
+  }
+
+  const handleMyShapesWindowOk = () => {
+    setMyShapesWindowVisible(false)
+  }
+
+  const handleMyShapesWindowCancel = () => {
+    setMyShapesWindowVisible(false)
+  }
+
+  const handleMyShapesChanged = () => {
+    setMyShapesChanged(true)
+  }
+
   const items: CollapseProps['items'] = [
     {
       key: '1',
       label: <div style={{fontWeight: 'bolder'}}><FormattedMessage id='workspace.navigator.panel.general' /></div>,
       children: <Space size={2} wrap>
-      {myShapeItems}    
-    </Space>,
+          {myShapeItems}    
+        </Space>,
+      extra: <EditOutlined onClick={handleModifyMyShapes}/>
     },
     {
       key: '2',
@@ -775,6 +798,7 @@ const Navigator: FC<NavigatorProps> = ({
   return (
     <div style={{ position: 'absolute', top: '0px', bottom: '0px', left: '0px', width: navigatorWidth, overflow: 'auto', scrollbarWidth: 'thin'}} >
       <Collapse items={items} defaultActiveKey={['1','2' ]} onChange={onChange} size='small'/>
+      <MyShapesWindowPage visible={myShapesWindowVisiible} onWindowCancel={handleMyShapesWindowCancel} onWindowOk={handleMyShapesWindowOk} onMyShapesChanged={handleMyShapesChanged}/>
     </div>
   )
 }
