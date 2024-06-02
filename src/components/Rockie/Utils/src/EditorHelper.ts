@@ -329,20 +329,12 @@ export class EditorHelper {
         }
     }
 
-    public static async addSvgToMyShapes(svgData: string, myShapes: MyShapes, callback: ()=> void) {
+    public static async addSvgToMyShapes(svgData: string, myShapes: MyShape[], callback: ()=> void) {
         const imageInfo = svgData
         const id =  SystemUtils.generateID()
-        if(!myShapes || ! myShapes.shapes) {
-            myShapes = {
-                shapes: [
-                    {image: svgData, info: imageInfo, type: MyShapeType.IMAGE, name: 'Custom Image', id: id}
-                    ]
-              }
-        } else {
-            myShapes.shapes.push({image: svgData, info: imageInfo, type: MyShapeType.IMAGE, name: 'Custom Image', id: id})
-        }
+        myShapes.push({image: svgData, info: imageInfo, type: MyShapeType.SVG, name: 'Custom SVG', id: id})
         
-        const myShapesInfo = JSON.stringify(myShapes)      
+        const myShapesInfo = JSON.stringify({shapes: myShapes})      
         // console.log(`myShapesInfo= ${myShapes}`)
         const updateSettingsData = await RequestUtils.updateSettings(myShapesInfo)
         if(updateSettingsData.status == 200 && updateSettingsData.data.success) {
