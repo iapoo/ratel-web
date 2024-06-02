@@ -1,13 +1,16 @@
 import React, { FC, useEffect, useState, useRef } from 'react'
 import styles from './index.css'
-import { Form, Input, Checkbox, Row, Col, Button, Modal, Menu, message, Alert, Space, Card, Popover, Tooltip, Dropdown, MenuProps, } from 'antd'
+import { Form, Input, Checkbox, Row, Col, Button, Modal, Menu, message, Alert, Space, Card, Popover, Tooltip, Dropdown, MenuProps, Upload, UploadProps, Flex, Divider, GetProp, } from 'antd'
 import { RequestUtils, Utils, } from '../../Utils'
 import axios from 'axios'
 import Avatar from 'antd/lib/avatar/avatar'
 import { MyShape, MyShapes } from '../../Utils/RequestUtils'
 import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
+import { DeleteOutlined, EditOutlined, UploadOutlined } from '@ant-design/icons'
 import Meta from 'antd/es/card/Meta'
+import { RcFile, UploadChangeParam } from 'antd/es/upload'
+import { UploadFile } from 'electron/main'
+import { EditorHelper } from '@/components/Rockie/Utils'
 
 interface MyShapesWindowProps {
   visible: boolean;
@@ -44,7 +47,7 @@ const MyShapesWindowPage: FC<MyShapesWindowProps> = ({
         const settingsData = await RequestUtils.getSettings()
         if(settingsData.status == 200 && settingsData.data.success) {
           const data = settingsData.data.data.settings
-          const newMyShapes: MyShapes = data ? JSON.parse(data) : []
+          const newMyShapes: MyShapes = data ? JSON.parse(data) : {shapes: []}
           if(newMyShapes) {
             setMyShapes(newMyShapes.shapes)
           } else {
@@ -164,7 +167,7 @@ const MyShapesWindowPage: FC<MyShapesWindowProps> = ({
       onMyShapesChanged()
     }
   }
-
+  
   const myShapeItems = myShapes.map(myShape => {
     return <Tooltip title={myShape.name}>
       <Card 
@@ -179,7 +182,59 @@ const MyShapesWindowPage: FC<MyShapesWindowProps> = ({
         <img src={`${myShape.image}`} width={64} height={64} style={{display: 'table-cell'}} alt={myShape.name}/>
       </Card>
     </Tooltip>
-    })
+  })
+
+  const handleSVGBeforeUpload = (file: RcFile, FileList: RcFile[]) => {
+    const isSVG = file.type === 'image/svg+xml';
+    if (!isSVG) {
+      message.error(`${file.name} ${intl.formatMessage({ id: 'workspace.navigator.my-shapes.message-upload-is-not-png-jpg-file'})}`);
+    }
+    const isLessThan256k = file.size < 256 * 1024 * 1024
+    if(!isLessThan256k) {
+      message.error(`${file.name} ${intl.formatMessage({ id: 'workspace.navigator.my-shapes.message-must-be-smaller-than'})}`);
+    }
+    return (isSVG && isLessThan256k) || Upload.LIST_IGNORE;
+  }
+
+  const handleSvgUploadOnChange = (info: UploadChangeParam) => {
+    console.log(info.fileList);
+  }
+
+  const handleImageBeforeUpload = (file: RcFile, FileList: RcFile[]) => {
+    const isImage = (file.type === 'image/png') || (file.type === 'image/jpg') || (file.type === 'image/jpeg');
+    if (!isImage) {
+      message.error(`${file.name} ${intl.formatMessage({ id: 'workspace.navigator.my-shapes.message-upload-is-not-svg-file'})}`);
+    }
+    const isLessThan256k = file.size < 256 * 1024 * 1024
+    if(!isLessThan256k) {
+      message.error(`${file.name} ${intl.formatMessage({ id: 'workspace.navigator.my-shapes.message-upload-must-be-smaller-than'})}`);
+    }
+    return (isImage && isLessThan256k) || Upload.LIST_IGNORE;
+  }
+
+  type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
+
+  const getBase64 = (img: FileType, callback: (url: string) => void) => {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => callback(reader.result as string));
+    reader.readAsDataURL(img);
+  }
+  
+
+  const handleImageDetail = async (imageData: string) => {
+    if(Utils.currentEditor) {
+      await EditorHelper.addImageToMyShapes(imageData, myShapes, onMyShapesChanged)
+    }
+  }
+  
+  const handleImageUploadOnChange = (info: UploadChangeParam) => {
+    if(info.file.status == 'done') {
+      getBase64(info.file.originFileObj as FileType, (url) => {
+        console.log(`image data = ${url}`)
+        handleImageDetail(url)
+      })
+    }
+  }
 
   return (
     <div>
@@ -189,11 +244,29 @@ const MyShapesWindowPage: FC<MyShapesWindowProps> = ({
           onOk={onOk}           
           onCancel={onCancel}
           maskClosable={false} 
-          footer={[<Button key='submit' type='primary' onClick={onOk}><FormattedMessage id='workspace.navigator.my-shapes.close' /></Button>]}
+          footer={
+            <Flex gap='small' justify='space-between'>
+              <Flex gap='small'>
+                <Tooltip title={intl.formatMessage({ id: 'workspace.navigator.my-shapes.tooltip-svg-import'})}>
+                  <Upload showUploadList={false} maxCount={1} accept='image/svg+xml' beforeUpload={handleSVGBeforeUpload} onChange={handleSvgUploadOnChange}>
+                    <Button type='default' ><FormattedMessage id='workspace.navigator.my-shapes.svg-import' /></Button>
+                  </Upload>
+                </Tooltip>
+                <Tooltip title={intl.formatMessage({ id: 'workspace.navigator.my-shapes.tooltip-image-import'})}>
+                  <Upload showUploadList={false} maxCount={1} accept='image/png, image/jpeg' beforeUpload={handleImageBeforeUpload} onChange={handleImageUploadOnChange}>
+                    <Button type='default' ><FormattedMessage id='workspace.navigator.my-shapes.image-import' /></Button>
+                  </Upload>
+                </Tooltip>
+              </Flex>
+              <Button key='submit' type='primary' onClick={onOk} ><FormattedMessage id='workspace.navigator.my-shapes.close' /></Button>
+            </Flex>
+          }
           width={640}>
-        <Space size={[10, 10]} align='start' wrap style={{width: 610, height: 400, overflow: 'auto', scrollbarWidth: 'thin'}} >
+        <Divider style={{margin: 4}}/>
+        <Space size={[10, 10]} align='start' wrap style={{width: 610, height: 400, overflow: 'auto', scrollbarWidth: 'thin', }} >
           {myShapeItems}
         </Space>
+        <Divider style={{margin: 4}}/>
       </Modal>
       <Modal title={intl.formatMessage({ id: 'workspace.navigator.my-shapes.rename'})} 
         centered open={renameModalVisible} onOk={onRenameOk} onCancel={onRenameCancel} maskClosable={false} >

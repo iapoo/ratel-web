@@ -84,7 +84,7 @@ const Navigator: FC<NavigatorProps> = ({
       const settingsData = await RequestUtils.getSettings()
       if(settingsData.status == 200 && settingsData.data.success) {
         const data = settingsData.data.data.settings
-        const newMyShapes: MyShapes = data ? JSON.parse(data) : []
+        const newMyShapes: MyShapes = data ? JSON.parse(data) : {shapes: []}
         if(newMyShapes) {
           setMyShapes(newMyShapes.shapes)
         } else {
