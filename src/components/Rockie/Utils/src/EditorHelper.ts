@@ -5,7 +5,7 @@ import { Operation, OperationHelper, OperationType } from "../../Operations";
 import { RequestUtils, SystemUtils } from "@/components/Workspace/Utils";
 import { Style, StyleInfo } from "../../Shapes/src/EntityUtils";
 import { ImageUtils } from "./ImageUtils";
-import { MyShapeType, MyShapes } from "@/components/Workspace/Utils/RequestUtils";
+import { MyShape, MyShapeType, MyShapes } from "@/components/Workspace/Utils/RequestUtils";
 
 export class EditorHelper {
 
@@ -307,6 +307,52 @@ export class EditorHelper {
             }
         } else {
             console.log(`Fail to get settings`)
+        }
+    }
+
+    public static async addImageToMyShapes(imageData: string, myShapes: MyShape[], callback: ()=> void) {
+        const imageInfo = imageData
+        const id =  SystemUtils.generateID()
+        myShapes.push({image: imageData, info: imageInfo, type: MyShapeType.IMAGE, name: 'Custom Image', id: id})
+        
+        const myShapesInfo = JSON.stringify({shapes: myShapes})      
+        // console.log(`myShapesInfo= ${myShapes}`)
+        const updateSettingsData = await RequestUtils.updateSettings(myShapesInfo)
+        if(updateSettingsData.status == 200 && updateSettingsData.data.success) {
+          console.log(`Succeed to update settings`)
+        } else {
+          console.log(`Fail to update settings`)
+        }
+        // SystemUtils.generateDownloadFile(data, 'test.png')
+        if(callback) {
+            callback()
+        }
+    }
+
+    public static async addSvgToMyShapes(svgData: string, myShapes: MyShapes, callback: ()=> void) {
+        const imageInfo = svgData
+        const id =  SystemUtils.generateID()
+        if(!myShapes || ! myShapes.shapes) {
+            myShapes = {
+                shapes: [
+                    {image: svgData, info: imageInfo, type: MyShapeType.IMAGE, name: 'Custom Image', id: id}
+                    ]
+              }
+        } else {
+            myShapes.shapes.push({image: svgData, info: imageInfo, type: MyShapeType.IMAGE, name: 'Custom Image', id: id})
+        }
+        
+        const myShapesInfo = JSON.stringify(myShapes)      
+        // console.log(`myShapesInfo= ${myShapes}`)
+        const updateSettingsData = await RequestUtils.updateSettings(myShapesInfo)
+        if(updateSettingsData.status == 200 && updateSettingsData.data.success) {
+          console.log(`Succeed to update settings`)
+        } else {
+          console.log(`Fail to update settings`)
+        }
+        // SystemUtils.generateDownloadFile(data, 'test.png')
+        if(callback) {
+            callback()
         }
     }
 
