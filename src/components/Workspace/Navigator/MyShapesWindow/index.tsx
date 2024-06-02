@@ -4,7 +4,7 @@ import { Form, Input, Checkbox, Row, Col, Button, Modal, Menu, message, Alert, S
 import { RequestUtils, Utils, } from '../../Utils'
 import axios from 'axios'
 import Avatar from 'antd/lib/avatar/avatar'
-import { MyShape, MyShapes } from '../../Utils/RequestUtils'
+import { MyShape, MyShapeType, MyShapes } from '../../Utils/RequestUtils'
 import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
 import { DeleteOutlined, EditOutlined, UploadOutlined } from '@ant-design/icons'
 import Meta from 'antd/es/card/Meta'
@@ -169,6 +169,8 @@ const MyShapesWindowPage: FC<MyShapesWindowProps> = ({
   }
   
   const myShapeItems = myShapes.map(myShape => {
+    let image = myShape.type == MyShapeType.SVG ? `${myShape.image}` :  <img src={`${myShape.image}`} width={64} height={64} style={{display: 'table-cell'}} alt={myShape.name}/>
+
     return <Tooltip title={myShape.name}>
       <Card 
           size='small' 
@@ -196,8 +198,36 @@ const MyShapesWindowPage: FC<MyShapesWindowProps> = ({
     return (isSVG && isLessThan256k) || Upload.LIST_IGNORE;
   }
 
+  type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
+
+  const getSvgFromFile = (img: FileType, callback: (url: string) => void) => {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => callback(reader.result as string))
+    reader.readAsDataURL(img)
+  }
+  
+  const getImageBase64FromFile = (img: FileType, callback: (url: string) => void) => {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => callback(reader.result as string))
+    reader.readAsText(img)
+  }
+  
+
+
   const handleSvgUploadOnChange = (info: UploadChangeParam) => {
     console.log(info.fileList);
+    if(info.file.status == 'done') {
+      getSvgFromFile(info.file.originFileObj as FileType, (url) => {
+        console.log(`image data = ${url}`)
+        handleSvgDetail(url)
+      })
+    }
+  }
+
+  const handleSvgDetail = async (imageData: string) => {
+    if(Utils.currentEditor) {
+      await EditorHelper.addSvgToMyShapes(imageData, myShapes, onMyShapesChanged)
+    }
   }
 
   const handleImageBeforeUpload = (file: RcFile, FileList: RcFile[]) => {
@@ -212,15 +242,6 @@ const MyShapesWindowPage: FC<MyShapesWindowProps> = ({
     return (isImage && isLessThan256k) || Upload.LIST_IGNORE;
   }
 
-  type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
-
-  const getBase64 = (img: FileType, callback: (url: string) => void) => {
-    const reader = new FileReader();
-    reader.addEventListener('load', () => callback(reader.result as string));
-    reader.readAsDataURL(img);
-  }
-  
-
   const handleImageDetail = async (imageData: string) => {
     if(Utils.currentEditor) {
       await EditorHelper.addImageToMyShapes(imageData, myShapes, onMyShapesChanged)
@@ -229,7 +250,7 @@ const MyShapesWindowPage: FC<MyShapesWindowProps> = ({
   
   const handleImageUploadOnChange = (info: UploadChangeParam) => {
     if(info.file.status == 'done') {
-      getBase64(info.file.originFileObj as FileType, (url) => {
+      getImageBase64FromFile(info.file.originFileObj as FileType, (url) => {
         console.log(`image data = ${url}`)
         handleImageDetail(url)
       })
@@ -275,7 +296,7 @@ const MyShapesWindowPage: FC<MyShapesWindowProps> = ({
           <Form.Item hidden label="id" name="id">
             <Input />
           </Form.Item>
-          <Form.Item label="name" name="name" rules={[{ required: true, message: intl.formatMessage({ id: 'workspace.navigator.my-shapes.name-place-holder'})}]} >
+          <Form.Item label="name" name="name" rules={[{ required: true, message: intl.formatMessage({ id: 'workspace.navigator.my-shapes.place-holder-name'})}]} >
             <Input />
           </Form.Item>
             {renameErrorVisible ? <Alert message={renameErrorMessage} type="error" showIcon/> : ''}          
