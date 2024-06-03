@@ -189,7 +189,7 @@ const MyShapesWindowPage: FC<MyShapesWindowProps> = ({
   const handleSVGBeforeUpload = (file: RcFile, FileList: RcFile[]) => {
     const isSVG = file.type === 'image/svg+xml';
     if (!isSVG) {
-      message.error(`${file.name} ${intl.formatMessage({ id: 'workspace.navigator.my-shapes.message-upload-is-not-png-jpg-file'})}`);
+      message.error(`${file.name} ${intl.formatMessage({ id: 'workspace.navigator.my-shapes.message-upload-is-not-svg-file'})}`);
     }
     const isLessThan256k = file.size < 256 * 1024 * 1024
     if(!isLessThan256k) {
@@ -239,9 +239,9 @@ const MyShapesWindowPage: FC<MyShapesWindowProps> = ({
   }
 
   const handleImageBeforeUpload = (file: RcFile, FileList: RcFile[]) => {
-    const isImage = (file.type === 'image/png') || (file.type === 'image/jpg') || (file.type === 'image/jpeg');
+    const isImage = (file.type === 'image/png') || (file.type === 'image/jpg') || (file.type === 'image/jpeg')
     if (!isImage) {
-      message.error(`${file.name} ${intl.formatMessage({ id: 'workspace.navigator.my-shapes.message-upload-is-not-svg-file'})}`);
+      message.error(`${file.name} ${intl.formatMessage({ id: 'workspace.navigator.my-shapes.message-upload-is-not-png-jpg-file'})}`);
     }
     const isLessThan256k = file.size < 256 * 1024 * 1024
     if(!isLessThan256k) {
