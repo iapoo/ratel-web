@@ -689,8 +689,10 @@ const Navigator: FC<NavigatorProps> = ({
   )
 
   const myShapeItems = myShapes.map(myShape => {
-    return <Button type='text' onClick={() => addMyShape(myShape)}  style={{padding: 2, display: 'table'}}>
-    <img src={`${myShape.image}`} width={28} height={28} style={{display: 'table-cell'}}/>
+    const width = myShape.width > myShape.height ? 28 :  Math.round(28 * myShape.width / myShape.height)
+    const height = myShape.height > myShape.width ? 28 :  Math.round(28 * myShape.height / myShape.width)
+    return <Button type='text' onClick={() => addMyShape(myShape)}  style={{padding: 2, display: 'flex', justifyContent:'center', alignItems:'center', width: 32, height: 32}}>
+      <img src={`${myShape.image}`} width={width} height={height} />
     </Button>
   })
 
