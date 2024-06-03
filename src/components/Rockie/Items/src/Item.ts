@@ -425,8 +425,13 @@ export abstract class Item implements EditorItem {
       this._shape.stroke.setStrokeDashStyle(ThemeUtils.strokeDashStyle)
       //this._shape.fontColor = ThemeUtils.fontColor
       //this._shape.fontSize = ThemeUtils.fontSize
-      this._shape.filled = ThemeUtils.filled
-      this._shape.stroked = ThemeUtils.stroked
+      if(this.category == Categories.CUSTOM_SVG_SHAPE || this.category == Categories.CUSTOM_IMAGE_SHAPE) {
+        this._shape.filled = this._filled
+        this._shape.stroked = this._stroked
+      } else {
+        this._shape.filled = ThemeUtils.filled
+        this._shape.stroked = ThemeUtils.stroked
+      }
       //this._shape.fontWeight = ThemeUtils.fontWeight
       //this._shape.fontSlant = ThemeUtils.fontSlant
       //this._shape.textDecoration = ThemeUtils.textDecoration

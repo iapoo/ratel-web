@@ -690,7 +690,7 @@ const Navigator: FC<NavigatorProps> = ({
 
   const myShapeItems = myShapes.map(myShape => {
     return <Button type='text' onClick={() => addMyShape(myShape)}  style={{padding: 2, display: 'table'}}>
-    <img src={`${myShape.image}`} width={32} height={32} style={{display: 'table-cell'}}/>
+    <img src={`${myShape.image}`} width={28} height={28} style={{display: 'table-cell'}}/>
     </Button>
   })
 
@@ -714,7 +714,7 @@ const Navigator: FC<NavigatorProps> = ({
   const items: CollapseProps['items'] = [
     {
       key: '1',
-      label: <div style={{fontWeight: 'bolder'}}><FormattedMessage id='workspace.navigator.panel.general' /></div>,
+      label: <div style={{fontWeight: 'bolder'}}><FormattedMessage id='workspace.navigator.panel.my-shapes' /></div>,
       children: <Space size={2} wrap>
           {myShapeItems}    
         </Space>,
