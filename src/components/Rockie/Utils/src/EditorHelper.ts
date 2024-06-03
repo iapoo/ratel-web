@@ -279,6 +279,7 @@ export class EditorHelper {
             const settings = settingData.data.data.settings
             let myShapes: MyShapes = settings ? JSON.parse(settings) : {}
             const selectionInfos = EditorHelper.generateEditorSelections(editor)
+            const [left, top, right, bottom] = editor.getSelectionBoundary()
             const data = EditorHelper.exportSelected(editor, 'png', true)
             const imageData = 'data:image/png;base64,' +data
             const imageInfo = JSON.stringify(selectionInfos)
@@ -286,11 +287,11 @@ export class EditorHelper {
             if(!myShapes || ! myShapes.shapes) {
                 myShapes = {
                     shapes: [
-                        {image: imageData, info: imageInfo, type: MyShapeType.SELECTION, name: 'Custom Shape', id: id}
+                        {image: imageData, info: imageInfo, type: MyShapeType.SELECTION, name: 'Custom Shape', id: id, width: right - left, height: bottom - top}
                         ]
                   }
             } else {
-                myShapes.shapes.push({image: imageData, info: imageInfo, type: MyShapeType.SELECTION, name: 'Custom Shape', id: id})
+                myShapes.shapes.push({image: imageData, info: imageInfo, type: MyShapeType.SELECTION, name: 'Custom Shape', id: id, width: right - left, height: bottom - top})
             }
             
             const myShapesInfo = JSON.stringify(myShapes)      
@@ -310,10 +311,10 @@ export class EditorHelper {
         }
     }
 
-    public static async addImageToMyShapes(imageData: string, myShapes: MyShape[], callback: ()=> void) {
+    public static async addImageToMyShapes(imageData: string, myShapes: MyShape[], callback: ()=> void, imageWidth: number, imageHeight: number) {
         const imageInfo = imageData
         const id =  SystemUtils.generateID()
-        myShapes.push({image: imageData, info: imageInfo, type: MyShapeType.IMAGE, name: 'Custom Image', id: id})
+        myShapes.push({image: imageData, info: imageInfo, type: MyShapeType.IMAGE, name: 'Custom Image', id: id, width: imageWidth, height: imageHeight})
         
         const myShapesInfo = JSON.stringify({shapes: myShapes})      
         // console.log(`myShapesInfo= ${myShapes}`)
@@ -329,10 +330,10 @@ export class EditorHelper {
         }
     }
 
-    public static async addSvgToMyShapes(svgData: string, myShapes: MyShape[], callback: ()=> void) {
-        const imageInfo = svgData
+    public static async addSvgToMyShapes(svgData: string, myShapes: MyShape[], callback: ()=> void, imageWidth: number, imageHeight: number) {
+        const imageInfo = ImageUtils.convertBase64ImageToString(svgData)
         const id =  SystemUtils.generateID()
-        myShapes.push({image: svgData, info: imageInfo, type: MyShapeType.SVG, name: 'Custom SVG', id: id})
+        myShapes.push({image: svgData, info: imageInfo, type: MyShapeType.SVG, name: 'Custom SVG', id: id, width: imageWidth, height: imageHeight})
         
         const myShapesInfo = JSON.stringify({shapes: myShapes})      
         // console.log(`myShapesInfo= ${myShapes}`)

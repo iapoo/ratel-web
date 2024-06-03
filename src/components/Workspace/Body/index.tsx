@@ -84,7 +84,7 @@ const Body: FC<BodyProps> = ({
     setMyShapesUpdated(false)
   }
 
-  console.log(`Check myShapesUpdated = ${myShapesUpdated}`)
+  // console.log(`Check myShapesUpdated = ${myShapesUpdated}`)
   return (
     <div style={{ position: 'absolute', top: `${Utils.HEADER_HEIGHT}px`, bottom: `${Utils.FOOTER_HEIGHT}px`, right: '0px', left: '0px', }} >
       <Navigator navigatorWidth={navigatorWidth} myShapesUpdated={myShapesUpdated} onMyShapesLoaded={handleMyShapesLoaded}/>

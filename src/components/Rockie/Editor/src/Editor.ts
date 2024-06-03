@@ -1871,34 +1871,52 @@ export class Editor extends Painter {
     if (this.controllerLayer.count == 0) {
       this.controllerLayer.addEditorItems(action.items)
     }
-    const controllerItem = this.controllerLayer.getEditorItem(0)
+    // const controllerItem = this.controllerLayer.getEditorItem(0)
     // console.log(`Moving... x = ${e.x} width=${controllerItem.width} `)
-    const ex = (e.x - this.horizontalSpace) / this._zoom 
-    const ey = (e.y - this.verticalSpace) / this._zoom
-    const width = this.alignToGridSize(controllerItem.width)
-    const height = this.alignToGridSize(controllerItem.height)
+    let [left, top, right, bottom] = Editor.getItemsBoundary(action.items)
+    let width = right - left
+    let height = bottom - top
+    let ex = this.alignToGridSize((e.x - this.horizontalSpace) / this._zoom - width / 2)
+    let ey = this.alignToGridSize((e.y - this.verticalSpace) / this._zoom - height / 2)
+    action.items.forEach(item => {
+      let itemWidth = this.alignToGridSize(item.width)
+      let itemHeight = this.alignToGridSize(item.height)
+      if(action instanceof MyShapeAction) {
+        itemWidth = item.width
+        itemHeight = item.height
+      }
+    
+      if (item instanceof Connector) {
+        // const targetPoint = this.findEditorItemPoint(controllerItem, e.x, e.y)
+        // controllerItem.start = new Point2(ex + controllerItem.start.x, ey + controllerItem.start.y)
+        // controllerItem.end = new Point2(ex + controllerItem.end.x, ey + controllerItem.end.y)
+        item.autoRefreshOrthogonalPoints = false
+        item.start = new Point2(ex + item.start.x - left, ey + item.start.y - top)
+        item.end = new Point2(ex + item.end.x - left, ey + item.end.y - top)
+        item.autoRefreshOrthogonalPoints = true
+      } else if (item instanceof Entity) {
+        item.boundary = Rectangle.makeLTWH(ex + item.left - left, ey + item.top - top, itemWidth, itemHeight)
+      }  
 
-    if (controllerItem instanceof Connector) {
-      // const targetPoint = this.findEditorItemPoint(controllerItem, e.x, e.y)
-      // controllerItem.start = new Point2(ex + controllerItem.start.x, ey + controllerItem.start.y)
-      // controllerItem.end = new Point2(ex + controllerItem.end.x, ey + controllerItem.end.y)
-      controllerItem.autoRefreshOrthogonalPoints = false
-      controllerItem.start = new Point2(ex - width / 2, ey - height / 2)
-      controllerItem.end = new Point2(ex + width / 2, ey + height / 2)
-      controllerItem.autoRefreshOrthogonalPoints = true
-    } else if (controllerItem instanceof Entity) {
-      controllerItem.boundary = Rectangle.makeLTWH(this.alignToGridSize(ex - width / 2), this.alignToGridSize(ey - height / 2), width, height)
-    }
+      //console.log(`Moving... x = ${e.x}  start=${controllerItem.left} end=${controllerItem.top} width=${controllerItem.width}  height=${controllerItem.height}`)
+    })
 
-    //console.log(`Moving... x = ${e.x}  start=${controllerItem.left} end=${controllerItem.top} width=${controllerItem.width}  height=${controllerItem.height}`)
     const containerEntity = this.findContainerEntity(e.x, e.y)
-    if(containerEntity && this.checkIfCreationInContainer(controllerItem, containerEntity)) {
+    let checkifInContainer = true
+    const this_ = this
+    action.items.forEach(item => {
+      const checkResult = containerEntity && this_.checkIfCreationInContainer(item, containerEntity)
+      if(!checkResult) {
+        checkifInContainer = false
+      }
+    })
+    if(containerEntity && checkifInContainer) {
       this.startContainerSelection()
       this.handleContainerSelection(containerEntity)
     } else {
       this.endContainerSelection()
     }
-  }
+}
 
   private handlePointMoveInMoving (e: PointerEvent) {
     const containerEntity = this.findContainerEntity(e.x, e.y)
@@ -2489,7 +2507,7 @@ export class Editor extends Painter {
   return false
   }
 
-  private checkIfCreationInContainer(editorItem: EditorItem, containerEntity: ContainerEntity): boolean {
+  public checkIfCreationInContainer(editorItem: EditorItem, containerEntity: ContainerEntity): boolean {
     const left = editorItem.left
     const top = editorItem.top
     const right = editorItem.right
@@ -2647,10 +2665,12 @@ export class Editor extends Painter {
       const clickedEditorItem = this.findEditorItem(e.x, e.y, false)
       if(clickedEditorItem && clickedEditorItem instanceof ContainerEntity && (!(clickedEditorItem instanceof TableEntity))) {        
         let point = this.findEditorItemPoint(clickedEditorItem, e.x, e.y)
-        let [left, top, width, height] = Editor.getItemsBoundary(this._action.items)
+        let [left, top, right, bottom] = Editor.getItemsBoundary(this._action.items)
+        let width = right - left
+        let height = bottom - top
+        let x = this.alignToGridSize(point.x / this._zoom - width / 2)
+        let y = this.alignToGridSize(point.y / this._zoom - height / 2)            
         this._action.items.forEach(item => {
-          let x = this.alignToGridSize(point.x / this._zoom - width / 2)
-          let y = this.alignToGridSize(point.y / this._zoom - height / 2)            
           item.boundary = Rectangle.makeLTWH(x + item.left - left, y + item.top - top, item.width, item.height)
           clickedEditorItem.addItem(item)
         })

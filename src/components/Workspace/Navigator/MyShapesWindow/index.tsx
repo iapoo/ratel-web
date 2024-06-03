@@ -209,24 +209,32 @@ const MyShapesWindowPage: FC<MyShapesWindowProps> = ({
   const getImageBase64FromFile = (img: FileType, callback: (url: string) => void) => {
     const reader = new FileReader();
     reader.addEventListener('load', () => callback(reader.result as string))
-    reader.readAsText(img)
+    reader.readAsDataURL(img)
   }
   
 
 
   const handleSvgUploadOnChange = (info: UploadChangeParam) => {
-    console.log(info.fileList);
+    // console.log(info.fileList);
     if(info.file.status == 'done') {
       getSvgFromFile(info.file.originFileObj as FileType, (url) => {
-        console.log(`image data = ${url}`)
-        handleSvgDetail(url)
+        // console.log(`image data = ${url}`)        
+        let imageWidth = 64
+        let imageHeight = 64
+        const image = new Image()
+        image.onload = () => {
+            imageWidth = image.width
+            imageHeight = image.height
+            handleSvgDetail(url, imageWidth, imageHeight)
+          }
+        image.src = url        
       })
     }
   }
 
-  const handleSvgDetail = async (imageData: string) => {
+  const handleSvgDetail = async (imageData: string, imageWidth: number, imageHeight: number) => {
     if(Utils.currentEditor) {
-      await EditorHelper.addSvgToMyShapes(imageData, myShapes, onMyShapesChanged)
+      await EditorHelper.addSvgToMyShapes(imageData, myShapes, onMyShapesChanged, imageWidth, imageHeight)
     }
   }
 
@@ -242,17 +250,25 @@ const MyShapesWindowPage: FC<MyShapesWindowProps> = ({
     return (isImage && isLessThan256k) || Upload.LIST_IGNORE;
   }
 
-  const handleImageDetail = async (imageData: string) => {
+  const handleImageDetail = async (imageData: string, imageWidth: number, imageHeight: number) => {
     if(Utils.currentEditor) {
-      await EditorHelper.addImageToMyShapes(imageData, myShapes, onMyShapesChanged)
+      await EditorHelper.addImageToMyShapes(imageData, myShapes, onMyShapesChanged, imageWidth, imageHeight)
     }
   }
   
   const handleImageUploadOnChange = (info: UploadChangeParam) => {
     if(info.file.status == 'done') {
       getImageBase64FromFile(info.file.originFileObj as FileType, (url) => {
-        console.log(`image data = ${url}`)
-        handleImageDetail(url)
+        // console.log(`image data = ${url}`)
+        let imageWidth = 64
+        let imageHeight = 64
+        const image = new Image()
+        image.onload = () => {
+            imageWidth = image.width
+            imageHeight = image.height
+            handleImageDetail(url, imageWidth, imageHeight)
+          }
+        image.src = url        
       })
     }
   }
@@ -283,10 +299,12 @@ const MyShapesWindowPage: FC<MyShapesWindowProps> = ({
             </Flex>
           }
           width={640}>
-        <Divider style={{margin: 4}}/>
-        <Space size={[10, 10]} align='start' wrap style={{width: 610, height: 400, overflow: 'auto', scrollbarWidth: 'thin', }} >
-          {myShapeItems}
-        </Space>
+        <Divider style={{margin: 8}}/>
+        <div style={{width: 610, height: 400, overflow: 'auto', scrollbarWidth: 'thin', }} >
+          <Flex gap='small' justify='start' align='flex-start' wrap='wrap' style={{width: '100%', }} >
+            {myShapeItems}
+          </Flex>
+        </div>
         <Divider style={{margin: 4}}/>
       </Modal>
       <Modal title={intl.formatMessage({ id: 'workspace.navigator.my-shapes.rename'})} 

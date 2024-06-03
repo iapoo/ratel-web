@@ -1,6 +1,6 @@
 import { Paint, } from '@/components/Engine'
 import { Theme, Themes, } from '@/components/Rockie/Theme'
-import { CustomEntity, EditorItemInfo, Item, ShapeEntity, Shapes, } from '../../Items'
+import { CustomEntity, EditorItemInfo, ImageContainer, Item, ShapeEntity, Shapes, SvgContainer, } from '../../Items'
 import { Action, } from './Action'
 import { ShapeType, ShapeTypes } from '../../Items/src/ShapeEntity'
 import { BottomTriangle, Star, TopTriangle } from '../../CustomItems/BasicShapes'
@@ -23,10 +23,10 @@ export class MyShapeAction extends Action {
     if(this._myShape) {
       switch(this._myShape.type) {
         case MyShapeType.IMAGE: {
-          break;
+          return [new ImageContainer(0, 0, this._myShape.width, this._myShape.height, this._myShape.info)]
         }
         case MyShapeType.SVG: {
-          break;
+          return [new SvgContainer(0, 0, this._myShape.width, this._myShape.height, this._myShape.info)]
         }
         default:
         case MyShapeType.SELECTION: {
