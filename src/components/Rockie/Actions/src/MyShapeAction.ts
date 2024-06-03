@@ -37,6 +37,10 @@ export class MyShapeAction extends Action {
             const editorItem = OperationHelper.loadItem(shapeInfo, this.editor)
             items.push(editorItem as Item)            
           })
+          //regenerate item id & load
+          shapeInfos.forEach(shapeInfo => {
+            EditorHelper.refreshSelections(shapeInfo, items)
+          })
           return items
         }
       }

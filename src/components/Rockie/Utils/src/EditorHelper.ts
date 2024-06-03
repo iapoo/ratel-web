@@ -145,7 +145,7 @@ export class EditorHelper {
         }
     }
 
-    private static refreshSelections(selection: EditorItemInfo, editorItems: EditorItem[]) {
+    public static refreshSelections(selection: EditorItemInfo, editorItems: EditorItem[]) {
         if (selection.category == Categories.CONNECTOR) {
             let connectorInfo = selection as ConnectorInfo
             let connector: Connector | null = null
