@@ -567,6 +567,15 @@ export class OperationHelper {
     return shapeEntity
   }
 
+  public static saveEditorItems(editorItems: EditorItem[]): EditorItemInfo[] {
+    const editorItemInfos: EditorItemInfo[] =[]
+    editorItems.forEach(editorItem => {
+      const editorItemInfo = OperationHelper.saveEditorItem(editorItem)
+      editorItemInfos.push(editorItemInfo)
+    })
+    return editorItemInfos
+  }
+  
   public static saveEditorItem(editorItem: EditorItem): EditorItemInfo {
     let editorItemInfo: EditorItemInfo
     switch (editorItem.category) {

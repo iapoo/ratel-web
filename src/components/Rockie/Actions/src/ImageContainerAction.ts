@@ -16,7 +16,7 @@ export class ImageContainerAction extends Action {
     this.build()
   }
 
-  protected buildItem (): Item {
-    return new ImageContainer(0, 0, this._width, this._height, this._data)
+  protected buildItems (): Item[] {
+    return [new ImageContainer(0, 0, this._width, this._height, this._data)]
   }
 }

@@ -17,7 +17,7 @@ export class SvgContainerAction extends Action {
     this.build()
   }
 
-  protected buildItem (): Item {
-    return new SvgContainer(0, 0, this._width, this._height, this._data)
+  protected buildItems (): Item[] {
+    return [new SvgContainer(0, 0, this._width, this._height, this._data)]
   }
 }

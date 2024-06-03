@@ -18,14 +18,14 @@ export class CustomConnectorAction extends Action {
     this.build()
   }
 
-  protected buildItem(): Item {
+  protected buildItems(): Item[] {
     if(this._classType && this._customConnectorTypeInfo) {
       let start = new Point2(this._customConnectorTypeInfo.startX, this._customConnectorTypeInfo.startY)
       let end = new Point2(this._customConnectorTypeInfo.endX, this._customConnectorTypeInfo.endY)
       const customEntity = new this._classType(start, end, this._customConnectorTypeInfo.name, [this._customConnectorTypeInfo])
-      return customEntity
+      return [customEntity]
     } 
-    return new ShapeEntity(0, 0, 100, 100)
+    return [new ShapeEntity(0, 0, 100, 100)]
 
   }
 }

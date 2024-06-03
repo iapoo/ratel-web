@@ -45,6 +45,12 @@ export abstract class EditorLayer extends Control {
     this.build()
   }
 
+  public addEditorItems(editorItems: EditorItem[]) {
+    const this_ = this
+    editorItems.forEach(editorItem => {
+      this_.addEditorItem(editorItem)
+    })
+  }
 
   public addEditorItemAt (editorItem: EditorItem, index: number): void {
     if (this._editorItems.indexOf(editorItem) < 0) {

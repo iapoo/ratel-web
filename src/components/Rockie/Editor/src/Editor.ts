@@ -3,7 +3,7 @@
 /* eslint-disable complexity */
 import { Painter, } from '@/components/Painter'
 import { Engine, Point2, Rectangle2D, Rotation, Shape, Line2D, Node, Rectangle, Graphics, Colors, MouseEvent, MouseCode, PointerEvent as UniPointerEvent, Control, PointerEvent, Path, Scale, KeyEvent, Color, Paint, StrokeDashStyle, Matrix, } from '../../../Engine'
-import { Action, } from '../../Actions'
+import { Action, MyShapeAction, } from '../../Actions'
 import { Holder, } from '../../Design'
 import { CellEntity, Connector, ContainerEntity, EditorItem, EditorItemInfo, Entity, FrameEntity, Item, ShapeEntity, TableEntity, } from '../../Items'
 import { ContentLayer, } from './ContentLayer'
@@ -717,14 +717,16 @@ export class Editor extends Painter {
   public set action (value: Action | undefined) {
     this._action = value
     if(this._action) {
-      if(this._action.item instanceof Connector) {
-        this._action.item.strokeColor = SystemUtils.parseColorString(this._theme.connectorStrokeColor)!
-        this._action.item.fillColor = SystemUtils.parseColorString(this._theme.connectorFillColor)!
-        this._action.item.fontColor = SystemUtils.parseColorString(this._theme.connectorFontColor)!
+      if(this._action.items[0] instanceof Connector && !(this._action instanceof MyShapeAction)) {
+        this._action.items[0].strokeColor = SystemUtils.parseColorString(this._theme.connectorStrokeColor)!
+        this._action.items[0].fillColor = SystemUtils.parseColorString(this._theme.connectorFillColor)!
+        this._action.items[0].fontColor = SystemUtils.parseColorString(this._theme.connectorFontColor)!
       } else {
-        this._action.item.strokeColor = SystemUtils.parseColorString(this._theme.shapeStrokeColor)!
-        this._action.item.fillColor = SystemUtils.parseColorString(this._theme.shapeFillColor)!
-        this._action.item.fontColor = SystemUtils.parseColorString(this._theme.shapeFontColor)!
+        this._action.items.forEach(item => {
+          item.strokeColor = SystemUtils.parseColorString(this._theme.shapeStrokeColor)!
+          item.fillColor = SystemUtils.parseColorString(this._theme.shapeFillColor)!
+          item.fontColor = SystemUtils.parseColorString(this._theme.shapeFontColor)!
+        })
       }
     }
   }
@@ -1139,9 +1141,9 @@ export class Editor extends Painter {
     if(this._action) { // It shouldn't happen here
       //console.log(`It is a exception here, shouldn't be reached`)
       this.selectionLayer.removeAllEditorItems()
-      this.selectionLayer.addEditorItem(this._action.item)
-      let editorItemInfo = OperationHelper.saveEditorItem(this._action.item)
-      let operation = new Operation(this, OperationType.ADD_ITEMS, [editorItemInfo], true, [])
+      this.selectionLayer.addEditorItems(this._action.items)
+      let editorItemInfos = OperationHelper.saveEditorItems(this._action.items)
+      let operation = new Operation(this, OperationType.ADD_ITEMS, editorItemInfos, true, [])
       this._operationService.addOperation(operation)
       this.triggerOperationChange()
       this._action = undefined
@@ -1867,7 +1869,7 @@ export class Editor extends Painter {
 
   private handlePointMoveinAction (e: PointerEvent, action: Action) {
     if (this.controllerLayer.count == 0) {
-      this.controllerLayer.addEditorItem(action.item)
+      this.controllerLayer.addEditorItems(action.items)
     }
     const controllerItem = this.controllerLayer.getEditorItem(0)
     // console.log(`Moving... x = ${e.x} width=${controllerItem.width} `)
@@ -2643,19 +2645,21 @@ export class Editor extends Painter {
     if (this._action) {
       // console.log(`handlePointerClick... x = ${e.x}  start=${this.action_.item.start.x} end=${this.action_.item.end.x} width=${this.action_.item.width}  height=${this.action_.item.height}`)
       const clickedEditorItem = this.findEditorItem(e.x, e.y, false)
-      if(clickedEditorItem && clickedEditorItem instanceof ContainerEntity && (!(clickedEditorItem instanceof TableEntity))) {
+      if(clickedEditorItem && clickedEditorItem instanceof ContainerEntity && (!(clickedEditorItem instanceof TableEntity))) {        
         let point = this.findEditorItemPoint(clickedEditorItem, e.x, e.y)
-        let x = this.alignToGridSize(point.x / this._zoom - this._action.item.width / 2)
-        let y = this.alignToGridSize(point.y / this._zoom - this._action.item.height / 2)
-
-        this._action.item.boundary = Rectangle.makeLTWH(x, y, this._action.item.width, this._action.item.height)
-        clickedEditorItem.addItem(this._action.item)
+        let [left, top, width, height] = Editor.getItemsBoundary(this._action.items)
+        this._action.items.forEach(item => {
+          let x = this.alignToGridSize(point.x / this._zoom - width / 2)
+          let y = this.alignToGridSize(point.y / this._zoom - height / 2)            
+          item.boundary = Rectangle.makeLTWH(x + item.left - left, y + item.top - top, item.width, item.height)
+          clickedEditorItem.addItem(item)
+        })
       } else {
-        this.contentLayer.addEditorItem(this._action.item)
+        this.contentLayer.addEditorItems(this._action.items)
         this.selectionLayer.removeAllEditorItems()
-        this.selectionLayer.addEditorItem(this._action.item)
-        let editorItemInfo = OperationHelper.saveEditorItem(this._action.item)
-        let operation = new Operation(this, OperationType.ADD_ITEMS, [editorItemInfo], true, [])
+        this.selectionLayer.addEditorItems(this._action.items)
+        let editorItemInfos = OperationHelper.saveEditorItems(this._action.items)
+        let operation = new Operation(this, OperationType.ADD_ITEMS, editorItemInfos, true, [])
         this._operationService.addOperation(operation)
         this.triggerOperationChange()
         this.triggerSelectionChange()
@@ -2981,5 +2985,37 @@ export class Editor extends Painter {
       checkItem = checkItem.parent
     }
     return result
+  }
+
+  private static getItemsBoundary(items: Item[]) {
+    let left = 0
+    let top = 0
+    let right = 0
+    let bottom = 0
+    let itemCount = items.length
+    for(let i = 0; i < itemCount; i ++) {      
+      const item = items[i]
+      const worldTransform = item.worldTransform
+      const leftTopPoint = worldTransform.makePoint(new Point2(0, 0))
+      const rightTopPoint = worldTransform.makePoint(new Point2(item.width, 0))
+      const rightBottomPoint = worldTransform.makePoint(new Point2(item.width, item.height))
+      const leftBottomPoint = worldTransform.makePoint(new Point2(0, item.height))
+      const itemLeft = Math.min(leftTopPoint.x, rightTopPoint.x, rightBottomPoint.x, leftBottomPoint.x)
+      const itemTop = Math.min(leftTopPoint.y, rightTopPoint.y, rightBottomPoint.y, leftBottomPoint.y)
+      const itemRight = Math.max(leftTopPoint.x, rightTopPoint.x, rightBottomPoint.x, leftBottomPoint.x)
+      const itemBottom = Math.max(leftTopPoint.y, rightTopPoint.y, rightBottomPoint.y, leftBottomPoint.y)
+    if(i == 0) {
+        left = itemLeft
+        top = itemTop
+        right = itemRight
+        bottom = itemBottom
+      } else {
+        left = itemLeft < left ? itemLeft : left
+        top = itemTop < top ? itemTop : top
+        right = itemRight > right ? itemRight : right
+        bottom = itemBottom > bottom ? itemBottom : bottom
+      }
+    }
+    return [left, top, right, bottom]
   }
 }

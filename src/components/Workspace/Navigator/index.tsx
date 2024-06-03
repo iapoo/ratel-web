@@ -3,7 +3,7 @@ import styles from './index.css'
 import { Button, Collapse, CollapseProps, Divider, Image, Popover, Space, Tooltip, message, } from 'antd'
 import { Utils, RequestUtils, } from '../Utils'
 import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
-import { ConnectorAction, ContainerAction, CustomShapeAction, ImageContainerAction, SvgContainerAction, LineAction, ShapeAction, TableAction, CustomTableAction, ExtendedShapeAction, ExtendedContainerAction, FrameAction, CustomContainerAction, } from '../../Rockie/Actions'
+import { ConnectorAction, ContainerAction, CustomShapeAction, ImageContainerAction, SvgContainerAction, LineAction, ShapeAction, TableAction, CustomTableAction, ExtendedShapeAction, ExtendedContainerAction, FrameAction, CustomContainerAction, MyShapeAction, } from '../../Rockie/Actions'
 import { StorageService, } from '../Storage'
 import {
   Rectangle, RoundRectangle, Text, Ellipse, Square, Circle, Process, Diamond, Parallelogram, Hexagon, Triangle,
@@ -224,6 +224,12 @@ const Navigator: FC<NavigatorProps> = ({
     const haha = atob('aa')
     str = decodeURI(haha)
     console.log(str)
+  }
+
+  const addMyShape = (myShape: MyShape) => {
+    if (Utils.currentEditor) {
+      Utils.currentEditor.action = new MyShapeAction(Utils.currentEditor, myShape)
+    }
   }
 
   const addCustomTable = (typeName: string, classType: typeof CustomTableEntity, shapeType: CustomTableType) => {
@@ -683,7 +689,7 @@ const Navigator: FC<NavigatorProps> = ({
   )
 
   const myShapeItems = myShapes.map(myShape => {
-    return <Button type='text' style={{padding: 2, display: 'table'}}>
+    return <Button type='text' onClick={() => addMyShape(myShape)}  style={{padding: 2, display: 'table'}}>
     <img src={`${myShape.image}`} width={32} height={32} style={{display: 'table-cell'}}/>
     </Button>
   })
