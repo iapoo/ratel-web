@@ -169,7 +169,9 @@ const MyShapesWindowPage: FC<MyShapesWindowProps> = ({
   }
   
   const myShapeItems = myShapes.map(myShape => {
-    let image = myShape.type == MyShapeType.SVG ? `${myShape.image}` :  <img src={`${myShape.image}`} width={64} height={64} style={{display: 'table-cell'}} alt={myShape.name}/>
+    const size = 64
+    const width = myShape.width > myShape.height ? size :  Math.round(size * myShape.width / myShape.height)
+    const height = myShape.height > myShape.width ? size :  Math.round(size * myShape.height / myShape.width)
 
     return <Tooltip title={myShape.name}>
       <Card 
@@ -181,7 +183,9 @@ const MyShapesWindowPage: FC<MyShapesWindowProps> = ({
             <Tooltip title='Delete'><DeleteOutlined style={{marginLeft: 8}} onClick={() => handleMyShapeDelete(myShape.id, myShape.name, myShape.image)}/></Tooltip>
             </div>}
           >
-        <img src={`${myShape.image}`} width={64} height={64} style={{display: 'table-cell'}} alt={myShape.name}/>
+        <div style={{width: size, height: size, display: 'flex', justifyContent: 'center', alignItems: 'center'}} >
+          <img src={`${myShape.image}`} width={width} height={height} alt={myShape.name}/>
+        </div>
       </Card>
     </Tooltip>
   })

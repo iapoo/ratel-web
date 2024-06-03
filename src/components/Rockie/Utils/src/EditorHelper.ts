@@ -204,6 +204,7 @@ export class EditorHelper {
             const iconHeight = 32
             const fontSizeFactor = 1
             const lineWidthFactor = width / iconWidth > height / iconHeight ? width / iconWidth : height / iconHeight
+            const sizeFactor = width > 300 || height > 300 ? 0.5 : (width > 200 || height > 200 ? 0.75 : 1)
             const selections: Array<EditorItemInfo> = []
             const allEditorItems = editor.selectionLayer.getAllEditorItems()
             const editorItems: Array<EditorItem> = []
@@ -223,10 +224,10 @@ export class EditorHelper {
                     editorItem.boundary = Rectangle.makeLTWH(editorItem.left, editorItem.top, editorItem.width, editorItem.height)
                 }
                 if(forIcon) {
-                    editorItem.lineWidth = 0.5 * editorItem.lineWidth * lineWidthFactor 
+                    editorItem.lineWidth = sizeFactor * editorItem.lineWidth * lineWidthFactor 
                     editorItem.fontSize = editorItem.fontSize * fontSizeFactor
                     editorItem.items.forEach(item => {
-                        item.lineWidth = 0.5 * item.lineWidth * lineWidthFactor 
+                        item.lineWidth = sizeFactor * item.lineWidth * lineWidthFactor 
                         item.fontSize = item.fontSize * fontSizeFactor
                     })
                 }
