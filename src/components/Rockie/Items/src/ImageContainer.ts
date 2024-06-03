@@ -24,9 +24,9 @@ export class ImageContainer extends ShapeEntity {
     this._image =  image
     const customTypeInfo = this.parseTypeInfo({shapeType: TYPE_IMAGE_CONTAINER})
     this._shape = new CustomImageShape(left, top, width, height, image, this.buildShape, customTypeInfo)
+    this.stroked = false
+    this.filled = false
     this.initializeTheme()
-    this._shape.filled = false
-    this._shape.stroked = false
   }
 
   public get image() {
