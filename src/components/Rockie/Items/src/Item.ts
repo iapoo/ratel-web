@@ -269,7 +269,7 @@ export abstract class Item implements EditorItem {
 
   public set stroked(value: boolean) {
     this._stroked = value
-    this.updateTheme
+    this.updateTheme()
   }
   public get lineWidth() {
     return this._lineWidth
@@ -425,14 +425,14 @@ export abstract class Item implements EditorItem {
       this._shape.stroke.setStrokeDashStyle(ThemeUtils.strokeDashStyle)
       //this._shape.fontColor = ThemeUtils.fontColor
       //this._shape.fontSize = ThemeUtils.fontSize
-      if(this.category == Categories.CUSTOM_SVG_SHAPE || this.category == Categories.CUSTOM_IMAGE_SHAPE) {
-        this._shape.filled = this._filled
-        this._shape.stroked = this._stroked
-      } else {
-        this._shape.filled = ThemeUtils.filled
-        this._shape.stroked = ThemeUtils.stroked
-      }
-      //this._shape.fontWeight = ThemeUtils.fontWeight
+      // if(this.category == Categories.CUSTOM_SVG_SHAPE || this.category == Categories.CUSTOM_IMAGE_SHAPE) {
+      // } else {
+      //   this._shape.filled = ThemeUtils.filled
+      //   this._shape.stroked = ThemeUtils.stroked
+      // }
+      this._shape.filled = this._filled
+      this._shape.stroked = this._stroked
+    //this._shape.fontWeight = ThemeUtils.fontWeight
       //this._shape.fontSlant = ThemeUtils.fontSlant
       //this._shape.textDecoration = ThemeUtils.textDecoration
       //this._shape.textAlignment = ThemeUtils.textAlignment
