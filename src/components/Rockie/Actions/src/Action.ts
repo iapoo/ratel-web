@@ -6,7 +6,7 @@ export abstract class Action {
   private _type: string | undefined;
   private _url: string | undefined;
   private _description: string | undefined;
-  private _item: Item;
+  private _items: Item[];
   private _editor: Editor;
 
   public constructor (editor: Editor, type: string | undefined = undefined, name: string | undefined = undefined,  description: string | undefined = undefined, url: string | undefined = undefined) {
@@ -15,7 +15,7 @@ export abstract class Action {
     this._name = name
     this._description = description
     this._url = url
-    this._item = this.buildItem()
+    this._items = this.buildItems()
 
     this.build()
   }
@@ -24,16 +24,16 @@ export abstract class Action {
     return this._editor
   }
 
-  public get item (): Item {
-    return this._item
+  public get items (): Item[] {
+    return this._items
   }
 
   public build () {
-    const newItem = this.buildItem()
-    this._item = newItem
+    const newItems = this.buildItems()
+    this._items = newItems
   }
 
-  protected abstract buildItem(): Item;
+  protected abstract buildItems(): Item[];
 
   public get type (): string | undefined {
     return this._type

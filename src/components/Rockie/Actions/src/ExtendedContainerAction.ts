@@ -19,17 +19,17 @@ export class ExtendedContainerAction extends Action {
     this.build()
   }
 
-  protected buildItem(): Item {
+  protected buildItems(): Item[] {
     if(this._classType && this._shapeType) {
       let left = this._shapeType.left
       let top = this._shapeType.top
       let width = this._shapeType.width
       let height = this._shapeType.height
       const extendedContainer = new this._classType(left, top, width, height, {shapeType: this._shapeType.name}, [this._shapeType])
-      return extendedContainer
+      return [extendedContainer]
     } 
 
-    return new ContainerEntity(0, 0, 100, 100)
+    return [new ContainerEntity(0, 0, 100, 100)]
 
   }
 

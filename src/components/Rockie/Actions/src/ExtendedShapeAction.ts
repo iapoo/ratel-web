@@ -18,16 +18,16 @@ export class ExtendedShapeAction extends Action {
     this.build()
   }
 
-  protected buildItem(): Item {
+  protected buildItems(): Item[] {
     if(this._classType && this._shapeType) {
       let left = this._shapeType.left
       let top = this._shapeType.top
       let width = this._shapeType.width
       let height = this._shapeType.height
       const customEntity = new this._classType(left, top, width, height, {shapeType: this._shapeType.name}, [this._shapeType])
-      return customEntity
+      return [customEntity]
     } 
-    return new ShapeEntity(0, 0, 100, 100)
+    return [new ShapeEntity(0, 0, 100, 100)]
 
   }
 }

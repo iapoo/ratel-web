@@ -5,7 +5,7 @@ import { ShapeTypes } from '../../Items/src/ShapeEntity'
 
 export class ContainerAction extends Action {
 
-  protected buildItem(): Item {
+  protected buildItems(): Item[] {
     let left = 0
     let top = 0
     let width = 100
@@ -23,7 +23,7 @@ export class ContainerAction extends Action {
     })
     //shapeEntity.shape.stroke.setColor(Themes.strokeColor)
 
-    return shapeEntity
+    return [shapeEntity]
   }
 
 }
