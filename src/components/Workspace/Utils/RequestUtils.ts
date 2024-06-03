@@ -48,6 +48,8 @@ export interface MyShape {
     image: string
     info: string
     type: MyShapeType
+    width: number
+    height: number
 }
 
 export function isFolder(source:  Folder | Document | undefined ): source is Folder {
