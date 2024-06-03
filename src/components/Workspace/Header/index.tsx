@@ -2199,7 +2199,7 @@ const Header: FC<HeaderProps> = ({
               {/* {online ? intl.formatMessage({ id: 'workspace.header.welcome' }) + ' ' + userInfo?.customerName + ' ' : " "} */}
               {/* <Button type='text' style={{ display: online ? 'inline' : 'none' }} onClick={logout}><FormattedMessage id='workspace.header.button-logout-title' /></Button> */}
               <Dropdown menu={{items: userProfileMenu}}>
-                <Button shape='circle' icon={<UserOutlined/>} style={{ display: online ? 'inline' : 'none' }} />
+                <Button shape='circle' type='text' icon={<UserOutlined/>} style={{ display: online ? 'inline' : 'none' }} />
               </Dropdown>
               <Button type='text' style={{ display: online ? 'none' : 'inline', marginLeft: '8px'}} hidden={!online} onClick={() => login(ON_LOGIN_NONE)}><FormattedMessage id='workspace.header.button-login-title' /></Button>
               <Button type='primary' style={{ display: online ? 'none' : 'inline', marginLeft: '8px' }} hidden={!online} onClick={() => register()}><FormattedMessage id='workspace.header.button-register-title' /></Button>
