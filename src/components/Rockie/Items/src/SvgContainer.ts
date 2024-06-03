@@ -35,9 +35,11 @@ export class SvgContainer extends ShapeEntity {
     this._enableFillColor = false
     this._enableStrokeColor = false
     this.initializeTheme()
+    // this.stroked = false
+    // this.filled = false
+    // this.strokeColor = Colors.Transparent
+    // this.fillColor = Colors.Blue
     this._svgShape.svgInitialized = true
-    this.stroked = false
-    this.filled = false
   }
 
   public get svgShape() {

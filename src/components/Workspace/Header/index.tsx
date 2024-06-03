@@ -1421,7 +1421,7 @@ const Header: FC<HeaderProps> = ({
         const customEntity = new SvgContainer(margin, margin, customShapeInfo.width, customShapeInfo.height, customShapeInfo.data)
         currentEditor.contentLayer.addEditorItem(customEntity)
         currentEditor.resize(customShapeInfo.width + margin * 2, customShapeInfo.height + margin * 2)
-        const data = currentEditor.export()
+        const data = EditorHelper.export(currentEditor)
         console.log(`download file = ${customShapeInfo.name}.png`)
         SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.png`)
       }
@@ -1439,7 +1439,7 @@ const Header: FC<HeaderProps> = ({
         const customEntity = new SvgContainer(margin, margin, customShapeInfo.width * sizeFactor, customShapeInfo.height * sizeFactor, customShapeInfo.data)
         currentEditor.contentLayer.addEditorItem(customEntity)
         currentEditor.resize(customShapeInfo.width * sizeFactor + margin * 2, customShapeInfo.height * sizeFactor + margin * 2)
-        const data = currentEditor.export()
+        const data = EditorHelper.export(currentEditor)
         console.log(`download file = ${customShapeInfo.name}.png`)
         SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.png`)
       }

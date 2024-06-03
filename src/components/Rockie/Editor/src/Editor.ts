@@ -5,7 +5,7 @@ import { Painter, } from '@/components/Painter'
 import { Engine, Point2, Rectangle2D, Rotation, Shape, Line2D, Node, Rectangle, Graphics, Colors, MouseEvent, MouseCode, PointerEvent as UniPointerEvent, Control, PointerEvent, Path, Scale, KeyEvent, Color, Paint, StrokeDashStyle, Matrix, } from '../../../Engine'
 import { Action, MyShapeAction, } from '../../Actions'
 import { Holder, } from '../../Design'
-import { CellEntity, Connector, ContainerEntity, EditorItem, EditorItemInfo, Entity, FrameEntity, Item, ShapeEntity, TableEntity, } from '../../Items'
+import { CellEntity, Connector, ContainerEntity, EditorItem, EditorItemInfo, Entity, FrameEntity, ImageContainer, Item, ShapeEntity, SvgContainer, TableEntity, } from '../../Items'
 import { ContentLayer, } from './ContentLayer'
 import { ControllerLayer, } from './ControllerLayer'
 import { EditorLayer, } from './EditorLayer'
@@ -717,11 +717,12 @@ export class Editor extends Painter {
   public set action (value: Action | undefined) {
     this._action = value
     if(this._action) {
+      //If theme is setup for document, we need to prepare theme for new shapes in editor here, but we need to skip for SVG and Image
       if(this._action.items[0] instanceof Connector && !(this._action instanceof MyShapeAction)) {
         this._action.items[0].strokeColor = SystemUtils.parseColorString(this._theme.connectorStrokeColor)!
         this._action.items[0].fillColor = SystemUtils.parseColorString(this._theme.connectorFillColor)!
         this._action.items[0].fontColor = SystemUtils.parseColorString(this._theme.connectorFontColor)!
-      } else {
+      } else if(!(this._action.items[0] instanceof SvgContainer || this._action.items[0] instanceof ImageContainer ) && !(this._action instanceof MyShapeAction)){
         this._action.items.forEach(item => {
           item.strokeColor = SystemUtils.parseColorString(this._theme.shapeStrokeColor)!
           item.fillColor = SystemUtils.parseColorString(this._theme.shapeFillColor)!
