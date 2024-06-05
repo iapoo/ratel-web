@@ -11,7 +11,7 @@
 7. Full operation support & Operation support for text edit (Done) 
 8. Use System Font resource
 9. SVG Generation
-10. My Shapes
+10. My Shapes (Done)
 
 ## Minor Features
 
@@ -30,4 +30,5 @@
 13. Regenerate Arrows for UML (Done)
 14. Make UML Object lifeline as container for activiation (Done)
 15. Clip seems doesnt always works.
-
+16. Logo
+17. 
