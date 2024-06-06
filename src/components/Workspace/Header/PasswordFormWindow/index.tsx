@@ -101,7 +101,7 @@ const PasswordFormWindowPage: FC<PasswordFormWindowProps> = ({
       }
     }
     setErrorVisible(false)
-    axios.post(`${RequestUtils.serverAddress}/updatePassword`, data, config)
+    axios.post(`${RequestUtils.systemServerAddress}/updatePassword`, data, config)
       .then(response => {
         if (response.status == 200 && response.data.success) {
           messageApi.open({

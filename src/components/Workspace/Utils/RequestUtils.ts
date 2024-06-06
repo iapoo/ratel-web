@@ -73,13 +73,42 @@ export class RequestUtils {
     private static userName_: string = ''
     private static password_: string = ''
     private static token_: string = ''
-    private static serverAddress_: string = 'http://192.168.1.215:8080'
-    private static rockieAddress_: string = 'http://192.168.1.215:8081'
+    private static serverAddress_: string = ''
+    private static rockieAddress_: string = ''
     //private static serverAddress_: string = 'http://127.0.0.1:8080'
     private static lastCheckTime_: number = 0;
     private static checkTimeInterval_: number = 60000;
     private static userInfo_: UserInfo | null = null
 
+    public static get systemServerAddress(): string {
+        if (RequestUtils.serverAddress_.length < 1) {
+            const protocal = window.location.protocol
+            const hostname = window.location.hostname
+            const port = window.location.port
+      
+            const WEB_HTTP = process.env.SYSTEM_WEB_HTTP ? process.env.SYSTEM_WEB_HTTP : protocal + '//'
+            const WEB_SERVER = process.env.SYSTEM_WEB_SERVER ? process.env.SYSTEM_WEB_SERVER : hostname
+            const WEB_PORT = process.env.SYSTEM_WEB_PORT ? ':' + process.env.SYSTEM_WEB_PORT : ':' + port
+            const WEB_PATH = process.env.SYSTEM_WEB_PATH
+            RequestUtils.serverAddress_ = WEB_HTTP + WEB_SERVER + WEB_PORT + WEB_PATH
+        }
+        return RequestUtils.serverAddress_
+    }
+    public static get rockieServerAddress(): string {
+        if (RequestUtils.rockieAddress_.length < 1) {
+            const protocal = window.location.protocol
+            const hostname = window.location.hostname
+            const port = window.location.port
+      
+            const WEB_HTTP = process.env.ROCKIE_WEB_HTTP ? process.env.ROCKIE_WEB_HTTP : protocal + '//'
+            const WEB_SERVER = process.env.ROCKIE_WEB_SERVER ? process.env.ROCKIE_WEB_SERVER : hostname
+            const WEB_PORT = process.env.ROCKIE_WEB_PORT ? ':' + process.env.ROCKIE_WEB_PORT : ':' + port
+            const WEB_PATH = process.env.ROCKIE_WEB_PATH
+            RequestUtils.rockieAddress_ = WEB_HTTP + WEB_SERVER + WEB_PORT + WEB_PATH
+        }
+        return RequestUtils.rockieAddress_
+    }
+    
     public static get token() : string {
         return RequestUtils.token_;
     }
@@ -90,10 +119,6 @@ export class RequestUtils {
 
     public static set token(value: string) {
         RequestUtils.token_ = value;
-    }
-
-    public static get serverAddress() : string {
-        return RequestUtils.serverAddress_;
     }
 
     public static get userName() {
@@ -132,7 +157,7 @@ export class RequestUtils {
                 'Content-Type': 'application/json'
             }
         }
-        axios.post(`${RequestUtils.serverAddress}/login`, data, config)
+        axios.post(`${RequestUtils.systemServerAddress}/login`, data, config)
         .then(response => {
             if(response.status == 200&& response.data.success) {
                 console.log(response.data)                
@@ -156,7 +181,7 @@ export class RequestUtils {
                 'Content-Type': 'application/json'
             }
         }
-        axios.post(`${RequestUtils.serverAddress}/login`, data, config)
+        axios.post(`${RequestUtils.systemServerAddress}/login`, data, config)
         .then(response => {
             if(response.status == 200 && response.data.success) {
                 console.log('Login succeed')
@@ -182,7 +207,7 @@ export class RequestUtils {
                 'Token': RequestUtils.token_
             }
         }
-        axios.post(`${RequestUtils.serverAddress}/logout`, data, config)
+        axios.post(`${RequestUtils.systemServerAddress}/logout`, data, config)
         .then(response => {
             if(response.status == 200 && response.data.success) {
                 console.log('Logout succeed')
@@ -253,7 +278,7 @@ export class RequestUtils {
                 'Token': RequestUtils.token
             }
         }
-        const response = await axios.post(`${RequestUtils.serverAddress}/info`, data, config)
+        const response = await axios.post(`${RequestUtils.systemServerAddress}/info`, data, config)
         //console.log(response.data)
         if(response?.data?.success) {
             RequestUtils.userInfo_ = response.data.data
@@ -267,7 +292,7 @@ export class RequestUtils {
     }
 
     public static info() {       
-        return axios.post(`${RequestUtils.serverAddress}/info`, {            
+        return axios.post(`${RequestUtils.systemServerAddress}/info`, {            
             }, {
             headers: {
                 'Content-Type': 'application/json',
@@ -277,7 +302,7 @@ export class RequestUtils {
     }
 
     public static getSettings() {       
-        return axios.post(`${RequestUtils.serverAddress}/settings`, {            
+        return axios.post(`${RequestUtils.systemServerAddress}/settings`, {            
             }, {
             headers: {
                 'Content-Type': 'application/json',
@@ -287,7 +312,7 @@ export class RequestUtils {
     }
 
     public static updateSettings(settings: string) {       
-        return axios.post(`${RequestUtils.serverAddress}/updateSettings`, {   
+        return axios.post(`${RequestUtils.systemServerAddress}/updateSettings`, {   
                 'settings':  settings       
             }, {
             headers: {
@@ -307,7 +332,7 @@ export class RequestUtils {
                 'Token': RequestUtils.token
             }
         }
-        return axios.post(this.rockieAddress_ + `/folder/folders`, data, config)
+        return axios.post(this.rockieServerAddress + `/folder/folders`, data, config)
     }
 
     public static getDocuments(folderId: number | null) {
@@ -320,7 +345,7 @@ export class RequestUtils {
                 'Token': RequestUtils.token
             }
         }
-        return axios.post(this.rockieAddress_ + `/document/documents`, data, config)
+        return axios.post(this.rockieServerAddress + `/document/documents`, data, config)
     }
 
     public static loadDocument(documentId: number) {
@@ -333,7 +358,7 @@ export class RequestUtils {
                 'Token': RequestUtils.token
             }
         }
-        return axios.post(this.rockieAddress_ + `/document/document`, data, config)
+        return axios.post(this.rockieServerAddress + `/document/document`, data, config)
     }
 
     public static saveDocument(documentName: String, content: string, folderId: number | null) {
@@ -351,7 +376,7 @@ export class RequestUtils {
                 'Token': RequestUtils.token
             }
         }
-        return axios.post(this.rockieAddress_ + `/document/add`, data, config)
+        return axios.post(this.rockieServerAddress + `/document/add`, data, config)
     }
 
     public static updateDocument(documentId: number, documentName: String, content: string, folderId: number | null) {
@@ -370,7 +395,7 @@ export class RequestUtils {
                 'Token': RequestUtils.token
             }
         }
-        return axios.post(this.rockieAddress_ + `/document/update`, data, config)
+        return axios.post(this.rockieServerAddress + `/document/update`, data, config)
     }
 
     public static deleteDocument(documentId: number) {
@@ -383,7 +408,7 @@ export class RequestUtils {
                 'Token': RequestUtils.token
             }
         }
-        return axios.post(this.rockieAddress_ + `/document/delete`, data, config)
+        return axios.post(this.rockieServerAddress + `/document/delete`, data, config)
     }
 
     public static addFolder(folderName: String, parentId: number | null) {
@@ -397,7 +422,7 @@ export class RequestUtils {
                 'Token': RequestUtils.token
             }
         }
-        return axios.post(this.rockieAddress_ + `/folder/add`, data, config)
+        return axios.post(this.rockieServerAddress + `/folder/add`, data, config)
     }
 
     public static deleteFolder(folderId: number) {
@@ -410,7 +435,7 @@ export class RequestUtils {
                 'Token': RequestUtils.token
             }
         }
-        return axios.post(this.rockieAddress_ + `/folder/delete`, data, config)
+        return axios.post(this.rockieServerAddress + `/folder/delete`, data, config)
     }
 
     public static getGoogleFonts() {
@@ -422,6 +447,6 @@ export class RequestUtils {
                 'Token': RequestUtils.token
             }
         }
-        return axios.post(this.rockieAddress_ + `/utils/google-fonts`, data, config)
+        return axios.post(this.rockieServerAddress + `/utils/google-fonts`, data, config)
     }
 }
