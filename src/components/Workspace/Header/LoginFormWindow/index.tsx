@@ -101,7 +101,7 @@ const LoginFormWindowPage: FC<LoginFormWindowProps> = ({
     }
 
     setErrorVisible(false)
-    axios.post(`${RequestUtils.serverAddress}/login`, data, config)
+    axios.post(`${RequestUtils.systemServerAddress}/login`, data, config)
       .then(response => {
         if (response.status == 200 && response.data.success) {
           messageApi.open({

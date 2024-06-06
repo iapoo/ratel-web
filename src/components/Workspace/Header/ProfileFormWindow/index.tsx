@@ -117,7 +117,7 @@ const ProfileFormWindowPage: FC<ProfileFormWindowProps> = ({
       }
     }
     setErrorVisible(false)
-    axios.post(`${RequestUtils.serverAddress}/update`, data, config)
+    axios.post(`${RequestUtils.systemServerAddress}/update`, data, config)
       .then(response => {
         if (response.status == 200 && response.data.success) {
           messageApi.open({

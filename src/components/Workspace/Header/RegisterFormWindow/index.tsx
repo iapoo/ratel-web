@@ -103,7 +103,7 @@ const RegisterFormWindowPage: FC<RegisterFormWindowProps> = ({
       }
     }
     setErrorVisible(false)
-    axios.post(`${RequestUtils.serverAddress}/register`, data, config)
+    axios.post(`${RequestUtils.systemServerAddress}/register`, data, config)
       .then(response => {
         if (response.status == 200 && response.data.success) {
           messageApi.open({
