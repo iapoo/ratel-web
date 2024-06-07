@@ -2080,30 +2080,30 @@ const Header: FC<HeaderProps> = ({
   ];
 
   const editItems: MenuProps['items'] = [
-    { key: 'New', label: 'New', onClick: handleFontHelper },
-    { key: 'OpenFrom', label: 'OpenFrom', },
-    { key: 'Open', label: 'Open', },
-    { key: 'Save', label: 'Save', },
-    { key: 'SaveAs', label: 'SaveAs', },
-    { key: 'Export', label: 'Export', },
+    // { key: 'New', label: 'New', onClick: handleFontHelper },
+    // { key: 'OpenFrom', label: 'OpenFrom', },
+    // { key: 'Open', label: 'Open', },
+    // { key: 'Save', label: 'Save', },
+    // { key: 'SaveAs', label: 'SaveAs', },
+    // { key: 'Export', label: 'Export', },
   ];
 
   const viewItems: MenuProps['items'] = [
-    { key: 'New', label: 'New', },
-    { key: 'OpenFrom', label: 'OpenFrom', },
-    { key: 'Open', label: 'Open', },
-    { key: 'Save', label: 'Save', },
-    { key: 'SaveAs', label: 'SaveAs', },
-    { key: 'Export', label: 'Export', },
+    // { key: 'New', label: 'New', },
+    // { key: 'OpenFrom', label: 'OpenFrom', },
+    // { key: 'Open', label: 'Open', },
+    // { key: 'Save', label: 'Save', },
+    // { key: 'SaveAs', label: 'SaveAs', },
+    // { key: 'Export', label: 'Export', },
   ];
 
   const operationItems: MenuProps['items'] = [
-    { key: 'New', label: 'New', },
-    { key: 'OpenFrom', label: 'OpenFrom', },
-    { key: 'Open', label: 'Open', },
-    { key: 'Save', label: 'Save', },
-    { key: 'SaveAs', label: 'SaveAs', },
-    { key: 'Export', label: 'Export', },
+    // { key: 'New', label: 'New', },
+    // { key: 'OpenFrom', label: 'OpenFrom', },
+    // { key: 'Open', label: 'Open', },
+    // { key: 'Save', label: 'Save', },
+    // { key: 'SaveAs', label: 'SaveAs', },
+    // { key: 'Export', label: 'Export', },
   ];
 
   const optionItems: MenuProps['items'] = [
@@ -2113,10 +2113,13 @@ const Header: FC<HeaderProps> = ({
         { key: 'en-US', label: 'English(US)', onClick: () => handleLocale('en-US'), icon: getLocale() == 'en-US' ? <CheckOutlined /> : <Placeholder />, },
       ]
     },
-    { key: 'OpenFrom', label: 'OpenFrom', },
-    { key: 'Open', label: 'Open', },
-    { key: 'Save', label: 'Save', },
-    { key: 'SaveAs', label: 'SaveAs', onClick: handleTestCode },
+    // { key: 'OpenFrom', label: 'OpenFrom', },
+    // { key: 'Open', label: 'Open', },
+    // { key: 'Save', label: 'Save', },
+  ]
+
+  const developmentItems: MenuProps['items'] = [
+    { key: 'Test Code', label: 'SaveAs', onClick: handleTestCode },
     { key: 'Test Shapes', label: 'Test Shapes', onClick: handleContainerShapesLarge, },
     { key: 'Test Container Shapes Large', label: 'Test Container Shapes Large', onClick: handleContainerShapesLarge, },
     { key: 'Test Container Shapes Small', label: 'Test Container Shapes Small', onClick: handleContainerShapesSmall, },
@@ -2184,6 +2187,12 @@ const Header: FC<HeaderProps> = ({
               <Dropdown menu={{ items: optionItems }}>
                 <Button type='text' size='small'><FormattedMessage id='workspace.header.menu-option' /></Button>
               </Dropdown>
+              {"false" == process.env.PRODUCTION 
+              ? <Dropdown menu={{ items: developmentItems }}>
+                  <Button type='text' size='small'>Development Menu</Button>
+                </Dropdown>
+                : ''
+              }              
               <Dropdown menu={{ items: helpItems }}>
                 <Button type='text' size='small'><FormattedMessage id='workspace.header.menu-help' /></Button>
               </Dropdown>
