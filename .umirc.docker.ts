@@ -26,6 +26,7 @@ export default defineConfig({
     entry: "./src/icons",
   },
   define: {
+    'process.env.PRODUCTION': "true",
     "process.env.SYSTEM_WEB_HTTP": "http://",
     "process.env.SYSTEM_WEB_SERVER": "192.168.1.5",
     "process.env.SYSTEM_WEB_PORT": "8080",
