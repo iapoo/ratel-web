@@ -49,6 +49,8 @@ export default {
   'workspace.header.message-invalid-document-name': '无效的文档名称',
   'workspace.header.message-invalid-document-id': '无效的文档ID',
   'workspace.header.message-auto-save-disabled-without-login': '自动保存需登录才能启用',
+  'workspace.header.message-document-modified': '文档已修改，确认放弃修改并继续吗?',
+  'workspace.header.message-title-document-modified': '文档已修改',
   'workspace.header.login-form-window.remember-account-title': '记住账号',
   'workspace.header.login-form-window.user-name-message': '账号名称不可为空',
   'workspace.header.login-form-window.user-name-placeholder': '请输入账号名称',
