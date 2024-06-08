@@ -1,16 +1,20 @@
-# umi-electron-typescript-template
-base template include umijs electron typescript
+# Ratel Web
 
+## About Ratel Web
 
-# NPM Config
+Ratel Web is frontend of Ratel. Ratel is general diagram editor. There are 3 sub projects: Ratel-Web(frontend), Ratel-Server(backend) and Ratel-deployment(deployment)
 
-registry=https://registry.npm.taobao.org/
-chromedriver_cdnurl=https://mirrors.huaweicloud.com/chromedriver
-electron_mirror=https://mirrors.huaweicloud.com/electron/
-electron_builder_binaries_mirror=https://mirrors.huaweicloud.com/electron-builder-binaries/
+## Try
 
+### Try online demo (in progress)
 
-# Icon maker
+Try onelin demo.
 
-npm run svgr --replace-attr-values "#3771c8=currentColor" src/components/Resource/Icons/Source/rectangle.svg 
-npm run svgr --replace-attr-values src/components/Resource/Icons/Source/rectangle.svg 
+### Try all-in-one docker
+
+Pleae check Ratel-Deployment
+
+## Build & Run
+
+Build: npm run build
+Run: npm run start
