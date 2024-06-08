@@ -18,5 +18,6 @@ Pleae check Ratel-Deployment
 
 ## Build & Run
 
-1. Build: npm run build
-2. Run: npm run start
+1. Install Node, require version 12.x. Other version may fail so far.
+2. Build: npm run build
+3. Run: npm run start
