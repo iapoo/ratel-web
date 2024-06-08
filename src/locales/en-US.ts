@@ -49,6 +49,8 @@ export default {
   'workspace.header.message-invalid-document-name': 'Invalid document name provided',
   'workspace.header.message-invalid-document-id': 'Invalid document id detected',
   'workspace.header.message-auto-save-disabled-without-login': 'Auto save requires login first',
+  'workspace.header.message-document-modified': 'Document is modified, are you sure to discard and continue?',
+  'workspace.header.message-title-document-modified': 'Document is modified',
   'workspace.header.login-form-window.remember-account-title': 'Remember password',
   'workspace.header.login-form-window.user-name-message': 'User name is required',
   'workspace.header.login-form-window.user-name-placeholder': 'Please enter the user name',

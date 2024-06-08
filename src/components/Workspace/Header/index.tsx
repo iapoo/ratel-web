@@ -601,6 +601,14 @@ const Header: FC<HeaderProps> = ({
     }
   }
 
+
+  const handleDownload = () => {
+    if (Utils.currentEditor) {
+      const data = EditorHelper.export(Utils.currentEditor)
+      SystemUtils.generateDownloadFile(data, 'test.png')
+    }
+  }
+
   const handleExport2 = () => {
     if (Utils.currentEditor) {
       const data = EditorHelper.exportSelected(Utils.currentEditor)
@@ -2077,6 +2085,7 @@ const Header: FC<HeaderProps> = ({
     { key: 'Open', label: <FormattedMessage id='workspace.header.menu-file-open' />, icon: <FolderOpenOutlined />, onClick: handleFileOpen, },
     { key: 'Save', label: <FormattedMessage id='workspace.header.menu-file-save' />, icon: <SaveOutlined />, onClick: handleFileSave },
     { key: 'Export', label: <FormattedMessage id='workspace.header.menu-file-export' />, icon: <DownloadOutlined />, onClick: handleExport },
+    { key: 'Download', label: <FormattedMessage id='workspace.header.menu-file-download' />, icon: <DownloadOutlined />, onClick: handleDownload },
   ];
 
   const editItems: MenuProps['items'] = [
@@ -2333,8 +2342,8 @@ const Header: FC<HeaderProps> = ({
       <ProfileFormWindowPage visible={profileFormWindowVisible} x={60} y={60} onWindowCancel={handleProfileFormWindowCancel} onWindowOk={handleProfileFormWindowOk} />
       <NewFileWindow visible={newFileWindowVisible} x={60} y={60} onWindowCancel={handleNewFileWindowCancel} onWindowOk={handleNewFileWindowOk} />
       <OpenFileWindow visible={openFileWindowVisible} x={60} y={60} onWindowCancel={handleOpenFileWindowCancel} onWindowOk={handleOpenFileWindowOk} disableFileName={disableFileName} selectedFolderId={selectedFolderId} selectedDocumentId={selectedDocumentId} selectedDocumentName={selectedDocumentName} />
-      <Modal title="Modal" centered open={discardModifiedDocumentWindowVisible} onOk={confirmDiscardModifiedDocument} onCancel={cancelDiscardModifiedDocument} okText="确认" cancelText="取消" >
-        <p>File is modified, are you sure to discard your modification?</p>
+      <Modal title={<FormattedMessage id='workspace.header.message-title-document-modified'/>} centered open={discardModifiedDocumentWindowVisible} onOk={confirmDiscardModifiedDocument} onCancel={cancelDiscardModifiedDocument} okText="确认" cancelText="取消" >
+        <FormattedMessage id='workspace.header.message-document-modified' />
       </Modal>
     </div>
   )
