@@ -4,6 +4,7 @@ import { Form, Input, Checkbox, Row, Col, Button, Modal, Menu, message, Alert, }
 import { RequestUtils, Utils, } from '../../Utils'
 import axios from 'axios'
 import Avatar from 'antd/lib/avatar/avatar'
+import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
 
 interface NewFileWindowProps {
   visible: boolean;
@@ -70,8 +71,8 @@ const NewFileWindowPage: FC<NewFileWindowProps> = ({
 
   return (
     <div>
-      <Modal title="New File" centered open={visible} onOk={onOk} onCancel={onCancel} maskClosable={false} >
-        <p>New File Templates. --TODO </p>
+      <Modal title={<FormattedMessage id='workspace.header.window.login.title' />} centered open={visible} onOk={onOk} onCancel={onCancel} maskClosable={false} >
+      <FormattedMessage id='workspace.header.window.login.content' />
       </Modal>
     </div>
   )
