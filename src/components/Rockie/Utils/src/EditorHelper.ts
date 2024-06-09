@@ -191,7 +191,7 @@ export class EditorHelper {
         })
     }
 
-    public static exportSelected(editor: Editor, format: 'png' | 'jpg' = 'png', forIcon: boolean = false): any {
+    public static exportSelected(editor: Editor, format: 'png' | 'jpg' = 'png', forIcon: boolean = false, encoded: boolean = true): any {
         try {
             const left = editor.horizontalSpace
             const top = editor.verticalSpace
@@ -243,10 +243,12 @@ export class EditorHelper {
             const image = editor.engine.surface.makeImageSnapshot([left + selectionLeft - 10, top + selectionTop - 10, left + selectionRight+ 10, top + selectionBottom + 10])
             const data = image.encodeToBytes()
             let base64Data = ''
-            if(data) {
+            if(data && encoded) {
                 base64Data = ImageUtils.convertUint8ArrayToBase64(data)
+                return base64Data
+            } else {
+                return data
             }
-            return base64Data
         } finally {
             editor.backgroundLayer.visible = true
             editor.selectionLayer.visible = true
