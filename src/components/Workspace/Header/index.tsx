@@ -65,6 +65,8 @@ const Header: FC<HeaderProps> = ({
   const STAGING_DOCUMENT_NAME = 'stagingDocumentName'
   const STAGING_FOLDER_ID = 'stagingFolderId'
 
+  const RATEL_FORMAT = 'ratel'
+
   const [forceUpdate, setForceUpdate, ] = useState<boolean>(false)
   const [initialized, setInitialized,] = useState<boolean>(false)
   const [online, setOnline,] = useState<boolean>(false)
@@ -110,6 +112,8 @@ const Header: FC<HeaderProps> = ({
   const [ connectorLineStartArrow, setConnectorLineStartArrow, ] = useState<string>(ConnectorArrowTypes[0].name)
   const [ connectorLineEndArrow, setConnectorLineEndArrow, ] = useState<string>(ConnectorArrowTypes[0].name)
   const [ connectorSelected, setConnectorSelected, ] = useState<boolean>(false)
+  // const [exportForm, ] = Form.useForm()
+  // const [downloadDocumentForm, ] = Form.useForm()
   const timerCountRef = useRef(0)
 
   useEffect(() => {
@@ -594,26 +598,27 @@ const Header: FC<HeaderProps> = ({
     }
   }
 
-  const handleExport = () => {
+  const handleExport = (format: 'png' | 'jpg' = 'png') => {
     if (Utils.currentEditor) {
-      const data = EditorHelper.export(Utils.currentEditor)
-      SystemUtils.generateDownloadFile(data, 'test.png')
+      const data = EditorHelper.export(Utils.currentEditor, format)
+      SystemUtils.generateDownloadFile(data, selectedDocumentName + '.' + format)
     }
   }
 
+  const handleExportSelected = (format: 'png' | 'jpg' = 'png') => {
+    if (Utils.currentEditor) {
+      const data = EditorHelper.exportSelected(Utils.currentEditor, format, false, false)
+      SystemUtils.generateDownloadFile(data, selectedDocumentName + '.' + format)
+    }
+  }
 
   const handleDownload = () => {
-    if (Utils.currentEditor) {
-      const data = EditorHelper.export(Utils.currentEditor)
-      SystemUtils.generateDownloadFile(data, 'test.png')
-    }
-  }
-
-  const handleExport2 = () => {
-    if (Utils.currentEditor) {
-      const data = EditorHelper.exportSelected(Utils.currentEditor)
-      SystemUtils.generateDownloadFile(data, 'test.png')
-    }
+    const storage = new StorageService()
+    storage.editors = Utils.editors
+    storage.save()
+    const documentData = storage.storageData
+    const documentContent = JSON.stringify(documentData)
+    SystemUtils.generateDownloadFile(documentContent, selectedDocumentName + '.' + RATEL_FORMAT)
   }
 
   const confirmDiscardModifiedDocument = () => {
@@ -634,6 +639,18 @@ const Header: FC<HeaderProps> = ({
   }
 
 
+  const onExportFormFinish = (values: any) => {
+    console.log('Receive values:', values)
+    const { folderName } = values
+    let parentId: number | null = null
+  }
+
+  const onDownloadDocumentFormFinish = (values: any) => {
+    console.log('Receive values:', values)
+    const { folderName } = values
+    let parentId: number | null = null
+  }
+  
   const zoomOptions = [
     { value: 0.25, label: '25%' },
     { value: 0.5, label: '50%' },
@@ -2084,8 +2101,17 @@ const Header: FC<HeaderProps> = ({
     { key: 'OpenFrom', label: <FormattedMessage id='workspace.header.menu-file-open-from' />, disabled: true, icon: <FolderOpenOutlined />, },
     { key: 'Open', label: <FormattedMessage id='workspace.header.menu-file-open' />, icon: <FolderOpenOutlined />, onClick: handleFileOpen, },
     { key: 'Save', label: <FormattedMessage id='workspace.header.menu-file-save' />, icon: <SaveOutlined />, onClick: handleFileSave },
-    { key: 'Export', label: <FormattedMessage id='workspace.header.menu-file-export' />, icon: <DownloadOutlined />, onClick: handleExport },
-    { key: 'Download', label: <FormattedMessage id='workspace.header.menu-file-download' />, icon: <DownloadOutlined />, onClick: handleDownload },
+    { key: 'Export', label: <FormattedMessage id='workspace.header.menu-file-export' />, icon: <DownloadOutlined />, 
+      children: [
+        { key: 'ExportToPNG', label: <FormattedMessage id='workspace.header.menu-file-export-png' />, icon: <DownloadOutlined />, onClick: () => handleExport('png') },
+        // { key: 'ExportToJPG', label: <FormattedMessage id='workspace.header.menu-file-export-jpg' />, icon: <DownloadOutlined />, onClick: () => handleExport('jpg') },
+        { key: 'ExportToDucment', label: <FormattedMessage id='workspace.header.menu-file-export-document' />, icon: <DownloadOutlined />, onClick: handleDownload },
+    ]},
+    { key: 'ExportSelected', label: <FormattedMessage id='workspace.header.menu-file-export-selected' />, icon: <DownloadOutlined />, 
+      children: [
+        { key: 'ExportSelectedToPNG', label: <FormattedMessage id='workspace.header.menu-file-export-selected-png' />, icon: <DownloadOutlined />, onClick: () => handleExportSelected('png') },
+        // { key: 'ExportSelectedToJPG', label: <FormattedMessage id='workspace.header.menu-file-export-selected-jpg' />, icon: <DownloadOutlined />, onClick: () => handleExportSelected('jpg') },
+    ]},
   ];
 
   const editItems: MenuProps['items'] = [
@@ -2345,6 +2371,22 @@ const Header: FC<HeaderProps> = ({
       <Modal title={<FormattedMessage id='workspace.header.message-title-document-modified'/>} centered open={discardModifiedDocumentWindowVisible} onOk={confirmDiscardModifiedDocument} onCancel={cancelDiscardModifiedDocument} okText="确认" cancelText="取消" >
         <FormattedMessage id='workspace.header.message-document-modified' />
       </Modal>
+      {/* <Modal title={<FormattedMessage id='workspace.header.message-title-document-modified'/>} centered open={discardModifiedDocumentWindowVisible} onOk={confirmDiscardModifiedDocument} onCancel={cancelDiscardModifiedDocument} okText="确认" cancelText="取消" >
+        <Form name="exportForm" form={exportForm} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }} style={{ maxWidth: 600 }} initialValues={{ remember: true }}
+            onFinish={onExportFormFinish} autoComplete="off">
+            <Form.Item label={<FormattedMessage id='workspace.header.window.open-file.add-folder.foler-name' />} name="folderName" rules={[{ required: true, message: <FormattedMessage id='workspace.header.window.open-file.add-folder.input-new-foler-name' /> }]} >
+              <Input />
+            </Form.Item>
+            </Form>
+      </Modal>
+      <Modal title={<FormattedMessage id='workspace.header.message-title-document-modified'/>} centered open={discardModifiedDocumentWindowVisible} onOk={confirmDiscardModifiedDocument} onCancel={cancelDiscardModifiedDocument} okText="确认" cancelText="取消" >
+      <Form name="downloadDocumentForm" form={downloadDocumentForm} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }} style={{ maxWidth: 600 }} initialValues={{ remember: true }}
+            onFinish={onDownloadDocumentFormFinish} autoComplete="off">
+            <Form.Item label={<FormattedMessage id='workspace.header.window.open-file.add-folder.foler-name' />} name="folderName" rules={[{ required: true, message: <FormattedMessage id='workspace.header.window.open-file.add-folder.input-new-foler-name' /> }]} >
+              <Input />
+            </Form.Item>
+            </Form>
+      </Modal> */}
     </div>
   )
 }
