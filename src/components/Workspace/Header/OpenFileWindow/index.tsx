@@ -26,36 +26,6 @@ interface OpenFileWindowProps {
 const FOLDER = 'FOLDER_'
 const DOC = "DOC_"
 
-const treeData2: DataNode[] = [
-  {
-    title: 'parent 1',
-    key: '0-0',
-    children: [
-      {
-        title: 'parent 1-0',
-        key: '0-0-0',
-        disabled: true,
-        children: [
-          {
-            title: 'leaf',
-            key: '0-0-0-0',
-            disableCheckbox: true,
-          },
-          {
-            title: 'leaf',
-            key: '0-0-0-1',
-          },
-        ],
-      },
-      {
-        title: 'parent 1-1',
-        key: '0-0-1',
-        children: [{ title: <span style={{ color: '#1677ff' }}>sss</span>, key: '0-0-1-0' }],
-      },
-    ],
-  },
-];
-
 const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
   visible, x, y, disableFileName, selectedFolderId, selectedDocumentId, selectedDocumentName, onWindowCancel, onWindowOk,
 }) => {
@@ -294,7 +264,13 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
     if (selectedFolderKey?.startsWith(FOLDER)) {
       parentId = parseInt(selectedFolderKey.substring(7))
     } else if (selectedFolderKey?.startsWith(DOC)) {
-      parentId = parseInt(selectedFolderKey.substring(4))
+      if(treeMap) {
+        const documentNode = treeMap.get(selectedFolderKey)
+        if(isDocument(documentNode)) {
+          parentId = documentNode.folderId
+        }
+
+      }
     }
     const fetchFolderData = async () => {
       const folderData = await RequestUtils.addFolder(folderName, parentId)
