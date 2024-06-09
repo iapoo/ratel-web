@@ -8,6 +8,7 @@ import { Document, Folder, isDocument, isFolder } from '../../Utils/RequestUtils
 import type { DataNode, TreeProps, } from 'antd/es/tree';
 import { FileFilled, FileOutlined, FolderFilled, FolderOutlined } from '@ant-design/icons'
 import { StorageService } from '../../Storage'
+import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
 
 
 interface OpenFileWindowProps {
@@ -439,12 +440,12 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
 
   return (
     <div>
-      <Modal title="Open File" centered open={visible} onOk={onOk} onCancel={onCancel} maskClosable={false}  >
+      <Modal title={<FormattedMessage id='workspace.header.window.open-file.title' />}  centered open={visible} onOk={onOk} onCancel={onCancel} maskClosable={false}  >
         <div style={{ width: '100%', height: '480px' }}>
           <Space wrap>
-            <Button onClick={openAddFolder}>Add Folder</Button>
-            <Button onClick={handleDeleteFolder} disabled={!selectedFolderIsFolder}>Delete Folder</Button>
-            <Button onClick={handleDeleteDocument} disabled={!selectedFolderIsDocument}>Delete Document</Button>
+            <Button onClick={openAddFolder}><FormattedMessage id='workspace.header.window.open-file.add-folder' /></Button>
+            <Button onClick={handleDeleteFolder} disabled={!selectedFolderIsFolder}><FormattedMessage id='workspace.header.window.open-file.delete-folder' /></Button>
+            <Button onClick={handleDeleteDocument} disabled={!selectedFolderIsDocument}><FormattedMessage id='workspace.header.window.open-file.delete-document' /></Button>
           </Space>
           <div style={{ width: '100%', height: '440px',borderWidth: '1px', borderColor: 'silver', borderStyle: 'solid', marginTop: '8px' }}>
             <Tree style={{ width: '100%', height: '100%',  margin: '8px', }}
@@ -462,23 +463,23 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
           </div>
         </div>
       </Modal>
-      <Modal title="Modal" centered open={addFolderWindowVisible} onOk={confirmAddFolder} onCancel={cancelAddFolder} okText="确认" cancelText="取消" >
+      <Modal title={<FormattedMessage id='workspace.header.window.open-file.add-folder.title' />} centered open={addFolderWindowVisible} onOk={confirmAddFolder} onCancel={cancelAddFolder} okText="确认" cancelText="取消" >
         <Form name="addFolderForm" form={addFolderForm} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }} style={{ maxWidth: 600 }} initialValues={{ remember: true }}
           onFinish={onFormFinish} autoComplete="off">
-          <Form.Item label="FolderName" name="folderName" rules={[{ required: true, message: 'Please input new folder name!' }]} >
+          <Form.Item label={<FormattedMessage id='workspace.header.window.open-file.add-folder.foler-name' />} name="folderName" rules={[{ required: true, message: <FormattedMessage id='workspace.header.window.open-file.add-folder.input-new-foler-name' /> }]} >
             <Input />
           </Form.Item>
           {errorVisible ? <Alert message={errorMessage} type="error" showIcon/> : ''}          
           </Form>
       </Modal>
-      <Modal title="Modal" centered open={confirmOverwriteWindowVisible} onOk={confirmOverwriteDocument} onCancel={cancelOverwriteDocument} okText="确认" cancelText="取消" >
-        <p>File already exists, are you sure to overwrite it?</p>
+      <Modal title={<FormattedMessage id='workspace.header.window.open-file.overwrite-document.title' />} centered open={confirmOverwriteWindowVisible} onOk={confirmOverwriteDocument} onCancel={cancelOverwriteDocument} okText="确认" cancelText="取消" >
+        <FormattedMessage id='workspace.header.window.open-file.overwrite-document.content' />
       </Modal>
-      <Modal title="Modal" centered open={confirmDeleteFolderWindowVisible} onOk={confirmDeleteFolder} onCancel={cancelDeleteFolder} okText="确认" cancelText="取消" >
-        <p>Are you sure to delete the folder?</p>
+      <Modal title={<FormattedMessage id='workspace.header.window.open-file.delete-folder.title' />} centered open={confirmDeleteFolderWindowVisible} onOk={confirmDeleteFolder} onCancel={cancelDeleteFolder} okText="确认" cancelText="取消" >
+        <FormattedMessage id='workspace.header.window.open-file.delete-folder.content' />
       </Modal>
-      <Modal title="Modal" centered open={confirmDeleteDocumentWindowVisible} onOk={confirmDeleteDocument} onCancel={cancelDeleteDocument} okText="确认" cancelText="取消" >
-        <p>Are your sure to delete the document?</p>
+      <Modal title={<FormattedMessage id='workspace.header.window.open-file.delete-document.title' />} centered open={confirmDeleteDocumentWindowVisible} onOk={confirmDeleteDocument} onCancel={cancelDeleteDocument} okText="确认" cancelText="取消" >
+        <FormattedMessage id='workspace.header.window.open-file.delete-document.content' />
       </Modal>
 
     </div>
