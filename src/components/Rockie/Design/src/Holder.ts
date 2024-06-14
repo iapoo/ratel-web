@@ -490,10 +490,10 @@ export class Holder extends Control {
         this.addNode(this._bottomResizeAnchor)
         this.addNode(this._leftBottomResizeAnchor)
         if (this._inSelection) {
-          this.addNode(this._leftCreationAnchor)
-          this.addNode(this._topCreationAnchor)
-          this.addNode(this._rightCreationAnchor)
-          this.addNode(this._bottomCreationAnchor)
+          // this.addNode(this._leftCreationAnchor)
+          // this.addNode(this._topCreationAnchor)
+          // this.addNode(this._rightCreationAnchor)
+          // this.addNode(this._bottomCreationAnchor)
           this.addNode(this._rotationAnchor)
           if(this._target instanceof ShapeEntity) {
             if (this._target.shapeType.modifiable) {
@@ -536,10 +536,10 @@ export class Holder extends Control {
       this.removeNode(this._bottomResizeAnchor)
       this.removeNode(this._leftBottomResizeAnchor)
       if (this._inSelection) {
-        this.removeNode(this._leftCreationAnchor)
-        this.removeNode(this._topCreationAnchor)
-        this.removeNode(this._rightCreationAnchor)
-        this.removeNode(this._bottomCreationAnchor)
+        // this.removeNode(this._leftCreationAnchor)
+        // this.removeNode(this._topCreationAnchor)
+        // this.removeNode(this._rightCreationAnchor)
+        // this.removeNode(this._bottomCreationAnchor)
         this.removeNode(this._rotationAnchor)
         if(this._target instanceof ShapeEntity) {
           if (this._target.shapeType.modifiable) {
