@@ -49,7 +49,8 @@ export class RotationAnchor extends Anchor {
       return;
     }
     this._inRaotating = false;
-    this.holder.rotation = this.target.rotation;
+    //this.holder.rotation = this.target.rotation;
+    this.holder.transform = this.target.shape.worldTransform
     this.holder.layoutAnchors();
   }
 

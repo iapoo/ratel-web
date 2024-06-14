@@ -37,7 +37,9 @@ export class SelectionLayer extends EditorLayer {
       }
     } else {
       this._holders.forEach((holder) => {
-        holder.boundary = holder.target.boundary
+        //holder.boundary = holder.target.boundary
+        holder.width = holder.target.width
+        holder.height = holder.target.width
         holder.layoutAnchors()
       })
     }
