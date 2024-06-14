@@ -252,7 +252,7 @@ const RegisterFormWindowPage: FC<RegisterFormWindowProps> = ({
                 style={{ width: '100%', }}
               />
             </Form.Item>
-            <div style={{ marginLeft: '40px', width: '280px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', }} />
+            {/* <div style={{ marginLeft: '40px', width: '280px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', }} />
             <Space>
               <Button type='primary' size='middle' onClick={sendValidationCode}><FormattedMessage id='workspace.header.register-form-window.email-validation-button-title' /></Button>
               <Form.Item name='validation' rules={[{ message: <FormattedMessage id='workspace.header.register-form-window.email-validation-message' />, },]} style={{ marginBottom: '4px', }} >
@@ -263,7 +263,7 @@ const RegisterFormWindowPage: FC<RegisterFormWindowProps> = ({
                   bordered={false}
                 />
               </Form.Item>
-            </Space>
+            </Space> */}
             <div style={{ marginLeft: '40px', width: '280px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', }} />
             {errorVisible && (<Alert message={errorMessage} type="error" closable/> )}
           </Form>
