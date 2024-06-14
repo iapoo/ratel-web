@@ -741,8 +741,8 @@ const Navigator: FC<NavigatorProps> = ({
       key: '3',
       label: <div style={{fontWeight: 'bolder'}}><FormattedMessage id='workspace.navigator.panel.advanced'/></div>,
       children: <Space size={2} wrap>
-      {aliyunShapes}
-      {awsShapes}
+      {/* {aliyunShapes}
+      {awsShapes} */}
       {customShapeFlowChartShapes}
       {customShapeBasicShapes}
       </Space>,
