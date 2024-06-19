@@ -40,6 +40,7 @@ export class ControllerAnchor extends Anchor {
     this._reshaping = true;
     this._startX = x;
     this._startY = y;
+    this.editor.beginOperation(this.target)
 
   }
   public handlePointerUp (x: number, y: number) {
@@ -47,6 +48,7 @@ export class ControllerAnchor extends Anchor {
       return;
     }
     this._reshaping = false;
+    this.editor.finishOperation(this.target)
   }
   public handlePointerMove (x: number, y: number) {
     if (!this.target) {

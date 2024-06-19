@@ -42,6 +42,7 @@ export class RotationAnchor extends Anchor {
     this._centerX = this.target.width / 2;
     this._centerY = this.target.height / 2;
     //console.log(`'anchor Pointer down' x=${x} y =${y}`);
+    this.editor.beginOperation(this.target)
   }
 
   public handlePointerUp(x: number, y: number) {
@@ -52,6 +53,7 @@ export class RotationAnchor extends Anchor {
     //this.holder.rotation = this.target.rotation;
     this.holder.transform = this.target.shape.worldTransform
     this.holder.layoutAnchors();
+    this.editor.finishOperation(this.target)
   }
 
   public handlePointerMove(x: number, y: number) {

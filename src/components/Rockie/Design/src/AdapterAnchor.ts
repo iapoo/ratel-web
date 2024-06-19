@@ -48,6 +48,7 @@ export class AdapterAnchor extends Anchor {
     this._adaptering = true;
     this._startX = x;
     this._startY = y;
+    this.editor.beginOperation(this.target)
 
   }
   public handlePointerUp(x: number, y: number) {
@@ -55,6 +56,7 @@ export class AdapterAnchor extends Anchor {
       return;
     }
     this._adaptering = false;
+    this.editor.finishOperation(this.target)
   }
   public handlePointerMove(x: number, y: number) {
     if (!this.target) {

@@ -41,6 +41,7 @@ export class CubicControllerAnchor extends Anchor {
     this._moving = true
     this._startX = x;
     this._startY = y;
+    this.editor.beginOperation(this.target)
 
   }
   public handlePointerUp (x: number, y: number) {
@@ -48,6 +49,7 @@ export class CubicControllerAnchor extends Anchor {
       return;
     }
     this._moving = false
+    this.editor.finishOperation(this.target)
   }
   public handlePointerMove (x: number, y: number) {
     if (!this.target) {
