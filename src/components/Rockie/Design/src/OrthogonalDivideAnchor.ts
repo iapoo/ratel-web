@@ -67,6 +67,7 @@ export class OrthogonalDivideAnchor extends Anchor {
       //this._orthogonals.length = 0
       this._orthogonalPoints = this._orthogonalPoints.concat(this.target.orthogonalPoints)
       //this._orthogonals = this._orthogonals.concat(this.target.orthogonals)
+      this.editor.beginOperation(this.target)
     }
 
   }
@@ -87,6 +88,7 @@ export class OrthogonalDivideAnchor extends Anchor {
     }
     this.editor.triggerSelectionChange()
     this._moving = false
+    this.editor.finishOperation(this.target)
 }
   public handlePointerMove (x: number, y: number) {
     if (!this.target) {

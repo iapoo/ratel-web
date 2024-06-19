@@ -60,6 +60,9 @@ export class ResizeAnchor extends Anchor {
     // this.editor.selectionLayer.removeAllEditorItems()
     // this.editor.controllerLayer.removeAllEditorItems()
     // this.editor.hoverLayer.removeAllEditorItems()
+    if(this.target) {
+      this.editor.beginOperation(this.target)
+    }
   }
 
   public handlePointerUp (x: number, y: number) {
@@ -75,6 +78,7 @@ export class ResizeAnchor extends Anchor {
       theSelectionLayer.removeAllEditorItems()
       theSelectionLayer.addEditorItem(this.target)
     }
+    this.editor.finishOperation(this.target)
   }
 
   public handlePointerMove (x: number, y: number) {

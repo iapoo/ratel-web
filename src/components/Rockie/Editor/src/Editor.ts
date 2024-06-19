@@ -2899,7 +2899,7 @@ export class Editor extends Painter {
     }
   }
 
-  private beginOperation(editorItem: EditorItem) {
+  public beginOperation(editorItem: EditorItem) {
     const theItem = editorItem as Item
     if(theItem.parent) {
       this._startEditorItemInfos.length = 0
@@ -2929,7 +2929,7 @@ export class Editor extends Painter {
     }
   }
 
-  private finishOperation(editorItem: EditorItem) {
+  public finishOperation(editorItem: EditorItem) {
     const theItem = editorItem as Item
     if(theItem.parent) {
       let origItemInfo = this._startEditorItemInfos[0]
