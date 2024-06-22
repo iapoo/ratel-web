@@ -110,7 +110,7 @@ export class ConnectionAnchor extends Anchor {
         const item = this.editor.findEditorItem(point.x, point.y, true)
         const editorItem = item as Item
         const isEdge = editorItem ? this.editor.hasEditorItemJoint(editorItem, point.x, point.y) : false
-        //console.log(`editorItem= ${editorItem} isEdge=${isEdge}`)
+        // console.log(`editorItem= ${editorItem} isEdge=${isEdge}`)
         if(this._fromSource) {
           if(this.target.source) {
             if(editorItem && isEdge) {
@@ -123,12 +123,19 @@ export class ConnectionAnchor extends Anchor {
                 this.target.source = editorItem
                 this.target.sourceJoint = sourceJoint
                 editorItem.addSourceConnector(this.target)
-                //console.log(`source is removed & added`)
+                // console.log(`source is removed & added`)
+              } else {
+                const inEditorItem = this.editor.isInEditorItem(editorItem, point.x, point.y)
+                const sourceJoint = this.editor.findEditorItemJoint(editorItem, point.x, point.y, inEditorItem)
+                const startDirection = this.editor.findConnectorDirection(editorItem, point.x, point.y)
+                this.target.startDirection = startDirection
+                this.target.sourceJoint = sourceJoint
+                // console.log(`source isn't changed`)
               }
             } else {
               this.target.source.removeSourceConnector(this.target)
               this.target.source = undefined
-              //console.log(`source is removed`)
+              // console.log(`source is removed`)
             }
           } else {
             if(editorItem && isEdge) {
@@ -139,7 +146,9 @@ export class ConnectionAnchor extends Anchor {
               this.target.source = editorItem
               this.target.sourceJoint = sourceJoint
               editorItem.addSourceConnector(this.target)
-              //console.log(`source is added`)
+              // console.log(`source is added`)
+            } else {
+              // console.log(`source isn't added`)
             }
           }
         } else {
@@ -154,12 +163,19 @@ export class ConnectionAnchor extends Anchor {
                 this.target.target = editorItem
                 this.target.targetJoint = targetJoint
                 editorItem.addTargetConnector(this.target)
-                //console.log(`target is removed & added`)
+                // console.log(`target is removed & added`)
+              } else {
+                const inEditorItem = this.editor.isInEditorItem(editorItem, point.x, point.y)
+                const targetJoint = this.editor.findEditorItemJoint(editorItem, point.x, point.y, inEditorItem)
+                const endDirection = this.editor.findConnectorDirection(editorItem, point.x, point.y)
+                this.target.endDirection = endDirection
+                this.target.targetJoint = targetJoint
+                // console.log(`taget isn't changed`)
               }
             } else {
               this.target.target.removeTargetConnector(this.target)
               this.target.target = undefined
-              //console.log(`target is removed`)
+              // console.log(`target is removed`)
             }
           } else {
             if(editorItem && isEdge) {
@@ -170,7 +186,9 @@ export class ConnectionAnchor extends Anchor {
               this.target.target = editorItem
               this.target.targetJoint = targetJoint
               editorItem.addTargetConnector(this.target)
-              //console.log(`target is added`)
+              // console.log(`target is added`)
+            } else {
+              // console.log(`target isn't added`)
             }
           }
         }

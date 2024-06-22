@@ -1723,6 +1723,12 @@ export class Editor extends Painter {
         }
       }
     }
+    //Force to align with grid 
+    targetX = this.alignToGridSize((targetX - this.horizontalSpace) / this._zoom)
+    targetY = this.alignToGridSize((targetY - this.verticalSpace) / this._zoom)
+    targetX = targetX * this._zoom + this.horizontalSpace
+    targetY = targetY * this.zoom + this.verticalSpace
+    
     if (editorItem.shape.worldInverseTransform) {
       const point = editorItem.shape.worldInverseTransform.makePoint(new Point2(targetX / this._zoom, targetY / this._zoom))
       return point
