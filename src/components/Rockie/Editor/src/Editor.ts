@@ -1706,19 +1706,78 @@ export class Editor extends Painter {
     let distance = 999999999
     let targetX = startX
     let targetY = startY
-    for (let i = startX; i <= endX; i++) {
-      for (let j = startY; j <= endY; j++) {
-        let contained = shape.contains(i, j)
-        // 如果鼠标在外面则求里面的点到目标点最近距离，否则外面的点到目标点点最近距离
-        if (inEditorItem) {
-          contained = !contained
+    // for (let i = startX; i <= endX; i++) {
+    //   for (let j = startY; j <= endY; j++) {
+    //     let contained = shape.contains(i, j)
+    //     // 如果鼠标在外面则求里面的点到目标点最近距离，否则外面的点到目标点点最近距离
+    //     if (inEditorItem) {
+    //       contained = !contained
+    //     }
+    //     if (contained) {
+    //       const newDistance = (centerX - i) * (centerX - i) + (centerY - j) * (centerY - j)
+    //       if (newDistance < distance) {
+    //         distance = newDistance
+    //         targetX = i
+    //         targetY = j
+    //       }
+    //     }
+    //   }
+    // }
+    //Need to start from center to outside
+    for(let i = 0; i < Editor.TEST_RADIUS; i ++) {
+      const startX = x - i
+      const startY = y - i
+      const endX = x + i
+      const endY = y + i
+      for(let j = startX; j <= endX; j ++) {
+        for(let k = 0; k < 1; k ++) { // check top & bottom
+          let pointX = j          
+          let pointY = startY
+          if(k == 0) {
+            pointX = j          
+            pointY = startY
+          } else {
+            pointX = j          
+            pointY = endY
+          }
+          let contained = shape.contains(pointX, pointY)
+          // 如果鼠标在外面则求里面的点到目标点最近距离，否则外面的点到目标点点最近距离
+          if (inEditorItem) {
+            contained = !contained
+          }
+          if (contained) {
+            const newDistance = (centerX - pointX) * (centerX - pointX) + (centerY - pointY) * (centerY - pointY)
+            if (newDistance < distance) {
+              distance = newDistance
+              targetX = pointX
+              targetY = pointY
+            }
+          }
         }
-        if (contained) {
-          const newDistance = (centerX - i) * (centerX - i) + (centerY - j) * (centerY - j)
-          if (newDistance < distance) {
-            distance = newDistance
-            targetX = i
-            targetY = j
+      }
+      for(let j = startY; j <= endY; j ++) {
+        for(let k = 0; k < 1; k ++) { // check left & right
+          let pointX = startX
+          let pointY = j
+          if(k == 0) {
+            pointX = startX         
+            pointY = j
+          } else {
+            pointX = endX          
+            pointY = j
+          }
+          let contained = shape.contains(pointX, pointY)
+          // 如果鼠标在外面则求里面的点到目标点最近距离，否则外面的点到目标点点最近距离
+          if (inEditorItem) {
+            contained = !contained
+          }
+          if (contained) {
+            const newDistance = (centerX - pointX) * (centerX - pointX) + (centerY - pointY) * (centerY - pointY)
+            if (newDistance < distance) {
+              distance = newDistance
+              targetX = pointX
+              targetY = pointY
+            }
           }
         }
       }
@@ -2891,7 +2950,8 @@ export class Editor extends Painter {
 
   public alignToGridSize(value: number) {
     if(this._snapToGrid) {
-      return value - value % this._gridSize
+      //return value - value % this._gridSize
+      return Math.round(value / this._gridSize) *  this._gridSize
     } else {
       return value
     }
