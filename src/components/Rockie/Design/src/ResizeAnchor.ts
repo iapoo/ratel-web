@@ -356,6 +356,7 @@ export class ResizeAnchor extends Anchor {
             const targetJoint = new Point2(connector.targetJoint.x * newWidth / this.target.width, connector.targetJoint.y * newHeight / this.target.height)
             // console.log(`new target point is x = ${targetJoint.x}, y = ${targetJoint.y}, newWidth = ${newWidth}, width = ${this.target.width}, newHeight = ${newHeight}, height = ${this.target.height}`)
             connector.targetJoint = targetJoint
+            //console.log(`connectr checking source joint x =  ${connector.sourceJoint?.x} , y =  x =  ${connector.sourceJoint?.y}`)
           }
         })
         this.updateItemBoundary(this.target, newLeft, newTop, newWidth, newHeight)

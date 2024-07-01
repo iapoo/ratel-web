@@ -366,7 +366,7 @@ export class Connector extends Item {
     this._connectorShape.start = value
     this.boundary = Rectangle.makeLTWH(Math.min(this._start.x, this._end.x), Math.min(this._start.y, this._end.y), Math.abs(this._start.x - this._end.x), Math.abs(this._start.y - this._end.y))
     if(this._autoRefreshOrthogonalPoints) {
-      this._orthogonalPoints = this.initializeOrthogonalPoints(true, false)
+      this._orthogonalPoints = this.initializeOrthogonalPoints(true, this.target ? true: false)
       this._connectorShape.orthogonalPoints = this._orthogonalPoints    
       this.initializeCurveModifiers()
     }
@@ -381,7 +381,7 @@ export class Connector extends Item {
     this._connectorShape.end = value
     this.boundary = Rectangle.makeLTWH(Math.min(this._start.x, this._end.x), Math.min(this._start.y, this._end.y), Math.abs(this._start.x - this._end.x), Math.abs(this._start.y - this._end.y))
     if(this._autoRefreshOrthogonalPoints) {
-      this._orthogonalPoints = this.initializeOrthogonalPoints(false, true)
+      this._orthogonalPoints = this.initializeOrthogonalPoints(this.source ? true: false, true)
       this._connectorShape.orthogonalPoints = this._orthogonalPoints   
       this.initializeCurveModifiers()
     }
@@ -403,10 +403,10 @@ export class Connector extends Item {
     this._sourceJoint = value
     if (value && this._source && this._sourceJoint) {
       this._start = this._source.worldTransform.makePoint(value)
-      this._connectorShape.start = this._start
-      this._orthogonalPoints = this.initializeOrthogonalPoints(true, false)
-      this._connectorShape.orthogonalPoints = this._orthogonalPoints
       this.boundary = Rectangle.makeLTWH(Math.min(this._start.x, this._end.x), Math.min(this._start.y, this._end.y), Math.abs(this._start.x - this._end.x), Math.abs(this._start.y - this._end.y))
+      this._connectorShape.start = this._start
+      this._orthogonalPoints = this.initializeOrthogonalPoints(true, this.target ? true: false)
+      this._connectorShape.orthogonalPoints = this._orthogonalPoints
       this.initializeCurveModifiers()
     }
   }
@@ -436,10 +436,10 @@ export class Connector extends Item {
     this._targetJoint = value
     if (value && this._target && this._targetJoint) {
       this._end = this._target.worldTransform.makePoint(value)
-      this._connectorShape.end = this._end
-      this._orthogonalPoints = this.initializeOrthogonalPoints(false, true)
-      this._connectorShape.orthogonalPoints = this._orthogonalPoints
       this.boundary = Rectangle.makeLTWH(Math.min(this._start.x, this._end.x), Math.min(this._start.y, this._end.y), Math.abs(this._start.x - this._end.x), Math.abs(this._start.y - this._end.y))
+      this._connectorShape.end = this._end
+      this._orthogonalPoints = this.initializeOrthogonalPoints(this.source ? true: false, true)
+      this._connectorShape.orthogonalPoints = this._orthogonalPoints
       this.initializeCurveModifiers()
     }
   }
