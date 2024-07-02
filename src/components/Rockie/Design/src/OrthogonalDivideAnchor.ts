@@ -69,8 +69,8 @@ export class OrthogonalDivideAnchor extends Anchor {
       //this._orthogonals = this._orthogonals.concat(this.target.orthogonals)
       this.editor.beginOperation(this.target)
     }
-
   }
+
   public handlePointerUp (x: number, y: number) {
     if (!this.target) {
       return;
@@ -89,7 +89,8 @@ export class OrthogonalDivideAnchor extends Anchor {
     this.editor.triggerSelectionChange()
     this._moving = false
     this.editor.finishOperation(this.target)
-}
+  }
+
   public handlePointerMove (x: number, y: number) {
     if (!this.target) {
       console.log(`'anchor Pointer moving bad target' x=${x} y =${y}`)
