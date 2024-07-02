@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, FC } from 'react'
 import styles from './index.css'
-import { Form, Input, Checkbox, Row, Col, Button, Modal, Menu, Space, Tooltip, Dropdown, Divider, Select, InputNumber, ColorPicker, message, } from 'antd'
-import type { MenuProps } from 'antd';
+import { Form, Input, Checkbox, Row, Col, Button, Modal, Menu, Space, Tooltip, Dropdown, Divider, Select, InputNumber, ColorPicker, message, Upload, } from 'antd'
+import type { GetProp, MenuProps, UploadProps } from 'antd';
 import { ConnectorLineEndArrows, ConnectorLineModes, ConnectorLineStartArrows, ConnectorLineTypes, Consts, FontSizeOptions, LineWidthOptions, RequestUtils, StrokeDashStyles, SystemUtils, Utils, } from '../Utils'
 import { setInterval } from 'timers'
 import { UserInfo } from '../Utils/RequestUtils'
@@ -38,6 +38,7 @@ import { UMLBasicShape, UMLBasicShapeTypes } from '@/components/Rockie/CustomIte
 import { UMLConnector } from '@/components/Rockie/CustomItems/UML/src/UMLConnector';
 import { UMLCustomShape, UMLCustomShapeTypes } from '@/components/Rockie/CustomItems/UML/src/UMLCustomShape';
 import { UMLFrameShape, UMLFrameShapeTypes } from '@/components/Rockie/CustomItems/UML/src/UMLFrameShape';
+import { RcFile, UploadChangeParam } from 'antd/es/upload';
 
 interface HeaderProps {
   previousEditor: Editor | undefined
@@ -598,6 +599,47 @@ const Header: FC<HeaderProps> = ({
     }
   }
 
+  const handleBeforeImportDocument = (file: RcFile, FileList: RcFile[]) => {
+    console.log(`${file.name.substring(file.name.length - 6)}`)
+    const isRATEL = file.name.length > 6 && file.name.substring(file.name.length - 6) === '.ratel';
+    if (!isRATEL) {
+      message.error(`${file.name} ${intl.formatMessage({ id: 'workspace.header.message-import-document-format-is-invalid'})}`);
+    }
+    const isLessThan1M = file.size < 1 * 1024 * 1024
+    if(!isLessThan1M) {
+      message.error(`${file.name} ${intl.formatMessage({ id: 'workspace.header.message-import-document-size-must-be-less-than'})}`);
+    }
+    return (isRATEL && isLessThan1M) || Upload.LIST_IGNORE;
+  }
+
+  type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
+
+  const getRatelgFromFile = (ratel: FileType, callback: (data: string) => void) => {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => callback(reader.result as string))
+    reader.readAsText(ratel)
+  }
+  
+  const handleAfterImportDocument = (info: UploadChangeParam) => {
+    if(info.file.status == 'done') {
+      getRatelgFromFile(info.file.originFileObj as FileType, (data) => {
+        console.log(`image data = ${data}`)        
+        const storage = new StorageService()
+        storage.editors = Utils.editors
+        storage.loadDocument(data)
+        Utils.storageData = storage.storageData
+        if (Utils.loadData) {
+          Utils.loadData()
+        }
+        if (Utils.checkIfModified) {
+          Utils.checkIfModified(false)
+        }
+        setSelectedDocumentId(null)
+        setSelectedFolderId(null)
+        setSelectedDocumentName(info.file.fileName ? info.file.fileName : DOCUMENT_NEW_NAME_PREFIX)
+      })
+    }
+  }
   const handleExport = (format: 'png' | 'jpg' = 'png') => {
     if (Utils.currentEditor) {
       const data = EditorHelper.export(Utils.currentEditor, format)
@@ -2101,11 +2143,23 @@ const Header: FC<HeaderProps> = ({
     { key: 'OpenFrom', label: <FormattedMessage id='workspace.header.menu-file-open-from' />, disabled: true, icon: <FolderOpenOutlined />, },
     { key: 'Open', label: <FormattedMessage id='workspace.header.menu-file-open' />, icon: <FolderOpenOutlined />, onClick: handleFileOpen, },
     { key: 'Save', label: <FormattedMessage id='workspace.header.menu-file-save' />, icon: <SaveOutlined />, onClick: handleFileSave },
+    { key: 'Import', label: <FormattedMessage id='workspace.header.menu-file-import' />, icon: <FolderOpenOutlined />, 
+      children: [
+        { key: 'ImportFromDocment', 
+          label: <Upload showUploadList={false} maxCount={1} accept='.ratel,.txt' 
+            beforeUpload={handleBeforeImportDocument} onChange={handleAfterImportDocument}>
+            <FolderOpenOutlined style={{marginRight: 10}}/>
+            <FormattedMessage id='workspace.header.menu-file-import-document'/>
+          </Upload>, 
+          // icon: <FolderOpenOutlined />, 
+          // onClick: handleImportDocument 
+        },
+    ]},
     { key: 'Export', label: <FormattedMessage id='workspace.header.menu-file-export' />, icon: <DownloadOutlined />, 
       children: [
         { key: 'ExportToPNG', label: <FormattedMessage id='workspace.header.menu-file-export-png' />, icon: <DownloadOutlined />, onClick: () => handleExport('png') },
         // { key: 'ExportToJPG', label: <FormattedMessage id='workspace.header.menu-file-export-jpg' />, icon: <DownloadOutlined />, onClick: () => handleExport('jpg') },
-        { key: 'ExportToDucment', label: <FormattedMessage id='workspace.header.menu-file-export-document' />, icon: <DownloadOutlined />, onClick: handleDownload },
+        { key: 'ExportToDocment', label: <FormattedMessage id='workspace.header.menu-file-export-document' />, icon: <DownloadOutlined />, onClick: handleDownload },
     ]},
     { key: 'ExportSelected', label: <FormattedMessage id='workspace.header.menu-file-export-selected' />, icon: <DownloadOutlined />, 
       children: [

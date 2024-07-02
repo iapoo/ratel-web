@@ -2,7 +2,8 @@
 
 ## About Ratel Web
 
-Ratel Web is frontend of Ratel. Ratel is general diagram editor. There are 3 sub projects: Ratel-Web(frontend), Ratel-Server(backend) and Ratel-deployment(deployment)
+Ratel Web is frontend of Ratel. Ratel is general diagram editor. There are 3 sub projects: Ratel-Web(frontend), Ratel-Server(backend) and Ratel-deployment(deployment).
+It can work online or offline(without network).
 
 Demo site: https://ratel.ivipa.com
 
@@ -10,7 +11,7 @@ Demo site: https://ratel.ivipa.com
 
 ### Try online demo (in progress)
 
-Try onelin demo.
+Try oneline demo.
 
 ### Try all-in-one docker
 

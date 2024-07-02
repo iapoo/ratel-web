@@ -195,7 +195,7 @@ const MyShapesWindowPage: FC<MyShapesWindowProps> = ({
     if (!isSVG) {
       message.error(`${file.name} ${intl.formatMessage({ id: 'workspace.navigator.my-shapes.message-upload-is-not-svg-file'})}`);
     }
-    const isLessThan256k = file.size < 256 * 1024 * 1024
+    const isLessThan256k = file.size < 256 * 1024
     if(!isLessThan256k) {
       message.error(`${file.name} ${intl.formatMessage({ id: 'workspace.navigator.my-shapes.message-must-be-smaller-than'})}`);
     }
@@ -247,7 +247,7 @@ const MyShapesWindowPage: FC<MyShapesWindowProps> = ({
     if (!isImage) {
       message.error(`${file.name} ${intl.formatMessage({ id: 'workspace.navigator.my-shapes.message-upload-is-not-png-jpg-file'})}`);
     }
-    const isLessThan256k = file.size < 256 * 1024 * 1024
+    const isLessThan256k = file.size < 256 * 1024
     if(!isLessThan256k) {
       message.error(`${file.name} ${intl.formatMessage({ id: 'workspace.navigator.my-shapes.message-upload-must-be-smaller-than'})}`);
     }
