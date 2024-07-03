@@ -366,7 +366,7 @@ export class Connector extends Item {
     this._connectorShape.start = value
     this.boundary = Rectangle.makeLTWH(Math.min(this._start.x, this._end.x), Math.min(this._start.y, this._end.y), Math.abs(this._start.x - this._end.x), Math.abs(this._start.y - this._end.y))
     if(this._autoRefreshOrthogonalPoints) {
-      this._orthogonalPoints = this.initializeOrthogonalPoints(true, this.target ? true: false)
+      this._orthogonalPoints = this.initializeOrthogonalPoints(true, this.target && !this._orthogonalPointsModified ? true: false)
       this._connectorShape.orthogonalPoints = this._orthogonalPoints    
       this.initializeCurveModifiers()
     }
@@ -381,7 +381,7 @@ export class Connector extends Item {
     this._connectorShape.end = value
     this.boundary = Rectangle.makeLTWH(Math.min(this._start.x, this._end.x), Math.min(this._start.y, this._end.y), Math.abs(this._start.x - this._end.x), Math.abs(this._start.y - this._end.y))
     if(this._autoRefreshOrthogonalPoints) {
-      this._orthogonalPoints = this.initializeOrthogonalPoints(this.source ? true: false, true)
+      this._orthogonalPoints = this.initializeOrthogonalPoints(this.source && !this._orthogonalPointsModified ? true: false, true)
       this._connectorShape.orthogonalPoints = this._orthogonalPoints   
       this.initializeCurveModifiers()
     }
@@ -405,7 +405,7 @@ export class Connector extends Item {
       this._start = this._source.worldTransform.makePoint(value)
       this.boundary = Rectangle.makeLTWH(Math.min(this._start.x, this._end.x), Math.min(this._start.y, this._end.y), Math.abs(this._start.x - this._end.x), Math.abs(this._start.y - this._end.y))
       this._connectorShape.start = this._start
-      this._orthogonalPoints = this.initializeOrthogonalPoints(true, this.target ? true: false)
+      this._orthogonalPoints = this.initializeOrthogonalPoints(true, this.target && !this._orthogonalPointsModified ? true: false)
       this._connectorShape.orthogonalPoints = this._orthogonalPoints
       this.initializeCurveModifiers()
     }
@@ -438,7 +438,7 @@ export class Connector extends Item {
       this._end = this._target.worldTransform.makePoint(value)
       this.boundary = Rectangle.makeLTWH(Math.min(this._start.x, this._end.x), Math.min(this._start.y, this._end.y), Math.abs(this._start.x - this._end.x), Math.abs(this._start.y - this._end.y))
       this._connectorShape.end = this._end
-      this._orthogonalPoints = this.initializeOrthogonalPoints(this.source ? true: false, true)
+      this._orthogonalPoints = this.initializeOrthogonalPoints(this.source && !this._orthogonalPointsModified ? true: false, true)
       this._connectorShape.orthogonalPoints = this._orthogonalPoints
       this.initializeCurveModifiers()
     }
@@ -677,6 +677,29 @@ export class Connector extends Item {
   }
 
   private initializeOrthogonalPointsWithDefault(): Point2[] {   
+    // const oldStart = new Point2(this.start.x - this.left, this.start.y - this.top)
+    // const length = this._orthogonalPoints.length
+    // let initPosition = length - 2
+    // if((this._orthogonalPoints[length - 3].x == this._orthogonalPoints[length - 2].x && this._orthogonalPoints[length - 3].x == this._orthogonalPoints[length - 1].x)
+    //   || (this._orthogonalPoints[length - 3].y == this._orthogonalPoints[length - 2].y && this._orthogonalPoints[length - 3].y == this._orthogonalPoints[length - 1].y)) {
+    //   initPosition = this._orthogonalPoints.length - 3
+    // }
+    // let endPosition = this._orthogonalPointsEndModified ? this._orthogonalPointsEndLength : initPosition
+    // this._orthogonalPointsEndModified = true
+    // let newStart = this._orthogonalPoints[endPosition]
+    // const oldEnd = new Point2(this.end.x - this.left, this.end.y - this.top)
+    // let startPosition = this._orthogonalPointsStartModified ? this._orthogonalPointsStartLength : 2
+    // // if(this._orthogonalPointsStartModified) {
+    // //   console.log(`aa`)
+    // // }
+    // this._orthogonalPointsStartModified = true
+    // let newEnd = this._orthogonalPoints[startPosition]
+    // const offsetX = oldEnd.x - this._orthogonalPoints[this._orthogonalPoints.length - 1].x
+    // const offsetY = oldEnd.y - this._orthogonalPoints[this._orthogonalPoints.length - 1].y
+    // // if(!newEnd) {
+    // //   console.log(`exception is here`)
+    // // }
+    // newEnd = new Point2(newEnd.x + offsetX, newEnd.y + offsetY)
     const start = new Point2(this.start.x - this.left, this.start.y - this.top)
     const end = new Point2(this.end.x - this.left, this.end.y - this.top)
     //console.log(`init start x= ${start.x} y = ${start.y} end x = ${end.x} y = ${end.y}`)
