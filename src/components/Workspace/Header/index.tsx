@@ -2310,7 +2310,7 @@ const Header: FC<HeaderProps> = ({
       </div>
       <div style={{ width: '100%', height: '50%', }}>
         <div style={{ float: 'left', height: '100%', display: 'table', marginLeft: '8px' }}>
-          <Space direction="horizontal" style={{ display: 'table-cell', verticalAlign: 'middle' }}>
+          <Space direction="horizontal" wrap={false} style={{ display: 'table-cell', verticalAlign: 'middle' }}>
             <Space wrap>
             <Tooltip title={<FormattedMessage id='workspace.header.title.zoom'/>}>
               <Select style={{ width: 100 }} value={zoom} size='small' onChange={handleZoom} bordered={false}
