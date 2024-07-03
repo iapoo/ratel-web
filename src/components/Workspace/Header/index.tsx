@@ -2288,9 +2288,9 @@ const Header: FC<HeaderProps> = ({
               <Button type='text' size='small' icon={<FileOutlined />} style={{ paddingLeft: '0px', fontSize: '11px', color: 'gray', fontStyle: 'italic', marginLeft: '24px' }}>{documentModifiedText}</Button>
               <FileTextOutlined />
               <Input placeholder='Document Name' type='text' value={selectedDocumentName} bordered={false} style={{ paddingLeft: '0px', paddingRight: '0px', width: '70px', fontWeight: 'bolder' }} onChange={handleUpdateDocumentName} />
-              <div style={{fontSize: 14, color: 'red', fontWeight: 'bold'}}>
+              {/* <div style={{fontSize: 14, color: 'red', fontWeight: 'bold'}}>
                 Demo purpose only and reset periodically
-              </div>
+              </div> */}
             </Space>
           </Space>
         </div>
