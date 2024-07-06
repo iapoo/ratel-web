@@ -1136,6 +1136,7 @@ export class Editor extends Painter {
   }
 
   public handlePointerUp (e: PointerEvent) {
+    //console.log(`Pointer up event = ${e}`)
     if(e.mouseCode == MouseCode.RIGHT_MOUSE_UP) {
       return
     }

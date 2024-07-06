@@ -8,6 +8,7 @@ export abstract class Action {
   private _description: string | undefined;
   private _items: Item[];
   private _editor: Editor;
+  private _imageId: string = ''
 
   public constructor (editor: Editor, type: string | undefined = undefined, name: string | undefined = undefined,  description: string | undefined = undefined, url: string | undefined = undefined) {
     this._editor = editor
@@ -20,6 +21,14 @@ export abstract class Action {
     this.build()
   }
 
+  public get imageId(): string {
+    return this._imageId
+  }
+
+  public set imageId(value: string) {
+    this._imageId = value
+  }
+  
   public get editor (): Editor {
     return this._editor
   }
