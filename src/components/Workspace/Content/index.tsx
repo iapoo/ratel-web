@@ -1,12 +1,12 @@
 /* eslint-disable radix */
 /* eslint-disable @typescript-eslint/prefer-for-of */
-import React, { useEffect, useState, useRef, FC, MouseEventHandler, SyntheticEvent, UIEvent, KeyboardEvent, ChangeEvent, Ref, MutableRefObject, } from 'react'
+import React, { useEffect, useState, useRef, FC, MouseEventHandler, SyntheticEvent, UIEvent, KeyboardEvent, ChangeEvent, Ref, MutableRefObject, DragEventHandler, } from 'react'
 import styles from './index.css'
 import { Button, ColorPicker, ConfigProvider, Divider, Dropdown, FloatButton, Input, InputNumber, InputRef, MenuProps, Select, Space, Tabs, Tooltip, theme, } from 'antd'
 import { Consts, FontSizeOptions, RequestUtils, SystemUtils, Utils, } from '../Utils'
 import { Editor, EditorEvent, EditorOperationEvent, } from '../../Rockie/Editor'
 
-import { Engine, Rectangle2D, EngineUtils, Line2D, FontWeight, FontSlant, TextDecoration, Point2, } from '../../Engine'
+import { Engine, Rectangle2D, EngineUtils, Line2D, FontWeight, FontSlant, TextDecoration, Point2, PointerEvent, MouseCode, } from '../../Engine'
 import { StorageService, } from '../Storage'
 import { Operation, OperationHelper, OperationType } from '@/components/Rockie/Operations'
 import { AlignCenterOutlined, AlignLeftOutlined, AlignRightOutlined, BoldOutlined, DeleteColumnOutlined, DeleteRowOutlined, InsertRowAboveOutlined, InsertRowBelowOutlined, InsertRowLeftOutlined, InsertRowRightOutlined, ItalicOutlined, QuestionCircleOutlined, UnderlineOutlined, VerticalAlignBottomOutlined, VerticalAlignMiddleOutlined, VerticalAlignTopOutlined } from '@ant-design/icons'
@@ -1975,6 +1975,72 @@ const Content: FC<ContentProps> = ({
     }
   }
 
+  //Currently editor can't handle this event internally, and so we trigger it manually to complete creation of shape
+  const handleEditorMouseUp = (e: SyntheticEvent<HTMLDivElement>) => {
+    if(Utils.currentEditor?.action) {
+      const pointerEvent = new PointerEvent(null as Node, e.nativeEvent.offsetX, e.nativeEvent.offsetY, MouseCode.LEFT_MOUSE_DOWN, false, false, false, 0, false, 0, '', 0, 0, 0, 0, 0, 0, 0)
+      Utils.currentEditor.handlePointerDown(pointerEvent)
+      Utils.currentEditor.handlePointerUp(pointerEvent)
+    }
+  }
+
+  // const handleEditorDrop = (e: SyntheticEvent<HTMLDivElement>) => {
+  //   e.preventDefault()
+  //   if(Utils.currentEditor?.action) {
+  //     const imageId = Utils.currentEditor.action.imageId
+  //     const largeImae = document.getElementById(imageId)
+  //     if(largeImae) {
+  //       largeImae.style.display = ''
+  //     }
+  //   }
+  //   if(Utils.currentEditor) {
+  //     const pointerEvent = new PointerEvent(null as Node, e.nativeEvent.offsetX, e.nativeEvent.offsetY, MouseCode.LEFT_MOUSE_DOWN, false, false, false, 0, false, 0, '', 0, 0, 0, 0, 0, 0, 0)
+  //     Utils.currentEditor.handlePointerDown(pointerEvent)
+  //   }
+  // }
+
+  // const handleEditorDragOver = (e: SyntheticEvent) => {
+  //   e.preventDefault()
+  //   //console.log(`drag event: x = ${e.nativeEvent.offsetX} x = ${e.clientX}`)
+  //   if(Utils.currentEditor) {
+  //     const pointerEvent = new PointerEvent(null as Node, e.nativeEvent.offsetX, e.nativeEvent.offsetY, MouseCode.LEFT_MOUSE_UP, false, false, false, 0, false, 0, '', 0, 0, 0, 0, 0, 0, 0)
+  //     Utils.currentEditor.handlePointerMove(pointerEvent)
+  //     if(Utils.currentEditor.action) {
+  //     }
+  //   }
+  // }
+
+  // const handleEditorDragEnter = (e: SyntheticEvent) => {
+  //   e.preventDefault()
+  //   //console.log(`drag event: x = ${e.nativeEvent.offsetX} x = ${e.clientX}`)
+  //   // if(e.dataTransfer) {
+  //   //   const data = e.dataTransfer.getData('text/plain')
+  //   //   const image = e.dataTransfer.getDataImage()
+  //   //   console.log(`${data}`)
+  //   // }
+  //  if(Utils.currentEditor?.action) {
+  //     const imageId = Utils.currentEditor.action.imageId
+  //     const largeImage = document.getElementById(imageId)
+  //     if(largeImage) {
+  //       largeImage.style.display = 'none'
+  //     }
+  //     // if(e.dataTransfer) {
+  //     //   e.dataTransfer.setDragImage(largeImage, 0, 0)
+  //     //  }
+  //   }
+  // }
+
+  // const handleEditorDragLeave = (e: SyntheticEvent) => {
+  //   e.preventDefault()
+  //   //console.log(`drag event: x = ${e.nativeEvent.offsetX} x = ${e.clientX}`)
+  //   if(Utils.currentEditor?.action) {
+  //     const imageId = Utils.currentEditor.action.imageId
+  //     const largeImae = document.getElementById(imageId)
+  //     if(largeImae) {
+  //       largeImae.style.display = ''
+  //     }
+  //   }
+  // }
 
   const popupShapeItems: MenuProps['items'] = [
     {label: <FormattedMessage id='workspace.content.popup-shape-delete' />, key: '1', onClick: handleDelete, },
@@ -2104,7 +2170,12 @@ const Content: FC<ContentProps> = ({
               <Dropdown 
                   menu={{items: popupType == PopupType.SHAPES ? popupShapeItems : (popupType == PopupType.EDITOR ? popupEditorItems : popupText)}} 
                   trigger={['contextMenu']} >
-                <div id='editor-container' style={{ width: editorWidth, height: '100%', float: 'left', backgroundColor: 'darkgray', cursor: editorCursor }} onContextMenu={handleContextTrigger} >
+                <div id='editor-container' style={{ width: editorWidth, height: '100%', float: 'left', backgroundColor: 'darkgray', cursor: editorCursor }} 
+                  onContextMenu={handleContextTrigger} 
+                  onMouseUp={handleEditorMouseUp}
+                  // onDrop={handleEditorDrop} onDragOver={handleEditorDragOver}
+                  // onDragEnter={handleEditorDragEnter} onDragLeave={handleEditorDragLeave}
+                  >
                 </div>
               </Dropdown>
               <div style={{ width: Editor.SHADOW_SIZE, height: '100%', float: 'left', backgroundColor: 'lightgray', }} />
