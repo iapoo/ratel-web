@@ -975,7 +975,7 @@ const Navigator: FC<NavigatorProps> = ({
          onMouseDown={handleNavigatorMouseDown} onMouseMove={handleNavigatorMouseMove} onMouseLeave={handleNavigatorMouseLeave} onMouseUp={handleNavigatorMouseUp}
          onScroll={handleNavigatorScroll}
         >
-      <div id={ACTION_IMAGE_ID} style={{position: 'absolute', zIndex: 9999}} 
+      <div id={ACTION_IMAGE_ID} style={{position: 'absolute', opacity: '0.5', zIndex: 9999}} 
         //onMouseMove={handleNavigatorImageMouseMove} 
       />
       <div id={NAVIGATOR_MASK_ID} style={{position: 'absolute', display: 'none', opacity: '0', backgroundColor: 'red',  width: '100%', height: '100%', zIndex: 99999}} 
