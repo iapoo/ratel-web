@@ -12,6 +12,8 @@
 8. Use System Font resource
 9. SVG Generation
 10. My Shapes (Done)
+11. File Export & Download (Done)
+12. File Import for offline mode
 
 ## Minor Features
 
@@ -31,4 +33,5 @@
 14. Make UML Object lifeline as container for activiation (Done)
 15. Clip seems doesnt always works.
 16. Logo
-17. 
+17. Start & End of connector need to keep in percent, instead of actual value. Nearest point need to compute from center to border, instead of left-top to right-bottom (Done)
+18. Keep connector modifications while moving target shape or source shapes

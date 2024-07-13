@@ -36,6 +36,30 @@ export class SystemUtils {
         console.log(message)
     }
 
+    public static parseUrl (url: string) {
+        const urlObj = {
+          protocol: /^(.+)\:\/\//,
+          host: /\:\/\/(.+?)[\?\#\s\/]/,
+          path: /\w(\/.*?)[\?\#\s]/,
+          query: /\?(.+?)[\#\/\s]/,
+          hash: /\#(\w+)\s$/,
+        }
+        url += ' '        
+        for (const key in urlObj) {
+          const pattern = urlObj[key]
+          urlObj[key] = key === 'query' ? (pattern.exec(url) && SystemUtils.formatQuery(pattern.exec(url)[1])) : (pattern.exec(url) && pattern.exec(url)[1])
+        }
+        return urlObj
+    }
+
+    private static formatQuery(str: string) {
+        return str.split('&').reduce((a, b) => {
+            const arr = b.split('=')
+            a[arr[0]] = arr[1]
+            return a
+          }, {})
+    }
+    
     public static generateID(): string {
         let d = new Date().getTime()
         if (window.performance && typeof window.performance.now === "function") {

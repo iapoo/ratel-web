@@ -13,7 +13,8 @@ import { StorageService } from '../Storage';
 import { Rectangle } from '@/components/Resource/LargeIcons';
 import { EngineUtils, Font, FontSlant, FontUtils, FontWeight, GraphicsUtils, Matrix, Point2, TextDecoration, TextShape } from '@/components/Engine';
 import { Editor, EditorEvent } from '@/components/Rockie/Editor';
-import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
+import { useIntl, setLocale, getLocale, FormattedMessage, useParams, } from 'umi';
+import { useLocation } from 'react-router-dom'
 import { Placeholder, } from '@/components/Resource/Icons'
 import { Operation, OperationHelper, OperationType } from '@/components/Rockie/Operations';
 import { Connector, ContainerEntity, ContainerTypes, ImageContainer, Item, ShapeEntity, ShapeTypes, SvgContainer, TableEntity } from '@/components/Rockie/Items';
@@ -39,6 +40,7 @@ import { UMLConnector } from '@/components/Rockie/CustomItems/UML/src/UMLConnect
 import { UMLCustomShape, UMLCustomShapeTypes } from '@/components/Rockie/CustomItems/UML/src/UMLCustomShape';
 import { UMLFrameShape, UMLFrameShapeTypes } from '@/components/Rockie/CustomItems/UML/src/UMLFrameShape';
 import { RcFile, UploadChangeParam } from 'antd/es/upload';
+import { parse, stringify } from 'querystringify';
 
 interface HeaderProps {
   previousEditor: Editor | undefined
@@ -154,13 +156,34 @@ const Header: FC<HeaderProps> = ({
     // }, 60000)
 
     const delayTimer = setTimeout(() => {
-      loadStagingDocument()
+      const hasLink = checkLink()
+      if(!hasLink) {
+        loadStagingDocument()
+      }
     }, 2000)
     return () => {
       clearInterval(timer)
       clearTimeout(delayTimer)
       // clearInterval(autoSaveTimer)
     }
+  }
+
+  const checkLink = async () => {
+    const url = document.URL
+    const urlObject = SystemUtils.parseUrl(url)
+    if(urlObject?.query && urlObject?.path) {
+      if(urlObject.path == '/document' && urlObject.query.id) {
+        loadLinkDocument(urlObject.query.id)
+        return true
+      }
+    }
+    return false
+  }
+
+  const loadLinkDocument = async (id: string) => {
+    const onlineResult = await RequestUtils.isOnline()
+    //handleOpenFileWindowOk(parseInt(id), '', 0)
+    console.log(`load link document now.`)
   }
 
   const loadStagingDocument = async () => {
