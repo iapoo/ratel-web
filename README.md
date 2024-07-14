@@ -28,3 +28,7 @@ Pleae check Ratel-Deployment
 1. Install Node, require version 12.x. Other version may fail so far.
 2. Build: npm run build
 3. Run: npm run start
+
+## Build with Electron for desktop installation
+
+1. UMI_ENV=electron npm run build
