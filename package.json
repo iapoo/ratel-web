@@ -16,6 +16,7 @@
     "electron:debug": "electron --inspect=5858 .",
     "electron:dir": "electron-builder -- --dir",
     "electron:win": "electron-builder --win",
+    "electron:mac": "electron-builder --macos",
     "svgr": "svgr"
   },
   "gitHooks": {
@@ -86,7 +87,7 @@
     "compression-webpack-plugin": "^4.0.0",
     "cross-env": "^7.0.3",
     "electron": "13.1.8",
-    "electron-builder": "^22.14.13",
+    "electron-builder": "^23.6.0",
     "electron-debug": "^3.0.1",
     "electron-webpack": "^2.8.2",
     "electron-webpack-eslint": "^6.0.0",
@@ -114,17 +115,6 @@
     },
     "renderer": {
       "sourceDirectory": null
-    }
-  },
-  "build2": {
-    "appId": "com.ivipi.ratel",
-    "files": [
-      "dist/",
-      "node_modules/",
-      "package.json"
-    ],
-    "directories": {
-      "output": "release"
     }
   },
   "build": {
@@ -165,13 +155,18 @@
       ]
     },
     "mac": {
+      "icon": "static/favicon-512.png",
       "target": [
         "dmg",
         "zip"
       ]
     },
     "linux": {
-      "icon": "build/icons"
+      "icon": "static/favicon.ico",
+      "target": [
+        "deb",
+        "zip"
+      ]
     }
   }
 }
