@@ -19,7 +19,7 @@ export default defineConfig({
   },
   // 使用hash解决框架打包后浏览器不刷新问题
   hash: true,
-  publicPath: './',
+  publicPath: "./",
   history: {
     type: "memory",
   },
@@ -27,7 +27,7 @@ export default defineConfig({
     entry: "./src/icons",
   },
   define: {
-    'process.env.PRODUCTION': "true",
+    "process.env.PRODUCTION": "true",
     "process.env.SYSTEM_WEB_HTTP": "http://",
     "process.env.SYSTEM_WEB_SERVER": "192.168.1.5",
     "process.env.SYSTEM_WEB_PORT": "8080",
