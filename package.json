@@ -122,22 +122,22 @@
       "dist/",
       "node_modules/",
       "package.json"
-    ],    
+    ],
     "directories": {
       "output": "release"
     }
   },
   "build": {
-    "productName":"Ratel",
+    "productName": "Ratel",
     "appId": "com.ivipi.ratel",
-    "directories": { 			
+    "directories": {
       "output": "build"
-    }, 
-    "files":[
+    },
+    "files": [
       "dist/",
       "main.js"
-    ],    
-    "copyright":"ivipa", 
+    ],
+    "copyright": "ivipa",
     "nsis": {
       "oneClick": false,
       "allowElevation": true,
@@ -159,10 +159,16 @@
     },
     "win": {
       "icon": "static/favicon.ico",
-      "target": ["nsis","zip"]
+      "target": [
+        "nsis",
+        "zip"
+      ]
     },
     "mac": {
-      "target": ["dmg","zip"]
+      "target": [
+        "dmg",
+        "zip"
+      ]
     },
     "linux": {
       "icon": "build/icons"
