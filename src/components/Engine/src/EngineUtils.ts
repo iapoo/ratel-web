@@ -18,14 +18,15 @@ export class EngineUtils {
   public static LANG_EN_US = 'en-US'
   public static LANG_ZH_CN = 'zh-CN'
 
-  public static getCanvasKitWasm = () => {
-    return axios.get(`/resources/canvaskit.wasm`, {
-      headers: {
-        'Content-Type': 'application/wasm',
-      },
-      responseType: 'arraybuffer',
-    })
-  }
+//   public static getCanvasKitWasm = () => {
+//     return axios.get(`/resources/canvaskit.wasm`, {
+//       headers: {
+//         'Content-Type': 'application/wasm',
+//       },
+//       responseType: 'arraybuffer',
+//     })
+//   }
+// 
 }
 
 export enum WebFontStatus {
@@ -74,12 +75,12 @@ export enum Languages {
 
 
 export const SystemFonts = [
-  {fontName: EngineUtils.FONT_NAME_LATO, fontUrl: '/fonts/Lato-Regular.woff2'},
-  {fontName: EngineUtils.FONT_NAME_OPEN_SANS, fontUrl: '/fonts/Open-Sans-Regular.woff2'},
-  {fontName: EngineUtils.FONT_NAME_ROBOTO, fontUrl: '/fonts/Roboto-Regular.woff2'},
-  {fontName: EngineUtils.FONT_NAME_ROBOTO_SLAB, fontUrl: '/fonts/Roboto-Slab-Regular.woff2'},
-  {fontName: EngineUtils.FONT_NAME_SOURCE_CODE_PRO, fontUrl: '/fonts/Source-Code-Pro-Regular.woff2'},
-  {fontName: EngineUtils.FONT_NAME_NOTO_SERIF_SC, fontUrl: '/fonts/Noto-Serif-SC-Regular.woff2'},
+  {fontName: EngineUtils.FONT_NAME_LATO, fontUrl: process.env.PUBLIC_PATH + '/fonts/Lato-Regular.woff2'},
+  {fontName: EngineUtils.FONT_NAME_OPEN_SANS, fontUrl: process.env.PUBLIC_PATH + '/fonts/Open-Sans-Regular.woff2'},
+  {fontName: EngineUtils.FONT_NAME_ROBOTO, fontUrl: process.env.PUBLIC_PATH + '/fonts/Roboto-Regular.woff2'},
+  {fontName: EngineUtils.FONT_NAME_ROBOTO_SLAB, fontUrl: process.env.PUBLIC_PATH + '/fonts/Roboto-Slab-Regular.woff2'},
+  {fontName: EngineUtils.FONT_NAME_SOURCE_CODE_PRO, fontUrl: process.env.PUBLIC_PATH + '/fonts/Source-Code-Pro-Regular.woff2'},
+  {fontName: EngineUtils.FONT_NAME_NOTO_SERIF_SC, fontUrl: process.env.PUBLIC_PATH + '/fonts/Noto-Serif-SC-Regular.woff2'},
 ]
 
 export enum WebFontSource {

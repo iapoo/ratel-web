@@ -133,63 +133,63 @@ const Navigator: FC<NavigatorProps> = ({
   const addShape = (type: string, folder: string) => {
     if (Utils.currentEditor) {      
       Utils.currentEditor.action = new ShapeAction(Utils.currentEditor, type)
-      Utils.currentEditor.action.imageId = `/${folder}/${type}.png`
+      Utils.currentEditor.action.imageId = process.env.PUBLIC_PATH + `/${folder}/${type}.png`
     }
   }
 
   const addContainer = (type: string, folder: string) => {
     if (Utils.currentEditor) {      
       Utils.currentEditor.action = new ContainerAction(Utils.currentEditor, type)
-      Utils.currentEditor.action.imageId = `/${folder}/${type}.png`
+      Utils.currentEditor.action.imageId = process.env.PUBLIC_PATH + `/${folder}/${type}.png`
     }
   }
 
   const addCustomShape = (type: string, classType: typeof CustomEntity, shapeType: ShapeType, folder: string) => {
     if(Utils.currentEditor) {
       Utils.currentEditor.action = new CustomShapeAction(Utils.currentEditor, type, classType, shapeType)
-      Utils.currentEditor.action.imageId = `/${folder}/${type}.png`
+      Utils.currentEditor.action.imageId = process.env.PUBLIC_PATH + `/${folder}/${type}.png`
     }
   }
 
   const addCustomContainer = (type: string, classType: typeof CustomContainerEntity, shapeType: ShapeType, folder: string) => {
     if(Utils.currentEditor) {
       Utils.currentEditor.action = new CustomContainerAction(Utils.currentEditor, type, classType, shapeType)
-      Utils.currentEditor.action.imageId = `/${folder}/${type}.png`
+      Utils.currentEditor.action.imageId = process.env.PUBLIC_PATH + `/${folder}/${type}.png`
     }
   }
 
   const addFrame = (type: string, classType: typeof FrameEntity, shapeType: ShapeType, folder: string) => {
     if(Utils.currentEditor) {
       Utils.currentEditor.action = new FrameAction(Utils.currentEditor, type, classType, shapeType)
-      Utils.currentEditor.action.imageId = `/${folder}/${type}.png`
+      Utils.currentEditor.action.imageId = process.env.PUBLIC_PATH + `/${folder}/${type}.png`
     }
   }
 
   const addSvgShape = (type: string, data: string, width: number, height: number, folder: string) => {
     if (Utils.currentEditor) {
       Utils.currentEditor.action = new SvgContainerAction(Utils.currentEditor, type, data, width, height)
-      Utils.currentEditor.action.imageId = `/${folder}/${type}.png`
+      Utils.currentEditor.action.imageId = process.env.PUBLIC_PATH + `/${folder}/${type}.png`
     }
   }
 
   const addImageShape = (type: string, data: string, width: number, height: number, folder: string) => {
     if (Utils.currentEditor) {
       Utils.currentEditor.action = new ImageContainerAction(Utils.currentEditor, type, data, width, height)
-      Utils.currentEditor.action.imageId = `/${folder}/${type}.png`
+      Utils.currentEditor.action.imageId = process.env.PUBLIC_PATH + `/${folder}/${type}.png`
     }
   }
 
   const addLine = (type: string, folder: string) => {
     if (Utils.currentEditor) {
       Utils.currentEditor.action = new ConnectorAction(Utils.currentEditor)
-      Utils.currentEditor.action.imageId = `/${folder}/${type}.png`
+      Utils.currentEditor.action.imageId = process.env.PUBLIC_PATH + `/${folder}/${type}.png`
     }
   }
 
   const addConnector = (type: string, folder: string) => {
     if (Utils.currentEditor) {
       Utils.currentEditor.action = new ConnectorAction(Utils.currentEditor)
-      Utils.currentEditor.action.imageId = `/${folder}/${type}.png`
+      Utils.currentEditor.action.imageId = process.env.PUBLIC_PATH + `/${folder}/${type}.png`
     }
   }
 
@@ -231,7 +231,7 @@ const Navigator: FC<NavigatorProps> = ({
   const addTable = (type: string, folder: string) => {
     if (Utils.currentEditor) {
       Utils.currentEditor.action = new TableAction(Utils.currentEditor)
-      Utils.currentEditor.action.imageId = `/${folder}/${type}.png`
+      Utils.currentEditor.action.imageId = process.env.PUBLIC_PATH + `/${folder}/${type}.png`
     }
     let str = encodeURI('ab')
     const base64 = btoa(str)
@@ -244,35 +244,35 @@ const Navigator: FC<NavigatorProps> = ({
   const addMyShape = (myShape: MyShape) => {
     if (Utils.currentEditor) {
       Utils.currentEditor.action = new MyShapeAction(Utils.currentEditor, myShape)
-      Utils.currentEditor.action.imageId = `/${folder}/${type}.png`
+      Utils.currentEditor.action.imageId = process.env.PUBLIC_PATH + `/${folder}/${type}.png`
     }
   }
 
   const addCustomTable = (typeName: string, classType: typeof CustomTableEntity, shapeType: CustomTableType, folder: string) => {
     if (Utils.currentEditor) {
       Utils.currentEditor.action = new CustomTableAction(Utils.currentEditor, typeName, classType, shapeType)
-      Utils.currentEditor.action.imageId = `/${folder}/${typeName}.png`
+      Utils.currentEditor.action.imageId = process.env.PUBLIC_PATH + `/${folder}/${typeName}.png`
     }
   }
 
   const addExtendedContainer = (typeName: string, classType: typeof ContainerEntity, shapeType: ShapeType, folder: string) => {
     if (Utils.currentEditor) {
       Utils.currentEditor.action = new ExtendedContainerAction(Utils.currentEditor, typeName, classType, shapeType)
-      Utils.currentEditor.action.imageId = `/${folder}/${typeName}.png`
+      Utils.currentEditor.action.imageId = process.env.PUBLIC_PATH + `/${folder}/${typeName}.png`
     }
   }
 
   const addExtendedShape = (type: string, classType: typeof ShapeEntity, shapeType: ShapeType, folder: string) => {
     if (Utils.currentEditor) {
       Utils.currentEditor.action = new ExtendedShapeAction(Utils.currentEditor, type, classType, shapeType)
-      Utils.currentEditor.action.imageId = `/${folder}/${type}.png`
+      Utils.currentEditor.action.imageId = process.env.PUBLIC_PATH + `/${folder}/${type}.png`
     }
   }
 
   const addCustomConnector = (type: string, classType: typeof CustomConnector, customConnectorTypeInfos: CustomConnectorTypeInfo, folder: string) => {
     if (Utils.currentEditor) {
       Utils.currentEditor.action = new CustomConnectorAction(Utils.currentEditor, type, classType, customConnectorTypeInfos)
-      Utils.currentEditor.action.imageId = `/${folder}/${type}.png`
+      Utils.currentEditor.action.imageId = process.env.PUBLIC_PATH + `/${folder}/${type}.png`
     }
   }
 
@@ -290,7 +290,7 @@ const Navigator: FC<NavigatorProps> = ({
   const getPopoverContent = (name: string, width: number, height: number) => {
     return <div style={{width: width * 1.25, display: 'table'}}>
         <div style={{display: 'table-cell', textAlign: 'center', verticalAlign: 'middle', borderTop: '0px solid gray', padding: '2px'}}>
-          <img id={`/shapes-large/${name}.png`} src={`/shapes-large/${name}.png`} />
+          <img id={process.env.PUBLIC_PATH + `/shapes-large/${name}.png`} src={process.env.PUBLIC_PATH + `/shapes-large/${name}.png`} />
         </div>
       </div>
   }
@@ -298,7 +298,7 @@ const Navigator: FC<NavigatorProps> = ({
   const getCustomShapeBasicShapesPopoverContent = (name: string, width: number, height: number) => {
     return <div style={{width: width * 1.25, display: 'table'}}>
         <div style={{display: 'table-cell', textAlign: 'center', verticalAlign: 'middle', borderTop: '0px solid gray', padding: '2px'}}>
-          <img id={`/custom-shapes-large/basic-shapes/${name}.png`} src={`/custom-shapes-large/basic-shapes/${name}.png`} />
+          <img id={process.env.PUBLIC_PATH + `/custom-shapes-large/basic-shapes/${name}.png`} src={process.env.PUBLIC_PATH + `/custom-shapes-large/basic-shapes/${name}.png`} />
         </div>
       </div>
   }
@@ -306,7 +306,7 @@ const Navigator: FC<NavigatorProps> = ({
   const getCustomShapeAliyunPopoverContent = (name: string, width: number, height: number) => {
     return <div style={{width: width * 1.25, display: 'table'}}>
         <div style={{display: 'table-cell', textAlign: 'center', verticalAlign: 'middle', borderTop: '0px solid gray', padding: '2px'}}>
-          <img id={`/custom-shapes-large/aliyun/${name}.png`} src={`/custom-shapes-large/aliyun/${name}.png`} />
+          <img id={process.env.PUBLIC_PATH + `/custom-shapes-large/aliyun/${name}.png`} src={process.env.PUBLIC_PATH + `/custom-shapes-large/aliyun/${name}.png`} />
         </div>
       </div>
   }
@@ -314,7 +314,7 @@ const Navigator: FC<NavigatorProps> = ({
   const getCustomShapeAwsPopoverContent = (name: string, width: number, height: number) => {
     return <div style={{width: width * 1.25, display: 'table'}}>
         <div style={{display: 'table-cell', textAlign: 'center', verticalAlign: 'middle', borderTop: '0px solid gray', padding: '2px'}}>
-          <img id={`/custom-shapes-large/aws/${name}.png`}  src={`/custom-shapes-large/aws/${name}.png`} />
+          <img id={process.env.PUBLIC_PATH + `/custom-shapes-large/aws/${name}.png`}  src={process.env.PUBLIC_PATH + `/custom-shapes-large/aws/${name}.png`} />
         </div>
       </div>
   }
@@ -322,7 +322,7 @@ const Navigator: FC<NavigatorProps> = ({
   const getCustomShapeArrowsPopoverContent = (name: string, width: number, height: number) => {
     return <div style={{width: width * 1.25, display: 'table'}}>
         <div style={{display: 'table-cell', textAlign: 'center', verticalAlign: 'middle', borderTop: '0px solid gray', padding: '2px'}}>
-          <img id={`/custom-shapes-large/arrows/${name}.png`} src={`/custom-shapes-large/arrows/${name}.png`} />
+          <img id={process.env.PUBLIC_PATH + `/custom-shapes-large/arrows/${name}.png`} src={process.env.PUBLIC_PATH + `/custom-shapes-large/arrows/${name}.png`} />
         </div>
       </div>
   }
@@ -330,7 +330,7 @@ const Navigator: FC<NavigatorProps> = ({
   const getCustomShapeFlowChartShapesPopoverContent = (name: string, width: number, height: number) => {
     return <div style={{width: width * 1.25, display: 'table'}}>
         <div style={{display: 'table-cell', textAlign: 'center', verticalAlign: 'middle', borderTop: '0px solid gray', padding: '2px'}}>
-          <img id={`/custom-shapes-large/flowchart/${name}.png`} src={`/custom-shapes-large/flowchart/${name}.png`} />
+          <img id={process.env.PUBLIC_PATH + `/custom-shapes-large/flowchart/${name}.png`} src={process.env.PUBLIC_PATH + `/custom-shapes-large/flowchart/${name}.png`} />
         </div>
       </div>
   }
@@ -338,7 +338,7 @@ const Navigator: FC<NavigatorProps> = ({
   const getCustomShapeUMLPopoverContent = (name: string, width: number, height: number) => {
     return <div style={{width: width * 1.25, display: 'table'}}>
         <div style={{display: 'table-cell', textAlign: 'center', verticalAlign: 'middle', borderTop: '0px solid gray', padding: '2px'}}>
-          <img id={`/custom-shapes-large/uml/${name}.png`} src={`/custom-shapes-large/uml/${name}.png`} />
+          <img id={process.env.PUBLIC_PATH + `/custom-shapes-large/uml/${name}.png`} src={process.env.PUBLIC_PATH + `/custom-shapes-large/uml/${name}.png`} />
         </div>
       </div>
   }
@@ -347,51 +347,51 @@ const Navigator: FC<NavigatorProps> = ({
   const getUMLContainerPopoverContent = (name: string, width: number, height: number) => {
     return <div style={{width: width * 1.25, display: 'table'}}>
         <div style={{display: 'table-cell', textAlign: 'center', verticalAlign: 'middle', borderTop: '0px solid gray', padding: '2px'}}>
-          <img id={`/custom-shapes-large/uml/${name}.png`} src={`/custom-shapes-large/uml/${name}.png`} />
+          <img id={process.env.PUBLIC_PATH + `/custom-shapes-large/uml/${name}.png`} src={process.env.PUBLIC_PATH + `/custom-shapes-large/uml/${name}.png`} />
         </div>
       </div>
   }
 
   const line = <Popover title={'Line'} placement='right' content={getPopoverContent('Line', 128, 128)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 180, width: 180,}}>
     <Button type='text' onMouseDown={() => addLine('Line', 'shapes-large')} style={{padding: 2, display: 'table'}}>
-      <img id={`/shapes/Line.png`}  src={`/shapes/Line.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+      <img id={process.env.PUBLIC_PATH + `/shapes/Line.png`}  src={process.env.PUBLIC_PATH + `/shapes/Line.png`} width={28} height={28} style={{display: 'table-cell'}}/>
     </Button>
   </Popover>
 
   const table = <Popover title={'Table'} placement='right' content={getPopoverContent('Table', 128, 128)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 180, width: 180,}}>
   <Button type='text' onMouseDown={() => addTable('Table', 'shapes-large')} style={{padding: 2, display: 'table'}}>
-    <img id={`/shapes/Table.png`}  src={`/shapes/Table.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+    <img id={process.env.PUBLIC_PATH + `/shapes/Table.png`}  src={process.env.PUBLIC_PATH + `/shapes/Table.png`} width={28} height={28} style={{display: 'table-cell'}}/>
   </Button>
   </Popover>
 
   // const customTable = <Popover title={'Table'} placement='right' content={getPopoverContent('Table', 128, 128)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 180, width: 180,}}>
   // <Button type='text' onMouseDown={() => addCustomTable('Interface')} style={{padding: 2, display: 'table'}}>
-  //   <img src={`/shapes/Table.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+  //   <img src={process.env.PUBLIC_PATH + `/shapes/Table.png`} width={28} height={28} style={{display: 'table-cell'}}/>
   // </Button>
   // </Popover>
 
   // const svgContainer = <Popover title={'Table'} placement='right' content={getPopoverContent('Table', 128, 128)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 180, width: 180,}}>
   // <Button type='text' onMouseDown={() => addSvgContainer()} style={{padding: 2, display: 'table'}}>
-  //   <img src={`/shapes/Table.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+  //   <img src={process.env.PUBLIC_PATH + `/shapes/Table.png`} width={28} height={28} style={{display: 'table-cell'}}/>
   // </Button>
   // </Popover>
 
   const connector = <Popover title={'Connector'} placement='right' content={getPopoverContent('Connector', 128, 128)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 180, width: 180,}}>
   <Button type='text' onMouseDown={() => addConnector('Connector', 'shapes-large')} style={{padding: 2, display: 'table'}}>
-    <img id={`/shapes/Connector.png`} src={`/shapes/Connector.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+    <img id={process.env.PUBLIC_PATH + `/shapes/Connector.png`} src={process.env.PUBLIC_PATH + `/shapes/Connector.png`} width={28} height={28} style={{display: 'table-cell'}}/>
   </Button>
   </Popover>
 
   const handleDragStart = (name: string, imageWidth: number, imageHeight: number, e: DragEvent) => {    
     addShape(name)
-    const largeImae = document.getElementById(`/shapes-large/${name}.png`)
+    const largeImae = document.getElementById(process.env.PUBLIC_PATH + `/shapes-large/${name}.png`)
     if(e.dataTransfer && largeImae) {
-      //e.dataTransfer.setData('text/plain',`/shapes-large/${name}.png`)
+      //e.dataTransfer.setData('text/plain',process.env.PUBLIC_PATH + `/shapes-large/${name}.png`)
       e.dataTransfer.setDragImage(largeImae, imageWidth  / 2, imageHeight / 2)
 
     }
     if(Utils.currentEditor?.action) {
-      Utils.currentEditor.action.imageId = `/shapes-large/${name}.png`
+      Utils.currentEditor.action.imageId = process.env.PUBLIC_PATH + `/shapes-large/${name}.png`
     }    
   }
 
@@ -539,7 +539,7 @@ const Navigator: FC<NavigatorProps> = ({
     }
     return <Popover title={shapeType.name} placement='right' content={getPopoverContent(shapeType.name, shapeType.width, shapeType.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 180, width: 180,}}>
       <Button type='text' onMouseDown={() => addShape(shapeType.name, 'shapes-large')}style={{padding: 2, display: 'table'}} >
-        <img src={`/shapes/${shapeType.name}.png`} width={width} height={height} style={{display: 'table-cell'}} draggable={false}/>
+        <img src={process.env.PUBLIC_PATH + `/shapes/${shapeType.name}.png`} width={width} height={height} style={{display: 'table-cell'}} draggable={false}/>
       </Button>
     </Popover>
     }
@@ -547,14 +547,14 @@ const Navigator: FC<NavigatorProps> = ({
 
   const containers2 = <Popover title={'Container'} placement='right' content={getPopoverContent('Rectangle', 128, 128)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 180, width: 180,}}>
   <Button type='text' onMouseDown={() => addContainer(Containers.TYPE_CONTAINER, 'shapes-large')} style={{padding: 2, display: 'table'}} >
-    <img src={`/shapes/Rectangle.png`} width={28} height={19} style={{display: 'table-cell'}}/>
+    <img src={process.env.PUBLIC_PATH + `/shapes/Rectangle.png`} width={28} height={19} style={{display: 'table-cell'}}/>
   </Button>
   </Popover>
 
   const containers = ContainerTypes.map(containerType => {
     return <Popover title={containerType.name} placement='right' content={getPopoverContent(containerType.name, containerType.width, containerType.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 280, width: 280,}}>
       <Button type='text' onMouseDown={() => addContainer(containerType.name, 'shapes-large')} style={{padding: 2, display: 'table'}}>
-        <img src={`/shapes/${containerType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+        <img src={process.env.PUBLIC_PATH + `/shapes/${containerType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
       </Button>
     </Popover>
     }
@@ -564,7 +564,7 @@ const Navigator: FC<NavigatorProps> = ({
     basicType => {
       return <Popover title={basicType.typeInfo.description} placement='right' content={getCustomShapeBasicShapesPopoverContent(basicType.name, basicType.typeInfo.width, basicType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
       <Button type='text' onMouseDown={() => addCustomShape(basicType.name, basicType.type, basicType.typeInfo, 'custom-shapes-large/basic-shapes')} style={{padding: 2, display: 'table'}}>
-        <img src={`/custom-shapes/basic-shapes/${basicType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+        <img src={process.env.PUBLIC_PATH + `/custom-shapes/basic-shapes/${basicType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
       </Button>
     </Popover>
     }
@@ -582,7 +582,7 @@ const Navigator: FC<NavigatorProps> = ({
       }
       return <Popover title={basicType.typeInfo.description} placement='right' content={getCustomShapeFlowChartShapesPopoverContent(basicType.name, basicType.typeInfo.width, basicType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
       <Button type='text' onMouseDown={() => addCustomShape(basicType.name, basicType.type, basicType.typeInfo, 'custom-shapes-large/flowchart')} style={{padding: 2, display: 'table'}}>
-        <img src={`/custom-shapes/flowchart/${basicType.name}.png`} width={width} height={height} style={{display: 'table-cell'}}/>
+        <img src={process.env.PUBLIC_PATH + `/custom-shapes/flowchart/${basicType.name}.png`} width={width} height={height} style={{display: 'table-cell'}}/>
       </Button>
     </Popover>
     }
@@ -599,7 +599,7 @@ const Navigator: FC<NavigatorProps> = ({
       }
         return <Popover title={arrow.typeInfo.description} placement='right' content={getCustomShapeArrowsPopoverContent(arrow.name, arrow.typeInfo.width, arrow.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 180, width: 180,}}>
       <Button type='text' onMouseDown={() => addCustomShape(arrow.name, arrow.type, arrow.typeInfo, 'custom-shapes-large/arrows')} style={{padding: 2, display: 'table'}}>
-        <img src={`/custom-shapes/arrows/${arrow.name}.png`} width={width} height={height} style={{display: 'table-cell'}}/>
+        <img src={process.env.PUBLIC_PATH + `/custom-shapes/arrows/${arrow.name}.png`} width={width} height={height} style={{display: 'table-cell'}}/>
       </Button>
     </Popover>
     }
@@ -609,7 +609,7 @@ const Navigator: FC<NavigatorProps> = ({
     shapeType => {
       return <Popover title={shapeType.name} placement='right' content={getCustomShapeAliyunPopoverContent(shapeType.name, shapeType.width, shapeType.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
       <Button type='text' onMouseDown={() => addSvgShape(shapeType.name, shapeType.data, shapeType.width, shapeType.height, 'custom-shapes-large/aliyun')} style={{padding: 2, display: 'table'}}>
-        <img src={`/custom-shapes/aliyun/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+        <img src={process.env.PUBLIC_PATH + `/custom-shapes/aliyun/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
       </Button>
     </Popover>
     }
@@ -619,7 +619,7 @@ const Navigator: FC<NavigatorProps> = ({
     shapeType => {
       return <Popover title={shapeType.name} placement='right' content={getCustomShapeAwsPopoverContent(shapeType.name, shapeType.width, shapeType.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
       <Button type='text' onMouseDown={() => addImageShape(shapeType.name, shapeType.data, shapeType.width, shapeType.height, 'custom-shapes-large/aws')} style={{padding: 2, display: 'table'}}>
-        <img src={`/custom-shapes/aws/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+        <img src={process.env.PUBLIC_PATH + `/custom-shapes/aws/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
       </Button>
     </Popover>
     }
@@ -629,7 +629,7 @@ const Navigator: FC<NavigatorProps> = ({
     shapeType => {
       return <Popover title={shapeType.name} placement='right' content={getCustomShapeAwsPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
       <Button type='text' onMouseDown={() => addCustomTable(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{padding: 2, display: 'table'}}>
-        <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+        <img src={process.env.PUBLIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
       </Button>
     </Popover>
     }
@@ -639,7 +639,7 @@ const Navigator: FC<NavigatorProps> = ({
     shapeType => {
       return <Popover title={shapeType.name} placement='right' content={getUMLContainerPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
       <Button type='text' onMouseDown={() => addExtendedContainer(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{padding: 2, display: 'table'}}>
-        <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+        <img src={process.env.PUBLIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
       </Button>
     </Popover>
     }
@@ -649,7 +649,7 @@ const Navigator: FC<NavigatorProps> = ({
     shapeType => {
       return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
       <Button type='text' onMouseDown={() => addExtendedShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{padding: 2, display: 'table'}}>
-        <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+        <img src={process.env.PUBLIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
       </Button>
     </Popover>
     }
@@ -659,7 +659,7 @@ const Navigator: FC<NavigatorProps> = ({
     shapeType => {
       return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, 160, 160)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160,}}>
       <Button type='text' onMouseDown={() => addCustomConnector(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{padding: 2, display: 'table'}}>
-        <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+        <img src={process.env.PUBLIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
       </Button>
     </Popover>
     }
@@ -669,7 +669,7 @@ const Navigator: FC<NavigatorProps> = ({
     shapeType => {
       return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: shapeType.typeInfo.width + 60, width: shapeType.typeInfo.height + 60,}}>
       <Button type='text' onMouseDown={() => addCustomTable(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{padding: 2, display: 'table'}}>
-        <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+        <img src={process.env.PUBLIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
       </Button>
     </Popover>
     }
@@ -679,7 +679,7 @@ const Navigator: FC<NavigatorProps> = ({
     shapeType => {
       return <Popover title={shapeType.name} placement='right' content={getUMLContainerPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: shapeType.typeInfo.width + 60, width: shapeType.typeInfo.height + 60,}}>
       <Button type='text' onMouseDown={() => addExtendedContainer(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{padding: 2, display: 'table'}}>
-        <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+        <img src={process.env.PUBLIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
       </Button>
     </Popover>
     }
@@ -689,7 +689,7 @@ const Navigator: FC<NavigatorProps> = ({
     shapeType => {
       return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: shapeType.typeInfo.width + 60, width: shapeType.typeInfo.height + 60,}}>
       <Button type='text' onMouseDown={() => addExtendedShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{padding: 2, display: 'table'}}>
-        <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+        <img src={process.env.PUBLIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
       </Button>
     </Popover>
     }
@@ -699,7 +699,7 @@ const Navigator: FC<NavigatorProps> = ({
     shapeType => {
       return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, 160, 160)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160 + 60, width: 160 + 60,}}>
       <Button type='text' onMouseDown={() => addCustomConnector(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{padding: 2, display: 'table'}}>
-        <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+        <img src={process.env.PUBLIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
       </Button>
     </Popover>
     }
@@ -709,7 +709,7 @@ const Navigator: FC<NavigatorProps> = ({
     shapeType => {
       return <Popover title={shapeType.name} placement='right' content={getUMLContainerPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: shapeType.typeInfo.width + 60, width: shapeType.typeInfo.height + 60,}}>
       <Button type='text' onMouseDown={() => addExtendedContainer(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{padding: 2, display: 'table'}}>
-        <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+        <img src={process.env.PUBLIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
       </Button>
     </Popover>
     }
@@ -719,7 +719,7 @@ const Navigator: FC<NavigatorProps> = ({
     shapeType => {
       return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: shapeType.typeInfo.width + 60, width: shapeType.typeInfo.height + 60,}}>
       <Button type='text' onMouseDown={() => addExtendedShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{padding: 2, display: 'table'}}>
-        <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+        <img src={process.env.PUBLIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
       </Button>
     </Popover>
     }
@@ -729,7 +729,7 @@ const Navigator: FC<NavigatorProps> = ({
     shapeType => {
       return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, 160, 160)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160 + 60, width: 160 + 60,}}>
       <Button type='text' onMouseDown={() => addCustomConnector(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{padding: 2, display: 'table'}}>
-        <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+        <img src={process.env.PUBLIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
       </Button>
     </Popover>
     }
@@ -739,7 +739,7 @@ const Navigator: FC<NavigatorProps> = ({
     shapeType => {
       return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: shapeType.typeInfo.width + 60, width: shapeType.typeInfo.height + 60,}}>
       <Button type='text' onMouseDown={() => addExtendedShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{padding: 2, display: 'table'}}>
-        <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+        <img src={process.env.PUBLIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
       </Button>
     </Popover>
     }
@@ -749,7 +749,7 @@ const Navigator: FC<NavigatorProps> = ({
     shapeType => {
       return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: shapeType.typeInfo.width + 60, width: shapeType.typeInfo.height + 60,}}>
       <Button type='text' onMouseDown={() => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{padding: 2, display: 'table'}}>
-        <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+        <img src={process.env.PUBLIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
       </Button>
     </Popover>
     }
@@ -759,7 +759,7 @@ const Navigator: FC<NavigatorProps> = ({
     shapeType => {
       return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, 160, 160)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160 + 60, width: 160 + 60,}}>
       <Button type='text' onMouseDown={() => addCustomConnector(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{padding: 2, display: 'table'}}>
-        <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+        <img src={process.env.PUBLIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
       </Button>
     </Popover>
     }
@@ -772,7 +772,7 @@ const Navigator: FC<NavigatorProps> = ({
       const iconSize = iconWidth >= iconheight ?  iconWidth :  iconheight
       return <Popover title={shapeType.name} placement='right' content={getUMLContainerPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: shapeType.typeInfo.width + 60, width: shapeType.typeInfo.width + 60,}}>
       <Button type='text' onMouseDown={() => addExtendedContainer(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{padding: 2, display: 'table'}}>
-        <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={iconSize} height={iconSize} style={{display: 'table-cell'}}/>
+        <img src={process.env.PUBLIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={iconSize} height={iconSize} style={{display: 'table-cell'}}/>
       </Button>
     </Popover>
     }
@@ -787,7 +787,7 @@ const Navigator: FC<NavigatorProps> = ({
       const iconSize = iconWidth >= iconheight ?  iconWidth :  iconheight
       return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: shapeType.typeInfo.width + 60, width: shapeType.typeInfo.height + 60,}}>
       <Button type='text' onMouseDown={() => addCustomContainer(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{padding: 2, display: 'table'}}>
-        <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={iconSize} height={iconSize} style={{display: 'table-cell'}}/>
+        <img src={process.env.PUBLIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={iconSize} height={iconSize} style={{display: 'table-cell'}}/>
       </Button>
     </Popover>
     }
@@ -800,7 +800,7 @@ const Navigator: FC<NavigatorProps> = ({
       const iconSize = iconWidth >= iconheight ?  iconWidth :  iconheight
       return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: shapeType.typeInfo.width + 60, width: shapeType.typeInfo.height + 60,}}>
       <Button type='text' onMouseDown={() => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{padding: 2, display: 'table'}}>
-        <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={iconSize} height={iconSize} style={{display: 'table-cell'}}/>
+        <img src={process.env.PUBLIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={iconSize} height={iconSize} style={{display: 'table-cell'}}/>
       </Button>
     </Popover>
     }
@@ -813,7 +813,7 @@ const Navigator: FC<NavigatorProps> = ({
       const iconSize = iconWidth >= iconheight ?  iconWidth :  iconheight
       return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: shapeType.typeInfo.width + 60, width: shapeType.typeInfo.height + 60,}}>
       <Button type='text' onMouseDown={() => addFrame(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{padding: 2, display: 'table'}}>
-        <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={iconSize} height={iconSize} style={{display: 'table-cell'}}/>
+        <img src={process.env.PUBLIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={iconSize} height={iconSize} style={{display: 'table-cell'}}/>
       </Button>
     </Popover>
     }
@@ -823,7 +823,7 @@ const Navigator: FC<NavigatorProps> = ({
     shapeType => {
       return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, 160, 160)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160 + 60, width: 160 + 60,}}>
       <Button type='text' onMouseDown={() => addCustomConnector(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{padding: 2, display: 'table'}}>
-        <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
+        <img src={process.env.PUBLIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{display: 'table-cell'}}/>
       </Button>
     </Popover>
     }
@@ -836,7 +836,7 @@ const Navigator: FC<NavigatorProps> = ({
       const iconSize = iconWidth >= iconheight ?  iconWidth :  iconheight
       return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: shapeType.typeInfo.width + 60, width: shapeType.typeInfo.height + 60,}}>
       <Button type='text' onMouseDown={() => addCustomTable(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{padding: 2, display: 'table'}}>
-        <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={iconSize} height={iconSize} style={{display: 'table-cell'}}/>
+        <img src={process.env.PUBLIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={iconSize} height={iconSize} style={{display: 'table-cell'}}/>
       </Button>
     </Popover>
     }
@@ -849,7 +849,7 @@ const Navigator: FC<NavigatorProps> = ({
       const iconSize = iconWidth >= iconheight ?  iconWidth :  iconheight
       return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: shapeType.typeInfo.width + 60, width: shapeType.typeInfo.height + 60,}}>
       <Button type='text' onMouseDown={() => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{padding: 2, display: 'table'}}>
-        <img src={`/custom-shapes/uml/${shapeType.name}.png`} width={iconSize} height={iconSize} style={{display: 'table-cell'}}/>
+        <img src={process.env.PUBLIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={iconSize} height={iconSize} style={{display: 'table-cell'}}/>
       </Button>
     </Popover>
     }
