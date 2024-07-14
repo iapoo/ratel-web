@@ -12,8 +12,10 @@
     "start:electron:prod": "cross-env NODE_ENV=production electron-webpack",
     "build:electron:prod": "cross-env NODE_ENV=production webpack --config ./build/webpack.main.prod.config.js",
     "build:electron:dev": "cross-env NODE_ENV=development webpack --config ./build/webpack.main.config.js",
-    "pack": "electron-builder",
-    "pack:dir": "electron-builder -- --dir",
+    "electron:run": "electron .",
+    "electron:debug": "electron --inspect=5858 .",
+    "electron:dir": "electron-builder -- --dir",
+    "electron:win": "electron-builder --win",
     "svgr": "svgr"
   },
   "gitHooks": {
@@ -105,7 +107,7 @@
   "engines": {
     "node": ">=8.0.0"
   },
-  "main": "./dist/main/main.js",
+  "main": "main.js",
   "electronWebpack": {
     "main": {
       "sourceDirectory": "server"
@@ -114,15 +116,56 @@
       "sourceDirectory": null
     }
   },
-  "build": {
+  "build2": {
     "appId": "com.ivipi.ratel",
     "files": [
       "dist/",
       "node_modules/",
       "package.json"
-    ],
+    ],    
     "directories": {
       "output": "release"
+    }
+  },
+  "build": {
+    "productName":"Ratel",
+    "appId": "com.ivipi.ratel",
+    "directories": { 			
+      "output": "build"
+    }, 
+    "files":[
+      "dist/",
+      "main.js"
+    ],    
+    "copyright":"ivipa", 
+    "nsis": {
+      "oneClick": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "static/favicon.ico",
+      "uninstallerIcon": "static/favicon.ico",
+      "installerHeaderIcon": "static/favicon.ico",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Ratel"
+    },
+    "publish": {
+      "provider": "github",
+      "repo": "xxxx",
+      "owner": "xxxx",
+      "token": "xxxxxxxxxxxxxxx",
+      "releaseType": "release",
+      "publishAutoUpdate": true
+    },
+    "win": {
+      "icon": "static/favicon.ico",
+      "target": ["nsis","zip"]
+    },
+    "mac": {
+      "target": ["dmg","zip"]
+    },
+    "linux": {
+      "icon": "build/icons"
     }
   }
 }

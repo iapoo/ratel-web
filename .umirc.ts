@@ -19,6 +19,7 @@ export default defineConfig({
   },
   // 使用hash解决框架打包后浏览器不刷新问题
   hash: true,  
+  publicPath: './',
   history: {
     type: 'memory'
   },
@@ -26,6 +27,7 @@ export default defineConfig({
     entry: './src/icons',
   },
   define: {
+    'process.env.PUBLIC_PATH': "./",
     'process.env.PRODUCTION': "false",
     'process.env.SYSTEM_WEB_HTTP': 'http://',
     'process.env.SYSTEM_WEB_SERVER': '192.168.1.215',

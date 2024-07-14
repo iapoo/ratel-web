@@ -135,7 +135,7 @@ export class Engine {
   private static async initilizeCanvasKit () {
     if (!this._canvaskitInitialized) {
       const canvasKit: CanvasKit = await CanvasKitInit({
-        locateFile: (file: any) => '/resources/' + file,
+        locateFile: (file: any) => process.env.PUBLIC_PATH + '/resources/' + file,
       })
       //console.log(canvasKit)
 
