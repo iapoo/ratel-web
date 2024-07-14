@@ -2263,12 +2263,12 @@ const Header: FC<HeaderProps> = ({
   ];
 
   const helpItems: MenuProps['items'] = [
-    { key: 'New', label: 'New', },
-    { key: 'OpenFrom', label: 'OpenFrom', },
-    { key: 'Open', label: 'Open', },
-    { key: 'Save', label: 'Save', },
-    { key: 'SaveAs', label: 'SaveAs', },
-    { key: 'Export', label: 'Export', },
+    // { key: 'New', label: 'New', },
+    // { key: 'OpenFrom', label: 'OpenFrom', },
+    // { key: 'Open', label: 'Open', },
+    // { key: 'Save', label: 'Save', },
+    // { key: 'SaveAs', label: 'SaveAs', },
+    // { key: 'Export', label: 'Export', },
   ];
 
   const userProfileMenu: MenuProps['items'] = [
