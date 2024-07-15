@@ -1,6 +1,6 @@
 module.exports = {
   // extends: [require.resolve('@umijs/fabric/dist/eslint')],
-  extends: [ 'alloy', 'alloy/react', 'alloy/typescript', ],
+  extends: ['alloy', 'alloy/react', 'alloy/typescript',],
   rules: {
     // 禁用alert, confirm, prompt
     'no-alert': 0,
@@ -25,7 +25,7 @@ module.exports = {
       },
     ],
     // 代码块两侧空格：function a(){ console.log('a') }
-    'block-spacing': [ 2, 'always', ],
+    'block-spacing': [2, 'always',],
     /*
       代码块换行格式，形如：
       if (foo) {
@@ -70,17 +70,17 @@ module.exports = {
       },
     ],
     // 逗号位置
-    'comma-style': [ 2, 'last', ],
+    'comma-style': [2, 'last',],
     // 类继承时需要显式调用super方法
     'constructor-super': 2,
     // 代码块的花括号格式，all - 不可省略，multi - 和语句可同行省略，multi-line - 单行语句可换行省略
-    curly: [ 2, 'all', ],
+    curly: [2, 'all',],
     // 点运算符是否可换行
-    'dot-location': [ 2, 'property', ],
+    'dot-location': [2, 'property',],
     // 文件末尾强制空行
     'eol-last': 2,
     // 使用===，null除外
-    eqeqeq: [ 0, 'allow-null', ],
+    eqeqeq: [0, 'allow-null',],
     // 生成器空格
     // function * generator() {}
     // const anonymous = function * () {}
@@ -93,10 +93,10 @@ module.exports = {
       },
     ],
     // 需要处理的回调错误
-    'handle-callback-err': [ 2, '^(err|error)$', ],
-    indent: [ 2, 2, {}, ],
+    'handle-callback-err': [2, '^(err|error)$',],
+    indent: [2, 2, {},],
     // jsx引号格式，优先单引号(例外：<a b="'" />)
-    'jsx-quotes': [ 2, 'prefer-single', ],
+    'jsx-quotes': [2, 'prefer-single',],
     // Object中key分号的前后空格
     'key-spacing': [
       2,
@@ -173,7 +173,7 @@ module.exports = {
     // 禁止不必要的Boolean型转换
     'no-extra-boolean-cast': 2,
     // 禁止不必要的括号
-    'no-extra-parens': [ 2, 'functions', ],
+    'no-extra-parens': [2, 'functions',],
     // 防止switch语句遗漏break时导致的错误
     'no-fallthrough': 2,
     // 浮点型数字需要包含小数点
@@ -183,7 +183,7 @@ module.exports = {
     // 避免隐式执行表达式
     'no-implied-eval': 2,
     // 函数声明和可选的变量声明位于程序的根节点或函数的主体中
-    'no-inner-declarations': [ 2, 'functions', ],
+    'no-inner-declarations': [2, 'functions',],
     // 不允许正则中出现非法表达式
     'no-invalid-regexp': 2,
     // 禁用非法的控制字符
@@ -246,7 +246,7 @@ module.exports = {
     // 正则表达式中禁止多个空格
     'no-regex-spaces': 2,
     // 禁止return语句中的赋值
-    'no-return-assign': [ 2, 'except-parens', ],
+    'no-return-assign': [2, 'except-parens',],
     // 禁用自身赋值
     'no-self-assign': 2,
     // 禁止自身比较
@@ -330,7 +330,7 @@ module.exports = {
       },
     ],
     // 代码块中的空行
-    'padded-blocks': [ 2, 'never', ],
+    'padded-blocks': [2, 'never',],
     // 引号类型
     quotes: [
       2,
@@ -341,7 +341,7 @@ module.exports = {
       },
     ],
     // 分号
-    semi: [ 2, 'never', ],
+    semi: [2, 'never',],
     // 分号两侧空格
     'semi-spacing': [
       2,
@@ -351,11 +351,11 @@ module.exports = {
       },
     ],
     // {}块前的空格样式
-    'space-before-blocks': [ 2, 'always', ],
+    'space-before-blocks': [2, 'always',],
     // 函数关键字左右空格
-    'space-before-function-paren': [ 2, 'always', ],
+    'space-before-function-paren': [2, 'always',],
     // 括号中的空格
-    'space-in-parens': [ 2, 'never', ],
+    'space-in-parens': [2, 'never',],
     // 中缀操作符之间的空白(1 + 2)
     'space-infix-ops': 2,
     // 一元运算符之间的空白
@@ -383,17 +383,17 @@ module.exports = {
       },
     ],
     // html模板中花括号两侧空格
-    'template-curly-spacing': [ 2, 'never', ],
+    'template-curly-spacing': [2, 'never',],
     // 禁用NaN常量，使用Number.isNaN()代替
     'use-isnan': 2,
     // 验证typeof的比较值
     'valid-typeof': 2,
     // IIFE规则
-    'wrap-iife': [ 2, 'any', ],
+    'wrap-iife': [2, 'any',],
     // yield语句*左右空格
-    'yield-star-spacing': [ 2, 'both', ],
+    'yield-star-spacing': [2, 'both',],
     // 禁用尤达比较：if ('red' === color) {}
-    yoda: [ 2, 'never', ],
+    yoda: [2, 'never',],
     // 建议const声明变量
     'prefer-const': 1,
     // 生产环境禁用debugger
@@ -407,7 +407,7 @@ module.exports = {
       },
     ],
     // 数组花括号空格
-    'array-bracket-spacing': [ 2, 'always', ],
+    'array-bracket-spacing': [2, 'always',],
   },
   globals: {},
   settings: {
