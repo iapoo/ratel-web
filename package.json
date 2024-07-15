@@ -24,10 +24,10 @@
   },
   "lint-staged": {
     "*.{js,jsx,less,md,json}": [
-      "prettier --write"
+      "//disable temporary here!  prettier --write"
     ],
     "*.ts?(x)": [
-      "prettier --parser=typescript --write"
+      "//disable temporary here!  prettier --parser=typescript --write"
     ]
   },
   "dependencies": {
