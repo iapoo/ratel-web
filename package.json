@@ -7,7 +7,7 @@
     "test": "umi test",
     "webpack": "umi webpack",
     "lint": "eslint {src,mock,tests}/**/*.{ts,tsx} --fix",
-    "precommit": "lint-staged",
+    "disabled:precommit": "lint-staged",
     "start:electron": "cross-env NODE_ENV=development electron-webpack dev",
     "start:electron:prod": "cross-env NODE_ENV=production electron-webpack",
     "build:electron:prod": "cross-env NODE_ENV=production webpack --config ./build/webpack.main.prod.config.js",
@@ -19,15 +19,15 @@
     "electron:mac": "electron-builder --macos",
     "svgr": "svgr"
   },
-  "gitHooks": {
+  "disabled: gitHooks": {
     "pre-commit-ignore": "lint-staged"
   },
-  "lint-staged": {
+  "disabled: lint-staged": {
     "*.{js,jsx,less,md,json}": [
-      "//disable temporary here!  prettier --write"
+      "prettier --write"
     ],
     "*.ts?(x)": [
-      "//disable temporary here!  prettier --parser=typescript --write"
+      "prettier --parser=typescript --write"
     ]
   },
   "dependencies": {
@@ -132,9 +132,9 @@
       "oneClick": false,
       "allowElevation": true,
       "allowToChangeInstallationDirectory": true,
-      "installerIcon": "static/favicon.ico",
-      "uninstallerIcon": "static/favicon.ico",
-      "installerHeaderIcon": "static/favicon.ico",
+      "installerIcon": "static/favicon-256.ico",
+      "uninstallerIcon": "static/favicon-256.ico",
+      "installerHeaderIcon": "static/favicon-256.ico",
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
       "shortcutName": "Ratel"
@@ -148,7 +148,7 @@
       "publishAutoUpdate": true
     },
     "win": {
-      "icon": "static/favicon.ico",
+      "icon": "static/favicon-256.ico",
       "target": [
         "nsis",
         "zip"
@@ -162,7 +162,7 @@
       ]
     },
     "linux": {
-      "icon": "static/favicon.ico",
+      "icon": "static/favicon-256.ico",
       "target": [
         "deb",
         "zip"

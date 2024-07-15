@@ -31,4 +31,5 @@ Pleae check Ratel-Deployment
 
 ## Build with Electron for desktop installation
 
-1. UMI_ENV=electron npm run build
+1. For Mac & Linux: UMI_ENV=electron npm run build
+2. For Windows: SET UMI_ENV=electron && npm run build
