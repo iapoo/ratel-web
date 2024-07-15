@@ -61,18 +61,8 @@ export interface LanguageFont {
 }
 
 export const LanguageFonts: LanguageFont[] = [
-  {
-    language: EngineUtils.LANG_EN_US,
-    defaultLatinFont: EngineUtils.FONT_NAME_ROBOTO,
-    defaultNonLatinFont: EngineUtils.FONT_NAME_NOTO_SERIF_SC,
-    fonts: ["Lato", "Open Sans", "Source Code Pro", "Roboto Slab"],
-  },
-  {
-    language: EngineUtils.LANG_ZH_CN,
-    defaultLatinFont: EngineUtils.FONT_NAME_ROBOTO,
-    defaultNonLatinFont: EngineUtils.FONT_NAME_NOTO_SERIF_SC,
-    fonts: ["Noto Sans SC"],
-  },
+  { language: EngineUtils.LANG_EN_US, defaultLatinFont: EngineUtils.FONT_NAME_ROBOTO, defaultNonLatinFont: EngineUtils.FONT_NAME_NOTO_SERIF_SC, fonts: ["Lato", "Open Sans", "Source Code Pro", "Roboto Slab"], },
+  { language: EngineUtils.LANG_ZH_CN, defaultLatinFont: EngineUtils.FONT_NAME_ROBOTO, defaultNonLatinFont: EngineUtils.FONT_NAME_NOTO_SERIF_SC, fonts: ["Noto Sans SC"], },
 ];
 
 export enum Languages {
@@ -81,30 +71,12 @@ export enum Languages {
 }
 
 export const SystemFonts = [
-  {
-    fontName: EngineUtils.FONT_NAME_LATO,
-    fontUrl: process.env.PUBLIC_PATH + "/fonts/Lato-Regular.woff2",
-  },
-  {
-    fontName: EngineUtils.FONT_NAME_OPEN_SANS,
-    fontUrl: process.env.PUBLIC_PATH + "/fonts/Open-Sans-Regular.woff2",
-  },
-  {
-    fontName: EngineUtils.FONT_NAME_ROBOTO,
-    fontUrl: process.env.PUBLIC_PATH + "/fonts/Roboto-Regular.woff2",
-  },
-  {
-    fontName: EngineUtils.FONT_NAME_ROBOTO_SLAB,
-    fontUrl: process.env.PUBLIC_PATH + "/fonts/Roboto-Slab-Regular.woff2",
-  },
-  {
-    fontName: EngineUtils.FONT_NAME_SOURCE_CODE_PRO,
-    fontUrl: process.env.PUBLIC_PATH + "/fonts/Source-Code-Pro-Regular.woff2",
-  },
-  {
-    fontName: EngineUtils.FONT_NAME_NOTO_SERIF_SC,
-    fontUrl: process.env.PUBLIC_PATH + "/fonts/Noto-Serif-SC-Regular.woff2",
-  },
+  { fontName: EngineUtils.FONT_NAME_LATO, fontUrl: process.env.PUBLIC_PATH + "/fonts/Lato-Regular.woff2", },
+  { fontName: EngineUtils.FONT_NAME_OPEN_SANS, fontUrl: process.env.PUBLIC_PATH + "/fonts/Open-Sans-Regular.woff2", },
+  { fontName: EngineUtils.FONT_NAME_ROBOTO, fontUrl: process.env.PUBLIC_PATH + "/fonts/Roboto-Regular.woff2", },
+  { fontName: EngineUtils.FONT_NAME_ROBOTO_SLAB, fontUrl: process.env.PUBLIC_PATH + "/fonts/Roboto-Slab-Regular.woff2", },
+  { fontName: EngineUtils.FONT_NAME_SOURCE_CODE_PRO, fontUrl: process.env.PUBLIC_PATH + "/fonts/Source-Code-Pro-Regular.woff2", },
+  { fontName: EngineUtils.FONT_NAME_NOTO_SERIF_SC, fontUrl: process.env.PUBLIC_PATH + "/fonts/Noto-Serif-SC-Regular.woff2", },
 ];
 
 export enum WebFontSource {
@@ -138,14 +110,8 @@ export const WebFonts: WebFontMeta[] = [
 export class WebFontManager {
   private _webFonts: Map<string, WebFont[]> = new Map<string, WebFont[]>();
   private _typeFaceFontProvider: TypefaceFontProvider | null = null;
-  private _fontDataMap: Map<string, ArrayBuffer> = new Map<
-    string,
-    ArrayBuffer
-  >();
-  private _typeFaces: Map<string, Typeface | null> = new Map<
-    string,
-    Typeface | null
-  >();
+  private _fontDataMap: Map<string, ArrayBuffer> = new Map<string, ArrayBuffer>();
+  private _typeFaces: Map<string, Typeface | null> = new Map<string, Typeface | null>();
   private _canvasKit: CanvasKit | null = null;
   private _initialized: boolean = false;
 
@@ -212,11 +178,9 @@ export class WebFontManager {
 }
 
 export class TextFontGlyph {
-  public constructor(
-    public text: string,
-    public fontName: string,
-    public glyph: number[]
-  ) {}
+  public constructor(public text: string, public fontName: string, public glyph: number[]) {
+
+  }
 }
 
 export class FontUtils {
