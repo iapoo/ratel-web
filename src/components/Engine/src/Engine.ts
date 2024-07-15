@@ -2,51 +2,10 @@
 import * as CanvasKitInit from "canvaskit-wasm";
 // eslint-disable-next-line no-unused-vars
 import {
-  CanvasKit,
-  Paint,
-  RRect,
-  FontMgr,
-  Typeface,
-  TypefaceFontProvider,
-  PaintStyle,
-  Canvas,
-  Surface,
-  Path,
-  ClipOp,
-  InputRect,
-  InputRRect,
-  InputMatrix,
-  ColorIntArray,
-  AngleInDegrees,
-  Image,
-  InputFlattenedRectangleArray,
-  InputFlattenedRSXFormArray,
-  BlendMode,
-  CubicResampler,
-  FilterOptions,
-  InputColor,
-  ColorInt,
-  InputGlyphIDArray,
-  InputFlattenedPointArray,
-  Font,
-  FilterMode,
-  MipmapMode,
-  InputIRect,
-  Paragraph,
-  Color,
-  SkPicture,
-  PointMode,
-  InputVector3,
-  TextBlob,
-  Vertices,
-  Matrix4x4,
-  ImageInfo,
-  MallocObj,
-  ImageFilter,
-  SaveLayerFlag,
-  AlphaType,
-  ColorType,
-  ColorSpace,
+  CanvasKit, Paint, RRect, FontMgr, Typeface, TypefaceFontProvider, PaintStyle, Canvas, Surface, Path, ClipOp, InputRect, InputRRect, InputMatrix, ColorIntArray, AngleInDegrees,
+  Image, InputFlattenedRectangleArray, InputFlattenedRSXFormArray, BlendMode, CubicResampler, FilterOptions, InputColor, ColorInt, InputGlyphIDArray, InputFlattenedPointArray,
+  Font, FilterMode, MipmapMode, InputIRect, Paragraph, Color, SkPicture, PointMode, InputVector3, TextBlob, Vertices, Matrix4x4, ImageInfo,
+  MallocObj, ImageFilter, SaveLayerFlag, AlphaType, ColorType, ColorSpace,
 } from "canvaskit-wasm/types";
 import { EngineUtils, FontUtils, SystemFonts } from "./EngineUtils";
 import { Graphics } from "./Graphics";
@@ -289,34 +248,12 @@ export class Engine {
     this._canvas.concat(m);
   }
 
-  public drawArc(
-    oval: number[],
-    startAngle: number,
-    sweepAngle: number,
-    useCenter: boolean,
-    paint: Paint
-  ) {
+  public drawArc(oval: number[], startAngle: number, sweepAngle: number, useCenter: boolean, paint: Paint) {
     this._canvas.drawArc(oval, startAngle, sweepAngle, useCenter, paint);
   }
 
-  public drawAtlas(
-    atlas: Image,
-    srcRects: InputFlattenedRectangleArray,
-    dstXforms: InputFlattenedRSXFormArray,
-    paint: Paint,
-    blendMode?: BlendMode | null,
-    colors?: ColorIntArray | null,
-    sampling?: CubicResampler | FilterOptions
-  ) {
-    this._canvas.drawAtlas(
-      atlas,
-      srcRects,
-      dstXforms,
-      paint,
-      blendMode,
-      colors,
-      sampling
-    );
+  public drawAtlas(atlas: Image, srcRects: InputFlattenedRectangleArray, dstXforms: InputFlattenedRSXFormArray, paint: Paint, blendMode?: BlendMode | null, colors?: ColorIntArray | null, sampling?: CubicResampler | FilterOptions) {
+    this._canvas.drawAtlas(atlas, srcRects, dstXforms, paint, blendMode, colors, sampling);
   }
 
   public drawCircle(cx: number, cy: number, radius: number, paint: Paint) {
@@ -327,13 +264,7 @@ export class Engine {
     this._canvas.drawColor(color, blendMode);
   }
 
-  public drawColorComponents(
-    r: number,
-    g: number,
-    b: number,
-    a: number,
-    blendMode?: BlendMode
-  ) {
+  public drawColorComponents(r: number, g: number, b: number, a: number, blendMode?: BlendMode) {
     this._canvas.drawColorComponents(r, g, b, a, blendMode);
   }
 
@@ -345,97 +276,40 @@ export class Engine {
     this._canvas.drawDRRect(outer, inner, paint);
   }
 
-  public drawGlyphs(
-    glyphs: InputGlyphIDArray,
-    positions: InputFlattenedPointArray,
-    x: number,
-    y: number,
-    font: Font,
-    paint: Paint
-  ) {
+  public drawGlyphs(glyphs: InputGlyphIDArray, positions: InputFlattenedPointArray, x: number, y: number, font: Font, paint: Paint) {
     this._canvas.drawGlyphs(glyphs, positions, x, y, font, paint);
   }
 
-  public drawImage(
-    img: Image,
-    left: number,
-    top: number,
-    paint?: Paint | null
-  ) {
+  public drawImage(img: Image, left: number, top: number, paint?: Paint | null) {
     this._canvas.drawImage(img, left, top, paint);
   }
 
-  public drawImageCubic(
-    img: Image,
-    left: number,
-    top: number,
-    B: number,
-    C: number,
-    paint?: Paint | null
-  ) {
+  public drawImageCubic(img: Image, left: number, top: number, B: number, C: number, paint?: Paint | null) {
     this._canvas.drawImageCubic(img, left, top, B, C, paint);
   }
 
-  public drawImageOptions(
-    img: Image,
-    left: number,
-    top: number,
-    fm: FilterMode,
-    mm: MipmapMode,
-    paint?: Paint | null
+  public drawImageOptions(img: Image, left: number, top: number, fm: FilterMode, mm: MipmapMode, paint?: Paint | null
   ) {
     this._canvas.drawImageOptions(img, left, top, fm, mm, paint);
   }
 
-  public drawImageNine(
-    img: Image,
-    center: InputIRect,
-    dest: InputRect,
-    filter: FilterMode,
-    paint?: Paint | null
-  ) {
+  public drawImageNine(img: Image, center: InputIRect, dest: InputRect, filter: FilterMode, paint?: Paint | null) {
     this._canvas.drawImageNine(img, center, dest, filter, paint);
   }
 
-  public drawImageRect(
-    img: Image,
-    src: InputRect,
-    dest: InputRect,
-    paint: Paint,
-    fastSample?: boolean
-  ) {
+  public drawImageRect(img: Image, src: InputRect, dest: InputRect, paint: Paint, fastSample?: boolean) {
     this._canvas.drawImageRect(img, src, dest, paint, fastSample);
   }
 
-  public drawImageRectCubic(
-    img: Image,
-    src: InputRect,
-    dest: InputRect,
-    B: number,
-    C: number,
-    paint?: Paint | null
-  ) {
+  public drawImageRectCubic(img: Image, src: InputRect, dest: InputRect, B: number, C: number, paint?: Paint | null) {
     this._canvas.drawImageRectCubic(img, src, dest, B, C, paint);
   }
 
-  public drawImageRectOptions(
-    img: Image,
-    src: InputRect,
-    dest: InputRect,
-    fm: FilterMode,
-    mm: MipmapMode,
-    paint?: Paint | null
-  ) {
+  public drawImageRectOptions(img: Image, src: InputRect, dest: InputRect, fm: FilterMode, mm: MipmapMode, paint?: Paint | null) {
     this._canvas.drawImageRectOptions(img, src, dest, fm, mm, paint);
   }
 
-  public drawLine(
-    x0: number,
-    y0: number,
-    x1: number,
-    y1: number,
-    paint: Paint
-  ) {
+  public drawLine(x0: number, y0: number, x1: number, y1: number, paint: Paint) {
     this._canvas.drawLine(x0, y0, x1, y1, paint);
   }
 
@@ -455,13 +329,7 @@ export class Engine {
     this._canvas.drawPath(path, paint);
   }
 
-  public drawPatch(
-    cubics: InputFlattenedPointArray,
-    colors?: ColorIntArray | Color[] | null,
-    texs?: InputFlattenedPointArray | null,
-    mode?: BlendMode | null,
-    paint?: Paint
-  ) {
+  public drawPatch(cubics: InputFlattenedPointArray, colors?: ColorIntArray | Color[] | null, texs?: InputFlattenedPointArray | null, mode?: BlendMode | null, paint?: Paint) {
     this._canvas.drawPatch(cubics, colors, texs, mode, paint);
   }
 
@@ -469,11 +337,7 @@ export class Engine {
     this._canvas.drawPicture(skp);
   }
 
-  public drawPoints(
-    mode: PointMode,
-    points: InputFlattenedPointArray,
-    paint: Paint
-  ) {
+  public drawPoints(mode: PointMode, points: InputFlattenedPointArray, paint: Paint) {
     this._canvas.drawPoints(mode, points, paint);
   }
 
@@ -481,13 +345,7 @@ export class Engine {
     this._canvas.drawRect(rect, paint);
   }
 
-  public drawRect4f(
-    left: number,
-    top: number,
-    right: number,
-    bottom: number,
-    paint: Paint
-  ) {
+  public drawRect4f(left: number, top: number, right: number, bottom: number, paint: Paint) {
     this._canvas.drawRect4f(left, top, right, bottom, paint);
   }
 
@@ -495,15 +353,7 @@ export class Engine {
     this._canvas.drawRRect(rrect, paint);
   }
 
-  public drawShadow(
-    path: Path,
-    zPlaneParams: InputVector3,
-    lightPos: InputVector3,
-    lightRadius: number,
-    ambientColor: InputColor,
-    spotColor: InputColor,
-    flags: number
-  ) {
+  public drawShadow(path: Path, zPlaneParams: InputVector3, lightPos: InputVector3, lightRadius: number, ambientColor: InputColor, spotColor: InputColor, flags: number) {
     this._canvas.drawShadow(
       path,
       zPlaneParams,
@@ -543,13 +393,7 @@ export class Engine {
     return this._canvas.makeSurface(info);
   }
 
-  public readPixels(
-    srcX: number,
-    srcY: number,
-    imageInfo: ImageInfo,
-    dest?: MallocObj,
-    bytesPerRow?: number
-  ) {
+  public readPixels(srcX: number, srcY: number, imageInfo: ImageInfo, dest?: MallocObj, bytesPerRow?: number) {
     this._canvas.readPixels(srcX, srcY, imageInfo, dest, bytesPerRow);
   }
 
@@ -568,12 +412,7 @@ export class Engine {
     this._canvas.save();
   }
 
-  public saveLayer(
-    paint?: Paint,
-    bounds?: InputRect | null,
-    backdrop?: ImageFilter | null,
-    flags?: SaveLayerFlag
-  ) {
+  public saveLayer(paint?: Paint, bounds?: InputRect | null, backdrop?: ImageFilter | null, flags?: SaveLayerFlag) {
     this._canvas.saveLayer(paint, bounds, backdrop, flags);
   }
 
@@ -589,26 +428,8 @@ export class Engine {
     this._canvas.translate(dx, dy);
   }
 
-  public writePixels(
-    pixels: Uint8Array | number[],
-    srcWidth: number,
-    srcHeight: number,
-    destX: number,
-    destY: number,
-    alphaType?: AlphaType,
-    colorType?: ColorType,
-    colorSpace?: ColorSpace
-  ) {
-    this._canvas.writePixels(
-      pixels,
-      srcWidth,
-      srcHeight,
-      destX,
-      destY,
-      alphaType,
-      colorType,
-      colorSpace
-    );
+  public writePixels(pixels: Uint8Array | number[], srcWidth: number, srcHeight: number, destX: number, destY: number, alphaType?: AlphaType, colorType?: ColorType, colorSpace?: ColorSpace) {
+    this._canvas.writePixels(pixels, srcWidth, srcHeight, destX, destY, alphaType, colorType, colorSpace);
   }
 }
 
@@ -621,11 +442,7 @@ export class MatrixHelper {
     return Engine.canvasKit.Matrix.invert(matrix);
   }
 
-  public static rotate(
-    angle: number,
-    px: number | undefined,
-    py: number | undefined
-  ): number[] {
+  public static rotate(angle: number, px: number | undefined, py: number | undefined): number[] {
     return Engine.canvasKit.Matrix.rotated(angle, px, py);
   }
 
@@ -633,21 +450,11 @@ export class MatrixHelper {
     return Engine.canvasKit.Matrix.multiply(...matrices);
   }
 
-  public static scale(
-    sx: number,
-    sy: number,
-    px?: number,
-    py?: number
-  ): number[] {
+  public static scale(sx: number, sy: number, px?: number, py?: number): number[] {
     return Engine.canvasKit.Matrix.scaled(sx, sy, px, py);
   }
 
-  public static skew(
-    kx: number,
-    ky: number,
-    px?: number,
-    py?: number
-  ): number[] {
+  public static skew(kx: number, ky: number, px?: number, py?: number): number[] {
     return Engine.canvasKit.Matrix.skewed(kx, ky, px, py);
   }
   public static translate(dx: number, dy: number): number[] {
