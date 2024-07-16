@@ -28,7 +28,7 @@ export default defineConfig({
     entry: "./src/icons",
   },
   plugins: [
-    './plugins/buildMonitor.js'
+    //'./plugins/buildMonitor.js'
   ],
   define: {
     "process.env.PUBLIC_PATH": "",
