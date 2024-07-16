@@ -20,6 +20,7 @@ export default defineConfig({
   // 使用hash解决框架打包后浏览器不刷新问题
   hash: true,
   publicPath: "/",
+  outputPath: './app/dist',
   history: {
     type: "memory",
   },
