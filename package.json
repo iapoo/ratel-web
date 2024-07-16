@@ -8,16 +8,8 @@
     "webpack": "umi webpack",
     "lint": "eslint {src,mock,tests}/**/*.{ts,tsx} --fix",
     "disabled:precommit": "lint-staged",
-    "start:electron": "cross-env NODE_ENV=development electron-webpack dev",
-    "start:electron:prod": "cross-env NODE_ENV=production electron-webpack",
-    "build:electron:prod": "cross-env NODE_ENV=production webpack --config ./build/webpack.main.prod.config.js",
-    "build:electron:dev": "cross-env NODE_ENV=development webpack --config ./build/webpack.main.config.js",
-    "electron:run": "electron .",
-    "electron:debug": "electron --inspect=5858 .",
-    "electron:dir": "electron-builder -- --dir",
-    "electron:win": "electron-builder --win",
-    "electron:mac": "electron-builder --macos",
-    "svgr": "svgr"
+    "electron:build": "cross-env UMI_ENV=electron umi build",
+    "electron:run": "electron ./app"
   },
   "disabled: gitHooks": {
     "pre-commit-ignore": "lint-staged"
@@ -106,67 +98,7 @@
     "webpack": "^4.43.0"
   },
   "engines": {
-    "node": ">=8.0.0"
+    "node": ">=14.0.0"
   },
-  "main": "main.js",
-  "electronWebpack": {
-    "main": {
-      "sourceDirectory": "server"
-    },
-    "renderer": {
-      "sourceDirectory": null
-    }
-  },
-  "build": {
-    "productName": "Ratel",
-    "appId": "com.ivipi.ratel",
-    "directories": {
-      "output": "build"
-    },
-    "files": [
-      "dist/",
-      "main.js"
-    ],
-    "copyright": "ivipa",
-    "nsis": {
-      "oneClick": false,
-      "allowElevation": true,
-      "allowToChangeInstallationDirectory": true,
-      "installerIcon": "static/favicon-256.ico",
-      "uninstallerIcon": "static/favicon-256.ico",
-      "installerHeaderIcon": "static/favicon-256.ico",
-      "createDesktopShortcut": true,
-      "createStartMenuShortcut": true,
-      "shortcutName": "Ratel"
-    },
-    "publish": {
-      "provider": "github",
-      "repo": "xxxx",
-      "owner": "xxxx",
-      "token": "xxxxxxxxxxxxxxx",
-      "releaseType": "release",
-      "publishAutoUpdate": true
-    },
-    "win": {
-      "icon": "static/favicon-256.ico",
-      "target": [
-        "nsis",
-        "zip"
-      ]
-    },
-    "mac": {
-      "icon": "static/favicon-512.png",
-      "target": [
-        "dmg",
-        "zip"
-      ]
-    },
-    "linux": {
-      "icon": "static/favicon-256.ico",
-      "target": [
-        "deb",
-        "zip"
-      ]
-    }
-  }
+  "main": "main.js"
 }

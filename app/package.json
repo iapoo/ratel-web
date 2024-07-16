@@ -1,0 +1,76 @@
+{
+  "name": "ratel",
+  "version": "1.0.0",
+  "scripts": {
+    "start:electron": "cross-env NODE_ENV=development electron-webpack dev",
+    "start:electron:prod": "cross-env NODE_ENV=production electron-webpack",
+    "build:electron:prod": "cross-env NODE_ENV=production webpack --config ./build/webpack.main.prod.config.js",
+    "build:electron:dev": "cross-env NODE_ENV=development webpack --config ./build/webpack.main.config.js",
+    "electron:run": "electron .",
+    "electron:debug": "electron --inspect=5858 .",
+    "electron:dir": "electron-builder -- --dir",
+    "electron:win": "electron-builder --win",
+    "electron:mac": "electron-builder --macos"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "electron": "13.1.8",
+    "electron-builder": "^23.6.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "main": "main.js",
+  "build": {
+    "productName": "Ratel",
+    "appId": "com.ivipi.ratel",
+    "directories": {
+      "output": "build"
+    },
+    "files": [
+      "dist/",
+      "main.js"
+    ],
+    "copyright": "ivipa",
+    "nsis": {
+      "oneClick": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "dist/favicon-256.ico",
+      "uninstallerIcon": "dist/favicon-256.ico",
+      "installerHeaderIcon": "dist/favicon-256.ico",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Ratel"
+    },
+    "publish": {
+      "provider": "github",
+      "repo": "xxxx",
+      "owner": "xxxx",
+      "token": "xxxxxxxxxxxxxxx",
+      "releaseType": "release",
+      "publishAutoUpdate": true
+    },
+    "win": {
+      "icon": "dist/favicon-256.ico",
+      "target": [
+        "nsis",
+        "zip"
+      ]
+    },
+    "mac": {
+      "icon": "dist/favicon-512.png",
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    },
+    "linux": {
+      "icon": "dist/favicon-256.ico",
+      "target": [
+        "deb",
+        "zip"
+      ]
+    }
+  }
+}
