@@ -28,16 +28,30 @@
     "productName": "Ratel",
     "appId": "com.ivipi.ratel",
     "directories": {
-      "output": "build"
+      "output": "build",
+      "buildResources": "./builder"
     },
     "files": [
       "dist/",
       "main.js"
     ],
+    "locales": {
+      "zh-CN": {
+        "description": "简体中文",
+        "name": "简体中文",
+        "message": "locales/zh-CN.json"
+      },
+      "en-US": {
+        "description": "English",
+        "name": "English",
+        "message": "locales/en-US.json"
+      }
+    },
     "copyright": "ivipa",
     "nsis": {
       "oneClick": false,
       "allowElevation": true,
+      "displayLanguageSelector": true,
       "allowToChangeInstallationDirectory": true,
       "installerIcon": "dist/favicon-256.ico",
       "uninstallerIcon": "dist/favicon-256.ico",
