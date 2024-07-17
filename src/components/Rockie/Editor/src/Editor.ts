@@ -83,7 +83,7 @@ export class Editor extends Painter {
   private _moveLayer: EditorLayer
   private _containerLayer: EditorLayer
   private _tableLayer: EditorLayer
-  private _exportLayer: EditorLayer 
+  private _exportLayer: EditorLayer
   private _zoom = 1.00;
   private _inMoving = false;
   private _moved = false; //Check if movement already started
@@ -108,7 +108,7 @@ export class Editor extends Painter {
   private _key: string
   private _id: string
   private _modified: boolean
-  private _selectionChangeListeners = new Array<(e: EditorEvent) => void>(0) 
+  private _selectionChangeListeners = new Array<(e: EditorEvent) => void>(0)
   private _operationService: OperationService = OperationService.instance
   private _operationChangeListeners = new Array<(e: EditorEvent) => void>(0)
   private _sizeChangeListeners = new Array<(e: EditorEvent) => void>(0)
@@ -142,7 +142,7 @@ export class Editor extends Painter {
   private _verticalSpace: number = Editor.VERTICAL_SPACE_DEFAULT
   private _theme: DocumentThemeType = DocumentThemeTypes[0]
 
-  public constructor (canvasId: string | HTMLCanvasElement) {
+  public constructor(canvasId: string | HTMLCanvasElement) {
     super(canvasId)
     this._backgroundLayer = new BackgroundLayer(this, this.horizontalSpace, this.verticalSpace, this.workWidth, this.workHeight, this.gridSize)
     this._contentLayer = new ContentLayer(this.horizontalSpace, this.verticalSpace, this.workWidth, this.workHeight)
@@ -261,7 +261,7 @@ export class Editor extends Painter {
   }
 
   public set horizontalSpace(value: number) {
-    if(this._horizontalSpace != value) {
+    if (this._horizontalSpace != value) {
       this._horizontalSpace = value
       this.setup(this.zoom, this.origWidth, this.origHeight)
     }
@@ -272,7 +272,7 @@ export class Editor extends Painter {
   }
 
   public set verticalSpace(value: number) {
-    if(this._verticalSpace != value) {
+    if (this._verticalSpace != value) {
       this._verticalSpace = value
       this.setup(this.zoom, this.origWidth, this.origHeight)
     }
@@ -294,7 +294,7 @@ export class Editor extends Painter {
     this._theme = value
   }
 
-  public onOperationChange(callback: (e:EditorEvent) => void) {
+  public onOperationChange(callback: (e: EditorEvent) => void) {
     const index = this._operationChangeListeners.indexOf(callback)
     if (index < 0) {
       this._operationChangeListeners.push(callback)
@@ -307,14 +307,14 @@ export class Editor extends Painter {
       this._operationChangeListeners.splice(index, 1)
     }
   }
-  
+
   public hasOperationChange(callback: (e: EditorEvent) => void) {
     const index = this._operationChangeListeners.indexOf(callback)
     return index >= 0
   }
 
 
-  public onOperationComplete(callback: (e:EditorEvent) => void) {
+  public onOperationComplete(callback: (e: EditorEvent) => void) {
     const index = this._operationCompleteListeners.indexOf(callback)
     if (index < 0) {
       this._operationCompleteListeners.push(callback)
@@ -327,7 +327,7 @@ export class Editor extends Painter {
       this._operationCompleteListeners.splice(index, 1)
     }
   }
-  
+
   public hasOperationComplete(callback: (e: EditorEvent) => void) {
     const index = this._operationCompleteListeners.indexOf(callback)
     return index >= 0
@@ -342,7 +342,7 @@ export class Editor extends Painter {
     if (index < 0) {
       this._selectionChangeListeners.push(callback)
     }
-  }  
+  }
 
   public removeSelectionChange(callback: (e: EditorEvent) => void) {
     const index = this._selectionChangeListeners.indexOf(callback)
@@ -350,7 +350,7 @@ export class Editor extends Painter {
       this._selectionChangeListeners.splice(index, 1)
     }
   }
-  
+
   public hasSelectionChange(callback: (e: EditorEvent) => void) {
     const index = this._selectionChangeListeners.indexOf(callback)
     return index >= 0
@@ -365,7 +365,7 @@ export class Editor extends Painter {
     if (index < 0) {
       this._textEditStartListeners.push(callback)
     }
-  }  
+  }
 
   public removeTextEditStart(callback: (e: EditorEvent) => void) {
     const index = this._textEditStartListeners.indexOf(callback)
@@ -373,7 +373,7 @@ export class Editor extends Painter {
       this._textEditStartListeners.splice(index, 1)
     }
   }
-  
+
   public hasTextEditStart(callback: (e: EditorEvent) => void) {
     const index = this._textEditStartListeners.indexOf(callback)
     return index >= 0
@@ -388,7 +388,7 @@ export class Editor extends Painter {
     if (index < 0) {
       this._textEditEndListeners.push(callback)
     }
-  }  
+  }
 
   public removeTextEditEnd(callback: (e: EditorEvent) => void) {
     const index = this._textEditEndListeners.indexOf(callback)
@@ -396,7 +396,7 @@ export class Editor extends Painter {
       this._textEditEndListeners.splice(index, 1)
     }
   }
-  
+
   public hasTextEditEnd(callback: (e: EditorEvent) => void) {
     const index = this._textEditEndListeners.indexOf(callback)
     return index >= 0
@@ -411,7 +411,7 @@ export class Editor extends Painter {
     if (index < 0) {
       this._tableTextEditStartListeners.push(callback)
     }
-  }  
+  }
 
   public removeTableTextEditStart(callback: (e: EditorEvent) => void) {
     const index = this._tableTextEditStartListeners.indexOf(callback)
@@ -419,7 +419,7 @@ export class Editor extends Painter {
       this._tableTextEditStartListeners.splice(index, 1)
     }
   }
-  
+
   public hasTableTextEditStart(callback: (e: EditorEvent) => void) {
     const index = this._tableTextEditStartListeners.indexOf(callback)
     return index >= 0
@@ -434,7 +434,7 @@ export class Editor extends Painter {
     if (index < 0) {
       this._tableTextEditEndListeners.push(callback)
     }
-  }  
+  }
 
   public removeTableTextEditEnd(callback: (e: EditorEvent) => void) {
     const index = this._tableTextEditEndListeners.indexOf(callback)
@@ -442,7 +442,7 @@ export class Editor extends Painter {
       this._tableTextEditEndListeners.splice(index, 1)
     }
   }
-  
+
   public hasTableTextEditEnd(callback: (e: EditorEvent) => void) {
     const index = this._tableTextEditEndListeners.indexOf(callback)
     return index >= 0
@@ -457,7 +457,7 @@ export class Editor extends Painter {
     if (index < 0) {
       this._selectionResizedListeners.push(callback)
     }
-  }  
+  }
 
   public removeSelectionResized(callback: (e: EditorEvent) => void) {
     const index = this._selectionResizedListeners.indexOf(callback)
@@ -465,11 +465,11 @@ export class Editor extends Painter {
       this._selectionResizedListeners.splice(index, 1)
     }
   }
-  
+
   public hasSelectionResized(callback: (e: EditorEvent) => void) {
     const index = this._selectionResizedListeners.indexOf(callback)
     return index >= 0
-  }  
+  }
 
   public get selectionResizingListeners() {
     return this._selectionResizingListeners
@@ -480,7 +480,7 @@ export class Editor extends Painter {
     if (index < 0) {
       this._selectionResizingListeners.push(callback)
     }
-  }  
+  }
 
   public removeSelectionResizing(callback: (e: EditorEvent) => void) {
     const index = this._selectionResizingListeners.indexOf(callback)
@@ -488,11 +488,11 @@ export class Editor extends Painter {
       this._selectionResizingListeners.splice(index, 1)
     }
   }
-  
+
   public hasSelectionResizing(callback: (e: EditorEvent) => void) {
     const index = this._selectionResizingListeners.indexOf(callback)
     return index >= 0
-  }  
+  }
 
   public get textEditStyleChangeListeners() {
     return this._textEditStyleChangeListeners
@@ -503,7 +503,7 @@ export class Editor extends Painter {
     if (index < 0) {
       this._textEditStyleChangeListeners.push(callback)
     }
-  }  
+  }
 
   public removeTextEditStyleChange(callback: (e: EditorEvent) => void) {
     const index = this._textEditStyleChangeListeners.indexOf(callback)
@@ -511,12 +511,12 @@ export class Editor extends Painter {
       this._textEditStyleChangeListeners.splice(index, 1)
     }
   }
-  
+
   public hasTextEditStyleChange(callback: (e: EditorEvent) => void) {
     const index = this._textEditStyleChangeListeners.indexOf(callback)
     return index >= 0
   }
-  
+
   public get sizeChangeListeners() {
     return this._sizeChangeListeners
   }
@@ -526,7 +526,7 @@ export class Editor extends Painter {
     if (index < 0) {
       this._sizeChangeListeners.push(callback)
     }
-  }  
+  }
 
   public removeSizeChange(callback: (e: EditorEvent) => void) {
     const index = this._sizeChangeListeners.indexOf(callback)
@@ -534,7 +534,7 @@ export class Editor extends Painter {
       this._sizeChangeListeners.splice(index, 1)
     }
   }
-  
+
   public hasSizeChange(callback: (e: EditorEvent) => void) {
     const index = this._sizeChangeListeners.indexOf(callback)
     return index >= 0
@@ -549,7 +549,7 @@ export class Editor extends Painter {
     if (index < 0) {
       this._editorModeChangeListeners.push(callback)
     }
-  }  
+  }
 
   public removeEditorModeChange(callback: (e: EditorEvent) => void) {
     const index = this._editorModeChangeListeners.indexOf(callback)
@@ -557,11 +557,11 @@ export class Editor extends Painter {
       this._editorModeChangeListeners.splice(index, 1)
     }
   }
-  
+
   public hasEditorModeChange(callback: (e: EditorEvent) => void) {
     const index = this._editorModeChangeListeners.indexOf(callback)
     return index >= 0
-  }  
+  }
 
   public get editorOperationEventListeners() {
     return this._editorOperationEventListeners
@@ -572,7 +572,7 @@ export class Editor extends Painter {
     if (index < 0) {
       this._editorOperationEventListeners.push(callback)
     }
-  }  
+  }
 
   public removeEditorOperationEvent(callback: (e: EditorOperationEvent) => void) {
     const index = this._editorOperationEventListeners.indexOf(callback)
@@ -580,26 +580,26 @@ export class Editor extends Painter {
       this._editorOperationEventListeners.splice(index, 1)
     }
   }
-  
+
   public hasEditorOperationEvent(callback: (e: EditorOperationEvent) => void) {
     const index = this._editorOperationEventListeners.indexOf(callback)
     return index >= 0
-  }  
+  }
 
   public get textArea() {
     return this._textArea
   }
 
-  public get gridSize (): number {
+  public get gridSize(): number {
     return this._gridSize
   }
 
-  public set gridSize (value: number) {
+  public set gridSize(value: number) {
     this._gridSize = value
     this._backgroundLayer.gridSize = value
   }
 
-  public get showGrid (): boolean {
+  public get showGrid(): boolean {
     return this._showGrid
   }
 
@@ -608,7 +608,7 @@ export class Editor extends Painter {
     this._backgroundLayer.invalidateLayer()
   }
 
-  public get snapToGrid (): boolean {
+  public get snapToGrid(): boolean {
     return this._snapToGrid
   }
 
@@ -643,8 +643,8 @@ export class Editor extends Painter {
     this._backgroundColor = value
     this._backgroundLayer.backgroundColor = value
   }
-  
-  public get inMoving (): boolean {
+
+  public get inMoving(): boolean {
     return this._inMoving
   }
 
@@ -652,35 +652,35 @@ export class Editor extends Painter {
     return this._textFocused
   }
 
-  public get contentLayer (): EditorLayer {
+  public get contentLayer(): EditorLayer {
     return this._contentLayer
   }
 
-  public get exportLayer (): EditorLayer {
+  public get exportLayer(): EditorLayer {
     return this._exportLayer
   }
 
-  public get backgroundLayer (): EditorLayer {
+  public get backgroundLayer(): EditorLayer {
     return this._backgroundLayer
   }
 
-  public get controllerLayer (): EditorLayer {
+  public get controllerLayer(): EditorLayer {
     return this._controllerLayer
   }
 
-  public get maskLayer (): EditorLayer {
+  public get maskLayer(): EditorLayer {
     return this._maskLayer
   }
 
-  public get selectionLayer (): EditorLayer {
+  public get selectionLayer(): EditorLayer {
     return this._selectionLayer
   }
 
-  public get hoverLayer (): EditorLayer {
+  public get hoverLayer(): EditorLayer {
     return this._hoverLayer
   }
 
-  public get target(): EditorItem | undefined  {
+  public get target(): EditorItem | undefined {
     return this._target
   }
 
@@ -692,12 +692,12 @@ export class Editor extends Painter {
     return this._targetItemIndex
   }
 
-  public get zoom (): number {
+  public get zoom(): number {
     return this._zoom
   }
 
-  public set zoom (value: number) {
-    this._zoom = value    
+  public set zoom(value: number) {
+    this._zoom = value
     this.resize(this._origWidth, this._origHeight)
     this.triggerSizeChange()
   }
@@ -710,19 +710,19 @@ export class Editor extends Painter {
     this.triggerSizeChange()
   }
 
-  public get action (): Action | undefined {
+  public get action(): Action | undefined {
     return this._action
   }
 
-  public set action (value: Action | undefined) {
+  public set action(value: Action | undefined) {
     this._action = value
-    if(this._action) {
+    if (this._action) {
       //If theme is setup for document, we need to prepare theme for new shapes in editor here, but we need to skip for SVG and Image
-      if(this._action.items[0] instanceof Connector && !(this._action instanceof MyShapeAction)) {
+      if (this._action.items[0] instanceof Connector && !(this._action instanceof MyShapeAction)) {
         this._action.items[0].strokeColor = SystemUtils.parseColorString(this._theme.connectorStrokeColor)!
         this._action.items[0].fillColor = SystemUtils.parseColorString(this._theme.connectorFillColor)!
         this._action.items[0].fontColor = SystemUtils.parseColorString(this._theme.connectorFontColor)!
-      } else if(!(this._action.items[0] instanceof SvgContainer || this._action.items[0] instanceof ImageContainer ) && !(this._action instanceof MyShapeAction)){
+      } else if (!(this._action.items[0] instanceof SvgContainer || this._action.items[0] instanceof ImageContainer) && !(this._action instanceof MyShapeAction)) {
         this._action.items.forEach(item => {
           item.strokeColor = SystemUtils.parseColorString(this._theme.shapeStrokeColor)!
           item.fillColor = SystemUtils.parseColorString(this._theme.shapeFillColor)!
@@ -732,19 +732,19 @@ export class Editor extends Painter {
     }
   }
 
-  public get title () {
+  public get title() {
     return this._title
   }
 
-  public set title (value: string) {
+  public set title(value: string) {
     this._title = value
   }
 
-  public get key () {
+  public get key() {
     return this._key
   }
 
-  public set key (value: string) {
+  public set key(value: string) {
     this._key = value
   }
 
@@ -764,11 +764,11 @@ export class Editor extends Painter {
     this._modified = false
   }
 
-  public resize (origWidth: number, origHeight: number) {
+  public resize(origWidth: number, origHeight: number) {
     super.resize(origWidth * this._zoom + this.horizontalSpace * 2, origHeight * this._zoom + this.verticalSpace * 2)
   }
 
-  public invalidate () {
+  public invalidate() {
     super.invalidate()
     const newBoundary = new Rectangle(this.horizontalSpace, this.verticalSpace, this.width - this.horizontalSpace, this.height - this.verticalSpace)
     const newFullBoundary = new Rectangle(0, 0, this.width, this.height)
@@ -789,14 +789,14 @@ export class Editor extends Painter {
   /**
    * while Editor become focused or activated
    */
-  public activate () {
+  public activate() {
     if (this.engine.container?.parentElement) {
       this.engine.container.parentElement.append(this._textArea)
     }
   }
 
   // render
-  public render () {
+  public render() {
     this._contentLayer.scale = new Scale(this._zoom, this._zoom)
     this._exportLayer.scale = new Scale(this._zoom, this._zoom)
     //this._selectionLayer.scale = new Scale(this._zoom, this._zoom)
@@ -810,7 +810,7 @@ export class Editor extends Painter {
 
   public undo() {
     let operation = this._operationService.getUndoOperation()
-    if(operation) {
+    if (operation) {
       switch (operation.type) {
         case OperationType.ADD_ITEMS:
           this.handleOperationUndoAddItems(operation.itemInfos)
@@ -855,15 +855,15 @@ export class Editor extends Painter {
         default:
           break;
       }
-      this._operationService.undo() 
+      this._operationService.undo()
       this.triggerOperationComplete()
     }
   }
 
   public redo() {
     let operation = this._operationService.getRedoOperation()
-    if(operation) {
-      switch(operation.type) {
+    if (operation) {
+      switch (operation.type) {
         case OperationType.ADD_ITEMS:
           this.handleOperationRedoAddItems(operation.itemInfos)
           break;
@@ -920,7 +920,7 @@ export class Editor extends Painter {
     return this._operationService.getRedoOperations().length > 0
   }
 
-  public handlePointerMove (e: PointerEvent) {
+  public handlePointerMove(e: PointerEvent) {
     //console.log(`Moving... x = ${e.x} action=${this._action}`)
     if (this._action) {
       //  in creating action
@@ -943,15 +943,15 @@ export class Editor extends Painter {
     }
   }
 
-  public handlePointerLeave (e: PointerEvent) { }
+  public handlePointerLeave(e: PointerEvent) { }
 
-  public handlePointerEnter (e: PointerEvent) { }
+  public handlePointerEnter(e: PointerEvent) { }
 
-  public handlePointerClick (e: PointerEvent) { }
+  public handlePointerClick(e: PointerEvent) { }
 
-  public handlePointerDown (e: PointerEvent) {    
+  public handlePointerDown(e: PointerEvent) {
     //console.log(`handle Mouse Down ... x = ${e.x}`)
-    if(e.mouseCode == MouseCode.RIGHT_MOUSE_DOWN) {
+    if (e.mouseCode == MouseCode.RIGHT_MOUSE_DOWN) {
       //Popup menu require this
       this.handleMouseRightButtonDown(e)
       return
@@ -964,8 +964,8 @@ export class Editor extends Painter {
     } else {
       const clickedEditorItem = this.findEditorItem(e.x, e.y, false)
       const theSelectionLayer = this.selectionLayer as SelectionLayer
-      const isEdge = clickedEditorItem ? this.hasEditorItemJoint(clickedEditorItem, e.x, e.y) && !this.checkParentType(clickedEditorItem, FrameEntity)  : false
-      const inClickEditorItem = clickedEditorItem ? this.isInEditorItem(clickedEditorItem, e.x, e.y) : false      
+      const isEdge = clickedEditorItem ? this.hasEditorItemJoint(clickedEditorItem, e.x, e.y) && !this.checkParentType(clickedEditorItem, FrameEntity) : false
+      const inClickEditorItem = clickedEditorItem ? this.isInEditorItem(clickedEditorItem, e.x, e.y) : false
       if (clickedEditorItem && isEdge && !inClickEditorItem) { //Create connector
         const targetPoint = this.findEditorItemJoint(clickedEditorItem, e.x, e.y, false)
         //const horizontal = this.checkIfConnectorHorizontal(clickedEditorItem, e.x, e.y)
@@ -1021,14 +1021,14 @@ export class Editor extends Painter {
           }
           this._targetItem = undefined
           this._targetItemIndex = -1
-          if(!((clickedEditorItem as Item).parent instanceof FrameEntity)) {
+          if (!((clickedEditorItem as Item).parent instanceof FrameEntity)) {
             this._inMoving = true
           }
         } else if (clickedEditorItem instanceof TableEntity) {
-          if(!clickedEditorItem.locked) {
+          if (!clickedEditorItem.locked) {
             const targetPoint = this.findEditorItemPoint(clickedEditorItem, e.x, e.y)
-            const [ targetRow, targetRowIndex, ] = this.isTableRowtResizable(clickedEditorItem, targetPoint.x, targetPoint.y)
-            const [ targetColumn, targetColumnIndex, ] = this.isTableColumnResizable(clickedEditorItem, targetPoint.x, targetPoint.y)
+            const [targetRow, targetRowIndex,] = this.isTableRowtResizable(clickedEditorItem, targetPoint.x, targetPoint.y)
+            const [targetColumn, targetColumnIndex,] = this.isTableColumnResizable(clickedEditorItem, targetPoint.x, targetPoint.y)
             this._target = clickedEditorItem
             if (targetRow) {
               // console.log('========1')
@@ -1060,7 +1060,7 @@ export class Editor extends Painter {
               this.startMoveOutline(e)
             } else {
               const itemIndex = this.findTableItemIndex(clickedEditorItem, targetPoint.x, targetPoint.y)
-              if(this._targetItemIndex != itemIndex) {
+              if (this._targetItemIndex != itemIndex) {
                 this._targetItemIndex = itemIndex
                 if (this._targetItem) {
                   this._targetItem.shape.focused = false
@@ -1078,7 +1078,7 @@ export class Editor extends Painter {
                 this._textSelecting = true
               } else {
                 //In text Editting 
-                if(this.isTextEditting && this._targetItem) {
+                if (this.isTextEditting && this._targetItem) {
                   this._inMoving = false
                   const cellPoint = this.findEditorItemPoint(this._targetItem, e.x, e.y)
                   this.updateTextCursorLocation(this._targetItem, cellPoint.x, cellPoint.y)
@@ -1094,14 +1094,14 @@ export class Editor extends Painter {
             }
             this.beginOperation(clickedEditorItem)
           }
-        } else if(this._textFocused) {
+        } else if (this._textFocused) {
           const targetPoint = this.findEditorItemPoint(clickedEditorItem, e.x, e.y)
           this.updateTextCursorLocation(clickedEditorItem, targetPoint.x, targetPoint.y)
           clickedEditorItem.shape.enter(targetPoint.x, targetPoint.y)
           this._textSelecting = true
         } else {
-          if(!clickedEditorItem.locked) {
-            if(!((clickedEditorItem as Item).parent instanceof FrameEntity)) {
+          if (!clickedEditorItem.locked) {
+            if (!((clickedEditorItem as Item).parent instanceof FrameEntity)) {
               this.beginOperation(clickedEditorItem)
               this._inMoving = true
               this.startMoveOutline(e)
@@ -1132,15 +1132,15 @@ export class Editor extends Painter {
     }
   }
 
-  public handleDoubleClick (e: PointerEvent) {
+  public handleDoubleClick(e: PointerEvent) {
   }
 
-  public handlePointerUp (e: PointerEvent) {
+  public handlePointerUp(e: PointerEvent) {
     //console.log(`Pointer up event = ${e}`)
-    if(e.mouseCode == MouseCode.RIGHT_MOUSE_UP) {
+    if (e.mouseCode == MouseCode.RIGHT_MOUSE_UP) {
       return
     }
-    if(this._action) { // It shouldn't happen here
+    if (this._action) { // It shouldn't happen here
       //console.log(`It is a exception here, shouldn't be reached`)
       this.selectionLayer.removeAllEditorItems()
       this.selectionLayer.addEditorItems(this._action.items)
@@ -1172,7 +1172,7 @@ export class Editor extends Painter {
       //  const editorItem = theSelectionLayer.getEditorItem(0)
       //  this.selectionLayer.removeAllEditorItems()
       //  this.contentLayer.addEditorItem(editorItem)
-    } else if(this._inContainerSelection) {
+    } else if (this._inContainerSelection) {
       this.finishContainerSelection(e)
     } else {
       const clickedEditorItem = this.findEditorItem(e.x, e.y, false)
@@ -1192,7 +1192,7 @@ export class Editor extends Painter {
           this._targetTime = Date.now()
         } else {
           if (clickedEditorItem instanceof TableEntity) {
-            if(!clickedEditorItem.locked) {
+            if (!clickedEditorItem.locked) {
               const itemIndex = this.findTableItemIndex(clickedEditorItem, targetPoint.x, targetPoint.y)
               if (itemIndex === this._targetItemIndex && this._targetItem) {
                 const cellPoint = this.findEditorItemPoint(this._targetItem, e.x, e.y)
@@ -1224,30 +1224,30 @@ export class Editor extends Painter {
               }
             }
           } else {
-            if(!clickedEditorItem.locked) {
+            if (!clickedEditorItem.locked) {
               const nowTime = Date.now()
               if (this._target.shape.focused) {
                 this._textArea.focus()
                 this.updateTextCursorLocation(clickedEditorItem, targetPoint.x, targetPoint.y)
                 this._target.shape.enterTo(targetPoint.x, targetPoint.y)
-                this._textSelecting = false              
+                this._textSelecting = false
                 this.triggerTextEditStyleChange()
               } else {
                 // Check double click
                 if (nowTime - this._targetTime < Editor.DOUBLE_CLICK_TIME) {
                   //console.log('Double click is detected')
                   // this.handleDoubleClick(e)
-                  if(this._target instanceof Connector) {
+                  if (this._target instanceof Connector) {
                     let origItemInfo = OperationHelper.saveEditorItem(this._target)
                     this.createTextBoxInConnector(this._target, targetPoint.x, targetPoint.y)
-                    let editorItemInfo =  OperationHelper.saveEditorItem(this._target)
-                    let operation = new Operation(this, OperationType.UPDATE_ITEMS, [editorItemInfo],true, [origItemInfo])
+                    let editorItemInfo = OperationHelper.saveEditorItem(this._target)
+                    let operation = new Operation(this, OperationType.UPDATE_ITEMS, [editorItemInfo], true, [origItemInfo])
                     this._operationService.addOperation(operation)
                     this.triggerOperationChange()
                   } else {
                     this._textArea.focus()
                     this._target.shape.enter(targetPoint.x, targetPoint.y)
-                    this.checkAndStartTextEdit()              
+                    this.checkAndStartTextEdit()
                     if (this._target) {
                       this._target.shape.focused = true
                     }
@@ -1264,13 +1264,13 @@ export class Editor extends Painter {
         }
       }
     }
-    if(this.inMoving && this._moved &&  this._target && this._startEditorItemInfos.length > 0) {
+    if (this.inMoving && this._moved && this._target && this._startEditorItemInfos.length > 0) {
       this.finishOperation(this._target)
     }
-    if(this._inRangeSelecting) {
+    if (this._inRangeSelecting) {
       this.endRangeSelecting(e)
     }
-    if(this._inMoving) {
+    if (this._inMoving) {
       // Shape is moved out of container here
       this.removeItemsFromContainer(e)
       this.endMoveOutline(e)
@@ -1290,20 +1290,20 @@ export class Editor extends Painter {
   }
 
   public focus() {
-    if(this._textFocused) {
+    if (this._textFocused) {
       this._textArea.focus()
     }
   }
 
-  public handleKeyDown (e: KeyEvent) {
+  public handleKeyDown(e: KeyEvent) {
     console.log(`key down event: ${e.code}   ${e.key}`)
   }
 
-  public handleKeyUp (e: KeyEvent) {
+  public handleKeyUp(e: KeyEvent) {
     console.log(`key up event: ${e.code}   ${e.key}`)
   }
 
-  public handleKeyPress (e: KeyEvent) {
+  public handleKeyPress(e: KeyEvent) {
     console.log(`key press event: ${e.code}   ${e.key}`)
   }
 
@@ -1312,7 +1312,7 @@ export class Editor extends Painter {
     this._hoverLayer.invalidateLayer()
   }
 
-  private initializeTextArea () {
+  private initializeTextArea() {
     if (this.engine.container?.parentElement) {
       this.engine.container.parentElement.append(this._textArea)
     }
@@ -1371,7 +1371,7 @@ export class Editor extends Painter {
   /**
    * Update cursor location in page
    */
-  private updateElementLocation () {
+  private updateElementLocation() {
 
   }
 
@@ -1381,11 +1381,11 @@ export class Editor extends Painter {
    * @param x
    * @param y
    */
-  private updateTextAreaLocation (editorItem: EditorItem, x: number, y: number) {
+  private updateTextAreaLocation(editorItem: EditorItem, x: number, y: number) {
 
   }
 
-  private getRelativePosition (element: HTMLElement) {
+  private getRelativePosition(element: HTMLElement) {
     let acturalLeft = element.offsetLeft
     let acturalTop = element.offsetTop
     let curElement = element.offsetParent
@@ -1406,31 +1406,31 @@ export class Editor extends Painter {
    * @param y
    */
 
-  private updateTextCursorLocation (editorItem: EditorItem, x: number, y: number) {
+  private updateTextCursorLocation(editorItem: EditorItem, x: number, y: number) {
     // this._textArea.style.position = 'absolute'
     //const parent = this._textArea.parentElement
     //const scrollContainer = parent?.parentElement?.parentElement?.parentElement
     const scrollContainer = document.getElementById('content-container')
     const worldTransform = editorItem.worldTransform
     // const pos = this.getRelativePosition(parent)
-    if(parent && scrollContainer) {
+    if (parent && scrollContainer) {
       //const position = worldTransform.makePoint(new Point2(0, 0))
       const point = worldTransform.makePoint(new Point2(x, y))
       //const pos = parent.getBoundingClientRect()
       //this._textArea.style.left = (Editor.SHADOW_SIZE + (editorItem.left + x) * this._zoom + this.horizontalSpace  + pos.left - scrollContainer.scrollLeft) + 'px'
       //this._textArea.style.top = (Editor.SHADOW_SIZE + (editorItem.top + y) * this._zoom + this.verticalSpace  + pos.top - scrollContainer.scrollTop) + 'px'
-      this._textArea.style.left = (Editor.SHADOW_SIZE + (point.x) * this._zoom  + this.horizontalSpace  - scrollContainer.scrollLeft) + 'px'
-      this._textArea.style.top = (Editor.SHADOW_SIZE + (point.y) * this._zoom + this.verticalSpace  - scrollContainer.scrollTop) + 'px'
+      this._textArea.style.left = (Editor.SHADOW_SIZE + (point.x) * this._zoom + this.horizontalSpace - scrollContainer.scrollLeft) + 'px'
+      this._textArea.style.top = (Editor.SHADOW_SIZE + (point.y) * this._zoom + this.verticalSpace - scrollContainer.scrollTop) + 'px'
       //console.log(`'Check left = ${editorItem.left}  x=${x} text.left = ${this._textArea.style.left}  scroll=${scrollContainer.scrollLeft}`)
     }
   }
 
-  private handleTextAreaKeyDown (e: KeyboardEvent) {
+  private handleTextAreaKeyDown(e: KeyboardEvent) {
     // console.log(`Key Down ${e.code}`)
     this._textCommandKey = false
   }
 
-  private handleTextAreaKeyUp (e: KeyboardEvent) {
+  private handleTextAreaKeyUp(e: KeyboardEvent) {
     //console.log(`Key Up ${e.code}  ${e.altKey}  ${e.ctrlKey} ${e.key}`)
     if (e.key === 'Meta' || e.key === 'Control') {
       this._textCommandKey = true
@@ -1539,33 +1539,33 @@ export class Editor extends Painter {
 
   public sendBackward(editorItem: EditorItem) {
     const index = this.contentLayer.getIndexOfEditorItem(editorItem)
-    if(index > 0) {
+    if (index > 0) {
       this.contentLayer.removeEditorItem(editorItem)
       this.contentLayer.addEditorItemAt(editorItem, index - 1)
-    } 
+    }
   }
 
   public bringForeward(editorItem: EditorItem) {
     const index = this.contentLayer.getIndexOfEditorItem(editorItem)
-    if(index < this.contentLayer.getEditorItemCount() - 1) {
+    if (index < this.contentLayer.getEditorItemCount() - 1) {
       this.contentLayer.removeEditorItem(editorItem)
       this.contentLayer.addEditorItemAt(editorItem, index + 1)
-    } 
+    }
   }
 
-  public isInEditorItem (editorItem: EditorItem, x: number, y: number): boolean {
+  public isInEditorItem(editorItem: EditorItem, x: number, y: number): boolean {
     const shape = editorItem.shape
     const inClickEditorItem = shape.contains(x, y)
     return inClickEditorItem
   }
 
-  public  findEditorItem (x: number, y: number, excludeConnector: boolean = false): EditorItem | undefined {
+  public findEditorItem(x: number, y: number, excludeConnector: boolean = false): EditorItem | undefined {
     let result
     const count = this.contentLayer.getEditorItemCount()
     for (let i = count - 1; i >= 0; i--) {
       const editorItem = this.contentLayer.getEditorItem(i)
       result = this.findEditorItemDetail(editorItem, x, y, excludeConnector)
-      if(result) {
+      if (result) {
         break;
       }
     }
@@ -1584,20 +1584,20 @@ export class Editor extends Painter {
     //  newX = newPoint.x
     //  newY = newPoint.y
     //}
-    if(editorItem instanceof Connector && excludeConnector) {
+    if (editorItem instanceof Connector && excludeConnector) {
       result = undefined
-    // } else if((editorItem as Item).parent instanceof FrameEntity) {
-    //   result = undefined
+      // } else if((editorItem as Item).parent instanceof FrameEntity) {
+      //   result = undefined
     } else {
       if (shape.intersects(x - Editor.TEST_RADIUS, y - Editor.TEST_RADIUS, Editor.TEST_SIZE, Editor.TEST_SIZE)) {
         result = editorItem
       }
       // if(!(editorItem instanceof TableEntity) && !(editorItem instanceof FrameEntity)) {
-      if(!(editorItem instanceof TableEntity)) {
+      if (!(editorItem instanceof TableEntity)) {
         for (let i = count - 1; i >= 0; i--) {
           const child = editorItem.items[i]
           let childResult = this.findEditorItemDetail(child, x, y, excludeConnector)
-          if(childResult) {
+          if (childResult) {
             result = childResult
             break;
           }
@@ -1607,63 +1607,63 @@ export class Editor extends Painter {
     return result
   }
 
-  public  findEditorItemById (id: string): EditorItem | undefined {
+  public findEditorItemById(id: string): EditorItem | undefined {
     let result
     const count = this.contentLayer.getEditorItemCount()
     for (let i = count - 1; i >= 0; i--) {
       const editorItem = this.contentLayer.getEditorItem(i)
-      if(editorItem.id == id) {
+      if (editorItem.id == id) {
         return editorItem
       }
       result = this.findEditorItemDetailById(editorItem, id)
-      if(result) {
+      if (result) {
         break;
       }
     }
     return undefined
   }
 
-  public  findEditorItemDetailById (editorItem: EditorItem, id: string): EditorItem | undefined {
+  public findEditorItemDetailById(editorItem: EditorItem, id: string): EditorItem | undefined {
     let result
     const count = editorItem.items.length
-    for (let i = 0; i < count; i ++) {
+    for (let i = 0; i < count; i++) {
       const childEditorItem = editorItem.items[i]
-      if(childEditorItem.id == id){
+      if (childEditorItem.id == id) {
         return childEditorItem
       }
       result = this.findEditorItemDetailById(childEditorItem, id)
-      if(result) {
+      if (result) {
         break;
       }
     }
     return result
   }
-  
-  private findContainerEntity (x: number, y: number): ContainerEntity | undefined {
+
+  private findContainerEntity(x: number, y: number): ContainerEntity | undefined {
     let result
     const count = this.contentLayer.getEditorItemCount()
-    for (let i = 0; i < count; i ++) {
+    for (let i = 0; i < count; i++) {
       const editorItem = this.contentLayer.getEditorItem(i)
-      const shape = editorItem.shape      
+      const shape = editorItem.shape
       // console.log(`Finding items ${x}    ${y}    ==== ${shape.position.x}    ${shape.position.y}`)
       //console.log(`check container: ${editorItem instanceof ContainerEntity}`)
       if (editorItem instanceof ContainerEntity && (!(editorItem instanceof TableEntity)) && shape.intersects(x - Editor.TEST_RADIUS, y - Editor.TEST_RADIUS, Editor.TEST_SIZE, Editor.TEST_SIZE)) {
         let inSelection = false
         const selectionCount = this.selectionLayer.getEditorItemCount()
-        for(let j = 0; j < selectionCount; j ++) {
+        for (let j = 0; j < selectionCount; j++) {
           const selection = this.selectionLayer.getEditorItem(j)
-          if(editorItem == selection) {
+          if (editorItem == selection) {
             inSelection = true
           }
         }
         const controlCount = this.controllerLayer.getEditorItemCount()
-        for(let j = 0; j < controlCount; j ++) {
+        for (let j = 0; j < controlCount; j++) {
           const selection = this.controllerLayer.getEditorItem(j)
-          if(editorItem == selection) {
+          if (editorItem == selection) {
             inSelection = true
           }
         }
-        if(!inSelection) {
+        if (!inSelection) {
           result = editorItem
         }
       }
@@ -1671,7 +1671,7 @@ export class Editor extends Painter {
     return result
   }
 
-  public hasEditorItemJoint (editorItem: EditorItem, x: number, y: number): boolean {
+  public hasEditorItemJoint(editorItem: EditorItem, x: number, y: number): boolean {
     let result = false
     const shape = editorItem.shape
     let inEditorItem = false
@@ -1696,7 +1696,7 @@ export class Editor extends Painter {
     return result
   }
 
-  public findEditorItemJoint (editorItem: EditorItem, x: number, y: number, inEditorItem: boolean): Point2 {
+  public findEditorItemJoint(editorItem: EditorItem, x: number, y: number, inEditorItem: boolean): Point2 {
     const shape = editorItem.shape
     const centerX = x
     const centerY = y
@@ -1725,20 +1725,20 @@ export class Editor extends Painter {
     //   }
     // }
     //Need to start from center to outside
-    for(let i = 0; i < Editor.TEST_RADIUS; i ++) {
+    for (let i = 0; i < Editor.TEST_RADIUS; i++) {
       const startX = x - i
       const startY = y - i
       const endX = x + i
       const endY = y + i
-      for(let j = startX; j <= endX; j ++) {
-        for(let k = 0; k < 1; k ++) { // check top & bottom
-          let pointX = j          
+      for (let j = startX; j <= endX; j++) {
+        for (let k = 0; k < 1; k++) { // check top & bottom
+          let pointX = j
           let pointY = startY
-          if(k == 0) {
-            pointX = j          
+          if (k == 0) {
+            pointX = j
             pointY = startY
           } else {
-            pointX = j          
+            pointX = j
             pointY = endY
           }
           let contained = shape.contains(pointX, pointY)
@@ -1756,15 +1756,15 @@ export class Editor extends Painter {
           }
         }
       }
-      for(let j = startY; j <= endY; j ++) {
-        for(let k = 0; k < 1; k ++) { // check left & right
+      for (let j = startY; j <= endY; j++) {
+        for (let k = 0; k < 1; k++) { // check left & right
           let pointX = startX
           let pointY = j
-          if(k == 0) {
-            pointX = startX         
+          if (k == 0) {
+            pointX = startX
             pointY = j
           } else {
-            pointX = endX          
+            pointX = endX
             pointY = j
           }
           let contained = shape.contains(pointX, pointY)
@@ -1788,7 +1788,7 @@ export class Editor extends Painter {
     targetY = this.alignToGridSize((targetY - this.verticalSpace) / this._zoom)
     targetX = targetX * this._zoom + this.horizontalSpace
     targetY = targetY * this.zoom + this.verticalSpace
-    
+
     if (editorItem.shape.worldInverseTransform) {
       const point = editorItem.shape.worldInverseTransform.makePoint(new Point2(targetX / this._zoom, targetY / this._zoom))
       return point
@@ -1804,7 +1804,7 @@ export class Editor extends Painter {
  * @param inEditorItem
  * @returns
  */
-  private findEditorItemPoint (editorItem: EditorItem, x: number, y: number): Point2 {
+  private findEditorItemPoint(editorItem: EditorItem, x: number, y: number): Point2 {
     if (editorItem.shape.worldInverseTransform) {
       const point = editorItem.shape.worldInverseTransform.makePoint(new Point2(x, y))
       return point
@@ -1819,7 +1819,7 @@ export class Editor extends Painter {
    * @param y
    * @returns
    */
-  private isTableRowtResizable (tableEntity: TableEntity, x: number, y: number): [boolean, number] {
+  private isTableRowtResizable(tableEntity: TableEntity, x: number, y: number): [boolean, number] {
     const rowCount = tableEntity.rowCount
     const columnCount = tableEntity.columnCount
     const items = tableEntity.items
@@ -1829,10 +1829,10 @@ export class Editor extends Painter {
       const item = items[i * columnCount]
       pos += item.height
       if (pos <= y + Editor.TEST_RADIUS && pos >= y - Editor.TEST_RADIUS) {
-        return [ true, i, ]
+        return [true, i,]
       }
     }
-    return [ false, 0, ]
+    return [false, 0,]
   }
 
   /**
@@ -1842,7 +1842,7 @@ export class Editor extends Painter {
    * @param y
    * @returns
    */
-  private isTableColumnResizable (tableEntity: TableEntity, x: number, y: number): [boolean, number] {
+  private isTableColumnResizable(tableEntity: TableEntity, x: number, y: number): [boolean, number] {
     const columnCount = tableEntity.columnCount
     const items = tableEntity.items
 
@@ -1851,10 +1851,10 @@ export class Editor extends Painter {
       const item = items[i]
       pos += item.width
       if (pos <= x + Editor.TEST_RADIUS && pos >= x - Editor.TEST_RADIUS) {
-        return [ true, i, ]
+        return [true, i,]
       }
     }
-    return [ false, 0, ]
+    return [false, 0,]
   }
 
   /**
@@ -1864,7 +1864,7 @@ export class Editor extends Painter {
    * @param y
    * @returns
    */
-  private findTableItemIndex (tableEntity: TableEntity, x: number, y: number): number {
+  private findTableItemIndex(tableEntity: TableEntity, x: number, y: number): number {
     const columnCount = tableEntity.columnCount
     const rowCount = tableEntity.rowCount
     const items = tableEntity.items
@@ -1905,8 +1905,8 @@ export class Editor extends Painter {
         }
         this._targetItem = undefined
         this._targetItemIndex = -1
-      } else if(this._textFocused) {
-        if(clickedEditorItem.shape.selection.length == 0) {
+      } else if (this._textFocused) {
+        if (clickedEditorItem.shape.selection.length == 0) {
           const targetPoint = this.findEditorItemPoint(clickedEditorItem, e.x, e.y)
           this.updateTextCursorLocation(clickedEditorItem, targetPoint.x, targetPoint.y)
           clickedEditorItem.shape.enter(targetPoint.x, targetPoint.y)
@@ -1934,7 +1934,7 @@ export class Editor extends Painter {
     }
   }
 
-  private handlePointMoveinAction (e: PointerEvent, action: Action) {
+  private handlePointMoveinAction(e: PointerEvent, action: Action) {
     if (this.controllerLayer.count == 0) {
       this.controllerLayer.addEditorItems(action.items)
     }
@@ -1948,11 +1948,11 @@ export class Editor extends Painter {
     action.items.forEach(item => {
       let itemWidth = this.alignToGridSize(item.width)
       let itemHeight = this.alignToGridSize(item.height)
-      if(action instanceof MyShapeAction) {
+      if (action instanceof MyShapeAction) {
         itemWidth = item.width
         itemHeight = item.height
       }
-    
+
       if (item instanceof Connector) {
         // const targetPoint = this.findEditorItemPoint(controllerItem, e.x, e.y)
         // controllerItem.start = new Point2(ex + controllerItem.start.x, ey + controllerItem.start.y)
@@ -1963,7 +1963,7 @@ export class Editor extends Painter {
         item.autoRefreshOrthogonalPoints = true
       } else if (item instanceof Entity) {
         item.boundary = Rectangle.makeLTWH(ex + item.left - left, ey + item.top - top, itemWidth, itemHeight)
-      }  
+      }
 
       //console.log(`Moving... x = ${e.x}  start=${controllerItem.left} end=${controllerItem.top} width=${controllerItem.width}  height=${controllerItem.height}`)
     })
@@ -1973,21 +1973,21 @@ export class Editor extends Painter {
     const this_ = this
     action.items.forEach(item => {
       const checkResult = containerEntity && this_.checkIfCreationInContainer(item, containerEntity)
-      if(!checkResult) {
+      if (!checkResult) {
         checkifInContainer = false
       }
     })
-    if(containerEntity && checkifInContainer) {
+    if (containerEntity && checkifInContainer) {
       this.startContainerSelection()
       this.handleContainerSelection(containerEntity)
     } else {
       this.endContainerSelection()
     }
-}
+  }
 
-  private handlePointMoveInMoving (e: PointerEvent) {
+  private handlePointMoveInMoving(e: PointerEvent) {
     const containerEntity = this.findContainerEntity(e.x, e.y)
-    if(containerEntity && this.checkIfSelectionInContainer(containerEntity)) {
+    if (containerEntity && this.checkIfSelectionInContainer(containerEntity)) {
       this.startContainerSelection()
       this.handleContainerSelection(containerEntity)
       this.handleDefaultMoveInMoving(e)
@@ -1999,7 +1999,7 @@ export class Editor extends Painter {
     }
   }
 
-  private handlePointMoveInCreatingConnector (e: PointerEvent) {
+  private handlePointMoveInCreatingConnector(e: PointerEvent) {
     // console.log('4========== x= ' + e.x + ',  y = ' + e.y)
     const theControllerLayer = this.controllerLayer as ControllerLayer
     const connector = theControllerLayer.getEditorItem(0) as Connector
@@ -2016,7 +2016,7 @@ export class Editor extends Painter {
       connector.target = editorItem as Entity
       connector.targetJoint = targetPoint
       connector.target.addTargetConnector(connector)
-      
+
     } else {
       //console.log(`create connector ...3`)
       if (connector.target) {
@@ -2028,7 +2028,7 @@ export class Editor extends Painter {
     }
   }
 
-  private handleTargetRowResizing (e: PointerEvent) {
+  private handleTargetRowResizing(e: PointerEvent) {
     const tableEntity = this._target as TableEntity
     const rowIndex = this._targetRowIndex
     const minHeight = Item.MIN_HEIGHT
@@ -2054,7 +2054,7 @@ export class Editor extends Painter {
     this._startPointY = e.y
   }
 
-  private handleTargetColumnResizing (e: PointerEvent) {
+  private handleTargetColumnResizing(e: PointerEvent) {
     const tableEntity = this._target as TableEntity
     const columnIndex = this._targetColumnIndex
     const minWidth = Item.MIN_WIDTH
@@ -2098,7 +2098,7 @@ export class Editor extends Painter {
     //It can only run once and so need to break immediately
     let runOnce = false
     this._operationChangeListeners.forEach(callback => {
-      if(!runOnce) {
+      if (!runOnce) {
         runOnce = true
         const event = new EditorEvent(this)
         callback(event)
@@ -2110,7 +2110,7 @@ export class Editor extends Painter {
     this._operationCompleteListeners.forEach(callback => {
       const event = new EditorEvent(this)
       callback(event)
-  })
+    })
   }
 
   public triggerTextEditStart() {
@@ -2173,7 +2173,7 @@ export class Editor extends Painter {
     //It can only run once and so need to break immediately
     let runOnce = false
     this._editorOperationEventListeners.forEach(callback => {
-      if(!runOnce) {
+      if (!runOnce) {
         runOnce = true
         const event = new EditorOperationEvent(this, operation, isUndo)
         callback(event)
@@ -2183,17 +2183,17 @@ export class Editor extends Painter {
 
   private handleRemoveEditorItem(id: string) {
     let itemCount = this._contentLayer.getEditorItemCount()
-    for(let i = itemCount - 1; i >= 0; i --) {
-      let editorItem =  this._contentLayer.getEditorItem(i) as Item;
-      if(editorItem.id == id) {
+    for (let i = itemCount - 1; i >= 0; i--) {
+      let editorItem = this._contentLayer.getEditorItem(i) as Item;
+      if (editorItem.id == id) {
         this._contentLayer.removeEditorItemAt(i)
         break;
       }
-      let found = this.removeItemById(editorItem, id)      
-      if(found) {
+      let found = this.removeItemById(editorItem, id)
+      if (found) {
         break;
       }
-    }    
+    }
   }
 
   private handleAddEditorItem(editorItemInfo: EditorItemInfo) {
@@ -2204,7 +2204,7 @@ export class Editor extends Painter {
 
   private handleAddEditorItemIntoEditorItem(editorItemInfo: EditorItemInfo, parentId: string) {
     let parent = this.findEditorItemById(parentId)
-    if(parent) {
+    if (parent) {
       const parentItem = parent as Item
       let editorItem = OperationHelper.loadItem(editorItemInfo, this)
       parentItem.addItem(editorItem)
@@ -2214,14 +2214,14 @@ export class Editor extends Painter {
   private handleUpdateEditorItem(editorItemInfo: EditorItemInfo): boolean {
     let items = this._contentLayer.getAllEditorItems()
     let count = items.length
-    for(let i = count  - 1; i >= 0; i --) {
-      let item =  items[i] as Item
-      if(item.id == editorItemInfo.id) {   
-        this.updateEditorItemDetail(item, editorItemInfo)     
+    for (let i = count - 1; i >= 0; i--) {
+      let item = items[i] as Item
+      if (item.id == editorItemInfo.id) {
+        this.updateEditorItemDetail(item, editorItemInfo)
         return true
       }
       let found = this.updateEditorItem(item, editorItemInfo)
-      if(found) {
+      if (found) {
         return true
       }
     }
@@ -2230,14 +2230,14 @@ export class Editor extends Painter {
 
   private updateEditorItem(item: Item, editorItemInfo: EditorItemInfo): boolean {
     let count = item.items.length
-    for(let i = count  - 1; i >= 0; i --) {
-      let childItem =  item.items[i] as Item
-      if(childItem.id == editorItemInfo.id) {
-        this.updateEditorItemDetail(childItem, editorItemInfo)     
+    for (let i = count - 1; i >= 0; i--) {
+      let childItem = item.items[i] as Item
+      if (childItem.id == editorItemInfo.id) {
+        this.updateEditorItemDetail(childItem, editorItemInfo)
         return true
       }
       let found = this.updateEditorItem(childItem, editorItemInfo)
-      if(found) {
+      if (found) {
         return true
       }
     }
@@ -2258,14 +2258,14 @@ export class Editor extends Painter {
     let editorItemInfo = operation.origItemInfos[0]
     let startIndex = operation.origTextStart
     let endIndex = operation.origTextEnd
-    if(!isUndo) {
+    if (!isUndo) {
       editorItemInfo = operation.itemInfos[0]
       startIndex = operation.textStart
-      endIndex =  operation.textEnd
+      endIndex = operation.textEnd
     }
     const editorItem = this.findEditorItemById(editorItemInfo.id)
-    if(editorItem) {
-      const newEditorItem =  this.updateEditorItemDetail(editorItem as Item, editorItemInfo)
+    if (editorItem) {
+      const newEditorItem = this.updateEditorItemDetail(editorItem as Item, editorItemInfo)
       this.selectionLayer.removeAllEditorItems()
       this.selectionLayer.addEditorItem(newEditorItem)
       this._target = newEditorItem
@@ -2284,14 +2284,14 @@ export class Editor extends Painter {
     let startIndex = operation.origTextStart
     let endIndex = operation.origTextEnd
     let tableCellIndex = operation.tableCellIndex
-    if(!isUndo) {
+    if (!isUndo) {
       editorItemInfo = operation.itemInfos[0]
       startIndex = operation.textStart
-      endIndex =  operation.textEnd
+      endIndex = operation.textEnd
     }
     const editorItem = this.findEditorItemById(editorItemInfo.id)
-    if(editorItem) {
-      const newEditorItem =  this.updateEditorItemDetail(editorItem as Item, editorItemInfo)
+    if (editorItem) {
+      const newEditorItem = this.updateEditorItemDetail(editorItem as Item, editorItemInfo)
       const newTableEntity = newEditorItem as TableEntity
       const tableCell = newTableEntity.items[tableCellIndex]
       this.selectionLayer.removeAllEditorItems()
@@ -2311,7 +2311,7 @@ export class Editor extends Painter {
   }
 
   private handleTableTextEditOld(operation: Operation, isUndo: boolean) {
-    if(isUndo) {
+    if (isUndo) {
       this.handleUpdateEditorItem(operation.itemInfos[0])
     } else {
       this.handleUpdateEditorItem(operation.origItemInfos[0])
@@ -2320,14 +2320,14 @@ export class Editor extends Painter {
 
   private removeItemById(item: Item, id: string): boolean {
     let count = item.items.length
-    for(let i = count  - 1; i >= 0; i --) {
-      let childItem =  item.items[i] as Item
-      if(childItem.id == id) {
+    for (let i = count - 1; i >= 0; i--) {
+      let childItem = item.items[i] as Item
+      if (childItem.id == id) {
         childItem.removeItemAt(i)
         return true
       }
       let found = this.removeItemById(childItem, childItem.id)
-      if(found) {
+      if (found) {
         return true
       }
     }
@@ -2420,7 +2420,7 @@ export class Editor extends Painter {
     items.forEach(editorItemInfo => {
       const id = editorItemInfo.id
       this.handleRemoveEditorItem(id)
-    })    
+    })
   }
 
   private handleOperationRedoShapTextEdit(operation: Operation) {
@@ -2432,7 +2432,7 @@ export class Editor extends Painter {
   }
 
   public checkAndStartTextEdit() {
-    if(!this._textFocused) {
+    if (!this._textFocused) {
       this._textFocused = true
       this.triggerTextEditStart()
     }
@@ -2442,7 +2442,7 @@ export class Editor extends Painter {
     if (this._target) {
       this._target.shape.focused = false
     }
-    if(this._textFocused) {
+    if (this._textFocused) {
       this._textFocused = false
       this.triggerTextEditEnd()
     }
@@ -2460,9 +2460,9 @@ export class Editor extends Painter {
     let right = Math.max(this._startPointX, e.x) - this.horizontalSpace
     let bottom = Math.max(this._startPointY, e.y) - this.verticalSpace
     let itemCount = this.contentLayer.getEditorItemCount()
-    for(let i = 0; i < itemCount; i ++) {
+    for (let i = 0; i < itemCount; i++) {
       let item = this.contentLayer.getEditorItem(i)
-      if(item.left > left && item.top > top && item.right < right && item.bottom < bottom) {
+      if (item.left > left && item.top > top && item.right < right && item.bottom < bottom) {
         this.selectionLayer.addEditorItem(item)
       }
     }
@@ -2476,7 +2476,7 @@ export class Editor extends Painter {
     let width = Math.abs(this._startPointX - e.x)
     let height = Math.abs(this._startPointY - e.y)
     this._rangeSelectionShape.boundary = Rectangle.makeLTWH(left, top, width, height)
-    if(!this._rangeLayer.hasNode(this._rangeSelectionShape)) {
+    if (!this._rangeLayer.hasNode(this._rangeSelectionShape)) {
       this._rangeLayer.addNode(this._rangeSelectionShape)
     }
   }
@@ -2493,9 +2493,9 @@ export class Editor extends Painter {
 
   private handleContainerSelection(container: ContainerEntity) {
     //console.log(`Container 1... `)
-    if(this._inContainerSelection) {
+    if (this._inContainerSelection) {
       //console.log(`Container 2 ... `)
-      this._containerSelectionShape.boundary = container.boundary            
+      this._containerSelectionShape.boundary = container.boundary
     } else {
       //console.log(`Container 3 ... `)
       this._containerSelectionShape.boundary = Rectangle.makeLTWH(0, 0, 0, 0)
@@ -2504,20 +2504,20 @@ export class Editor extends Painter {
 
   private finishContainerSelection(e: PointerEvent) {
     const containerEntity = this.findContainerEntity(e.x, e.y)
-    if(this._inContainerSelection && containerEntity) {
+    if (this._inContainerSelection && containerEntity) {
       let selectionCount = this.selectionLayer.getEditorItemCount()
-      for(let i = 0; i < selectionCount; i ++) {
+      for (let i = 0; i < selectionCount; i++) {
         const selection = this.selectionLayer.getEditorItem(i) as Item
-        if(selection.parent == containerEntity) {
+        if (selection.parent == containerEntity) {
           //Do nothing here
-        } else{
+        } else {
           const left = selection.left - containerEntity.left
           const top = selection.top - containerEntity.top
           const rotation = selection.rotation.radius - containerEntity.rotation.radius
-  
+
           selection.boundary = Rectangle.makeLTWH(left, top, selection.width, selection.height)
           selection.rotation = new Rotation(rotation)
-          if(selection.parent) {
+          if (selection.parent) {
             selection.parent.removeItem(selection)
             containerEntity.addItem(selection)
           } else {
@@ -2527,18 +2527,18 @@ export class Editor extends Painter {
         }
       }
       this._inContainerSelection = false
-      this._containerLayer.removeNode(this._containerSelectionShape)      
+      this._containerLayer.removeNode(this._containerSelectionShape)
       this.selectionLayer.removeAllEditorItems()
     }
   }
 
-  public getSelectionBoundary():[number, number, number, number] {
+  public getSelectionBoundary(): [number, number, number, number] {
     let left = 0
     let top = 0
     let right = 0
     let bottom = 0
     let selectionCount = this.selectionLayer.getEditorItemCount()
-    for(let i = 0; i < selectionCount; i ++) {      
+    for (let i = 0; i < selectionCount; i++) {
       const selection = this.selectionLayer.getEditorItem(i)
       const worldTransform = selection.worldTransform
       const leftTopPoint = worldTransform.makePoint(new Point2(0, 0))
@@ -2549,7 +2549,7 @@ export class Editor extends Painter {
       const selectionTop = Math.min(leftTopPoint.y, rightTopPoint.y, rightBottomPoint.y, leftBottomPoint.y)
       const selectionRight = Math.max(leftTopPoint.x, rightTopPoint.x, rightBottomPoint.x, leftBottomPoint.x)
       const selectionBottom = Math.max(leftTopPoint.y, rightTopPoint.y, rightBottomPoint.y, leftBottomPoint.y)
-    if(i == 0) {
+      if (i == 0) {
         left = selectionLeft
         top = selectionTop
         right = selectionRight
@@ -2567,11 +2567,11 @@ export class Editor extends Painter {
   private checkIfSelectionInContainer(containerEntity: ContainerEntity): boolean {
     const [left, top, right, bottom] = this.getSelectionBoundary()
     //console.log(`check selection in container 3... ${containerEntity.left} ${containerEntity.top} ${containerEntity.right} ${containerEntity.bottom} ${left} ${top} ${right} ${bottom}`)
-    if(containerEntity.left <= left && containerEntity.top <= top && containerEntity.right >= right && containerEntity.bottom >= bottom) {
+    if (containerEntity.left <= left && containerEntity.top <= top && containerEntity.right >= right && containerEntity.bottom >= bottom) {
       //console.log(`check selection in container 4... ${containerEntity}`)
       return true
     }
-  return false
+    return false
   }
 
   public checkIfCreationInContainer(editorItem: EditorItem, containerEntity: ContainerEntity): boolean {
@@ -2580,11 +2580,11 @@ export class Editor extends Painter {
     const right = editorItem.right
     const bottom = editorItem.bottom
     //console.log(`check selection in container 3... ${containerEntity.left} ${containerEntity.top} ${containerEntity.right} ${containerEntity.bottom} ${left} ${top} ${right} ${bottom}`)
-    if(containerEntity.left <= left && containerEntity.top <= top && containerEntity.right >= right && containerEntity.bottom >= bottom) {
+    if (containerEntity.left <= left && containerEntity.top <= top && containerEntity.right >= right && containerEntity.bottom >= bottom) {
       //console.log(`check selection in container 4... ${containerEntity}`)
       return true
     }
-  return false
+    return false
   }
 
   private handleDefaultPointMove(e: PointerEvent) {
@@ -2592,16 +2592,16 @@ export class Editor extends Painter {
     const theSelectionLayer: SelectionLayer = this.selectionLayer as SelectionLayer
     const editorItem = this.findEditorItem(e.x, e.y, false)
     //console.log(`Finding ...... ${editorItem}`)
-    const isEdge = editorItem ? this.hasEditorItemJoint(editorItem, e.x, e.y) && !this.checkParentType(editorItem, FrameEntity)  : false
+    const isEdge = editorItem ? this.hasEditorItemJoint(editorItem, e.x, e.y) && !this.checkParentType(editorItem, FrameEntity) : false
     //console.log(` Find editor item edge = ${isEdge}`)
     if (editorItem && isEdge) {
       //console.log(` Check here1`)
-      if(!editorItem.locked) {
+      if (!editorItem.locked) {
         const inEditorItem = this.isInEditorItem(editorItem, e.x, e.y)
         //const targetPoint = this.findEditorItemJoint(editorItem, e.x, e.y, inEditorItem)
-        if(inEditorItem) {
+        if (inEditorItem) {
           //console.log(` Check here2 ${this._textFocused}`)
-          if(this._textFocused) {
+          if (this._textFocused) {
             //console.log(` Check here21 ${this._textFocused}`)
             this.updateEditorMode(EditorMode.TEXT)
           } else {
@@ -2632,33 +2632,33 @@ export class Editor extends Painter {
           theHoverLayer.invalidateLayer()
         }
         if (editorItem instanceof TableEntity) {
-          if(!editorItem.locked)  {
+          if (!editorItem.locked) {
             const targetPoint = this.findEditorItemPoint(editorItem, e.x, e.y)
-            const [ targetRow, targetRowIndex, ] = this.isTableRowtResizable(editorItem, targetPoint.x, targetPoint.y)
-            const [ targetColumn, targetColumnIndex, ] = this.isTableColumnResizable(editorItem, targetPoint.x, targetPoint.y)
+            const [targetRow, targetRowIndex,] = this.isTableRowtResizable(editorItem, targetPoint.x, targetPoint.y)
+            const [targetColumn, targetColumnIndex,] = this.isTableColumnResizable(editorItem, targetPoint.x, targetPoint.y)
             if (targetRow) {
               this.updateEditorMode(EditorMode.ROW_RESIZE)
             } else if (targetColumn) {
               this.updateEditorMode(EditorMode.COL_RESIZE)
-            } else if(this._targetItem && this._textFocused && this._textSelecting) {
+            } else if (this._targetItem && this._textFocused && this._textSelecting) {
               this.updateEditorMode(EditorMode.TEXT)
             } else {
               this.updateEditorMode(EditorMode.MOVE)
             }
           }
-        } else if(this._textFocused && this._textSelecting) {
+        } else if (this._textFocused && this._textSelecting) {
           this.updateEditorMode(EditorMode.TEXT)
         } else {
-          if(!editorItem.locked) {
+          if (!editorItem.locked) {
             this.updateEditorMode(EditorMode.MOVE)
           }
         }
       } else {
         if (editorItem instanceof TableEntity) {
-          if(!editorItem.locked) {
+          if (!editorItem.locked) {
             const targetPoint = this.findEditorItemPoint(editorItem, e.x, e.y)
-            const [ targetRow, targetRowIndex, ] = this.isTableRowtResizable(editorItem, targetPoint.x, targetPoint.y)
-            const [ targetColumn, targetColumnIndex, ] = this.isTableColumnResizable(editorItem, targetPoint.x, targetPoint.y)
+            const [targetRow, targetRowIndex,] = this.isTableRowtResizable(editorItem, targetPoint.x, targetPoint.y)
+            const [targetColumn, targetColumnIndex,] = this.isTableColumnResizable(editorItem, targetPoint.x, targetPoint.y)
             if (targetRow) {
               // console.log('========2')
               // this._targetRow = true
@@ -2669,24 +2669,24 @@ export class Editor extends Painter {
               // this._targetColumn = targetColumn
               // this._targetColumnIndex = targetColumnIndex
               this.updateEditorMode(EditorMode.COL_RESIZE)
-            } else if(this._targetItem && this._textFocused && this._textSelecting) {
+            } else if (this._targetItem && this._textFocused && this._textSelecting) {
               const cellPoint = this.findEditorItemPoint(this._targetItem, e.x, e.y)
               this._targetItem.shape.enterTo(cellPoint.x, cellPoint.y)
               this.updateEditorMode(EditorMode.TEXT)
-            } else if(this._targetItem && this._textFocused) {
+            } else if (this._targetItem && this._textFocused) {
               this.updateEditorMode(EditorMode.TEXT)
             } else {
               this.updateEditorMode(EditorMode.MOVE)
             }
           }
-        } else if(this._textFocused && this._textSelecting) {
+        } else if (this._textFocused && this._textSelecting) {
           const targetPoint = this.findEditorItemPoint(editorItem, e.x, e.y)
           editorItem.shape.enterTo(targetPoint.x, targetPoint.y)
           this.updateEditorMode(EditorMode.TEXT)
-        } else if(this._textFocused) {
+        } else if (this._textFocused) {
           this.updateEditorMode(EditorMode.TEXT)
         } else {
-          if(!editorItem.locked) {
+          if (!editorItem.locked) {
             this.updateEditorMode(EditorMode.MOVE)
           }
         }
@@ -2730,13 +2730,13 @@ export class Editor extends Painter {
     if (this._action) {
       // console.log(`handlePointerClick... x = ${e.x}  start=${this.action_.item.start.x} end=${this.action_.item.end.x} width=${this.action_.item.width}  height=${this.action_.item.height}`)
       const clickedEditorItem = this.findEditorItem(e.x, e.y, false)
-      if(clickedEditorItem && clickedEditorItem instanceof ContainerEntity && (!(clickedEditorItem instanceof TableEntity))) {        
+      if (clickedEditorItem && clickedEditorItem instanceof ContainerEntity && (!(clickedEditorItem instanceof TableEntity))) {
         let point = this.findEditorItemPoint(clickedEditorItem, e.x, e.y)
         let [left, top, right, bottom] = Editor.getItemsBoundary(this._action.items)
         let width = right - left
         let height = bottom - top
         let x = this.alignToGridSize(point.x / this._zoom - width / 2)
-        let y = this.alignToGridSize(point.y / this._zoom - height / 2)            
+        let y = this.alignToGridSize(point.y / this._zoom - height / 2)
         this._action.items.forEach(item => {
           item.boundary = Rectangle.makeLTWH(x + item.left - left, y + item.top - top, item.width, item.height)
           clickedEditorItem.addItem(item)
@@ -2785,7 +2785,7 @@ export class Editor extends Painter {
     const alignMoveY = this.alignToGridSize(moveY)
     for (let i = 0; i < count; i++) {
       const editorItem = theSelectionLayer.getEditorItem(i) as Item
-      if(editorItem.locked) {
+      if (editorItem.locked) {
         continue
       }
       const left = editorItem.left
@@ -2806,17 +2806,17 @@ export class Editor extends Painter {
         const endX = editorItem.end.x + alignMoveX
         const endY = editorItem.end.y + alignMoveY
         editorItem.autoRefreshOrthogonalPoints = false
-        if(!editorItem.source) {
+        if (!editorItem.source) {
           editorItem.start = new Point2(startX, startY)
         }
-        if(!editorItem.target) {
+        if (!editorItem.target) {
           editorItem.end = new Point2(endX, endY)
         }
         editorItem.autoRefreshOrthogonalPoints = true
         //console.log(`startx = ${startX} start.y=${startY} end.x = ${endX} end.y = ${endY}`)
       } else if (editorItem instanceof Entity) {
       }
- 
+
       for (let j = 0; j < sourceConnectorCount; j++) {
         const connector = editorItem.getSourceConnector(j)
         if (connector.source == editorItem) {
@@ -2838,11 +2838,13 @@ export class Editor extends Painter {
         }
       }
     }
-    if(alignMoveX != 0) {
-      this._startPointX = e.x
+    if (alignMoveX != 0) {
+      //this._startPointX = e.x
+      this._startPointX = this._startPointX + alignMoveX * this._zoom
     }
-    if(alignMoveY != 0) {
-      this._startPointY = e.y
+    if (alignMoveY != 0) {
+      //this._startPointY = e.y
+      this._startPointY = this._startPointY + alignMoveY * this._zoom
     }
     this._moved = true
     theSelectionLayer.invalidateLayer()
@@ -2863,7 +2865,7 @@ export class Editor extends Painter {
 
   private handleMoveOutline(e: PointerEvent) {
     //Dont show outline if only connector selected
-    if(this.selectionLayer.getEditorItemCount() == 1 && this.selectionLayer.getEditorItem(0) instanceof Connector) {
+    if (this.selectionLayer.getEditorItemCount() == 1 && this.selectionLayer.getEditorItem(0) instanceof Connector) {
       return
     }
     const [left, top, right, bottom] = this.getSelectionBoundary()
@@ -2872,15 +2874,15 @@ export class Editor extends Painter {
   }
 
   private handleTableActiveCellShape() {
-    if(this._targetItem) {
+    if (this._targetItem) {
       const margin = EditorUtils.tableActiveCellMargin
       const worldTransform = this._targetItem.shape.worldTransform
       this._tableActiveCellShape.transform = worldTransform
-      this._tableActiveCellShape.boundary =  Rectangle.makeLTWH(margin, margin, this._targetItem.width - margin * 2, this._targetItem.height - margin * 2)
+      this._tableActiveCellShape.boundary = Rectangle.makeLTWH(margin, margin, this._targetItem.width - margin * 2, this._targetItem.height - margin * 2)
       this.triggerTableTextEditStart()
     } else {
       this._tableActiveCellShape.transform = new Matrix()
-      this._tableActiveCellShape.boundary =  Rectangle.makeLTWH(0, 0, 0, 0)
+      this._tableActiveCellShape.boundary = Rectangle.makeLTWH(0, 0, 0, 0)
       this.triggerTableTextEditEnd()
     }
   }
@@ -2888,11 +2890,11 @@ export class Editor extends Painter {
   private removeItemsFromContainer(e: PointerEvent) {
     let requireRemove = false
     const [left, top, right, bottom] = this.getSelectionBoundary()
-    if(this.selectionLayer.getEditorItemCount() > 0) {
+    if (this.selectionLayer.getEditorItemCount() > 0) {
       const firstSelection = this.selectionLayer.getEditorItem(0) as Item
-      if(firstSelection.parent) {
+      if (firstSelection.parent) {
         const parent = firstSelection.parent
-        if((left > parent.left && top > parent.top && right < parent.right && bottom < parent.bottom) || !(parent instanceof ContainerEntity)) {
+        if ((left > parent.left && top > parent.top && right < parent.right && bottom < parent.bottom) || !(parent instanceof ContainerEntity)) {
           requireRemove = false
         } else {
           requireRemove = true
@@ -2902,11 +2904,11 @@ export class Editor extends Painter {
       //  requireRemove = true
       //}
     }
-    if(requireRemove) {
+    if (requireRemove) {
       const count = this.selectionLayer.getEditorItemCount()
-      for(let i = 0; i < count; i ++) {
+      for (let i = 0; i < count; i++) {
         const selection = this.selectionLayer.getEditorItem(i) as Item
-        if(selection.parent) {
+        if (selection.parent) {
           const left = selection.left + selection.parent.left
           const top = selection.top + selection.parent.top
           const rotation = selection.rotation.radius + selection.parent.rotation.radius
@@ -2930,16 +2932,16 @@ export class Editor extends Painter {
     let result = ConnectorDirection.Right
     const shape = editorItem.shape
     const matrix = shape.worldInverseTransform
-    if(matrix) {
+    if (matrix) {
       const position = matrix.makePoint(new Point2(x, y))
-      if(Math.abs(position.y - shape.height / 2) < Math.abs(position.x - shape.width / 2)) {
-        if(position.x > shape.width / 2) {
+      if (Math.abs(position.y - shape.height / 2) < Math.abs(position.x - shape.width / 2)) {
+        if (position.x > shape.width / 2) {
           result = ConnectorDirection.Right
         } else {
           result = ConnectorDirection.Left
         }
       } else {
-        if(position.y < shape.height / 2) {
+        if (position.y < shape.height / 2) {
           result = ConnectorDirection.Top
         } else {
           result = ConnectorDirection.Bottom
@@ -2950,9 +2952,9 @@ export class Editor extends Painter {
   }
 
   public alignToGridSize(value: number) {
-    if(this._snapToGrid) {
+    if (this._snapToGrid) {
       //return value - value % this._gridSize
-      return Math.round(value / this._gridSize) *  this._gridSize
+      return Math.round(value / this._gridSize) * this._gridSize
     } else {
       return value
     }
@@ -2960,15 +2962,15 @@ export class Editor extends Painter {
 
   public updateEditorMode(mode: EditorMode) {
     //console.log(` this.mode= ${this._mode}  mode =  ${mode}`)
-    if(this._mode != mode) {
-      this._mode =  mode
+    if (this._mode != mode) {
+      this._mode = mode
       this.triggerEditorModeChange()
     }
   }
 
   public beginOperation(editorItem: EditorItem) {
     const theItem = editorItem as Item
-    if(theItem.parent) {
+    if (theItem.parent) {
       this._startEditorItemInfos.length = 0
       let editorItemInfo = OperationHelper.saveEditorItem(theItem.parent)
       this._startEditorItemInfos.push(editorItemInfo)
@@ -2987,28 +2989,28 @@ export class Editor extends Painter {
   }
 
   private beginShapeTextEditOperation(editorItem: EditorItem): [EditorItemInfo, number, number] {
-    if(this._target && this._targetItem) {
-      const editorItemInfo = OperationHelper.saveEditorItem(editorItem)    
+    if (this._target && this._targetItem) {
+      const editorItemInfo = OperationHelper.saveEditorItem(editorItem)
       return [editorItemInfo, this._targetItem.shape.startIndex, this._targetItem.shape.endIndex]
     } else {
-      const editorItemInfo = OperationHelper.saveEditorItem(editorItem)    
+      const editorItemInfo = OperationHelper.saveEditorItem(editorItem)
       return [editorItemInfo, editorItem.shape.startIndex, editorItem.shape.endIndex]
     }
   }
 
   public finishOperation(editorItem: EditorItem) {
     const theItem = editorItem as Item
-    if(theItem.parent) {
+    if (theItem.parent) {
       let origItemInfo = this._startEditorItemInfos[0]
-      let editorItemInfo =  OperationHelper.saveEditorItem(theItem.parent)
-      let operation = new Operation(this, OperationType.UPDATE_ITEMS, [editorItemInfo],true, [origItemInfo])
+      let editorItemInfo = OperationHelper.saveEditorItem(theItem.parent)
+      let operation = new Operation(this, OperationType.UPDATE_ITEMS, [editorItemInfo], true, [origItemInfo])
       this._operationService.addOperation(operation)
       this.triggerOperationChange()
       this._startEditorItemInfos.length = 0
     } else {
       let origItemInfo = this._startEditorItemInfos[0]
-      let editorItemInfo =  OperationHelper.saveEditorItem(editorItem)
-      let operation = new Operation(this, OperationType.UPDATE_ITEMS, [editorItemInfo],true, [origItemInfo])
+      let editorItemInfo = OperationHelper.saveEditorItem(editorItem)
+      let operation = new Operation(this, OperationType.UPDATE_ITEMS, [editorItemInfo], true, [origItemInfo])
       this._operationService.addOperation(operation)
       this.triggerOperationChange()
       this._startEditorItemInfos.length = 0
@@ -3016,19 +3018,19 @@ export class Editor extends Painter {
   }
 
   private finishTextEditOperation() {
-    if(this._target && this._targetItem && this._startEditorItemInfos.length > 0) {
+    if (this._target && this._targetItem && this._startEditorItemInfos.length > 0) {
       let origItemInfo = this._startEditorItemInfos[0]
-      let editorItemInfo =  OperationHelper.saveEditorItem(this._target)
-      let operation = new Operation(this, OperationType.UPDATE_ITEMS, [editorItemInfo],true, [origItemInfo])
+      let editorItemInfo = OperationHelper.saveEditorItem(this._target)
+      let operation = new Operation(this, OperationType.UPDATE_ITEMS, [editorItemInfo], true, [origItemInfo])
       this._operationService.addOperation(operation)
       //console.log(`finish: ${editorItemInfo}`)
       //console.log(`finish2: ${origItemInfo}`)
       this.triggerOperationChange()
       this._startEditorItemInfos.length = 0
-    } else if(this._target && this._startEditorItemInfos.length > 0) {
+    } else if (this._target && this._startEditorItemInfos.length > 0) {
       let origItemInfo = this._startEditorItemInfos[0]
-      let editorItemInfo =  OperationHelper.saveEditorItem(this._target)
-      let operation = new Operation(this, OperationType.UPDATE_ITEMS, [editorItemInfo],true, [origItemInfo])
+      let editorItemInfo = OperationHelper.saveEditorItem(this._target)
+      let operation = new Operation(this, OperationType.UPDATE_ITEMS, [editorItemInfo], true, [origItemInfo])
       this._operationService.addOperation(operation)
       //console.log(`finish3: ${editorItemInfo}`)
       //console.log(`finish4: ${origItemInfo}`)
@@ -3038,15 +3040,15 @@ export class Editor extends Painter {
   }
 
   private finishShapeTextEditOperation(origEditorItemInfo: EditorItemInfo, startIndex: number, endIndex: number) {
-    if(this._target && this._targetItem) {
-      let editorItemInfo =  OperationHelper.saveEditorItem(this._target)
-      let operation = new Operation(this, OperationType.TABLE_TEXT_EDIT, [editorItemInfo],true, [origEditorItemInfo], '', null, null, null, null, true, this._targetItem.shape.startIndex, this._targetItem.shape.endIndex, startIndex, endIndex, '', '', null, this._targetItemIndex)
+    if (this._target && this._targetItem) {
+      let editorItemInfo = OperationHelper.saveEditorItem(this._target)
+      let operation = new Operation(this, OperationType.TABLE_TEXT_EDIT, [editorItemInfo], true, [origEditorItemInfo], '', null, null, null, null, true, this._targetItem.shape.startIndex, this._targetItem.shape.endIndex, startIndex, endIndex, '', '', null, this._targetItemIndex)
       this._operationService.addOperation(operation)
       this.triggerOperationChange()
       this._startEditorItemInfos.length = 0
-    } else if(this._target) {
-      let editorItemInfo =  OperationHelper.saveEditorItem(this._target)
-      let operation = new Operation(this, OperationType.SHAPE_TEXT_EDIT, [editorItemInfo],true, [origEditorItemInfo], '', null, null, null, null, true, this._target.shape.startIndex, this._target.shape.endIndex, startIndex, endIndex)
+    } else if (this._target) {
+      let editorItemInfo = OperationHelper.saveEditorItem(this._target)
+      let operation = new Operation(this, OperationType.SHAPE_TEXT_EDIT, [editorItemInfo], true, [origEditorItemInfo], '', null, null, null, null, true, this._target.shape.startIndex, this._target.shape.endIndex, startIndex, endIndex)
       this._operationService.addOperation(operation)
       this.triggerOperationChange()
       this._startEditorItemInfos.length = 0
@@ -3054,20 +3056,20 @@ export class Editor extends Painter {
   }
 
   private createTextBoxInConnector(connector: Connector, x: number, y: number) {
-    const textBox = new ShapeEntity(x - 40, y  - 15, 80, 30)
+    const textBox = new ShapeEntity(x - 40, y - 15, 80, 30)
     textBox.text = 'text'
     textBox.fillColor = Colors.Transparent
     textBox.strokeColor = Colors.Transparent
     connector.addItem(textBox)
   }
 
-  private checkParentType(editorItem: EditorItem, parentType: typeof  Item): boolean {
+  private checkParentType(editorItem: EditorItem, parentType: typeof Item): boolean {
     let result = false
     const item = editorItem as Item
     //console.log(`check parent = ${item.parent instanceof parentType}   == ${item.parent}`)
     let checkItem: Item = item
-    while(checkItem.parent) {
-      if(checkItem.parent instanceof parentType){
+    while (checkItem.parent) {
+      if (checkItem.parent instanceof parentType) {
         return true
       }
       checkItem = checkItem.parent
@@ -3081,7 +3083,7 @@ export class Editor extends Painter {
     let right = 0
     let bottom = 0
     let itemCount = items.length
-    for(let i = 0; i < itemCount; i ++) {      
+    for (let i = 0; i < itemCount; i++) {
       const item = items[i]
       const worldTransform = item.worldTransform
       const leftTopPoint = worldTransform.makePoint(new Point2(0, 0))
@@ -3092,7 +3094,7 @@ export class Editor extends Painter {
       const itemTop = Math.min(leftTopPoint.y, rightTopPoint.y, rightBottomPoint.y, leftBottomPoint.y)
       const itemRight = Math.max(leftTopPoint.x, rightTopPoint.x, rightBottomPoint.x, leftBottomPoint.x)
       const itemBottom = Math.max(leftTopPoint.y, rightTopPoint.y, rightBottomPoint.y, leftBottomPoint.y)
-    if(i == 0) {
+      if (i == 0) {
         left = itemLeft
         top = itemTop
         right = itemRight
