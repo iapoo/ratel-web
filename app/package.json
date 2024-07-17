@@ -29,24 +29,12 @@
     "appId": "com.ivipi.ratel",
     "directories": {
       "output": "build",
-      "buildResources": "./builder"
+      "buildResources": "./public"
     },
     "files": [
       "dist/",
       "main.js"
     ],
-    "locales": {
-      "zh-CN": {
-        "description": "简体中文",
-        "name": "简体中文",
-        "message": "locales/zh-CN.json"
-      },
-      "en-US": {
-        "description": "English",
-        "name": "English",
-        "message": "locales/en-US.json"
-      }
-    },
     "copyright": "ivipa",
     "nsis": {
       "oneClick": false,
@@ -56,8 +44,13 @@
       "installerIcon": "dist/favicon-256.ico",
       "uninstallerIcon": "dist/favicon-256.ico",
       "installerHeaderIcon": "dist/favicon-256.ico",
+      "installerLanguages": [
+        "en-US",
+        "zh-CN"
+      ],
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
+      "license": "LICENSE",
       "shortcutName": "Ratel"
     },
     "publish": {
