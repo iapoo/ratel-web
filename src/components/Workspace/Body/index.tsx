@@ -22,17 +22,17 @@ interface BodyProps {
 const Body: FC<BodyProps> = ({
   previousEditor, currentEditor, onEditorChange, onMyShapesNotified, loginCompleted, logoutCompleted
 }) => {
-  const [ initialized, setInitialized, ] = useState<boolean>(false)
-  const [ navigatorWidth, setNavigatorWidth, ] = useState<number>(Utils.DEFAULT_NAVIGATOR_WIDTH)
-  const [ enablePropertyEditor, setEnablePropertyEditor] = useState<boolean>(false)
-  const [ myShapesUpdated, setMyShapesUpdated, ] = useState<boolean>(false)
+  const [initialized, setInitialized,] = useState<boolean>(false)
+  const [navigatorWidth, setNavigatorWidth,] = useState<number>(Utils.DEFAULT_NAVIGATOR_WIDTH)
+  const [enablePropertyEditor, setEnablePropertyEditor] = useState<boolean>(false)
+  const [myShapesUpdated, setMyShapesUpdated,] = useState<boolean>(false)
   useEffect(() => {
     if (!initialized) {
       initialize()
     }
-    if(loginCompleted || logoutCompleted) {
+    if (loginCompleted || logoutCompleted) {
       setMyShapesUpdated(true)
-      if(onMyShapesNotified) {
+      if (onMyShapesNotified) {
         onMyShapesNotified()
       }
     }
@@ -43,7 +43,7 @@ const Body: FC<BodyProps> = ({
     const timer = setInterval(async () => {
       setEnablePropertyEditor(Utils.enablePropertyEditor)
     }, 100)
-   
+
     return () => {
       clearInterval(timer)
     }
@@ -69,8 +69,8 @@ const Body: FC<BodyProps> = ({
     // setNavigatorWidth(data.x)
   }
 
-  const handleEditorChange = (oldEditor: Editor | undefined, newEditor: Editor | undefined)=> {
-    if(oldEditor) {
+  const handleEditorChange = (oldEditor: Editor | undefined, newEditor: Editor | undefined) => {
+    if (oldEditor) {
       oldEditor.checkAndEndTextEdit()
     }
     onEditorChange(oldEditor, newEditor)
@@ -87,7 +87,7 @@ const Body: FC<BodyProps> = ({
   // console.log(`Check myShapesUpdated = ${myShapesUpdated}`)
   return (
     <div style={{ position: 'absolute', top: `${Utils.HEADER_HEIGHT}px`, bottom: `${Utils.FOOTER_HEIGHT}px`, right: '0px', left: '0px', }} >
-      <Navigator navigatorWidth={navigatorWidth} myShapesUpdated={myShapesUpdated} onMyShapesLoaded={handleMyShapesLoaded}/>
+      <Navigator navigatorWidth={navigatorWidth} myShapesUpdated={myShapesUpdated} onMyShapesLoaded={handleMyShapesLoaded} />
       <Draggable
         axis='x'
         handle='.handle'
@@ -101,9 +101,9 @@ const Body: FC<BodyProps> = ({
         onStop={handleDragStop}>
         <div className='handle' style={{ position: 'absolute', top: '0px', bottom: '0px', left: `${navigatorWidth} + px`, width: `${Utils.DEFAULT_DIVIDER_WIDTH}px`, cursor: 'ew-resize', zIndex: 999, }} />
       </Draggable>
-      <Content onEditorChange={handleEditorChange} onMyShapesUpdated={handleMyShapesUpdated} x={`${navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH}px`} y= {`${enablePropertyEditor ? '220px' : '0px'} `}/>
-      <Drawer placement='right' mask={false} closable={false}  open={enablePropertyEditor} getContainer={false} bodyStyle={{padding: 16}} width={220} >
-        <PropertyEditor previousEditor={previousEditor} currentEditor={currentEditor}/>
+      <Content onEditorChange={handleEditorChange} onMyShapesUpdated={handleMyShapesUpdated} x={`${navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH}px`} y={`${enablePropertyEditor ? '220px' : '0px'} `} />
+      <Drawer placement='right' mask={false} closable={false} open={enablePropertyEditor} getContainer={false} bodyStyle={{ padding: 16 }} width={240} >
+        <PropertyEditor previousEditor={previousEditor} currentEditor={currentEditor} />
       </Drawer>
 
     </div>
