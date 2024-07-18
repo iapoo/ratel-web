@@ -2816,23 +2816,48 @@ export class Editor extends Painter {
         //console.log(`startx = ${startX} start.y=${startY} end.x = ${endX} end.y = ${endY}`)
       } else if (editorItem instanceof Entity) {
       }
-
       for (let j = 0; j < sourceConnectorCount; j++) {
         const connector = editorItem.getSourceConnector(j)
+        let connectorInSelection = false
+        for (let k = 0; k < count; k++) {
+          const checkItem = theSelectionLayer.getEditorItem(k) as Item
+          if (checkItem == connector) {
+            connectorInSelection = true
+          }
+        }
         if (connector.source == editorItem) {
           // connector.updateSourceJoint()
           // if (connector.sourceJoint) {
           //  connector.sourceJoint = new Point2(connector.sourceJoint.x + e.x / this._zoom - this._startPointX / this._zoom, connector.sourceJoint.y + e.y / this._zoom - this._startPointY / this._zoom)
           // }
-          connector.start = new Point2(connector.start.x + alignMoveX, connector.start.y + alignMoveY)
+          if (connectorInSelection) {
+            connector.autoRefreshOrthogonalPoints = false
+            connector.start = new Point2(connector.start.x + alignMoveX, connector.start.y + alignMoveY)
+            connector.autoRefreshOrthogonalPoints = true
+          } else {
+            connector.start = new Point2(connector.start.x + alignMoveX, connector.start.y + alignMoveY)
+          }
         }
       }
       for (let j = 0; j < targetConnectorCount; j++) {
         const connector = editorItem.getTargetConnector(j)
+        let connectorInSelection = false
+        for (let k = 0; k < count; k++) {
+          const checkItem = theSelectionLayer.getEditorItem(k) as Item
+          if (checkItem == connector) {
+            connectorInSelection = true
+          }
+        }
         if (connector.target == editorItem) {
           // connector.updateTargetJoint()
           // connector.end = new Point2(connector.end.x + e.x - this._startPointX, connector.end.y + e.y - this._startPointY)
-          connector.end = new Point2(connector.end.x + alignMoveX, connector.end.y + alignMoveY)
+          if (connectorInSelection) {
+            connector.autoRefreshOrthogonalPoints = false
+            connector.end = new Point2(connector.end.x + alignMoveX, connector.end.y + alignMoveY)
+            connector.autoRefreshOrthogonalPoints = true
+          } else {
+            connector.end = new Point2(connector.end.x + alignMoveX, connector.end.y + alignMoveY)
+          }
           //connector.end = new Point2(connector.end.x + e.x - this._startPointX, connector.end.y + e.y - this._startPointY)
           //console.log(`end is connector.end.x = ${connector.end.x} connector.end.y = ${connector.end.y} item.x = ${editorItem.left} item.y = ${editorItem.top}`)
         }
