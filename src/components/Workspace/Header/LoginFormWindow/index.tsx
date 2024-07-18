@@ -5,7 +5,7 @@ import { RequestUtils, Utils, } from '../../Utils'
 import type { DraggableData, DraggableEvent } from 'react-draggable';
 import Draggable from 'react-draggable';
 import axios from 'axios'
-import Avatar from 'antd/lib/avatar/avatar'
+import CryptoJs from 'crypto-js'
 import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 
@@ -21,19 +21,19 @@ const LoginFormWindowPage: FC<LoginFormWindowProps> = ({
   visible, x, y, onWindowCancel, onWindowOk,
 }) => {
   const intl = useIntl();
-  const [messageApi, contextHolder, ] = message.useMessage()
+  const [messageApi, contextHolder,] = message.useMessage()
   const [dataLoading, setDataLoading,] = useState<boolean>(false)
   const [modalX, setModalX,] = useState<number>(0)
   const [modalY, setModalY,] = useState<number>(0)
-  const [disabled, setDisabled, ] = useState<boolean>(true)
+  const [disabled, setDisabled,] = useState<boolean>(true)
   const [origModalX, setOrigModalX,] = useState<number>(0)
   const [origModalY, setOrigModalY,] = useState<number>(0)
   const [windowVisible, setWindowVisible,] = useState<boolean>(false)
   const draggleRef = useRef<HTMLDivElement>(null);
   const [loginForm,] = Form.useForm()
   const [errorVisible, setErrorVisible,] = useState<boolean>(false)
-  const [errorMessage, setErrorMessage, ] = useState<string>('')
-  const [bounds, setBounds, ] = useState({left: 0, top: 0, bottom: 0, right: 0})
+  const [errorMessage, setErrorMessage,] = useState<string>('')
+  const [bounds, setBounds,] = useState({ left: 0, top: 0, bottom: 0, right: 0 })
 
   if (origModalX != x) {
     setOrigModalX(x)
@@ -92,7 +92,7 @@ const LoginFormWindowPage: FC<LoginFormWindowProps> = ({
     const { userName, userPassword } = values
     const data = {
       'name': userName,
-      'password': userPassword, //CryptoJs.SHA1(password).toString()
+      'password': CryptoJs.SHA512(userPassword).toString()
     }
     const config = {
       headers: {
@@ -106,12 +106,12 @@ const LoginFormWindowPage: FC<LoginFormWindowProps> = ({
         if (response.status == 200 && response.data.success) {
           messageApi.open({
             type: 'success',
-            content: intl.formatMessage({ id: 'workspace.header.login-form-window.window-success-message'}) 
+            content: intl.formatMessage({ id: 'workspace.header.login-form-window.window-success-message' })
           })
           console.log('Login succeed')
           RequestUtils.token = response.data.data
           RequestUtils.userName = userName
-          RequestUtils.password = userPassword
+          RequestUtils.password = CryptoJs.SHA512(userPassword).toString()
           RequestUtils.online = true
           localStorage.setItem('auth.token', response.data.data)
           RequestUtils.checkOnline()
@@ -133,7 +133,7 @@ const LoginFormWindowPage: FC<LoginFormWindowProps> = ({
 
   return (
     <div>
-    {contextHolder}
+      {contextHolder}
       <Modal
         title={
           <div style={{ width: '100%', cursor: 'move', }}
@@ -147,9 +147,9 @@ const LoginFormWindowPage: FC<LoginFormWindowProps> = ({
             }}
             // fix eslintjsx-a11y/mouse-events-have-key-events
             // https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/blob/master/docs/rules/mouse-events-have-key-events.md
-            onFocus={() => {}}
-            onBlur={() => {}}
-            // end
+            onFocus={() => { }}
+            onBlur={() => { }}
+          // end
           >
             <FormattedMessage id='workspace.header.login-form-window.window-title' />
           </div>
@@ -163,7 +163,7 @@ const LoginFormWindowPage: FC<LoginFormWindowProps> = ({
           <Draggable
             //disabled={disable}
             bounds={bounds}
-            onStart={handleDragStart}            
+            onStart={handleDragStart}
           >
             <div ref={draggleRef}>{modal}</div>
           </Draggable>
@@ -179,8 +179,8 @@ const LoginFormWindowPage: FC<LoginFormWindowProps> = ({
           >
             <Form.Item name='userName' rules={[{ required: true, message: <FormattedMessage id='workspace.header.login-form-window.user-name-message' />, },]} style={{ marginBottom: '4px', }} >
               <Input
-                prefix={<UserOutlined/>}
-                placeholder={intl.formatMessage({ id: 'workspace.header.login-form-window.user-name-placeholder'})}
+                prefix={<UserOutlined />}
+                placeholder={intl.formatMessage({ id: 'workspace.header.login-form-window.user-name-placeholder' })}
                 size='middle'
                 bordered={false}
                 style={{ width: '100%', }}
@@ -189,9 +189,9 @@ const LoginFormWindowPage: FC<LoginFormWindowProps> = ({
             <div style={{ marginLeft: '40px', width: '280px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', }} />
             <Form.Item name='userPassword' rules={[{ required: true, message: <FormattedMessage id='workspace.header.login-form-window.user-password-message' />, },]} style={{ marginBottom: '4px', }}>
               <Input.Password
-                prefix={<LockOutlined/>}
+                prefix={<LockOutlined />}
                 type='password'
-                placeholder={intl.formatMessage({ id: 'workspace.header.login-form-window.user-password-placeholder'})}
+                placeholder={intl.formatMessage({ id: 'workspace.header.login-form-window.user-password-placeholder' })}
                 size='middle'
                 bordered={false}
                 style={{ width: '100%', }}
@@ -202,7 +202,7 @@ const LoginFormWindowPage: FC<LoginFormWindowProps> = ({
               <Checkbox style={{ float: 'right', fontSize: '14px', }}><FormattedMessage id='workspace.header.login-form-window.remember-account-title' /></Checkbox>
             </Form.Item> */}
             {errorVisible && (
-              <Alert message={errorMessage} type="error" closable/>
+              <Alert message={errorMessage} type="error" closable />
             )}
           </Form>
         </div>
