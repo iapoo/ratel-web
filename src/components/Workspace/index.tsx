@@ -14,13 +14,13 @@ import PropertyEditor from './PropertyEditor'
 import Content from './Content'
 
 export default (props: any) => {
-  const [ initialized, setInitialized, ] = useState<boolean>(false)
-  const [ editor, setEditor, ] = useState<Editor>()
-  const [ ready, setReady, ] = useState<boolean>(false)
-  const [ currentEditor, setCurrentEditor, ] = useState<Editor | undefined>(undefined)
-  const [ previousEditor, setPreviousEditor, ] = useState<Editor | undefined>(undefined)
-  const [ loginCompleted, setLoginCompleted] = useState<boolean>(false)
-  const [ logoutCompleted, setLogoutCompleted] = useState<boolean>(false)
+  const [initialized, setInitialized,] = useState<boolean>(false)
+  const [editor, setEditor,] = useState<Editor>()
+  const [ready, setReady,] = useState<boolean>(false)
+  const [currentEditor, setCurrentEditor,] = useState<Editor | undefined>(undefined)
+  const [previousEditor, setPreviousEditor,] = useState<Editor | undefined>(undefined)
+  const [loginCompleted, setLoginCompleted] = useState<boolean>(false)
+  const [logoutCompleted, setLogoutCompleted] = useState<boolean>(false)
 
   useEffect(() => {
     if (!initialized) {
@@ -50,11 +50,11 @@ export default (props: any) => {
     setLoginCompleted(online)
   }
 
-  const handleEditorChange = (oldEditor: Editor | undefined, newEditor: Editor | undefined)=> {
+  const handleEditorChange = (oldEditor: Editor | undefined, newEditor: Editor | undefined) => {
     setPreviousEditor(oldEditor)
     setCurrentEditor(newEditor)
-    if(newEditor) {
-      newEditor.setup(1, 800, 600)
+    if (newEditor) {
+      newEditor.setup(newEditor.zoom, newEditor.origWidth, newEditor.origHeight)
     }
   }
 
@@ -75,9 +75,9 @@ export default (props: any) => {
 
   return (
     <div style={{ width: '100%', height: '100%', }}>
-      <Header previousEditor={previousEditor} currentEditor={currentEditor} onLogin={handleLogin} onLogout={handleLogout}/>
-      <Body onEditorChange={handleEditorChange}  previousEditor={previousEditor} currentEditor={currentEditor} loginCompleted={loginCompleted} logoutCompleted={logoutCompleted} onMyShapesNotified={handleMyShapesNotified}/>
-      <Footer/>
+      <Header previousEditor={previousEditor} currentEditor={currentEditor} onLogin={handleLogin} onLogout={handleLogout} />
+      <Body onEditorChange={handleEditorChange} previousEditor={previousEditor} currentEditor={currentEditor} loginCompleted={loginCompleted} logoutCompleted={logoutCompleted} onMyShapesNotified={handleMyShapesNotified} />
+      <Footer />
     </div>
 
   )

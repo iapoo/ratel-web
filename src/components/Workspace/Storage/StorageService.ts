@@ -117,7 +117,7 @@ export class StorageService {
 
   //   return tableEntity
   // }
-  
+
   private _editors: Array<Editor> = new Array<Editor>(0)
   private _storageData: StorageData = new StorageData()
 
@@ -216,6 +216,9 @@ export class StorageService {
   private saveEditor(editor: Editor, editorData: EditorData) {
     editorData.title = editor.title
     editorData.key = editor.key
+    editorData.width = editor.origWidth
+    editorData.height = editor.origHeight
+    editorData.zoom = editor.zoom
     const itemCount = editor.contentLayer.getEditorItemCount()
     for (let i = 0; i < itemCount; i++) {
       const editorItem = editor.contentLayer.getEditorItem(i)
@@ -251,7 +254,7 @@ export class StorageService {
   //     editorItemData.fillColor = SystemUtils.generateColorString(editorItem.strokeColor)
   //     editorItemData.lineWidth = editorItem.lineWidth
   //   }
-    
+
   //   const itemCount = editorItem.items.length
   //   for (let i = 0; i < itemCount; i++) {
   //     const childItem = editorItem.items[i]

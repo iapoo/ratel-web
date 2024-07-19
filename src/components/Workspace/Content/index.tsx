@@ -94,11 +94,11 @@ const Content: FC<ContentProps> = ({
       return Math.round(Utils.currentEditor.width + Editor.SHADOW_SIZE * 2) + 'px'
     } else {
       return (DEFAULT_PAINTER_WIDTH + Editor.SHADOW_SIZE * 2) + 'px'
-    } 
+    }
   }
-  
+
   const getDefaultContentHeight = () => {
-    if (Utils.currentEditor) {      
+    if (Utils.currentEditor) {
       return Math.round(Utils.currentEditor.height + Editor.SHADOW_SIZE * 2) + 'px'
     } else {
       return (DEFAULT_PAINTER_HEIGHT + Editor.SHADOW_SIZE * 2) + 'px'
@@ -119,46 +119,46 @@ const Content: FC<ContentProps> = ({
     }
   }
 
-  const [ forceUpdate, setForceUpdate, ] = useState<boolean>(false)
-  const [ initialized, setInitialized, ] = useState<boolean>(false)
-  const [ activeKey, setActiveKey, ] = useState(initialPanes[0].key)
-  const [ activePane, setActivePane, ] = useState<Pane | null>(initialPanes[0])
-  const [ viewWidth, setViewWidth, ] = useState<number>(300)
-  const [ viewHeight, setViewHeight, ] = useState<number>(300)
-  const [ contentWidth, setContentWidth, ] = useState<string>(getDefaultContentWidth())
-  const [ contentHeight, setContentHeight, ] = useState<string>(getDefaultContentHeight())
-  const [ editorWidth, setEditorWidth, ] = useState<string>(getDefaultEditorWidth())
-  const [ editorHeight, setEditorHeight, ] = useState<string>(getDefaultEditorHeight())
-  const [ documentModified, setDocumentModified, ] = useState<boolean>(false)
-  const [ textToolbarLeft, setTextToolbarLeft, ] = useState<number>(0)
-  const [ textToolbarTop, setTextToolbarTop, ] = useState<number>(0)
-  const [ textToolbarVisible, setTextToolbarVisible,  ] = useState<boolean>(false)
-  const [ tableToolbarLeft, setTableToolbarLeft, ] = useState<number>(0)
-  const [ tableToolbarTop, setTableToolbarTop, ] = useState<number>(0)
-  const [ tableToolbarVisible, setTableToolbarVisible,  ] = useState<boolean>(false)
+  const [forceUpdate, setForceUpdate,] = useState<boolean>(false)
+  const [initialized, setInitialized,] = useState<boolean>(false)
+  const [activeKey, setActiveKey,] = useState(initialPanes[0].key)
+  const [activePane, setActivePane,] = useState<Pane | null>(initialPanes[0])
+  const [viewWidth, setViewWidth,] = useState<number>(300)
+  const [viewHeight, setViewHeight,] = useState<number>(300)
+  const [contentWidth, setContentWidth,] = useState<string>(getDefaultContentWidth())
+  const [contentHeight, setContentHeight,] = useState<string>(getDefaultContentHeight())
+  const [editorWidth, setEditorWidth,] = useState<string>(getDefaultEditorWidth())
+  const [editorHeight, setEditorHeight,] = useState<string>(getDefaultEditorHeight())
+  const [documentModified, setDocumentModified,] = useState<boolean>(false)
+  const [textToolbarLeft, setTextToolbarLeft,] = useState<number>(0)
+  const [textToolbarTop, setTextToolbarTop,] = useState<number>(0)
+  const [textToolbarVisible, setTextToolbarVisible,] = useState<boolean>(false)
+  const [tableToolbarLeft, setTableToolbarLeft,] = useState<number>(0)
+  const [tableToolbarTop, setTableToolbarTop,] = useState<number>(0)
+  const [tableToolbarVisible, setTableToolbarVisible,] = useState<boolean>(false)
   const [fontSize, setFontSize,] = useState<number>(Consts.FONT_SIZE_DEFAULT)
-  const [fontColor, setFontColor, ] = useState<string>(Consts.COLOR_FONT_DEFAULT)
-  const [fontWeight, setFontWeight, ] = useState<string>(Consts.FONT_WEIGHT_NORMAL)
-  const [fontSlant, setFontSlant, ] = useState<string>(Consts.FONT_SLANT_UP_RIGHT)
-  const [fontWidth, setFontWidth, ] = useState<string>(Consts.FONT_WIDTH_NORMAL)
-  const [textAlignment, setTextAlignment, ] = useState<string>(Consts.TEXT_ALIGNMENT_LEFT)
-  const [textDecoration, setTextDecoration, ] = useState<string>(Consts.TEXT_DECORATION_NONE)
-  const [textVerticalAlignment, setTextVerticalAlignment, ] = useState<string>(Consts.PLACE_HOLDER_ALIGNMENT_MIDDLE)
-  const [fontBold, setFontBold, ] = useState<boolean>(false)
+  const [fontColor, setFontColor,] = useState<string>(Consts.COLOR_FONT_DEFAULT)
+  const [fontWeight, setFontWeight,] = useState<string>(Consts.FONT_WEIGHT_NORMAL)
+  const [fontSlant, setFontSlant,] = useState<string>(Consts.FONT_SLANT_UP_RIGHT)
+  const [fontWidth, setFontWidth,] = useState<string>(Consts.FONT_WIDTH_NORMAL)
+  const [textAlignment, setTextAlignment,] = useState<string>(Consts.TEXT_ALIGNMENT_LEFT)
+  const [textDecoration, setTextDecoration,] = useState<string>(Consts.TEXT_DECORATION_NONE)
+  const [textVerticalAlignment, setTextVerticalAlignment,] = useState<string>(Consts.PLACE_HOLDER_ALIGNMENT_MIDDLE)
+  const [fontBold, setFontBold,] = useState<boolean>(false)
   const [fontItalic, setFontItalic,] = useState<boolean>(false)
-  const [fontUnderline, setFontUnderline, ] = useState<boolean>(false)
-  const [currentEditor, setCurrentEditor, ] = useState<Editor | null  >(null)
-  const [fontSizeNode, setFontSizeNode, ] = useState<any>(null)
+  const [fontUnderline, setFontUnderline,] = useState<boolean>(false)
+  const [currentEditor, setCurrentEditor,] = useState<Editor | null>(null)
+  const [fontSizeNode, setFontSizeNode,] = useState<any>(null)
   const [popupMenuVisible, setPopupMenuVisible] = useState<boolean>(false)
-  const [popupType, setPopupType, ] = useState<PopupType>(PopupType.EDITOR)
-  const [pasteLocation, setPasteLocation, ] = useState<Point2>(new Point2())
-  const [pasteFromSystem, setPasteFromSystem, ] = useState<boolean>(true)
-  const [tableEdittable, setTableEdittable, ] = useState<boolean>(false)
-  const [editorCursor, setEditorCursor, ] = useState<string>(Consts.EDITOR_CURSOR_AUTO)
+  const [popupType, setPopupType,] = useState<PopupType>(PopupType.EDITOR)
+  const [pasteLocation, setPasteLocation,] = useState<Point2>(new Point2())
+  const [pasteFromSystem, setPasteFromSystem,] = useState<boolean>(true)
+  const [tableEdittable, setTableEdittable,] = useState<boolean>(false)
+  const [editorCursor, setEditorCursor,] = useState<string>(Consts.EDITOR_CURSOR_AUTO)
   const newTabIndex = useRef(4)
-  const [ panes, setPanes, ] = useState(initialPanes)
+  const [panes, setPanes,] = useState(initialPanes)
   const panesRef = useRef(initialPanes)
-  const sensor = useSensor(PointerSensor, {activationConstraint: {distance: 10}})
+  const sensor = useSensor(PointerSensor, { activationConstraint: { distance: 10 } })
   // const [paneTititle, setPaneTitle, ] = useState<string>('hello')
   const paneTitleRef = useRef(null)
 
@@ -167,7 +167,7 @@ const Content: FC<ContentProps> = ({
   //     activePane.title = text
   //   }
   // }
-  
+
   // useEditable(paneTitleRef, handlePaneTitleChange)
 
   useEffect(() => {
@@ -198,10 +198,10 @@ const Content: FC<ContentProps> = ({
 
   const updateEditorSize = (panes: Pane[]) => {
     const contentContainer = document.getElementById('content-container')
-    if(contentContainer) {
+    if (contentContainer) {
       const horizontalSpace = contentContainer.clientWidth - MIN_VISUAL_SIZE
       const verticalSpace = contentContainer.clientHeight - MIN_VISUAL_SIZE
-      if(Utils.currentEditor) {
+      if (Utils.currentEditor) {
         Utils.currentEditor.horizontalSpace = horizontalSpace
         Utils.currentEditor.verticalSpace = verticalSpace
       }
@@ -242,30 +242,30 @@ const Content: FC<ContentProps> = ({
       }
     }
     const currentPane = findCurrentPane(panes)
-    if(contentContainer && currentPane) {
-      if(currentPane.initialized) {
-        if(contentContainer.scrollWidth > contentContainer.clientWidth) {
+    if (contentContainer && currentPane) {
+      if (currentPane.initialized) {
+        if (contentContainer.scrollWidth > contentContainer.clientWidth) {
           contentContainer.scrollLeft = currentPane.scrollLeft
         } else {
           contentContainer.scrollLeft = 0
         }
-        if(contentContainer.scrollHeight > contentContainer.clientHeight) {
+        if (contentContainer.scrollHeight > contentContainer.clientHeight) {
           contentContainer.scrollTop = currentPane.scrollTop
         } else {
           contentContainer.scrollTop = 0
         }
       } else {
-        if(contentContainer.scrollWidth > contentContainer.clientWidth) {
+        if (contentContainer.scrollWidth > contentContainer.clientWidth) {
           contentContainer.scrollLeft = (contentContainer.scrollWidth - contentContainer.clientWidth) / 2
         } else {
           contentContainer.scrollLeft = 0
         }
-        if(contentContainer.scrollHeight > contentContainer.clientHeight) {
+        if (contentContainer.scrollHeight > contentContainer.clientHeight) {
           contentContainer.scrollTop = (contentContainer.scrollHeight - contentContainer.clientHeight) / 2
         } else {
           contentContainer.scrollTop = 0
         }
-        
+
         currentPane.scrollLeft = contentContainer.scrollLeft
         currentPane.scrollTop = contentContainer.scrollTop
         currentPane.initialized = true
@@ -277,7 +277,7 @@ const Content: FC<ContentProps> = ({
         // setPanes(newPanes)
       }
     }
-}
+  }
 
 
   const calculateViewSize = () => {
@@ -365,10 +365,10 @@ const Content: FC<ContentProps> = ({
 
   const updateScroll = () => {
     const contentContainer = document.getElementById('content-container')
-    if(contentContainer) {
+    if (contentContainer) {
       const horizontalSpace = contentContainer.clientWidth - MIN_VISUAL_SIZE
       const verticalSpace = contentContainer.clientHeight - MIN_VISUAL_SIZE
-      if(Utils.currentEditor) {
+      if (Utils.currentEditor) {
         Utils.currentEditor.horizontalSpace = horizontalSpace
         Utils.currentEditor.verticalSpace = verticalSpace
       }
@@ -424,6 +424,9 @@ const Content: FC<ContentProps> = ({
       const editor = new Editor(canvas)
       pane.editor = editor
       editor.key = pane.key
+      //editor.origWidth = sheetData.width
+      //editor.origHeight = sheetData.height
+      editor.setup(sheetData.zoom, sheetData.width, sheetData.height)
       editor.title = pane.title
       sheetData.items.forEach(itemData => {
         const item = OperationHelper.loadItem(itemData, editor)
@@ -503,20 +506,20 @@ const Content: FC<ContentProps> = ({
       if (pane.key == newActiveKey) {
         const editor = pane.editor
         const canvas = editor?.container
-        container?.append(canvas!)        
+        container?.append(canvas!)
         editor?.activate()
         let oldEditor = Utils.currentEditor
         //Remove editor will trigger this, and so we need to skip it here
-        if(oldEditor != editor) {
+        if (oldEditor != editor) {
           Utils.currentEditor = editor!
           setCurrentEditor(editor!)
           currentPane = pane
           setActivePane(pane)
           //setPaneTitle(pane.title)
           onEditorChange(oldEditor, Utils.currentEditor)
-          
-          if(oldEditor && requireOperation && Utils.currentEditor) {
-            let operation = new Operation(Utils.currentEditor, OperationType.SELECT_EDITOR, [], false, [], '', oldEditor, null )
+
+          if (oldEditor && requireOperation && Utils.currentEditor) {
+            let operation = new Operation(Utils.currentEditor, OperationType.SELECT_EDITOR, [], false, [], '', oldEditor, null)
             Utils.currentEditor.operationService.addOperation(operation)
             Utils.currentEditor.triggerOperationChange()
           }
@@ -549,7 +552,7 @@ const Content: FC<ContentProps> = ({
   }
 
   const refresh = () => {
-    if(Utils.currentEditor)  {
+    if (Utils.currentEditor) {
       refreshSelectionInfo(Utils.currentEditor)
       refreshPaneTitleValues()
     }
@@ -559,7 +562,7 @@ const Content: FC<ContentProps> = ({
     const panes = panesRef.current
     panes.forEach(pane => {
       const element = document.getElementById('pane-title-input-' + pane.key)
-      if(element) {
+      if (element) {
         const input = element as HTMLInputElement
         input.value = pane.title
         input.defaultValue = pane.title
@@ -570,7 +573,7 @@ const Content: FC<ContentProps> = ({
   const refreshSelectionInfo = (editor: Editor) => {
     if (editor.selectionLayer.getEditorItemCount() > 0) {
       let editorItem = editor.selectionLayer.getEditorItem(0)
-      if(editorItem instanceof TableEntity && editor.targetItem) {
+      if (editorItem instanceof TableEntity && editor.targetItem) {
         editorItem = editor.targetItem
       }
       setFontSize(editorItem.fontSize)
@@ -590,19 +593,19 @@ const Content: FC<ContentProps> = ({
 
   const handleTableTextEditStart = (e: EditorEvent) => {
     setTableEdittable(true)
-//    console.log(`table edit  start check: ${tableEdittable}`)
+    //    console.log(`table edit  start check: ${tableEdittable}`)
   }
 
   const handleTableTextEditEnd = (e: EditorEvent) => {
     setTableEdittable(false)
-//    console.log(`table edit end check: ${tableEdittable}`)
+    //    console.log(`table edit end check: ${tableEdittable}`)
   }
 
   const handleSelectionChange = (e: EditorEvent) => {
     let tableSelected = false
-    if(Utils.currentEditor && e.source.selectionLayer.getEditorItemCount() == 1 ) {
+    if (Utils.currentEditor && e.source.selectionLayer.getEditorItemCount() == 1) {
       let item = e.source.selectionLayer.getEditorItem(0) as Item
-      if(item instanceof TableEntity && item.customizable) {
+      if (item instanceof TableEntity && item.customizable) {
         let container = document.getElementById('editor-container')
         let postion = getElementAbsolutePosition(container)
         const [scrollLeft, scrollTop] = findEditorScrollPosition()
@@ -617,10 +620,10 @@ const Content: FC<ContentProps> = ({
       }
       refreshSelectionInfo(Utils.currentEditor)
     }
-    if(!tableSelected) {
+    if (!tableSelected) {
       setTableToolbarVisible(false)
-    }    
-    if(Utils.currentEditor && e.source.selectionLayer.getEditorItemCount() > 0 ) {
+    }
+    if (Utils.currentEditor && e.source.selectionLayer.getEditorItemCount() > 0) {
       setPopupType(PopupType.SHAPES)
     } else {
       setPopupType(PopupType.EDITOR)
@@ -630,7 +633,7 @@ const Content: FC<ContentProps> = ({
 
   const handleSelectionResized = (e: EditorEvent) => {
     //console.log(`handle selection resized`)
-    if(Utils.currentEditor && e.source.selectionLayer.getEditorItemCount() == 1 ) {
+    if (Utils.currentEditor && e.source.selectionLayer.getEditorItemCount() == 1) {
       let item = e.source.selectionLayer.getEditorItem(0) as Item
       let container = document.getElementById('editor-container')
       let postion = getElementAbsolutePosition(container)
@@ -641,22 +644,22 @@ const Content: FC<ContentProps> = ({
       let top = point.y * Utils.currentEditor.zoom - scrollTop
       //let left = item.left * Utils.currentEditor.zoom
       //let top = item.top * Utils.currentEditor.zoom
-      if(item instanceof TableEntity && item.customizable) {
+      if (item instanceof TableEntity && item.customizable) {
         setTableToolbarLeft(left + postion.left)
         setTableToolbarTop(top + postion.top)
         setTableToolbarVisible(true)
-        if(Utils.currentEditor.targetItem) {
+        if (Utils.currentEditor.targetItem) {
           setTextToolbarLeft(left + postion.left)
           setTextToolbarTop(top + postion.top)
           setTextToolbarVisible(true)
         }
-      } else if(item instanceof TableEntity) {
-        if(Utils.currentEditor.targetItem) {
+      } else if (item instanceof TableEntity) {
+        if (Utils.currentEditor.targetItem) {
           setTextToolbarLeft(left + postion.left)
           setTextToolbarTop(top + postion.top)
           setTextToolbarVisible(true)
         }
-    } else if(item instanceof ShapeEntity && e.source.isTextEditting) {
+      } else if (item instanceof ShapeEntity && e.source.isTextEditting) {
         setTextToolbarLeft(left + postion.left)
         setTextToolbarTop(top + postion.top)
         setTextToolbarVisible(true)
@@ -667,28 +670,28 @@ const Content: FC<ContentProps> = ({
 
   const handleSelectionResizing = (e: EditorEvent) => {
     //console.log(`handle selection resizing`)
-    if(Utils.currentEditor && e.source.selectionLayer.getEditorItemCount() == 1 ) {
+    if (Utils.currentEditor && e.source.selectionLayer.getEditorItemCount() == 1) {
       let item = e.source.selectionLayer.getEditorItem(0) as Item
-      if(item instanceof TableEntity) {
+      if (item instanceof TableEntity) {
         setTableToolbarVisible(false)
-        if(Utils.currentEditor.targetItem) {
+        if (Utils.currentEditor.targetItem) {
           setTextToolbarVisible(false)
         }
-      } else if(item instanceof ShapeEntity && e.source.isTextEditting) {
+      } else if (item instanceof ShapeEntity && e.source.isTextEditting) {
         setTextToolbarVisible(false)
       }
     }
   }
 
   const handleTextEditStyleChange = (e: EditorEvent) => {
-    if(Utils.currentEditor && e.source.selectionLayer.getEditorItemCount() == 1 ) {
+    if (Utils.currentEditor && e.source.selectionLayer.getEditorItemCount() == 1) {
       refreshSelectionInfo(Utils.currentEditor)
     }
   }
 
   const handleEditorModeChange = (e: EditorEvent) => {
-    if(Utils.currentEditor) {
-      const editorCursor =  SystemUtils.generateEditorMode(Utils.currentEditor.mode)
+    if (Utils.currentEditor) {
+      const editorCursor = SystemUtils.generateEditorMode(Utils.currentEditor.mode)
       setEditorCursor(editorCursor)
       //console.log(`cursor is updated = ${editorCursor}`)
     }
@@ -696,7 +699,7 @@ const Content: FC<ContentProps> = ({
 
   const handleTextEditStart = (e: EditorEvent) => {
     //console.log(`handle text start`)
-    if(Utils.currentEditor && e.source.selectionLayer.getEditorItemCount() == 1 ) {
+    if (Utils.currentEditor && e.source.selectionLayer.getEditorItemCount() == 1) {
       let item = e.source.selectionLayer.getEditorItem(0) as Item
       let container = document.getElementById('editor-container')
       let postion = getElementAbsolutePosition(container)
@@ -716,7 +719,7 @@ const Content: FC<ContentProps> = ({
   }
 
   const getElementAbsolutePosition = (element: HTMLElement | null) => {
-    if(element) {
+    if (element) {
       let acturalLeft = element.offsetLeft
       let acturalTop = element.offsetTop
       let curElement = element.offsetParent as HTMLElement
@@ -745,18 +748,18 @@ const Content: FC<ContentProps> = ({
 
   const findEditorScrollPosition = () => {
     const contentContainer = document.getElementById('content-container')
-    if(contentContainer) {
+    if (contentContainer) {
       return [contentContainer.scrollLeft, contentContainer.scrollTop]
     } else {
       return [0, 0]
     }
-    
+
   }
 
   const addEditor = (requireOperation: boolean, fromEditor: Editor | null, afterEditor: Editor | null, beforeEditor: Editor | null) => {
     const newActiveKey = `${newTabIndex.current++}`
     const panes = panesRef.current
-    const newPanes = [ ...panes, ]
+    const newPanes = [...panes,]
     //let newPanes: Pane[] = []
     //newPanes = newPanes.concat(panes)
 
@@ -767,11 +770,11 @@ const Content: FC<ContentProps> = ({
     let exists = false
     for (let i = 0; i < panes.length; i++) {
       const childPane = panes[i]
-      if (childPane.editor == fromEditor) {    
+      if (childPane.editor == fromEditor) {
         exists = true
       }
     }
-    
+
     const canvasId = fromEditor ? 'editor-' + fromEditor.key : 'editor-' + pane.key
     const canvas = fromEditor ? fromEditor.canvas! : document.createElement('canvas')
     canvas.width = DEFAULT_PAINTER_WIDTH
@@ -782,21 +785,21 @@ const Content: FC<ContentProps> = ({
     editor.key = pane.key
     editor.title = pane.title
     editor.start()
-    if(afterEditor) {
-      if(!exists) {
+    if (afterEditor) {
+      if (!exists) {
         for (let i = 0; i < panes.length; i++) {
           const childPane = panes[i]
-          if (childPane.editor == afterEditor) {    
+          if (childPane.editor == afterEditor) {
             newPanes.splice(i + 1, 0, pane)
             break
           }
         }
       }
-    } else if(beforeEditor) {
-      if(!exists) {
+    } else if (beforeEditor) {
+      if (!exists) {
         for (let i = 0; i < panes.length; i++) {
           const childPane = panes[i]
-          if (childPane.editor == beforeEditor) {    
+          if (childPane.editor == beforeEditor) {
             newPanes.splice(i, 0, pane)
             break
           }
@@ -841,7 +844,7 @@ const Content: FC<ContentProps> = ({
     Utils.currentEditor.onEditorOperationEvent(handleEditorOperationEvent)
     oldEditor?.removeSizeChange(handleEditorSizeChange)
     Utils.currentEditor.onSizeChange(handleEditorSizeChange)
-    if(requireOperation) {
+    if (requireOperation) {
       let operation = new Operation(Utils.currentEditor, OperationType.ADD_EDITOR, [])
       Utils.currentEditor.operationService.addOperation(operation)
       Utils.currentEditor.triggerOperationChange()
@@ -857,10 +860,10 @@ const Content: FC<ContentProps> = ({
     let beforeEditor: Editor | null = null
     let oldEditor = Utils.currentEditor
     const panes = panesRef.current
-    if(!targetKey) { // for undo addEditorr, only happen on last tab because addEditor is for last tab
+    if (!targetKey) { // for undo addEditorr, only happen on last tab because addEditor is for last tab
       for (let i = 0; i < panes.length; i++) {
         const pane = panes[i]
-        if (pane.editor == editor) {    
+        if (pane.editor == editor) {
           theTargetKey = pane.key
           oldEditor = pane.editor!
         }
@@ -868,9 +871,9 @@ const Content: FC<ContentProps> = ({
     } else {
       for (let i = 0; i < panes.length; i++) {
         const pane = panes[i]
-        if (pane.key == theTargetKey) {    
+        if (pane.key == theTargetKey) {
           oldEditor = pane.editor!
-          if(i > 0) {
+          if (i > 0) {
             afterTargetKey = panes[i - 1].key
             afterEditor = panes[i - 1].editor
           } else {
@@ -886,13 +889,13 @@ const Content: FC<ContentProps> = ({
     let newPanes = panes.filter(pane => pane.key !== theTargetKey)
     newPanes = [...newPanes]
     newActivePane = newPanes[0]
-    if(!targetKey) {
+    if (!targetKey) {
       lastIndex = panes.length - 2
       newActiveKey = panes[lastIndex].key
       newActivePane = panes[lastIndex]
     } else {
       //Try to keep current page , and if current page will be delete then choose previouse page
-      if(activeKey != targetKey) {
+      if (activeKey != targetKey) {
         newPanes.forEach((pane, i) => {
           if (pane.key === activeKey) {
             lastIndex = i
@@ -954,8 +957,8 @@ const Content: FC<ContentProps> = ({
     oldEditor?.removeSizeChange(handleEditorSizeChange)
     Utils.currentEditor.onSizeChange(handleEditorSizeChange)
 
-    if(Utils.currentEditor) {
-      if(requireOperation) {
+    if (Utils.currentEditor) {
+      if (requireOperation) {
         let operation = new Operation(oldEditor!, OperationType.REMOVE_EDITOR, [], false, [], undefined, afterEditor, null, beforeEditor, null)
         Utils.currentEditor.operationService.addOperation(operation)
         Utils.currentEditor.triggerOperationChange()
@@ -971,7 +974,7 @@ const Content: FC<ContentProps> = ({
     const newPanes = clonePanes()
     let activatePane = newPanes[0]
     newPanes.forEach(pane => {
-      if(pane.key == editor.key) {
+      if (pane.key == editor.key) {
         pane.title = toName
         editor.title = toName
         activatePane = pane
@@ -983,7 +986,7 @@ const Content: FC<ContentProps> = ({
     //   input.value = toName
     //   input.defaultValue = toName
     // }
-    panesRef.current = newPanes    
+    panesRef.current = newPanes
     setPanes(newPanes)
     setDocumentModified(true)
     setActivePane(activatePane)
@@ -997,21 +1000,21 @@ const Content: FC<ContentProps> = ({
     if (action === 'add') {
       addEditor(true, null, null, null)
     } else {
-      if(panes.length > 1) {
+      if (panes.length > 1) {
         removeEditor(targetKey, true, null)
       }
     }
   }
 
-  const checkIfDocumentModified = (ifModified: boolean)=> {
-    if(ifModified) {
+  const checkIfDocumentModified = (ifModified: boolean) => {
+    if (ifModified) {
       setDocumentModified(true)
       Utils.isModified = true
     } else {
       let modified = false
-      if(Utils.editors.length > 0) {
-        Utils.editors.forEach( editor => {
-          if(editor.isModified()) {
+      if (Utils.editors.length > 0) {
+        Utils.editors.forEach(editor => {
+          if (editor.isModified()) {
             modified = true
           }
         })
@@ -1028,37 +1031,37 @@ const Content: FC<ContentProps> = ({
 
   const handleEditorOperationEvent = (event: EditorOperationEvent) => {
     checkIfDocumentModified(true)
-    switch(event.operation.type) {
+    switch (event.operation.type) {
       case OperationType.SELECT_EDITOR:
-        if(event.isUndo) {
+        if (event.isUndo) {
           handleUndoSelectEditor(event.operation)
         } else {
           handleRedoSelectEditor(event.operation)
         }
         break;
       case OperationType.ADD_EDITOR:
-        if(event.isUndo) {
+        if (event.isUndo) {
           handleUndoAddEditor(event.operation)
         } else {
           checkIfDocumentModified(true)
         }
         break;
       case OperationType.REMOVE_EDITOR:
-        if(event.isUndo) {
+        if (event.isUndo) {
           handleUndoRemoveEditor(event.operation)
         } else {
           handleRedoRemoveEditor(event.operation)
         }
         break;
       case OperationType.RENAME_EDITOR:
-        if(event.isUndo) {
+        if (event.isUndo) {
           handleUndoRenameEditor(event.operation)
         } else {
           handleRedoRenameEditor(event.operation)
         }
         break;
       case OperationType.MOVE_EDITOR:
-        if(event.isUndo) {
+        if (event.isUndo) {
           handleUndoMoveEditor(event.operation)
         } else {
           handleRedoMoveEditor(event.operation)
@@ -1077,8 +1080,8 @@ const Content: FC<ContentProps> = ({
       const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
       const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
       editorItems.forEach(editorItem => {
-        if(editorItem instanceof TableEntity) {
-          if(Utils.currentEditor?.targetItem) {
+        if (editorItem instanceof TableEntity) {
+          if (Utils.currentEditor?.targetItem) {
             Utils.currentEditor.targetItem.fontSize = value
           }
         } else {
@@ -1088,22 +1091,22 @@ const Content: FC<ContentProps> = ({
       Utils.currentEditor.focus()
       Utils.currentEditor.triggerTextEditStyleChange()
       const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      const  operation: Operation = new Operation(Utils.currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
+      const operation: Operation = new Operation(Utils.currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
       Utils.currentEditor.operationService.addOperation(operation)
       Utils.currentEditor.triggerOperationChange()
     }
-    if(fontSizeNode) {
+    if (fontSizeNode) {
       console.log('font size blue trigger on size change')
       fontSizeNode.blur()
     }
   }
-  
-  const handleFontSizeStepChange = (value: number, info : any) => {
+
+  const handleFontSizeStepChange = (value: number, info: any) => {
     console.log('font size step changed')
-    if(Utils.currentEditor) {
+    if (Utils.currentEditor) {
       Utils.currentEditor.focus()
     }
-    if(fontSizeNode) {
+    if (fontSizeNode) {
       console.log('font size blue trigger on size step change')
       fontSizeNode.blur()
     }
@@ -1111,14 +1114,14 @@ const Content: FC<ContentProps> = ({
 
   const handleFontSizeBlur = () => {
     console.log('font size is blured')
-    if(Utils.currentEditor) {
+    if (Utils.currentEditor) {
       Utils.currentEditor.focus()
     }
   }
 
   const handleFontSizePressEnter = (e: KeyboardEvent) => {
-    console.log('font size is pressed Enter Key')       
-    if(fontSizeNode) {
+    console.log('font size is pressed Enter Key')
+    if (fontSizeNode) {
       console.log('font size blue trigger on size step change')
       //fontSizeNode.blur()
     }
@@ -1132,9 +1135,9 @@ const Content: FC<ContentProps> = ({
       const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
       editorItems.forEach(editorItem => {
         let color = SystemUtils.parseColorString(value.toHexString())
-        if(color) {
-          if(editorItem instanceof TableEntity) {
-            if(Utils.currentEditor?.targetItem) {
+        if (color) {
+          if (editorItem instanceof TableEntity) {
+            if (Utils.currentEditor?.targetItem) {
               Utils.currentEditor.targetItem.fontColor = color
             }
           } else {
@@ -1142,10 +1145,10 @@ const Content: FC<ContentProps> = ({
           }
         }
       })
-      Utils.currentEditor.focus()    
+      Utils.currentEditor.focus()
       Utils.currentEditor.triggerTextEditStyleChange()
       const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      const  operation: Operation = new Operation(Utils.currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
+      const operation: Operation = new Operation(Utils.currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
       Utils.currentEditor.operationService.addOperation(operation)
       Utils.currentEditor.triggerOperationChange()
     }
@@ -1153,29 +1156,29 @@ const Content: FC<ContentProps> = ({
 
   const handleFontColorChangeComplete = (value: any) => {
     if (Utils.currentEditor) {
-      Utils.currentEditor.focus()    
+      Utils.currentEditor.focus()
       Utils.currentEditor.triggerTextEditStyleChange()
     }
   }
 
   const handleBoldChanged = () => {
     setFontBold(!fontBold)
-    if(Utils.currentEditor) {
+    if (Utils.currentEditor) {
       const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
       const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
       editorItems.forEach(editorItem => {
-        if(editorItem instanceof TableEntity) {
-          if(Utils.currentEditor?.targetItem) {
+        if (editorItem instanceof TableEntity) {
+          if (Utils.currentEditor?.targetItem) {
             Utils.currentEditor.targetItem.fontWeight = fontBold ? FontWeight.NORMAL : FontWeight.BOLD
           }
         } else {
           editorItem.fontWeight = fontBold ? FontWeight.NORMAL : FontWeight.BOLD
         }
       })
-      Utils.currentEditor.focus()    
+      Utils.currentEditor.focus()
       Utils.currentEditor.triggerTextEditStyleChange()
       const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      const  operation: Operation = new Operation(Utils.currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
+      const operation: Operation = new Operation(Utils.currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
       Utils.currentEditor.operationService.addOperation(operation)
       Utils.currentEditor.triggerOperationChange()
     }
@@ -1183,12 +1186,12 @@ const Content: FC<ContentProps> = ({
 
   const handleItalicChanged = () => {
     setFontItalic(!fontItalic)
-    if(Utils.currentEditor) {
+    if (Utils.currentEditor) {
       const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
       const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
       editorItems.forEach(editorItem => {
-        if(editorItem instanceof TableEntity) {
-          if(Utils.currentEditor?.targetItem) {
+        if (editorItem instanceof TableEntity) {
+          if (Utils.currentEditor?.targetItem) {
             Utils.currentEditor.targetItem.fontSlant = fontItalic ? FontSlant.UP_RIGHT : FontSlant.ITALIC
           }
         } else {
@@ -1198,7 +1201,7 @@ const Content: FC<ContentProps> = ({
       Utils.currentEditor.focus()
       Utils.currentEditor.triggerTextEditStyleChange()
       const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      const  operation: Operation = new Operation(Utils.currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
+      const operation: Operation = new Operation(Utils.currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
       Utils.currentEditor.operationService.addOperation(operation)
       Utils.currentEditor.triggerOperationChange()
     }
@@ -1206,22 +1209,22 @@ const Content: FC<ContentProps> = ({
 
   const handleUnderlineChanged = () => {
     setFontUnderline(!fontUnderline)
-    if(Utils.currentEditor) {
+    if (Utils.currentEditor) {
       const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
       const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
       editorItems.forEach(editorItem => {
-        if(editorItem instanceof TableEntity) {
-          if(Utils.currentEditor?.targetItem) {
+        if (editorItem instanceof TableEntity) {
+          if (Utils.currentEditor?.targetItem) {
             Utils.currentEditor.targetItem.textDecoration = fontUnderline ? TextDecoration.NONE : TextDecoration.UNDERLINE
           }
         } else {
           editorItem.textDecoration = fontUnderline ? TextDecoration.NONE : TextDecoration.UNDERLINE
         }
       })
-      Utils.currentEditor.focus()    
+      Utils.currentEditor.focus()
       Utils.currentEditor.triggerTextEditStyleChange()
       const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      const  operation: Operation = new Operation(Utils.currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
+      const operation: Operation = new Operation(Utils.currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
       Utils.currentEditor.operationService.addOperation(operation)
       Utils.currentEditor.triggerOperationChange()
     }
@@ -1229,24 +1232,24 @@ const Content: FC<ContentProps> = ({
 
   const handleTextAlignmentChanged = (textAlignment: string) => {
     setTextAlignment(textAlignment)
-    if(Utils.currentEditor) {
+    if (Utils.currentEditor) {
       const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
       const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
       editorItems.forEach(editorItem => {
-        if(editorItem instanceof TableEntity) {
-          if(Utils.currentEditor?.targetItem) {
+        if (editorItem instanceof TableEntity) {
+          if (Utils.currentEditor?.targetItem) {
             Utils.currentEditor.targetItem.textAlignment = SystemUtils.parseTextAlignment(textAlignment)
           }
         } else {
           editorItem.textAlignment = SystemUtils.parseTextAlignment(textAlignment)
         }
       })
-      Utils.currentEditor.focus()    
+      Utils.currentEditor.focus()
       Utils.currentEditor.triggerTextEditStyleChange()
       Utils.currentEditor.focus()
       Utils.currentEditor.triggerTextEditStyleChange()
       const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      const  operation: Operation = new Operation(Utils.currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
+      const operation: Operation = new Operation(Utils.currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
       Utils.currentEditor.operationService.addOperation(operation)
       Utils.currentEditor.triggerOperationChange()
     }
@@ -1254,34 +1257,34 @@ const Content: FC<ContentProps> = ({
 
   const handleTextVerticalAlignmentChanged = (textVerticalAlignment: string) => {
     setTextVerticalAlignment(textVerticalAlignment)
-    if(Utils.currentEditor) {
+    if (Utils.currentEditor) {
       const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
       const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
       editorItems.forEach(editorItem => {
-        if(editorItem instanceof TableEntity) {
-          if(Utils.currentEditor?.targetItem) {
+        if (editorItem instanceof TableEntity) {
+          if (Utils.currentEditor?.targetItem) {
             Utils.currentEditor.targetItem.textVerticalAlignment = SystemUtils.parseTextVerticalAligment(textVerticalAlignment)
           }
         } else {
           editorItem.textVerticalAlignment = SystemUtils.parseTextVerticalAligment(textVerticalAlignment)
         }
       })
-      Utils.currentEditor.focus()    
+      Utils.currentEditor.focus()
       Utils.currentEditor.triggerTextEditStyleChange()
       const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      const  operation: Operation = new Operation(Utils.currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
+      const operation: Operation = new Operation(Utils.currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
       Utils.currentEditor.operationService.addOperation(operation)
       Utils.currentEditor.triggerOperationChange()
     }
   }
 
-  const handleKeyDownEvent = (event: KeyboardEvent)  => {
-    if(event.key == 'Delete') {
+  const handleKeyDownEvent = (event: KeyboardEvent) => {
+    if (event.key == 'Delete') {
       event.preventDefault()
       handleDelete()
     }
-    if(event.metaKey || event.ctrlKey) {
-      switch(event.key) {
+    if (event.metaKey || event.ctrlKey) {
+      switch (event.key) {
         case 'a':
           event.preventDefault()
           handleSelectAll()
@@ -1296,7 +1299,7 @@ const Content: FC<ContentProps> = ({
           break;
       }
     }
-    
+
   }
 
   /**
@@ -1304,14 +1307,14 @@ const Content: FC<ContentProps> = ({
    * @param e 
    */
   const handleCopyDetail = (e: ClipboardEvent) => {
-    if(e.clipboardData && Utils.currentEditor) {
-      if(textToolbarVisible) {
+    if (e.clipboardData && Utils.currentEditor) {
+      if (textToolbarVisible) {
         let item = Utils.currentEditor.selectionLayer.getEditorItem(0) as Item
         let data = item.shape.richSelection
-        if(item instanceof TableEntity && Utils.currentEditor.targetItem) {
+        if (item instanceof TableEntity && Utils.currentEditor.targetItem) {
           data = Utils.currentEditor.targetItem.shape.richSelection
         }
-        if(data.length > 0) {
+        if (data.length > 0) {
           e.clipboardData.clearData()
           e.clipboardData.setData('text/plain', data)
         }
@@ -1321,7 +1324,7 @@ const Content: FC<ContentProps> = ({
         e.clipboardData.clearData()
         e.clipboardData.setData('text/plain', data)
         //e.clipboardData.setData('text/retel', data)
-        console.log(`copy data = ${data}`) 
+        console.log(`copy data = ${data}`)
       }
       e.preventDefault()
     }
@@ -1329,7 +1332,7 @@ const Content: FC<ContentProps> = ({
 
   // Handle copy command only for application by menu
   const handleCopy = async () => {
-    if(Utils.currentEditor) {
+    if (Utils.currentEditor) {
       console.log(`copy is triggered`)
       const data = EditorHelper.exportEditorSelections(Utils.currentEditor)
       //let dataTransfer = new DataTransfer()
@@ -1338,32 +1341,32 @@ const Content: FC<ContentProps> = ({
       //data = `a${data}a`
       //dataTransfer.setData('text/plain', data)
       //dataTransfer.setData('text/retel', data)
-    //window.dispatchEvent(new ClipboardEvent('copy', {
-    //    bubbles: true,
-    //    cancelable: true,
-    //    composed: true,
-    //    clipboardData: dataTransfer
-    //  }))
+      //window.dispatchEvent(new ClipboardEvent('copy', {
+      //    bubbles: true,
+      //    cancelable: true,
+      //    composed: true,
+      //    clipboardData: dataTransfer
+      //  }))
 
-    //  document.dispatchEvent(new KeyboardEvent('keydown', {
-    //    key: 'c',
-    //    which: 67,
-    //    ctrlKey: true,
-    //    metaKey: true,
-    //    bubbles:true,
-    //  }))
-    
-    //  let sandbox = document.getElementById('sandbox')
-    //  if(sandbox) {
-    //    sandbox.focus()    
-    //    let result = document.execCommand('copy', false, 'a')
-    //    console.log(`Copy execution result is ${result}`)
-    //  }
-      
+      //  document.dispatchEvent(new KeyboardEvent('keydown', {
+      //    key: 'c',
+      //    which: 67,
+      //    ctrlKey: true,
+      //    metaKey: true,
+      //    bubbles:true,
+      //  }))
+
+      //  let sandbox = document.getElementById('sandbox')
+      //  if(sandbox) {
+      //    sandbox.focus()    
+      //    let result = document.execCommand('copy', false, 'a')
+      //    console.log(`Copy execution result is ${result}`)
+      //  }
+
       //document.execCommand('copy')
 
       let clipboard = navigator.clipboard
-      if(!clipboard) {
+      if (!clipboard) {
         SystemUtils.handleInternalError(intl.formatMessage({ id: 'workspace.content.message-clipboard-not-supported' }))
         return
       }
@@ -1391,17 +1394,17 @@ const Content: FC<ContentProps> = ({
   }
 
   const handleCutDetail = (e: ClipboardEvent) => {
-    if(e.clipboardData && Utils.currentEditor) {
-      if(textToolbarVisible) {
+    if (e.clipboardData && Utils.currentEditor) {
+      if (textToolbarVisible) {
         let item = Utils.currentEditor.selectionLayer.getEditorItem(0) as Item
         let data = item.shape.richSelection
-        if(item instanceof TableEntity && Utils.currentEditor.targetItem) {
+        if (item instanceof TableEntity && Utils.currentEditor.targetItem) {
           data = Utils.currentEditor.targetItem.shape.richSelection
         }
-        if(data.length > 0) {
+        if (data.length > 0) {
           e.clipboardData.clearData()
           e.clipboardData.setData('text/plain', data)
-          if(item instanceof TableEntity && Utils.currentEditor.targetItem) {
+          if (item instanceof TableEntity && Utils.currentEditor.targetItem) {
             Utils.currentEditor.targetItem.shape.deleteSelection()
           } else {
             item.shape.deleteSelection()
@@ -1414,7 +1417,7 @@ const Content: FC<ContentProps> = ({
         e.clipboardData.setData('text/plain', data)
         //e.clipboardData.setData('text/retel', data)
         EditorHelper.deleteSelections(Utils.currentEditor)
-        console.log(`cube data = ${data}`) 
+        console.log(`cube data = ${data}`)
         //deleteCurrentDocumentSelection()
       }
       e.preventDefault()
@@ -1422,10 +1425,10 @@ const Content: FC<ContentProps> = ({
   }
 
   const handleCut = async () => {
-    if(Utils.currentEditor) {
+    if (Utils.currentEditor) {
       console.log(`cut is triggered`)
       let clipboard = navigator.clipboard
-      if(!clipboard) {
+      if (!clipboard) {
         SystemUtils.handleInternalError(intl.formatMessage({ id: 'workspace.content.message-clipboard-not-supported' }))
         return
       }
@@ -1440,14 +1443,14 @@ const Content: FC<ContentProps> = ({
    * @param e 
    */
   const handlePasteDetail = (e: ClipboardEvent) => {
-    if(Utils.currentEditor && e.clipboardData && e.clipboardData.types.indexOf('text/plain') > -1) {
+    if (Utils.currentEditor && e.clipboardData && e.clipboardData.types.indexOf('text/plain') > -1) {
       let data = e.clipboardData.getData('text/plain')
       console.log(`oldData = ${data}`)
-      if(textToolbarVisible) {
+      if (textToolbarVisible) {
         let item = Utils.currentEditor.selectionLayer.getEditorItem(0) as Item
-        if(item instanceof TableEntity && Utils.currentEditor.targetItem) {
+        if (item instanceof TableEntity && Utils.currentEditor.targetItem) {
           Utils.currentEditor.targetItem.shape.insertRichText(data)
-        } else if(item instanceof ShapeEntity ){
+        } else if (item instanceof ShapeEntity) {
           item.shape.insertRichText(data)
         }
       } else {
@@ -1468,7 +1471,7 @@ const Content: FC<ContentProps> = ({
     console.log(`paste is triggered`)
     setPasteFromSystem(false)
     const clipboard = navigator.clipboard
-    if(!clipboard) {
+    if (!clipboard) {
       SystemUtils.handleInternalError(intl.formatMessage({ id: 'workspace.content.message-clipboard-not-supported' }))
       return
     }
@@ -1520,15 +1523,15 @@ const Content: FC<ContentProps> = ({
 
   // Handle copy command only for application by menu
   const handleTextCopy = async () => {
-    if(Utils.currentEditor && Utils.currentEditor.selectionLayer.getEditorItemCount() == 1 ) {
+    if (Utils.currentEditor && Utils.currentEditor.selectionLayer.getEditorItemCount() == 1) {
       console.log(`text copy is triggered`)
       let item = Utils.currentEditor.selectionLayer.getEditorItem(0) as Item
       let data = item.shape.richSelection
-      if(data.length <= 0) {
+      if (data.length <= 0) {
         return
       }
       let clipboard = navigator.clipboard
-      if(!clipboard) {
+      if (!clipboard) {
         SystemUtils.handleInternalError(intl.formatMessage({ id: 'workspace.content.message-clipboard-not-supported' }))
         return
       }
@@ -1537,15 +1540,15 @@ const Content: FC<ContentProps> = ({
   }
 
   const handleTextCut = async () => {
-    if(Utils.currentEditor && Utils.currentEditor.selectionLayer.getEditorItemCount() == 1 ) {
+    if (Utils.currentEditor && Utils.currentEditor.selectionLayer.getEditorItemCount() == 1) {
       console.log(`text cute is triggered`)
       let item = Utils.currentEditor.selectionLayer.getEditorItem(0) as Item
       let data = item.shape.selection
-      if(data.length <= 0) {
+      if (data.length <= 0) {
         return
       }
       let clipboard = navigator.clipboard
-      if(!clipboard) {
+      if (!clipboard) {
         SystemUtils.handleInternalError(intl.formatMessage({ id: 'workspace.content.message-clipboard-not-supported' }))
         return
       }
@@ -1561,7 +1564,7 @@ const Content: FC<ContentProps> = ({
     console.log(`text paste is triggered`)
     setPasteFromSystem(false)
     const clipboard = navigator.clipboard
-    if(!clipboard) {
+    if (!clipboard) {
       SystemUtils.handleInternalError(intl.formatMessage({ id: 'workspace.content.message-clipboard-not-supported' }))
       return
     }
@@ -1585,7 +1588,7 @@ const Content: FC<ContentProps> = ({
   }
 
   const handleSelectAll = () => {
-    if(Utils.currentEditor) {
+    if (Utils.currentEditor) {
       Utils.currentEditor.selectAll()
     }
   }
@@ -1596,7 +1599,7 @@ const Content: FC<ContentProps> = ({
   }
 
   const handleLock = () => {
-    if(Utils.currentEditor) {
+    if (Utils.currentEditor) {
       const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
       const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
       editorItems.forEach(editorItem => {
@@ -1604,39 +1607,39 @@ const Content: FC<ContentProps> = ({
       })
       Utils.currentEditor.invalideHolder()
       const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      const  operation: Operation = new Operation(Utils.currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
+      const operation: Operation = new Operation(Utils.currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
       Utils.currentEditor.operationService.addOperation(operation)
       Utils.currentEditor.triggerOperationChange()
     }
   }
 
   const handleToFront = () => {
-    if(Utils.currentEditor) {
+    if (Utils.currentEditor) {
       const selections = Utils.currentEditor.selectionLayer.getAllEditorItems()
       Utils.currentEditor.toFront(selections)
     }
   }
 
   const handleToBack = () => {
-    if(Utils.currentEditor) {
+    if (Utils.currentEditor) {
       const selections = Utils.currentEditor.selectionLayer.getAllEditorItems()
       Utils.currentEditor.toBack(selections)
     }
   }
 
   const handleBringForeward = () => {
-    if(Utils.currentEditor) {
+    if (Utils.currentEditor) {
       const selections = Utils.currentEditor.selectionLayer.getAllEditorItems()
-      if(selections.length == 1) {
+      if (selections.length == 1) {
         Utils.currentEditor.bringForeward(selections[0])
       }
     }
   }
 
   const handleSendBackward = () => {
-    if(Utils.currentEditor) {
+    if (Utils.currentEditor) {
       const selections = Utils.currentEditor.selectionLayer.getAllEditorItems()
-      if(selections.length == 1) {
+      if (selections.length == 1) {
         Utils.currentEditor.sendBackward(selections[0])
       }
     }
@@ -1658,8 +1661,8 @@ const Content: FC<ContentProps> = ({
     //const panes = panesRef.current
     for (let i = 0; i < panes.length; i++) {
       const pane = panes[i]
-      if (pane.editor == operation.afterEditor) {    
-        handleTabChange(panes, pane.key,false)
+      if (pane.editor == operation.afterEditor) {
+        handleTabChange(panes, pane.key, false)
       }
     }
   }
@@ -1668,8 +1671,8 @@ const Content: FC<ContentProps> = ({
     //const panes = panesRef.current
     for (let i = 0; i < panes.length; i++) {
       const pane = panes[i]
-      if (pane.editor == operation.editor) {    
-        handleTabChange(panes, pane.key,false)
+      if (pane.editor == operation.editor) {
+        handleTabChange(panes, pane.key, false)
       }
     }
   }
@@ -1697,22 +1700,22 @@ const Content: FC<ContentProps> = ({
   const handleRedoRenameEditor = (operation: Operation) => {
     renameSheet(operation.editor, operation.origEditorTitle, operation.editorTitle)
   }
-  
+
   const handleUndoMoveEditor = (operation: Operation) => {
-    if(operation.origEditor) {
+    if (operation.origEditor) {
       handleMoveEditor(operation.origEditor.key, operation.editor.key, false)
     }
   }
 
   const handleRedoMoveEditor = (operation: Operation) => {
-    if(operation.origEditor) {
+    if (operation.origEditor) {
       handleMoveEditor(operation.editor.key, operation.origEditor.key, false)
     }
   }
 
   const handleDelete = () => {
     if (currentEditor) {
-      if(currentEditor.isTextEditting) {
+      if (currentEditor.isTextEditting) {
         // Editor already handle this
         // if(currentEditor.targetItem) {
         //  currentEditor.targetItem.shape.handleDelete()
@@ -1726,7 +1729,7 @@ const Content: FC<ContentProps> = ({
   }
 
   const handleInsertRowBefore = () => {
-    if(currentEditor && currentEditor.targetItem && currentEditor.selectionLayer.getEditorItemCount() == 1) {
+    if (currentEditor && currentEditor.targetItem && currentEditor.selectionLayer.getEditorItemCount() == 1) {
       const tableEntity = currentEditor.selectionLayer.getEditorItem(0) as TableEntity
       const targetItemIndex = currentEditor.targetItemIndex
       const rowIndex = Math.floor(targetItemIndex / tableEntity.columnCount)
@@ -1738,7 +1741,7 @@ const Content: FC<ContentProps> = ({
 
 
   const handleInsertRowAfter = () => {
-    if(currentEditor && currentEditor.targetItem && currentEditor.selectionLayer.getEditorItemCount() == 1) {
+    if (currentEditor && currentEditor.targetItem && currentEditor.selectionLayer.getEditorItemCount() == 1) {
       const tableEntity = currentEditor.selectionLayer.getEditorItem(0) as TableEntity
       const targetItemIndex = currentEditor.targetItemIndex
       const rowIndex = Math.floor(targetItemIndex / tableEntity.columnCount)
@@ -1750,7 +1753,7 @@ const Content: FC<ContentProps> = ({
 
 
   const handleInsertColumnBefore = () => {
-    if(currentEditor && currentEditor.targetItem && currentEditor.selectionLayer.getEditorItemCount() == 1) {
+    if (currentEditor && currentEditor.targetItem && currentEditor.selectionLayer.getEditorItemCount() == 1) {
       const tableEntity = currentEditor.selectionLayer.getEditorItem(0) as TableEntity
       const targetItemIndex = currentEditor.targetItemIndex
       const columnIndex = targetItemIndex % tableEntity.columnCount
@@ -1762,7 +1765,7 @@ const Content: FC<ContentProps> = ({
 
 
   const handleInsertColumnAfter = () => {
-    if(currentEditor && currentEditor.targetItem && currentEditor.selectionLayer.getEditorItemCount() == 1) {
+    if (currentEditor && currentEditor.targetItem && currentEditor.selectionLayer.getEditorItemCount() == 1) {
       const tableEntity = currentEditor.selectionLayer.getEditorItem(0) as TableEntity
       const targetItemIndex = currentEditor.targetItemIndex
       const columnIndex = targetItemIndex % tableEntity.columnCount
@@ -1773,11 +1776,11 @@ const Content: FC<ContentProps> = ({
   }
 
   const handleDeleteRow = () => {
-    if(currentEditor && currentEditor.targetItem && currentEditor.selectionLayer.getEditorItemCount() == 1) {
+    if (currentEditor && currentEditor.targetItem && currentEditor.selectionLayer.getEditorItemCount() == 1) {
       const tableEntity = currentEditor.selectionLayer.getEditorItem(0) as TableEntity
       const targetItemIndex = currentEditor.targetItemIndex
       const rowIndex = Math.floor(targetItemIndex / tableEntity.columnCount)
-      tableEntity.deleteRow(rowIndex)      
+      tableEntity.deleteRow(rowIndex)
       currentEditor.invalideHolder()
       currentEditor.triggerSelectionResized()
     }
@@ -1785,7 +1788,7 @@ const Content: FC<ContentProps> = ({
 
 
   const handleDeleteColumn = () => {
-    if(currentEditor && currentEditor.targetItem && currentEditor.selectionLayer.getEditorItemCount() == 1) {
+    if (currentEditor && currentEditor.targetItem && currentEditor.selectionLayer.getEditorItemCount() == 1) {
       const tableEntity = currentEditor.selectionLayer.getEditorItem(0) as TableEntity
       const targetItemIndex = currentEditor.targetItemIndex
       const columnIndex = targetItemIndex % tableEntity.columnCount
@@ -1798,14 +1801,14 @@ const Content: FC<ContentProps> = ({
   const handleScroll = (event: UIEvent) => {
     const scrollLeft = event.currentTarget.scrollLeft
     const scrollTop = event.currentTarget.scrollTop
-    if(activePane) {
+    if (activePane) {
       activePane.scrollLeft = scrollLeft
       activePane.scrollTop = scrollTop
-    }    
+    }
   }
 
-  const onDragEnd = ({active, over} : DragEndEvent) => {
-    if(over) {
+  const onDragEnd = ({ active, over }: DragEndEvent) => {
+    if (over) {
       handleMoveEditor(active.id, over.id, true)
     }
   }
@@ -1821,11 +1824,11 @@ const Content: FC<ContentProps> = ({
       panesRef.current = panes
       setPanes(panes)
       setForceUpdate(!forceUpdate)
-      if(activePane.editor && requireOperation) {
+      if (activePane.editor && requireOperation) {
         const operation = new Operation(activePane.editor, OperationType.MOVE_EDITOR, [], false, [], '', null, null, null, null, false, 0, 0, 0, 0, '', '', origPane.editor)
         activePane.editor.operationService.addOperation(operation)
       }
-      if(Utils.currentEditor)  {
+      if (Utils.currentEditor) {
         Utils.currentEditor.triggerOperationChange()
       }
     }
@@ -1833,7 +1836,7 @@ const Content: FC<ContentProps> = ({
 
   const handleRenamePaneTitle = (key: string) => {
     const element = document.getElementById('pane-title-input-' + activeKey)
-    if(element) {
+    if (element) {
       const input = element as HTMLInputElement
       //input.readOnly = false
       input.focus()
@@ -1844,9 +1847,9 @@ const Content: FC<ContentProps> = ({
   const handleDuplicatePane = (key: string) => {
     const oldEditor = Utils.currentEditor
     addEditor(true, null, null, null)
-    if(oldEditor) {
+    if (oldEditor) {
       const editorItemInfos = EditorHelper.generateEditorItems(oldEditor)
-      if(Utils.currentEditor) {
+      if (Utils.currentEditor) {
         editorItemInfos.forEach(editorItemInfo => {
           const editorItem = OperationHelper.loadItem(editorItemInfo, Utils.currentEditor!)
           Utils.currentEditor!.contentLayer.addEditorItem(editorItem)
@@ -1861,13 +1864,13 @@ const Content: FC<ContentProps> = ({
   }
 
   const handlePaneTitlePointerEnter = (event: SyntheticEvent<HTMLInputElement>) => {
-    if(event.target && event.target.style) {
+    if (event.target && event.target.style) {
       event.target.style.cursor = 'move'
     }
   }
 
   const handlePaneTitleDoubleClick = (pane: Pane, event: SyntheticEvent<HTMLInputElement>) => {
-    if(event.target && event.target.style) {
+    if (event.target && event.target.style) {
       event.target.style.cursor = 'text'
     }
     event.target.readOnly = false
@@ -1878,7 +1881,7 @@ const Content: FC<ContentProps> = ({
   const handlePaneTitleLabelDoubleClick = (pane: Pane, event: SyntheticEvent<HTMLInputElement>) => {
     event.target.style.display = 'none'
     const element = document.getElementById('pane-title-input-' + pane.key)
-    if(element) {
+    if (element) {
       const input = element as HTMLInputElement
       input.defaultValue = pane.title
       input.value = pane.title
@@ -1889,7 +1892,7 @@ const Content: FC<ContentProps> = ({
   }
 
   const handlePaneTitleClick = (key: string, event: SyntheticEvent<HTMLInputElement>) => {
-    if(activePane?.key != key) {
+    if (activePane?.key != key) {
       onTabChange(key)
     }
   }
@@ -1897,10 +1900,10 @@ const Content: FC<ContentProps> = ({
 
 
   const handlePaneTitleChangeBlur = (pane: Pane, event: SyntheticEvent<HTMLInputElement>) => {
-    if(!event.target.readOnly) {
+    if (!event.target.readOnly) {
       handlePaneTitleChangeCompleted(pane, event)
     }
-    
+
   }
 
 
@@ -1908,7 +1911,7 @@ const Content: FC<ContentProps> = ({
     const newPanes = clonePanes()
     const newPane = findPane(pane.key, newPanes)
     newPane.title = event.target.value
-    if(newPane.editor) {
+    if (newPane.editor) {
       newPane.editor.title = newPane.title
     }
     panesRef.current = newPanes
@@ -1919,7 +1922,7 @@ const Content: FC<ContentProps> = ({
     event.target.readOnly = true
     event.target.value = newPane.title
     //event.target.blur()    
-    if(newPane.editor) {
+    if (newPane.editor) {
       const operation = new Operation(newPane.editor, OperationType.RENAME_EDITOR, [], false, [], '', null, null, null, null, false, 0, 0, 0, 0, newPane.title, pane.title)
       newPane.editor.operationService.addOperation(operation)
       setDocumentModified(true)
@@ -1946,7 +1949,7 @@ const Content: FC<ContentProps> = ({
   const findPane = (key: string, panes: Pane[]) => {
     let newPane = panes[0]
     panes.forEach(pane => {
-      if(key == pane.key) {
+      if (key == pane.key) {
         newPane = pane
       }
     })
@@ -1966,8 +1969,8 @@ const Content: FC<ContentProps> = ({
   }
 
   const handleAddToMyShapes = async () => {
-    if(Utils.currentEditor) {
-      if(RequestUtils.online) {
+    if (Utils.currentEditor) {
+      if (RequestUtils.online) {
         await EditorHelper.addToMyShapes(Utils.currentEditor, onMyShapesUpdated)
       } else {
         SystemUtils.handleInternalError(intl.formatMessage({ id: 'workspace.content.message-login-is-required' }))
@@ -1977,7 +1980,7 @@ const Content: FC<ContentProps> = ({
 
   //Currently editor can't handle this event internally, and so we trigger it manually to complete creation of shape
   const handleEditorMouseUp = (e: SyntheticEvent<HTMLDivElement>) => {
-    if(Utils.currentEditor?.action) {
+    if (Utils.currentEditor?.action) {
       const pointerEvent = new PointerEvent(null as Node, e.nativeEvent.offsetX, e.nativeEvent.offsetY, MouseCode.LEFT_MOUSE_DOWN, false, false, false, 0, false, 0, '', 0, 0, 0, 0, 0, 0, 0)
       Utils.currentEditor.handlePointerDown(pointerEvent)
       Utils.currentEditor.handlePointerUp(pointerEvent)
@@ -2043,139 +2046,139 @@ const Content: FC<ContentProps> = ({
   // }
 
   const popupShapeItems: MenuProps['items'] = [
-    {label: <FormattedMessage id='workspace.content.popup-shape-delete' />, key: '1', onClick: handleDelete, },
-    {type: 'divider' },
-    {label: <FormattedMessage id='workspace.content.popup-shape-copy' />, key: '2', onClick: handleCopy, },
-    {label: <FormattedMessage id='workspace.content.popup-shape-cut' />, key: '3', onClick: handleCut, },
-    {label: <FormattedMessage id='workspace.content.popup-shape-paste' />, key: '4', onClick: handlePaste, },
-    {label: <FormattedMessage id='workspace.content.popup-shape-duplicate' />, key: '5', onClick: handleDuplicate, },
-    {type: 'divider' },
-    {label: <FormattedMessage id='workspace.content.popup-shape-lock' />, key: '6', onClick: handleLock, },
-    {type: 'divider' },
-    {label: <FormattedMessage id='workspace.content.popup-shape-to-front' />, key: '7', onClick: handleToFront, },
-    {label: <FormattedMessage id='workspace.content.popup-shape-to-back' />, key: '8', onClick: handleToBack, },
-    {label: <FormattedMessage id='workspace.content.popup-shape-bring-foreward' />, key: '9', onClick: handleBringForeward, },
-    {label: <FormattedMessage id='workspace.content.popup-shape-send-backward' />, key: '10', onClick: handleSendBackward, },
-    {type: 'divider' },
-    {label: <FormattedMessage id='workspace.content.popup-shape-add-to-my-shapes' />, key: '116', onClick: handleAddToMyShapes, },
+    { label: <FormattedMessage id='workspace.content.popup-shape-delete' />, key: '1', onClick: handleDelete, },
+    { type: 'divider' },
+    { label: <FormattedMessage id='workspace.content.popup-shape-copy' />, key: '2', onClick: handleCopy, },
+    { label: <FormattedMessage id='workspace.content.popup-shape-cut' />, key: '3', onClick: handleCut, },
+    { label: <FormattedMessage id='workspace.content.popup-shape-paste' />, key: '4', onClick: handlePaste, },
+    { label: <FormattedMessage id='workspace.content.popup-shape-duplicate' />, key: '5', onClick: handleDuplicate, },
+    { type: 'divider' },
+    { label: <FormattedMessage id='workspace.content.popup-shape-lock' />, key: '6', onClick: handleLock, },
+    { type: 'divider' },
+    { label: <FormattedMessage id='workspace.content.popup-shape-to-front' />, key: '7', onClick: handleToFront, },
+    { label: <FormattedMessage id='workspace.content.popup-shape-to-back' />, key: '8', onClick: handleToBack, },
+    { label: <FormattedMessage id='workspace.content.popup-shape-bring-foreward' />, key: '9', onClick: handleBringForeward, },
+    { label: <FormattedMessage id='workspace.content.popup-shape-send-backward' />, key: '10', onClick: handleSendBackward, },
+    { type: 'divider' },
+    { label: <FormattedMessage id='workspace.content.popup-shape-add-to-my-shapes' />, key: '116', onClick: handleAddToMyShapes, },
   ]
 
   const popupEditorItems: MenuProps['items'] = [
-    {label: <FormattedMessage id='workspace.content.popup-editor-undo' />, key: '1', onClick: handleUndo, },
-    {label: <FormattedMessage id='workspace.content.popup-editor-redo' />, key: '3', onClick: handlePaste, },
-    {type: 'divider' },
-    {label: <FormattedMessage id='workspace.content.popup-editor-paste' />, key: '2', onClick: handlePaste, },
-    {type: 'divider' },
-    {label: <FormattedMessage id='workspace.content.popup-editor-select-all' />, key: '4', onClick: handleSelectAll, },
+    { label: <FormattedMessage id='workspace.content.popup-editor-undo' />, key: '1', onClick: handleUndo, },
+    { label: <FormattedMessage id='workspace.content.popup-editor-redo' />, key: '3', onClick: handlePaste, },
+    { type: 'divider' },
+    { label: <FormattedMessage id='workspace.content.popup-editor-paste' />, key: '2', onClick: handlePaste, },
+    { type: 'divider' },
+    { label: <FormattedMessage id='workspace.content.popup-editor-select-all' />, key: '4', onClick: handleSelectAll, },
   ]
 
   const popupText: MenuProps['items'] = [
-    {label: <FormattedMessage id='workspace.content.popup-text-undo' />, key: '1', onClick: handleUndo, },
-    {label: <FormattedMessage id='workspace.content.popup-text-redo' />, key: '2', onClick: handleRedo, },
-    {type: 'divider' },
-    {label: <FormattedMessage id='workspace.content.popup-text-cut' />, key: '3', onClick: handleTextCut, },
-    {label: <FormattedMessage id='workspace.content.popup-text-copy' />, key: '4', onClick: handleTextCopy, },
-    {label: <FormattedMessage id='workspace.content.popup-text-paste' />, key: '5', onClick: handleTextPaste, },
-    {type: 'divider' },
-    {label: <FormattedMessage id='workspace.content.popup-text-select-all' />, key: '6', onClick: handleSelectAll, },
+    { label: <FormattedMessage id='workspace.content.popup-text-undo' />, key: '1', onClick: handleUndo, },
+    { label: <FormattedMessage id='workspace.content.popup-text-redo' />, key: '2', onClick: handleRedo, },
+    { type: 'divider' },
+    { label: <FormattedMessage id='workspace.content.popup-text-cut' />, key: '3', onClick: handleTextCut, },
+    { label: <FormattedMessage id='workspace.content.popup-text-copy' />, key: '4', onClick: handleTextCopy, },
+    { label: <FormattedMessage id='workspace.content.popup-text-paste' />, key: '5', onClick: handleTextPaste, },
+    { type: 'divider' },
+    { label: <FormattedMessage id='workspace.content.popup-text-select-all' />, key: '6', onClick: handleSelectAll, },
   ]
 
   const popupPaneTitle = (key: string): MenuProps['items'] => {
     return [
-      {label: <FormattedMessage id='workspace.content.popup-menu-rename-pane-title' />, key: '1', onClick: () => handleRenamePaneTitle(key), },
-      {label: <FormattedMessage id='workspace.content.popup-menu-duplicate-pane' />, key: '2', onClick: () => handleDuplicatePane(key), },
-      {label: <FormattedMessage id='workspace.content.popup-menu-delete-pane' />, key: '3', onClick: () => handleDeletePane(key), },
+      { label: <FormattedMessage id='workspace.content.popup-menu-rename-pane-title' />, key: '1', onClick: () => handleRenamePaneTitle(key), },
+      { label: <FormattedMessage id='workspace.content.popup-menu-duplicate-pane' />, key: '2', onClick: () => handleDuplicatePane(key), },
+      { label: <FormattedMessage id='workspace.content.popup-menu-delete-pane' />, key: '3', onClick: () => handleDeletePane(key), },
     ]
-  } 
+  }
 
-  const textToolbars = <FloatButton.Group style={{left: textToolbarLeft, top: textToolbarTop - 40, height: 32, display: textToolbarVisible ? 'block' : 'none' }}>                  
-    <Space direction='horizontal' style={{backgroundColor: 'white', borderColor: 'silver', borderWidth: 1, borderStyle: 'solid', padding: 2}}>
-      <Tooltip title={<FormattedMessage id='workspace.header.title.font-bold'/>}>
-        <Button type={fontBold ? 'primary' : 'text'} size='small' icon={<BoldOutlined/>}  onClick={handleBoldChanged} />
-        </Tooltip>
-      <Tooltip title={<FormattedMessage id='workspace.header.title.font-italic'/>}>
-        <Button type={fontItalic ? 'primary' : 'text'} size='small' icon={<ItalicOutlined/>} onClick={handleItalicChanged} />
+  const textToolbars = <FloatButton.Group style={{ left: textToolbarLeft, top: textToolbarTop - 40, height: 32, display: textToolbarVisible ? 'block' : 'none' }}>
+    <Space direction='horizontal' style={{ backgroundColor: 'white', borderColor: 'silver', borderWidth: 1, borderStyle: 'solid', padding: 2 }}>
+      <Tooltip title={<FormattedMessage id='workspace.header.title.font-bold' />}>
+        <Button type={fontBold ? 'primary' : 'text'} size='small' icon={<BoldOutlined />} onClick={handleBoldChanged} />
       </Tooltip>
-      <Tooltip title={<FormattedMessage id='workspace.header.title.font-underline'/>}>
-        <Button type={fontUnderline ? 'primary' : 'text'} size='small' icon={<UnderlineOutlined/>} onClick={handleUnderlineChanged} />
+      <Tooltip title={<FormattedMessage id='workspace.header.title.font-italic' />}>
+        <Button type={fontItalic ? 'primary' : 'text'} size='small' icon={<ItalicOutlined />} onClick={handleItalicChanged} />
       </Tooltip>
-      <Divider type='vertical' style={{ margin: 0 }} />
-      <Tooltip title={<FormattedMessage id='workspace.header.title.text-left'/>}>
-        <Button type={textAlignment == Consts.TEXT_ALIGNMENT_LEFT ? 'primary' : 'text'} size='small' icon={<AlignLeftOutlined/>} onClick={() => handleTextAlignmentChanged(Consts.TEXT_ALIGNMENT_LEFT)} />
-      </Tooltip>
-      <Tooltip title={<FormattedMessage id='workspace.header.title.text-center'/>}>
-        <Button type={textAlignment == Consts.TEXT_ALIGNMENT_CENTER ? 'primary' : 'text'} size='small' icon={<AlignCenterOutlined/>} onClick={() => handleTextAlignmentChanged(Consts.TEXT_ALIGNMENT_CENTER)} />
-      </Tooltip>
-      <Tooltip title={<FormattedMessage id='workspace.header.title.text-right'/>}>
-        <Button type={textAlignment == Consts.TEXT_ALIGNMENT_RIGHT ? 'primary' : 'text'} size='small' icon={<AlignRightOutlined/>} onClick={() => handleTextAlignmentChanged(Consts.TEXT_ALIGNMENT_RIGHT)} />
+      <Tooltip title={<FormattedMessage id='workspace.header.title.font-underline' />}>
+        <Button type={fontUnderline ? 'primary' : 'text'} size='small' icon={<UnderlineOutlined />} onClick={handleUnderlineChanged} />
       </Tooltip>
       <Divider type='vertical' style={{ margin: 0 }} />
-      <Tooltip title={<FormattedMessage id='workspace.header.title.text-top'/>}>
-        <Button type={textVerticalAlignment == Consts.PLACE_HOLDER_ALIGNMENT_TOP ? 'primary' : 'text'} size='small' icon={<VerticalAlignTopOutlined/>} onClick={() => handleTextVerticalAlignmentChanged(Consts.PLACE_HOLDER_ALIGNMENT_TOP)} />
+      <Tooltip title={<FormattedMessage id='workspace.header.title.text-left' />}>
+        <Button type={textAlignment == Consts.TEXT_ALIGNMENT_LEFT ? 'primary' : 'text'} size='small' icon={<AlignLeftOutlined />} onClick={() => handleTextAlignmentChanged(Consts.TEXT_ALIGNMENT_LEFT)} />
       </Tooltip>
-      <Tooltip title={<FormattedMessage id='workspace.header.title.text-middle'/>}>
-        <Button type={textVerticalAlignment == Consts.PLACE_HOLDER_ALIGNMENT_MIDDLE ? 'primary' : 'text'} size='small' icon={<VerticalAlignMiddleOutlined/>}  onClick={() => handleTextVerticalAlignmentChanged(Consts.PLACE_HOLDER_ALIGNMENT_MIDDLE)} />
+      <Tooltip title={<FormattedMessage id='workspace.header.title.text-center' />}>
+        <Button type={textAlignment == Consts.TEXT_ALIGNMENT_CENTER ? 'primary' : 'text'} size='small' icon={<AlignCenterOutlined />} onClick={() => handleTextAlignmentChanged(Consts.TEXT_ALIGNMENT_CENTER)} />
       </Tooltip>
-      <Tooltip title={<FormattedMessage id='workspace.header.title.text-bottom'/>}>
-        <Button type={textVerticalAlignment == Consts.PLACE_HOLDER_ALIGNMENT_BOTTOM ? 'primary' : 'text'} size='small' icon={<VerticalAlignBottomOutlined/>} onClick={() => handleTextVerticalAlignmentChanged(Consts.PLACE_HOLDER_ALIGNMENT_BOTTOM)} />
+      <Tooltip title={<FormattedMessage id='workspace.header.title.text-right' />}>
+        <Button type={textAlignment == Consts.TEXT_ALIGNMENT_RIGHT ? 'primary' : 'text'} size='small' icon={<AlignRightOutlined />} onClick={() => handleTextAlignmentChanged(Consts.TEXT_ALIGNMENT_RIGHT)} />
       </Tooltip>
       <Divider type='vertical' style={{ margin: 0 }} />
-      <Tooltip title={<FormattedMessage id='workspace.header.title.font-size'/>}>
+      <Tooltip title={<FormattedMessage id='workspace.header.title.text-top' />}>
+        <Button type={textVerticalAlignment == Consts.PLACE_HOLDER_ALIGNMENT_TOP ? 'primary' : 'text'} size='small' icon={<VerticalAlignTopOutlined />} onClick={() => handleTextVerticalAlignmentChanged(Consts.PLACE_HOLDER_ALIGNMENT_TOP)} />
+      </Tooltip>
+      <Tooltip title={<FormattedMessage id='workspace.header.title.text-middle' />}>
+        <Button type={textVerticalAlignment == Consts.PLACE_HOLDER_ALIGNMENT_MIDDLE ? 'primary' : 'text'} size='small' icon={<VerticalAlignMiddleOutlined />} onClick={() => handleTextVerticalAlignmentChanged(Consts.PLACE_HOLDER_ALIGNMENT_MIDDLE)} />
+      </Tooltip>
+      <Tooltip title={<FormattedMessage id='workspace.header.title.text-bottom' />}>
+        <Button type={textVerticalAlignment == Consts.PLACE_HOLDER_ALIGNMENT_BOTTOM ? 'primary' : 'text'} size='small' icon={<VerticalAlignBottomOutlined />} onClick={() => handleTextVerticalAlignmentChanged(Consts.PLACE_HOLDER_ALIGNMENT_BOTTOM)} />
+      </Tooltip>
+      <Divider type='vertical' style={{ margin: 0 }} />
+      <Tooltip title={<FormattedMessage id='workspace.header.title.font-size' />}>
         {/** TODO:  FIXME, HIDE TEMPORARY*/}
-        <InputNumber min={Consts.FONT_SIZE_MIN} max={Consts.FONT_SIZE_MAX} value={fontSize} 
-          ref={(node) => {setFontSizeNode(node)}} 
-          onChange={handleFontSizeChange}  onStep={handleFontSizeStepChange} onBlur={handleFontSizeBlur} onPressEnter={handleFontSizePressEnter} size='small' style={{ width: 60, display: 'none' }} />
-        <Select size='small' value={fontSize} onChange={handleFontSizeChange} style={{width: 64, }} options={FontSizeOptions} bordered={false}/>
+        <InputNumber min={Consts.FONT_SIZE_MIN} max={Consts.FONT_SIZE_MAX} value={fontSize}
+          ref={(node) => { setFontSizeNode(node) }}
+          onChange={handleFontSizeChange} onStep={handleFontSizeStepChange} onBlur={handleFontSizeBlur} onPressEnter={handleFontSizePressEnter} size='small' style={{ width: 60, display: 'none' }} />
+        <Select size='small' value={fontSize} onChange={handleFontSizeChange} style={{ width: 64, }} options={FontSizeOptions} bordered={false} />
       </Tooltip>
-      <Tooltip title={<FormattedMessage id='workspace.header.title.font-color'/>}>
-        <ColorPicker size='small' value={fontColor} onChange={handleFontColorChange} onChangeComplete={handleFontColorChangeComplete} destroyTooltipOnHide={true} trigger='hover'/>
+      <Tooltip title={<FormattedMessage id='workspace.header.title.font-color' />}>
+        <ColorPicker size='small' value={fontColor} onChange={handleFontColorChange} onChangeComplete={handleFontColorChangeComplete} destroyTooltipOnHide={true} trigger='hover' />
       </Tooltip>
     </Space>
   </FloatButton.Group>
 
-  const tableToolbars = <FloatButton.Group style={{left: tableToolbarLeft, top: tableToolbarTop - 40 - (textToolbarVisible ? 40 : 0), height: 32, display: tableToolbarVisible ? 'block' : 'none'}}>                  
-    <Space direction='horizontal' style={{backgroundColor: 'white', borderColor: 'silver', borderWidth: 1, borderStyle: 'solid', padding: 2}}>
-      <Tooltip title={<FormattedMessage id='workspace.header.title.font-bold'/>}>
-        <Button type='text' size='small' icon={<InsertRowAboveOutlined/>}  onClick={handleInsertRowBefore} disabled={!tableEdittable}/>
-        </Tooltip>
-      <Tooltip title={<FormattedMessage id='workspace.header.title.font-italic'/>}>
-        <Button type='text' size='small' icon={<InsertRowBelowOutlined/>} onClick={handleInsertRowAfter}  disabled={!tableEdittable}/>
-        </Tooltip>
-      <Tooltip title={<FormattedMessage id='workspace.header.title.font-underline'/>}>
-        <Button type='text' size='small' icon={<InsertRowLeftOutlined/>} onClick={handleInsertColumnBefore}  disabled={!tableEdittable}/>
+  const tableToolbars = <FloatButton.Group style={{ left: tableToolbarLeft, top: tableToolbarTop - 40 - (textToolbarVisible ? 40 : 0), height: 32, display: tableToolbarVisible ? 'block' : 'none' }}>
+    <Space direction='horizontal' style={{ backgroundColor: 'white', borderColor: 'silver', borderWidth: 1, borderStyle: 'solid', padding: 2 }}>
+      <Tooltip title={<FormattedMessage id='workspace.header.title.font-bold' />}>
+        <Button type='text' size='small' icon={<InsertRowAboveOutlined />} onClick={handleInsertRowBefore} disabled={!tableEdittable} />
       </Tooltip>
-      <Tooltip title={<FormattedMessage id='workspace.header.title.font-underline'/>}>
-        <Button type='text' size='small' icon={<InsertRowRightOutlined/>} onClick={handleInsertColumnAfter}  disabled={!tableEdittable}/>
+      <Tooltip title={<FormattedMessage id='workspace.header.title.font-italic' />}>
+        <Button type='text' size='small' icon={<InsertRowBelowOutlined />} onClick={handleInsertRowAfter} disabled={!tableEdittable} />
+      </Tooltip>
+      <Tooltip title={<FormattedMessage id='workspace.header.title.font-underline' />}>
+        <Button type='text' size='small' icon={<InsertRowLeftOutlined />} onClick={handleInsertColumnBefore} disabled={!tableEdittable} />
+      </Tooltip>
+      <Tooltip title={<FormattedMessage id='workspace.header.title.font-underline' />}>
+        <Button type='text' size='small' icon={<InsertRowRightOutlined />} onClick={handleInsertColumnAfter} disabled={!tableEdittable} />
       </Tooltip>
       <Divider type='vertical' style={{ margin: 0 }} />
-      <Tooltip title={<FormattedMessage id='workspace.header.title.text-left'/>}>
-        <Button type='text' size='small' icon={<DeleteRowOutlined/>} onClick={() => handleDeleteRow()}  disabled={!tableEdittable}/>
+      <Tooltip title={<FormattedMessage id='workspace.header.title.text-left' />}>
+        <Button type='text' size='small' icon={<DeleteRowOutlined />} onClick={() => handleDeleteRow()} disabled={!tableEdittable} />
       </Tooltip>
-      <Tooltip title={<FormattedMessage id='workspace.header.title.text-center'/>}>
-        <Button type='text' size='small' icon={<DeleteColumnOutlined/>} onClick={() => handleDeleteColumn()}  disabled={!tableEdittable}/>
+      <Tooltip title={<FormattedMessage id='workspace.header.title.text-center' />}>
+        <Button type='text' size='small' icon={<DeleteColumnOutlined />} onClick={() => handleDeleteColumn()} disabled={!tableEdittable} />
       </Tooltip>
     </Space>
   </FloatButton.Group>
 
   return (
-    <div  style={{ position: 'absolute', top: '0px', bottom: '0px', left: x, right: y, backgroundColor: 'lightgray', }}>
+    <div style={{ position: 'absolute', top: '0px', bottom: '0px', left: x, right: y, backgroundColor: 'lightgray', }}>
       <div style={{ position: 'absolute', width: '100%', height: `calc(100% - ${Utils.TITLE_HEIGHT}px + 0px) `, zIndex: 2, }} >
         <div id='content-container' style={{ width: '100%', height: '100%', overflow: 'scroll', scrollbarWidth: 'thin', display: 'grid', placeItems: 'center', }} onScroll={handleScroll}>
           {textToolbars}
-          {tableToolbars}      
+          {tableToolbars}
           <div style={{ width: contentWidth, height: contentHeight, }}>
             <div style={{ width: '100%', height: Editor.SHADOW_SIZE, backgroundColor: 'lightgray', }} />
             <div style={{ width: '100%', height: editorHeight, boxSizing: 'border-box', }}>
               <div style={{ width: Editor.SHADOW_SIZE, height: '100%', float: 'left', backgroundColor: 'lightgray', }} />
-              <Dropdown 
-                  menu={{items: popupType == PopupType.SHAPES ? popupShapeItems : (popupType == PopupType.EDITOR ? popupEditorItems : popupText)}} 
-                  trigger={['contextMenu']} >
-                <div id='editor-container' style={{ width: editorWidth, height: '100%', float: 'left', backgroundColor: 'darkgray', cursor: editorCursor }} 
-                  onContextMenu={handleContextTrigger} 
+              <Dropdown
+                menu={{ items: popupType == PopupType.SHAPES ? popupShapeItems : (popupType == PopupType.EDITOR ? popupEditorItems : popupText) }}
+                trigger={['contextMenu']} >
+                <div id='editor-container' style={{ width: editorWidth, height: '100%', float: 'left', backgroundColor: 'darkgray', cursor: editorCursor }}
+                  onContextMenu={handleContextTrigger}
                   onMouseUp={handleEditorMouseUp}
-                  // onDrop={handleEditorDrop} onDragOver={handleEditorDragOver}
-                  // onDragEnter={handleEditorDragEnter} onDragLeave={handleEditorDragLeave}
-                  >
+                // onDrop={handleEditorDrop} onDragOver={handleEditorDragOver}
+                // onDragEnter={handleEditorDragEnter} onDragLeave={handleEditorDragLeave}
+                >
                 </div>
               </Dropdown>
               <div style={{ width: Editor.SHADOW_SIZE, height: '100%', float: 'left', backgroundColor: 'lightgray', }} />
@@ -2185,71 +2188,71 @@ const Content: FC<ContentProps> = ({
         </div>
       </div>
       <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: `${Utils.TITLE_HEIGHT}px`, zIndex: 1, }} >
-      <ConfigProvider
-        theme={{
-          components:   {
-            Tabs: {
-              cardHeight: 34,
-              cardPaddingSM: '2px 4px',
-              horizontalItemPaddingSM: '4px 0',
-              horizontalMargin: '0 0 4px 0'
+        <ConfigProvider
+          theme={{
+            components: {
+              Tabs: {
+                cardHeight: 34,
+                cardPaddingSM: '2px 4px',
+                horizontalItemPaddingSM: '4px 0',
+                horizontalMargin: '0 0 4px 0'
+              },
+              Input: {
+                paddingInlineSM: 2
+              },
+              Button: {
+                paddingInlineSM: 2
+              }
             },
-            Input: {
-              paddingInlineSM: 2
-            },
-            Button: {
-              paddingInlineSM: 2
-            }
-          },
-        }}  
-      >
-        <Tabs type='editable-card' size='small' tabPosition='bottom' onChange={onTabChange} activeKey={activeKey} onEdit = {onEdit} 
-          renderTabBar={(tabBarProps: any, DefaultTabBar: any) => (
-            <DndContext sensors={[sensor]} onDragEnd={onDragEnd}>
-              <SortableContext items={panes.map((i) => i.key)} strategy={horizontalListSortingStrategy}>
-                <DefaultTabBar {...tabBarProps} >
-                  {(node: any) => (
-                    <DraggableTabNode {...node.props} key={node.key}>
-                      {node}
-                    </DraggableTabNode>
-                  )}
-                </DefaultTabBar>
-              </SortableContext>
-            </DndContext>
-          )}>
-          {            
-            panes.map(pane => {
-              const paneTitle = <Dropdown menu={{items: popupPaneTitle(pane.key)}}
+          }}
+        >
+          <Tabs type='editable-card' size='small' tabPosition='bottom' onChange={onTabChange} activeKey={activeKey} onEdit={onEdit}
+            renderTabBar={(tabBarProps: any, DefaultTabBar: any) => (
+              <DndContext sensors={[sensor]} onDragEnd={onDragEnd}>
+                <SortableContext items={panes.map((i) => i.key)} strategy={horizontalListSortingStrategy}>
+                  <DefaultTabBar {...tabBarProps} >
+                    {(node: any) => (
+                      <DraggableTabNode {...node.props} key={node.key}>
+                        {node}
+                      </DraggableTabNode>
+                    )}
+                  </DefaultTabBar>
+                </SortableContext>
+              </DndContext>
+            )}>
+            {
+              panes.map(pane => {
+                const paneTitle = <Dropdown menu={{ items: popupPaneTitle(pane.key) }}
                   trigger={['contextMenu']} >
-                    <div>
-                        <Input id={`pane-title-input-${pane.key}`} defaultValue={pane.title} size='small' variant='borderless' maxLength={32}
-                        style={{width: '50px', display: 'inline'}} 
-                        // onCompositionUpdate={e => handlePaneTitleInitialize(pane, e)}
-                        // onCompositionEnd={e => handlePaneTitleInitialize(pane, e)}
-                        // onEnded={e => handlePaneTitleInitialize(pane, e)}
-                        onChange={e => handlePaneTitleChange(pane, e.target.value, e)} 
-                        readOnly={true}
-                        onPointerEnter={handlePaneTitlePointerEnter}
-                        onDoubleClick={e => handlePaneTitleDoubleClick(pane, e)}
-                        onPressEnter={e => handlePaneTitleChangeCompleted(pane, e)} 
-                        onBlur={ e => handlePaneTitleChangeBlur(pane, e)}
-                        //onFocus={e => handlePaneTitleDoubleClick(pane, e)}
-                        onPointerDown={e => handlePaneTitleClick(pane.key, e)}
-                        />
-                        {/* <label id={`pane-title-label-${pane.key}`} style={{display: 'inline'}}
+                  <div>
+                    <Input id={`pane-title-input-${pane.key}`} defaultValue={pane.title} size='small' variant='borderless' maxLength={32}
+                      style={{ width: '50px', display: 'inline' }}
+                      // onCompositionUpdate={e => handlePaneTitleInitialize(pane, e)}
+                      // onCompositionEnd={e => handlePaneTitleInitialize(pane, e)}
+                      // onEnded={e => handlePaneTitleInitialize(pane, e)}
+                      onChange={e => handlePaneTitleChange(pane, e.target.value, e)}
+                      readOnly={true}
+                      onPointerEnter={handlePaneTitlePointerEnter}
+                      onDoubleClick={e => handlePaneTitleDoubleClick(pane, e)}
+                      onPressEnter={e => handlePaneTitleChangeCompleted(pane, e)}
+                      onBlur={e => handlePaneTitleChangeBlur(pane, e)}
+                      //onFocus={e => handlePaneTitleDoubleClick(pane, e)}
+                      onPointerDown={e => handlePaneTitleClick(pane.key, e)}
+                    />
+                    {/* <label id={`pane-title-label-${pane.key}`} style={{display: 'inline'}}
                         onDoubleClick={ e => handlePaneTitleLabelDoubleClick(pane, e)}
                         onPointerDown={e => handlePaneTitleClick(pane.key, e)}
                         >{pane.title}</label> */}
-                    </div>
+                  </div>
                 </Dropdown>
-              return <TabPane tab={paneTitle} key={pane.key} closable={pane.key == activeKey} />
-            })
-          }
-        </Tabs>
+                return <TabPane tab={paneTitle} key={pane.key} closable={pane.key == activeKey} />
+              })
+            }
+          </Tabs>
         </ConfigProvider>
       </div>
-      <div style={{display: 'none'}}>
-          <Input id='sandbox'/>
+      <div style={{ display: 'none' }}>
+        <Input id='sandbox' />
       </div>
     </div>
   )

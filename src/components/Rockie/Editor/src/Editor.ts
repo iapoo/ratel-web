@@ -73,6 +73,9 @@ export class Editor extends Painter {
   public static readonly HORIZONTAL_SPACE_DEFAULT = 1256
   public static readonly VERTICAL_SPACE_DEFAULT = 1256
 
+  public static readonly ORIG_WIDTH_DEFAULT = 800
+  public static readonly ORIG_HEIGHT_DEAULT = 600
+
   private _backgroundLayer: BackgroundLayer
   private _contentLayer: EditorLayer;
   private _controllerLayer: EditorLayer;
@@ -169,8 +172,8 @@ export class Editor extends Painter {
     this._key = ''
     this._id = SystemUtils.generateID()
     this._modified = false
-    this._origWidth = this.width * this._zoom
-    this._origHeight = this.height * this.zoom
+    this._origWidth = Editor.ORIG_WIDTH_DEFAULT * this._zoom
+    this._origHeight = Editor.ORIG_HEIGHT_DEAULT * this.zoom
     this._showGrid = true
     this._rangeSelectionShape.fill.setColor(EditorUtils.rangeSelectionFillColor)
     this._rangeSelectionShape.fill.setAlpha(EditorUtils.rangeSelectionFillAlpha)
