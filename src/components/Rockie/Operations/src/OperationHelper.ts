@@ -556,6 +556,8 @@ export class OperationHelper {
     const shapeEntity = new CellEntity(shapeInfo.left, shapeInfo.top, shapeInfo.width, shapeInfo.height, { shapeType: shapeInfo.type })
     shapeEntity.type = shapeInfo.type
     shapeEntity.text = shapeInfo.text
+    shapeEntity.textAlignment = SystemUtils.parseTextAlignment(shapeInfo.textAlignment)
+    shapeEntity.textVerticalAlignment = SystemUtils.parseTextVerticalAligment(shapeInfo.textVerticalAlignment)
     shapeEntity.id = shapeInfo.id
     if (shapeInfo.rotation) {
       shapeEntity.rotation = new Rotation(shapeInfo.rotation, shapeEntity.width / 2, shapeEntity.height / 2)
