@@ -688,11 +688,12 @@ const Header: FC<HeaderProps> = ({
 
   const confirmDiscardModifiedDocument = () => {
     setDiscardModifiedDocumentWindowVisible(false)
-    if (online) {
-      setNewFileWindowVisible(!newFileWindowVisible)
-    } else {
-      login(ON_LOGIN_NONE)
-    }
+    setNewFileWindowVisible(!newFileWindowVisible)
+    // if (online) {
+    //   setNewFileWindowVisible(!newFileWindowVisible)
+    // } else {
+    //   login(ON_LOGIN_NONE)
+    // }
   }
 
   const cancelDiscardModifiedDocument = () => {
@@ -2452,7 +2453,8 @@ const Header: FC<HeaderProps> = ({
       <ProfileFormWindowPage visible={profileFormWindowVisible} x={60} y={60} onWindowCancel={handleProfileFormWindowCancel} onWindowOk={handleProfileFormWindowOk} />
       <NewFileWindow visible={newFileWindowVisible} x={60} y={60} onWindowCancel={handleNewFileWindowCancel} onWindowOk={handleNewFileWindowOk} />
       <OpenFileWindow visible={openFileWindowVisible} x={60} y={60} onWindowCancel={handleOpenFileWindowCancel} onWindowOk={handleOpenFileWindowOk} disableFileName={disableFileName} selectedFolderId={selectedFolderId} selectedDocumentId={selectedDocumentId} selectedDocumentName={selectedDocumentName} />
-      <Modal title={<FormattedMessage id='workspace.header.message-title-document-modified' />} centered open={discardModifiedDocumentWindowVisible} onOk={confirmDiscardModifiedDocument} onCancel={cancelDiscardModifiedDocument} okText="确认" cancelText="取消" >
+      <Modal title={<FormattedMessage id='workspace.header.message-title-document-modified' />} centered open={discardModifiedDocumentWindowVisible}
+        onOk={confirmDiscardModifiedDocument} onCancel={cancelDiscardModifiedDocument} okText="确认" cancelText="取消" >
         <FormattedMessage id='workspace.header.message-document-modified' />
       </Modal>
       {/* <Modal title={<FormattedMessage id='workspace.header.message-title-document-modified'/>} centered open={discardModifiedDocumentWindowVisible} onOk={confirmDiscardModifiedDocument} onCancel={cancelDiscardModifiedDocument} okText="确认" cancelText="取消" >

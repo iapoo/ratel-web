@@ -191,9 +191,9 @@ export class StorageService {
   public loadNewDocument() {
     let documentData = `
     {"version":"1.0","author":"",
-    "sheets":[{"name":"","index":0,"zoom":1,"x":0,"y":0,"width":2000,"height":2000,"title":"File 1","key":"1","items":[]},
-    {"name":"","index":0,"zoom":1,"x":0,"y":0,"width":2000,"height":2000,"title":"File 2","key":"2","items":[]},
-    {"name":"","index":0,"zoom":1,"x":0,"y":0,"width":2000,"height":2000,"title":"File 3","key":"3","items":[]}]}
+    "sheets":[{"name":"","index":0,"zoom":1,"x":0,"y":0,"width":800,"height":600,"title":"File 1","key":"1","items":[]},
+    {"name":"","index":0,"zoom":1,"x":0,"y":0,"width":800,"height":600,"title":"File 2","key":"2","items":[]},
+    {"name":"","index":0,"zoom":1,"x":0,"y":0,"width":800,"height":600,"title":"File 3","key":"3","items":[]}]}
     `
     let data = JSON.parse(documentData)
     this._storageData = data
