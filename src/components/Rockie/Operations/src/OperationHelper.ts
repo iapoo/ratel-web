@@ -79,9 +79,9 @@ export class OperationHelper {
         break
     }
     //Need to use correct StyleInfo    
-    OperationHelper.fixStyleInfo(itemInfo)    
+    OperationHelper.fixStyleInfo(itemInfo)
     editorItem.shape.styles = StyleInfo.makeStyles(itemInfo.styles)
-    if(itemInfo.category != Categories.TABLE && itemInfo.category != Categories.FRAME) {
+    if (itemInfo.category != Categories.TABLE && itemInfo.category != Categories.FRAME && itemInfo.category != Categories.CUSTOM_TABLE) {
       itemInfo.items.forEach(childItemInfo => {
         let childItem = OperationHelper.loadItem(childItemInfo, editor)
         editorItem.addItem(childItem)
@@ -93,8 +93,8 @@ export class OperationHelper {
     }
     editorItem.locked = itemInfo.locked
     editorItem.useTheme = itemInfo.useTheme
-    if(itemInfo.useTheme) {
-      if(itemInfo.category == Categories.CONNECTOR) {
+    if (itemInfo.useTheme) {
+      if (itemInfo.category == Categories.CONNECTOR) {
         editorItem.strokeColor = ThemeUtils.getConnectorStrokeColor(itemInfo.themeName)
         editorItem.fillColor = ThemeUtils.getConnectorFillColor(itemInfo.themeName)
         editorItem.fontColor = ThemeUtils.getConnectorFontColor(itemInfo.themeName)
@@ -106,14 +106,14 @@ export class OperationHelper {
       editorItem.lineWidth = ThemeUtils.lineWidth
     } else {
       let strokeColor = SystemUtils.parseColorString(itemInfo.strokeColor)
-      if(strokeColor) {
+      if (strokeColor) {
         editorItem.strokeColor = strokeColor
       }
       let fillColor = SystemUtils.parseColorString(itemInfo.fillColor)
-      if(fillColor) {
+      if (fillColor) {
         editorItem.fillColor = fillColor
       }
-      if(itemInfo.lineWidth) {
+      if (itemInfo.lineWidth) {
         editorItem.lineWidth = itemInfo.lineWidth
       }
     }
@@ -124,10 +124,10 @@ export class OperationHelper {
     // editorItem.fontW
 
     //TODO: FIXME : Some cleanup or intializeation
-    if(editorItem instanceof SvgContainer) {
+    if (editorItem instanceof SvgContainer) {
       editorItem.svgShape.svgInitialized = true
     }
-    if(editorItem instanceof ImageContainer) {
+    if (editorItem instanceof ImageContainer) {
       editorItem.shape.stroked = false
       editorItem.shape.filled = false
     }
@@ -139,19 +139,19 @@ export class OperationHelper {
       let connectorInfo = itemInfo as ConnectorInfo
       let connector: Connector | null = null
       items.forEach(item => {
-        if(connectorInfo.id == item.id) {
+        if (connectorInfo.id == item.id) {
           connector = item as Connector
         }
       })
       items.forEach(item => {
-        if(connectorInfo.source == item.id && connector) {
+        if (connectorInfo.source == item.id && connector) {
           let entity = item as Entity
-          connector.source =  entity
+          connector.source = entity
           entity.addSourceConnector(connector)
         }
-        if(connectorInfo.target == item.id && connector) {
+        if (connectorInfo.target == item.id && connector) {
           let entity = item as Entity
-          connector.target =  entity
+          connector.target = entity
           entity.addTargetConnector(connector)
         }
       })
@@ -178,16 +178,16 @@ export class OperationHelper {
     let end = SystemUtils.parsePointString(connectorInfo.end)
     let connector = new Connector(start, end)
     connector.connectorType = connectorInfo.connectorType ? CommonUtils.parseConnectorTypeString(connectorInfo.connectorType) : ConnectorType.Orthogonal
-    if(connectorInfo.source) {
+    if (connectorInfo.source) {
       //connector.source = connectorInfo.source
     }
-    if(connectorInfo.target) {
+    if (connectorInfo.target) {
 
     }
-    if(connectorInfo.sourceJoint) {
+    if (connectorInfo.sourceJoint) {
       connector.sourceJoint = SystemUtils.parsePointString(connectorInfo.sourceJoint)
     }
-    if(connectorInfo.targetJoint) {
+    if (connectorInfo.targetJoint) {
       connector.targetJoint = SystemUtils.parsePointString(connectorInfo.targetJoint)
     }
     connector.id = connectorInfo.id
@@ -207,30 +207,30 @@ export class OperationHelper {
   }
 
   public static loadCustomConnector(itemInfo: EditorItemInfo, editor: Editor): Connector {
-    if(!OperationHelper.initialized) {
+    if (!OperationHelper.initialized) {
       OperationHelper.initializeCustomEntities()
     }
     const customConnectorInfo = itemInfo as CustomConnectorInfo
-    const customConnectorTypeInfo = OperationHelper.CustomConnectorTypes.get(customConnectorInfo.type)    
+    const customConnectorTypeInfo = OperationHelper.CustomConnectorTypes.get(customConnectorInfo.type)
     let start = SystemUtils.parsePointString(customConnectorInfo.start)
     let end = SystemUtils.parsePointString(customConnectorInfo.end)
     const customConnectorTypeInfos: CustomConnectorTypeInfo[] = []
     let connector = new Connector(start, end)
-    if(customConnectorTypeInfo) {
+    if (customConnectorTypeInfo) {
       customConnectorTypeInfos.push(customConnectorTypeInfo.shapeType)
       connector = new customConnectorTypeInfo.type(start, end, customConnectorTypeInfo.shapeType.name, customConnectorTypeInfos)
     }
     connector.connectorType = customConnectorInfo.connectorType ? CommonUtils.parseConnectorTypeString(customConnectorInfo.connectorType) : ConnectorType.Orthogonal
-    if(customConnectorInfo.source) {
+    if (customConnectorInfo.source) {
       //connector.source = connectorInfo.source
     }
-    if(customConnectorInfo.target) {
+    if (customConnectorInfo.target) {
 
     }
-    if(customConnectorInfo.sourceJoint) {
+    if (customConnectorInfo.sourceJoint) {
       connector.sourceJoint = SystemUtils.parsePointString(customConnectorInfo.sourceJoint)
     }
-    if(customConnectorInfo.targetJoint) {
+    if (customConnectorInfo.targetJoint) {
       connector.targetJoint = SystemUtils.parsePointString(customConnectorInfo.targetJoint)
     }
     connector.id = customConnectorInfo.id
@@ -251,7 +251,7 @@ export class OperationHelper {
 
   public static loadShapeEntity(itemInfo: EditorItemInfo): ShapeEntity {
     let shapeInfo = itemInfo as ShapeInfo
-    const shapeEntity = new ShapeEntity(shapeInfo.left, shapeInfo.top, shapeInfo.width, shapeInfo.height, {shapeType: shapeInfo.type})
+    const shapeEntity = new ShapeEntity(shapeInfo.left, shapeInfo.top, shapeInfo.width, shapeInfo.height, { shapeType: shapeInfo.type })
     shapeEntity.type = shapeInfo.type
     shapeEntity.text = shapeInfo.text
     shapeEntity.id = shapeInfo.id
@@ -259,25 +259,25 @@ export class OperationHelper {
       shapeEntity.rotation = new Rotation(shapeInfo.rotation, shapeEntity.width / 2, shapeEntity.height / 2)
     }
     shapeEntity.shape.modifier = SystemUtils.parsePointString(shapeInfo.modifier)
-    shapeEntity.shape.controller  = SystemUtils.parsePointString(shapeInfo.controller)
+    shapeEntity.shape.controller = SystemUtils.parsePointString(shapeInfo.controller)
     shapeEntity.shape.adapter = SystemUtils.parsePointString(shapeInfo.adapter)
     shapeEntity.shape.adapterSize = shapeInfo.adapterSize
     return shapeEntity
   }
 
   public static loadExtendedShapeEntity(itemInfo: EditorItemInfo): ShapeEntity {
-    if(!OperationHelper.initialized) {
+    if (!OperationHelper.initialized) {
       OperationHelper.initializeCustomEntities()
     }
     let extendedShapeInfo = itemInfo as CustomShapeInfo
     const extendedShapeTypeInfo = OperationHelper.extendedShapeTypes.get(extendedShapeInfo.type)
     const extendedShapeTypeInfos: ShapeType[] = []
     let shapeEntity: ShapeEntity
-    if(extendedShapeTypeInfo) {
+    if (extendedShapeTypeInfo) {
       extendedShapeTypeInfos.push(extendedShapeTypeInfo.shapeType)
-      shapeEntity = new extendedShapeTypeInfo.type(extendedShapeInfo.left, extendedShapeInfo.top, extendedShapeInfo.width, extendedShapeInfo.height, {shapeType: extendedShapeInfo.type}, extendedShapeTypeInfos)
+      shapeEntity = new extendedShapeTypeInfo.type(extendedShapeInfo.left, extendedShapeInfo.top, extendedShapeInfo.width, extendedShapeInfo.height, { shapeType: extendedShapeInfo.type }, extendedShapeTypeInfos)
     } else {
-      shapeEntity = new ShapeEntity(extendedShapeInfo.left, extendedShapeInfo.top, extendedShapeInfo.width, extendedShapeInfo.height, {shapeType: extendedShapeInfo.type})
+      shapeEntity = new ShapeEntity(extendedShapeInfo.left, extendedShapeInfo.top, extendedShapeInfo.width, extendedShapeInfo.height, { shapeType: extendedShapeInfo.type })
     }
     shapeEntity.type = extendedShapeInfo.type
     shapeEntity.text = extendedShapeInfo.text
@@ -286,25 +286,25 @@ export class OperationHelper {
       shapeEntity.rotation = new Rotation(extendedShapeInfo.rotation, shapeEntity.width / 2, shapeEntity.height / 2)
     }
     shapeEntity.shape.modifier = SystemUtils.parsePointString(extendedShapeInfo.modifier)
-    shapeEntity.shape.controller  = SystemUtils.parsePointString(extendedShapeInfo.controller)
+    shapeEntity.shape.controller = SystemUtils.parsePointString(extendedShapeInfo.controller)
     shapeEntity.shape.adapter = SystemUtils.parsePointString(extendedShapeInfo.adapter)
     shapeEntity.shape.adapterSize = extendedShapeInfo.adapterSize
     return shapeEntity
-}
+  }
 
   public static loadFrame(itemInfo: EditorItemInfo, editor: Editor): ShapeEntity {
-    if(!OperationHelper.initialized) {
+    if (!OperationHelper.initialized) {
       OperationHelper.initializeCustomEntities()
     }
     const frameInfo = itemInfo as FrameEntityInfo
     const frameTypeInfo = OperationHelper.frameShapeTypes.get(frameInfo.type)
     const shapeTypes: ShapeType[] = []
     let frameEntity: FrameEntity
-    if(frameTypeInfo) {
+    if (frameTypeInfo) {
       shapeTypes.push(frameTypeInfo.shapeType)
-      frameEntity = new frameTypeInfo.type(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, {shapeType: frameInfo.type}, shapeTypes)
+      frameEntity = new frameTypeInfo.type(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, { shapeType: frameInfo.type }, shapeTypes)
     } else {
-      frameEntity = new FrameEntity(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, {shapeType: frameInfo.type}, shapeTypes)
+      frameEntity = new FrameEntity(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, { shapeType: frameInfo.type }, shapeTypes)
     }
     frameEntity.id = frameInfo.id
     if (frameInfo.rotation) {
@@ -324,11 +324,11 @@ export class OperationHelper {
   }
 
   public static loadGroup(itemInfo: EditorItemInfo): ShapeEntity {
-    if(!OperationHelper.initialized) {
+    if (!OperationHelper.initialized) {
       OperationHelper.initializeCustomEntities()
     }
     const containerInfo = itemInfo as ContainerInfo
-    const containerEntity = new ContainerEntity(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, {shapeType: containerInfo.type})
+    const containerEntity = new ContainerEntity(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, { shapeType: containerInfo.type })
     containerEntity.id = containerInfo.id
     if (containerInfo.rotation) {
       containerEntity.rotation = new Rotation(containerInfo.rotation, containerInfo.width / 2, containerInfo.height / 2)
@@ -347,39 +347,39 @@ export class OperationHelper {
 
   private static initializeCustomEntities() {
     CustomShapes.forEach(customShape => {
-      OperationHelper.customShapes.set(customShape.name, {type: customShape.type, shapeType: customShape.typeInfo})
+      OperationHelper.customShapes.set(customShape.name, { type: customShape.type, shapeType: customShape.typeInfo })
     })
     CustomTableShapes.forEach(customShape => {
-      OperationHelper.customTableShapes.set(customShape.name,{type: customShape.type, shapeType: customShape.typeInfo})
+      OperationHelper.customTableShapes.set(customShape.name, { type: customShape.type, shapeType: customShape.typeInfo })
     })
     ExtendedContainerTypes.forEach(customShape => {
-      OperationHelper.extendedContainerTypes.set(customShape.name,{type: customShape.type, shapeType: customShape.typeInfo})
+      OperationHelper.extendedContainerTypes.set(customShape.name, { type: customShape.type, shapeType: customShape.typeInfo })
     })
     ExtendedShapes.forEach(customShape => {
-      OperationHelper.extendedShapeTypes.set(customShape.name,{type: customShape.type, shapeType: customShape.typeInfo})
+      OperationHelper.extendedShapeTypes.set(customShape.name, { type: customShape.type, shapeType: customShape.typeInfo })
     })
     CustomConnectors.forEach(customShape => {
-      OperationHelper.CustomConnectorTypes.set(customShape.name, {type: customShape.type, shapeType: customShape.typeInfo})
+      OperationHelper.CustomConnectorTypes.set(customShape.name, { type: customShape.type, shapeType: customShape.typeInfo })
     })
     FrameShapes.forEach(customShape => {
-      OperationHelper.frameShapeTypes.set(customShape.name, {type: customShape.type, shapeType: customShape.typeInfo})
+      OperationHelper.frameShapeTypes.set(customShape.name, { type: customShape.type, shapeType: customShape.typeInfo })
     })
     CustomContainers.forEach(customShape => {
-      OperationHelper.customContainerTypes.set(customShape.name, {type: customShape.type, shapeType: customShape.typeInfo})
+      OperationHelper.customContainerTypes.set(customShape.name, { type: customShape.type, shapeType: customShape.typeInfo })
     })
   }
 
   public static loadCustomEntity(itemInfo: EditorItemInfo): ShapeEntity {
-    if(!OperationHelper.initialized) {
+    if (!OperationHelper.initialized) {
       OperationHelper.initializeCustomEntities()
     }
     let shapeInfo = itemInfo as CustomShapeInfo
     let customShapeType = OperationHelper.customShapes.get(shapeInfo.type)
     let shapeEntity: ShapeEntity
-    if(customShapeType) {
+    if (customShapeType) {
       shapeEntity = new customShapeType.type(shapeInfo.left, shapeInfo.top, shapeInfo.width, shapeInfo.height, shapeInfo.type)
     } else {
-      shapeEntity = new ShapeEntity(shapeInfo.left, shapeInfo.top, shapeInfo.width, shapeInfo.height, {shapeType: shapeInfo.type})
+      shapeEntity = new ShapeEntity(shapeInfo.left, shapeInfo.top, shapeInfo.width, shapeInfo.height, { shapeType: shapeInfo.type })
     }
     shapeEntity.type = shapeInfo.type
     shapeEntity.text = shapeInfo.text
@@ -388,7 +388,7 @@ export class OperationHelper {
       shapeEntity.rotation = new Rotation(shapeInfo.rotation, shapeEntity.width / 2, shapeEntity.height / 2)
     }
     shapeEntity.shape.modifier = SystemUtils.parsePointString(shapeInfo.modifier)
-    shapeEntity.shape.controller  = SystemUtils.parsePointString(shapeInfo.controller)
+    shapeEntity.shape.controller = SystemUtils.parsePointString(shapeInfo.controller)
     shapeEntity.shape.adapter = SystemUtils.parsePointString(shapeInfo.adapter)
     shapeEntity.shape.adapterSize = shapeInfo.adapterSize
     return shapeEntity
@@ -405,17 +405,17 @@ export class OperationHelper {
       svgContainer.rotation = new Rotation(svgContainerInfo.rotation, svgContainer.width / 2, svgContainer.height / 2)
     }
     svgContainer.shape.modifier = SystemUtils.parsePointString(svgContainerInfo.modifier)
-    svgContainer.shape.controller  = SystemUtils.parsePointString(svgContainerInfo.controller)
+    svgContainer.shape.controller = SystemUtils.parsePointString(svgContainerInfo.controller)
     svgContainer.shape.adapter = SystemUtils.parsePointString(svgContainerInfo.adapter)
     svgContainer.shape.adapterSize = svgContainerInfo.adapterSize
-    if(svgContainerInfo.enableFillColor) {
+    if (svgContainerInfo.enableFillColor) {
       svgContainer.enableFillColor = svgContainerInfo.enableFillColor
     }
-    if(svgContainerInfo.enableStrokeColor) {
+    if (svgContainerInfo.enableStrokeColor) {
       svgContainer.enableStrokeColor = svgContainerInfo.enableStrokeColor
     }
 
-    return svgContainer    
+    return svgContainer
   }
 
   public static loadImageContainer(itemInfo: EditorItemInfo): ShapeEntity {
@@ -428,15 +428,15 @@ export class OperationHelper {
       imageContainer.rotation = new Rotation(imageContainerInfo.rotation, imageContainer.width / 2, imageContainer.height / 2)
     }
     imageContainer.shape.modifier = SystemUtils.parsePointString(imageContainerInfo.modifier)
-    imageContainer.shape.controller  = SystemUtils.parsePointString(imageContainerInfo.controller)
+    imageContainer.shape.controller = SystemUtils.parsePointString(imageContainerInfo.controller)
     imageContainer.shape.adapter = SystemUtils.parsePointString(imageContainerInfo.adapter)
     imageContainer.shape.adapterSize = imageContainerInfo.adapterSize
-    return imageContainer    
+    return imageContainer
   }
 
   public static loadContainerEntity(itemInfo: EditorItemInfo): ContainerEntity {
     const containerInfo = itemInfo as ContainerInfo
-    const containerEntity = new ContainerEntity(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, {shapeType: containerInfo.type})
+    const containerEntity = new ContainerEntity(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, { shapeType: containerInfo.type })
     containerEntity.id = containerInfo.id
     if (containerInfo.rotation) {
       containerEntity.rotation = new Rotation(containerInfo.rotation, containerInfo.width / 2, containerInfo.height / 2)
@@ -454,16 +454,16 @@ export class OperationHelper {
   }
 
   public static loadExtendedContainerEntity(itemInfo: EditorItemInfo): ContainerEntity {
-    if(!OperationHelper.initialized) {
+    if (!OperationHelper.initialized) {
       OperationHelper.initializeCustomEntities()
     }
     const extendedContainerInfo = itemInfo as ContainerInfo
     const extendedContainerTypeInfo = OperationHelper.extendedContainerTypes.get(extendedContainerInfo.type)
     let containerEntity: ContainerEntity
-    if(extendedContainerTypeInfo) {
-      containerEntity = new extendedContainerTypeInfo.type(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, {shapeType: extendedContainerInfo.type}, [extendedContainerTypeInfo.shapeType])
+    if (extendedContainerTypeInfo) {
+      containerEntity = new extendedContainerTypeInfo.type(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, { shapeType: extendedContainerInfo.type }, [extendedContainerTypeInfo.shapeType])
     } else {
-      containerEntity = new ContainerEntity(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, {shapeType: extendedContainerInfo.type})
+      containerEntity = new ContainerEntity(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, { shapeType: extendedContainerInfo.type })
     }
     containerEntity.id = extendedContainerInfo.id
     if (extendedContainerInfo.rotation) {
@@ -479,17 +479,17 @@ export class OperationHelper {
       containerEntity.addItem(childItem)
     })
     return containerEntity
-}
+  }
 
 
   public static loadCustomContainerEntity(itemInfo: EditorItemInfo): CustomContainerEntity {
-    if(!OperationHelper.initialized) {
+    if (!OperationHelper.initialized) {
       OperationHelper.initializeCustomEntities()
     }
     const extendedContainerInfo = itemInfo as ContainerInfo
     const extendedContainerTypeInfo = OperationHelper.customContainerTypes.get(extendedContainerInfo.type)
     let containerEntity: CustomContainerEntity
-    if(extendedContainerTypeInfo) {
+    if (extendedContainerTypeInfo) {
       containerEntity = new extendedContainerTypeInfo.type(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, extendedContainerInfo.type, [extendedContainerTypeInfo.shapeType])
     } else {
       containerEntity = new CustomContainerEntity(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, extendedContainerInfo.type)
@@ -508,7 +508,7 @@ export class OperationHelper {
       containerEntity.addItem(childItem)
     })
     return containerEntity
-}
+  }
 
   public static loadTableEntity(itemInfo: EditorItemInfo): TableEntity {
     const tableInfo = itemInfo as TableInfo
@@ -524,16 +524,16 @@ export class OperationHelper {
     })
     return tableEntity
   }
-  
+
   public static loadCustomTable(itemInfo: EditorItemInfo): CustomTableEntity {
-    if(!OperationHelper.initialized) {
+    if (!OperationHelper.initialized) {
       OperationHelper.initializeCustomEntities()
     }
     const customTableInfo = itemInfo as CustomTableInfo
     const customTableTypeInfo = OperationHelper.customTableShapes.get(customTableInfo.type)
     let customTableTypeInfos: CustomTableShapeType[] = []
     let customTableEntity: CustomTableEntity
-    if(customTableTypeInfo) {
+    if (customTableTypeInfo) {
       customTableTypeInfos.push(customTableTypeInfo)
       customTableEntity = new customTableTypeInfo.type(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, customTableInfo.customTableTypeName, [], customTableInfo.rowCount, customTableInfo.columnCount)
     } else {
@@ -549,11 +549,11 @@ export class OperationHelper {
       customTableEntity.addItem(childItem)
     })
     return customTableEntity
-}
-  
+  }
+
   public static loadTableCellEntity(itemInfo: EditorItemInfo): CellEntity {
     let shapeInfo = itemInfo as ShapeInfo
-    const shapeEntity = new CellEntity(shapeInfo.left, shapeInfo.top, shapeInfo.width, shapeInfo.height, {shapeType: shapeInfo.type})
+    const shapeEntity = new CellEntity(shapeInfo.left, shapeInfo.top, shapeInfo.width, shapeInfo.height, { shapeType: shapeInfo.type })
     shapeEntity.type = shapeInfo.type
     shapeEntity.text = shapeInfo.text
     shapeEntity.id = shapeInfo.id
@@ -568,14 +568,14 @@ export class OperationHelper {
   }
 
   public static saveEditorItems(editorItems: EditorItem[]): EditorItemInfo[] {
-    const editorItemInfos: EditorItemInfo[] =[]
+    const editorItemInfos: EditorItemInfo[] = []
     editorItems.forEach(editorItem => {
       const editorItemInfo = OperationHelper.saveEditorItem(editorItem)
       editorItemInfos.push(editorItemInfo)
     })
     return editorItemInfos
   }
-  
+
   public static saveEditorItem(editorItem: EditorItem): EditorItemInfo {
     let editorItemInfo: EditorItemInfo
     switch (editorItem.category) {
@@ -631,7 +631,7 @@ export class OperationHelper {
     editorItemInfo.useTheme = editorItem.useTheme
     editorItemInfo.themeName = editorItem.themeName
     editorItemInfo.locked = editorItem.locked
-    if(editorItem.useTheme) {
+    if (editorItem.useTheme) {
       editorItemInfo.strokeColor = null
       editorItemInfo.fillColor = null
       editorItemInfo.lineWidth = null
@@ -654,7 +654,7 @@ export class OperationHelper {
     return editorItemInfo
   }
 
-  public static  saveShape(shapeEntity: ShapeEntity) : EditorItemInfo {
+  public static saveShape(shapeEntity: ShapeEntity): EditorItemInfo {
     let styleInfos: StyleInfo[] = Style.makeStyleInfos(shapeEntity.shape.styles)
     let shapeinfo = new ShapeInfo(shapeEntity.type, shapeEntity.category, shapeEntity.left, shapeEntity.top, shapeEntity.width, shapeEntity.height, shapeEntity.text, shapeEntity.rotation.radius, styleInfos)
     shapeinfo.rotation = shapeEntity.rotation.radius
@@ -666,7 +666,7 @@ export class OperationHelper {
     return shapeinfo
   }
 
-  public static  saveCustomShape(customEntity: CustomEntity) : EditorItemInfo {
+  public static saveCustomShape(customEntity: CustomEntity): EditorItemInfo {
     let styleInfos: StyleInfo[] = Style.makeStyleInfos(customEntity.shape.styles)
     let shapeinfo = new ShapeInfo(customEntity.type, customEntity.category, customEntity.left, customEntity.top, customEntity.width, customEntity.height, customEntity.text, customEntity.rotation.radius, styleInfos)
     shapeinfo.rotation = customEntity.rotation.radius
@@ -678,7 +678,7 @@ export class OperationHelper {
     return shapeinfo
   }
 
-  public static  saveExtendedShape(customEntity: ShapeEntity) : EditorItemInfo {
+  public static saveExtendedShape(customEntity: ShapeEntity): EditorItemInfo {
     let styleInfos: StyleInfo[] = Style.makeStyleInfos(customEntity.shape.styles)
     let shapeinfo = new CustomShapeInfo(customEntity.type, customEntity.category, customEntity.left, customEntity.top, customEntity.width, customEntity.height, customEntity.text, customEntity.rotation.radius, styleInfos)
     shapeinfo.rotation = customEntity.rotation.radius
@@ -690,7 +690,7 @@ export class OperationHelper {
     return shapeinfo
   }
 
-  public static  saveCustomSvgShape(svgContainer: SvgContainer) : EditorItemInfo {
+  public static saveCustomSvgShape(svgContainer: SvgContainer): EditorItemInfo {
     let styleInfos: StyleInfo[] = Style.makeStyleInfos(svgContainer.shape.styles)
     let svgContainerInfo = new SvgContainerInfo(svgContainer.type, svgContainer.category, svgContainer.left, svgContainer.top, svgContainer.width, svgContainer.height, svgContainer.text, svgContainer.rotation.radius, styleInfos)
     svgContainerInfo.rotation = svgContainer.rotation.radius
@@ -705,7 +705,7 @@ export class OperationHelper {
     return svgContainerInfo
   }
 
-  public static  saveCustomImageShape(imageContainer: ImageContainer) : EditorItemInfo {
+  public static saveCustomImageShape(imageContainer: ImageContainer): EditorItemInfo {
     let styleInfos: StyleInfo[] = Style.makeStyleInfos(imageContainer.shape.styles)
     let imageContainerInfo = new ImageContainerInfo(imageContainer.type, imageContainer.category, imageContainer.left, imageContainer.top, imageContainer.width, imageContainer.height, imageContainer.text, imageContainer.rotation.radius, styleInfos)
     imageContainerInfo.rotation = imageContainer.rotation.radius
@@ -718,23 +718,23 @@ export class OperationHelper {
     return imageContainerInfo
   }
 
-  public static  saveTable(tableEntity: TableEntity) : EditorItemInfo {
+  public static saveTable(tableEntity: TableEntity): EditorItemInfo {
     let styleInfos: StyleInfo[] = Style.makeStyleInfos(tableEntity.shape.styles)
     let tableInfo = new TableInfo(tableEntity.left, tableEntity.top, tableEntity.width, tableEntity.height, tableEntity.rowCount, tableEntity.columnCount, tableEntity.rotation.radius, styleInfos)
 
     return tableInfo
   }
 
-  public static  saveCustomTable(customTableEntity: CustomTableEntity) : EditorItemInfo {
+  public static saveCustomTable(customTableEntity: CustomTableEntity): EditorItemInfo {
     let styleInfos: StyleInfo[] = Style.makeStyleInfos(customTableEntity.shape.styles)
-    let tableInfo = new CustomTableInfo(customTableEntity.left, customTableEntity.top, customTableEntity.width, customTableEntity.height,customTableEntity.customTableTypeName, customTableEntity.rowCount, customTableEntity.columnCount, customTableEntity.rotation.radius, styleInfos)
+    let tableInfo = new CustomTableInfo(customTableEntity.left, customTableEntity.top, customTableEntity.width, customTableEntity.height, customTableEntity.customTableTypeName, customTableEntity.rowCount, customTableEntity.columnCount, customTableEntity.rotation.radius, styleInfos)
 
     return tableInfo
   }
 
-  public static  saveContainer(container: ContainerEntity) : EditorItemInfo {
+  public static saveContainer(container: ContainerEntity): EditorItemInfo {
     let styleInfos: StyleInfo[] = Style.makeStyleInfos(container.shape.styles)
-    let containerInfo = new ContainerInfo(container.type, container.category, container.left, container.top, container.width, container.height, container.text,  container.rotation.radius, styleInfos)
+    let containerInfo = new ContainerInfo(container.type, container.category, container.left, container.top, container.width, container.height, container.text, container.rotation.radius, styleInfos)
     containerInfo.rotation = container.rotation.radius
     containerInfo.modifier = container.shape.modifier.x + ',' + container.shape.modifier.y
     containerInfo.adapter = container.shape.adapter.x + ',' + container.shape.adapter.y
@@ -743,9 +743,9 @@ export class OperationHelper {
     return containerInfo
   }
 
-  public static  saveCustomContainer(container: CustomContainerEntity) : EditorItemInfo {
+  public static saveCustomContainer(container: CustomContainerEntity): EditorItemInfo {
     let styleInfos: StyleInfo[] = Style.makeStyleInfos(container.shape.styles)
-    let containerInfo = new ContainerInfo(container.type, container.category, container.left, container.top, container.width, container.height, container.text,  container.rotation.radius, styleInfos)
+    let containerInfo = new ContainerInfo(container.type, container.category, container.left, container.top, container.width, container.height, container.text, container.rotation.radius, styleInfos)
     containerInfo.rotation = container.rotation.radius
     containerInfo.modifier = container.shape.modifier.x + ',' + container.shape.modifier.y
     containerInfo.adapter = container.shape.adapter.x + ',' + container.shape.adapter.y
@@ -754,9 +754,9 @@ export class OperationHelper {
     return containerInfo
   }
 
-  public static  saveExtendedContainer(customContainer: CustomContainerEntity) : EditorItemInfo {
+  public static saveExtendedContainer(customContainer: CustomContainerEntity): EditorItemInfo {
     let styleInfos: StyleInfo[] = Style.makeStyleInfos(customContainer.shape.styles)
-    let containerInfo = new ContainerInfo(customContainer.type, customContainer.category, customContainer.left, customContainer.top, customContainer.width, customContainer.height, customContainer.text,  customContainer.rotation.radius, styleInfos)
+    let containerInfo = new ContainerInfo(customContainer.type, customContainer.category, customContainer.left, customContainer.top, customContainer.width, customContainer.height, customContainer.text, customContainer.rotation.radius, styleInfos)
     containerInfo.rotation = customContainer.rotation.radius
     containerInfo.modifier = customContainer.shape.modifier.x + ',' + customContainer.shape.modifier.y
     containerInfo.adapter = customContainer.shape.adapter.x + ',' + customContainer.shape.adapter.y
@@ -765,9 +765,9 @@ export class OperationHelper {
     return containerInfo
   }
 
-  public static  saveFrame(frame: FrameEntity) : EditorItemInfo {
+  public static saveFrame(frame: FrameEntity): EditorItemInfo {
     let styleInfos: StyleInfo[] = Style.makeStyleInfos(frame.shape.styles)
-    let frameEntityInfo = new FrameEntityInfo(frame.type, frame.category, frame.left, frame.top, frame.width, frame.height, frame.text,  frame.rotation.radius, styleInfos)
+    let frameEntityInfo = new FrameEntityInfo(frame.type, frame.category, frame.left, frame.top, frame.width, frame.height, frame.text, frame.rotation.radius, styleInfos)
     frameEntityInfo.rotation = frame.rotation.radius
     frameEntityInfo.modifier = frame.shape.modifier.x + ',' + frame.shape.modifier.y
     frameEntityInfo.adapter = frame.shape.adapter.x + ',' + frame.shape.adapter.y
@@ -776,9 +776,9 @@ export class OperationHelper {
     return frameEntityInfo
   }
 
-  public static  saveGroup(container: GroupEntity) : EditorItemInfo {
+  public static saveGroup(container: GroupEntity): EditorItemInfo {
     let styleInfos: StyleInfo[] = Style.makeStyleInfos(container.shape.styles)
-    let containerInfo = new ContainerInfo(container.type, container.category, container.left, container.top, container.width, container.height, container.text,  container.rotation.radius, styleInfos)
+    let containerInfo = new ContainerInfo(container.type, container.category, container.left, container.top, container.width, container.height, container.text, container.rotation.radius, styleInfos)
     containerInfo.rotation = container.rotation.radius
     containerInfo.modifier = container.shape.modifier.x + ',' + container.shape.modifier.y
     containerInfo.adapter = container.shape.adapter.x + ',' + container.shape.adapter.y
@@ -787,31 +787,31 @@ export class OperationHelper {
     return containerInfo
   }
 
-  public static  saveLine(lineEntity: LineEntity) : EditorItemInfo {
+  public static saveLine(lineEntity: LineEntity): EditorItemInfo {
     let styleInfos: StyleInfo[] = Style.makeStyleInfos(lineEntity.shape.styles)
     let lineData = new LineInfo(lineEntity.start.x, lineEntity.start.y, lineEntity.end.x, lineEntity.end.y, lineEntity.text, lineEntity.rotation.radius, styleInfos)
 
     return lineData
   }
 
-  public static  saveConnector(connector: Connector) : EditorItemInfo {
+  public static saveConnector(connector: Connector): EditorItemInfo {
     let styleInfos: StyleInfo[] = Style.makeStyleInfos(connector.shape.styles)
     let connectorInfo = new ConnectorInfo(connector.start.x, connector.start.y, connector.end.x, connector.end.y, connector.text, connector.rotation.radius, styleInfos)
-    if(connector.source) {
+    if (connector.source) {
       connectorInfo.source = connector.source.id
     }
-    if(connector.target) {
+    if (connector.target) {
       connectorInfo.target = connector.target.id
     }
-    if(connector.sourceJoint) {
+    if (connector.sourceJoint) {
       connectorInfo.sourceJoint = SystemUtils.generatePointString(connector.sourceJoint)
     }
-    if(connector.targetJoint) {
-        connectorInfo.targetJoint = SystemUtils.generatePointString(connector.targetJoint)
+    if (connector.targetJoint) {
+      connectorInfo.targetJoint = SystemUtils.generatePointString(connector.targetJoint)
     }
-    
+
     connectorInfo.text = connector.text
-    connectorInfo.connectorType = connector.connectorType ?  CommonUtils.parseConnectorType(connector.connectorType) : null
+    connectorInfo.connectorType = connector.connectorType ? CommonUtils.parseConnectorType(connector.connectorType) : null
     connectorInfo.startArrow = SystemUtils.generateConnectorArrow(connector.startArrow)
     connectorInfo.endArrow = SystemUtils.generateConnectorArrow(connector.endArrow)
     connectorInfo.curveStartModifier = SystemUtils.generatePointString(connector.curveStartModifier)
@@ -828,24 +828,24 @@ export class OperationHelper {
   }
 
 
-  public static  saveCustomConnector(customConnector: CustomConnector) : EditorItemInfo {
+  public static saveCustomConnector(customConnector: CustomConnector): EditorItemInfo {
     let styleInfos: StyleInfo[] = Style.makeStyleInfos(customConnector.shape.styles)
     let connectorInfo = new CustomConnectorInfo(customConnector.connectorTypeInfo.name, customConnector.start.x, customConnector.start.y, customConnector.end.x, customConnector.end.y, customConnector.text, customConnector.rotation.radius, styleInfos)
-    if(customConnector.source) {
+    if (customConnector.source) {
       connectorInfo.source = customConnector.source.id
     }
-    if(customConnector.target) {
+    if (customConnector.target) {
       connectorInfo.target = customConnector.target.id
     }
-    if(customConnector.sourceJoint) {
+    if (customConnector.sourceJoint) {
       connectorInfo.sourceJoint = SystemUtils.generatePointString(customConnector.sourceJoint)
     }
-    if(customConnector.targetJoint) {
-        connectorInfo.targetJoint = SystemUtils.generatePointString(customConnector.targetJoint)
+    if (customConnector.targetJoint) {
+      connectorInfo.targetJoint = SystemUtils.generatePointString(customConnector.targetJoint)
     }
-    
+
     connectorInfo.text = customConnector.text
-    connectorInfo.connectorType = customConnector.connectorType ?  CommonUtils.parseConnectorType(customConnector.connectorType) : null
+    connectorInfo.connectorType = customConnector.connectorType ? CommonUtils.parseConnectorType(customConnector.connectorType) : null
     connectorInfo.startArrow = SystemUtils.generateConnectorArrow(customConnector.startArrow)
     connectorInfo.endArrow = SystemUtils.generateConnectorArrow(customConnector.endArrow)
     connectorInfo.curveStartModifier = SystemUtils.generatePointString(customConnector.curveStartModifier)
@@ -863,14 +863,14 @@ export class OperationHelper {
 
   private static fixStyleInfo(editorItemInfo: EditorItemInfo) {
     let count = editorItemInfo.styles.length
-    for(let i = 0; i < count; i ++) {
-        let oldStyleInfo = editorItemInfo.styles[i]
-        let styleInfo = new StyleInfo(oldStyleInfo.length, oldStyleInfo.typeFaceName, oldStyleInfo.size, oldStyleInfo.color, oldStyleInfo.bold, oldStyleInfo.italic, oldStyleInfo.underline)
-        editorItemInfo.styles[i] = styleInfo
+    for (let i = 0; i < count; i++) {
+      let oldStyleInfo = editorItemInfo.styles[i]
+      let styleInfo = new StyleInfo(oldStyleInfo.length, oldStyleInfo.typeFaceName, oldStyleInfo.size, oldStyleInfo.color, oldStyleInfo.bold, oldStyleInfo.italic, oldStyleInfo.underline)
+      editorItemInfo.styles[i] = styleInfo
     }
     editorItemInfo.items.forEach(child => {
-        OperationHelper.fixStyleInfo(child)
+      OperationHelper.fixStyleInfo(child)
     })
-}
+  }
 
 }
