@@ -52,15 +52,15 @@ export interface MyShape {
     height: number
 }
 
-export function isFolder(source:  Folder | Document | undefined ): source is Folder {
-    if( source == undefined) {
+export function isFolder(source: Folder | Document | undefined): source is Folder {
+    if (source == undefined) {
         return false
     }
     return (<Folder>source).data != undefined
 }
 
-export function isDocument(source:  Folder | Document | undefined ): source is Document {
-    if( source == undefined) {
+export function isDocument(source: Folder | Document | undefined): source is Document {
+    if (source == undefined) {
         return false
     }
     return (<Document>source).documentName != undefined
@@ -85,7 +85,7 @@ export class RequestUtils {
             const protocal = window.location.protocol
             const hostname = window.location.hostname
             const port = window.location.port
-      
+
             const WEB_HTTP = process.env.SYSTEM_WEB_HTTP ? process.env.SYSTEM_WEB_HTTP : protocal + '//'
             const WEB_SERVER = process.env.SYSTEM_WEB_SERVER ? process.env.SYSTEM_WEB_SERVER : hostname
             const WEB_PORT = process.env.SYSTEM_WEB_PORT ? ':' + process.env.SYSTEM_WEB_PORT : ':' + port
@@ -99,7 +99,7 @@ export class RequestUtils {
             const protocal = window.location.protocol
             const hostname = window.location.hostname
             const port = window.location.port
-      
+
             const WEB_HTTP = process.env.ROCKIE_WEB_HTTP ? process.env.ROCKIE_WEB_HTTP : protocal + '//'
             const WEB_SERVER = process.env.ROCKIE_WEB_SERVER ? process.env.ROCKIE_WEB_SERVER : hostname
             const WEB_PORT = process.env.ROCKIE_WEB_PORT ? ':' + process.env.ROCKIE_WEB_PORT : ':' + port
@@ -108,8 +108,8 @@ export class RequestUtils {
         }
         return RequestUtils.rockieAddress_
     }
-    
-    public static get token() : string {
+
+    public static get token(): string {
         return RequestUtils.token_;
     }
 
@@ -146,7 +146,7 @@ export class RequestUtils {
     }
 
     public static register(name: string, password: string) {
-        RequestUtils.userName_ =  name
+        RequestUtils.userName_ = name
         RequestUtils.password_ = password
         const data = {
             name: RequestUtils.userName_,
@@ -158,19 +158,19 @@ export class RequestUtils {
             }
         }
         axios.post(`${RequestUtils.systemServerAddress}/login`, data, config)
-        .then(response => {
-            if(response.status == 200&& response.data.success) {
-                console.log(response.data)                
-            }
+            .then(response => {
+                if (response.status == 200 && response.data.success) {
+                    console.log(response.data)
+                }
 
-        })
-        .catch(error => {
-            console.log('Login error: ', error)
-        })
+            })
+            .catch(error => {
+                console.log('Login error: ', error)
+            })
     }
 
     public static login(name: string, password: string) {
-        RequestUtils.userName_ =  name
+        RequestUtils.userName_ = name
         RequestUtils.password_ = password
         const data = {
             name: RequestUtils.userName_,
@@ -182,17 +182,17 @@ export class RequestUtils {
             }
         }
         axios.post(`${RequestUtils.systemServerAddress}/login`, data, config)
-        .then(response => {
-            if(response.status == 200 && response.data.success) {
-                console.log('Login succeed')
-                RequestUtils.token = response.data.data
-                localStorage.setItem('auth.token', response.data.data)
-            }
-            console.log('Login data: ', response.data)
-        })
-        .catch(error => {
-            console.log('Login error: ', error)
-        })
+            .then(response => {
+                if (response.status == 200 && response.data.success) {
+                    console.log('Login succeed')
+                    RequestUtils.token = response.data.data
+                    localStorage.setItem('auth.token', response.data.data)
+                }
+                console.log('Login data: ', response.data)
+            })
+            .catch(error => {
+                console.log('Login error: ', error)
+            })
     }
 
     public static update() {
@@ -208,21 +208,21 @@ export class RequestUtils {
             }
         }
         axios.post(`${RequestUtils.systemServerAddress}/logout`, data, config)
-        .then(response => {
-            if(response.status == 200 && response.data.success) {
-                console.log('Logout succeed')
-                RequestUtils.token = ''
-                RequestUtils.online_ = false
-                RequestUtils.userName_ = ''
-                RequestUtils.password_ = ''
-                RequestUtils.userInfo_ = null
-                localStorage.setItem('auth.token', '')
-            }
-            console.log('Logout data: ', response.data)
-        })
-        .catch(error => {
-            console.log('Logout error: ', error)
-        })
+            .then(response => {
+                if (response.status == 200 && response.data.success) {
+                    console.log('Logout succeed')
+                    RequestUtils.token = ''
+                    RequestUtils.online_ = false
+                    RequestUtils.userName_ = ''
+                    RequestUtils.password_ = ''
+                    RequestUtils.userInfo_ = null
+                    localStorage.setItem('auth.token', '')
+                }
+                console.log('Logout data: ', response.data)
+            })
+            .catch(error => {
+                console.log('Logout error: ', error)
+            })
     }
 
     public static async isOnline() {
@@ -230,14 +230,14 @@ export class RequestUtils {
         const token = localStorage.getItem('auth.token')
         RequestUtils.token = token == null ? '' : token
         // console.log(`isOnlie == ${RequestUtils.token}`)
-        if(!RequestUtils.token) {
+        if (!RequestUtils.token) {
             // console.log(`isOnlie == checkpoint = 1`)
             return false
         }
-        if(nowTime - RequestUtils.lastCheckTime_ > RequestUtils.checkTimeInterval_) {
+        if (nowTime - RequestUtils.lastCheckTime_ > RequestUtils.checkTimeInterval_) {
             RequestUtils.lastCheckTime_ = nowTime
             const online = await RequestUtils.checkOnline()
-            if(online) {
+            if (online) {
                 RequestUtils.checkTime_ = 0
                 // console.log(`isOnlie == checkpoint = 2`)
                 return true;
@@ -246,13 +246,13 @@ export class RequestUtils {
                 return false;
             }
         } else {
-            if(RequestUtils.online_) {
+            if (RequestUtils.online_) {
                 // console.log(`isOnlie == checkpoint = 4`)
                 return true
-            } else if(RequestUtils.checkTime_ < 5) {
+            } else if (RequestUtils.checkTime_ < 5) {
                 RequestUtils.checkTime_ = RequestUtils.checkTime_ + 1
                 const online = await RequestUtils.checkOnline()
-                if(online) {
+                if (online) {
                     RequestUtils.checkTime_ = 0
                     RequestUtils.online_ = true
                     // console.log(`isOnlie == checkpoint = 5`)
@@ -280,7 +280,7 @@ export class RequestUtils {
         }
         const response = await axios.post(`${RequestUtils.systemServerAddress}/info`, data, config)
         //console.log(response.data)
-        if(response?.data?.success) {
+        if (response?.data?.success) {
             RequestUtils.userInfo_ = response.data.data
             RequestUtils.online_ = true
             return true
@@ -291,38 +291,38 @@ export class RequestUtils {
         }
     }
 
-    public static info() {       
-        return axios.post(`${RequestUtils.systemServerAddress}/info`, {            
-            }, {
+    public static info() {
+        return axios.post(`${RequestUtils.systemServerAddress}/info`, {
+        }, {
             headers: {
                 'Content-Type': 'application/json',
                 'Token': RequestUtils.token
             },
-            })        
+        })
     }
 
-    public static getSettings() {       
-        return axios.post(`${RequestUtils.systemServerAddress}/settings`, {            
-            }, {
+    public static getSettings() {
+        return axios.post(`${RequestUtils.systemServerAddress}/settings`, {
+        }, {
             headers: {
                 'Content-Type': 'application/json',
                 'Token': RequestUtils.token
             },
-            })        
+        })
     }
 
-    public static updateSettings(settings: string) {       
-        return axios.post(`${RequestUtils.systemServerAddress}/updateSettings`, {   
-                'settings':  settings       
-            }, {
+    public static updateSettings(settings: string) {
+        return axios.post(`${RequestUtils.systemServerAddress}/updateSettings`, {
+            'settings': settings
+        }, {
             headers: {
                 'Content-Type': 'application/json',
                 'Token': RequestUtils.token
             },
-            })        
+        })
     }
 
-    public static getFolders = (parentId: number | null)=> {
+    public static getFolders = (parentId: number | null) => {
         const data = {
             parentId: parentId
         }
@@ -439,7 +439,7 @@ export class RequestUtils {
     }
 
     public static getGoogleFonts() {
-        const data = {            
+        const data = {
         }
         const config = {
             headers: {
@@ -448,5 +448,16 @@ export class RequestUtils {
             }
         }
         return axios.post(this.rockieServerAddress + `/utils/google-fonts`, data, config)
+    }
+
+    public static async fetchTextFileAsBlob(url: string) {
+        return axios.get(url, { responseType: 'blob' })
+    }
+
+    public static async fetchJsonFile(url: string) {
+        const request = axios.get(url, { headers: { 'Content-Type': 'application/json' } })
+        const response = await request
+        //console.log(response.data)
+        return response.data
     }
 }

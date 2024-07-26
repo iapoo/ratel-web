@@ -417,11 +417,15 @@ const Header: FC<HeaderProps> = ({
   const handleNewFileWindowCancel = () => {
     setNewFileWindowVisible(false)
   }
-  const handleNewFileWindowOk = () => {
+  const handleNewFileWindowOk = (templateContent: string | null) => {
     setNewFileWindowVisible(false)
     const storage = new StorageService()
     storage.editors = Utils.editors
-    storage.loadNewDocument()
+    if (templateContent) {
+      storage.loadDocument(templateContent)
+    } else {
+      storage.loadNewDocument()
+    }
     Utils.storageData = storage.storageData
     if (Utils.loadData) {
       Utils.loadData()
@@ -486,7 +490,7 @@ const Header: FC<HeaderProps> = ({
         content: intl.formatMessage({ id: 'workspace.header.logout-confirm-message' }),
         onOk() {
           RequestUtils.logout()
-          handleNewFileWindowOk()
+          handleNewFileWindowOk(null)
         },
         onCancel() {
 
@@ -494,7 +498,7 @@ const Header: FC<HeaderProps> = ({
       })
     } else {
       RequestUtils.logout()
-      handleNewFileWindowOk()
+      handleNewFileWindowOk(null)
     }
     if (onLogout) {
       onLogout()
@@ -2454,7 +2458,7 @@ const Header: FC<HeaderProps> = ({
       <NewFileWindow visible={newFileWindowVisible} x={60} y={60} onWindowCancel={handleNewFileWindowCancel} onWindowOk={handleNewFileWindowOk} />
       <OpenFileWindow visible={openFileWindowVisible} x={60} y={60} onWindowCancel={handleOpenFileWindowCancel} onWindowOk={handleOpenFileWindowOk} disableFileName={disableFileName} selectedFolderId={selectedFolderId} selectedDocumentId={selectedDocumentId} selectedDocumentName={selectedDocumentName} />
       <Modal title={<FormattedMessage id='workspace.header.message-title-document-modified' />} centered open={discardModifiedDocumentWindowVisible}
-        onOk={confirmDiscardModifiedDocument} onCancel={cancelDiscardModifiedDocument} okText="确认" cancelText="取消" >
+        onOk={confirmDiscardModifiedDocument} onCancel={cancelDiscardModifiedDocument} >
         <FormattedMessage id='workspace.header.message-document-modified' />
       </Modal>
       {/* <Modal title={<FormattedMessage id='workspace.header.message-title-document-modified'/>} centered open={discardModifiedDocumentWindowVisible} onOk={confirmDiscardModifiedDocument} onCancel={cancelDiscardModifiedDocument} okText="确认" cancelText="取消" >
