@@ -36,18 +36,18 @@ export class SystemUtils {
         console.log(message)
     }
 
-    public static parseUrl (url: string) {
+    public static parseUrl(url: string) {
         const urlObj = {
-          protocol: /^(.+)\:\/\//,
-          host: /\:\/\/(.+?)[\?\#\s\/]/,
-          path: /\w(\/.*?)[\?\#\s]/,
-          query: /\?(.+?)[\#\/\s]/,
-          hash: /\#(\w+)\s$/,
+            protocol: /^(.+)\:\/\//,
+            host: /\:\/\/(.+?)[\?\#\s\/]/,
+            path: /\w(\/.*?)[\?\#\s]/,
+            query: /\?(.+?)[\#\/\s]/,
+            hash: /\#(\w+)\s$/,
         }
-        url += ' '        
+        url += ' '
         for (const key in urlObj) {
-          const pattern = urlObj[key]
-          urlObj[key] = key === 'query' ? (pattern.exec(url) && SystemUtils.formatQuery(pattern.exec(url)[1])) : (pattern.exec(url) && pattern.exec(url)[1])
+            const pattern = urlObj[key]
+            urlObj[key] = key === 'query' ? (pattern.exec(url) && SystemUtils.formatQuery(pattern.exec(url)[1])) : (pattern.exec(url) && pattern.exec(url)[1])
         }
         return urlObj
     }
@@ -57,9 +57,9 @@ export class SystemUtils {
             const arr = b.split('=')
             a[arr[0]] = arr[1]
             return a
-          }, {})
+        }, {})
     }
-    
+
     public static generateID(): string {
         let d = new Date().getTime()
         if (window.performance && typeof window.performance.now === "function") {
@@ -114,7 +114,7 @@ export class SystemUtils {
     public static generatePointsString(points: Point2[]): string {
         let result = ''
         const count = points.length
-        for(let i = 0; i < count; i ++) {
+        for (let i = 0; i < count; i++) {
             const point = points[i]
             result += point.x + ',' + point.y + ';'
         }
@@ -123,13 +123,13 @@ export class SystemUtils {
 
     public static parsePointsString(points: string): Point2[] {
         let result: Point2[] = []
-        if(points && points.length > 3) {
+        if (points && points.length > 3) {
             const pointStrs = points.split(';')
-            if(pointStrs.length > 0) {
+            if (pointStrs.length > 0) {
                 pointStrs.forEach(pointStr => {
-                    if(pointStr && pointStr.length > 0) {// It may be emptyt string here and need to ignore
+                    if (pointStr && pointStr.length > 0) {// It may be emptyt string here and need to ignore
                         const point = SystemUtils.parsePointString(pointStr)
-                        if(point) {
+                        if (point) {
                             result.push(point)
                         }
                     }
@@ -391,7 +391,7 @@ export class SystemUtils {
     public static findConnectorArrowType(connectorArrowTypeName: string): string {
         let connectorArrowTypeNameValue = ConnectorArrowTypes[0].name
         ConnectorArrowTypes.forEach(connectorArrowType => {
-            if(connectorArrowType.name == connectorArrowTypeName) {
+            if (connectorArrowType.name == connectorArrowTypeName) {
                 connectorArrowTypeNameValue = connectorArrowType.name
             }
         })
@@ -409,14 +409,14 @@ export class SystemUtils {
             count: connectorArrowType.count,
             outline: connectorArrowType.outline,
             close: connectorArrowType.close,
-            displayMode: connectorArrowType.displayMode  
+            displayMode: connectorArrowType.displayMode
         }
     }
 
     public static debugPoints(points: Point2[]) {
         let count = points.length
         let output = `Array data: length = ${count}, data = `
-        for(let i = 0; i < count; i ++) {
+        for (let i = 0; i < count; i++) {
             const point = points[i]
             output = output + `${i}:[${point.x}, ${point.y}],`
         }
@@ -455,7 +455,7 @@ export class SystemUtils {
     }
 
     public static generateConnectorArrowDisplayType(displayType: ConnectorArrowDisplayType): string {
-        switch(displayType) {
+        switch (displayType) {
             case ConnectorArrowDisplayType.Triangle:
                 return Consts.CONNECTOR_ARROW_DISPLAY_TYPE_TRIANGLE
             case ConnectorArrowDisplayType.Diamond:
@@ -489,7 +489,7 @@ export class SystemUtils {
     }
 
     public static parseConnectorArrowDisplayType(displayType: string): ConnectorArrowDisplayType {
-        switch(displayType) {
+        switch (displayType) {
             case Consts.CONNECTOR_ARROW_DISPLAY_TYPE_TRIANGLE:
                 return ConnectorArrowDisplayType.Triangle
             case Consts.CONNECTOR_ARROW_DISPLAY_TYPE_DIAMOND:
@@ -523,7 +523,7 @@ export class SystemUtils {
     }
 
     public static generateConnectorArrowDisplayMode(displayMode: ConnectorArrowDisplayMode): string {
-        switch(displayMode) {
+        switch (displayMode) {
             case ConnectorArrowDisplayMode.Top:
                 return Consts.CONNECTOR_ARROW_DISPLAY_MODE_TOP
             case ConnectorArrowDisplayMode.Bottom:
@@ -535,7 +535,7 @@ export class SystemUtils {
     }
 
     public static parseConnectorArrowDisplayMode(displayMode: string): ConnectorArrowDisplayMode {
-        switch(displayMode) {
+        switch (displayMode) {
             case Consts.CONNECTOR_ARROW_DISPLAY_MODE_TOP:
                 return ConnectorArrowDisplayMode.Top
             case Consts.CONNECTOR_ARROW_DISPLAY_MODE_BOTTOM:
@@ -543,11 +543,11 @@ export class SystemUtils {
             case Consts.CONNECTOR_ARROW_DISPLAY_MODE_FULL:
             default:
                 return ConnectorArrowDisplayMode.Full
-        }  
+        }
     }
 
-    public static generateConnectorDirection(direction: ConnectorDirection): string  {
-        switch(direction) {
+    public static generateConnectorDirection(direction: ConnectorDirection): string {
+        switch (direction) {
             case ConnectorDirection.Top:
                 return Consts.CONNECTOR_DIRECTION_TOP
             case ConnectorDirection.Right:
@@ -561,7 +561,7 @@ export class SystemUtils {
     }
 
     public static parseConnectorDirection(direction: string): ConnectorDirection {
-        switch(direction) {
+        switch (direction) {
             case Consts.CONNECTOR_DIRECTION_TOP:
                 return ConnectorDirection.Top
             case Consts.CONNECTOR_DIRECTION_RIGHT:
@@ -574,8 +574,8 @@ export class SystemUtils {
         }
     }
 
-    public static generateEditorMode(editorMode: EditorMode){
-        switch(editorMode) {
+    public static generateEditorMode(editorMode: EditorMode) {
+        switch (editorMode) {
             case EditorMode.AUTO:
                 return Consts.EDITOR_CURSOR_AUTO
             case EditorMode.DEFAULT:
