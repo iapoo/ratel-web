@@ -910,7 +910,6 @@ const Navigator: FC<NavigatorProps> = ({
       children: <Space size={2} wrap>
         {/* {aliyunShapes}
       {awsShapes} */}
-        {customShapeFlowChartShapes}
         {customShapeBasicShapes}
       </Space>,
     },
@@ -919,6 +918,13 @@ const Navigator: FC<NavigatorProps> = ({
       label: <div style={{ fontWeight: 'bolder' }}><FormattedMessage id='workspace.navigator.panel.arrows' /></div>,
       children: <Space size={2} wrap>
         {customShapeArrows}
+      </Space>,
+    },
+    {
+      key: '5',
+      label: <div style={{ fontWeight: 'bolder' }}><FormattedMessage id='workspace.navigator.panel.flowchart' /></div>,
+      children: <Space size={2} wrap>
+        {customShapeFlowChartShapes}
       </Space>,
     },
     {

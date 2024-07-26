@@ -175,6 +175,7 @@ export default {
   'workspace.navigator.panel.advanced': '高级',
   'workspace.navigator.panel.arrows': '箭头',
   'workspace.navigator.panel.basic': '基础',
+  'workspace.navigator.panel.flowchart': 'Flowchart流程图',
   'workspace.navigator.panel.general': '通用',
   'workspace.navigator.panel.my-shapes': '我的图形库',
   'workspace.navigator.panel.uml-class': 'UML类图',
