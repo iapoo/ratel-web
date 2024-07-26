@@ -178,6 +178,7 @@ export default {
   'workspace.navigator.panel.flowchart': 'Flowchart流程图',
   'workspace.navigator.panel.general': '通用',
   'workspace.navigator.panel.my-shapes': '我的图形库',
+  'workspace.navigator.panel.pool': '泳道',
   'workspace.navigator.panel.uml-class': 'UML类图',
   'workspace.navigator.panel.uml-use-case': 'UML用例图',
   'workspace.navigator.panel.uml-activity-state': 'UML活动/状态图',
