@@ -223,11 +223,11 @@ export class EditorHelper {
                 } else if (editorItem instanceof Item) {
                     editorItem.boundary = Rectangle.makeLTWH(editorItem.left, editorItem.top, editorItem.width, editorItem.height)
                 }
-                if(forIcon) {
-                    editorItem.lineWidth = sizeFactor * editorItem.lineWidth * lineWidthFactor 
+                if (forIcon) {
+                    editorItem.lineWidth = sizeFactor * editorItem.lineWidth * lineWidthFactor
                     editorItem.fontSize = editorItem.fontSize * fontSizeFactor
                     editorItem.items.forEach(item => {
-                        item.lineWidth = sizeFactor * item.lineWidth * lineWidthFactor 
+                        item.lineWidth = sizeFactor * item.lineWidth * lineWidthFactor
                         item.fontSize = item.fontSize * fontSizeFactor
                     })
                 }
@@ -240,10 +240,11 @@ export class EditorHelper {
             editor.selectionLayer.visible = false
             editor.contentLayer.visible = false
             editor.render()
-            const image = editor.engine.surface.makeImageSnapshot([left + selectionLeft - 10, top + selectionTop - 10, left + selectionRight+ 10, top + selectionBottom + 10])
+            const image = editor.engine.surface.makeImageSnapshot([left + selectionLeft - 10, top + selectionTop - 10, left + selectionRight + 10, top + selectionBottom + 10])
             const data = image.encodeToBytes()
+            image.delete()
             let base64Data = ''
-            if(data && encoded) {
+            if (data && encoded) {
                 base64Data = ImageUtils.convertUint8ArrayToBase64(data)
                 return base64Data
             } else {
@@ -264,6 +265,7 @@ export class EditorHelper {
             editor.render()
             const image = editor.engine.surface.makeImageSnapshot([editor.horizontalSpace, editor.verticalSpace, editor.workWidth + editor.horizontalSpace, editor.workHeight + editor.verticalSpace])
             const data = image.encodeToBytes()
+            image.delete()
             let encoded = ''
             if (data) {
                 //encoded = Buffer.from(data).toString('base64');
@@ -275,38 +277,38 @@ export class EditorHelper {
         }
     }
 
-    public static async addToMyShapes(editor: Editor, callback: ()=> void) {
+    public static async addToMyShapes(editor: Editor, callback: () => void) {
         const settingData = await RequestUtils.getSettings()
-        if(settingData.status == 200 && settingData.data.success) {
+        if (settingData.status == 200 && settingData.data.success) {
             console.log(`Succeed to get settings`)
             const settings = settingData.data.data.settings
             let myShapes: MyShapes = settings ? JSON.parse(settings) : {}
             const selectionInfos = EditorHelper.generateEditorSelections(editor)
             const [left, top, right, bottom] = editor.getSelectionBoundary()
             const data = EditorHelper.exportSelected(editor, 'png', true)
-            const imageData = 'data:image/png;base64,' +data
+            const imageData = 'data:image/png;base64,' + data
             const imageInfo = JSON.stringify(selectionInfos)
-            const id =  SystemUtils.generateID()
-            if(!myShapes || ! myShapes.shapes) {
+            const id = SystemUtils.generateID()
+            if (!myShapes || !myShapes.shapes) {
                 myShapes = {
                     shapes: [
-                        {image: imageData, info: imageInfo, type: MyShapeType.SELECTION, name: 'Custom Shape', id: id, width: right - left, height: bottom - top}
-                        ]
-                  }
+                        { image: imageData, info: imageInfo, type: MyShapeType.SELECTION, name: 'Custom Shape', id: id, width: right - left, height: bottom - top }
+                    ]
+                }
             } else {
-                myShapes.shapes.push({image: imageData, info: imageInfo, type: MyShapeType.SELECTION, name: 'Custom Shape', id: id, width: right - left, height: bottom - top})
+                myShapes.shapes.push({ image: imageData, info: imageInfo, type: MyShapeType.SELECTION, name: 'Custom Shape', id: id, width: right - left, height: bottom - top })
             }
-            
-            const myShapesInfo = JSON.stringify(myShapes)      
+
+            const myShapesInfo = JSON.stringify(myShapes)
             // console.log(`myShapesInfo= ${myShapes}`)
             const updateSettingsData = await RequestUtils.updateSettings(myShapesInfo)
-            if(updateSettingsData.status == 200 && updateSettingsData.data.success) {
-              console.log(`Succeed to update settings`)
+            if (updateSettingsData.status == 200 && updateSettingsData.data.success) {
+                console.log(`Succeed to update settings`)
             } else {
-              console.log(`Fail to update settings`)
+                console.log(`Fail to update settings`)
             }
             // SystemUtils.generateDownloadFile(data, 'test.png')
-            if(callback) {
+            if (callback) {
                 callback()
             }
         } else {
@@ -314,40 +316,40 @@ export class EditorHelper {
         }
     }
 
-    public static async addImageToMyShapes(imageData: string, myShapes: MyShape[], callback: ()=> void, imageWidth: number, imageHeight: number) {
+    public static async addImageToMyShapes(imageData: string, myShapes: MyShape[], callback: () => void, imageWidth: number, imageHeight: number) {
         const imageInfo = imageData
-        const id =  SystemUtils.generateID()
-        myShapes.push({image: imageData, info: imageInfo, type: MyShapeType.IMAGE, name: 'Custom Image', id: id, width: imageWidth, height: imageHeight})
-        
-        const myShapesInfo = JSON.stringify({shapes: myShapes})      
+        const id = SystemUtils.generateID()
+        myShapes.push({ image: imageData, info: imageInfo, type: MyShapeType.IMAGE, name: 'Custom Image', id: id, width: imageWidth, height: imageHeight })
+
+        const myShapesInfo = JSON.stringify({ shapes: myShapes })
         // console.log(`myShapesInfo= ${myShapes}`)
         const updateSettingsData = await RequestUtils.updateSettings(myShapesInfo)
-        if(updateSettingsData.status == 200 && updateSettingsData.data.success) {
-          console.log(`Succeed to update settings`)
+        if (updateSettingsData.status == 200 && updateSettingsData.data.success) {
+            console.log(`Succeed to update settings`)
         } else {
-          console.log(`Fail to update settings`)
+            console.log(`Fail to update settings`)
         }
         // SystemUtils.generateDownloadFile(data, 'test.png')
-        if(callback) {
+        if (callback) {
             callback()
         }
     }
 
-    public static async addSvgToMyShapes(svgData: string, myShapes: MyShape[], callback: ()=> void, imageWidth: number, imageHeight: number) {
+    public static async addSvgToMyShapes(svgData: string, myShapes: MyShape[], callback: () => void, imageWidth: number, imageHeight: number) {
         const imageInfo = ImageUtils.convertBase64ImageToString(svgData)
-        const id =  SystemUtils.generateID()
-        myShapes.push({image: svgData, info: imageInfo, type: MyShapeType.SVG, name: 'Custom SVG', id: id, width: imageWidth, height: imageHeight})
-        
-        const myShapesInfo = JSON.stringify({shapes: myShapes})      
+        const id = SystemUtils.generateID()
+        myShapes.push({ image: svgData, info: imageInfo, type: MyShapeType.SVG, name: 'Custom SVG', id: id, width: imageWidth, height: imageHeight })
+
+        const myShapesInfo = JSON.stringify({ shapes: myShapes })
         // console.log(`myShapesInfo= ${myShapes}`)
         const updateSettingsData = await RequestUtils.updateSettings(myShapesInfo)
-        if(updateSettingsData.status == 200 && updateSettingsData.data.success) {
-          console.log(`Succeed to update settings`)
+        if (updateSettingsData.status == 200 && updateSettingsData.data.success) {
+            console.log(`Succeed to update settings`)
         } else {
-          console.log(`Fail to update settings`)
+            console.log(`Fail to update settings`)
         }
         // SystemUtils.generateDownloadFile(data, 'test.png')
-        if(callback) {
+        if (callback) {
             callback()
         }
     }

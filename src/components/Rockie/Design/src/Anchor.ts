@@ -10,14 +10,14 @@ export abstract class Anchor extends Shape {
   private _holder: Holder;
   private _lastMovingTime = new Date().getTime();
 
-  public constructor (editor: Editor, holder: Holder) {
+  public constructor(editor: Editor, holder: Holder) {
     super()
     this._editor = editor
     this._holder = holder
     this.width = 10
     this.height = 10
-    this.stroke = Paint.makeColorPaint(Colors.Blue)
-    this.fill = Paint.makeColorPaint(Colors.White)
+    this.stroke.setColor(Colors.Blue)
+    this.fill.setColor(Colors.White)
     this.stroke.setAntiAlias(true)
     this.onPointerClick((e) => {
       this.handlePointerClick(e.x, e.y)
@@ -35,11 +35,11 @@ export abstract class Anchor extends Shape {
       this.handlePointerMove(e.x, e.y)
     })
 
-    this.onPointerEnter( (e) => {
+    this.onPointerEnter((e) => {
       this.handlePointerEnter()
     })
 
-    this.onPointerLeave( (e) => {
+    this.onPointerLeave((e) => {
       this.handlePointerLeave()
     })
     this.buildAnchor()
@@ -52,27 +52,27 @@ export abstract class Anchor extends Shape {
   public abstract handlePointerEnter(): void
   public abstract handlePointerLeave(): void
 
-  protected get lastMovingTime (): number {
+  protected get lastMovingTime(): number {
     return this._lastMovingTime
   }
 
-  protected set lastMovingTime (value: number) {
+  protected set lastMovingTime(value: number) {
     this._lastMovingTime = value
   }
 
-  public get editor (): Editor {
+  public get editor(): Editor {
     return this._editor
   }
 
-  public get holder (): Holder {
+  public get holder(): Holder {
     return this._holder
   }
 
-  public get target (): Item | undefined {
+  public get target(): Item | undefined {
     return this._target
   }
 
-  public set target (value: Item | undefined) {
+  public set target(value: Item | undefined) {
     this._target = value
   }
 

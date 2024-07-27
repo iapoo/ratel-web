@@ -110,6 +110,13 @@ export class Engine {
     return path.copy();
   }
 
+  /**
+   * Need to delete after used
+   * @param imageInfo 
+   * @param bytes 
+   * @param bytesPerRow 
+   * @returns 
+   */
   public static makeImage(
     imageInfo: ImageInfo,
     bytes: number[],

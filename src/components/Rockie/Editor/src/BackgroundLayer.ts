@@ -18,7 +18,7 @@ export class BackgroundLayer extends EditorLayer {
   private _workPaint: Paint
   private _spacePaint: Paint
 
-  public constructor (editor: Editor, left = 0, top = 0, width = 100, height = 100, gridSize = 16, gridZoom = 1.0) {
+  public constructor(editor: Editor, left = 0, top = 0, width = 100, height = 100, gridSize = 16, gridZoom = 1.0) {
     super(left, top, width, height, true)
     this.editor = editor
     this._gridColor = editor.gridColor
@@ -39,21 +39,21 @@ export class BackgroundLayer extends EditorLayer {
     this.buildLayer()
   }
 
-  public get gridZoom () {
+  public get gridZoom() {
     return this._gridZoom
   }
 
-  public set gridZoom (value: number) {
+  public set gridZoom(value: number) {
     this._gridZoom = value
     this.invalidateLayer()
   }
 
-  public set gridSize (value: number) {
+  public set gridSize(value: number) {
     this._gridSize = value
     this.invalidateLayer()
   }
 
-  public get gridSize () {
+  public get gridSize() {
     return this._gridSize
   }
 
@@ -77,22 +77,46 @@ export class BackgroundLayer extends EditorLayer {
     this.invalidateLayer()
   }
 
-  public render (graphics: Graphics): void {
+  public render(graphics: Graphics): void {
     super.render(graphics)
-    if(this.editor) {
+    if (this.editor) {
       graphics.drawRectangle(Rectangle.makeLTWH(-this.editor.horizontalSpace, -this.editor.verticalSpace, this.editor.width, this.editor.height), this._spacePaint)
     }
     graphics.drawRectangle(Rectangle.makeLTWH(0, 0, this.width, this.height), this._workPaint)
-    if(this._theEditor.showBackground) {
+    if (this._theEditor.showBackground) {
       graphics.drawRectangle(Rectangle.makeLTWH(0, 0, this.width, this.height), this._backgroundBrush)
     }
-    if(this._theEditor.showGrid) {
+    if (this._theEditor.showGrid) {
       graphics.drawPath(this._subPath, this._subStroke)
       graphics.drawPath(this._mainPath, this._mainStroke)
     }
   }
 
-  protected buildLayer () {
+  public dispose(): void {
+    super.dispose()
+    if (this._mainStroke) {
+      this._mainPath.delete()
+    }
+    if (this._subStroke) {
+      this._subStroke.delete()
+    }
+    if (this._mainPath) {
+      this._mainPath.delete()
+    }
+    if (this._subPath) {
+      this._subPath.delete()
+    }
+    if (this._backgroundBrush) {
+      this._backgroundBrush.delete()
+    }
+    if (this._workPaint) {
+      this._workPaint.delete()
+    }
+    if (this._spacePaint) {
+      this._spacePaint.delete()
+    }
+  }
+  protected buildLayer() {
     const theGridSize = this._gridSize * this._theEditor.zoom
     this._subPath.reset()
     this._mainPath.reset()
@@ -119,7 +143,7 @@ export class BackgroundLayer extends EditorLayer {
     this._mainPath.addRectangle(new Rectangle(0, 0, this.width, this.height))
   }
 
-  private refreshGridPaints()  {
+  private refreshGridPaints() {
     let r = Math.round((this._gridColor.r + (1 - this._gridColor.r) * 0.75) * 255)
     let g = Math.round((this._gridColor.g + (1 - this._gridColor.g) * 0.75) * 255)
     let b = Math.round((this._gridColor.b + (1 - this._gridColor.b) * 0.75) * 255)

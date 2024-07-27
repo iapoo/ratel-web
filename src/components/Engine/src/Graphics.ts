@@ -4,81 +4,82 @@
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
 /* eslint-disable no-unused-vars */
 /* eslint-disable max-params */
+import { ColorFilter, PathEffect } from 'canvaskit-wasm'
 import { MatrixHelper, Engine, } from './Engine'
 import { EngineUtils, FontUtils, } from './EngineUtils'
 import { Node, } from './Node'
 
 export class Point2 {
-  public constructor (public readonly x: number = 0, public readonly y: number = 0) {}
+  public constructor(public readonly x: number = 0, public readonly y: number = 0) { }
 
-  public clone (): Point2 {
+  public clone(): Point2 {
     return new Point2(this.x, this.y)
   }
 
-  public equals (point: Point2): boolean {
+  public equals(point: Point2): boolean {
     return point.x === this.x && point.y === this.y
   }
 }
 
 export class Point3 {
-  public constructor (
+  public constructor(
     public readonly x: number,
     public readonly y: number,
     public readonly z: number
-  ) {}
+  ) { }
 
-  public clone (): Point3 {
+  public clone(): Point3 {
     return new Point3(this.x, this.y, this.z)
   }
 
-  public equals (vector: Point3): boolean {
+  public equals(vector: Point3): boolean {
     return vector.x === this.x && vector.y === this.y && vector.z === this.z
   }
 }
 
 export class Rectangle {
-  public static makeLTWH (left: number, top: number, width: number, height: number): Rectangle {
+  public static makeLTWH(left: number, top: number, width: number, height: number): Rectangle {
     return new Rectangle(left, top, left + width, top + height)
   }
 
   private _source: number[];
 
-  public constructor (left: number, top: number, right: number, bottom: number) {
-    this._source = [ left, top, right, bottom, ]
+  public constructor(left: number, top: number, right: number, bottom: number) {
+    this._source = [left, top, right, bottom,]
   }
 
-  public get source () {
+  public get source() {
     return this._source
   }
-  public get left () {
+  public get left() {
     return this._source[0]
   }
 
-  public get top () {
+  public get top() {
     return this._source[1]
   }
 
-  public get right () {
+  public get right() {
     return this._source[2]
   }
 
-  public get bottom () {
+  public get bottom() {
     return this._source[3]
   }
 
-  public get width () {
+  public get width() {
     return this._source[2] - this._source[0]
   }
 
-  public get height () {
+  public get height() {
     return this._source[3] - this._source[1]
   }
 
-  public clone (): Rectangle {
+  public clone(): Rectangle {
     return new Rectangle(this._source[0], this._source[1], this._source[2], this._source[3])
   }
 
-  public equals (rectangle: Rectangle): boolean {
+  public equals(rectangle: Rectangle): boolean {
     return (
       rectangle._source[0] === this._source[0] &&
       rectangle._source[1] === this._source[1] &&
@@ -90,7 +91,7 @@ export class Rectangle {
 
 export class RoundRectangle {
   private _source: number[];
-  public constructor (
+  public constructor(
     left: number,
     top: number,
     right: number,
@@ -98,45 +99,45 @@ export class RoundRectangle {
     rx: number,
     ry: number
   ) {
-    this._source = [ left, top, right, bottom, rx, ry, rx, ry, rx, ry, rx, ry, ]
+    this._source = [left, top, right, bottom, rx, ry, rx, ry, rx, ry, rx, ry,]
   }
 
-  public get source () {
+  public get source() {
     return this._source
   }
-  public get left () {
+  public get left() {
     return this._source[0]
   }
 
-  public get top () {
+  public get top() {
     return this._source[1]
   }
 
-  public get right () {
+  public get right() {
     return this._source[2]
   }
 
-  public get bottom () {
+  public get bottom() {
     return this._source[3]
   }
 
-  public get width () {
+  public get width() {
     return this._source[2] - this._source[0]
   }
 
-  public get height () {
+  public get height() {
     return this._source[3] - this._source[1]
   }
 
-  public get radiusX () {
+  public get radiusX() {
     return this._source[4]
   }
 
-  public get radiusY () {
+  public get radiusY() {
     return this._source[5]
   }
 
-  public clone (): RoundRectangle {
+  public clone(): RoundRectangle {
     return new RoundRectangle(
       this._source[0],
       this._source[1],
@@ -147,7 +148,7 @@ export class RoundRectangle {
     )
   }
 
-  public equals (rectangle: RoundRectangle): boolean {
+  public equals(rectangle: RoundRectangle): boolean {
     return (
       rectangle._source[0] === this._source[0] &&
       rectangle._source[1] === this._source[1] &&
@@ -160,43 +161,43 @@ export class RoundRectangle {
 }
 
 export class Color {
-  public static makeFromRGBA (rgba: number): Color {
+  public static makeFromRGBA(rgba: number): Color {
     const color = new Color(rgba >> 24, (rgba << 8) >> 24, (rgba << 16) >> 24, (rgba << 24) >> 24)
     return color
   }
 
-  public static makeFromFloatArray (source: number[]): Color {
+  public static makeFromFloatArray(source: number[]): Color {
     const color = new Color(source[0] * 255, source[1] * 255, source[2] * 255, source[3] * 255)
     return color
   }
 
   private _source: number[];
 
-  constructor (r: number, g: number, b: number, a: number) {
-    this._source = [ (r & 0xff) / 255, (g & 0xff) / 255, (b & 0xff) / 255, (a & 0xff) / 255, ]
+  constructor(r: number, g: number, b: number, a: number) {
+    this._source = [(r & 0xff) / 255, (g & 0xff) / 255, (b & 0xff) / 255, (a & 0xff) / 255,]
   }
 
-  public get r (): number {
+  public get r(): number {
     return this._source[0]
   }
 
-  public get g (): number {
+  public get g(): number {
     return this._source[1]
   }
 
-  public get b (): number {
+  public get b(): number {
     return this._source[2]
   }
 
-  public get a (): number {
+  public get a(): number {
     return this._source[3]
   }
 
-  public get source (): number[] {
+  public get source(): number[] {
     return this._source
   }
 
-  public equals (color: Color): boolean {
+  public equals(color: Color): boolean {
     return this.a == color.a && this.r == color.r && this.g == color.g && this.b == color.b
   }
 }
@@ -561,18 +562,18 @@ export enum ParagraphDirection {
 export class TextFontFeature {
   public readonly name: string;
   public readonly value: number;
-  constructor (name: string, value: number) {
+  constructor(name: string, value: number) {
     this.name = name
     this.value = value
   }
 }
 
 export class TextShadow {
-  constructor (
+  constructor(
     public readonly color: Color,
     public readonly offset: number[],
     public readonly blurRadius: number
-  ) {}
+  ) { }
 }
 
 export interface ParagraphStyleOptions {
@@ -601,7 +602,7 @@ export class ParagraphStyle {
   private _textStyle: TextStyle;
   private _paragraphDirection: ParagraphDirection
 
-  constructor (
+  constructor(
     options: ParagraphStyleOptions = {
       maxLines: 0,
       textAlignment: TextAlignment.LEFT,
@@ -635,31 +636,31 @@ export class ParagraphStyle {
     })
   }
 
-  public get source () {
+  public get source() {
     return this._source
   }
 
-  public get textAlignment () {
+  public get textAlignment() {
     return this._textAlignment
   }
 
-  public get textDirection () {
+  public get textDirection() {
     return this._textDirection
   }
 
-  public get textAngle () {
+  public get textAngle() {
     return this._textAngle
   }
 
-  public get maxLines () {
+  public get maxLines() {
     return this._maxLines
   }
 
-  public get textStyle () {
+  public get textStyle() {
     return this._textStyle
   }
 
-  public get strutStyle () {
+  public get strutStyle() {
     return this._strutStyle
   }
 }
@@ -667,27 +668,27 @@ export class ParagraphStyle {
 export class Paragraph {
   private _source;
 
-  constructor (paragraphBuilder: ParagraphBuilder) {
+  constructor(paragraphBuilder: ParagraphBuilder) {
     this._source = paragraphBuilder.source.build()
   }
 
-  public get source () {
+  public get source() {
     return this._source
   }
 
-  public layout (width: number) {
+  public layout(width: number) {
     this._source.layout(width)
   }
 
-  public getShapedLines (): ShapedLine[] {
+  public getShapedLines(): ShapedLine[] {
     return this._source.getShapedLines()
   }
 
-  public getHeight (): number {
+  public getHeight(): number {
     return this._source.getHeight()
   }
 
-  public getMaxWidth (): number {
+  public getMaxWidth(): number {
     return this._source.getMaxWidth()
   }
 }
@@ -703,21 +704,21 @@ export class FontStyle {
   private _width: FontWidth;
   private _slant: FontSlant;
 
-  constructor (options?: FontStyleOptions) {
+  constructor(options?: FontStyleOptions) {
     this._weight = options?.weight ? options.weight : FontWeight.NORMAL
     this._width = options?.width ? options.width : FontWidth.NORMAL
     this._slant = options?.slant ? options.slant : FontSlant.UP_RIGHT
   }
 
-  public get weight () {
+  public get weight() {
     return this._weight
   }
 
-  public get width () {
+  public get width() {
     return this._width
   }
 
-  public get slant () {
+  public get slant() {
     return this._slant
   }
 }
@@ -764,12 +765,12 @@ export class TextStyle {
   private _textBaseline: TextBaseline;
   private _wordSpacing: number;
 
-  constructor (
+  constructor(
     textStyle: TextStyleOptions = {
       color: Colors.Black,
       fontSize: 14,
-      fontFamilies: [ EngineUtils.FONT_NAME_DEFAULT],
-      
+      fontFamilies: [EngineUtils.FONT_NAME_DEFAULT],
+
     }
   ) {
     this._backgroundColor = textStyle.backgroundColor ? textStyle.backgroundColor : undefined
@@ -814,79 +815,79 @@ export class TextStyle {
     })
   }
 
-  public get source () {
+  public get source() {
     return this._source
   }
 
-  public get backgroundColor () {
+  public get backgroundColor() {
     return this._backgroundColor
   }
 
-  public get color () {
+  public get color() {
     return this._color
   }
 
-  public get decoration () {
+  public get decoration() {
     return this._decoration
   }
 
-  public get decorationColor () {
+  public get decorationColor() {
     return this._decorationColor
   }
 
-  public get decorationThickness () {
+  public get decorationThickness() {
     return this._decorationThickness
   }
 
-  public get decorationStyle () {
+  public get decorationStyle() {
     return this._decorationStyle
   }
 
-  public get fontFamilies () {
+  public get fontFamilies() {
     return this._fontFamilies
   }
 
-  public get fontFeatures () {
+  public get fontFeatures() {
     return this._fontFeatures
   }
 
-  public get fontSize () {
+  public get fontSize() {
     return this._fontSize
   }
 
-  public get fontStyle () {
+  public get fontStyle() {
     return this._fontStyle
   }
 
-  public get foregroundColor () {
+  public get foregroundColor() {
     return this._foregroundColor
   }
 
-  public get heightMultiplier () {
+  public get heightMultiplier() {
     return this._heightMultiplier
   }
 
-  public get halfLeading () {
+  public get halfLeading() {
     return this._halfLeading
   }
 
-  public get letterSpacing () {
+  public get letterSpacing() {
     return this._letterSpacing
   }
 
-  public get locale () {
+  public get locale() {
     return this._locale
   }
 
-  public get shadows () {
+  public get shadows() {
     return this._shadows
   }
 
-  public get textBaseline () {
+  public get textBaseline() {
     return this._textBaseline
   }
 
-  public get wordSpacing () {
+  public get wordSpacing() {
     return this._wordSpacing
   }
 }
@@ -913,7 +914,7 @@ export class StrutStyle {
   private _leading: number;
   private _forceStrutHeight: boolean;
 
-  public constructor (options?: StrutStyleOptions) {
+  public constructor(options?: StrutStyleOptions) {
     this._strutEnabled = options?.strutEnabled ? options.strutEnabled : false
     this._fontFamilies = options?.fontFamilies ? options.fontFamilies : []
     this._fontStyle = options?.fontStyle ? options.fontStyle : new FontStyle()
@@ -934,180 +935,180 @@ export class StrutStyle {
     }
   }
 
-  public get source () {
+  public get source() {
     return this._source
   }
 
-  public get strutEnabled () {
+  public get strutEnabled() {
     return this._strutEnabled
   }
 
-  public get fontFamilies () {
+  public get fontFamilies() {
     return this._fontFamilies
   }
 
-  public get fontStyle () {
+  public get fontStyle() {
     return this._fontStyle
   }
 
-  public get fontSize () {
+  public get fontSize() {
     return this._fontSize
   }
 
-  public get heightMultiplier () {
+  public get heightMultiplier() {
     return this._heightMultiplier
   }
 
-  public get halfLeading () {
+  public get halfLeading() {
     return this._halfLeading
   }
 
-  public get leading () {
+  public get leading() {
     return this._leading
   }
 
-  public get forceStrutHeight () {
+  public get forceStrutHeight() {
     return this._forceStrutHeight
   }
 }
 
 export class GraphicsUtils {
-  public static convertPlaceholderAlignment (placeholderAlignment: PlaceholderAlignment) {
+  public static convertPlaceholderAlignment(placeholderAlignment: PlaceholderAlignment) {
     switch (placeholderAlignment) {
-    case PlaceholderAlignment.BASELINE:
-      return Engine.canvasKit.PlaceholderAlignment.Baseline
-    case PlaceholderAlignment.ABOVE_BASELINE:
-      return Engine.canvasKit.PlaceholderAlignment.AboveBaseline
-    case PlaceholderAlignment.BELOW_BASELINE:
-      return Engine.canvasKit.PlaceholderAlignment.BelowBaseline
-    case PlaceholderAlignment.BOTTOM:
-      return Engine.canvasKit.PlaceholderAlignment.Bottom
-    case PlaceholderAlignment.TOP:
-      return Engine.canvasKit.PlaceholderAlignment.Top
-    case PlaceholderAlignment.MIDDLE:
-      return Engine.canvasKit.PlaceholderAlignment.Middle
+      case PlaceholderAlignment.BASELINE:
+        return Engine.canvasKit.PlaceholderAlignment.Baseline
+      case PlaceholderAlignment.ABOVE_BASELINE:
+        return Engine.canvasKit.PlaceholderAlignment.AboveBaseline
+      case PlaceholderAlignment.BELOW_BASELINE:
+        return Engine.canvasKit.PlaceholderAlignment.BelowBaseline
+      case PlaceholderAlignment.BOTTOM:
+        return Engine.canvasKit.PlaceholderAlignment.Bottom
+      case PlaceholderAlignment.TOP:
+        return Engine.canvasKit.PlaceholderAlignment.Top
+      case PlaceholderAlignment.MIDDLE:
+        return Engine.canvasKit.PlaceholderAlignment.Middle
     }
   }
 
-  public static convertTextBaseline (textBaseline: TextBaseline) {
+  public static convertTextBaseline(textBaseline: TextBaseline) {
     switch (textBaseline) {
-    case TextBaseline.ALPHABETIC:
-      return Engine.canvasKit.TextBaseline.Alphabetic
-    case TextBaseline.IDEOGRAPHIC:
-      return Engine.canvasKit.TextBaseline.Ideographic
+      case TextBaseline.ALPHABETIC:
+        return Engine.canvasKit.TextBaseline.Alphabetic
+      case TextBaseline.IDEOGRAPHIC:
+        return Engine.canvasKit.TextBaseline.Ideographic
     }
   }
 
-  public static convertTextAlignment (textAlignment: TextAlignment) {
+  public static convertTextAlignment(textAlignment: TextAlignment) {
     switch (textAlignment) {
-    case TextAlignment.LEFT:
-      return Engine.canvasKit.TextAlign.Left
-    case TextAlignment.RIGHT:
-      return Engine.canvasKit.TextAlign.Right
-    case TextAlignment.CENTER:
-      return Engine.canvasKit.TextAlign.Center
-    case TextAlignment.JUSTIFY:
-      return Engine.canvasKit.TextAlign.Justify
-    case TextAlignment.START:
-      return Engine.canvasKit.TextAlign.Start
-    case TextAlignment.END:
-      return Engine.canvasKit.TextAlign.End
+      case TextAlignment.LEFT:
+        return Engine.canvasKit.TextAlign.Left
+      case TextAlignment.RIGHT:
+        return Engine.canvasKit.TextAlign.Right
+      case TextAlignment.CENTER:
+        return Engine.canvasKit.TextAlign.Center
+      case TextAlignment.JUSTIFY:
+        return Engine.canvasKit.TextAlign.Justify
+      case TextAlignment.START:
+        return Engine.canvasKit.TextAlign.Start
+      case TextAlignment.END:
+        return Engine.canvasKit.TextAlign.End
     }
   }
 
-  public static convertDecorationStyle (decorationStyle: DecorationStyle) {
+  public static convertDecorationStyle(decorationStyle: DecorationStyle) {
     switch (decorationStyle) {
-    case DecorationStyle.SOLID:
-      return Engine.canvasKit.DecorationStyle.Solid
-    case DecorationStyle.DOUBLE:
-      return Engine.canvasKit.DecorationStyle.Double
-    case DecorationStyle.DOTTED:
-      return Engine.canvasKit.DecorationStyle.Dotted
-    case DecorationStyle.DASHED:
-      return Engine.canvasKit.DecorationStyle.Dashed
-    case DecorationStyle.WAVY:
-      return Engine.canvasKit.DecorationStyle.Wavy
+      case DecorationStyle.SOLID:
+        return Engine.canvasKit.DecorationStyle.Solid
+      case DecorationStyle.DOUBLE:
+        return Engine.canvasKit.DecorationStyle.Double
+      case DecorationStyle.DOTTED:
+        return Engine.canvasKit.DecorationStyle.Dotted
+      case DecorationStyle.DASHED:
+        return Engine.canvasKit.DecorationStyle.Dashed
+      case DecorationStyle.WAVY:
+        return Engine.canvasKit.DecorationStyle.Wavy
     }
   }
 
-  public static convertFontStyle (fontStyle: FontStyle) {
+  public static convertFontStyle(fontStyle: FontStyle) {
     let fontWeight = Engine.canvasKit.FontWeight.Normal
     let fontWidth = Engine.canvasKit.FontWidth.Normal
     let fontSlant = Engine.canvasKit.FontSlant.Upright
     switch (fontStyle.weight) {
-    case FontWeight.INVISIBLE:
-      fontWeight = Engine.canvasKit.FontWeight.Invisible
-      break
-    case FontWeight.THIN:
-      fontWeight = Engine.canvasKit.FontWeight.Thin
-      break
-    case FontWeight.EXTRA_LIGHT:
-      fontWeight = Engine.canvasKit.FontWeight.ExtraLight
-      break
-    case FontWeight.LIGHT:
-      fontWeight = Engine.canvasKit.FontWeight.Light
-      break
-    case FontWeight.NORMAL:
-      fontWeight = Engine.canvasKit.FontWeight.Normal
-      break
-    case FontWeight.MEDIUM:
-      fontWeight = Engine.canvasKit.FontWeight.Medium
-      break
-    case FontWeight.SEMI_BOLD:
-      fontWeight = Engine.canvasKit.FontWeight.SemiBold
-      break
-    case FontWeight.BOLD:
-      fontWeight = Engine.canvasKit.FontWeight.Bold
-      break
-    case FontWeight.EXTRA_BOLD:
-      fontWeight = Engine.canvasKit.FontWeight.ExtraBold
-      break
-    case FontWeight.BLACK:
-      fontWeight = Engine.canvasKit.FontWeight.Black
-      break
-    case FontWeight.EXTRA_BLACK:
-      fontWeight = Engine.canvasKit.FontWeight.ExtraBlack
-      break
+      case FontWeight.INVISIBLE:
+        fontWeight = Engine.canvasKit.FontWeight.Invisible
+        break
+      case FontWeight.THIN:
+        fontWeight = Engine.canvasKit.FontWeight.Thin
+        break
+      case FontWeight.EXTRA_LIGHT:
+        fontWeight = Engine.canvasKit.FontWeight.ExtraLight
+        break
+      case FontWeight.LIGHT:
+        fontWeight = Engine.canvasKit.FontWeight.Light
+        break
+      case FontWeight.NORMAL:
+        fontWeight = Engine.canvasKit.FontWeight.Normal
+        break
+      case FontWeight.MEDIUM:
+        fontWeight = Engine.canvasKit.FontWeight.Medium
+        break
+      case FontWeight.SEMI_BOLD:
+        fontWeight = Engine.canvasKit.FontWeight.SemiBold
+        break
+      case FontWeight.BOLD:
+        fontWeight = Engine.canvasKit.FontWeight.Bold
+        break
+      case FontWeight.EXTRA_BOLD:
+        fontWeight = Engine.canvasKit.FontWeight.ExtraBold
+        break
+      case FontWeight.BLACK:
+        fontWeight = Engine.canvasKit.FontWeight.Black
+        break
+      case FontWeight.EXTRA_BLACK:
+        fontWeight = Engine.canvasKit.FontWeight.ExtraBlack
+        break
     }
     switch (fontStyle.width) {
-    case FontWidth.ULTRA_CONDENSED:
-      fontWidth = Engine.canvasKit.FontWidth.UltraCondensed
-      break
-    case FontWidth.EXTRA_CONDENSED:
-      fontWidth = Engine.canvasKit.FontWidth.ExtraCondensed
-      break
-    case FontWidth.CONDENSED:
-      fontWidth = Engine.canvasKit.FontWidth.Condensed
-      break
-    case FontWidth.SEMI_CONDENSED:
-      fontWidth = Engine.canvasKit.FontWidth.SemiCondensed
-      break
-    case FontWidth.NORMAL:
-      fontWidth = Engine.canvasKit.FontWidth.Normal
-      break
-    case FontWidth.SEMI_EXPANDED:
-      fontWidth = Engine.canvasKit.FontWidth.SemiExpanded
-      break
-    case FontWidth.EXPANDED:
-      fontWidth = Engine.canvasKit.FontWidth.Expanded
-      break
-    case FontWidth.EXTRA_EXPANDED:
-      fontWidth = Engine.canvasKit.FontWidth.ExtraExpanded
-      break
-    case FontWidth.ULTRA_EXPANDED:
-      fontWidth = Engine.canvasKit.FontWidth.UltraExpanded
-      break
+      case FontWidth.ULTRA_CONDENSED:
+        fontWidth = Engine.canvasKit.FontWidth.UltraCondensed
+        break
+      case FontWidth.EXTRA_CONDENSED:
+        fontWidth = Engine.canvasKit.FontWidth.ExtraCondensed
+        break
+      case FontWidth.CONDENSED:
+        fontWidth = Engine.canvasKit.FontWidth.Condensed
+        break
+      case FontWidth.SEMI_CONDENSED:
+        fontWidth = Engine.canvasKit.FontWidth.SemiCondensed
+        break
+      case FontWidth.NORMAL:
+        fontWidth = Engine.canvasKit.FontWidth.Normal
+        break
+      case FontWidth.SEMI_EXPANDED:
+        fontWidth = Engine.canvasKit.FontWidth.SemiExpanded
+        break
+      case FontWidth.EXPANDED:
+        fontWidth = Engine.canvasKit.FontWidth.Expanded
+        break
+      case FontWidth.EXTRA_EXPANDED:
+        fontWidth = Engine.canvasKit.FontWidth.ExtraExpanded
+        break
+      case FontWidth.ULTRA_EXPANDED:
+        fontWidth = Engine.canvasKit.FontWidth.UltraExpanded
+        break
     }
     switch (fontStyle.slant) {
-    case FontSlant.UP_RIGHT:
-      fontSlant = Engine.canvasKit.FontSlant.Upright
-      break
-    case FontSlant.ITALIC:
-      fontSlant = Engine.canvasKit.FontSlant.Italic
-      break
-    case FontSlant.OBLIQUE:
-      fontSlant = Engine.canvasKit.FontSlant.Oblique
-      break
+      case FontSlant.UP_RIGHT:
+        fontSlant = Engine.canvasKit.FontSlant.Upright
+        break
+      case FontSlant.ITALIC:
+        fontSlant = Engine.canvasKit.FontSlant.Italic
+        break
+      case FontSlant.OBLIQUE:
+        fontSlant = Engine.canvasKit.FontSlant.Oblique
+        break
     }
     return {
       weight: fontWeight,
@@ -1116,7 +1117,7 @@ export class GraphicsUtils {
     }
   }
 
-  public static convertShadow (shadows: TextShadow[]) {
+  public static convertShadow(shadows: TextShadow[]) {
     const shadowsSource: { color: number[]; offset: number[]; blurRadius: number }[] = []
     shadows.forEach((shadow) => {
       shadowsSource.push({
@@ -1129,188 +1130,188 @@ export class GraphicsUtils {
     return shadowsSource
   }
 
-  public static convertTextDirection (textDirection: TextDirection) {
+  public static convertTextDirection(textDirection: TextDirection) {
     switch (textDirection) {
-    case TextDirection.LTR:
-      return Engine.canvasKit.TextDirection.LTR
-    case TextDirection.RTL:
-      return Engine.canvasKit.TextDirection.RTL
+      case TextDirection.LTR:
+        return Engine.canvasKit.TextDirection.LTR
+      case TextDirection.RTL:
+        return Engine.canvasKit.TextDirection.RTL
     }
   }
 
-  public static convertTextHeightBehavior (textHeightBehavior: TextHeightBehavior) {
+  public static convertTextHeightBehavior(textHeightBehavior: TextHeightBehavior) {
     switch (textHeightBehavior) {
-    case TextHeightBehavior.ALL:
-      return Engine.canvasKit.TextHeightBehavior.All
-    case TextHeightBehavior.DISABLE_FIRST_ASCENT:
-      return Engine.canvasKit.TextHeightBehavior.DisableFirstAscent
-    case TextHeightBehavior.DISABLE_LAST_DESCENT:
-      return Engine.canvasKit.TextHeightBehavior.DisableLastDescent
-    case TextHeightBehavior.DISABLE_ALL:
-      return Engine.canvasKit.TextHeightBehavior.DisableAll
+      case TextHeightBehavior.ALL:
+        return Engine.canvasKit.TextHeightBehavior.All
+      case TextHeightBehavior.DISABLE_FIRST_ASCENT:
+        return Engine.canvasKit.TextHeightBehavior.DisableFirstAscent
+      case TextHeightBehavior.DISABLE_LAST_DESCENT:
+        return Engine.canvasKit.TextHeightBehavior.DisableLastDescent
+      case TextHeightBehavior.DISABLE_ALL:
+        return Engine.canvasKit.TextHeightBehavior.DisableAll
     }
   }
 
-  public static convertClipOp (clipOp: ClipOp) {
+  public static convertClipOp(clipOp: ClipOp) {
     switch (clipOp) {
-    case ClipOp.DIFFERENCE:
-      return Engine.canvasKit.ClipOp.Difference
-    case ClipOp.INTERSECT:
-      return Engine.canvasKit.ClipOp.Intersect
+      case ClipOp.DIFFERENCE:
+        return Engine.canvasKit.ClipOp.Difference
+      case ClipOp.INTERSECT:
+        return Engine.canvasKit.ClipOp.Intersect
     }
   }
 
-  public static convertAlphaType (alphaType: AlphaType) {
+  public static convertAlphaType(alphaType: AlphaType) {
     switch (alphaType) {
-    case AlphaType.OPAQUE:
-      return Engine.canvasKit.AlphaType.Opaque
-    case AlphaType.PREMUL:
-      return Engine.canvasKit.AlphaType.Premul
-    case AlphaType.UNPREMUL:
-      return Engine.canvasKit.AlphaType.Unpremul
+      case AlphaType.OPAQUE:
+        return Engine.canvasKit.AlphaType.Opaque
+      case AlphaType.PREMUL:
+        return Engine.canvasKit.AlphaType.Premul
+      case AlphaType.UNPREMUL:
+        return Engine.canvasKit.AlphaType.Unpremul
     }
   }
 
-  public static convertColorSpace (colorSpace: ColorSpace) {
+  public static convertColorSpace(colorSpace: ColorSpace) {
     switch (colorSpace) {
-    case ColorSpace.SRGB:
-      return Engine.canvasKit.ColorSpace.SRGB
-    case ColorSpace.DISPLAY_P3:
-      return Engine.canvasKit.ColorSpace.DISPLAY_P3
-    case ColorSpace.ADOBE_RGB:
-      return Engine.canvasKit.ColorSpace.ADOBE_RGB
+      case ColorSpace.SRGB:
+        return Engine.canvasKit.ColorSpace.SRGB
+      case ColorSpace.DISPLAY_P3:
+        return Engine.canvasKit.ColorSpace.DISPLAY_P3
+      case ColorSpace.ADOBE_RGB:
+        return Engine.canvasKit.ColorSpace.ADOBE_RGB
     }
   }
 
-  public static convertColorType (colorType: ColorType) {
+  public static convertColorType(colorType: ColorType) {
     switch (colorType) {
-    case ColorType.ALPHA_8:
-      return Engine.canvasKit.ColorType.Alpha_8
-    case ColorType.RGB_565:
-      return Engine.canvasKit.ColorType.RGB_565
-    case ColorType.RGBA_8888:
-      return Engine.canvasKit.ColorType.RGBA_8888
-    case ColorType.BGRA_8888:
-      return Engine.canvasKit.ColorType.BGRA_8888
-    case ColorType.RGBA_1010102:
-      return Engine.canvasKit.ColorType.RGBA_1010102
-    case ColorType.RGB_101010x:
-      return Engine.canvasKit.ColorType.RGB_101010x
-    case ColorType.GRAY_8:
-      return Engine.canvasKit.ColorType.Gray_8
-    case ColorType.RGBA_F16:
-      return Engine.canvasKit.ColorType.RGBA_F16
-    case ColorType.RGBA_F32:
-      return Engine.canvasKit.ColorType.RGBA_F32
+      case ColorType.ALPHA_8:
+        return Engine.canvasKit.ColorType.Alpha_8
+      case ColorType.RGB_565:
+        return Engine.canvasKit.ColorType.RGB_565
+      case ColorType.RGBA_8888:
+        return Engine.canvasKit.ColorType.RGBA_8888
+      case ColorType.BGRA_8888:
+        return Engine.canvasKit.ColorType.BGRA_8888
+      case ColorType.RGBA_1010102:
+        return Engine.canvasKit.ColorType.RGBA_1010102
+      case ColorType.RGB_101010x:
+        return Engine.canvasKit.ColorType.RGB_101010x
+      case ColorType.GRAY_8:
+        return Engine.canvasKit.ColorType.Gray_8
+      case ColorType.RGBA_F16:
+        return Engine.canvasKit.ColorType.RGBA_F16
+      case ColorType.RGBA_F32:
+        return Engine.canvasKit.ColorType.RGBA_F32
     }
   }
 
-  public static convertBlendMode (blendMode: BlendMode) {
+  public static convertBlendMode(blendMode: BlendMode) {
     switch (blendMode) {
-    case BlendMode.CLEAR:
-      return Engine.canvasKit.BlendMode.Clear
-    case BlendMode.SRC:
-      return Engine.canvasKit.BlendMode.Src
-    case BlendMode.DST:
-      return Engine.canvasKit.BlendMode.Dst
-    case BlendMode.SRC_OVER:
-      return Engine.canvasKit.BlendMode.SrcOver
-    case BlendMode.DST_OVER:
-      return Engine.canvasKit.BlendMode.DstOver
-    case BlendMode.SRC_IN:
-      return Engine.canvasKit.BlendMode.SrcIn
-    case BlendMode.DST_IN:
-      return Engine.canvasKit.BlendMode.DstIn
-    case BlendMode.SRC_OUT:
-      return Engine.canvasKit.BlendMode.SrcOut
-    case BlendMode.DST_OUT:
-      return Engine.canvasKit.BlendMode.DstOut
-    case BlendMode.SRC_ATOP:
-      return Engine.canvasKit.BlendMode.SrcATop
-    case BlendMode.DST_ATOP:
-      return Engine.canvasKit.BlendMode.DstATop
-    case BlendMode.XOR:
-      return Engine.canvasKit.BlendMode.Xor
-    case BlendMode.PLUS:
-      return Engine.canvasKit.BlendMode.Plus
-    case BlendMode.MODULATE:
-      return Engine.canvasKit.BlendMode.Modulate
-    case BlendMode.SCREEN:
-      return Engine.canvasKit.BlendMode.Screen
-    case BlendMode.OVERLAY:
-      return Engine.canvasKit.BlendMode.Overlay
-    case BlendMode.DARKEN:
-      return Engine.canvasKit.BlendMode.Darken
-    case BlendMode.LIGHTEN:
-      return Engine.canvasKit.BlendMode.Lighten
-    case BlendMode.COLOR_DODGE:
-      return Engine.canvasKit.BlendMode.ColorDodge
-    case BlendMode.COLOR_BURN:
-      return Engine.canvasKit.BlendMode.ColorBurn
-    case BlendMode.HARD_LIGHT:
-      return Engine.canvasKit.BlendMode.HardLight
-    case BlendMode.SOFT_LIGHT:
-      return Engine.canvasKit.BlendMode.SoftLight
-    case BlendMode.DIFFERENCE:
-      return Engine.canvasKit.BlendMode.Difference
-    case BlendMode.EXCLUSION:
-      return Engine.canvasKit.BlendMode.Exclusion
-    case BlendMode.MULTIPLY:
-      return Engine.canvasKit.BlendMode.Multiply
-    case BlendMode.HUE:
-      return Engine.canvasKit.BlendMode.Hue
-    case BlendMode.SATURATION:
-      return Engine.canvasKit.BlendMode.Saturation
-    case BlendMode.COLOR:
-      return Engine.canvasKit.BlendMode.Color
-    case BlendMode.LUMINOSITY:
-      return Engine.canvasKit.BlendMode.Luminosity
+      case BlendMode.CLEAR:
+        return Engine.canvasKit.BlendMode.Clear
+      case BlendMode.SRC:
+        return Engine.canvasKit.BlendMode.Src
+      case BlendMode.DST:
+        return Engine.canvasKit.BlendMode.Dst
+      case BlendMode.SRC_OVER:
+        return Engine.canvasKit.BlendMode.SrcOver
+      case BlendMode.DST_OVER:
+        return Engine.canvasKit.BlendMode.DstOver
+      case BlendMode.SRC_IN:
+        return Engine.canvasKit.BlendMode.SrcIn
+      case BlendMode.DST_IN:
+        return Engine.canvasKit.BlendMode.DstIn
+      case BlendMode.SRC_OUT:
+        return Engine.canvasKit.BlendMode.SrcOut
+      case BlendMode.DST_OUT:
+        return Engine.canvasKit.BlendMode.DstOut
+      case BlendMode.SRC_ATOP:
+        return Engine.canvasKit.BlendMode.SrcATop
+      case BlendMode.DST_ATOP:
+        return Engine.canvasKit.BlendMode.DstATop
+      case BlendMode.XOR:
+        return Engine.canvasKit.BlendMode.Xor
+      case BlendMode.PLUS:
+        return Engine.canvasKit.BlendMode.Plus
+      case BlendMode.MODULATE:
+        return Engine.canvasKit.BlendMode.Modulate
+      case BlendMode.SCREEN:
+        return Engine.canvasKit.BlendMode.Screen
+      case BlendMode.OVERLAY:
+        return Engine.canvasKit.BlendMode.Overlay
+      case BlendMode.DARKEN:
+        return Engine.canvasKit.BlendMode.Darken
+      case BlendMode.LIGHTEN:
+        return Engine.canvasKit.BlendMode.Lighten
+      case BlendMode.COLOR_DODGE:
+        return Engine.canvasKit.BlendMode.ColorDodge
+      case BlendMode.COLOR_BURN:
+        return Engine.canvasKit.BlendMode.ColorBurn
+      case BlendMode.HARD_LIGHT:
+        return Engine.canvasKit.BlendMode.HardLight
+      case BlendMode.SOFT_LIGHT:
+        return Engine.canvasKit.BlendMode.SoftLight
+      case BlendMode.DIFFERENCE:
+        return Engine.canvasKit.BlendMode.Difference
+      case BlendMode.EXCLUSION:
+        return Engine.canvasKit.BlendMode.Exclusion
+      case BlendMode.MULTIPLY:
+        return Engine.canvasKit.BlendMode.Multiply
+      case BlendMode.HUE:
+        return Engine.canvasKit.BlendMode.Hue
+      case BlendMode.SATURATION:
+        return Engine.canvasKit.BlendMode.Saturation
+      case BlendMode.COLOR:
+        return Engine.canvasKit.BlendMode.Color
+      case BlendMode.LUMINOSITY:
+        return Engine.canvasKit.BlendMode.Luminosity
     }
   }
 
-  public static convertFilterMode (filterMode: FilterMode) {
+  public static convertFilterMode(filterMode: FilterMode) {
     switch (filterMode) {
-    case FilterMode.LINEAR:
-      return Engine.canvasKit.FilterMode.Linear
-    case FilterMode.NEAREST:
-      return Engine.canvasKit.FilterMode.Nearest
+      case FilterMode.LINEAR:
+        return Engine.canvasKit.FilterMode.Linear
+      case FilterMode.NEAREST:
+        return Engine.canvasKit.FilterMode.Nearest
     }
   }
 
-  public static convertMipmapMode (mipmapMode: MipmapMode) {
+  public static convertMipmapMode(mipmapMode: MipmapMode) {
     switch (mipmapMode) {
-    case MipmapMode.NONE:
-      return Engine.canvasKit.MipmapMode.None
-    case MipmapMode.NEAREST:
-      return Engine.canvasKit.MipmapMode.Nearest
-    case MipmapMode.LINEAR:
-      return Engine.canvasKit.MipmapMode.Linear
+      case MipmapMode.NONE:
+        return Engine.canvasKit.MipmapMode.None
+      case MipmapMode.NEAREST:
+        return Engine.canvasKit.MipmapMode.Nearest
+      case MipmapMode.LINEAR:
+        return Engine.canvasKit.MipmapMode.Linear
     }
   }
 
-  public static convertPointMode (pointMode: PointMode) {
+  public static convertPointMode(pointMode: PointMode) {
     switch (pointMode) {
-    case PointMode.POINTS:
-      return Engine.canvasKit.PointMode.Points
-    case PointMode.LINES:
-      return Engine.canvasKit.PointMode.Lines
-    case PointMode.POLYGON:
-      return Engine.canvasKit.PointMode.Polygon
+      case PointMode.POINTS:
+        return Engine.canvasKit.PointMode.Points
+      case PointMode.LINES:
+        return Engine.canvasKit.PointMode.Lines
+      case PointMode.POLYGON:
+        return Engine.canvasKit.PointMode.Polygon
     }
   }
 
-  public static convertPathOp (pathOp: PathOp) {
+  public static convertPathOp(pathOp: PathOp) {
     switch (pathOp) {
-    case PathOp.DIFFERENCE:
-      return Engine.canvasKit.PathOp.Difference
-    case PathOp.INTERSECT:
-      return Engine.canvasKit.PathOp.Intersect
-    case PathOp.UNION:
-      return Engine.canvasKit.PathOp.Union
-    case PathOp.XOR:
-      return Engine.canvasKit.PathOp.XOR
-    case PathOp.REVERSE_DIFFERENCE:
-      return Engine.canvasKit.PathOp.ReverseDifference
+      case PathOp.DIFFERENCE:
+        return Engine.canvasKit.PathOp.Difference
+      case PathOp.INTERSECT:
+        return Engine.canvasKit.PathOp.Intersect
+      case PathOp.UNION:
+        return Engine.canvasKit.PathOp.Union
+      case PathOp.XOR:
+        return Engine.canvasKit.PathOp.XOR
+      case PathOp.REVERSE_DIFFERENCE:
+        return Engine.canvasKit.PathOp.ReverseDifference
     }
   }
 
@@ -1321,7 +1322,7 @@ export class GraphicsUtils {
    * @param end
    * @returns
    */
-  public static getTriangleAngle (target: Point2, start: Point2, end: Point2): number {
+  public static getTriangleAngle(target: Point2, start: Point2, end: Point2): number {
     const se = GraphicsUtils.getPointDistance(start, end)
     const ts = GraphicsUtils.getPointDistance(target, start)
     const te = GraphicsUtils.getPointDistance(target, end)
@@ -1330,18 +1331,18 @@ export class GraphicsUtils {
     return angle
   }
 
-  private static getPointDistance (start: Point2, end: Point2): number {
+  private static getPointDistance(start: Point2, end: Point2): number {
     return Math.sqrt((start.x - end.x) * (start.x - end.x) + (start.y - end.y) * (start.y - end.y))
   }
 
 
   public static getTriangleAngleEx(target: Point2, start: Point2, end: Point2) {
-    const numerator = start.y*(target.x- end.x) + target.y*(end.x-start.x) + end.y*(start.x-target.x);
-    const denominator = (start.x-target.x)*(target.x-end.x) + (start.y-target.y)*(target.y-end.y);
-    const ratio = numerator/denominator;
+    const numerator = start.y * (target.x - end.x) + target.y * (end.x - start.x) + end.y * (start.x - target.x);
+    const denominator = (start.x - target.x) * (target.x - end.x) + (start.y - target.y) * (target.y - end.y);
+    const ratio = numerator / denominator;
 
     const angleRad = Math.atan(ratio);
-    const angleDeg = (angleRad*180)/Math.PI;
+    const angleDeg = (angleRad * 180) / Math.PI;
 
     //if(angleDeg<0){
     // angleDeg = 180+angleDeg;
@@ -1353,7 +1354,7 @@ export class GraphicsUtils {
 
 export class ParagraphBuilder {
   private _source;
-  constructor (paragraphStyle: ParagraphStyle) {
+  constructor(paragraphStyle: ParagraphStyle) {
     this._source = Engine.canvasKit.ParagraphBuilder.MakeFromFontProvider(
       paragraphStyle.source,
       //Engine.typeFaceFontProvider
@@ -1361,15 +1362,15 @@ export class ParagraphBuilder {
     )
   }
 
-  public get source () {
+  public get source() {
     return this._source
   }
 
-  public build (): Paragraph {
+  public build(): Paragraph {
     return new Paragraph(this)
   }
 
-  public addPlaceholder (
+  public addPlaceholder(
     width: number,
     height: number,
     alignment: PlaceholderAlignment,
@@ -1381,37 +1382,46 @@ export class ParagraphBuilder {
     this._source?.addPlaceholder(width, height, alignmentSource, baselineSource, offset)
   }
 
-  public addText (str: string): void {
+  public addText(str: string): void {
     this._source?.addText(str)
   }
 
-  public pop (): void {
+  public pop(): void {
     this._source?.pop()
   }
 
-  public pushStyle (textStyle: TextStyle): void {
+  public pushStyle(textStyle: TextStyle): void {
     this._source?.pushStyle(textStyle.source)
   }
 
-  public pushPaintStyle (textStyle: TextStyle, fg: Paint, bg: Paint): void {
+  public pushPaintStyle(textStyle: TextStyle, fg: Paint, bg: Paint): void {
     this._source?.pushPaintStyle(textStyle.source, fg.source, bg.source)
   }
 
-  public reset (): void {
+  public reset(): void {
     this._source?.reset()
+  }
+
+  public delete() {
+    if (this._source) {
+      this._source.delete()
+    }
   }
 }
 
 export class Paint {
   private _source;
   private _strokeDashStyle: StrokeDashStyle
+  private _colorFilter: ColorFilter | null = null
+  private _pathEffect: PathEffect | null = null
 
-  public static makeColorPaint (color: Color): Paint {
+  public static makeColorPaint(color: Color): Paint {
     const paint: Paint = new Paint()
     paint.setColor(color)
     return paint
   }
-  constructor (paint: Paint | null = null) {
+
+  constructor(paint: Paint | null = null) {
     if (paint) {
       this._source = Engine.makePaintFrom(paint._source)
     } else {
@@ -1420,15 +1430,15 @@ export class Paint {
     this._strokeDashStyle = StrokeDashStyle.SOLID
   }
 
-  public get source () {
+  public get source() {
     return this._source
   }
 
-  public setColor (color: Color) {
+  public setColor(color: Color) {
     this._source.setColor(color.source)
   }
 
-  public getColor (): Color {
+  public getColor(): Color {
     const color = this._source.getColor()
     if (color && color.length >= 4) {
       return new Color(
@@ -1441,25 +1451,25 @@ export class Paint {
     return Colors.Black
   }
 
-  public getStrokeCap (): StrokeCap {
+  public getStrokeCap(): StrokeCap {
     const strokeCap = this._source.getStrokeCap()
     return strokeCap.value
   }
 
-  public setStrokeCap (strokeCap: StrokeCap) {
+  public setStrokeCap(strokeCap: StrokeCap) {
     // this._source.setStrokeCap(strokeCap)
   }
 
-  public getStrokeJoin (): StrokeJoin {
+  public getStrokeJoin(): StrokeJoin {
     const strokeJoin = this._source.getStrokeJoin()
     return strokeJoin.value
   }
 
-  public setStrokeJoin (strokeJoin: StrokeJoin) {
+  public setStrokeJoin(strokeJoin: StrokeJoin) {
     // this._source.setStrokeJoin(strokeJoin)
   }
 
-  public setPaintStyle (paintStyle: PaintStyle) {
+  public setPaintStyle(paintStyle: PaintStyle) {
     if (paintStyle == PaintStyle.STROKE) {
       this._source.setStyle(Engine.canvasKit.PaintStyle.Stroke)
     } else {
@@ -1467,47 +1477,47 @@ export class Paint {
     }
   }
 
-  public getStrokeMiter (): number {
+  public getStrokeMiter(): number {
     const strokeMiter = this._source.getStrokeMiter()
     return strokeMiter
   }
 
-  public getStroketWidth (): number {
+  public getStroketWidth(): number {
     const strokeWidth = this._source.getStrokeWidth()
     return strokeWidth
   }
 
-  public setAlpha (alpha: number) {
+  public setAlpha(alpha: number) {
     this._source.setAlphaf(alpha)
   }
 
-  public setAntiAlias (antiAlias: boolean) {
+  public setAntiAlias(antiAlias: boolean) {
     this._source.setAntiAlias(antiAlias)
   }
 
-  public setBlendMode (blendMode: number) {
+  public setBlendMode(blendMode: number) {
     // const newBlendMode = { value: blendMode, }
     // this.source.setBlendMode(newBlendMode)
   }
 
-  public setColorComponents (r: number, g: number, b: number, a: number) {
+  public setColorComponents(r: number, g: number, b: number, a: number) {
     // this._paint.setColorComponents(r, g, b, a)
   }
-  public setColorFilter (color: Color) {
+  public setColorFilter(color: Color) {
     // TODO
     // CanvasKitHelper.Paint.setColorFilter(colorFilter)
-    const colorFilter = Engine.canvasKit.ColorFilter.MakeBlend(color.source, Engine.canvasKit.BlendMode.Color)
-    this._source.setColorFilter(colorFilter)
+    this._colorFilter = Engine.canvasKit.ColorFilter.MakeBlend(color.source, Engine.canvasKit.BlendMode.Color)
+    this._source.setColorFilter(this._colorFilter)
   }
   // public setColorInt (color: number) {
   //  this._source.setColorInt(color)
   // }
-  public setImageFilter (imageFilter: number) {}
-  public setMaskFilter (maskFilter: number) {}
-  public setPathEffect (pathEffect: number) {}
-  public setShader (shader: number) {}
-  public setStrokeMiter (strokeMiter: number) {}
-  public setStrokeWidth (stokeWidth: number) {
+  public setImageFilter(imageFilter: number) { }
+  public setMaskFilter(maskFilter: number) { }
+  public setPathEffect(pathEffect: number) { }
+  public setShader(shader: number) { }
+  public setStrokeMiter(strokeMiter: number) { }
+  public setStrokeWidth(stokeWidth: number) {
     this._source.setStrokeWidth(stokeWidth)
   }
   public getStrokeDashStyle() {
@@ -1515,32 +1525,44 @@ export class Paint {
   }
   public setStrokeDashStyle(value: StrokeDashStyle) {
     this._strokeDashStyle = value
-    switch(value) {
+    switch (value) {
       case StrokeDashStyle.DASH: {
-        let pathEffect = Engine.canvasKit.PathEffect.MakeDash([10,2,10,2])
-        this._source.setPathEffect(pathEffect)
+        this._pathEffect = Engine.canvasKit.PathEffect.MakeDash([10, 2, 10, 2])
+        this._source.setPathEffect(this._pathEffect)
         break;
       }
-      case StrokeDashStyle.DOT:{
-        let pathEffect = Engine.canvasKit.PathEffect.MakeDash([2,2,2,2])
-        this._source.setPathEffect(pathEffect)
+      case StrokeDashStyle.DOT: {
+        this._pathEffect = Engine.canvasKit.PathEffect.MakeDash([2, 2, 2, 2])
+        this._source.setPathEffect(this._pathEffect)
         break;
       }
-      case StrokeDashStyle.DASH_DOT:{
-        let pathEffect = Engine.canvasKit.PathEffect.MakeDash([10,2,2,2])
-        this._source.setPathEffect(pathEffect)
+      case StrokeDashStyle.DASH_DOT: {
+        this._pathEffect = Engine.canvasKit.PathEffect.MakeDash([10, 2, 2, 2])
+        this._source.setPathEffect(this._pathEffect)
         break;
       }
-      case StrokeDashStyle.DASH_DOT_DOT:{
-        let pathEffect = Engine.canvasKit.PathEffect.MakeDash([10,2,2,2,2,2])
-        this._source.setPathEffect(pathEffect)
+      case StrokeDashStyle.DASH_DOT_DOT: {
+        this._pathEffect = Engine.canvasKit.PathEffect.MakeDash([10, 2, 2, 2, 2, 2])
+        this._source.setPathEffect(this._pathEffect)
         break;
       }
       case StrokeDashStyle.SOLID:
       default:
         this._source.setPathEffect(null)
         break;
-      }
+    }
+  }
+
+  public delete() {
+    if (this._source) {
+      this._source.delete()
+    }
+    if (this._colorFilter) {
+      this._colorFilter.delete()
+    }
+    if (this._pathEffect) {
+      this._pathEffect.delete()
+    }
   }
 }
 
@@ -1549,42 +1571,42 @@ export class Font {
   private _fontSize: number;
   private _source;
 
-  constructor (fontName: string = EngineUtils.FONT_NAME_DEFAULT, fontSize = 14) {
+  constructor(fontName: string = EngineUtils.FONT_NAME_DEFAULT, fontSize = 14) {
     this._fontName = fontName
     this._fontSize = fontSize
     this._source = Engine.makeFont(fontName, fontSize)
   }
 
-  public get source () {
+  public get source() {
     return this._source
   }
 
-  public get fontName (): string {
+  public get fontName(): string {
     return this._fontName
   }
 
-  public get fontSize (): number {
+  public get fontSize(): number {
     return this._fontSize
   }
 
-  public set fontSize (value: number) {
+  public set fontSize(value: number) {
     this._fontSize = value
     this._source.setSize(value)
   }
 
-  public get embolden (): boolean {
+  public get embolden(): boolean {
     return this._source.isEmbolden()
   }
 
-  public set embolden (value: boolean) {
+  public set embolden(value: boolean) {
     this._source.setEmbolden(value)
   }
 
-  public get skewX (): number {
+  public get skewX(): number {
     return this._source.getSkewX()
   }
 
-  public set skewX (value: number) {
+  public set skewX(value: number) {
     this._source.setSkewX(value)
   }
   /**
@@ -1602,7 +1624,7 @@ export class Font {
   * @param bottom        bottom of the thick "line" to use for intersection testing
   * @return              array of [start, end] x-coordinate pairs. Maybe be empty.
   */
-  public getGlyphIntercepts (glyphs: number[], positions: Float32Array | number[],
+  public getGlyphIntercepts(glyphs: number[], positions: Float32Array | number[],
     top: number, bottom: number): Float32Array {
     return this._source.getGlyphIntercepts(glyphs, positions, top, bottom)
   }
@@ -1619,6 +1641,11 @@ export class Font {
     return this._source.getGlyphWidths(glyphs, paint?.source, output)
   }
 
+  public delete() {
+    if (this._source) {
+      this._source.delete()
+    }
+  }
 }
 
 export class Rotation {
@@ -1628,29 +1655,29 @@ export class Rotation {
 
   private _py: number;
 
-  public constructor (radius: number, px = 0, py = 0) {
+  public constructor(radius: number, px = 0, py = 0) {
     this._radius = radius
     this._px = px
     this._py = py
   }
 
-  public get radius () {
+  public get radius() {
     return this._radius
   }
 
-  public get px () {
+  public get px() {
     return this._px
   }
 
-  public get py () {
+  public get py() {
     return this._py
   }
 
-  public clone (): Rotation {
+  public clone(): Rotation {
     return new Rotation(this._radius, this._px, this._py)
   }
 
-  public equals (rotation: Rotation): boolean {
+  public equals(rotation: Rotation): boolean {
     return (
       rotation._radius === this._radius && rotation._px === this._px && rotation._py === this._py
     )
@@ -1666,34 +1693,34 @@ export class Scale {
 
   private _py: number;
 
-  public constructor (sx: number, sy: number, px = 0, py = 0) {
+  public constructor(sx: number, sy: number, px = 0, py = 0) {
     this._sx = sx
     this._sy = sy
     this._px = px
     this._py = py
   }
 
-  public get sx () {
+  public get sx() {
     return this._sx
   }
 
-  public get sy () {
+  public get sy() {
     return this._sy
   }
 
-  public get px () {
+  public get px() {
     return this._px
   }
 
-  public get py () {
+  public get py() {
     return this._py
   }
 
-  public clone (): Scale {
+  public clone(): Scale {
     return new Scale(this._sx, this._sy, this._px, this._py)
   }
 
-  public equals (scale: Scale): boolean {
+  public equals(scale: Scale): boolean {
     return (
       scale._sx === this._sx &&
       scale._sy === this._sy &&
@@ -1712,34 +1739,34 @@ export class Skew {
 
   private _py: number;
 
-  public constructor (kx: number, ky: number, px = 0, py = 0) {
+  public constructor(kx: number, ky: number, px = 0, py = 0) {
     this._kx = kx
     this._ky = ky
     this._px = px
     this._py = py
   }
 
-  public get kx () {
+  public get kx() {
     return this._kx
   }
 
-  public get ky () {
+  public get ky() {
     return this._ky
   }
 
-  public get px () {
+  public get px() {
     return this._px
   }
 
-  public get py () {
+  public get py() {
     return this._py
   }
 
-  public clone (): Skew {
+  public clone(): Skew {
     return new Skew(this._kx, this._ky, this._px, this._py)
   }
 
-  public equals (skew: Skew): boolean {
+  public equals(skew: Skew): boolean {
     return (
       skew._kx === this._kx &&
       skew._ky === this._ky &&
@@ -1753,29 +1780,29 @@ export class Vector3 {
   private _y: number;
   private _z: number;
 
-  public constructor (x: number, y: number, z: number) {
+  public constructor(x: number, y: number, z: number) {
     this._x = x
     this._y = y
     this._z = z
   }
 
-  public get x () {
+  public get x() {
     return this._x
   }
 
-  public get y () {
+  public get y() {
     return this._y
   }
 
-  public get z () {
+  public get z() {
     return this._z
   }
 
-  public clone (): Vector3 {
+  public clone(): Vector3 {
     return new Vector3(this._x, this._y, this._z)
   }
 
-  public equals (vector: Vector3): boolean {
+  public equals(vector: Vector3): boolean {
     return vector._x === this._x && vector._y === this._y && vector._z === this._z
   }
 }
@@ -1789,19 +1816,19 @@ export class Matrix {
     return matrix
   }
 
-  public constructor () {
-    this._source = [ 1, 0, 0, 0, 1, 0, 0, 0, 1, ]
+  public constructor() {
+    this._source = [1, 0, 0, 0, 1, 0, 0, 0, 1,]
   }
 
-  public get source (): number[] {
+  public get source(): number[] {
     return this._source
   }
 
-  public identity () {
+  public identity() {
     this._source = MatrixHelper.identity()
   }
 
-  public invert (): Matrix | null {
+  public invert(): Matrix | null {
     const matrix = MatrixHelper.invert(this._source)
     if (matrix) {
       const invertMatrix = new Matrix()
@@ -1812,36 +1839,36 @@ export class Matrix {
     }
   }
 
-  public rotate (angle: number, px = 0, py = 0) {
+  public rotate(angle: number, px = 0, py = 0) {
     this._source = MatrixHelper.multiply(this._source, MatrixHelper.rotate(angle, px, py))
   }
 
-  public multiply (...matrices: number[][]) {
+  public multiply(...matrices: number[][]) {
     this._source = MatrixHelper.multiply(this._source, ...matrices)
   }
 
-  public scale (sx: number, sy: number, px = 0, py = 0) {
+  public scale(sx: number, sy: number, px = 0, py = 0) {
     this._source = MatrixHelper.multiply(this._source, MatrixHelper.scale(sx, sy, px, py))
   }
 
-  public skew (kx: number, ky: number, px = 0, py = 0) {
+  public skew(kx: number, ky: number, px = 0, py = 0) {
     this._source = MatrixHelper.multiply(this._source, MatrixHelper.skew(kx, ky, px, py))
   }
 
-  public translate (dx: number, dy: number) {
+  public translate(dx: number, dy: number) {
     this._source = MatrixHelper.multiply(this._source, MatrixHelper.translate(dx, dy))
   }
 
-  public makePoints (points: number[]): number[] {
+  public makePoints(points: number[]): number[] {
     return MatrixHelper.mapPoints(this._source, points)
   }
 
-  public makePoint (point: Point2): Point2 {
-    const points = MatrixHelper.mapPoints(this._source, [ point.x, point.y, ])
+  public makePoint(point: Point2): Point2 {
+    const points = MatrixHelper.mapPoints(this._source, [point.x, point.y,])
     return new Point2(points[0], points[1])
   }
 
-  public equals (matrix: Matrix): boolean {
+  public equals(matrix: Matrix): boolean {
     if (matrix) {
       for (let i = 0; i < this._source.length; i++) {
         if (this._source[i] != matrix._source[i]) {
@@ -1854,7 +1881,7 @@ export class Matrix {
 }
 
 export class Matrix4 {
-  public static make (source: number[]): Matrix4 {
+  public static make(source: number[]): Matrix4 {
     const matrix = new Matrix4()
     if (source) {
       matrix._source = source
@@ -1864,46 +1891,46 @@ export class Matrix4 {
 
   private _source: number[];
 
-  public constructor () {
-    this._source = [ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, ]
+  public constructor() {
+    this._source = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1,]
   }
 }
 
 export class Path {
   private _source;
 
-  constructor (path: Path | null = null) {
+  constructor(path: Path | null = null) {
     if (path) {
       this._source = Engine.makePathFrom(path._source)
     } else {
       this._source = Engine.makePath()
     }
   }
-  public get source () {
+  public get source() {
     return this._source
   }
 
-  public addArc (oval: Rectangle, startAngle: number, sweepAngle: number): Path {
+  public addArc(oval: Rectangle, startAngle: number, sweepAngle: number): Path {
     this._source.addArc(oval.source, startAngle, sweepAngle)
     return this
   }
-  public addOval (oval: Rectangle, isCCW = true, startIndex = 0): Path {
+  public addOval(oval: Rectangle, isCCW = true, startIndex = 0): Path {
     this._source.addOval(oval.source, isCCW, startIndex)
     return this
   }
-  public addPath (...args: any[]): Path | null {
+  public addPath(...args: any[]): Path | null {
     return this
   }
-  public addPolyline (points: number[], close: boolean): Path {
+  public addPolyline(points: number[], close: boolean): Path {
     this._source.addPoly(points, close)
     return this
   }
 
-  public addRectangle (rectangle: Rectangle, isCCW = true): Path {
+  public addRectangle(rectangle: Rectangle, isCCW = true): Path {
     this._source.addRect(rectangle.source, isCCW)
     return this
   }
-  public addRRect (roundRectangle: RoundRectangle, isCCW = true): Path {
+  public addRRect(roundRectangle: RoundRectangle, isCCW = true): Path {
     this._source.addRRect(roundRectangle.source, isCCW)
     return this
   }
@@ -1926,7 +1953,7 @@ export class Path {
   // public arcToTangent (x1: number, y1: number, x2: number, y2: number, radius: number): Path {
   //  return this
   // }
-  public close (): Path {
+  public close(): Path {
     this._source.close()
     return this
   }
@@ -1936,15 +1963,15 @@ export class Path {
   // public conicTo (x1: number, y1: number, x2: number, y2: number, w: number): Path {
   //  return this
   // }
-  public contains (x: number, y: number): boolean {
+  public contains(x: number, y: number): boolean {
     return this._source.contains(x, y)
   }
 
-  public copy (): Path {
+  public copy(): Path {
     return new Path(this)
   }
 
-  public countPoints (): number {
+  public countPoints(): number {
     return this._source.countPoints()
   }
 
@@ -1953,7 +1980,7 @@ export class Path {
     return point
   }
 
-  public cubicTo (
+  public cubicTo(
     cpx1: number,
     cpy1: number,
     cpx2: number,
@@ -1965,15 +1992,15 @@ export class Path {
     return this
   }
 
-  public dash (on: number, off: number, phase: number): boolean {
+  public dash(on: number, off: number, phase: number): boolean {
     return this._source.dash(on, off, phase)
   }
 
-  public equals (other: Path): boolean {
+  public equals(other: Path): boolean {
     return this._source.equals(other._source)
   }
 
-  public getBounds (): Rectangle {
+  public getBounds(): Rectangle {
     const rectangle = this._source.getBounds()
     return new Rectangle(rectangle[0], rectangle[1], rectangle[2], rectangle[3])
   }
@@ -1984,18 +2011,18 @@ export class Path {
   // public getPoint (index: number, outputArray?: Point): Point {
 
   // }
-  public isEmpty (): boolean {
+  public isEmpty(): boolean {
     return this._source.isEmpty()
   }
-  public isVolatile (): boolean {
+  public isVolatile(): boolean {
     return this._source.isVolatile()
   }
 
-  public lineTo (x: number, y: number): Path {
+  public lineTo(x: number, y: number): Path {
     this._source.lineTo(x, y)
     return this
   }
-  public makeAsWinding (): Path | null {
+  public makeAsWinding(): Path | null {
     const newPath = this._source.makeAsWinding()
     if (newPath) {
       const path = new Path()
@@ -2006,17 +2033,17 @@ export class Path {
     }
   }
 
-  public moveTo (x: number, y: number): Path {
+  public moveTo(x: number, y: number): Path {
     this._source.moveTo(x, y)
     return this
   }
 
-  public offset (dx: number, dy: number): Path {
+  public offset(dx: number, dy: number): Path {
     this._source.offset(dx, dy)
     return this
   }
 
-  public op (other: Path, op: PathOp): Path | undefined {
+  public op(other: Path, op: PathOp): Path | undefined {
     const pathSource = this._source.op(other._source, GraphicsUtils.convertPathOp(op))
     if (pathSource) {
       const path = new Path()
@@ -2027,7 +2054,7 @@ export class Path {
     }
   }
 
-  public quadTo (x1: number, y1: number, x2: number, y2: number): Path {
+  public quadTo(x1: number, y1: number, x2: number, y2: number): Path {
     this._source.quadTo(x1, y1, x2, y2)
     return this
   }
@@ -2037,63 +2064,48 @@ export class Path {
     return this
   }
 
-  public rArcTo (
-    rx: number,
-    ry: number,
-    xAxisRotate: number,
-    useSmallArc: boolean,
-    isCCW: boolean,
-    dx: number,
-    dy: number
-  ): Path {
+  public rArcTo(rx: number, ry: number, xAxisRotate: number, useSmallArc: boolean, isCCW: boolean, dx: number, dy: number): Path {
     this._source.rArcTo(rx, ry, xAxisRotate, useSmallArc, isCCW, dx, dy)
     return this
   }
-  public rConicTo (dx1: number, dy1: number, dx2: number, dy2: number, w: number): Path {
+  public rConicTo(dx1: number, dy1: number, dx2: number, dy2: number, w: number): Path {
     this._source.rConicTo(dx1, dy1, dx2, dy2, w)
     return this
   }
-  public rCubicTo (
-    cpx1: number,
-    cpy1: number,
-    cpx2: number,
-    cpy2: number,
-    x: number,
-    y: number
-  ): Path {
+  public rCubicTo(cpx1: number, cpy1: number, cpx2: number, cpy2: number, x: number, y: number): Path {
     this._source.rCubicTo(cpx1, cpy1, cpx2, cpy2, x, y)
     return this
   }
-  public reset (): void {
+  public reset(): void {
     this._source.reset()
   }
-  public rewind (): void {
+  public rewind(): void {
     this._source.rewind()
   }
-  public rLineTo (x: number, y: number): Path {
+  public rLineTo(x: number, y: number): Path {
     this._source.rLineTo(x, y)
     return this
   }
-  public rMoveTo (x: number, y: number): Path {
+  public rMoveTo(x: number, y: number): Path {
     this._source.rMoveTo(x, y)
     return this
   }
-  public rQuadTo (x1: number, y1: number, x2: number, y2: number): Path {
+  public rQuadTo(x1: number, y1: number, x2: number, y2: number): Path {
     this._source.rQuadTo(x1, y1, x2, y2)
     return this
   }
-  public setFillType (fill: FillType): void {
+  public setFillType(fill: FillType): void {
     if (fill == FillType.Winding) {
       this._source.setFillType(Engine.canvasKit.FillType.Winding)
     } else {
       this._source.setFillType(Engine.canvasKit.FillType.EvenOdd)
     }
   }
-  public setIsVolatile (volatile: boolean): void {
+  public setIsVolatile(volatile: boolean): void {
     this._source.setIsVolatile(volatile)
   }
 
-  public simplify (): boolean {
+  public simplify(): boolean {
     return this._source.simplify()
   }
 
@@ -2103,7 +2115,7 @@ export class Path {
   // public toCmds(): Float32Array {
 
   // }
-  public toSVGString (): string {
+  public toSVGString(): string {
     return this._source.toSVGString()
   }
 
@@ -2114,11 +2126,17 @@ export class Path {
   // public trim(startT: number, stopT: number, isComplement: boolean): Path | null {
   //  return this
   // }
+
+  public delete() {
+    if (this._source && !this._source.isDeleted()) {
+      this._source.delete()
+    }
+  }
 }
 
 export class ImageInfo {
   private _source;
-  constructor (
+  constructor(
     readonly alphaType: AlphaType,
     readonly colorSpace: ColorSpace,
     readonly colorType: ColorType,
@@ -2134,15 +2152,15 @@ export class ImageInfo {
     }
   }
 
-  public get source () {
+  public get source() {
     return this._source
   }
 }
 export class Image {
-  public static makeFrom (imageInfo: ImageInfo, bytes: number[], bytesPerRow: number): Image {
+  public static makeFrom(imageInfo: ImageInfo, bytes: number[], bytesPerRow: number): Image {
     const image = new Image()
     const source = Engine.canvasKit.MakeImage(imageInfo.source, bytes, bytesPerRow)
-    if(source) {
+    if (source) {
       image._width = source.width()
       image._height = source.height()
     }
@@ -2150,10 +2168,10 @@ export class Image {
     return image
   }
 
-  public static make (bytes: ArrayBuffer): Image {
+  public static make(bytes: ArrayBuffer): Image {
     const image = new Image()
     const source = Engine.canvasKit.MakeImageFromEncoded(bytes)
-    if(source) {
+    if (source) {
       image._width = source.width()
       image._height = source.height()
     }
@@ -2165,9 +2183,9 @@ export class Image {
   private _width: number = 0
   private _height: number = 0
 
-  private constructor () {}
+  private constructor() { }
 
-  public get source () {
+  public get source() {
     return this._source
   }
 
@@ -2178,33 +2196,39 @@ export class Image {
   public get height() {
     return this._height
   }
+
+  public delete() {
+    if (this._source) {
+      this._source.delete()
+    }
+  }
 }
 
 export class Range {
-  public constructor (public first: number, public last: number) {
+  public constructor(public first: number, public last: number) {
 
   }
 }
 
 export class TextRange {
-  public constructor (public start: number, public end: number) {
+  public constructor(public start: number, public end: number) {
 
   }
 }
 export class GlyphRun {
-  public constructor (public typefaceName: string, public size: number, public fakeBold: boolean, public fakeItalic: boolean, 
-    public glyphs: Uint16Array, public positions: Float32Array, public offsets: Uint32Array, public flags: number, public textRange: TextRange, 
+  public constructor(public typefaceName: string, public size: number, public fakeBold: boolean, public fakeItalic: boolean,
+    public glyphs: Uint16Array, public positions: Float32Array, public offsets: Uint32Array, public flags: number, public textRange: TextRange,
     public indices: number[], public isReturn: boolean = false, public isEnter: boolean = false) {
 
   }
 
-  public get typeface () {
+  public get typeface() {
     return FontUtils.getTypeFace(this.typefaceName)!
   }
 }
 
 export class ShapedLine {
-  public constructor (public textRange: Range, public top: number, public bottom: number, public baseline: number, public runs: GlyphRun[]) {
+  public constructor(public textRange: Range, public top: number, public bottom: number, public baseline: number, public runs: GlyphRun[]) {
 
   }
 
@@ -2220,42 +2244,42 @@ export class ShapedLine {
 export class Graphics {
   private _engine: Engine;
 
-  public constructor (engine: Engine) {
+  public constructor(engine: Engine) {
     this._engine = engine
   }
 
-  public clear (color: Color = Colors.Black) {
+  public clear(color: Color = Colors.Black) {
     this._engine.clear(color.source)
   }
 
-  public clipPath (path: Path, clipOp: ClipOp = ClipOp.INTERSECT, antiAlias = false) {
+  public clipPath(path: Path, clipOp: ClipOp = ClipOp.INTERSECT, antiAlias = false) {
     this._engine.clipPath(path.source, GraphicsUtils.convertClipOp(clipOp), antiAlias)
   }
 
-  public clipRectangle (rectangle: Rectangle, clipOp: ClipOp = ClipOp.INTERSECT, antiAlias = false) {
+  public clipRectangle(rectangle: Rectangle, clipOp: ClipOp = ClipOp.INTERSECT, antiAlias = false) {
     this._engine.clipRect(rectangle.source, GraphicsUtils.convertClipOp(clipOp), antiAlias)
   }
 
-  public clipRoundedRectangle (roundRectangle: RoundRectangle, clipOp: ClipOp, antiAlias: boolean) {
+  public clipRoundedRectangle(roundRectangle: RoundRectangle, clipOp: ClipOp, antiAlias: boolean) {
     this._engine.clipRRect(roundRectangle.source, GraphicsUtils.convertClipOp(clipOp), antiAlias)
   }
 
-  public concat (matrix: Matrix) {
+  public concat(matrix: Matrix) {
     this._engine.concat(matrix.source)
   }
 
-  public drawArc (
+  public drawArc(
     rectangle: Rectangle,
     startAngle: number,
     sweepAngle: number,
     useCenter: boolean,
     paint: Paint
   ) {
-    const rect = [ rectangle.left, rectangle.top, rectangle.right, rectangle.bottom, ]
+    const rect = [rectangle.left, rectangle.top, rectangle.right, rectangle.bottom,]
     this._engine.drawArc(rect, startAngle, sweepAngle, useCenter, paint.source)
   }
 
-  public drawAtlas (
+  public drawAtlas(
     atlas: Image,
     srcRects: number[],
     dstXForms: number[],
@@ -2271,23 +2295,23 @@ export class Graphics {
     )
   }
 
-  public drawCircle (cx: number, cy: number, radius: number, paint: Paint) {
+  public drawCircle(cx: number, cy: number, radius: number, paint: Paint) {
     this._engine.drawCircle(cx, cy, radius, paint.source)
   }
 
-  public drawColor (color: Color, blendMode: BlendMode) {
+  public drawColor(color: Color, blendMode: BlendMode) {
     this._engine.drawColor(color.source, GraphicsUtils.convertBlendMode(blendMode))
   }
 
-  public drawColorComponents (r: number, g: number, b: number, a: number, blendMode: BlendMode) {
+  public drawColorComponents(r: number, g: number, b: number, a: number, blendMode: BlendMode) {
     this._engine.drawColorComponents(r, g, b, a, GraphicsUtils.convertBlendMode(blendMode))
   }
 
-  public drawDRRect (outer: RoundRectangle, inner: RoundRectangle, paint: Paint) {
+  public drawDRRect(outer: RoundRectangle, inner: RoundRectangle, paint: Paint) {
     this._engine.drawDRRect(outer.source, inner.source, paint.source)
   }
 
-  public drawGlyphs (
+  public drawGlyphs(
     glyphs: number[],
     positions: number[],
     x: number,
@@ -2298,11 +2322,11 @@ export class Graphics {
     this._engine.drawGlyphs(glyphs, positions, x, y, font.source, paint.source)
   }
 
-  public drawImage (image: Image, left: number, top: number, paint?: Paint) {
+  public drawImage(image: Image, left: number, top: number, paint?: Paint) {
     this._engine.drawImage(image.source, left, top, paint?.source)
   }
 
-  public drawImageCubic (
+  public drawImageCubic(
     image: Image,
     left: number,
     top: number,
@@ -2313,7 +2337,7 @@ export class Graphics {
     this._engine.drawImageCubic(image.source, left, top, B, C, paint?.source)
   }
 
-  public drawImageOptions (
+  public drawImageOptions(
     image: Image,
     left: number,
     top: number,
@@ -2331,7 +2355,7 @@ export class Graphics {
     )
   }
 
-  public drawImageNine (
+  public drawImageNine(
     image: Image,
     center: Rectangle,
     dest: Rectangle,
@@ -2347,7 +2371,7 @@ export class Graphics {
     )
   }
 
-  public drawImageRect (
+  public drawImageRect(
     image: Image,
     src: Rectangle,
     dest: Rectangle,
@@ -2357,7 +2381,7 @@ export class Graphics {
     this._engine.drawImageRect(image.source, src.source, dest.source, paint.source, fastSample)
   }
 
-  public drawImageRectCubic (
+  public drawImageRectCubic(
     image: Image,
     src: Rectangle,
     dest: Rectangle,
@@ -2368,7 +2392,7 @@ export class Graphics {
     this._engine.drawImageRectCubic(image.source, src.source, dest.source, b, c, paint?.source)
   }
 
-  public drawImageRectOptions (
+  public drawImageRectOptions(
     image: Image,
     src: Rectangle,
     dest: Rectangle,
@@ -2386,27 +2410,27 @@ export class Graphics {
     )
   }
 
-  public drawLine (x0: number, y0: number, x1: number, y1: number, paint: Paint) {
+  public drawLine(x0: number, y0: number, x1: number, y1: number, paint: Paint) {
     this._engine.drawLine(x0, y0, x1, y1, paint.source)
   }
 
-  public drawOval (rectangle: Rectangle, paint: Paint) {
+  public drawOval(rectangle: Rectangle, paint: Paint) {
     this._engine.drawOval(rectangle.source, paint.source)
   }
 
-  public drawPaint (paint: Paint) {
+  public drawPaint(paint: Paint) {
     this._engine.drawPaint(paint.source)
   }
 
-  public drawParagraph (paragraph: Paragraph, x: number, y: number) {
+  public drawParagraph(paragraph: Paragraph, x: number, y: number) {
     this._engine.drawParagraph(paragraph.source, x, y)
   }
 
-  public drawPath (path: Path, paint: Paint) {
+  public drawPath(path: Path, paint: Paint) {
     this._engine.drawPath(path.source, paint.source)
   }
 
-  public drawPatch (
+  public drawPatch(
     cubics: number[],
     colors: number[],
     texs: number[],
@@ -2426,23 +2450,23 @@ export class Graphics {
   // Engine.canvasKit.Pict
   // }
 
-  public drawPoints (points: number[], pointMode: PointMode, paint: Paint) {
+  public drawPoints(points: number[], pointMode: PointMode, paint: Paint) {
     this._engine.drawPoints(GraphicsUtils.convertPointMode(pointMode), points, paint.source)
   }
 
-  public drawRectangle (rectangle: Rectangle, paint: Paint) {
+  public drawRectangle(rectangle: Rectangle, paint: Paint) {
     this._engine.drawRect(rectangle.source, paint.source)
   }
 
-  public drawRect4f (left: number, top: number, right: number, bottom: number, paint: Paint) {
+  public drawRect4f(left: number, top: number, right: number, bottom: number, paint: Paint) {
     this._engine.drawRect4f(left, top, right, bottom, paint.source)
   }
 
-  public drawRoundRectangle (roundRectangle: RoundRectangle, paint: Paint) {
+  public drawRoundRectangle(roundRectangle: RoundRectangle, paint: Paint) {
     this._engine.drawRRect(roundRectangle.source, paint.source)
   }
 
-  public drawShadow (
+  public drawShadow(
     path: Path,
     zPlaneParams: number[],
     lightPos: number[],
@@ -2462,7 +2486,7 @@ export class Graphics {
     )
   }
 
-  public drawText (str: string, x: number, y: number, paint: Paint, font: Font) {
+  public drawText(str: string, x: number, y: number, paint: Paint, font: Font) {
     this._engine.drawText(str, x, y, paint.source, font.source)
   }
 
@@ -2481,11 +2505,11 @@ export class Graphics {
   //  }
   // }
 
-  public getSaveCount (): number {
+  public getSaveCount(): number {
     return this._engine.getSaveCount()
   }
 
-  public getTotalMatrix (): number[] {
+  public getTotalMatrix(): number[] {
     return this._engine.getTotalMatrix()
   }
 
@@ -2497,35 +2521,35 @@ export class Graphics {
 
   // }
 
-  public restore () {
+  public restore() {
     this._engine.restore()
   }
 
-  public restoreToCount (saveCount: number) {
+  public restoreToCount(saveCount: number) {
     this._engine.restoreToCount(saveCount)
   }
 
-  public rotate (angleInDegrees: number, rx: number, ry: number) {
+  public rotate(angleInDegrees: number, rx: number, ry: number) {
     this._engine.rotate(angleInDegrees, rx, ry)
   }
 
-  public save () {
+  public save() {
     this._engine.save()
   }
 
-  public saveLayer (paint?: Paint, bounds?: Rectangle) {
+  public saveLayer(paint?: Paint, bounds?: Rectangle) {
     this._engine.saveLayer(paint?.source, bounds?.source)
   }
 
-  public scale (sx: number, sy: number) {
+  public scale(sx: number, sy: number) {
     this._engine.scale(sx, sy)
   }
 
-  public skew (sx: number, sy: number) {
+  public skew(sx: number, sy: number) {
     this._engine.skew(sx, sy)
   }
 
-  public translate (dx: number, dy: number) {
+  public translate(dx: number, dy: number) {
     this._engine.translate(dx, dy)
   }
 
@@ -2664,14 +2688,14 @@ export enum FingerType {
 
 export class NodeEvent {
   readonly source: Node;
-  constructor (source: Node) {
+  constructor(source: Node) {
     this.source = source
   }
 }
 
 export class NodeChangeEvent extends NodeEvent {
   readonly target: Node;
-  constructor (source: Node, target: Node) {
+  constructor(source: Node, target: Node) {
     super(source)
     this.target = target
   }
@@ -2687,7 +2711,7 @@ export class KeyEvent extends NodeEvent {
   readonly repeat: boolean;
   readonly isComposing: boolean;
 
-  constructor (
+  constructor(
     source: Node,
     key: string,
     code: string,
@@ -2716,7 +2740,7 @@ export class KeyPressEvent extends NodeEvent {
   readonly control: boolean;
   readonly alt: boolean;
 
-  constructor (source: Node, keyCode: KeyCode, shift: boolean, control: boolean, alt: boolean) {
+  constructor(source: Node, keyCode: KeyCode, shift: boolean, control: boolean, alt: boolean) {
     super(source)
     this.keyCode = keyCode
     this.shift = shift
@@ -2728,7 +2752,7 @@ export class KeyPressEvent extends NodeEvent {
 export class CharEvent extends NodeEvent {
   readonly charCode: number;
 
-  constructor (source: Node, charCode: number) {
+  constructor(source: Node, charCode: number) {
     super(source)
     this.charCode = charCode
   }
@@ -2742,7 +2766,7 @@ export class MouseEvent extends NodeEvent {
   readonly control: boolean;
   readonly alt: boolean;
 
-  constructor (
+  constructor(
     source: Node,
     x: number,
     y: number,
@@ -2768,7 +2792,7 @@ export class MouseMoveEvent extends NodeEvent {
   readonly control: boolean;
   readonly alt: boolean;
 
-  constructor (source: Node, x: number, y: number, shift: boolean, control: boolean, alt: boolean) {
+  constructor(source: Node, x: number, y: number, shift: boolean, control: boolean, alt: boolean) {
     super(source)
     this.x = x
     this.y = y
@@ -2788,7 +2812,7 @@ export class TouchFingerEvent extends NodeEvent {
   readonly dy: number;
   readonly pressure: number;
 
-  constructor (
+  constructor(
     source: Node,
     fingerType: FingerType,
     fingerId: number,
@@ -2823,7 +2847,7 @@ export class PointerEvent extends MouseEvent {
   readonly twist: number;
   readonly width: number;
 
-  constructor (
+  constructor(
     source: Node,
     x: number,
     y: number,
