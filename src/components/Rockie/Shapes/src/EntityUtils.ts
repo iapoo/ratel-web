@@ -3,69 +3,66 @@ import { Color, Colors, Engine, EngineUtils, Font, FontSlant, FontStyle, FontUti
 import { SystemUtils } from '@/components/Workspace/Utils'
 
 export class TextCursor {
-    private _linePaint: Paint
-    private _pathPaint: Paint
-    private _left: number
-    private _top: number
-    private _bottom: number
-    private _path: Path | undefined
-    private _interval = 2
+  private _linePaint: Paint
+  private _pathPaint: Paint
+  private _left: number
+  private _top: number
+  private _bottom: number
+  private _path: Path
+  private _interval = 2
 
-    public constructor (lineColor: Color, pathColor: Color, left: number, top: number, bottom: number, interval: number) {
-      this._linePaint = new Paint()
-      this._linePaint.setColor(lineColor)
-      this._pathPaint = new Paint()
-      this._pathPaint.setColor(pathColor)
-      this._left = left
-      this._top = top
-      this._bottom = bottom
-      this._interval = interval
-    }
+  public constructor(lineColor: Color, pathColor: Color, left: number, top: number, bottom: number, interval: number) {
+    this._linePaint = new Paint()
+    this._linePaint.setColor(lineColor)
+    this._pathPaint = new Paint()
+    this._pathPaint.setColor(pathColor)
+    this._left = left
+    this._top = top
+    this._bottom = bottom
+    this._interval = interval
+    this._path = new Path()
+  }
 
-    public set interval (value: number) {
-      this._interval = value
-    }
+  public set interval(value: number) {
+    this._interval = value
+  }
 
-    public get interval () {
-      return this._interval
-    }
+  public get interval() {
+    return this._interval
+  }
 
-    public get path () {
-      return this._path
-    }
+  public get path() {
+    return this._path
+  }
 
-    public set path (value: Path | undefined) {
-      this._path = value
-    }
+  public place(left: number, top: number, bottom: number) {
+    this._left = left
+    this._top = top
+    this._bottom = bottom
+    this._path.reset()
+  }
 
-    public place (left: number, top: number, bottom: number) {
-      this._left = left
-      this._top = top
-      this._bottom = bottom
-      this._path = undefined
+  public renderBefore(graphics: Graphics) {
+    if (this._path) {
+      graphics.drawPath(this._path, this._pathPaint)
     }
+  }
 
-    public renderBefore (graphics: Graphics) {
-      if (this._path) {
-        graphics.drawPath(this._path, this._pathPaint)
-      }
+  public renderAfter(graphics: Graphics) {
+    if ((Math.floor(Date.now() / this._interval) & 1)) {
+      graphics.drawLine(this._left, this._top, this._left, this._bottom, this._linePaint)
     }
-
-    public renderAfter (graphics: Graphics) {
-      if ((Math.floor(Date.now() / this._interval) & 1)) {
-        graphics.drawLine(this._left, this._top, this._left, this._bottom, this._linePaint)
-      }
-    }
+  }
 }
 
 export class StyleInfo {
-  public constructor (public length: number = 0, public typeFaceName: string = EngineUtils.FONT_NAME_DEFAULT, public size: number = EngineUtils.FONT_SIZE_DEFAULT, public color: string = '', public bold: boolean = false, public italic: boolean = false, public underline: boolean = false) {
+  public constructor(public length: number = 0, public typeFaceName: string = EngineUtils.FONT_NAME_DEFAULT, public size: number = EngineUtils.FONT_SIZE_DEFAULT, public color: string = '', public bold: boolean = false, public italic: boolean = false, public underline: boolean = false) {
 
   }
 
   public makeStyle() {
     let color = SystemUtils.parseColorString(this.color)
-    if(!color) {
+    if (!color) {
       color = Colors.Black
     }
     return new Style(this.length, this.typeFaceName, this.size, color, this.bold, this.italic, this.underline)
@@ -91,7 +88,7 @@ export class Style {
   private _underline: boolean
   private _font: Font
 
-  public constructor (length: number = 0, typeFaceName: string = EngineUtils.FONT_NAME_DEFAULT, size: number = EngineUtils.FONT_SIZE_DEFAULT, color: Color = Colors.Black, bold: boolean = false, italic: boolean = false, underline: boolean = false) {
+  public constructor(length: number = 0, typeFaceName: string = EngineUtils.FONT_NAME_DEFAULT, size: number = EngineUtils.FONT_SIZE_DEFAULT, color: Color = Colors.Black, bold: boolean = false, italic: boolean = false, underline: boolean = false) {
     this._length = length
     this._typeFaceName = typeFaceName
     this._size = size
@@ -169,16 +166,16 @@ export class Style {
     this._underline = value
   }
 
-  public clone (): Style {
+  public clone(): Style {
     return new Style(this.length, this.typeFaceName, this.size, this.color, this.bold, this.italic, this.underline)
   }
 
-  public get typeface () {
+  public get typeface() {
     return FontUtils.getTypeFace(this.typeFaceName)
   }
 
   public isSameStyle(style: Style): boolean {
-    if(this.typeFaceName == style.typeFaceName && this.size == style.size && this.color.equals(style.color) && this.bold == style.bold && this.italic == style.italic && this.underline == style.underline) {
+    if (this.typeFaceName == style.typeFaceName && this.size == style.size && this.color.equals(style.color) && this.bold == style.bold && this.italic == style.italic && this.underline == style.underline) {
       return true
     }
     return false
@@ -212,7 +209,7 @@ export class Style {
     return textStyle
   }
 
-  public mergeFrom (src: Style) {
+  public mergeFrom(src: Style) {
     let layoutChanged = false
 
     if (src.typeFaceName && this.typeFaceName !== src.typeFaceName) {
