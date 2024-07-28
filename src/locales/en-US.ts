@@ -174,6 +174,7 @@ export default {
   'workspace.navigator.panel.advanced': 'Advanced',
   'workspace.navigator.panel.arrows': 'Arrows',
   'workspace.navigator.panel.basic': 'Basic',
+  'workspace.navigator.panel.er': 'Entity Relation',
   'workspace.navigator.panel.flowchart': 'Flowchart',
   'workspace.navigator.panel.general': 'General',
   'workspace.navigator.panel.my-shapes': 'My Shapes',
