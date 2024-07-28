@@ -483,9 +483,15 @@ export abstract class AbstractTextShape extends Shape {
     }
     this._startIndex = Math.min(newStart, newEnd)
     this._endIndex = Math.max(newStart, newEnd)
-    const [startStyleIndex, preStartLen,] = this.findStyleIndexAndPrevLength(this._startIndex, true)
-    const [endStyleIndex, preEndLen,] = this.findStyleIndexAndPrevLength(this._endIndex, false)
-    this._selectStyle = this._styles[startStyleIndex].clone()
+    if (newStart == newEnd) {
+      const [startStyleIndex, preStartLen,] = this.findStyleIndexAndPrevLength(this._startIndex, false)
+      const [endStyleIndex, preEndLen,] = this.findStyleIndexAndPrevLength(this._endIndex, false)
+      this._selectStyle = this._styles[startStyleIndex].clone()
+    } else {
+      const [startStyleIndex, preStartLen,] = this.findStyleIndexAndPrevLength(this._startIndex, true)
+      const [endStyleIndex, preEndLen,] = this.findStyleIndexAndPrevLength(this._endIndex, false)
+      this._selectStyle = this._styles[startStyleIndex].clone()
+    }
     // console.log(`text selectting =  ${startStyleIndex}  ${endStyleIndex} ${this._startIndex} ${this._endIndex}`)
     // if(this._startIndex == 3 && this._endIndex == 3) {
     //   console.log(`Exception is here`)
@@ -898,6 +904,7 @@ export abstract class AbstractTextShape extends Shape {
           this._text = this._text.slice(0, index) + text + this._text.slice(index)
           this._startIndex = this._endIndex = index + text.length
           i++
+          break
         }
       }
     } else {
@@ -1094,8 +1101,8 @@ export abstract class AbstractTextShape extends Shape {
       }
       this._cursor.place(x + this.getTextPaddingX(), top + this.getTextPaddingY(), line.bottom + this.getTextPaddingY())
     } else {
-      const path = this.getLinesIndicesToPath(startIndex, endIndex)
-      this._cursor.path = path
+      const cursorPath = this._cursor.path
+      this.getLinesIndicesToPath(startIndex, endIndex, cursorPath)
     }
   }
 
@@ -1397,12 +1404,12 @@ export abstract class AbstractTextShape extends Shape {
     return line.runs[line.runs.length - 1]
   }
 
-  private getLinesIndicesToPath(startIndex: number, endIndex: number) {
+  private getLinesIndicesToPath(startIndex: number, endIndex: number, targetPath: Path) {
     console.log(`getLinesIndicesToPath=> ${startIndex}  ${endIndex}`)
     if (startIndex == endIndex) {
       return undefined
     }
-    const path = new Path()
+    targetPath.reset()
     const startLineIndex = this.getLinesIndexToLineIndex(startIndex)
     const endLineIndex = this.getLinesIndexToLineIndex(endIndex)
     const startLine = this.getLinesIndexToLine(startIndex)
@@ -1419,20 +1426,19 @@ export abstract class AbstractTextShape extends Shape {
     //  }
     //}
     if (startLineIndex == endLineIndex) {
-      path.addRectangle(new Rectangle(startLineStartX + this.getTextPaddingX(), startLine.top + this.getTextPaddingY(), endLineEndX + this.getTextPaddingX(), startLine.bottom + this.getTextPaddingY()))
+      targetPath.addRectangle(new Rectangle(startLineStartX + this.getTextPaddingX(), startLine.top + this.getTextPaddingY(), endLineEndX + this.getTextPaddingX(), startLine.bottom + this.getTextPaddingY()))
     } else {
       const startLineEndX = this.getLineToX(startLine)
       const endLineStartX = this.getLineFromX(endLine)
-      path.addRectangle(new Rectangle(startLineStartX + this.getTextPaddingX(), startLine.top + this.getTextPaddingY(), startLineEndX + this.getTextPaddingX(), startLine.bottom + this.getTextPaddingY()))
-      path.addRectangle(new Rectangle(endLineStartX + this.getTextPaddingX(), endLine.top + this.getTextPaddingY(), endLineEndX + this.getTextPaddingX(), endLine.bottom + this.getTextPaddingY()))
+      targetPath.addRectangle(new Rectangle(startLineStartX + this.getTextPaddingX(), startLine.top + this.getTextPaddingY(), startLineEndX + this.getTextPaddingX(), startLine.bottom + this.getTextPaddingY()))
+      targetPath.addRectangle(new Rectangle(endLineStartX + this.getTextPaddingX(), endLine.top + this.getTextPaddingY(), endLineEndX + this.getTextPaddingX(), endLine.bottom + this.getTextPaddingY()))
       for (let index = startLineIndex + 1; index <= endLineIndex - 1; index++) {
         const line = this._lines[index]
         const lineEndX = this.getLineToX(line)
         const lineStartX = this.getLineFromX(line)
-        path.addRectangle(new Rectangle(lineStartX + this.getTextPaddingX(), line.top + this.getTextPaddingY(), lineEndX + this.getTextPaddingX(), line.bottom + this.getTextPaddingY()))
+        targetPath.addRectangle(new Rectangle(lineStartX + this.getTextPaddingX(), line.top + this.getTextPaddingY(), lineEndX + this.getTextPaddingX(), line.bottom + this.getTextPaddingY()))
       }
     }
-    return path
   }
 
   private getLineToX(line: ShapedLine): number {
