@@ -2043,6 +2043,12 @@ export class Path {
     return this
   }
 
+  /**
+   * TODO: Check if memory leak
+   * @param other 
+   * @param op 
+   * @returns 
+   */
   public op(other: Path, op: PathOp): Path | undefined {
     const pathSource = this._source.op(other._source, GraphicsUtils.convertPathOp(op))
     if (pathSource) {

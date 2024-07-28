@@ -73,10 +73,7 @@ export class Engine {
     return font;
   }
 
-  public static makeEngine(
-    canvasKit: CanvasKit,
-    canvasId: string | HTMLCanvasElement
-  ): Engine {
+  public static makeEngine(canvasKit: CanvasKit, canvasId: string | HTMLCanvasElement): Engine {
     const surface = canvasKit.MakeWebGLCanvasSurface(canvasId)!;
     const canvas = surface.getCanvas();
     if (canvasId instanceof HTMLCanvasElement) {
@@ -437,6 +434,16 @@ export class Engine {
 
   public writePixels(pixels: Uint8Array | number[], srcWidth: number, srcHeight: number, destX: number, destY: number, alphaType?: AlphaType, colorType?: ColorType, colorSpace?: ColorSpace) {
     this._canvas.writePixels(pixels, srcWidth, srcHeight, destX, destY, alphaType, colorType, colorSpace);
+  }
+
+  public dispose() {
+    // No dispose here because same Engine & Canvas will be reused (canvas id will be same after reloaded)
+    // if (this._canvas) {
+    //   this._canvas.delete()
+    // }
+    // if (this._surface) {
+    //   this._surface.delete()
+    // }
   }
 }
 

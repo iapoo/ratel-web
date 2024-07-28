@@ -1,8 +1,10 @@
 /* eslint-disable complexity */
-import { Engine, Point2, Rectangle2D, Rotation, Shape, Line2D, Node,
+import {
+  Engine, Point2, Rectangle2D, Rotation, Shape, Line2D, Node,
   Layer, Rectangle, Graphics, Colors, MouseEvent, MouseCode,
   PointerEvent as UniPointerEvent, KeyEvent as UniKeyEvent,
-  Control, Button, Path, Paint, PaintStyle, PathOp, } from '../../Engine'
+  Control, Button, Path, Paint, PaintStyle, PathOp,
+} from '../../Engine'
 
 export class Painter {
   private _canvasId: string | HTMLCanvasElement
@@ -15,7 +17,7 @@ export class Painter {
   private _timer: any
   private _started: boolean
 
-  public constructor (canvasId: string | HTMLCanvasElement) {
+  public constructor(canvasId: string | HTMLCanvasElement) {
     this._canvasId = canvasId
     this._engine = Engine.makeEngine(Engine.canvasKit, this._canvasId)
     this._graphics = this._engine.graphics
@@ -25,27 +27,27 @@ export class Painter {
     this.initialize()
   }
 
-  public get engine () {
+  public get engine() {
     return this._engine
   }
 
-  public get container () {
+  public get container() {
     return this._engine.container
   }
 
-  public get width () {
+  public get width() {
     return this._engine.width
   }
 
-  public get height () {
+  public get height() {
     return this._engine.height
   }
 
-  public get root (): Layer {
+  public get root(): Layer {
     return this._root
   }
 
-  public get canvasId () {
+  public get canvasId() {
     return this._canvasId
   }
 
@@ -53,7 +55,11 @@ export class Painter {
     return this._engine.container
   }
 
-  public start () {
+  public dispose() {
+    this._engine.dispose()
+  }
+
+  public start() {
     if (!this._started) {
       this._started = true
       this._timer = setInterval(() => {
@@ -62,14 +68,14 @@ export class Painter {
     }
   }
 
-  public stop () {
+  public stop() {
     if (this._started) {
       clearInterval(this._timer)
       this._started = false
     }
   }
   // render
-  public render () {
+  public render() {
     this._graphics.clear(Colors.White)
     if (this._root) {
       this.renderNode(this._root)
@@ -101,7 +107,7 @@ export class Painter {
     this._engine.surface.flush()
   }
 
-  public resize (width: number, height: number) {
+  public resize(width: number, height: number) {
     if (this._engine.container) {
       this._engine.container.width = width
       this._engine.container.height = height
@@ -109,7 +115,10 @@ export class Painter {
     }
   }
 
-  public invalidate () {
+  public invalidate() {
+    // if (this._engine) {
+    //   this._engine.dispose()
+    // }
     this._engine = Engine.makeEngine(Engine.canvasKit, this._canvasId)
     this._graphics = this._engine.graphics
     this._root.boundary = new Rectangle(0, 0, this._engine.width, this._engine.height)
@@ -118,7 +127,7 @@ export class Painter {
     //this.initialize()
   }
 
-  private initialize () {
+  private initialize() {
     const container = this._engine.container
     if (container) {
       container.addEventListener('pointerenter', this.handlePointerEvent.bind(this))
@@ -144,7 +153,7 @@ export class Painter {
     }
   }
 
-  private renderNode (node: Node) {
+  private renderNode(node: Node) {
     try {
       this._graphics.save()
       if (node.dirty) {
@@ -154,7 +163,7 @@ export class Painter {
         this._graphics.concat(node.internalTransform)
         if (node.clipped) {
           this._graphics.clipPath(node.clip)
-          if(node instanceof Shape && node.width >= 119 && node.width <= 131) {
+          if (node instanceof Shape && node.width >= 119 && node.width <= 131) {
             // console.log(`clip test = ${node.clip.contains(50, 50)}  = ${node.clip.contains(500, 500)}`)
             // this._graphics.drawRectangle( Rectangle.makeLTWH(0, 0, 300, 300), node.stroke)
             // this._graphics.clipPath(node.clip)
@@ -177,7 +186,7 @@ export class Painter {
     }
   }
 
-  private buildNode (node: Node) {
+  private buildNode(node: Node) {
     node.update()
     const count = node.children.length
     for (let i = 0; i < count; i++) {
@@ -187,7 +196,7 @@ export class Painter {
     node.resetDirty()
   }
 
-  private findTarget (shape: Shape, x: number, y: number): Shape | undefined {
+  private findTarget(shape: Shape, x: number, y: number): Shape | undefined {
     if (shape.visible) {
       if (shape.contains(x, y)) {
         const count = shape.children.length
@@ -223,7 +232,7 @@ export class Painter {
     }
   }
 
-  private handlePointerEvent (e: PointerEvent) {
+  private handlePointerEvent(e: PointerEvent) {
     // const target = this.findTarget(this._root, e.offsetX, e.offsetY)
     // console.log('Target is ' + target + ', type=' + e.type)
     if (e.type == 'pointerdown') {
@@ -237,14 +246,14 @@ export class Painter {
     e.preventDefault()
   }
 
-  private handlePointerDownType (e: PointerEvent) {
+  private handlePointerDownType(e: PointerEvent) {
     const target = this.findTarget(this._root, e.offsetX, e.offsetY)
     let mouseCode = MouseCode.LEFT_MOUSE_DOWN
-    if(e.button == 2) {
+    if (e.button == 2) {
       mouseCode = MouseCode.RIGHT_MOUSE_DOWN
-    }      
+    }
     if (target?.worldInverseTransform) {
-      const point = target.worldInverseTransform.makePoints([ e.offsetX, e.offsetY, ])
+      const point = target.worldInverseTransform.makePoints([e.offsetX, e.offsetY,])
       target.pointerDownListeners.forEach(callback => {
         const event = new UniPointerEvent(target, point[0], point[1], mouseCode, e.shiftKey, e.ctrlKey, e.altKey, e.height, e.isPrimary, e.pointerId, e.pointerType, e.pressure, e.tangentialPressure, e.tiltX, e.tiltY, e.twist, e.width)
         callback(event)
@@ -264,19 +273,19 @@ export class Painter {
     // this.endEditting()
     //Force to blur, it is for rename sheet title since it looks keep focus even after mouse down in canvas.
     const activeElement = document.activeElement
-    if(activeElement) {
+    if (activeElement) {
       activeElement.blur()
     }
-}
+  }
 
-  private handlePointerUpType (e: PointerEvent) {
+  private handlePointerUpType(e: PointerEvent) {
     let mouseCode = MouseCode.LEFT_MOUSE_UP
-    if(e.button == 2) {
+    if (e.button == 2) {
       mouseCode = MouseCode.RIGHT_MOUSE_UP
-    } 
+    }
     if (this._pointerDownTarget) {
       if (this._pointerDownTarget?.worldInverseTransform) {
-        const point = this._pointerDownTarget.worldInverseTransform.makePoints([ e.offsetX, e.offsetY, ])
+        const point = this._pointerDownTarget.worldInverseTransform.makePoints([e.offsetX, e.offsetY,])
         this._pointerDownTarget.pointerUpListeners.forEach(callback => {
           const event = new UniPointerEvent(this._pointerDownTarget!, point[0], point[1], mouseCode, e.shiftKey, e.ctrlKey, e.altKey, e.height, e.isPrimary, e.pointerId, e.pointerType, e.pressure, e.tangentialPressure, e.tiltX, e.tiltY, e.twist, e.width)
           callback(event)
@@ -291,13 +300,13 @@ export class Painter {
     this._pointerMoveTarget = undefined
   }
 
-  private handlePointerMoveType (e: PointerEvent) {
+  private handlePointerMoveType(e: PointerEvent) {
     const target = this.findTarget(this._root, e.offsetX, e.offsetY)
     // console.log('x1=' + e.offsetX + ', y=' + e.offsetY + ', left=' + this._edittingShape?.boundary.left + ', top=' + this._edittingShape?.boundary.top)
     // console.log(this._pointerDownTarget)
     if (this._pointerDownTarget !== null && this._pointerDownTarget !== undefined) {
       if (this._pointerDownTarget?.worldInverseTransform) {
-        const point = this._pointerDownTarget.worldInverseTransform.makePoints([ e.offsetX, e.offsetY, ])
+        const point = this._pointerDownTarget.worldInverseTransform.makePoints([e.offsetX, e.offsetY,])
         this._pointerDownTarget.pointerMoveListeners.forEach(callback => {
           const event = new UniPointerEvent(this._pointerDownTarget!, point[0], point[1], MouseCode.LEFT_MOUSE_DOWN, e.shiftKey, e.ctrlKey, e.altKey, e.height, e.isPrimary, e.pointerId, e.pointerType, e.pressure, e.tangentialPressure, e.tiltX, e.tiltY, e.twist, e.width)
           callback(event)
@@ -309,14 +318,14 @@ export class Painter {
         if (target != this._pointerMoveTarget) {
           // console.log('x3=' + e.offsetX + ', y=' + e.offsetY + ', left=' + this._edittingShape?.boundary.left + ', top=' + this._edittingShape?.boundary.top)
           if (this._pointerMoveTarget.worldInverseTransform) {
-            const point = this._pointerMoveTarget.worldInverseTransform.makePoints([ e.offsetX, e.offsetY, ])
+            const point = this._pointerMoveTarget.worldInverseTransform.makePoints([e.offsetX, e.offsetY,])
             this._pointerMoveTarget.pointerLeaveListeners.forEach(callback => {
               const event = new UniPointerEvent(this._pointerMoveTarget!, point[0], point[1], MouseCode.LEFT_MOUSE_DOWN, e.shiftKey, e.ctrlKey, e.altKey, e.height, e.isPrimary, e.pointerId, e.pointerType, e.pressure, e.tangentialPressure, e.tiltX, e.tiltY, e.twist, e.width)
               callback(event)
             })
           }
           if (target.worldInverseTransform) {
-            const point = target.worldInverseTransform.makePoints([ e.offsetX, e.offsetY, ])
+            const point = target.worldInverseTransform.makePoints([e.offsetX, e.offsetY,])
             target.pointerEnterListeners.forEach(callback => {
               const event = new UniPointerEvent(target, point[0], point[1], MouseCode.LEFT_MOUSE_DOWN, e.shiftKey, e.ctrlKey, e.altKey, e.height, e.isPrimary, e.pointerId, e.pointerType, e.pressure, e.tangentialPressure, e.tiltX, e.tiltY, e.twist, e.width)
               callback(event)
@@ -325,7 +334,7 @@ export class Painter {
           this._pointerMoveTarget = target
         } else {
           if (target.worldInverseTransform) {
-            const point = target.worldInverseTransform.makePoints([ e.offsetX, e.offsetY, ])
+            const point = target.worldInverseTransform.makePoints([e.offsetX, e.offsetY,])
             target.pointerMoveListeners.forEach(callback => {
               const event = new UniPointerEvent(target, point[0], point[1], MouseCode.LEFT_MOUSE_DOWN, e.shiftKey, e.ctrlKey, e.altKey, e.height, e.isPrimary, e.pointerId, e.pointerType, e.pressure, e.tangentialPressure, e.tiltX, e.tiltY, e.twist, e.width)
               callback(event)
@@ -335,7 +344,7 @@ export class Painter {
       } else {
         // console.log('x4=' + e.offsetX + ', y=' + e.offsetY + ', left=' + this._edittingShape?.boundary.left + ', top=' + this._edittingShape?.boundary.top)
         if (this._pointerMoveTarget.worldInverseTransform) {
-          const point = this._pointerMoveTarget.worldInverseTransform.makePoints([ e.offsetX, e.offsetY, ])
+          const point = this._pointerMoveTarget.worldInverseTransform.makePoints([e.offsetX, e.offsetY,])
           this._pointerMoveTarget.pointerLeaveListeners.forEach(callback => {
             const event = new UniPointerEvent(this._pointerMoveTarget!, point[0], point[1], MouseCode.LEFT_MOUSE_DOWN, e.shiftKey, e.ctrlKey, e.altKey, e.height, e.isPrimary, e.pointerId, e.pointerType, e.pressure, e.tangentialPressure, e.tiltX, e.tiltY, e.twist, e.width)
             callback(event)
@@ -346,7 +355,7 @@ export class Painter {
     } else {
       if (target) {
         if (target.worldInverseTransform) {
-          const point = target.worldInverseTransform.makePoints([ e.offsetX, e.offsetY, ])
+          const point = target.worldInverseTransform.makePoints([e.offsetX, e.offsetY,])
           target.pointerEnterListeners.forEach(callback => {
             const event = new UniPointerEvent(target, point[0], point[1], MouseCode.LEFT_MOUSE_DOWN, e.shiftKey, e.ctrlKey, e.altKey, e.height, e.isPrimary, e.pointerId, e.pointerType, e.pressure, e.tangentialPressure, e.tiltX, e.tiltY, e.twist, e.width)
             callback(event)
@@ -354,7 +363,7 @@ export class Painter {
         }
         this._pointerMoveTarget = target
         if (target?.worldInverseTransform) {
-          const point = target.worldInverseTransform.makePoints([ e.offsetX, e.offsetY, ])
+          const point = target.worldInverseTransform.makePoints([e.offsetX, e.offsetY,])
           target.pointerMoveListeners.forEach(callback => {
             const event = new UniPointerEvent(target, point[0], point[1], MouseCode.LEFT_MOUSE_DOWN, e.shiftKey, e.ctrlKey, e.altKey, e.height, e.isPrimary, e.pointerId, e.pointerType, e.pressure, e.tangentialPressure, e.tiltX, e.tiltY, e.twist, e.width)
             callback(event)
@@ -364,7 +373,7 @@ export class Painter {
     }
   }
 
-  private handleKeyDownEvent (e: KeyboardEvent) {
+  private handleKeyDownEvent(e: KeyboardEvent) {
     console.log(333)
     if (this._focusTarget !== null && this._focusTarget != undefined) {
       const target = this._focusTarget
@@ -375,7 +384,7 @@ export class Painter {
     }
   }
 
-  private handleKeyUpEvent (e: KeyboardEvent) {
+  private handleKeyUpEvent(e: KeyboardEvent) {
     if (this._focusTarget !== null && this._focusTarget != undefined) {
       const target = this._focusTarget
       target.keyUpListeners.forEach(callback => {
@@ -385,7 +394,7 @@ export class Painter {
     }
   }
 
-  private handleKeyPressEvent (e: KeyboardEvent) {
+  private handleKeyPressEvent(e: KeyboardEvent) {
     if (this._focusTarget !== null && this._focusTarget != undefined) {
       const target = this._focusTarget
       target.keyPressListeners.forEach(callback => {
@@ -395,18 +404,18 @@ export class Painter {
     }
   }
 
-  private handleResize (e: UIEvent) {
+  private handleResize(e: UIEvent) {
   }
 
-  private handleScrollEvent (e: Event) {
+  private handleScrollEvent(e: Event) {
   }
 
-  private handleWhellEvent (e: WheelEvent) {
+  private handleWhellEvent(e: WheelEvent) {
   }
 
-  private handleFocusEvent (e: FocusEvent) {
+  private handleFocusEvent(e: FocusEvent) {
   }
 
-  private handleDragEvent (e: DragEvent) {
+  private handleDragEvent(e: DragEvent) {
   }
 }

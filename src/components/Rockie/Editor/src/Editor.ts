@@ -3045,6 +3045,21 @@ export class Editor extends Painter {
     }
   }
 
+  public dispose() {
+    super.dispose()
+    this._backgroundLayer.dispose()
+    this._contentLayer.dispose()
+    this._controllerLayer.dispose()
+    this._hoverLayer.dispose()
+    this._selectionLayer.dispose()
+    this._maskLayer.dispose()
+    this._rangeLayer.dispose()
+    this._moveLayer.dispose()
+    this._containerLayer.dispose()
+    this._tableLayer.dispose()
+    this._exportLayer.dispose()
+  }
+
   private finishTextEditOperation() {
     if (this._target && this._targetItem && this._startEditorItemInfos.length > 0) {
       let origItemInfo = this._startEditorItemInfos[0]

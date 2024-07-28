@@ -412,7 +412,8 @@ const Content: FC<ContentProps> = ({
     let activateCanvas = null
     let activeEditor = null
     let activePane: Pane | null = null
-    const panes: Pane[] = []
+    const oldPanes = panes
+    const newPanes: Pane[] = []
     for (let sheetIndex = 0; sheetIndex < sheetCount; sheetIndex++) {
       const sheetData = storageData.sheets[sheetIndex]
       const pane: Pane = { title: sheetData.title, content: DOCUMENT_CONTENT, key: sheetData.key, editor: null, initialized: false, scrollLeft: 0, scrollTop: 0, }
@@ -438,7 +439,7 @@ const Content: FC<ContentProps> = ({
       })
       editor.resetModified()
       editor.start()
-      panes.push(pane)
+      newPanes.push(pane)
       if (sheetIndex == 0) {
         activeKey = sheetData.key
         activateCanvas = canvas
@@ -446,8 +447,9 @@ const Content: FC<ContentProps> = ({
         activePane = pane
       }
     }
-    setPanes(panes)
-    panesRef.current = panes
+    setPanes(newPanes)
+    panesRef.current = newPanes
+    cleanupPanes(oldPanes)
     setActiveKey(activeKey)
     setActivePane(activePane)
     //setPaneTitle(activePane?.title)
@@ -464,7 +466,7 @@ const Content: FC<ContentProps> = ({
     Utils.currentEditor = activeEditor!
     setCurrentEditor(activeEditor!)
     onEditorChange(oldEditor, Utils.currentEditor)
-    updateEditors(panes)
+    updateEditors(newPanes)
     checkIfDocumentModified(false)
     oldEditor?.removeSelectionChange(handleSelectionChange)
     Utils.currentEditor.onSelectionChange(handleSelectionChange)
@@ -488,6 +490,11 @@ const Content: FC<ContentProps> = ({
     Utils.currentEditor.onSizeChange(handleEditorSizeChange)
   }
 
+  const cleanupPanes = (panes: Pane[]) => {
+    panes.forEach(pane => {
+      pane.editor?.dispose()
+    })
+  }
   const onTabChange = (newActiveKey: string) => {
     handleTabChange(panes, newActiveKey, true)
   }
