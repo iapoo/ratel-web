@@ -1,5 +1,5 @@
 /* eslint-disable max-params */
-import { Point2, Rectangle, Rotation, } from '@/components/Engine'
+import { Colors, Point2, Rectangle, Rotation, } from '@/components/Engine'
 import { EntityShape, } from '../../Shapes'
 import { Entity, } from './Entity'
 import { Categories, Type, } from './Item'
@@ -13,10 +13,12 @@ import { ShapeEntity, ShapeOptions, ShapeType, ShapeTypes, Shapes } from './Shap
 
 export class CellEntity extends ShapeEntity {
 
-  public constructor(left: number, top: number, width: number, height: number, shapeOptions: ShapeOptions = { shapeType: Shapes.TYPE_RECTANGLE }, 
-      shapeTypes: ShapeType[] = ShapeTypes) {
+  public constructor(left: number, top: number, width: number, height: number, shapeOptions: ShapeOptions = { shapeType: Shapes.TYPE_RECTANGLE },
+    shapeTypes: ShapeType[] = ShapeTypes) {
     super(left, top, width, height, shapeOptions, shapeTypes)
     this._shape.clipped = true
+    this.strokeColor = Colors.Silver
+    this.lineWidth = 1
     // this._shape.filled = false
   }
 
