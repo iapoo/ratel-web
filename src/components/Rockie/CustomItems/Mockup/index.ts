@@ -1,0 +1,13 @@
+import { MockupCustomShape, MockupCustomShapeTypes } from "./src/MockupCustomShape";
+
+
+export const MockupShapes = [
+    { name: MockupCustomShapeTypes[0].name, type: MockupCustomShape, typeInfo: MockupCustomShapeTypes[0] },
+    { name: MockupCustomShapeTypes[1].name, type: MockupCustomShape, typeInfo: MockupCustomShapeTypes[1] },
+    { name: MockupCustomShapeTypes[2].name, type: MockupCustomShape, typeInfo: MockupCustomShapeTypes[2] },
+    { name: MockupCustomShapeTypes[3].name, type: MockupCustomShape, typeInfo: MockupCustomShapeTypes[3] },
+    { name: MockupCustomShapeTypes[4].name, type: MockupCustomShape, typeInfo: MockupCustomShapeTypes[4] },
+    { name: MockupCustomShapeTypes[5].name, type: MockupCustomShape, typeInfo: MockupCustomShapeTypes[5] },
+    { name: MockupCustomShapeTypes[6].name, type: MockupCustomShape, typeInfo: MockupCustomShapeTypes[6] },
+    { name: MockupCustomShapeTypes[7].name, type: MockupCustomShape, typeInfo: MockupCustomShapeTypes[7] },
+]

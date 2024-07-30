@@ -10,15 +10,15 @@ import { ConnectorDirection } from './ConnectorShape'
 
 export class CustomShape extends EntityShape {
 
-  private _buildShape: (theThis: CustomShape)=> void
+  private _buildShape: (theThis: CustomShape) => void
   private _secondPath: Path
   private _secondFill: Paint
   private _secondStroke: Paint
   private _secondFilled: boolean
   private _secondStroked: boolean
-  
-  public constructor (left: number, top: number, width: number, height: number, buildShape: (_this: CustomShape)=> void, shapeTypeInfo: ShapeTypeInfo) {
-    super('', left, top, width, height, shapeTypeInfo)    
+
+  public constructor(left: number, top: number, width: number, height: number, buildShape: (_this: CustomShape) => void, shapeTypeInfo: ShapeTypeInfo) {
+    super('', left, top, width, height, shapeTypeInfo)
     this._secondPath = new Path()
     this._secondStroke = new Paint()
     this._secondStroke.setPaintStyle(PaintStyle.STROKE)
@@ -43,7 +43,7 @@ export class CustomShape extends EntityShape {
     return this._secondStroke
   }
 
-  public render (graphics: Graphics): void {
+  public render(graphics: Graphics): void {
     super.render(graphics)
     if (this._secondFilled) {
       graphics.drawPath(this._secondPath, this._secondFill)
@@ -53,11 +53,16 @@ export class CustomShape extends EntityShape {
     }
   }
 
-  public update () {
+  public update() {
     super.update()
     this._secondStroke.setColor(this.stroke.getColor())
     this._secondFill.setColor(this.fill.getColor())
     this._buildShape(this)
   }
 
+  public dispose(): void {
+    this.secondPath.delete()
+    this.secondStroke.delete()
+    this.secondFill.delete()
+  }
 }

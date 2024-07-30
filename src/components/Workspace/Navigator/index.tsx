@@ -25,6 +25,7 @@ import { MyShape, MyShapes } from '../Utils/RequestUtils';
 import { EditOutlined } from '@ant-design/icons';
 import MyShapesWindowPage from './MyShapesWindow';
 import { ERCustomShapes } from '@/components/Rockie/CustomItems/EntityRelation';
+import { MockupShapes } from '@/components/Rockie/CustomItems/Mockup';
 
 interface NavigatorProps {
   navigatorWidth: number
@@ -875,6 +876,16 @@ const Navigator: FC<NavigatorProps> = ({
     }
   )
 
+  const mockupCustomShapes = MockupShapes.map(
+    shapeType => {
+      return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: shapeType.typeInfo.width + 60, width: shapeType.typeInfo.height + 60, }}>
+        <Button type='text' onMouseDown={() => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{ padding: 2, display: 'table' }}>
+          <img src={process.env.PUBLIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{ display: 'table-cell' }} />
+        </Button>
+      </Popover>
+    }
+  )
+
   const handleModifyMyShapes = (event: MouseEvent) => {
     setMyShapesWindowVisible(!myShapesWindowVisiible)
     event.stopPropagation()
@@ -999,6 +1010,13 @@ const Navigator: FC<NavigatorProps> = ({
       label: <div style={{ fontWeight: 'bolder' }}><FormattedMessage id='workspace.navigator.panel.er' /></div>,
       children: <Space size={2} wrap>
         {erCustomShapes}
+      </Space>,
+    },
+    {
+      key: '13',
+      label: <div style={{ fontWeight: 'bolder' }}><FormattedMessage id='workspace.navigator.panel.mockup' /></div>,
+      children: <Space size={2} wrap>
+        {mockupCustomShapes}
       </Space>,
     },
   ]

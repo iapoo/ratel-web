@@ -1403,7 +1403,7 @@ export class ParagraphBuilder {
   }
 
   public delete() {
-    if (this._source) {
+    if (this._source && !this._source.isDeleted()) {
       this._source.delete()
     }
   }
@@ -1554,13 +1554,13 @@ export class Paint {
   }
 
   public delete() {
-    if (this._source) {
+    if (this._source && !this._source.isDeleted()) {
       this._source.delete()
     }
-    if (this._colorFilter) {
+    if (this._colorFilter && !this._colorFilter.isDeleted()) {
       this._colorFilter.delete()
     }
-    if (this._pathEffect) {
+    if (this._pathEffect && !this._pathEffect.isDeleted()) {
       this._pathEffect.delete()
     }
   }
@@ -1642,7 +1642,7 @@ export class Font {
   }
 
   public delete() {
-    if (this._source) {
+    if (this._source && !this._source.isDeleted()) {
       this._source.delete()
     }
   }
@@ -2204,7 +2204,7 @@ export class Image {
   }
 
   public delete() {
-    if (this._source) {
+    if (this._source && !this._source.isDeleted()) {
       this._source.delete()
     }
   }
