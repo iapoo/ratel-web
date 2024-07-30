@@ -725,7 +725,7 @@ export class Editor extends Painter {
         this._action.items[0].strokeColor = SystemUtils.parseColorString(this._theme.connectorStrokeColor)!
         this._action.items[0].fillColor = SystemUtils.parseColorString(this._theme.connectorFillColor)!
         this._action.items[0].fontColor = SystemUtils.parseColorString(this._theme.connectorFontColor)!
-      } else if (!(this._action.items[0] instanceof SvgContainer || this._action.items[0] instanceof ImageContainer) && !(this._action instanceof MyShapeAction)) {
+      } else if (this._action.items[0].useTheme && !(this._action.items[0] instanceof SvgContainer || this._action.items[0] instanceof ImageContainer) && !(this._action instanceof MyShapeAction)) {
         this._action.items.forEach(item => {
           item.strokeColor = SystemUtils.parseColorString(this._theme.shapeStrokeColor)!
           item.fillColor = SystemUtils.parseColorString(this._theme.shapeFillColor)!

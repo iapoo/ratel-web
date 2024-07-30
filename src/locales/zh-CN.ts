@@ -178,6 +178,7 @@ export default {
   'workspace.navigator.panel.er': '实体关系图(E-R图)',
   'workspace.navigator.panel.flowchart': 'Flowchart流程图',
   'workspace.navigator.panel.general': '通用',
+  'workspace.navigator.panel.mockup': '原型图',
   'workspace.navigator.panel.my-shapes': '我的图形库',
   'workspace.navigator.panel.pool': '泳道',
   'workspace.navigator.panel.uml-class': 'UML类图',

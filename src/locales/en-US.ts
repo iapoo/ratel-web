@@ -177,6 +177,7 @@ export default {
   'workspace.navigator.panel.er': 'Entity Relation',
   'workspace.navigator.panel.flowchart': 'Flowchart',
   'workspace.navigator.panel.general': 'General',
+  'workspace.navigator.panel.mockup': 'Mockup',
   'workspace.navigator.panel.my-shapes': 'My Shapes',
   'workspace.navigator.panel.pool': 'Pool',
   'workspace.navigator.panel.uml-class': 'UML Class',

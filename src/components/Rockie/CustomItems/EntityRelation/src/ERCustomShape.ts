@@ -203,7 +203,7 @@ export class ERCustomShape extends CustomEntity {
         break;
       }
       case ERCustomShapes.TYPE_RELATIONSHIP_2: {
-        const offsetWidth = theThis.height * 0.1
+        const offsetWidth = theThis.width * 0.1
         const offsetHeight = theThis.height * 0.1
         theThis.secondStroke.setColor(theThis.stroke.getColor())
         theThis.secondStroke.setStrokeWidth(theThis.stroke.getStroketWidth())
