@@ -2,7 +2,7 @@
 /* eslint-disable max-params */
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
 
-import { Colors, Font, GlyphRun, Graphics, Paint, Paragraph, ParagraphBuilder, ParagraphStyle, Path, Point2, Rectangle, Rotation, RoundRectangle, Shape, ShapedLine, } from '@/components/Engine'
+import { Colors, Font, GlyphRun, Graphics, Paint, PaintStyle, Paragraph, ParagraphBuilder, ParagraphStyle, Path, Point2, Rectangle, Rotation, RoundRectangle, Shape, ShapedLine, } from '@/components/Engine'
 import { TextCursor, Style, } from './EntityUtils'
 import { AbstractTextShape, } from './AbstractTextShape'
 import { ConnectorShape } from './ConnectorShape'
@@ -139,6 +139,15 @@ export class EntityShape extends AbstractTextShape {
     this._adapter = typeInfo.adapter
     this._adapterSize = typeInfo.adapterSize
     this._maskPath = new Path()
+    this.secondStroke.setAntiAlias(true)
+    this.secondStroke.setPaintStyle(PaintStyle.STROKE)
+    this.secondFill.setPaintStyle(PaintStyle.FILL)
+    this.thirdStroke.setAntiAlias(true)
+    this.thirdStroke.setPaintStyle(PaintStyle.STROKE)
+    this.thirdFill.setPaintStyle(PaintStyle.FILL)
+    this.fourthStroke.setAntiAlias(true)
+    this.fourthStroke.setPaintStyle(PaintStyle.STROKE)
+    this.fourthFill.setPaintStyle(PaintStyle.FILL)
   }
 
   public set clipped(clipped: boolean) {

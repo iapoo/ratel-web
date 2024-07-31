@@ -28,7 +28,7 @@ export class MockupCustomShapes {
   public static TEXT_PICTURE = 'Picture'
   public static TYPE_VIDEO = 'Video'
   public static DESC_VIDEO = 'Video'
-  public static TEXT_VIDEO = 'Video'
+  public static TEXT_VIDEO = ''
   public static TYPE_HORIZONTAL_SCROLLBAR = 'Horizontal Scrollbar'
   public static DESC_HORIZONTAL_SCROLLBAR = 'Horizontal Scrollbar'
   public static TEXT_HORIZONTAL_SCROLLBAR = 'Horizontal Scrollbar'
@@ -93,13 +93,13 @@ export const MockupCustomShapeTypes = [
     adaptable: true, adapterX: 0.1, adapterY: 0.7, adapterDirection: 'X', adapterSize: 0.4, adapterStartX: 0.3, adapterStartY: 0, adapterEndX: 0.7, adapterEndY: 0.3, adaptInLine: false, adaptInPercent: true
   },
   {
-    name: MockupCustomShapes.TYPE_PICTURE, description: MockupCustomShapes.DESC_PICTURE, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_PICTURE, left: 0, top: 0, width: 120, height: 60, enableMask: false,
+    name: MockupCustomShapes.TYPE_PICTURE, description: MockupCustomShapes.DESC_PICTURE, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_PICTURE, left: 0, top: 0, width: 280, height: 210, enableMask: false,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
   {
-    name: MockupCustomShapes.TYPE_VIDEO, description: MockupCustomShapes.DESC_VIDEO, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_VIDEO, left: 0, top: 0, width: 120, height: 60, enableMask: false,
+    name: MockupCustomShapes.TYPE_VIDEO, description: MockupCustomShapes.DESC_VIDEO, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_VIDEO, left: 0, top: 0, width: 280, height: 210, enableMask: false,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
@@ -274,29 +274,59 @@ export class MockupCustomShape extends CustomEntity {
         break;
       }
       case MockupCustomShapes.TYPE_PICTURE: {
-        theThis.secondPath.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width * 0.75, theThis.height))
-        theThis.thirdPath.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width * 0.5, theThis.height))
-        theThis.fourthPath.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width * 0.25, theThis.height))
+        theThis.secondPath.moveTo(theThis.width * 0.1, theThis.height * 0.85)
+        theThis.secondPath.lineTo(theThis.width * 0.5, theThis.height * 0.4)
+        theThis.secondPath.lineTo(theThis.width * 0.65, theThis.height * 0.5)
+        theThis.secondPath.lineTo(theThis.width * 0.75, theThis.height * 0.2)
+        theThis.secondPath.lineTo(theThis.width * 0.9, theThis.height * 0.85)
+        theThis.secondPath.lineTo(theThis.width * 0.1, theThis.height * 0.85)
+        theThis.secondPath.addOval(Rectangle.makeLTWH(theThis.width * 0.3, theThis.height * 0.2, theThis.width * 0.1, theThis.width * 0.1))
         theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
         break;
       }
       case MockupCustomShapes.TYPE_VIDEO: {
-        const offsetWidth = theThis.width * 0.1
-        const offsetHeight = theThis.height * 0.1
-        theThis.secondStroke.setColor(theThis.stroke.getColor())
-        theThis.secondStroke.setStrokeWidth(theThis.stroke.getStroketWidth())
-        theThis.secondStroke.setStrokeDashStyle(theThis.stroke.getStrokeDashStyle())
-        theThis.secondFill.setAlpha(0)
-        theThis.path.moveTo(this.width / 2, 0)
-        theThis.path.lineTo(this.width, this.height / 2)
-        theThis.path.lineTo(this.width / 2, this.height)
-        theThis.path.lineTo(0, this.height / 2)
-        theThis.path.lineTo(this.width / 2, 0)
-        theThis.secondPath.moveTo(this.width / 2, offsetHeight)
-        theThis.secondPath.lineTo(this.width - offsetWidth, this.height / 2)
-        theThis.secondPath.lineTo(this.width / 2, this.height - offsetHeight)
-        theThis.secondPath.lineTo(offsetWidth, this.height / 2)
-        theThis.secondPath.lineTo(this.width / 2, offsetHeight)
+        const videoWidth = 40 // theThis.width * 0.15
+        const videoRegionHeight = theThis.height - 28 // theThis.height * 0.87
+        const videoLeft = (theThis.width - videoWidth) * 0.5
+        const videoTop = (videoRegionHeight - videoWidth) * 0.5
+        const playWidth = 14 //theThis.width * 0.05
+        const playLeft = 14 //theThis.width * 0.05
+        const playTop = videoRegionHeight + (theThis.height - videoRegionHeight - playWidth) * 0.5
+        const voiceRight = theThis.width - 14 //theThis.width * 0.95
+        const voiceWidth = 14 //theThis.width * 0.05
+        const voiceLeft = voiceRight - voiceWidth
+        const voiceTop = videoRegionHeight + (theThis.height - videoRegionHeight - voiceWidth) * 0.5
+        const seperatorHeight = 0.1
+        const progressLeft = theThis.width - playWidth - playLeft - 12
+        const progressHeight = 6
+        const progressWidth = theThis.width - progressLeft * 2
+        const progressTop = videoRegionHeight + (theThis.height - videoRegionHeight - progressHeight) * 0.5
+        //Light Color
+        theThis.thirdStroke.setColor(Colors.DimGray)
+        theThis.thirdStroke.setStrokeWidth(2)
+        theThis.thirdFill.setColor(Colors.White)
+        const indicatorLeft = progressLeft + progressWidth * 0.5
+        const indicatorWidth = 14
+        const indicatorTop = videoRegionHeight + (theThis.height - videoRegionHeight - indicatorWidth) * 0.5
+        theThis.secondPath.moveTo(videoLeft, videoTop)
+        theThis.secondPath.lineTo(videoLeft, videoTop + videoWidth)
+        theThis.secondPath.lineTo(videoLeft + videoWidth, videoTop + videoWidth * 0.5)
+        theThis.secondPath.lineTo(videoLeft, videoTop)
+        theThis.secondPath.moveTo(playLeft, playTop)
+        theThis.secondPath.lineTo(playLeft, playTop + playWidth)
+        theThis.secondPath.lineTo(playLeft + playWidth, playTop + playWidth * 0.5)
+        theThis.secondPath.lineTo(playLeft, voiceTop)
+        theThis.secondPath.moveTo(voiceLeft, voiceTop + voiceWidth * 0.25)
+        theThis.secondPath.lineTo(voiceLeft, voiceTop + voiceWidth * 0.75)
+        theThis.secondPath.lineTo(voiceLeft + voiceWidth * 0.6, voiceTop + voiceWidth * 0.75)
+        theThis.secondPath.lineTo(voiceLeft + voiceWidth, voiceTop + voiceWidth)
+        theThis.secondPath.lineTo(voiceLeft + voiceWidth, voiceTop)
+        theThis.secondPath.lineTo(voiceLeft + voiceWidth * 0.6, voiceTop + voiceWidth * 0.25)
+        theThis.secondPath.lineTo(voiceLeft, voiceTop + voiceWidth * 0.25)
+        theThis.secondPath.addRectangle(Rectangle.makeLTWH(progressLeft, progressTop, progressWidth, progressHeight))
+        theThis.thirdPath.addOval(Rectangle.makeLTWH(indicatorLeft, indicatorTop, indicatorWidth, indicatorWidth))
+        theThis.path.addRectangle(Rectangle.makeLTWH(0, videoRegionHeight, theThis.width, seperatorHeight))
+        theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
         break;
       }
     }
