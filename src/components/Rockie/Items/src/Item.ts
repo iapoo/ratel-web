@@ -109,8 +109,14 @@ export abstract class Item implements EditorItem {
   private _parent: Item | undefined = undefined
 
   private _locked: boolean = false
+  private _secondStrokeColor: Color = Colors.Black
+  private _secondFillColor: Color = Colors.White
+  private _thirdStrokeColor: Color = Colors.Black
+  private _thirdFillColor: Color = Colors.White
+  private _fourthStrokeColor: Color = Colors.Black
+  private _fourthFillColor: Color = Colors.White
 
-  public constructor (left: number, top: number, width: number, height: number) {
+  public constructor(left: number, top: number, width: number, height: number) {
     this._boundary = Rectangle.makeLTWH(left, top, width, height)
     this._shape = new EntityShape('', left, top, width, height)
     this.initializeTheme()
@@ -127,7 +133,7 @@ export abstract class Item implements EditorItem {
   public set id(value: string) {
     this._id = value
   }
-  
+
   public get locked() {
     return this._locked
   }
@@ -135,76 +141,76 @@ export abstract class Item implements EditorItem {
   public set locked(value: boolean) {
     this._locked = value
   }
-  
-  public get minWidth (): number {
+
+  public get minWidth(): number {
     return Item.MIN_WIDTH
   }
 
-  public get minHeight (): number {
+  public get minHeight(): number {
     return Item.MIN_HEIGHT
   }
 
-  public get rotation (): Rotation {
+  public get rotation(): Rotation {
     return this._rotation
   }
 
-  public set rotation (value: Rotation) {
+  public set rotation(value: Rotation) {
     this._rotation = value
     this._shape.rotation = value
   }
 
-  public get shape (): EntityShape {
+  public get shape(): EntityShape {
     return this._shape
   }
 
-  public get width (): number {
+  public get width(): number {
     return this._boundary.width
   }
 
-  public get height (): number {
+  public get height(): number {
     return this._boundary.height
   }
 
-  public get left (): number {
+  public get left(): number {
     return this._boundary.left
   }
 
-  public get top (): number {
+  public get top(): number {
     return this._boundary.top
   }
 
-  public get right (): number {
+  public get right(): number {
     return this._boundary.left + this.boundary.width
   }
 
-  public get bottom (): number {
+  public get bottom(): number {
     return this._boundary.top + this.boundary.height
   }
 
-  public get boundary (): Rectangle {
+  public get boundary(): Rectangle {
     return this._boundary
   }
 
-  public set boundary (value: Rectangle) {
+  public set boundary(value: Rectangle) {
     //const oldBoundary = this._boundary
     this._boundary = value
     this._shape.boundary = value
     //this.updateItemsBoundary(oldBoundary, value)
   }
 
-  public get text (): string {
+  public get text(): string {
     return this._shape.text
   }
 
-  public set text (value: string) {
+  public set text(value: string) {
     this._shape.text = value
   }
 
-  public get type (): string {
+  public get type(): string {
     return this._type
   }
 
-  public set type (value: string) {
+  public set type(value: string) {
     const shapeTypes = this.types
     let index = -1
     shapeTypes.forEach((shapeType, shapeTypeIndex) => {
@@ -236,11 +242,11 @@ export abstract class Item implements EditorItem {
     this.updateTheme()
   }
 
-  public get strokeColor(): Color  {
+  public get strokeColor(): Color {
     return this._strokeColor
   }
 
-  public set strokeColor(value: Color ) {
+  public set strokeColor(value: Color) {
     this._strokeColor = value
     this.updateTheme()
   }
@@ -249,9 +255,63 @@ export abstract class Item implements EditorItem {
     return this._fillColor
   }
 
-  public set fillColor(value: Color ) {
+  public set fillColor(value: Color) {
     this._fillColor = value
     this.updateTheme()
+  }
+
+  public get secondStrokeColor(): Color {
+    return this._secondStrokeColor
+  }
+
+  public set secondStrokeColor(value: Color) {
+    this._secondStrokeColor = value
+    this.shape.secondStroke.setColor(value)
+  }
+
+  public get secondFillColor(): Color {
+    return this._secondFillColor
+  }
+
+  public set secondFillColor(value: Color) {
+    this._secondFillColor = value
+    this.shape.secondFill.setColor(value)
+  }
+
+  public get thirdStrokeColor(): Color {
+    return this._thirdStrokeColor
+  }
+
+  public set thirdStrokeColor(value: Color) {
+    this._thirdStrokeColor = value
+    this.shape.thirdStroke.setColor(value)
+  }
+
+  public get thirdFillColor(): Color {
+    return this._thirdFillColor
+  }
+
+  public set thirdFillColor(value: Color) {
+    this._thirdFillColor = value
+    this.shape.thirdFill.setColor(value)
+  }
+
+  public get fourthStrokeColor(): Color {
+    return this._fourthStrokeColor
+  }
+
+  public set fourthStrokeColor(value: Color) {
+    this._fourthStrokeColor = value
+    this.shape.fourthStroke.setColor(value)
+  }
+
+  public get fourthFillColor(): Color {
+    return this._fourthFillColor
+  }
+
+  public set fourthFillColor(value: Color) {
+    this._fourthFillColor = value
+    this.shape.fourthFill.setColor(value)
   }
 
   public get filled() {
@@ -281,14 +341,14 @@ export abstract class Item implements EditorItem {
   }
 
   public get fontName() {
-    this._fontName  = this._shape.fontName
+    this._fontName = this._shape.fontName
     return this._fontName
   }
 
   public set fontName(value: string) {
     this._fontName = value
     //this.updateTheme()
-    this._shape.fontName = value 
+    this._shape.fontName = value
   }
 
   public get fontColor() {
@@ -413,8 +473,8 @@ export abstract class Item implements EditorItem {
   }
 
   public updateTheme() {
-    if(this._useTheme) {
-      if(this.category == Categories.CONNECTOR) {
+    if (this._useTheme) {
+      if (this.category == Categories.CONNECTOR) {
         this._shape.stroke.setColor(ThemeUtils.getConnectorStrokeColor(this._themeName))
         this._shape.fill.setColor(ThemeUtils.getConnectorFillColor(this._themeName))
       } else {
@@ -432,14 +492,14 @@ export abstract class Item implements EditorItem {
       // }
       this._shape.filled = this._filled
       this._shape.stroked = this._stroked
-    //this._shape.fontWeight = ThemeUtils.fontWeight
+      //this._shape.fontWeight = ThemeUtils.fontWeight
       //this._shape.fontSlant = ThemeUtils.fontSlant
       //this._shape.textDecoration = ThemeUtils.textDecoration
       //this._shape.textAlignment = ThemeUtils.textAlignment
       //this._shape.textVerticalAlignment = ThemeUtils.textVerticalAlignment
     } else {
       this._shape.stroke.setColor(this._strokeColor)
-      this._shape.fill.setColor(this._fillColor)    
+      this._shape.fill.setColor(this._fillColor)
       this._shape.stroke.setStrokeWidth(this._lineWidth)
       this._shape.stroke.setStrokeDashStyle(this._strokeDashStyle)
       //this._shape.fontColor = this._fontColor
@@ -457,7 +517,7 @@ export abstract class Item implements EditorItem {
   }
 
   public initializeTheme() {
-    if(this.category == Categories.CONNECTOR) {
+    if (this.category == Categories.CONNECTOR) {
       this.strokeColor = ThemeUtils.getConnectorStrokeColor(this._themeName)
       this.fillColor = ThemeUtils.getConnectorFillColor(this._themeName)
     } else {
@@ -474,15 +534,15 @@ export abstract class Item implements EditorItem {
     this.textAlignment = ThemeUtils.textAlignment
     this.textVerticalAlignment = ThemeUtils.textVerticalAlignment
     this.updateTheme()
-}
+  }
 
-  public get items (): EditorItem[] {
+  public get items(): EditorItem[] {
     return this._items
   }
 
   public get worldTransform() {
     const worldTransform = new Matrix()
-    if(this.parent) {
+    if (this.parent) {
       worldTransform.multiply(this.parent.worldTransform.source)
     }
     worldTransform.multiply(this.internalTransform.source)
@@ -491,7 +551,7 @@ export abstract class Item implements EditorItem {
 
   public get worldInverseTransform() {
     const worldTransform = new Matrix()
-    if(this.parent) {
+    if (this.parent) {
       worldTransform.multiply(this.parent.worldTransform.source)
     }
     return worldTransform.invert()
@@ -501,10 +561,10 @@ export abstract class Item implements EditorItem {
     return this._shape.internalTransform
   }
 
-  public addItem (item: EditorItem) {
+  public addItem(item: EditorItem) {
     const editorItem = item as Item
     if (editorItem && this._items.indexOf(editorItem) < 0) {
-      if(editorItem.parent) {
+      if (editorItem.parent) {
         editorItem.parent.removeItem(editorItem)
       }
       editorItem._parent = this
@@ -516,7 +576,7 @@ export abstract class Item implements EditorItem {
   public addItemAt(item: EditorItem, index: number) {
     const editorItem = item as Item
     if (editorItem && this._items.indexOf(editorItem) < 0) {
-      if(editorItem.parent) {
+      if (editorItem.parent) {
         editorItem.parent.removeItem(editorItem)
       }
       editorItem._parent = this
@@ -525,7 +585,7 @@ export abstract class Item implements EditorItem {
     }
   }
 
-  public removeItem (item: EditorItem) {
+  public removeItem(item: EditorItem) {
     const editorItem = item as Item
     const index = this._items.indexOf(item)
     if (index >= 0) {
@@ -535,7 +595,7 @@ export abstract class Item implements EditorItem {
     }
   }
 
-  public removeItemAt (index : number) {
+  public removeItemAt(index: number) {
     if (index >= 0 && index < this._items.length) {
       const editorItem = this._items[index] as Item
       editorItem._parent = undefined
@@ -544,9 +604,9 @@ export abstract class Item implements EditorItem {
     }
   }
 
-  public removeAllItems () {
+  public removeAllItems() {
     const count = this._items.length
-    for(let i = 0; i <  count; i ++) {
+    for (let i = 0; i < count; i++) {
       const item = this._items[i] as Item
       item._parent = undefined
     }
@@ -554,91 +614,91 @@ export abstract class Item implements EditorItem {
     this.shape.clear()
   }
 
-  public addSourceConnector (connector: Connector) {
+  public addSourceConnector(connector: Connector) {
     const index = this._sourceConnectors.indexOf(connector)
     if (index < 0) {
       this._sourceConnectors.push(connector)
     }
   }
 
-  public removeSourceConnector (connector: Connector) {
+  public removeSourceConnector(connector: Connector) {
     const index = this._sourceConnectors.indexOf(connector)
     if (index >= 0) {
       this._sourceConnectors.splice(index, 1)
     }
   }
 
-  public getSourceConnector (index: number): Connector {
+  public getSourceConnector(index: number): Connector {
     return this._sourceConnectors[index]
   }
 
-  public removeSourceConnectorAt (index: number) {
+  public removeSourceConnectorAt(index: number) {
     this._sourceConnectors.splice(index, 1)
   }
 
-  public removeAllSourceConnectors () {
+  public removeAllSourceConnectors() {
     this._sourceConnectors.length = 0
   }
 
-  public getAllSourceConnectors (): Connector[] {
-    return [ ...this._sourceConnectors, ]
+  public getAllSourceConnectors(): Connector[] {
+    return [...this._sourceConnectors,]
   }
 
-  public getSourceConnectorCount (): number {
+  public getSourceConnectorCount(): number {
     return this._sourceConnectors.length
   }
 
-  public hasSourceConnector (connector: Connector): boolean {
+  public hasSourceConnector(connector: Connector): boolean {
     return this._sourceConnectors.includes(connector)
   }
 
-  public getIndexOfSourceConnector (connector: Connector): number {
+  public getIndexOfSourceConnector(connector: Connector): number {
     return this._sourceConnectors.indexOf(connector)
   }
 
-  public addTargetConnector (connector: Connector) {
+  public addTargetConnector(connector: Connector) {
     const index = this._targetConnectors.indexOf(connector)
     if (index < 0) {
       this._targetConnectors.push(connector)
     }
   }
 
-  public removeTargetConnector (connector: Connector) {
+  public removeTargetConnector(connector: Connector) {
     const index = this._targetConnectors.indexOf(connector)
     if (index >= 0) {
       this._targetConnectors.splice(index, 1)
     }
   }
 
-  public getTargetConnector (index: number): Connector {
+  public getTargetConnector(index: number): Connector {
     return this._targetConnectors[index]
   }
 
-  public removeTargetConnectorAt (index: number) {
+  public removeTargetConnectorAt(index: number) {
     this._targetConnectors.splice(index, 1)
   }
 
-  public removeAllTargetConnectors () {
+  public removeAllTargetConnectors() {
     this._targetConnectors.length = 0
   }
 
-  public getAllTargetConnectors (): Connector[] {
-    return [ ...this._targetConnectors, ]
+  public getAllTargetConnectors(): Connector[] {
+    return [...this._targetConnectors,]
   }
 
-  public getTargetConnectorCount (): number {
+  public getTargetConnectorCount(): number {
     return this._targetConnectors.length
   }
 
-  public hasTargetConnector (connector: Connector): boolean {
+  public hasTargetConnector(connector: Connector): boolean {
     return this._targetConnectors.includes(connector)
   }
 
-  public getIndexOfTargetConnector (connector: Connector): number {
+  public getIndexOfTargetConnector(connector: Connector): number {
     return this._targetConnectors.indexOf(connector)
   }
 
-  public saveData (): EditorItemInfo {
+  public saveData(): EditorItemInfo {
     let data = new EditorItemInfo()
     data.type = this.type
     data.text = this.text
@@ -655,13 +715,13 @@ export abstract class Item implements EditorItem {
       const itemData = {}
       const item = child as Item
       //item.saveData(itemData)
-     // data.items.push(itemData)
+      // data.items.push(itemData)
     })
     this.save(data)
     return data
   }
 
-  public loadData (data: EditorItemInfo, editor: Editor) {
+  public loadData(data: EditorItemInfo, editor: Editor) {
     this.boundary = Rectangle.makeLTWH(data.left, data.top, data.width, data.height)
     this.text = data.text
     this.type = data.type
@@ -669,7 +729,7 @@ export abstract class Item implements EditorItem {
     // this.items
   }
 
-  
+
   // private updateItemsBoundary (oldBoundary: Rectangle, newBoundary: Rectangle) {
   //   const widthZoom = newBoundary.width / oldBoundary.width
   //   const heightZoom = newBoundary.height / oldBoundary.height

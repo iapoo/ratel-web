@@ -114,6 +114,16 @@ export class MockupCustomShape extends CustomEntity {
     this._shape = new CustomShape(left, top, width, height, this.buildShape, customTypeInfo)
     this.initializeTheme()
     this.initializeShape()
+    this.strokeColor = Colors.Gray
+    //Dark color
+    this.secondFillColor = Colors.DimGray
+    this.secondStrokeColor = Colors.DimGray
+    //Light Color
+    this.thirdStrokeColor = Colors.Gainsboro
+    this.thirdFillColor = Colors.Gainsboro
+    //Hightlight Color
+    this.fourthStrokeColor = Colors.Blue
+    this.fourthFillColor = Colors.Blue
   }
 
   public get types(): Type[] {
@@ -121,10 +131,6 @@ export class MockupCustomShape extends CustomEntity {
   }
 
   private initializeShape() {
-    const strokeColor = Colors.Gray
-    const darkColor = Colors.DimGray
-    const lightColor = Colors.Gainsboro
-    const highlightColor = Colors.Blue
     switch (this._shape.typeInfo.name) {
       case MockupCustomShapes.TYPE_HEADER: {
         this.filled = false
@@ -160,7 +166,7 @@ export class MockupCustomShape extends CustomEntity {
       case MockupCustomShapes.TYPE_COMMENT: {
         this.useTheme = false
         this.fillColor = new Color(255, 247, 189, 255)
-        this.strokeColor = strokeColor
+        //this.strokeColor = strokeColor
         this.text = this._shape.typeInfo.text
         break;
       }
@@ -206,6 +212,8 @@ export class MockupCustomShape extends CustomEntity {
     }
     theThis.path.reset()
     theThis.secondPath.reset()
+    theThis.thirdPath.reset()
+    theThis.fourthPath.reset()
     switch (theThis.typeInfo.name) {
       case MockupCustomShapes.TYPE_HEADER: {
         theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
@@ -266,11 +274,10 @@ export class MockupCustomShape extends CustomEntity {
         break;
       }
       case MockupCustomShapes.TYPE_PICTURE: {
-        theThis.path.moveTo(this.width / 2, 0)
-        theThis.path.lineTo(this.width, this.height / 2)
-        theThis.path.lineTo(this.width / 2, this.height)
-        theThis.path.lineTo(0, this.height / 2)
-        theThis.path.lineTo(this.width / 2, 0)
+        theThis.secondPath.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width * 0.75, theThis.height))
+        theThis.thirdPath.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width * 0.5, theThis.height))
+        theThis.fourthPath.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width * 0.25, theThis.height))
+        theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
         break;
       }
       case MockupCustomShapes.TYPE_VIDEO: {
