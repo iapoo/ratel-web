@@ -35,49 +35,67 @@ export class UMLCustomShapes {
 }
 
 export const UMLCustomShapeTypes = [
-  { name: UMLCustomShapes.TYPE_ACTIVATION, description: UMLCustomShapes.DESC_ACTIVATION, freeze: Shapes.FREEZE_NONE, text: UMLCustomShapes.TEXT_ACTIVATION, left: 0, top: 0, width: 20, height: 80, enableMask: false, 
+  {
+    name: UMLCustomShapes.TYPE_ACTIVATION, description: UMLCustomShapes.DESC_ACTIVATION, freeze: Shapes.FREEZE_NONE, text: UMLCustomShapes.TEXT_ACTIVATION, left: 0, top: 0, width: 20, height: 80, enableMask: false,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true},
-  { name: UMLCustomShapes.TYPE_FINAL_NODE, description: UMLCustomShapes.DESC_FINAL_NODE, freeze: Shapes.FREEZE_ASPECT_RATIO , text: UMLCustomShapes.TEXT_FINAL_NODE, left: 0, top: 0, width: 40, height: 40,  enableMask: false,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: UMLCustomShapes.TYPE_FINAL_NODE, description: UMLCustomShapes.DESC_FINAL_NODE, freeze: Shapes.FREEZE_ASPECT_RATIO, text: UMLCustomShapes.TEXT_FINAL_NODE, left: 0, top: 0, width: 40, height: 40, enableMask: false,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true },
-  { name: UMLCustomShapes.TYPE_NODE, description: UMLCustomShapes.DESC_NODE, freeze: Shapes.FREEZE_NONE, text: UMLCustomShapes.TEXT_NODE, left: 0, top: 0, width: 120, height: 100, enableMask: false,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: UMLCustomShapes.TYPE_NODE, description: UMLCustomShapes.DESC_NODE, freeze: Shapes.FREEZE_NONE, text: UMLCustomShapes.TEXT_NODE, left: 0, top: 0, width: 120, height: 100, enableMask: false,
     modifiable: true, modifierX: 0.85, modifierY: 0.15, modifierStartX: 0, modifierStartY: 0, modifierEndX: 1, modifierEndY: 1, modifyInLine: false, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true  },
-  { name: UMLCustomShapes.TYPE_NODE_2, description: UMLCustomShapes.DESC_NODE_2, freeze: Shapes.FREEZE_NONE, text: UMLCustomShapes.TEXT_NODE_2, left: 0, top: 0, width: 120, height: 100,  enableMask: false,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: UMLCustomShapes.TYPE_NODE_2, description: UMLCustomShapes.DESC_NODE_2, freeze: Shapes.FREEZE_NONE, text: UMLCustomShapes.TEXT_NODE_2, left: 0, top: 0, width: 120, height: 100, enableMask: false,
     modifiable: true, modifierX: 0.85, modifierY: 0.15, modifierStartX: 0, modifierStartY: 0, modifierEndX: 1, modifierEndY: 1, modifyInLine: false, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true  },
-  { name: UMLCustomShapes.TYPE_MODULE, description: UMLCustomShapes.DESC_MODULE, freeze: Shapes.FREEZE_ASPECT_RATIO , text: UMLCustomShapes.TEXT_MODULE, left: 0, top: 0, width: 120, height: 60,  enableMask: false,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: UMLCustomShapes.TYPE_MODULE, description: UMLCustomShapes.DESC_MODULE, freeze: Shapes.FREEZE_ASPECT_RATIO, text: UMLCustomShapes.TEXT_MODULE, left: 0, top: 0, width: 120, height: 60, enableMask: false,
     modifiable: true, modifierX: 0.2, modifierY: 0.5, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0.5, modifierEndY: 1, modifyInLine: false, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true },
-  { name: UMLCustomShapes.TYPE_COMPONENT, description: UMLCustomShapes.DESC_COMPONENT, freeze: Shapes.FREEZE_ASPECT_RATIO , text: UMLCustomShapes.TEXT_COMPONENT, left: 0, top: 0, width: 180, height: 100,  enableMask: false,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: UMLCustomShapes.TYPE_COMPONENT, description: UMLCustomShapes.DESC_COMPONENT, freeze: Shapes.FREEZE_ASPECT_RATIO, text: UMLCustomShapes.TEXT_COMPONENT, left: 0, top: 0, width: 180, height: 100, enableMask: false,
     modifiable: true, modifierX: 0.5, modifierY: 0.5, modifierStartX: 0.5, modifierStartY: 0, modifierEndX: 1, modifierEndY: 0.5, modifyInLine: false, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true },
-  { name: UMLCustomShapes.TYPE_LOLLIPOP_NOTATION, description: UMLCustomShapes.DESC_LOLLIPOP_NOTATION, freeze: Shapes.FREEZE_NONE, text: UMLCustomShapes.TEXT_LOLLIPOP_NOTATION, left: 0, top: 0, width: 80, height: 40, enableMask: true, 
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: UMLCustomShapes.TYPE_LOLLIPOP_NOTATION, description: UMLCustomShapes.DESC_LOLLIPOP_NOTATION, freeze: Shapes.FREEZE_NONE, text: UMLCustomShapes.TEXT_LOLLIPOP_NOTATION, left: 0, top: 0, width: 80, height: 40, enableMask: true,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true},
-  { name: UMLCustomShapes.TYPE_REQUIRED_INTERFACE, description: UMLCustomShapes.DESC_REQUIRED_INTERFACE, freeze: Shapes.FREEZE_NONE, text: UMLCustomShapes.TEXT_REQUIRED_INTERFACE, left: 0, top: 0, width: 60, height: 40, enableMask: true, 
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: UMLCustomShapes.TYPE_REQUIRED_INTERFACE, description: UMLCustomShapes.DESC_REQUIRED_INTERFACE, freeze: Shapes.FREEZE_NONE, text: UMLCustomShapes.TEXT_REQUIRED_INTERFACE, left: 0, top: 0, width: 60, height: 40, enableMask: true,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true},
-  { name: UMLCustomShapes.TYPE_INITIAL_NODE, description: UMLCustomShapes.DESC_INITIAL_NODE, freeze: Shapes.FREEZE_ASPECT_RATIO , text: UMLCustomShapes.TEXT_INITIAL_NODE, left: 0, top: 0, width: 40, height: 40,  enableMask: false,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: UMLCustomShapes.TYPE_INITIAL_NODE, description: UMLCustomShapes.DESC_INITIAL_NODE, freeze: Shapes.FREEZE_ASPECT_RATIO, text: UMLCustomShapes.TEXT_INITIAL_NODE, left: 0, top: 0, width: 40, height: 40, enableMask: false,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true },
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
 ]
 
 export class UMLCustomShape extends CustomEntity {
-  
+
   public constructor(left: number, top: number, width: number, height: number, typeName: string) {
-    super(left, top, width, height, '', {shapeType: typeName}, UMLCustomShapeTypes)
-    const customTypeInfo = this.parseTypeInfo({shapeType: typeName})
+    super(left, top, width, height, '', { shapeType: typeName }, UMLCustomShapeTypes)
+    const customTypeInfo = this.parseTypeInfo({ shapeType: typeName })
     this._shape = new CustomShape(left, top, width, height, this.buildShape, customTypeInfo)
     this.initializeTheme()
     this.initializeShape()
@@ -88,7 +106,7 @@ export class UMLCustomShape extends CustomEntity {
   }
 
   private initializeShape() {
-    switch(this._shape.typeInfo.name) {
+    switch (this._shape.typeInfo.name) {
       case UMLCustomShapes.TYPE_ACTIVATION: {
         break;
       }
@@ -132,27 +150,29 @@ export class UMLCustomShape extends CustomEntity {
     let modifierHeight = theThis.modifier.y + theThis.typeInfo.modifierStart.y * theThis.height
     let controllerWidth = theThis.controller.x + theThis.typeInfo.controllerStart.x * theThis.width
     let controllerHeight = theThis.controller.y + theThis.typeInfo.controllerStart.y * theThis.height
-    let adapterWidth = theThis.adapter.x +theThis.typeInfo.adapterStart.x * theThis.width
+    let adapterWidth = theThis.adapter.x + theThis.typeInfo.adapterStart.x * theThis.width
     let adapterHeight = theThis.adapter.y + theThis.typeInfo.adapterStart.y * theThis.height
     let adapterSizeX = theThis.adapterSize
     let adapterSizeY = theThis.adapterSize
-    if(theThis.typeInfo.modifyInPercent) {
+    if (theThis.typeInfo.modifyInPercent) {
       modifierWidth = theThis.width * theThis.modifier.x * (theThis.typeInfo.modifierEnd.x - theThis.typeInfo.modifierStart.x) + theThis.typeInfo.modifierStart.x * theThis.width
       modifierHeight = theThis.height * theThis.modifier.y * (theThis.typeInfo.modifierEnd.y - theThis.typeInfo.modifierStart.y) + theThis.typeInfo.modifierStart.y * theThis.height
     }
-    if(theThis.typeInfo.controlInPercent) {
+    if (theThis.typeInfo.controlInPercent) {
       controllerWidth = theThis.width * theThis.controller.x * (theThis.typeInfo.controllerEnd.x - theThis.typeInfo.controllerStart.x) + theThis.typeInfo.controllerStart.x * theThis.width
       controllerHeight = theThis.height * theThis.controller.y * (theThis.typeInfo.controllerEnd.y - theThis.typeInfo.controllerStart.y) + theThis.typeInfo.controllerStart.y * theThis.height
     }
-    if(theThis.typeInfo.adaptInPercent) {
+    if (theThis.typeInfo.adaptInPercent) {
       adapterWidth = theThis.width * theThis.adapter.x * (theThis.typeInfo.adapterEnd.x - theThis.typeInfo.adapterStart.x) + theThis.typeInfo.adapterStart.x * theThis.width
       adapterHeight = theThis.height * theThis.adapter.y * (theThis.typeInfo.adapterEnd.y - theThis.typeInfo.adapterStart.y) + theThis.typeInfo.adapterStart.y * theThis.height
       adapterSizeX = theThis.adapterSize * (theThis.typeInfo.adapterEnd.x - theThis.typeInfo.adapterStart.x) * this.width
       adapterSizeY = theThis.adapterSize * (theThis.typeInfo.adapterEnd.y - theThis.typeInfo.adapterStart.y) * this.height
     }
+    theThis.secondStroke.setColor(theThis.stroke.getColor())
+    theThis.secondFill.setColor(theThis.fill.getColor())
     theThis.path.reset()
     theThis.secondPath.reset()
-    switch(theThis.typeInfo.name) {
+    switch (theThis.typeInfo.name) {
       case UMLCustomShapes.TYPE_ACTIVATION: {
         theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
         break;
@@ -165,7 +185,7 @@ export class UMLCustomShape extends CustomEntity {
       }
       case UMLCustomShapes.TYPE_FINAL_NODE: {
         theThis.secondFill.setColor(theThis.stroke.getColor())
-        theThis.path.addOval(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))        
+        theThis.path.addOval(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
         theThis.secondPath.addOval(Rectangle.makeLTWH(theThis.width * 0.1, theThis.width * 0.1, theThis.width * 0.8, theThis.height * 0.8))
         break;
       }
@@ -187,7 +207,7 @@ export class UMLCustomShape extends CustomEntity {
       case UMLCustomShapes.TYPE_MODULE: {
         theThis.textLeft = modifierWidth * 2
         theThis.textWidth = this.width - modifierWidth * 2
-        const top =  modifierHeight <= this.height / 2 ? modifierHeight * 0.4 : this.height - (this.height - modifierHeight) * 0.4 * 4
+        const top = modifierHeight <= this.height / 2 ? modifierHeight * 0.4 : this.height - (this.height - modifierHeight) * 0.4 * 4
         const height = modifierHeight <= this.height / 2 ? modifierHeight * 0.4 : (this.height - modifierHeight) * 0.4
         theThis.path.addRectangle(Rectangle.makeLTWH(0, top, modifierWidth * 2, height))
         theThis.path.addRectangle(Rectangle.makeLTWH(0, top + height * 2, modifierWidth * 2, height))
@@ -203,7 +223,7 @@ export class UMLCustomShape extends CustomEntity {
         break;
       }
       case UMLCustomShapes.TYPE_COMPONENT: {
-        theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, this.width , this.height))
+        theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, this.width, this.height))
         const moduleLeft = modifierWidth + (this.width - modifierWidth) * 0.1
         const moduleTop = modifierHeight * 0.2
         const moduleWidth = (this.width - modifierWidth) * 0.8
@@ -219,35 +239,35 @@ export class UMLCustomShape extends CustomEntity {
         theThis.path.lineTo(moduleLeft + width * 0.5, moduleTop + height * 3)
         theThis.path.moveTo(moduleLeft + width * 0.5, moduleTop + height * 4)
         theThis.path.lineTo(moduleLeft + width * 0.5, moduleTop + moduleHeight)
-        theThis.path.lineTo(moduleLeft + moduleWidth,  moduleTop + moduleHeight)
+        theThis.path.lineTo(moduleLeft + moduleWidth, moduleTop + moduleHeight)
         theThis.path.lineTo(moduleLeft + moduleWidth, moduleTop)
         theThis.path.lineTo(moduleLeft + width * 0.5, moduleTop)
         break;
       }
       case UMLCustomShapes.TYPE_LOLLIPOP_NOTATION: {
-        if(this.width > this.height) {
+        if (this.width > this.height) {
           theThis.path.addOval(Rectangle.makeLTWH(theThis.width * 0.5 - theThis.height * 0.25, theThis.height * 0.25, theThis.height * 0.5, theThis.height * 0.5))
           theThis.path.addArc(Rectangle.makeLTWH(this.width * 0.5 - theThis.height * 0.5, 0, theThis.height, theThis.height), 270, 180)
           theThis.path.moveTo(0, theThis.height * 0.5)
           theThis.path.lineTo(theThis.width * 0.5 - theThis.height * 0.25, theThis.height * 0.5)
           theThis.path.moveTo(theThis.width * 0.5 + theThis.height * 0.5, theThis.height * 0.5)
           theThis.path.lineTo(theThis.width, theThis.height * 0.5)
-        } else if(this.width > this.height * 0.5) {
+        } else if (this.width > this.height * 0.5) {
           theThis.path.addOval(Rectangle.makeLTWH(theThis.width * 0.5 - theThis.height * 0.25, theThis.height * 0.25, theThis.height * 0.5, theThis.height * 0.5))
           theThis.path.moveTo(0, theThis.height * 0.5)
           theThis.path.lineTo(theThis.width * 0.5 - theThis.height * 0.25, theThis.height * 0.5)
           //Ref to: https://www.ibashu.cn/news/show_261576.html
           //Ref to: https://blog.csdn.net/jeremyjone/article/details/102069294
-          let k = this.width  * 0.5 / 0.75
+          let k = this.width * 0.5 / 0.75
           theThis.path.moveTo(this.width * 0.5, 0)
-          theThis.path.cubicTo(this.width *  0.5 + k, 0, this.width * 0.5 + k, this.height, this.width * 0.5, this.height)
+          theThis.path.cubicTo(this.width * 0.5 + k, 0, this.width * 0.5 + k, this.height, this.width * 0.5, this.height)
         } else {
           theThis.path.addOval(Rectangle.makeLTWH(0, theThis.height * 0.25, theThis.width, theThis.height * 0.5))
           //Ref to: https://www.ibashu.cn/news/show_261576.html
           //Ref to: https://blog.csdn.net/jeremyjone/article/details/102069294
-          let k = this.width  * 0.5 / 0.75
+          let k = this.width * 0.5 / 0.75
           theThis.path.moveTo(this.width * 0.5, 0)
-          theThis.path.cubicTo(this.width *  0.5 + k, 0, this.width * 0.5 + k, this.height, this.width * 0.5, this.height)
+          theThis.path.cubicTo(this.width * 0.5 + k, 0, this.width * 0.5 + k, this.height, this.width * 0.5, this.height)
         }
         break;
       }
@@ -275,6 +295,6 @@ export class UMLCustomShape extends CustomEntity {
   protected parseEntityShapeType(type: string): EntityShapeType {
     let shapeType = EntityShapeType.CustomShape
     return shapeType
-  } 
+  }
 
 }

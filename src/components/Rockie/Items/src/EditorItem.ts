@@ -25,8 +25,8 @@ export interface EditorItem {
   locked: boolean
   useTheme: boolean
   themeName: string
-  strokeColor: Color 
-  fillColor: Color 
+  strokeColor: Color
+  fillColor: Color
   lineWidth: number
   fontName: string
   fontColor: Color
@@ -44,6 +44,12 @@ export interface EditorItem {
   stroked: boolean
   strokeDashStyle: StrokeDashStyle
   id: string;
+  secondStrokeColor: Color
+  secondFillColor: Color
+  thirdStrokeColor: Color
+  thirdFillColor: Color
+  fourthStrokeColor: Color
+  fourthFillColor: Color
   saveData: () => EditorItemInfo;
   loadData: (data: EditorItemInfo, editor: Editor) => void;
   //clone: () => EditorItem

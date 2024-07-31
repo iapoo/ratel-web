@@ -17,7 +17,7 @@ export class CellEntity extends ShapeEntity {
     shapeTypes: ShapeType[] = ShapeTypes) {
     super(left, top, width, height, shapeOptions, shapeTypes)
     this._shape.clipped = true
-    this.strokeColor = Colors.Silver
+    //this.strokeColor = Colors.Gray
     this.lineWidth = 1
     // this._shape.filled = false
   }

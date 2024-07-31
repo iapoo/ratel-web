@@ -12,22 +12,26 @@ export class CustomShape extends EntityShape {
 
   private _buildShape: (theThis: CustomShape) => void
   private _secondPath: Path
-  private _secondFill: Paint
-  private _secondStroke: Paint
   private _secondFilled: boolean
   private _secondStroked: boolean
+  private _thirdPath: Path
+  private _thirdFilled: boolean
+  private _thirdStroked: boolean
+  private _fourthPath: Path
+  private _fourthFilled: boolean
+  private _fourthStroked: boolean
 
   public constructor(left: number, top: number, width: number, height: number, buildShape: (_this: CustomShape) => void, shapeTypeInfo: ShapeTypeInfo) {
     super('', left, top, width, height, shapeTypeInfo)
     this._secondPath = new Path()
-    this._secondStroke = new Paint()
-    this._secondStroke.setPaintStyle(PaintStyle.STROKE)
-    this._secondStroke.setColor(this.stroke.getColor())
-    this._secondFill = new Paint()
-    this._secondFill.setPaintStyle(PaintStyle.FILL)
-    this._secondFill.setColor(this.fill.getColor())
     this._secondFilled = true
     this._secondStroked = true
+    this._thirdPath = new Path()
+    this._thirdFilled = true
+    this._thirdStroked = true
+    this._fourthPath = new Path()
+    this._fourthFilled = true
+    this._fourthStroked = true
     this._buildShape = buildShape
   }
 
@@ -35,34 +39,44 @@ export class CustomShape extends EntityShape {
     return this._secondPath
   }
 
-  public get secondFill() {
-    return this._secondFill
+  public get thirdPath() {
+    return this._thirdPath
   }
 
-  public get secondStroke() {
-    return this._secondStroke
+  public get fourthPath() {
+    return this._fourthPath
   }
 
   public render(graphics: Graphics): void {
     super.render(graphics)
     if (this._secondFilled) {
-      graphics.drawPath(this._secondPath, this._secondFill)
+      graphics.drawPath(this._secondPath, this.secondFill)
     }
     if (this._secondStroked) {
-      graphics.drawPath(this._secondPath, this._secondStroke)
+      graphics.drawPath(this._secondPath, this.secondStroke)
+    }
+    if (this._thirdFilled) {
+      graphics.drawPath(this._thirdPath, this.thirdFill)
+    }
+    if (this._thirdStroked) {
+      graphics.drawPath(this._thirdPath, this.thirdStroke)
+    }
+    if (this._fourthFilled) {
+      graphics.drawPath(this._fourthPath, this.fourthFill)
+    }
+    if (this._fourthStroked) {
+      graphics.drawPath(this._fourthPath, this.fourthStroke)
     }
   }
 
   public update() {
     super.update()
-    this._secondStroke.setColor(this.stroke.getColor())
-    this._secondFill.setColor(this.fill.getColor())
     this._buildShape(this)
   }
 
   public dispose(): void {
     this.secondPath.delete()
-    this.secondStroke.delete()
-    this.secondFill.delete()
+    this.thirdPath.delete()
+    this.fourthPath.delete()
   }
 }
