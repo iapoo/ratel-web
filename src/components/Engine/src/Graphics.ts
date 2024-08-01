@@ -1980,14 +1980,7 @@ export class Path {
     return point
   }
 
-  public cubicTo(
-    cpx1: number,
-    cpy1: number,
-    cpx2: number,
-    cpy2: number,
-    x: number,
-    y: number
-  ): Path {
+  public cubicTo(cpx1: number, cpy1: number, cpx2: number, cpy2: number, x: number, y: number): Path {
     this._source.cubicTo(cpx1, cpy1, cpx2, cpy2, x, y)
     return this
   }
