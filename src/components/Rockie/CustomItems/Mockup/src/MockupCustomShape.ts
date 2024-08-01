@@ -31,28 +31,28 @@ export class MockupCustomShapes {
   public static TEXT_VIDEO = ''
   public static TYPE_HORIZONTAL_SCROLLBAR = 'Horizontal Scrollbar'
   public static DESC_HORIZONTAL_SCROLLBAR = 'Horizontal Scrollbar'
-  public static TEXT_HORIZONTAL_SCROLLBAR = 'Horizontal Scrollbar'
+  public static TEXT_HORIZONTAL_SCROLLBAR = ''
   public static TYPE_VERTICAL_SCROLLBAR = 'Vertical Scrollbar'
   public static DESC_VERTICAL_SCROLLBAR = 'Vertical Scrollbar'
-  public static TEXT_VERTICAL_SCROLLBAR = 'Vertical Scrollbar'
+  public static TEXT_VERTICAL_SCROLLBAR = ''
   public static TYPE_HORIZONTAL_LINE = 'Horizontal Line'
   public static DESC_HORIZONTAL_LINE = 'Horizontal Line'
-  public static TEXT_HORIZONTAL_LINE = 'Horizontal Line'
+  public static TEXT_HORIZONTAL_LINE = ''
   public static TYPE_VERTICAL_LINE = 'Vertical Line'
   public static DESC_VERTICAL_LINE = 'Vertical Line'
-  public static TEXT_VERTICAL_LINE = 'Vertical Line'
+  public static TEXT_VERTICAL_LINE = ''
   public static TYPE_LINE_CHART = 'Line Chart'
   public static DESC_LINE_CHART = 'Line Chart'
-  public static TEXT_LINE_CHART = 'Line Chart'
+  public static TEXT_LINE_CHART = ''
   public static TYPE_PIE_CHART = 'Pie Chart'
   public static DESC_PIE_CHART = 'Pie Chart'
-  public static TEXT_PIE_CHART = 'Pie Chart'
+  public static TEXT_PIE_CHART = ''
   public static TYPE_BAR_CHART = 'Bar Chart'
   public static DESC_BAR_CHART = 'Bar Chart'
-  public static TEXT_BAR_CHART = 'Bar Chart'
+  public static TEXT_BAR_CHART = ''
   public static TYPE_COLUMN_CHART = 'Column Chart'
   public static DESC_COLUMN_CHART = 'Column Chart'
-  public static TEXT_COLUMN_CHART = 'Column Chart'
+  public static TEXT_COLUMN_CHART = ''
 }
 
 export const MockupCustomShapeTypes = [
@@ -104,9 +104,37 @@ export const MockupCustomShapeTypes = [
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
+  {
+    name: MockupCustomShapes.TYPE_HORIZONTAL_SCROLLBAR, description: MockupCustomShapes.DESC_HORIZONTAL_SCROLLBAR, freeze: Shapes.FREEZE_HEIGHT, text: MockupCustomShapes.TEXT_HORIZONTAL_SCROLLBAR, left: 0, top: 0, width: 280, height: 24, enableMask: false,
+    modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
+    adaptable: true, adapterX: 0.25, adapterY: 0, adapterDirection: 'X', adapterSize: 0.3, adapterStartX: 0.15, adapterStartY: 0, adapterEndX: 0.85, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: MockupCustomShapes.TYPE_VERTICAL_SCROLLBAR, description: MockupCustomShapes.DESC_VERTICAL_SCROLLBAR, freeze: Shapes.FREEZE_WIDTH, text: MockupCustomShapes.TEXT_VERTICAL_SCROLLBAR, left: 0, top: 0, width: 24, height: 280, enableMask: false,
+    modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
+    adaptable: true, adapterX: 0, adapterY: 0.25, adapterDirection: 'Y', adapterSize: 0.3, adapterStartX: 0, adapterStartY: 0.15, adapterEndX: 0, adapterEndY: 0.85, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: MockupCustomShapes.TYPE_HORIZONTAL_LINE, description: MockupCustomShapes.DESC_HORIZONTAL_LINE, freeze: Shapes.FREEZE_HEIGHT, text: MockupCustomShapes.TEXT_HORIZONTAL_LINE, left: 0, top: 0, width: 280, height: 20, enableMask: true,
+    modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: MockupCustomShapes.TYPE_VERTICAL_LINE, description: MockupCustomShapes.DESC_VERTICAL_LINE, freeze: Shapes.FREEZE_WIDTH, text: MockupCustomShapes.TEXT_VERTICAL_LINE, left: 0, top: 0, width: 20, height: 280, enableMask: true,
+    modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
 ]
 
 export class MockupCustomShape extends CustomEntity {
+  public static BORDER_COLOR = Colors.Gray
+  public static DARK_COLOR = Colors.DimGray
+  public static LIGHT_COLOR = Colors.Gainsboro
+  public static HIGHTLIGHT_COLOR = Colors.Blue
 
   public constructor(left: number, top: number, width: number, height: number, typeName: string) {
     super(left, top, width, height, '', { shapeType: typeName }, MockupCustomShapeTypes)
@@ -114,16 +142,13 @@ export class MockupCustomShape extends CustomEntity {
     this._shape = new CustomShape(left, top, width, height, this.buildShape, customTypeInfo)
     this.initializeTheme()
     this.initializeShape()
-    this.strokeColor = Colors.Gray
-    //Dark color
-    this.secondFillColor = Colors.DimGray
-    this.secondStrokeColor = Colors.DimGray
-    //Light Color
-    this.thirdStrokeColor = Colors.Gainsboro
-    this.thirdFillColor = Colors.Gainsboro
-    //Hightlight Color
-    this.fourthStrokeColor = Colors.Blue
-    this.fourthFillColor = Colors.Blue
+    this.strokeColor = MockupCustomShape.BORDER_COLOR
+    this.secondFillColor = MockupCustomShape.DARK_COLOR
+    this.secondStrokeColor = MockupCustomShape.DARK_COLOR
+    this.thirdStrokeColor = MockupCustomShape.LIGHT_COLOR
+    this.thirdFillColor = MockupCustomShape.LIGHT_COLOR
+    this.fourthStrokeColor = MockupCustomShape.HIGHTLIGHT_COLOR
+    this.fourthFillColor = MockupCustomShape.HIGHTLIGHT_COLOR
   }
 
   public get types(): Type[] {
@@ -180,6 +205,20 @@ export class MockupCustomShape extends CustomEntity {
       }
       case MockupCustomShapes.TYPE_VIDEO: {
         this.text = this._shape.typeInfo.text
+        break;
+      }
+      case MockupCustomShapes.TYPE_HORIZONTAL_SCROLLBAR: {
+        break;
+      }
+      case MockupCustomShapes.TYPE_VERTICAL_SCROLLBAR: {
+        break;
+      }
+      case MockupCustomShapes.TYPE_HORIZONTAL_LINE: {
+        this.lineWidth = 1
+        break;
+      }
+      case MockupCustomShapes.TYPE_VERTICAL_LINE: {
+        this.lineWidth = 1
         break;
       }
       default:
@@ -302,9 +341,9 @@ export class MockupCustomShape extends CustomEntity {
         const progressWidth = theThis.width - progressLeft * 2
         const progressTop = videoRegionHeight + (theThis.height - videoRegionHeight - progressHeight) * 0.5
         //Light Color
-        theThis.thirdStroke.setColor(Colors.DimGray)
+        theThis.thirdStroke.setColor(MockupCustomShape.DARK_COLOR)
         theThis.thirdStroke.setStrokeWidth(2)
-        theThis.thirdFill.setColor(Colors.White)
+        theThis.thirdFill.setColor(theThis.fill.getColor())
         const indicatorLeft = progressLeft + progressWidth * 0.5
         const indicatorWidth = 14
         const indicatorTop = videoRegionHeight + (theThis.height - videoRegionHeight - indicatorWidth) * 0.5
@@ -327,6 +366,94 @@ export class MockupCustomShape extends CustomEntity {
         theThis.thirdPath.addOval(Rectangle.makeLTWH(indicatorLeft, indicatorTop, indicatorWidth, indicatorWidth))
         theThis.path.addRectangle(Rectangle.makeLTWH(0, videoRegionHeight, theThis.width, seperatorHeight))
         theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
+        break;
+      }
+      case MockupCustomShapes.TYPE_HORIZONTAL_SCROLLBAR: {
+        const scrollbarButtonWidth = 30
+        const scrollbarButtonIconWidth = 14
+        const scrollbarButtonIconHeight = 12
+        const scrollbarButtonIconLeft = (scrollbarButtonWidth - scrollbarButtonIconWidth) * 0.5
+        const scrollbarButtonIconTop = (theThis.height - scrollbarButtonIconHeight) * 0.5
+        const scrollbarButtonIcon2Left = theThis.width - scrollbarButtonWidth + (scrollbarButtonWidth - scrollbarButtonIconWidth) * 0.5
+        const scrollbarThumbWidth = adapterSizeX
+        const scrollbarThumbPosition = adapterWidth
+        const scrollbarThumbBorder = 5
+        theThis.stroke.setStrokeWidth(0.5)
+        theThis.stroke.setColor(MockupCustomShape.BORDER_COLOR)
+        theThis.secondStroke.setColor(MockupCustomShape.BORDER_COLOR)
+        theThis.secondStroke.setStrokeWidth(theThis.stroke.getStroketWidth())
+        theThis.secondFill.setColor(MockupCustomShape.LIGHT_COLOR)
+        theThis.thirdStroke.setColor(MockupCustomShape.DARK_COLOR)
+        theThis.thirdFill.setColor(MockupCustomShape.DARK_COLOR)
+        theThis.fourthStroke.setColor(MockupCustomShape.DARK_COLOR)
+        theThis.fourthFill.setColor(MockupCustomShape.DARK_COLOR)
+        theThis.secondPath.addRectangle(Rectangle.makeLTWH(0, 0, scrollbarButtonWidth, theThis.height))
+        // theThis.fill.setColor(Colors.Red)
+        theThis.thirdPath.moveTo(scrollbarButtonIconLeft, theThis.height * 0.5)
+        theThis.thirdPath.lineTo(scrollbarButtonIconLeft + scrollbarButtonIconWidth, scrollbarButtonIconTop + scrollbarButtonIconHeight)
+        theThis.thirdPath.lineTo(scrollbarButtonIconLeft + scrollbarButtonIconWidth, scrollbarButtonIconTop)
+        theThis.thirdPath.lineTo(scrollbarButtonIconLeft, theThis.height * 0.5)
+        theThis.secondPath.addRectangle(Rectangle.makeLTWH(theThis.width - scrollbarButtonWidth, 0, scrollbarButtonWidth, theThis.height))
+        theThis.thirdPath.moveTo(scrollbarButtonIcon2Left + scrollbarButtonIconWidth, theThis.height * 0.5)
+        theThis.thirdPath.lineTo(scrollbarButtonIcon2Left, scrollbarButtonIconTop + scrollbarButtonIconHeight)
+        theThis.thirdPath.lineTo(scrollbarButtonIcon2Left, scrollbarButtonIconTop)
+        theThis.thirdPath.lineTo(scrollbarButtonIcon2Left + scrollbarButtonIconWidth, theThis.height * 0.5)
+        //theThis.path.addRectangle(Rectangle.makeLTWH(scrollbarButtonWidth, 0, theThis.width - scrollbarButtonWidth * 2, theThis.height))
+        theThis.fourthPath.addRectangle(Rectangle.makeLTWH(scrollbarThumbPosition, scrollbarThumbBorder, scrollbarThumbWidth, theThis.height - scrollbarThumbBorder * 2))
+        theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
+        break;
+      }
+      case MockupCustomShapes.TYPE_VERTICAL_SCROLLBAR: {
+        const scrollbarButtonHeight = 30
+        const scrollbarButtonIconWidth = 12
+        const scrollbarButtonIconHeight = 14
+        const scrollbarButtonIconTop = (scrollbarButtonHeight - scrollbarButtonIconHeight) * 0.5
+        const scrollbarButtonIconLeft = (theThis.width - scrollbarButtonIconWidth) * 0.5
+        const scrollbarButtonIcon2Top = theThis.height - scrollbarButtonHeight + (scrollbarButtonHeight - scrollbarButtonIconHeight) * 0.5
+        const scrollbarThumbHeight = adapterSizeY
+        const scrollbarThumbPosition = adapterHeight
+        const scrollbarThumbBorder = 5
+        theThis.stroke.setStrokeWidth(0.5)
+        theThis.stroke.setColor(MockupCustomShape.BORDER_COLOR)
+        theThis.secondStroke.setColor(MockupCustomShape.BORDER_COLOR)
+        theThis.secondStroke.setStrokeWidth(theThis.stroke.getStroketWidth())
+        theThis.secondFill.setColor(MockupCustomShape.LIGHT_COLOR)
+        theThis.thirdStroke.setColor(MockupCustomShape.DARK_COLOR)
+        theThis.thirdFill.setColor(MockupCustomShape.DARK_COLOR)
+        theThis.fourthStroke.setColor(MockupCustomShape.DARK_COLOR)
+        theThis.fourthFill.setColor(MockupCustomShape.DARK_COLOR)
+        theThis.secondPath.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, scrollbarButtonHeight))
+        theThis.thirdPath.moveTo(theThis.width * 0.5, scrollbarButtonIconTop)
+        theThis.thirdPath.lineTo(scrollbarButtonIconLeft, scrollbarButtonIconTop + scrollbarButtonIconHeight)
+        theThis.thirdPath.lineTo(scrollbarButtonIconLeft + scrollbarButtonIconWidth, scrollbarButtonIconTop + scrollbarButtonIconHeight)
+        theThis.thirdPath.lineTo(theThis.width * 0.5, scrollbarButtonIconTop)
+        theThis.secondPath.addRectangle(Rectangle.makeLTWH(0, theThis.height - scrollbarButtonHeight, theThis.width, scrollbarButtonHeight))
+        theThis.thirdPath.moveTo(theThis.width * 0.5, scrollbarButtonIcon2Top + scrollbarButtonIconHeight)
+        theThis.thirdPath.lineTo(scrollbarButtonIconLeft, scrollbarButtonIcon2Top)
+        theThis.thirdPath.lineTo(scrollbarButtonIconLeft + scrollbarButtonIconWidth, scrollbarButtonIcon2Top)
+        theThis.thirdPath.lineTo(theThis.width * 0.5, scrollbarButtonIcon2Top + scrollbarButtonIconHeight)
+        theThis.fourthPath.addRectangle(Rectangle.makeLTWH(scrollbarThumbBorder, scrollbarThumbPosition, theThis.width - scrollbarThumbBorder * 2, scrollbarThumbHeight))
+        theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
+        break;
+      }
+      case MockupCustomShapes.TYPE_HORIZONTAL_LINE: {
+        const lineSize = 1
+        theThis.stroked = false
+        theThis.filled = false
+        theThis.secondStroke.setColor(MockupCustomShape.BORDER_COLOR)
+        theThis.secondStroke.setStrokeWidth(theThis.stroke.getStroketWidth())
+        theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
+        theThis.secondPath.addRectangle(Rectangle.makeLTWH(0, theThis.height * 0.5, theThis.width, lineSize))
+        break;
+      }
+      case MockupCustomShapes.TYPE_VERTICAL_LINE: {
+        const lineSize = 1
+        theThis.stroked = false
+        theThis.filled = false
+        theThis.secondStroke.setColor(MockupCustomShape.BORDER_COLOR)
+        theThis.secondStroke.setStrokeWidth(theThis.stroke.getStroketWidth())
+        theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
+        theThis.secondPath.addRectangle(Rectangle.makeLTWH(theThis.width * 0.5, 0, lineSize, theThis.height))
         break;
       }
     }
