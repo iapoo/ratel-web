@@ -128,6 +128,30 @@ export const MockupCustomShapeTypes = [
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
+  {
+    name: MockupCustomShapes.TYPE_LINE_CHART, description: MockupCustomShapes.DESC_LINE_CHART, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_LINE_CHART, left: 0, top: 0, width: 200, height: 160, enableMask: true,
+    modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: MockupCustomShapes.TYPE_PIE_CHART, description: MockupCustomShapes.DESC_PIE_CHART, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_PIE_CHART, left: 0, top: 0, width: 160, height: 160, enableMask: false,
+    modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: MockupCustomShapes.TYPE_BAR_CHART, description: MockupCustomShapes.DESC_BAR_CHART, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_BAR_CHART, left: 0, top: 0, width: 200, height: 160, enableMask: true,
+    modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: MockupCustomShapes.TYPE_COLUMN_CHART, description: MockupCustomShapes.DESC_COLUMN_CHART, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_COLUMN_CHART, left: 0, top: 0, width: 200, height: 160, enableMask: true,
+    modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
 ]
 
 export class MockupCustomShape extends CustomEntity {
@@ -219,6 +243,18 @@ export class MockupCustomShape extends CustomEntity {
       }
       case MockupCustomShapes.TYPE_VERTICAL_LINE: {
         this.lineWidth = 1
+        break;
+      }
+      case MockupCustomShapes.TYPE_LINE_CHART: {
+        break;
+      }
+      case MockupCustomShapes.TYPE_PIE_CHART: {
+        break;
+      }
+      case MockupCustomShapes.TYPE_BAR_CHART: {
+        break;
+      }
+      case MockupCustomShapes.TYPE_COLUMN_CHART: {
         break;
       }
       default:
@@ -454,6 +490,120 @@ export class MockupCustomShape extends CustomEntity {
         theThis.secondStroke.setStrokeWidth(theThis.stroke.getStroketWidth())
         theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
         theThis.secondPath.addRectangle(Rectangle.makeLTWH(theThis.width * 0.5, 0, lineSize, theThis.height))
+        break;
+      }
+      case MockupCustomShapes.TYPE_LINE_CHART: {
+        theThis.stroked = false
+        theThis.filled = false
+        theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
+        theThis.secondStroke.setStrokeWidth(theThis.stroke.getStroketWidth())
+        theThis.secondPath.moveTo(0, 0)
+        theThis.secondPath.lineTo(0, theThis.height)
+        theThis.secondPath.lineTo(theThis.width, theThis.height)
+        theThis.secondPath.lineTo(0, theThis.height)
+        theThis.secondPath.lineTo(0, 0)
+        theThis.secondPath.moveTo(0, theThis.height * 0.5)
+        theThis.secondPath.lineTo(theThis.width * 0.2, theThis.height * 0.7)
+        theThis.secondPath.lineTo(theThis.width * 0.4, theThis.height * 0.6)
+        theThis.secondPath.lineTo(theThis.width * 0.6, theThis.height * 0.7)
+        theThis.secondPath.lineTo(theThis.width * 0.8, theThis.height * 0.5)
+        theThis.secondPath.lineTo(theThis.width * 1, theThis.height * 0.6)
+        theThis.secondPath.lineTo(theThis.width * 0.8, theThis.height * 0.5)
+        theThis.secondPath.lineTo(theThis.width * 0.6, theThis.height * 0.7)
+        theThis.secondPath.lineTo(theThis.width * 0.4, theThis.height * 0.6)
+        theThis.secondPath.lineTo(theThis.width * 0.2, theThis.height * 0.7)
+        theThis.secondPath.lineTo(0, theThis.height * 0.5)
+        theThis.secondPath.moveTo(0, theThis.height * 0.6)
+        theThis.secondPath.lineTo(theThis.width * 0.2, theThis.height * 0.3)
+        theThis.secondPath.lineTo(theThis.width * 0.4, theThis.height * 0.4)
+        theThis.secondPath.lineTo(theThis.width * 0.6, theThis.height * 0.3)
+        theThis.secondPath.lineTo(theThis.width * 0.8, theThis.height * 0.2)
+        theThis.secondPath.lineTo(theThis.width * 1, theThis.height * 0.3)
+        theThis.secondPath.lineTo(theThis.width * 0.8, theThis.height * 0.2)
+        theThis.secondPath.lineTo(theThis.width * 0.6, theThis.height * 0.3)
+        theThis.secondPath.lineTo(theThis.width * 0.4, theThis.height * 0.4)
+        theThis.secondPath.lineTo(theThis.width * 0.2, theThis.height * 0.3)
+        theThis.secondPath.lineTo(0, theThis.height * 0.6)
+        break;
+      }
+      case MockupCustomShapes.TYPE_PIE_CHART: {
+        theThis.path.addOval(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
+        //Reference: https://blog.csdn.net/xiamentingtao/article/details/85804823
+        // p1: 60  p2: 160  p3: 290
+        const rx = theThis.width * 0.5
+        const ry = theThis.height * 0.5
+        const cx = theThis.width * 0.5
+        const cy = theThis.height * 0.5
+        const origP1x = rx * ry / Math.sqrt(ry * ry + rx * rx * Math.tan(Math.PI * 60 / 180) * Math.tan(Math.PI * 60 / 180))
+        const origP1y = rx * ry * Math.tan(Math.PI * 60 / 180) / Math.sqrt(ry * ry + rx * rx * Math.tan(Math.PI * 60 / 180) * Math.tan(Math.PI * 60 / 180))
+        const p1x = origP1x + cx
+        const p1y = cy - origP1y
+        const origP2x = - rx * ry / Math.sqrt(ry * ry + rx * rx * Math.tan(Math.PI * 160 / 180) * Math.tan(Math.PI * 160 / 180))
+        const origP2y = - rx * ry * Math.tan(Math.PI * 160 / 180) / Math.sqrt(ry * ry + rx * rx * Math.tan(Math.PI * 160 / 180) * Math.tan(Math.PI * 160 / 180))
+        const p2x = origP2x + cx
+        const p2y = cy - origP2y
+        const origP3x = rx * ry / Math.sqrt(ry * ry + rx * rx * Math.tan(Math.PI * 290 / 180) * Math.tan(Math.PI * 290 / 180))
+        const origP3y = rx * ry * Math.tan(Math.PI * 290 / 180) / Math.sqrt(ry * ry + rx * rx * Math.tan(Math.PI * 290 / 180) * Math.tan(Math.PI * 290 / 180))
+        const p3x = origP3x + cx
+        const p3y = cy - origP3y
+        theThis.path.moveTo(cx, cy)
+        theThis.path.lineTo(p1x, p1y)
+        theThis.path.moveTo(cx, cy)
+        theThis.path.lineTo(p2x, p2y)
+        theThis.path.moveTo(cx, cy)
+        theThis.path.lineTo(p3x, p3y)
+        break;
+      }
+      case MockupCustomShapes.TYPE_BAR_CHART: {
+        theThis.stroked = false
+        theThis.filled = false
+        theThis.secondStroke.setColor(theThis.stroke.getColor())
+        theThis.secondStroke.setStrokeWidth(theThis.stroke.getStroketWidth())
+        theThis.secondStroke.setAntiAlias(true)
+        theThis.secondFill.setColor(theThis.fill.getColor())
+        theThis.thirdStroke.setColor(theThis.stroke.getColor())
+        theThis.thirdStroke.setStrokeWidth(theThis.stroke.getStroketWidth())
+        theThis.thirdStroke.setAntiAlias(true)
+        theThis.thirdFill.setColor(MockupCustomShape.LIGHT_COLOR)
+        theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
+        theThis.secondStroke.setStrokeWidth(theThis.stroke.getStroketWidth())
+        theThis.secondPath.moveTo(0, 0)
+        theThis.secondPath.lineTo(0, theThis.height)
+        theThis.secondPath.lineTo(theThis.width, theThis.height)
+        theThis.secondPath.lineTo(0, theThis.height)
+        theThis.secondPath.lineTo(0, 0)
+        theThis.secondPath.addRectangle(Rectangle.makeLTWH(theThis.width * 0.1, theThis.height * 0.4, theThis.width * 0.1, theThis.height * 0.6))
+        theThis.secondPath.addRectangle(Rectangle.makeLTWH(theThis.width * 0.4, theThis.height * 0.3, theThis.width * 0.1, theThis.height * 0.7))
+        theThis.secondPath.addRectangle(Rectangle.makeLTWH(theThis.width * 0.7, theThis.height * 0.5, theThis.width * 0.1, theThis.height * 0.5))
+        theThis.thirdPath.addRectangle(Rectangle.makeLTWH(theThis.width * 0.2, theThis.height * 0.3, theThis.width * 0.1, theThis.height * 0.7))
+        theThis.thirdPath.addRectangle(Rectangle.makeLTWH(theThis.width * 0.5, theThis.height * 0.4, theThis.width * 0.1, theThis.height * 0.6))
+        theThis.thirdPath.addRectangle(Rectangle.makeLTWH(theThis.width * 0.8, theThis.height * 0.6, theThis.width * 0.1, theThis.height * 0.4))
+        break;
+      }
+      case MockupCustomShapes.TYPE_COLUMN_CHART: {
+        theThis.stroked = false
+        theThis.filled = false
+        theThis.secondStroke.setColor(theThis.stroke.getColor())
+        theThis.secondStroke.setStrokeWidth(theThis.stroke.getStroketWidth())
+        theThis.secondStroke.setAntiAlias(true)
+        theThis.secondFill.setColor(theThis.fill.getColor())
+        theThis.thirdStroke.setColor(theThis.stroke.getColor())
+        theThis.thirdStroke.setStrokeWidth(theThis.stroke.getStroketWidth())
+        theThis.thirdStroke.setAntiAlias(true)
+        theThis.thirdFill.setColor(MockupCustomShape.LIGHT_COLOR)
+        theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
+        theThis.secondStroke.setStrokeWidth(theThis.stroke.getStroketWidth())
+        theThis.secondPath.moveTo(0, 0)
+        theThis.secondPath.lineTo(0, theThis.height)
+        theThis.secondPath.lineTo(theThis.width, theThis.height)
+        theThis.secondPath.lineTo(0, theThis.height)
+        theThis.secondPath.lineTo(0, 0)
+        theThis.secondPath.addRectangle(Rectangle.makeLTWH(0, theThis.height * 0.1, theThis.width * 0.6, theThis.height * 0.1))
+        theThis.secondPath.addRectangle(Rectangle.makeLTWH(0, theThis.height * 0.4, theThis.width * 0.7, theThis.height * 0.1))
+        theThis.secondPath.addRectangle(Rectangle.makeLTWH(0, theThis.height * 0.7, theThis.width * 0.5, theThis.height * 0.1))
+        theThis.thirdPath.addRectangle(Rectangle.makeLTWH(0, theThis.height * 0.2, theThis.width * 0.7, theThis.height * 0.1))
+        theThis.thirdPath.addRectangle(Rectangle.makeLTWH(0, theThis.height * 0.5, theThis.width * 0.6, theThis.height * 0.1))
+        theThis.thirdPath.addRectangle(Rectangle.makeLTWH(0, theThis.height * 0.8, theThis.width * 0.4, theThis.height * 0.1))
         break;
       }
     }

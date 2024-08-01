@@ -14,4 +14,8 @@ export const MockupShapes = [
     { name: MockupCustomShapeTypes[9].name, type: MockupCustomShape, typeInfo: MockupCustomShapeTypes[9] },
     { name: MockupCustomShapeTypes[10].name, type: MockupCustomShape, typeInfo: MockupCustomShapeTypes[10] },
     { name: MockupCustomShapeTypes[11].name, type: MockupCustomShape, typeInfo: MockupCustomShapeTypes[11] },
+    { name: MockupCustomShapeTypes[12].name, type: MockupCustomShape, typeInfo: MockupCustomShapeTypes[12] },
+    { name: MockupCustomShapeTypes[13].name, type: MockupCustomShape, typeInfo: MockupCustomShapeTypes[13] },
+    { name: MockupCustomShapeTypes[14].name, type: MockupCustomShape, typeInfo: MockupCustomShapeTypes[14] },
+    { name: MockupCustomShapeTypes[15].name, type: MockupCustomShape, typeInfo: MockupCustomShapeTypes[15] },
 ]
