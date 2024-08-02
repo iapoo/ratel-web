@@ -243,10 +243,10 @@ const Navigator: FC<NavigatorProps> = ({
     console.log(str)
   }
 
-  const addMyShape = (myShape: MyShape) => {
+  const addMyShape = (myShape: MyShape, imageId: string) => {
     if (Utils.currentEditor) {
       Utils.currentEditor.action = new MyShapeAction(Utils.currentEditor, myShape)
-      Utils.currentEditor.action.imageId = process.env.PUBLIC_PATH + `/${folder}/${type}.png`
+      Utils.currentEditor.action.imageId = imageId
     }
   }
 
@@ -341,6 +341,14 @@ const Navigator: FC<NavigatorProps> = ({
     return <div style={{ width: width * 1.25, display: 'table' }}>
       <div style={{ display: 'table-cell', textAlign: 'center', verticalAlign: 'middle', borderTop: '0px solid gray', padding: '2px' }}>
         <img id={process.env.PUBLIC_PATH + `/custom-shapes-large/uml/${name}.png`} src={process.env.PUBLIC_PATH + `/custom-shapes-large/uml/${name}.png`} />
+      </div>
+    </div>
+  }
+
+  const getMyShapePopoverContent = (id: string, name: string, image: string, width: number, height: number) => {
+    return <div style={{ width: width * 1.25, display: 'table' }}>
+      <div style={{ display: 'table-cell', textAlign: 'center', verticalAlign: 'middle', borderTop: '0px solid gray', padding: '2px' }}>
+        <img id={id} src={image} />
       </div>
     </div>
   }
@@ -875,9 +883,12 @@ const Navigator: FC<NavigatorProps> = ({
   const myShapeItems = myShapes.map(myShape => {
     const width = myShape.width > myShape.height ? 28 : Math.round(28 * myShape.width / myShape.height)
     const height = myShape.height > myShape.width ? 28 : Math.round(28 * myShape.height / myShape.width)
-    return <Button type='text' onMouseDown={() => addMyShape(myShape)} style={{ padding: 2, display: 'flex', justifyContent: 'center', alignItems: 'center', width: 32, height: 32 }}>
-      <img src={`${myShape.image}`} width={width} height={height} />
-    </Button>
+    const imageId = myShape.id
+    return <Popover title={myShape.name} placement='right' content={getMyShapePopoverContent(myShape.id, myShape.name, myShape.image, myShape.width, myShape.height)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: myShape.width + 60, width: myShape.height + 60, }}>
+      <Button type='text' onMouseDown={() => addMyShape(myShape, imageId)} style={{ padding: 2, display: 'flex', justifyContent: 'center', alignItems: 'center', width: 32, height: 32 }}>
+        <img src={`${myShape.icon}`} width={width} height={height} />
+      </Button>
+    </Popover>
   })
 
 

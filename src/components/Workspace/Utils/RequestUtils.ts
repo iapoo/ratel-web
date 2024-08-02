@@ -45,6 +45,7 @@ export enum MyShapeType {
 export interface MyShape {
     id: string
     name: string
+    icon: string
     image: string
     info: string
     type: MyShapeType
