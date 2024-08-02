@@ -53,6 +53,48 @@ export class MockupCustomShapes {
   public static TYPE_COLUMN_CHART = 'Column Chart'
   public static DESC_COLUMN_CHART = 'Column Chart'
   public static TEXT_COLUMN_CHART = ''
+  public static TYPE_BUTTON = 'Button'
+  public static DESC_BUTTON = 'Button'
+  public static TEXT_BUTTON = 'Button'
+  public static TYPE_INPUT = 'Input'
+  public static DESC_INPUT = 'Input'
+  public static TEXT_INPUT = ''
+  public static TYPE_DROPDOWN = 'Dropdown'
+  public static DESC_DROPDOWN = 'Dropdown'
+  public static TEXT_DROPDOWN = ''
+  public static TYPE_SEARCH_BAR = 'Search Bar'
+  public static DESC_SEARCH_BAR = 'Search Bar'
+  public static TEXT_SEARCH_BAR = ''
+  public static TYPE_CHECKBOX = 'CheckBox'
+  public static DESC_CHECKBOX = 'CheckBox'
+  public static TEXT_CHECKBOX = 'CheckBox'
+  public static TYPE_CHECKBOX_CHECKED = 'CheckBox Checked'
+  public static DESC_CHECKBOX_CHECKED = 'CheckBox Checked'
+  public static TEXT_CHECKBOX_CHECKED = 'CheckBox'
+  public static TYPE_RADIO = 'Radio'
+  public static DESC_RADIO = 'Radio'
+  public static TEXT_RADIO = 'Radio'
+  public static TYPE_RADIO_CHECKED = 'Radio Checked'
+  public static DESC_RADIO_CHECKED = 'Radio Checked'
+  public static TEXT_RADIO_CHECKED = 'Radio'
+  public static TYPE_INPUT_NUMBER = 'Input Number'
+  public static DESC_INPUT_NUMBER = 'Input Number'
+  public static TEXT_INPUT_NUMBER = ''
+  public static TYPE_TEXT_AREA = 'TextArea'
+  public static DESC_TEXT_AREA = 'TextArea'
+  public static TEXT_TEXT_AREA = ''
+  public static TYPE_LISTBOX = 'ListBox'
+  public static DESC_LISTBOX = 'ListBox'
+  public static TEXT_LISTBOX = ''
+  public static TYPE_DATE_PICKER = 'Date Picker'
+  public static DESC_DATE_PICKER = 'Date Picker'
+  public static TEXT_DATE_PICKER = ''
+  public static TYPE_SLIDER = 'Slider'
+  public static DESC_SLIDER = 'Slider'
+  public static TEXT_SLIDER = ''
+  public static TYPE_SLIDER_VERTICAL = 'Slider(Vertical)'
+  public static DESC_SLIDER_VERTICAL = 'Slider(Vertical)'
+  public static TEXT_SLIDER_VERTICAL = ''
 }
 
 export const MockupCustomShapeTypes = [
@@ -152,6 +194,90 @@ export const MockupCustomShapeTypes = [
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
+  {
+    name: MockupCustomShapes.TYPE_BUTTON, description: MockupCustomShapes.DESC_BUTTON, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_BUTTON, left: 0, top: 0, width: 120, height: 30, enableMask: false,
+    modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: MockupCustomShapes.TYPE_INPUT, description: MockupCustomShapes.DESC_INPUT, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_INPUT, left: 0, top: 0, width: 160, height: 30, enableMask: false,
+    modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: MockupCustomShapes.TYPE_DROPDOWN, description: MockupCustomShapes.DESC_DROPDOWN, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_DROPDOWN, left: 0, top: 0, width: 160, height: 30, enableMask: false,
+    modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: MockupCustomShapes.TYPE_SEARCH_BAR, description: MockupCustomShapes.DESC_SEARCH_BAR, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_SEARCH_BAR, left: 0, top: 0, width: 160, height: 30, enableMask: false,
+    modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: MockupCustomShapes.TYPE_CHECKBOX, description: MockupCustomShapes.DESC_CHECKBOX, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_CHECKBOX, left: 0, top: 0, width: 160, height: 30, enableMask: true,
+    modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: MockupCustomShapes.TYPE_CHECKBOX_CHECKED, description: MockupCustomShapes.DESC_CHECKBOX_CHECKED, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_CHECKBOX_CHECKED, left: 0, top: 0, width: 160, height: 30, enableMask: true,
+    modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: MockupCustomShapes.TYPE_RADIO, description: MockupCustomShapes.DESC_RADIO, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_RADIO, left: 0, top: 0, width: 160, height: 30, enableMask: true,
+    modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: MockupCustomShapes.TYPE_RADIO_CHECKED, description: MockupCustomShapes.DESC_RADIO_CHECKED, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_RADIO_CHECKED, left: 0, top: 0, width: 160, height: 30, enableMask: true,
+    modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: MockupCustomShapes.TYPE_INPUT_NUMBER, description: MockupCustomShapes.DESC_INPUT_NUMBER, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_INPUT_NUMBER, left: 0, top: 0, width: 80, height: 30, enableMask: false,
+    modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: MockupCustomShapes.TYPE_TEXT_AREA, description: MockupCustomShapes.DESC_TEXT_AREA, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_TEXT_AREA, left: 0, top: 0, width: 180, height: 60, enableMask: false,
+    modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: MockupCustomShapes.TYPE_LISTBOX, description: MockupCustomShapes.DESC_LISTBOX, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_LISTBOX, left: 0, top: 0, width: 180, height: 160, enableMask: false,
+    modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
+    adaptable: true, adapterX: 0, adapterY: 0.25, adapterDirection: 'Y', adapterSize: 0.3, adapterStartX: 1, adapterStartY: 0.15, adapterEndX: 1, adapterEndY: 0.85, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: MockupCustomShapes.TYPE_DATE_PICKER, description: MockupCustomShapes.DESC_DATE_PICKER, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_DATE_PICKER, left: 0, top: 0, width: 160, height: 30, enableMask: false,
+    modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: MockupCustomShapes.TYPE_SLIDER, description: MockupCustomShapes.DESC_SLIDER, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_SLIDER, left: 0, top: 0, width: 200, height: 30, enableMask: true,
+    modifiable: true, modifierX: 0.3, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 1, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: MockupCustomShapes.TYPE_SLIDER_VERTICAL, description: MockupCustomShapes.DESC_SLIDER_VERTICAL, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_SLIDER_VERTICAL, left: 0, top: 0, width: 30, height: 200, enableMask: true,
+    modifiable: true, modifierX: 0, modifierY: 0.3, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 1, modifyInLine: true, modifyInPercent: true,
+    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
 ]
 
 export class MockupCustomShape extends CustomEntity {
@@ -159,6 +285,8 @@ export class MockupCustomShape extends CustomEntity {
   public static DARK_COLOR = Colors.DimGray
   public static LIGHT_COLOR = Colors.Gainsboro
   public static HIGHTLIGHT_COLOR = Colors.Blue
+  public static HEADER_COLOR = Colors.WhiteSmoke
+  public static BACKGROUND_COLOR = Colors.White
 
   public constructor(left: number, top: number, width: number, height: number, typeName: string) {
     super(left, top, width, height, '', { shapeType: typeName }, MockupCustomShapeTypes)
@@ -255,6 +383,58 @@ export class MockupCustomShape extends CustomEntity {
         break;
       }
       case MockupCustomShapes.TYPE_COLUMN_CHART: {
+        break;
+      }
+      case MockupCustomShapes.TYPE_BUTTON: {
+        this.fillColor = MockupCustomShape.LIGHT_COLOR
+        this.text = this._shape.typeInfo.text
+        break;
+      }
+      case MockupCustomShapes.TYPE_INPUT: {
+        break;
+      }
+      case MockupCustomShapes.TYPE_DROPDOWN: {
+        break;
+      }
+      case MockupCustomShapes.TYPE_SEARCH_BAR: {
+        break;
+      }
+      case MockupCustomShapes.TYPE_CHECKBOX: {
+        this.text = this._shape.typeInfo.text
+        this.textAlignment = TextAlignment.LEFT
+        break;
+      }
+      case MockupCustomShapes.TYPE_CHECKBOX_CHECKED: {
+        this.text = this._shape.typeInfo.text
+        this.textAlignment = TextAlignment.LEFT
+        break;
+      }
+      case MockupCustomShapes.TYPE_RADIO: {
+        this.text = this._shape.typeInfo.text
+        this.textAlignment = TextAlignment.LEFT
+        break;
+      }
+      case MockupCustomShapes.TYPE_RADIO_CHECKED: {
+        this.text = this._shape.typeInfo.text
+        this.textAlignment = TextAlignment.LEFT
+        break;
+      }
+      case MockupCustomShapes.TYPE_INPUT_NUMBER: {
+        break;
+      }
+      case MockupCustomShapes.TYPE_TEXT_AREA: {
+        break;
+      }
+      case MockupCustomShapes.TYPE_LISTBOX: {
+        break;
+      }
+      case MockupCustomShapes.TYPE_DATE_PICKER: {
+        break;
+      }
+      case MockupCustomShapes.TYPE_SLIDER: {
+        break;
+      }
+      case MockupCustomShapes.TYPE_SLIDER_VERTICAL: {
         break;
       }
       default:
@@ -604,6 +784,290 @@ export class MockupCustomShape extends CustomEntity {
         theThis.thirdPath.addRectangle(Rectangle.makeLTWH(0, theThis.height * 0.2, theThis.width * 0.7, theThis.height * 0.1))
         theThis.thirdPath.addRectangle(Rectangle.makeLTWH(0, theThis.height * 0.5, theThis.width * 0.6, theThis.height * 0.1))
         theThis.thirdPath.addRectangle(Rectangle.makeLTWH(0, theThis.height * 0.8, theThis.width * 0.4, theThis.height * 0.1))
+        break;
+      }
+      case MockupCustomShapes.TYPE_BUTTON: {
+        theThis.path.addRRect(new RoundRectangle(0, 0, theThis.width, theThis.height, 3, 3))
+        break;
+      }
+      case MockupCustomShapes.TYPE_INPUT: {
+        theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
+        break;
+      }
+      case MockupCustomShapes.TYPE_DROPDOWN: {
+        const buttonWidth = 30
+        const buttonLeft = theThis.width - buttonWidth
+        const iconLeft = buttonLeft + buttonWidth * 0.3
+        const iconTop = theThis.height * 0.3
+        const iconWidth = buttonWidth * 0.4
+        const iconHeight = theThis.height - iconTop * 2
+        theThis.secondStroke.setColor(theThis.stroke.getColor())
+        theThis.secondStroke.setStrokeWidth(theThis.stroke.getStroketWidth())
+        theThis.secondFill.setColor(MockupCustomShape.LIGHT_COLOR)
+        theThis.thirdStroke.setColor(MockupCustomShape.DARK_COLOR)
+        theThis.thirdFill.setColor(MockupCustomShape.DARK_COLOR)
+        theThis.secondPath.addRectangle(Rectangle.makeLTWH(buttonLeft, 0, buttonWidth, theThis.height))
+        theThis.thirdPath.moveTo(iconLeft, iconTop)
+        theThis.thirdPath.lineTo(iconLeft + iconWidth * 0.5, iconTop + iconHeight)
+        theThis.thirdPath.lineTo(iconLeft + iconWidth, iconTop)
+        theThis.thirdPath.lineTo(iconLeft, iconTop)
+        theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
+        break;
+      }
+      case MockupCustomShapes.TYPE_SEARCH_BAR: {
+        const iconLeft = 8
+        const iconTop = theThis.height * 0.2
+        const circleRadius = theThis.height * 0.2
+        const iconWidth = (theThis.height - iconTop * 2) * 0.8
+        const circleCenterX = iconLeft + circleRadius
+        const circleCenterY = iconTop + circleRadius
+        const lineEndX = iconLeft + iconWidth
+        const lineEndY = theThis.height - iconTop
+        theThis.secondStroke.setColor(theThis.stroke.getColor())
+        theThis.secondStroke.setStrokeWidth(2.5)
+        theThis.secondFill.setColor(theThis.fill.getColor())
+        theThis.thirdStroke.setColor(theThis.stroke.getColor())
+        theThis.thirdStroke.setStrokeWidth(2.5)
+        theThis.thirdFill.setColor(theThis.fill.getColor())
+        theThis.secondPath.moveTo(circleCenterX, circleCenterY)
+        theThis.secondPath.lineTo(lineEndX, lineEndY)
+        theThis.secondPath.lineTo(circleCenterX, circleCenterY)
+        theThis.thirdPath.addOval(Rectangle.makeLTWH(iconLeft, iconTop, circleRadius * 2, circleRadius * 2))
+        theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
+        break;
+      }
+      case MockupCustomShapes.TYPE_CHECKBOX: {
+        theThis.stroked = false
+        theThis.filled = false
+        const iconLeft = 8
+        const iconTop = theThis.height * 0.2
+        const iconWidth = theThis.height * 0.6
+        const iconHeight = theThis.height * 0.6
+        const textLeft = iconLeft + iconWidth
+        theThis.textLeft = textLeft
+        theThis.textWidth = theThis.width - textLeft
+        theThis.secondStroke.setColor(MockupCustomShape.DARK_COLOR)
+        theThis.secondStroke.setStrokeWidth(2)
+        theThis.secondFill.setColor(MockupCustomShape.BACKGROUND_COLOR)
+        theThis.secondPath.addRectangle(Rectangle.makeLTWH(iconLeft, iconTop, iconWidth, iconHeight))
+        theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
+        break;
+      }
+      case MockupCustomShapes.TYPE_CHECKBOX_CHECKED: {
+        theThis.stroked = false
+        theThis.filled = false
+        const iconLeft = 8
+        const iconTop = theThis.height * 0.2
+        const iconWidth = theThis.height * 0.6
+        const iconHeight = theThis.height * 0.6
+        const textLeft = iconLeft + iconWidth
+        theThis.textLeft = textLeft
+        theThis.textWidth = theThis.width - textLeft
+        theThis.secondStroke.setColor(MockupCustomShape.DARK_COLOR)
+        theThis.secondStroke.setStrokeWidth(2)
+        theThis.secondFill.setColor(MockupCustomShape.BACKGROUND_COLOR)
+        theThis.thirdStroke.setColor(MockupCustomShape.DARK_COLOR)
+        theThis.thirdStroke.setStrokeWidth(2.5)
+        theThis.thirdFill.setColor(MockupCustomShape.BACKGROUND_COLOR)
+        theThis.secondPath.addRectangle(Rectangle.makeLTWH(iconLeft, iconTop, iconWidth, iconHeight))
+        theThis.thirdPath.moveTo(iconLeft + iconWidth * 0.2, iconTop + iconHeight * 0.5)
+        theThis.thirdPath.lineTo(iconLeft + iconWidth * 0.5, iconTop + iconHeight * 0.8)
+        theThis.thirdPath.lineTo(iconLeft + iconWidth * 0.8, iconTop + iconHeight * 0.2)
+        theThis.thirdPath.lineTo(iconLeft + iconWidth * 0.5, iconTop + iconHeight * 0.8)
+        theThis.thirdPath.lineTo(iconLeft + iconWidth * 0.2, iconTop + iconHeight * 0.5)
+        theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
+        break;
+      }
+      case MockupCustomShapes.TYPE_RADIO: {
+        theThis.stroked = false
+        theThis.filled = false
+        const iconLeft = 8
+        const iconTop = theThis.height * 0.2
+        const iconWidth = theThis.height * 0.6
+        const iconHeight = theThis.height * 0.6
+        const textLeft = iconLeft + iconWidth
+        theThis.textLeft = textLeft
+        theThis.textWidth = theThis.width - textLeft
+        theThis.secondStroke.setColor(MockupCustomShape.DARK_COLOR)
+        theThis.secondStroke.setStrokeWidth(2)
+        theThis.secondFill.setColor(MockupCustomShape.BACKGROUND_COLOR)
+        theThis.secondPath.addOval(Rectangle.makeLTWH(iconLeft, iconTop, iconWidth, iconHeight))
+        theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
+        break;
+      }
+      case MockupCustomShapes.TYPE_RADIO_CHECKED: {
+        theThis.stroked = false
+        theThis.filled = false
+        const iconLeft = 8
+        const iconTop = theThis.height * 0.2
+        const iconWidth = theThis.height * 0.6
+        const iconHeight = theThis.height * 0.6
+        const icon2Left = iconLeft + theThis.height * 0.13
+        const icon2Top = theThis.height * 0.33
+        const icon2Width = theThis.height * 0.34
+        const icon2Height = theThis.height * 0.34
+        const textLeft = iconLeft + iconWidth
+        theThis.textLeft = textLeft
+        theThis.textWidth = theThis.width - textLeft
+        theThis.secondStroke.setColor(MockupCustomShape.DARK_COLOR)
+        theThis.secondStroke.setStrokeWidth(2)
+        theThis.secondFill.setColor(MockupCustomShape.BACKGROUND_COLOR)
+        theThis.thirdStroke.setColor(MockupCustomShape.DARK_COLOR)
+        theThis.thirdStroke.setStrokeWidth(2.5)
+        theThis.thirdFill.setColor(MockupCustomShape.DARK_COLOR)
+        theThis.secondPath.addOval(Rectangle.makeLTWH(iconLeft, iconTop, iconWidth, iconHeight))
+        theThis.thirdPath.addOval(Rectangle.makeLTWH(icon2Left, icon2Top, icon2Width, icon2Height))
+        theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
+        break;
+      }
+      case MockupCustomShapes.TYPE_INPUT_NUMBER: {
+        const buttonWidth = 20
+        const buttonLeft = theThis.width - buttonWidth
+        const icon1Left = buttonLeft + buttonWidth * 0.2
+        const icon1Top = theThis.height * 0.15
+        const icon1Width = buttonWidth * 0.6
+        const icon1Height = theThis.height * 0.5 - icon1Top * 2
+        const icon2Left = buttonLeft + buttonWidth * 0.2
+        const icon2Top = theThis.height * 0.65
+        const icon2Width = buttonWidth * 0.6
+        const icon2Height = theThis.height * 0.5 - icon1Top * 2
+        theThis.secondStroke.setColor(theThis.stroke.getColor())
+        theThis.secondStroke.setStrokeWidth(theThis.stroke.getStroketWidth())
+        theThis.secondFill.setColor(MockupCustomShape.LIGHT_COLOR)
+        theThis.thirdStroke.setColor(MockupCustomShape.DARK_COLOR)
+        theThis.thirdFill.setColor(MockupCustomShape.DARK_COLOR)
+        theThis.secondPath.addRectangle(Rectangle.makeLTWH(buttonLeft, 0, buttonWidth, theThis.height))
+        theThis.secondPath.moveTo(buttonLeft, theThis.height * 0.5)
+        theThis.secondPath.lineTo(buttonLeft + buttonWidth, theThis.height * 0.5)
+        theThis.secondPath.lineTo(buttonLeft, theThis.height * 0.5)
+        theThis.thirdPath.moveTo(icon1Left + icon1Width * 0.5, icon1Top)
+        theThis.thirdPath.lineTo(icon1Left, icon1Top + icon1Height)
+        theThis.thirdPath.lineTo(icon1Left + icon1Width, icon1Top + icon1Height)
+        theThis.thirdPath.lineTo(icon1Left + icon1Width * 0.5, icon1Top)
+        theThis.thirdPath.moveTo(icon2Left, icon2Top)
+        theThis.thirdPath.lineTo(icon2Left + icon2Width * 0.5, icon2Top + icon2Height)
+        theThis.thirdPath.lineTo(icon2Left + icon2Width, icon2Top)
+        theThis.thirdPath.lineTo(icon2Left, icon2Top)
+        theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
+        break;
+      }
+      case MockupCustomShapes.TYPE_TEXT_AREA: {
+        theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
+        break;
+      }
+      case MockupCustomShapes.TYPE_LISTBOX: {
+        const scrollbarButtonHeight = 20
+        const scrollbarButtonWidth = 20
+        const scrollbarButtonIconWidth = 12
+        const scrollbarButtonIconHeight = 10
+        const scrollbarButtonLeft = theThis.width - scrollbarButtonWidth
+        const scrollbarButtonIconTop = (scrollbarButtonHeight - scrollbarButtonIconHeight) * 0.5
+        const scrollbarButtonIconLeft = theThis.width - scrollbarButtonWidth + (scrollbarButtonWidth - scrollbarButtonIconWidth) * 0.5
+        const scrollbarButtonIcon2Top = theThis.height - scrollbarButtonHeight + (scrollbarButtonHeight - scrollbarButtonIconHeight) * 0.5
+        const scrollbarThumbBorder = 5
+        const scrollbarThumbHeight = adapterSizeY
+        const scrollbarThumbWidth = scrollbarButtonWidth - scrollbarThumbBorder * 2
+        const scrollbarThumbLeft = theThis.width - scrollbarButtonWidth + scrollbarThumbBorder
+        const scrollbarThumbPosition = adapterHeight
+        // theThis.stroke.setStrokeWidth(0.5)
+        // theThis.stroke.setColor(MockupCustomShape.BORDER_COLOR)
+        theThis.secondStroke.setColor(theThis.stroke.getColor())
+        theThis.secondStroke.setStrokeWidth(theThis.stroke.getStroketWidth())
+        theThis.secondFill.setColor(MockupCustomShape.LIGHT_COLOR)
+        theThis.thirdStroke.setColor(theThis.stroke.getColor())
+        theThis.thirdStroke.setStrokeWidth(theThis.stroke.getStroketWidth())
+        theThis.thirdFill.setColor(theThis.fill.getColor())
+        theThis.fourthStroke.setColor(MockupCustomShape.DARK_COLOR)
+        theThis.fourthFill.setColor(MockupCustomShape.DARK_COLOR)
+        theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
+        theThis.secondPath.addRectangle(Rectangle.makeLTWH(scrollbarButtonLeft, 0, scrollbarButtonWidth, scrollbarButtonHeight))
+        theThis.secondPath.addRectangle(Rectangle.makeLTWH(scrollbarButtonLeft, theThis.height - scrollbarButtonHeight, scrollbarButtonWidth, scrollbarButtonHeight))
+        theThis.thirdPath.addRectangle(Rectangle.makeLTWH(0, 0, scrollbarButtonLeft, theThis.height))
+        theThis.thirdPath.addRectangle(Rectangle.makeLTWH(scrollbarButtonLeft, scrollbarButtonHeight, scrollbarButtonWidth, theThis.height - scrollbarButtonHeight * 2))
+        theThis.fourthPath.moveTo(scrollbarButtonIconLeft + scrollbarButtonIconWidth * 0.5, scrollbarButtonIconTop)
+        theThis.fourthPath.lineTo(scrollbarButtonIconLeft, scrollbarButtonIconTop + scrollbarButtonIconHeight)
+        theThis.fourthPath.lineTo(scrollbarButtonIconLeft + scrollbarButtonIconWidth, scrollbarButtonIconTop + scrollbarButtonIconHeight)
+        theThis.fourthPath.lineTo(scrollbarButtonIconLeft + scrollbarButtonIconWidth * 0.5, scrollbarButtonIconTop)
+        theThis.fourthPath.moveTo(scrollbarButtonIconLeft + scrollbarButtonIconWidth * 0.5, scrollbarButtonIcon2Top + scrollbarButtonIconHeight)
+        theThis.fourthPath.lineTo(scrollbarButtonIconLeft, scrollbarButtonIcon2Top)
+        theThis.fourthPath.lineTo(scrollbarButtonIconLeft + scrollbarButtonIconWidth, scrollbarButtonIcon2Top)
+        theThis.fourthPath.lineTo(scrollbarButtonIconLeft + scrollbarButtonIconWidth * 0.5, scrollbarButtonIcon2Top + scrollbarButtonIconHeight)
+        theThis.fourthPath.addRectangle(Rectangle.makeLTWH(scrollbarThumbLeft, scrollbarThumbPosition, scrollbarThumbWidth, scrollbarThumbHeight))
+        break;
+      }
+      case MockupCustomShapes.TYPE_DATE_PICKER: {
+        const buttonWidth = 30
+        const buttonLeft = theThis.width - buttonWidth
+        const iconLeft = buttonLeft + buttonWidth * 0.2
+        const iconTop = theThis.height * 0.2
+        const iconWidth = buttonWidth * 0.6
+        const iconHeight = theThis.height - iconTop * 2
+        theThis.secondStroke.setColor(theThis.stroke.getColor())
+        theThis.secondStroke.setStrokeWidth(theThis.stroke.getStroketWidth())
+        theThis.secondFill.setColor(Colors.Transparent)
+        theThis.thirdStroke.setColor(MockupCustomShape.DARK_COLOR)
+        theThis.thirdStroke.setStrokeWidth(1.5)
+        theThis.thirdFill.setColor(Colors.Transparent)
+        theThis.fourthStroke.setColor(MockupCustomShape.DARK_COLOR)
+        theThis.fourthStroke.setStrokeWidth(1)
+        theThis.fourthFill.setColor(MockupCustomShape.DARK_COLOR)
+        theThis.secondPath.addRectangle(Rectangle.makeLTWH(buttonLeft, 0, buttonWidth, theThis.height))
+        theThis.thirdPath.addRectangle(Rectangle.makeLTWH(iconLeft, iconTop, iconWidth, iconHeight))
+        theThis.fourthPath.addRectangle(Rectangle.makeLTWH(iconLeft + iconWidth * 0.15, iconTop - iconHeight * 0.075, iconWidth * 0.15, iconHeight * 0.15))
+        theThis.fourthPath.addRectangle(Rectangle.makeLTWH(iconLeft + iconWidth * 0.45, iconTop - iconHeight * 0.075, iconWidth * 0.15, iconHeight * 0.15))
+        theThis.fourthPath.addRectangle(Rectangle.makeLTWH(iconLeft + iconWidth * 0.75, iconTop - iconHeight * 0.075, iconWidth * 0.15, iconHeight * 0.15))
+        theThis.fourthPath.addRectangle(Rectangle.makeLTWH(iconLeft + iconWidth * 0.15, iconTop + iconHeight * 0.15, iconWidth * 0.1, iconHeight * 0.1))
+        theThis.fourthPath.addRectangle(Rectangle.makeLTWH(iconLeft + iconWidth * 0.45, iconTop + iconHeight * 0.15, iconWidth * 0.1, iconHeight * 0.1))
+        theThis.fourthPath.addRectangle(Rectangle.makeLTWH(iconLeft + iconWidth * 0.75, iconTop + iconHeight * 0.15, iconWidth * 0.1, iconHeight * 0.1))
+        theThis.fourthPath.addRectangle(Rectangle.makeLTWH(iconLeft + iconWidth * 0.15, iconTop + iconHeight * 0.45, iconWidth * 0.1, iconHeight * 0.1))
+        theThis.fourthPath.addRectangle(Rectangle.makeLTWH(iconLeft + iconWidth * 0.45, iconTop + iconHeight * 0.45, iconWidth * 0.1, iconHeight * 0.1))
+        theThis.fourthPath.addRectangle(Rectangle.makeLTWH(iconLeft + iconWidth * 0.75, iconTop + iconHeight * 0.45, iconWidth * 0.1, iconHeight * 0.1))
+        theThis.fourthPath.addRectangle(Rectangle.makeLTWH(iconLeft + iconWidth * 0.15, iconTop + iconHeight * 0.75, iconWidth * 0.1, iconHeight * 0.1))
+        theThis.fourthPath.addRectangle(Rectangle.makeLTWH(iconLeft + iconWidth * 0.45, iconTop + iconHeight * 0.75, iconWidth * 0.1, iconHeight * 0.1))
+        theThis.fourthPath.addRectangle(Rectangle.makeLTWH(iconLeft + iconWidth * 0.75, iconTop + iconHeight * 0.75, iconWidth * 0.1, iconHeight * 0.1))
+        theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
+        break;
+      }
+      case MockupCustomShapes.TYPE_SLIDER: {
+        const sliderLeft = 0
+        const sliderHeight = 4
+        const sliderTop = (theThis.height - sliderHeight) * 0.5
+        const sliderWidth = theThis.width
+        const iconWidth = 14
+        const iconHeight = 14
+        const iconLeft = modifierWidth - iconWidth * 0.5
+        const iconTop = (theThis.height - iconHeight) * 0.5
+        theThis.stroked = false
+        theThis.filled = false
+        theThis.secondStroke.setColor(theThis.stroke.getColor())
+        theThis.secondFill.setColor(theThis.stroke.getColor())
+        theThis.thirdStroke.setColor(MockupCustomShape.DARK_COLOR)
+        theThis.thirdStroke.setStrokeWidth(2)
+        theThis.thirdFill.setColor(theThis.fill.getColor())
+        theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
+        theThis.secondPath.addRectangle(Rectangle.makeLTWH(sliderLeft, sliderTop, sliderWidth, sliderHeight))
+        theThis.thirdPath.addOval(Rectangle.makeLTWH(iconLeft, iconTop, iconWidth, iconHeight))
+        break;
+      }
+      case MockupCustomShapes.TYPE_SLIDER_VERTICAL: {
+        const sliderTop = 0
+        const sliderWidth = 4
+        const sliderLeft = (theThis.width - sliderWidth) * 0.5
+        const sliderHeight = theThis.height
+        const iconWidth = 14
+        const iconHeight = 14
+        const iconLeft = (theThis.width - iconWidth) * 0.5
+        const iconTop = modifierHeight - iconHeight * 0.5
+        theThis.stroked = false
+        theThis.filled = false
+        theThis.secondStroke.setColor(theThis.stroke.getColor())
+        theThis.secondFill.setColor(theThis.stroke.getColor())
+        theThis.thirdStroke.setColor(MockupCustomShape.DARK_COLOR)
+        theThis.thirdStroke.setStrokeWidth(2)
+        theThis.thirdFill.setColor(theThis.fill.getColor())
+        theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
+        theThis.secondPath.addRectangle(Rectangle.makeLTWH(sliderLeft, sliderTop, sliderWidth, sliderHeight))
+        theThis.thirdPath.addOval(Rectangle.makeLTWH(iconLeft, iconTop, iconWidth, iconHeight))
         break;
       }
     }
