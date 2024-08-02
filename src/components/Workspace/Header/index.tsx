@@ -42,6 +42,7 @@ import { UMLFrameShape, UMLFrameShapeTypes } from '@/components/Rockie/CustomIte
 import { RcFile, UploadChangeParam } from 'antd/es/upload';
 import { parse, stringify } from 'querystringify';
 import { ERCustomShape, ERCustomShapeTypes } from '@/components/Rockie/CustomItems/EntityRelation/src/ERCustomShape';
+import { MockupCustomShape, MockupCustomShapeTypes } from '@/components/Rockie/CustomItems/Mockup/src/MockupCustomShape';
 
 interface HeaderProps {
   previousEditor: Editor | undefined
@@ -2229,9 +2230,9 @@ const Header: FC<HeaderProps> = ({
 
   const handleTestMockupShapeLarge = () => {
     if (currentEditor) {
-      let count = UMLFrameShapeTypes.length
+      let count = MockupCustomShapeTypes.length
       for (let i = 0; i < count; i++) {
-        let shapeType = UMLFrameShapeTypes[i]
+        let shapeType = MockupCustomShapeTypes[i]
         let margin = 5
         let lineFactor = 1
         let fontFactor = 1
@@ -2243,7 +2244,7 @@ const Header: FC<HeaderProps> = ({
         if (shapeType.width < shapeType.height) {
           left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
         }
-        let shapeEntity = new UMLFrameShape(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, { shapeType: shapeType.name }, [shapeType])
+        let shapeEntity = new MockupCustomShape(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, shapeType.name)
         shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
         shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
         shapeEntity.items.forEach(item => {
@@ -2269,9 +2270,9 @@ const Header: FC<HeaderProps> = ({
 
   const handleTestMockupShapeSmall = () => {
     if (currentEditor) {
-      let count = UMLFrameShapeTypes.length
+      let count = MockupCustomShapeTypes.length
       for (let i = 0; i < count; i++) {
-        let shapeType = UMLFrameShapeTypes[i]
+        let shapeType = MockupCustomShapeTypes[i]
         let margin = 2
         let lineFactor = 1
         let fontFactor = 0.1
@@ -2283,7 +2284,7 @@ const Header: FC<HeaderProps> = ({
         if (shapeType.width < shapeType.height) {
           left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
         }
-        let shapeEntity = new UMLFrameShape(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, { shapeType: shapeType.name }, [shapeType])
+        let shapeEntity = new MockupCustomShape(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, shapeType.name)
         shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
         shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
         shapeEntity.items.forEach(item => {
@@ -2298,7 +2299,7 @@ const Header: FC<HeaderProps> = ({
         if (shapeType.width < shapeType.height) {
           currentEditor.resize(shapeType.height * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
         } else {
-          currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+          currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.width * sizeFactor + margin * 2)
         }
         currentEditor.contentLayer.addEditorItem(shapeEntity)
         const data = EditorHelper.export(currentEditor)
