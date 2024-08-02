@@ -1949,8 +1949,8 @@ export class Editor extends Painter {
     let ex = this.alignToGridSize((e.x - this.horizontalSpace) / this._zoom - width / 2)
     let ey = this.alignToGridSize((e.y - this.verticalSpace) / this._zoom - height / 2)
     action.items.forEach(item => {
-      let itemWidth = this.alignToGridSize(item.width)
-      let itemHeight = this.alignToGridSize(item.height)
+      let itemWidth = item.width //this.alignToGridSize(item.width)
+      let itemHeight = item.height //this.alignToGridSize(item.height)
       if (action instanceof MyShapeAction) {
         itemWidth = item.width
         itemHeight = item.height

@@ -105,7 +105,7 @@ export const MockupCustomShapeTypes = [
     adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
   {
-    name: MockupCustomShapes.TYPE_LABEL, description: MockupCustomShapes.DESC_LABEL, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_LABEL, left: 0, top: 0, width: 100, height: 30, enableMask: false,
+    name: MockupCustomShapes.TYPE_LABEL, description: MockupCustomShapes.DESC_LABEL, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_LABEL, left: 0, top: 0, width: 100, height: 24, enableMask: false,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
@@ -117,7 +117,7 @@ export const MockupCustomShapeTypes = [
     adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
   {
-    name: MockupCustomShapes.TYPE_LINK, description: MockupCustomShapes.DESC_LINK, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_LINK, left: 0, top: 0, width: 100, height: 30, enableMask: false,
+    name: MockupCustomShapes.TYPE_LINK, description: MockupCustomShapes.DESC_LINK, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_LINK, left: 0, top: 0, width: 100, height: 24, enableMask: false,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
@@ -195,55 +195,55 @@ export const MockupCustomShapeTypes = [
     adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
   {
-    name: MockupCustomShapes.TYPE_BUTTON, description: MockupCustomShapes.DESC_BUTTON, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_BUTTON, left: 0, top: 0, width: 120, height: 30, enableMask: false,
+    name: MockupCustomShapes.TYPE_BUTTON, description: MockupCustomShapes.DESC_BUTTON, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_BUTTON, left: 0, top: 0, width: 120, height: 24, enableMask: false,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
   {
-    name: MockupCustomShapes.TYPE_INPUT, description: MockupCustomShapes.DESC_INPUT, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_INPUT, left: 0, top: 0, width: 160, height: 30, enableMask: false,
+    name: MockupCustomShapes.TYPE_INPUT, description: MockupCustomShapes.DESC_INPUT, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_INPUT, left: 0, top: 0, width: 160, height: 24, enableMask: false,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
   {
-    name: MockupCustomShapes.TYPE_DROPDOWN, description: MockupCustomShapes.DESC_DROPDOWN, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_DROPDOWN, left: 0, top: 0, width: 160, height: 30, enableMask: false,
+    name: MockupCustomShapes.TYPE_DROPDOWN, description: MockupCustomShapes.DESC_DROPDOWN, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_DROPDOWN, left: 0, top: 0, width: 160, height: 24, enableMask: false,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
   {
-    name: MockupCustomShapes.TYPE_SEARCH_BAR, description: MockupCustomShapes.DESC_SEARCH_BAR, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_SEARCH_BAR, left: 0, top: 0, width: 160, height: 30, enableMask: false,
+    name: MockupCustomShapes.TYPE_SEARCH_BAR, description: MockupCustomShapes.DESC_SEARCH_BAR, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_SEARCH_BAR, left: 0, top: 0, width: 160, height: 24, enableMask: false,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
   {
-    name: MockupCustomShapes.TYPE_CHECKBOX, description: MockupCustomShapes.DESC_CHECKBOX, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_CHECKBOX, left: 0, top: 0, width: 160, height: 30, enableMask: true,
+    name: MockupCustomShapes.TYPE_CHECKBOX, description: MockupCustomShapes.DESC_CHECKBOX, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_CHECKBOX, left: 0, top: 0, width: 160, height: 24, enableMask: true,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
   {
-    name: MockupCustomShapes.TYPE_CHECKBOX_CHECKED, description: MockupCustomShapes.DESC_CHECKBOX_CHECKED, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_CHECKBOX_CHECKED, left: 0, top: 0, width: 160, height: 30, enableMask: true,
+    name: MockupCustomShapes.TYPE_CHECKBOX_CHECKED, description: MockupCustomShapes.DESC_CHECKBOX_CHECKED, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_CHECKBOX_CHECKED, left: 0, top: 0, width: 160, height: 24, enableMask: true,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
   {
-    name: MockupCustomShapes.TYPE_RADIO, description: MockupCustomShapes.DESC_RADIO, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_RADIO, left: 0, top: 0, width: 160, height: 30, enableMask: true,
+    name: MockupCustomShapes.TYPE_RADIO, description: MockupCustomShapes.DESC_RADIO, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_RADIO, left: 0, top: 0, width: 160, height: 24, enableMask: true,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
   {
-    name: MockupCustomShapes.TYPE_RADIO_CHECKED, description: MockupCustomShapes.DESC_RADIO_CHECKED, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_RADIO_CHECKED, left: 0, top: 0, width: 160, height: 30, enableMask: true,
+    name: MockupCustomShapes.TYPE_RADIO_CHECKED, description: MockupCustomShapes.DESC_RADIO_CHECKED, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_RADIO_CHECKED, left: 0, top: 0, width: 160, height: 24, enableMask: true,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
   {
-    name: MockupCustomShapes.TYPE_INPUT_NUMBER, description: MockupCustomShapes.DESC_INPUT_NUMBER, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_INPUT_NUMBER, left: 0, top: 0, width: 80, height: 30, enableMask: false,
+    name: MockupCustomShapes.TYPE_INPUT_NUMBER, description: MockupCustomShapes.DESC_INPUT_NUMBER, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_INPUT_NUMBER, left: 0, top: 0, width: 80, height: 24, enableMask: false,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
@@ -261,19 +261,19 @@ export const MockupCustomShapeTypes = [
     adaptable: true, adapterX: 0, adapterY: 0.25, adapterDirection: 'Y', adapterSize: 0.3, adapterStartX: 1, adapterStartY: 0.15, adapterEndX: 1, adapterEndY: 0.85, adaptInLine: true, adaptInPercent: true
   },
   {
-    name: MockupCustomShapes.TYPE_DATE_PICKER, description: MockupCustomShapes.DESC_DATE_PICKER, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_DATE_PICKER, left: 0, top: 0, width: 160, height: 30, enableMask: false,
+    name: MockupCustomShapes.TYPE_DATE_PICKER, description: MockupCustomShapes.DESC_DATE_PICKER, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_DATE_PICKER, left: 0, top: 0, width: 160, height: 24, enableMask: false,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
   {
-    name: MockupCustomShapes.TYPE_SLIDER, description: MockupCustomShapes.DESC_SLIDER, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_SLIDER, left: 0, top: 0, width: 200, height: 30, enableMask: true,
+    name: MockupCustomShapes.TYPE_SLIDER, description: MockupCustomShapes.DESC_SLIDER, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_SLIDER, left: 0, top: 0, width: 200, height: 24, enableMask: true,
     modifiable: true, modifierX: 0.3, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 1, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
   {
-    name: MockupCustomShapes.TYPE_SLIDER_VERTICAL, description: MockupCustomShapes.DESC_SLIDER_VERTICAL, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_SLIDER_VERTICAL, left: 0, top: 0, width: 30, height: 200, enableMask: true,
+    name: MockupCustomShapes.TYPE_SLIDER_VERTICAL, description: MockupCustomShapes.DESC_SLIDER_VERTICAL, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_SLIDER_VERTICAL, left: 0, top: 0, width: 24, height: 200, enableMask: true,
     modifiable: true, modifierX: 0, modifierY: 0.3, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 1, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
@@ -585,15 +585,15 @@ export class MockupCustomShape extends CustomEntity {
         break;
       }
       case MockupCustomShapes.TYPE_HORIZONTAL_SCROLLBAR: {
-        const scrollbarButtonWidth = 30
-        const scrollbarButtonIconWidth = 14
-        const scrollbarButtonIconHeight = 12
+        const scrollbarButtonWidth = 24
+        const scrollbarButtonIconWidth = 12
+        const scrollbarButtonIconHeight = 10
         const scrollbarButtonIconLeft = (scrollbarButtonWidth - scrollbarButtonIconWidth) * 0.5
         const scrollbarButtonIconTop = (theThis.height - scrollbarButtonIconHeight) * 0.5
         const scrollbarButtonIcon2Left = theThis.width - scrollbarButtonWidth + (scrollbarButtonWidth - scrollbarButtonIconWidth) * 0.5
         const scrollbarThumbWidth = adapterSizeX
         const scrollbarThumbPosition = adapterWidth
-        const scrollbarThumbBorder = 5
+        const scrollbarThumbBorder = 7
         theThis.stroke.setStrokeWidth(0.5)
         theThis.stroke.setColor(MockupCustomShape.BORDER_COLOR)
         theThis.secondStroke.setColor(MockupCustomShape.BORDER_COLOR)
@@ -620,15 +620,15 @@ export class MockupCustomShape extends CustomEntity {
         break;
       }
       case MockupCustomShapes.TYPE_VERTICAL_SCROLLBAR: {
-        const scrollbarButtonHeight = 30
-        const scrollbarButtonIconWidth = 12
-        const scrollbarButtonIconHeight = 14
+        const scrollbarButtonHeight = 24
+        const scrollbarButtonIconWidth = 10
+        const scrollbarButtonIconHeight = 12
         const scrollbarButtonIconTop = (scrollbarButtonHeight - scrollbarButtonIconHeight) * 0.5
         const scrollbarButtonIconLeft = (theThis.width - scrollbarButtonIconWidth) * 0.5
         const scrollbarButtonIcon2Top = theThis.height - scrollbarButtonHeight + (scrollbarButtonHeight - scrollbarButtonIconHeight) * 0.5
         const scrollbarThumbHeight = adapterSizeY
         const scrollbarThumbPosition = adapterHeight
-        const scrollbarThumbBorder = 5
+        const scrollbarThumbBorder = 7
         theThis.stroke.setStrokeWidth(0.5)
         theThis.stroke.setColor(MockupCustomShape.BORDER_COLOR)
         theThis.secondStroke.setColor(MockupCustomShape.BORDER_COLOR)
@@ -795,7 +795,7 @@ export class MockupCustomShape extends CustomEntity {
         break;
       }
       case MockupCustomShapes.TYPE_DROPDOWN: {
-        const buttonWidth = 30
+        const buttonWidth = 24
         const buttonLeft = theThis.width - buttonWidth
         const iconLeft = buttonLeft + buttonWidth * 0.3
         const iconTop = theThis.height * 0.3
@@ -964,7 +964,7 @@ export class MockupCustomShape extends CustomEntity {
         const scrollbarButtonIconTop = (scrollbarButtonHeight - scrollbarButtonIconHeight) * 0.5
         const scrollbarButtonIconLeft = theThis.width - scrollbarButtonWidth + (scrollbarButtonWidth - scrollbarButtonIconWidth) * 0.5
         const scrollbarButtonIcon2Top = theThis.height - scrollbarButtonHeight + (scrollbarButtonHeight - scrollbarButtonIconHeight) * 0.5
-        const scrollbarThumbBorder = 5
+        const scrollbarThumbBorder = 6
         const scrollbarThumbHeight = adapterSizeY
         const scrollbarThumbWidth = scrollbarButtonWidth - scrollbarThumbBorder * 2
         const scrollbarThumbLeft = theThis.width - scrollbarButtonWidth + scrollbarThumbBorder
@@ -996,7 +996,7 @@ export class MockupCustomShape extends CustomEntity {
         break;
       }
       case MockupCustomShapes.TYPE_DATE_PICKER: {
-        const buttonWidth = 30
+        const buttonWidth = 24
         const buttonLeft = theThis.width - buttonWidth
         const iconLeft = buttonLeft + buttonWidth * 0.2
         const iconTop = theThis.height * 0.2
