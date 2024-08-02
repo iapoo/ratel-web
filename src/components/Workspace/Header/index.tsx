@@ -41,6 +41,7 @@ import { UMLCustomShape, UMLCustomShapeTypes } from '@/components/Rockie/CustomI
 import { UMLFrameShape, UMLFrameShapeTypes } from '@/components/Rockie/CustomItems/UML/src/UMLFrameShape';
 import { RcFile, UploadChangeParam } from 'antd/es/upload';
 import { parse, stringify } from 'querystringify';
+import { ERCustomShape, ERCustomShapeTypes } from '@/components/Rockie/CustomItems/EntityRelation/src/ERCustomShape';
 
 interface HeaderProps {
   previousEditor: Editor | undefined
@@ -1274,7 +1275,7 @@ const Header: FC<HeaderProps> = ({
           currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
         }
         currentEditor.contentLayer.addEditorItem(shapeEntity)
-        const data = currentEditor.export()
+        const data = EditorHelper.export(currentEditor)
         SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
       }
     }
@@ -1311,7 +1312,7 @@ const Header: FC<HeaderProps> = ({
           currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
         }
         currentEditor.contentLayer.addEditorItem(shapeEntity)
-        const data = currentEditor.export()
+        const data = EditorHelper.export(currentEditor)
         SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
       }
     }
@@ -1345,7 +1346,7 @@ const Header: FC<HeaderProps> = ({
           currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
         }
         currentEditor.contentLayer.addEditorItem(shapeEntity)
-        const data = currentEditor.export()
+        const data = EditorHelper.export(currentEditor)
         SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
       }
     }
@@ -1368,7 +1369,7 @@ const Header: FC<HeaderProps> = ({
         //   y = 16
         // }
         currentEditor.resize(32, 32)
-        const data = currentEditor.export()
+        const data = EditorHelper.export(currentEditor)
         console.log(`download file = connector-line-start-arrow-${connectorArrowType.name.toLowerCase()}.png`)
         SystemUtils.generateDownloadFile(data, `connector-line-start-arrow-${connectorArrowType.name.toLowerCase()}.png`)
       }
@@ -1392,7 +1393,7 @@ const Header: FC<HeaderProps> = ({
         //  y = 16
         //}
         currentEditor.resize(32, 32)
-        const data = currentEditor.export()
+        const data = EditorHelper.export(currentEditor)
         console.log(`download file = connector-line-end-arrow-${connectorArrowType.name.toLowerCase()}.png`)
         SystemUtils.generateDownloadFile(data, `connector-line-end-arrow-${connectorArrowType.name.toLowerCase()}.png`)
       }
@@ -1411,7 +1412,7 @@ const Header: FC<HeaderProps> = ({
         const customEntity = new BasicShapes[i].type(customShapeInfo.left + margin, customShapeInfo.top + margin, customShapeInfo.width, customShapeInfo.height, customShapeTypeName)
         currentEditor.contentLayer.addEditorItem(customEntity)
         currentEditor.resize(customShapeInfo.width + margin * 2, customShapeInfo.height + margin * 2)
-        const data = currentEditor.export()
+        const data = EditorHelper.export(currentEditor)
         console.log(`download file = ${customShapeInfo.name}.png`)
         SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.png`)
       }
@@ -1438,7 +1439,7 @@ const Header: FC<HeaderProps> = ({
         }
         currentEditor.contentLayer.addEditorItem(customEntity)
         currentEditor.resize(customShapeInfo.width * sizeFactor + margin * 2, customShapeInfo.height * sizeFactor + margin * 2)
-        const data = currentEditor.export()
+        const data = EditorHelper.export(currentEditor)
         console.log(`download file = ${customShapeInfo.name}.png`)
         SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.png`)
       }
@@ -1464,7 +1465,7 @@ const Header: FC<HeaderProps> = ({
         } else {
           currentEditor.resize(customShapeInfo.width + margin * 2, customShapeInfo.height + margin * 2)
         }
-        const data = currentEditor.export()
+        const data = EditorHelper.export(currentEditor)
         console.log(`download file = ${customShapeInfo.name}.png`)
         SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.png`)
       }
@@ -1499,7 +1500,7 @@ const Header: FC<HeaderProps> = ({
         } else {
           currentEditor.resize(customShapeInfo.width * sizeFactor + margin * 2, customShapeInfo.height * sizeFactor + margin * 2)
         }
-        const data = currentEditor.export()
+        const data = EditorHelper.export(currentEditor)
         console.log(`download file = ${customShapeInfo.name}.png`)
         SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.png`)
       }
@@ -1551,7 +1552,7 @@ const Header: FC<HeaderProps> = ({
         const customEntity = new ImageContainer(margin, margin, customShapeInfo.width, customShapeInfo.height, customShapeInfo.data)
         currentEditor.contentLayer.addEditorItem(customEntity)
         currentEditor.resize(customShapeInfo.width + margin * 2, customShapeInfo.height + margin * 2)
-        const data = currentEditor.export()
+        const data = EditorHelper.export(currentEditor)
         console.log(`download file = ${customShapeInfo.name}.png`)
         SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.png`)
       }
@@ -1569,7 +1570,7 @@ const Header: FC<HeaderProps> = ({
         const customEntity = new ImageContainer(margin, margin, customShapeInfo.width * sizeFactor, customShapeInfo.height * sizeFactor, customShapeInfo.data)
         currentEditor.contentLayer.addEditorItem(customEntity)
         currentEditor.resize(customShapeInfo.width * sizeFactor + margin * 2, customShapeInfo.height * sizeFactor + margin * 2)
-        const data = currentEditor.export()
+        const data = EditorHelper.export(currentEditor)
         console.log(`download file = ${customShapeInfo.name}.png`)
         SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.png`)
       }
@@ -1596,7 +1597,7 @@ const Header: FC<HeaderProps> = ({
         } else {
           currentEditor.resize(customShapeInfo.width + margin * 2, customShapeInfo.height + margin * 2)
         }
-        const data = currentEditor.export()
+        const data = EditorHelper.export(currentEditor)
         console.log(`download file = ${customShapeInfo.name}.png`)
         SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.png`)
       }
@@ -1631,7 +1632,7 @@ const Header: FC<HeaderProps> = ({
         } else {
           currentEditor.resize(customShapeInfo.width * sizeFactor + margin * 2, customShapeInfo.height * sizeFactor + margin * 2)
         }
-        const data = currentEditor.export()
+        const data = EditorHelper.export(currentEditor)
         console.log(`download file = ${customShapeInfo.name}.png`)
         SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.png`)
       }
@@ -1675,7 +1676,7 @@ const Header: FC<HeaderProps> = ({
         } else {
           currentEditor.resize(customShapeInfo.width * sizeFactor + margin * 2, customShapeInfo.height * sizeFactor + margin * 2)
         }
-        const data = currentEditor.export()
+        const data = EditorHelper.export(currentEditor)
         console.log(`download file = ${customShapeInfo.name}.png`)
         SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.png`)
       }
@@ -1719,7 +1720,7 @@ const Header: FC<HeaderProps> = ({
         } else {
           currentEditor.resize(customShapeInfo.width * sizeFactor + margin * 2, customShapeInfo.height * sizeFactor + margin * 2)
         }
-        const data = currentEditor.export()
+        const data = EditorHelper.export(currentEditor)
         console.log(`download file = ${customShapeInfo.name}.png`)
         SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.png`)
       }
@@ -1759,7 +1760,7 @@ const Header: FC<HeaderProps> = ({
         //   currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
         // }
         currentEditor.contentLayer.addEditorItem(shapeEntity)
-        const data = currentEditor.export()
+        const data = EditorHelper.export(currentEditor)
         SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
       }
     }
@@ -1797,7 +1798,7 @@ const Header: FC<HeaderProps> = ({
           currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
         }
         currentEditor.contentLayer.addEditorItem(shapeEntity)
-        const data = currentEditor.export()
+        const data = EditorHelper.export(currentEditor)
         SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
       }
     }
@@ -1834,7 +1835,7 @@ const Header: FC<HeaderProps> = ({
           currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
         }
         currentEditor.contentLayer.addEditorItem(shapeEntity)
-        const data = currentEditor.export()
+        const data = EditorHelper.export(currentEditor)
         SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
       }
     }
@@ -1871,7 +1872,7 @@ const Header: FC<HeaderProps> = ({
           currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
         }
         currentEditor.contentLayer.addEditorItem(shapeEntity)
-        const data = currentEditor.export()
+        const data = EditorHelper.export(currentEditor)
         SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
       }
     }
@@ -1905,7 +1906,7 @@ const Header: FC<HeaderProps> = ({
           currentEditor.resize(width + margin * 2, width + margin * 2)
         }
         currentEditor.contentLayer.addEditorItem(shapeEntity)
-        const data = currentEditor.export()
+        const data = EditorHelper.export(currentEditor)
         SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
         console.log(`download file: ${shapeType.name}.png`)
       }
@@ -1939,7 +1940,7 @@ const Header: FC<HeaderProps> = ({
           currentEditor.resize(width + margin * 2, width + margin * 2)
         }
         currentEditor.contentLayer.addEditorItem(shapeEntity)
-        const data = currentEditor.export()
+        const data = EditorHelper.export(currentEditor)
         SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
         console.log(`download file: ${shapeType.name}.png`)
       }
@@ -1983,7 +1984,7 @@ const Header: FC<HeaderProps> = ({
         }
         currentEditor.contentLayer.addEditorItem(shapeEntity)
         currentEditor.contentLayer.addEditorItem(connector)
-        const data = currentEditor.export()
+        const data = EditorHelper.export(currentEditor)
         SystemUtils.generateDownloadFile(data, `${documentTheme.name}.png`)
       }
     }
@@ -2021,7 +2022,7 @@ const Header: FC<HeaderProps> = ({
         //   currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
         // }
         currentEditor.contentLayer.addEditorItem(shapeEntity)
-        const data = currentEditor.export()
+        const data = EditorHelper.export(currentEditor)
         SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
 
       }
@@ -2060,12 +2061,11 @@ const Header: FC<HeaderProps> = ({
           currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
         }
         currentEditor.contentLayer.addEditorItem(shapeEntity)
-        const data = currentEditor.export()
+        const data = EditorHelper.export(currentEditor)
         SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
       }
     }
   }
-
 
   const handleTestUMLFrameShapeLarge = () => {
     if (currentEditor) {
@@ -2101,7 +2101,7 @@ const Header: FC<HeaderProps> = ({
           currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
         }
         currentEditor.contentLayer.addEditorItem(shapeEntity)
-        const data = currentEditor.export()
+        const data = EditorHelper.export(currentEditor)
         SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
       }
     }
@@ -2141,7 +2141,167 @@ const Header: FC<HeaderProps> = ({
           currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
         }
         currentEditor.contentLayer.addEditorItem(shapeEntity)
-        const data = currentEditor.export()
+        const data = EditorHelper.export(currentEditor)
+        SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
+      }
+    }
+  }
+
+  const handleTestERShapeLarge = () => {
+    if (currentEditor) {
+      let count = ERCustomShapeTypes.length
+      for (let i = 0; i < count; i++) {
+        let shapeType = ERCustomShapeTypes[i]
+        let margin = 5
+        let lineFactor = 1
+        let fontFactor = 1
+        let sizeFactor = 1
+        let modifierFactor = 1
+        let controllerFactor = 1
+        currentEditor.contentLayer.removeAllEditorItems()
+        let left = shapeType.left + margin
+        if (shapeType.width < shapeType.height) {
+          left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
+        }
+        let shapeEntity = new ERCustomShape(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, shapeType.name)
+        shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
+        shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
+        shapeEntity.items.forEach(item => {
+          item.fontSize = shapeEntity.fontSize * fontFactor
+        })
+        if (!shapeType.modifyInPercent) {
+          shapeEntity.shape.modifier = new Point2(Math.round(shapeEntity.shape.modifier.x * modifierFactor), Math.round(shapeEntity.shape.modifier.y * modifierFactor))
+        }
+        if (!shapeType.controlInPercent) {
+          shapeEntity.shape.controller = new Point2(Math.round(shapeEntity.shape.controller.x * controllerFactor), Math.round(shapeEntity.shape.controller.y * controllerFactor))
+        }
+        if (shapeType.width < shapeType.height) {
+          currentEditor.resize(shapeType.height * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+        } else {
+          currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+        }
+        currentEditor.contentLayer.addEditorItem(shapeEntity)
+        const data = EditorHelper.export(currentEditor)
+        SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
+      }
+    }
+  }
+
+  const handleTestERShapeSmall = () => {
+    if (currentEditor) {
+      let count = ERCustomShapeTypes.length
+      for (let i = 0; i < count; i++) {
+        let shapeType = ERCustomShapeTypes[i]
+        let margin = 2
+        let lineFactor = 1
+        let fontFactor = 0.2
+        let sizeFactor = 0.25
+        let modifierFactor = 0.25
+        let controllerFactor = 0.25
+        currentEditor.contentLayer.removeAllEditorItems()
+        let left = shapeType.left + margin
+        if (shapeType.width < shapeType.height) {
+          left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
+        }
+        let shapeEntity = new ERCustomShape(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, shapeType.name)
+        shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
+        shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
+        shapeEntity.items.forEach(item => {
+          item.fontSize = shapeEntity.fontSize * fontFactor
+        })
+        if (!shapeType.modifyInPercent) {
+          shapeEntity.shape.modifier = new Point2(Math.round(shapeEntity.shape.modifier.x * modifierFactor), Math.round(shapeEntity.shape.modifier.y * modifierFactor))
+        }
+        if (!shapeType.controlInPercent) {
+          shapeEntity.shape.controller = new Point2(Math.round(shapeEntity.shape.controller.x * controllerFactor), Math.round(shapeEntity.shape.controller.y * controllerFactor))
+        }
+        if (shapeType.width < shapeType.height) {
+          currentEditor.resize(shapeType.height * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+        } else {
+          currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.width * sizeFactor + margin * 2)
+        }
+        currentEditor.contentLayer.addEditorItem(shapeEntity)
+        const data = EditorHelper.export(currentEditor)
+        SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
+      }
+    }
+  }
+
+  const handleTestMockupShapeLarge = () => {
+    if (currentEditor) {
+      let count = UMLFrameShapeTypes.length
+      for (let i = 0; i < count; i++) {
+        let shapeType = UMLFrameShapeTypes[i]
+        let margin = 5
+        let lineFactor = 1
+        let fontFactor = 1
+        let sizeFactor = 1
+        let modifierFactor = 1
+        let controllerFactor = 1
+        currentEditor.contentLayer.removeAllEditorItems()
+        let left = shapeType.left + margin
+        if (shapeType.width < shapeType.height) {
+          left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
+        }
+        let shapeEntity = new UMLFrameShape(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, { shapeType: shapeType.name }, [shapeType])
+        shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
+        shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
+        shapeEntity.items.forEach(item => {
+          item.fontSize = shapeEntity.fontSize * fontFactor
+        })
+        if (!shapeType.modifyInPercent) {
+          shapeEntity.shape.modifier = new Point2(Math.round(shapeEntity.shape.modifier.x * modifierFactor), Math.round(shapeEntity.shape.modifier.y * modifierFactor))
+        }
+        if (!shapeType.controlInPercent) {
+          shapeEntity.shape.controller = new Point2(Math.round(shapeEntity.shape.controller.x * controllerFactor), Math.round(shapeEntity.shape.controller.y * controllerFactor))
+        }
+        if (shapeType.width < shapeType.height) {
+          currentEditor.resize(shapeType.height * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+        } else {
+          currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+        }
+        currentEditor.contentLayer.addEditorItem(shapeEntity)
+        const data = EditorHelper.export(currentEditor)
+        SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
+      }
+    }
+  }
+
+  const handleTestMockupShapeSmall = () => {
+    if (currentEditor) {
+      let count = UMLFrameShapeTypes.length
+      for (let i = 0; i < count; i++) {
+        let shapeType = UMLFrameShapeTypes[i]
+        let margin = 2
+        let lineFactor = 1
+        let fontFactor = 0.1
+        let sizeFactor = 0.25
+        let modifierFactor = 0.25
+        let controllerFactor = 0.25
+        currentEditor.contentLayer.removeAllEditorItems()
+        let left = shapeType.left + margin
+        if (shapeType.width < shapeType.height) {
+          left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
+        }
+        let shapeEntity = new UMLFrameShape(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, { shapeType: shapeType.name }, [shapeType])
+        shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
+        shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
+        shapeEntity.items.forEach(item => {
+          item.fontSize = shapeEntity.fontSize * fontFactor
+        })
+        if (!shapeType.modifyInPercent) {
+          shapeEntity.shape.modifier = new Point2(Math.round(shapeEntity.shape.modifier.x * modifierFactor), Math.round(shapeEntity.shape.modifier.y * modifierFactor))
+        }
+        if (!shapeType.controlInPercent) {
+          shapeEntity.shape.controller = new Point2(Math.round(shapeEntity.shape.controller.x * controllerFactor), Math.round(shapeEntity.shape.controller.y * controllerFactor))
+        }
+        if (shapeType.width < shapeType.height) {
+          currentEditor.resize(shapeType.height * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+        } else {
+          currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+        }
+        currentEditor.contentLayer.addEditorItem(shapeEntity)
+        const data = EditorHelper.export(currentEditor)
         SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
       }
     }
@@ -2272,6 +2432,10 @@ const Header: FC<HeaderProps> = ({
     { key: 'Test UML Frame Shape Large', label: 'Test UML Frame Shape Large', onClick: handleTestUMLFrameShapeLarge, },
     { key: 'Test UML Frame Shape Small', label: 'Test UML Frame Shape Small', onClick: handleTestUMLFrameShapeSmall, },
     { key: 'Test Style', label: 'Test Style', onClick: handleTestStyle, },
+    { key: 'Test Mockup Shape Large', label: 'Test Mockup Shape Large', onClick: handleTestMockupShapeLarge, },
+    { key: 'Test Mockup Shape Small', label: 'Test Mockup Shape Small', onClick: handleTestMockupShapeSmall, },
+    { key: 'Test ER Shape Large', label: 'Test ER Shape Large', onClick: handleTestERShapeLarge, },
+    { key: 'Test ER Shape Small', label: 'Test ER Shape Small', onClick: handleTestERShapeSmall, },
   ];
 
   const helpItems: MenuProps['items'] = [
