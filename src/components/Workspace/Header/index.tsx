@@ -2274,11 +2274,12 @@ const Header: FC<HeaderProps> = ({
       for (let i = 0; i < count; i++) {
         let shapeType = MockupCustomShapeTypes[i]
         let margin = 2
-        let lineFactor = 1
-        let fontFactor = 0.1
-        let sizeFactor = 0.25
-        let modifierFactor = 0.25
-        let controllerFactor = 0.25
+        let lineFactor = 2
+        const factor = shapeType.width >= shapeType.height ? shapeType.width : shapeType.height
+        let fontFactor = 1 //factor / 28
+        let sizeFactor = 1 //factor / 28
+        let modifierFactor = 1 // factor / 28
+        let controllerFactor = 1 //factor / 28
         currentEditor.contentLayer.removeAllEditorItems()
         let left = shapeType.left + margin
         if (shapeType.width < shapeType.height) {
@@ -2287,9 +2288,6 @@ const Header: FC<HeaderProps> = ({
         let shapeEntity = new MockupCustomShape(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, shapeType.name)
         shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
         shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
-        shapeEntity.items.forEach(item => {
-          item.fontSize = shapeEntity.fontSize * fontFactor
-        })
         if (!shapeType.modifyInPercent) {
           shapeEntity.shape.modifier = new Point2(Math.round(shapeEntity.shape.modifier.x * modifierFactor), Math.round(shapeEntity.shape.modifier.y * modifierFactor))
         }
