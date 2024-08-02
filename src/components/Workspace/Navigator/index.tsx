@@ -345,6 +345,14 @@ const Navigator: FC<NavigatorProps> = ({
     </div>
   }
 
+  const getCustomShapeERPopoverContent = (name: string, width: number, height: number) => {
+    return <div style={{ width: width * 1.25, display: 'table' }}>
+      <div style={{ display: 'table-cell', textAlign: 'center', verticalAlign: 'middle', borderTop: '0px solid gray', padding: '2px' }}>
+        <img id={process.env.PUBLIC_PATH + `/custom-shapes-large/entity-relation/${name}.png`} src={process.env.PUBLIC_PATH + `/custom-shapes-large/entity-relation/${name}.png`} />
+      </div>
+    </div>
+  }
+
 
   const getUMLContainerPopoverContent = (name: string, width: number, height: number) => {
     return <div style={{ width: width * 1.25, display: 'table' }}>
@@ -868,9 +876,9 @@ const Navigator: FC<NavigatorProps> = ({
 
   const erCustomShapes = ERCustomShapes.map(
     shapeType => {
-      return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: shapeType.typeInfo.width + 60, width: shapeType.typeInfo.height + 60, }}>
-        <Button type='text' onMouseDown={() => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{ padding: 2, display: 'table' }}>
-          <img src={process.env.PUBLIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{ display: 'table-cell' }} />
+      return <Popover title={shapeType.name} placement='right' content={getCustomShapeERPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: shapeType.typeInfo.width + 60, width: shapeType.typeInfo.height + 60, }}>
+        <Button type='text' onMouseDown={() => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/entity-relation')} style={{ padding: 2, display: 'table' }}>
+          <img src={process.env.PUBLIC_PATH + `/custom-shapes/entity-relation/${shapeType.name}.png`} width={28} height={28} style={{ display: 'table-cell' }} />
         </Button>
       </Popover>
     }
