@@ -1,6 +1,9 @@
 import { Arrows } from "../../CustomItems/Arrows";
 import { BasicShapes } from "../../CustomItems/BasicShapes";
+import { ERCustomShapes } from "../../CustomItems/EntityRelation";
 import { FlowChartShapes } from "../../CustomItems/FlowChart";
+import { MockupShapes } from "../../CustomItems/Mockup";
+import { MockupCustomShapeTypes } from "../../CustomItems/Mockup/src/MockupCustomShape";
 import { UMLBasicShapes, UMLConnectors, UMLContainerShapes, UMLCustomContainers, UMLCustomShapes, UMLCustomTables, UMLFrameShapes, } from "../../CustomItems/UML";
 import { ContainerEntity, CustomConnector, CustomEntity, CustomTableEntity, FrameEntity } from "../../Items";
 import { CustomConnectorTypeInfo } from "../../Items/src/CustomConnector";
@@ -51,8 +54,10 @@ export const CustomShapes = [
     ...BasicShapes,
     ...Arrows,
     ...FlowChartShapes,
-    ...UMLCustomShapes
-  ]
+    ...UMLCustomShapes,
+    ...ERCustomShapes,
+    ...MockupShapes
+]
 
 export const CustomTableShapes = [
     ...UMLCustomTables
@@ -84,8 +89,8 @@ export class CommonUtils {
     public static CONNECTOR_TYPE_CURVE = 'Curve'
     public static CONNECTOR_TYPE_CROSS_LINE = 'Orthogonal'
 
-    public static parseConnectorType(connectorType: ConnectorType) : string {
-        switch(connectorType) {
+    public static parseConnectorType(connectorType: ConnectorType): string {
+        switch (connectorType) {
             case ConnectorType.Curve:
                 return this.CONNECTOR_TYPE_CURVE
                 break;
@@ -99,8 +104,8 @@ export class CommonUtils {
         }
     }
 
-    public static parseConnectorTypeString(connectorType: string) : ConnectorType {
-        switch(connectorType) {
+    public static parseConnectorTypeString(connectorType: string): ConnectorType {
+        switch (connectorType) {
             case this.CONNECTOR_TYPE_CURVE:
                 return ConnectorType.Curve
                 break;
