@@ -1,4 +1,4 @@
-import { Point2, Rectangle } from "@/components/Engine";
+import { Paint, Path, Point2, Rectangle, Woff2Utils } from "@/components/Engine";
 import { Editor } from "../../Editor";
 import { Categories, Connector, ConnectorInfo, EditorItem, EditorItemInfo, Entity, Item, ShapeEntity } from "../../Items";
 import { Operation, OperationHelper, OperationType } from "../../Operations";
@@ -6,6 +6,7 @@ import { RequestUtils, SystemUtils } from "@/components/Workspace/Utils";
 import { Style, StyleInfo } from "../../Shapes/src/EntityUtils";
 import { ImageUtils } from "./ImageUtils";
 import { MyShape, MyShapeType, MyShapes } from "@/components/Workspace/Utils/RequestUtils";
+import opentype from 'opentype.js'
 
 export class EditorHelper {
 
@@ -353,6 +354,96 @@ export class EditorHelper {
         // SystemUtils.generateDownloadFile(data, 'test.png')
         if (callback) {
             callback()
+        }
+    }
+
+    public static async exportToSVG(editor: Editor) {
+        const a = new opentype.Path()
+        const ttfdata = await Woff2Utils.decompress('a')
+        const arrayBuffer = ttfdata.buffer.slice(ttfdata.byteOffset, ttfdata.byteLength + ttfdata.byteOffset)
+        const font = opentype.parse(arrayBuffer)
+        console.log(`Font info = ${font}`)
+        const textPath = font.getPath('abc', 30, 30, 24)
+        const textSVG = textPath.toSVG()
+        return textSVG
+    }
+
+    public static async exportSelectedToSVG(editor: Editor) {
+        return EditorHelper.generatEditorSVG(editor)
+    }
+
+    private static generatEditorSVG(editor: Editor) {
+        let content = ''
+        editor.contentLayer.getAllEditorItems().forEach(editorItem => {
+            content += EditorHelper.generateSVGItem(editorItem as Item)
+        })
+        const result = `<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.dev/svgjs" width="${editor.origWidth}" ` +
+            `height="${editor.origHeight}">` +
+            `${content}` +
+            `\n</svg>`
+        return result
+    }
+
+    private static generatEditorItemSVG(item: Item) {
+        const itemSVG = EditorHelper.generateSVGItem(item)
+        let itemsSVG = ''
+        if (item.items.length > 0) {
+            itemsSVG += '\n<g>'
+            item.items.forEach(child => {
+                itemsSVG += EditorHelper.generatEditorItemSVG(child as Item)
+            })
+            itemsSVG += '</g>'
+        }
+        const result = itemSVG + itemsSVG
+        return result
+    }
+
+    private static generateSVGItem(item: Item) {
+        const transformSVG = EditorHelper.generateSVGTransform(item)
+        const pathSvg = EditorHelper.generateSVGPath(item.shape.path)
+        const strokeSVG = EditorHelper.generateSVGPaint(item.shape.stroke, true, item.shape.stroked)
+        const fillSVG = EditorHelper.generateSVGPaint(item.shape.fill, false, item.shape.filled)
+        const disableSecond = item.shape.secondPath.isEmpty()
+        const disableThird = item.shape.thirdPath.isEmpty()
+        const disableFourth = item.shape.fourthPath.isEmpty()
+        const secondPathSvg = disableSecond ? '' : EditorHelper.generateSVGPath(item.shape.secondPath)
+        const secondStrokeSVG = disableSecond ? '' : EditorHelper.generateSVGPaint(item.shape.secondStroke, true, item.shape.secondStroked)
+        const secondFillSVG = disableSecond ? '' : EditorHelper.generateSVGPaint(item.shape.secondFill, false, item.shape.secondFilled)
+        const thirdPathSvg = disableThird ? '' : EditorHelper.generateSVGPath(item.shape.thirdPath)
+        const thirdtrokeSVG = disableThird ? '' : EditorHelper.generateSVGPaint(item.shape.thirdStroke, true, item.shape.thirdStroked)
+        const thirdFillSVG = disableThird ? '' : EditorHelper.generateSVGPaint(item.shape.thirdFill, false, item.shape.thirdFilled)
+        const fourthPathSvg = disableFourth ? '' : EditorHelper.generateSVGPath(item.shape.fourthPath)
+        const fourthStrokeSVG = disableFourth ? '' : EditorHelper.generateSVGPaint(item.shape.fourthStroke, true, item.shape.fourthStroked)
+        const fourthFillSVG = disableFourth ? '' : EditorHelper.generateSVGPaint(item.shape.fourthFill, false, item.shape.fourthFilled)
+        const secondSVG = disableSecond ? '' : `\n    <path ${secondFillSVG} ${secondStrokeSVG} ${secondPathSvg}/>`
+        const thirdSVG = disableThird ? '' : `\n    <path ${thirdFillSVG} ${thirdtrokeSVG} ${thirdPathSvg}/>`
+        const fourthSVG = disableFourth ? '' : `\n    <path ${fourthFillSVG} ${fourthStrokeSVG} ${fourthPathSvg}/>`
+        return `\n<g id="${item.id}" ${transformSVG}>\n    <path ${fillSVG} ${strokeSVG} ${pathSvg}/> ${secondSVG} ${thirdSVG} ${fourthSVG}\n</g>`
+    }
+
+    private static generateSVGTransform(item: Item) {
+        const translate = (item.shape.position.x == 0 && item.shape.position.y == 0) ? '' : `translate(${item.shape.position.x}, ${item.shape.position.y})`
+        const rotate = (item.shape.rotation.px == 0 && item.shape.rotation.py == 0 && item.shape.rotation.radius == 0) ? '' : `rotate(${item.shape.rotation.radius * 180 / Math.PI}, ${item.shape.rotation.px}, ${item.shape.rotation.py})`
+        const result = `transform="${translate} ${rotate}"`
+        return result
+    }
+
+    private static generateSVGPath(path: Path) {
+        const result = `d="${path.toSVGString()}"`
+        return result
+    }
+
+    private static generateSVGPaint(paint: Paint, isStroke: boolean, isEnabled: boolean) {
+        let color = 'none'
+        if (isEnabled) {
+            color = SystemUtils.generateColorString(paint.getColor())
+        }
+        if (isStroke) {
+            const result = `stroke="${color}" stroke-width="${paint.getStroketWidth()}"`
+            return result
+        } else {
+            const result = `fill="${color}"`
+            return result
         }
     }
 

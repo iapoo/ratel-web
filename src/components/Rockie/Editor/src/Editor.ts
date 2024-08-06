@@ -2,7 +2,7 @@
 /* eslint-disable max-params */
 /* eslint-disable complexity */
 import { Painter, } from '@/components/Painter'
-import { Engine, Point2, Rectangle2D, Rotation, Shape, Line2D, Node, Rectangle, Graphics, Colors, MouseEvent, MouseCode, PointerEvent as UniPointerEvent, Control, PointerEvent, Path, Scale, KeyEvent, Color, Paint, StrokeDashStyle, Matrix, } from '../../../Engine'
+import { Engine, Point2, Rectangle2D, Rotation, Shape, Line2D, Node, Rectangle, Graphics, Colors, MouseEvent, MouseCode, PointerEvent as UniPointerEvent, Control, PointerEvent, Path, Scale, KeyEvent, Color, Paint, StrokeDashStyle, Matrix, EngineUtils, Woff2Utils, } from '../../../Engine'
 import { Action, MyShapeAction, } from '../../Actions'
 import { Holder, } from '../../Design'
 import { CellEntity, Connector, ContainerEntity, EditorItem, EditorItemInfo, Entity, FrameEntity, ImageContainer, Item, ShapeEntity, SvgContainer, TableEntity, } from '../../Items'
@@ -23,7 +23,7 @@ import { TableLayer } from './TableLayer'
 import { DocumentThemeTypes, EditorUtils } from '@/components/Rockie/Theme'
 import { DocumentThemeType } from '../../Theme/DocumentTheme'
 import { EditorOperationEvent } from './EditorOperationEvent'
-
+import { FontUtils, WebFont, WebFontManager } from '@/components/Engine/src/EngineUtils'
 
 export enum EditorMode {
   AUTO,
@@ -3151,4 +3151,5 @@ export class Editor extends Painter {
     }
     return [left, top, right, bottom]
   }
+
 }

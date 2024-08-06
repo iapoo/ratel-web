@@ -337,7 +337,8 @@ export abstract class Item implements EditorItem {
 
   public set lineWidth(value: number) {
     this._lineWidth = value
-    this.updateTheme()
+    this._shape.stroke.setStrokeWidth(value)
+    //this.updateTheme()
   }
 
   public get fontName() {
@@ -379,6 +380,7 @@ export abstract class Item implements EditorItem {
 
   public set fontWidth(value: FontWidth) {
     this._fontWidth = value
+    //this._shape.fontWidth = value
     this.updateTheme()
   }
 
@@ -469,7 +471,8 @@ export abstract class Item implements EditorItem {
 
   public set strokeDashStyle(value: StrokeDashStyle) {
     this._strokeDashStyle = value
-    this.updateTheme()
+    // this.updateTheme()
+    this._shape.stroke.setStrokeDashStyle(value)
   }
 
   public updateTheme() {
@@ -477,12 +480,20 @@ export abstract class Item implements EditorItem {
       if (this.category == Categories.CONNECTOR) {
         this._shape.stroke.setColor(ThemeUtils.getConnectorStrokeColor(this._themeName))
         this._shape.fill.setColor(ThemeUtils.getConnectorFillColor(this._themeName))
+        this._shape.fontColor = ThemeUtils.getConnectorFontColor(this._themeName)
+        this._strokeColor = ThemeUtils.getConnectorStrokeColor(this._themeName)
+        this._fillColor = ThemeUtils.getConnectorFillColor(this._themeName)
+        this._fontColor = ThemeUtils.getConnectorFontColor(this._themeName)
       } else {
         this._shape.stroke.setColor(ThemeUtils.getShapeStrokeColor(this._themeName))
         this._shape.fill.setColor(ThemeUtils.getShapeFillColor(this._themeName))
+        this._shape.fontColor = ThemeUtils.getShapeFontColor(this._themeName)
+        this._strokeColor = ThemeUtils.getShapeStrokeColor(this._themeName)
+        this._fillColor = ThemeUtils.getShapeFillColor(this._themeName)
+        this._fontColor = ThemeUtils.getShapeFontColor(this._themeName)
       }
-      this._shape.stroke.setStrokeWidth(ThemeUtils.lineWidth)
-      this._shape.stroke.setStrokeDashStyle(ThemeUtils.strokeDashStyle)
+      // this._shape.stroke.setStrokeWidth(ThemeUtils.lineWidth)
+      // this._shape.stroke.setStrokeDashStyle(ThemeUtils.strokeDashStyle)
       //this._shape.fontColor = ThemeUtils.fontColor
       //this._shape.fontSize = ThemeUtils.fontSize
       // if(this.category == Categories.CUSTOM_SVG_SHAPE || this.category == Categories.CUSTOM_IMAGE_SHAPE) {
@@ -500,9 +511,9 @@ export abstract class Item implements EditorItem {
     } else {
       this._shape.stroke.setColor(this._strokeColor)
       this._shape.fill.setColor(this._fillColor)
-      this._shape.stroke.setStrokeWidth(this._lineWidth)
-      this._shape.stroke.setStrokeDashStyle(this._strokeDashStyle)
-      //this._shape.fontColor = this._fontColor
+      // this._shape.stroke.setStrokeWidth(this._lineWidth)
+      // this._shape.stroke.setStrokeDashStyle(this._strokeDashStyle)
+      this._shape.fontColor = this._fontColor
       //this._shape.fontSize = this._fontSize
       this._shape.filled = this._filled
       this._shape.stroked = this._stroked

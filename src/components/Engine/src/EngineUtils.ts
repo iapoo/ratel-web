@@ -485,7 +485,7 @@ export class FontUtils {
     }
   }
 
-  private static async loadSystemFontFile(fontUrl: string) {
+  public static async loadSystemFontFile(fontUrl: string) {
     const webFontFile = await FontUtils.getWebFontFile(fontUrl);
     return webFontFile.data;
   }

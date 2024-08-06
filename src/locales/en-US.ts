@@ -38,7 +38,7 @@ export default {
   'workspace.header.menu-file-export': 'Export',
   'workspace.header.menu-file-export-png': 'Export to PNG',
   'workspace.header.menu-file-export-jpg': 'Export to JPG',
-  'workspace.header.menu-file-export-document': 'Export tto Ratel document',
+  'workspace.header.menu-file-export-document': 'Export to Ratel document',
   'workspace.header.menu-file-export-selected': 'Export selected',
   'workspace.header.menu-file-export-selected-png': 'Export selected to PNG',
   'workspace.header.menu-file-export-selected-jpg': 'Export selected to JPG',

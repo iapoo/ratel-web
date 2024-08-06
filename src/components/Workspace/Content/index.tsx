@@ -1150,6 +1150,7 @@ const Content: FC<ContentProps> = ({
           } else {
             editorItem.fontColor = color
           }
+          editorItem.useTheme = false
         }
       })
       Utils.currentEditor.focus()
@@ -1977,6 +1978,10 @@ const Content: FC<ContentProps> = ({
 
   const handleAddToMyShapes = async () => {
     if (Utils.currentEditor) {
+      //const a = Utils.currentEditor.contentLayer.getEditorItem(0).shape.path.toSVGString()
+      // const a = await Utils.currentEditor.exportToSVG()
+      const a = await EditorHelper.exportSelectedToSVG(Utils.currentEditor)
+      console.log(`SVG = ${a}`)
       if (RequestUtils.online) {
         await EditorHelper.addToMyShapes(Utils.currentEditor, onMyShapesUpdated)
       } else {

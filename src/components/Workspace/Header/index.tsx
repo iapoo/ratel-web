@@ -890,6 +890,7 @@ const Header: FC<HeaderProps> = ({
         if (color) {
           editorItem.fillColor = color
         }
+        editorItem.useTheme = false
       })
       const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
       const operation: Operation = new Operation(Utils.currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
@@ -911,6 +912,7 @@ const Header: FC<HeaderProps> = ({
         if (color) {
           editorItem.strokeColor = color
         }
+        editorItem.useTheme = false
       })
       const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
       const operation: Operation = new Operation(Utils.currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
@@ -932,6 +934,7 @@ const Header: FC<HeaderProps> = ({
         if (color) {
           editorItem.fontColor = color
         }
+        editorItem.useTheme = false
       })
       Utils.currentEditor.focus()
       Utils.currentEditor.triggerTextEditStyleChange()
