@@ -93,29 +93,41 @@ export class OperationHelper {
     }
     editorItem.locked = itemInfo.locked
     editorItem.useTheme = itemInfo.useTheme
-    if (itemInfo.useTheme) {
-      if (itemInfo.category == Categories.CONNECTOR) {
-        editorItem.strokeColor = ThemeUtils.getConnectorStrokeColor(itemInfo.themeName)
-        editorItem.fillColor = ThemeUtils.getConnectorFillColor(itemInfo.themeName)
-        editorItem.fontColor = ThemeUtils.getConnectorFontColor(itemInfo.themeName)
-      } else {
-        editorItem.strokeColor = ThemeUtils.getShapeStrokeColor(itemInfo.themeName)
-        editorItem.fillColor = ThemeUtils.getShapeFillColor(itemInfo.themeName)
-        editorItem.fontColor = ThemeUtils.getShapeFontColor(itemInfo.themeName)
-      }
-      editorItem.lineWidth = ThemeUtils.lineWidth
-    } else {
-      let strokeColor = SystemUtils.parseColorString(itemInfo.strokeColor)
-      if (strokeColor) {
-        editorItem.strokeColor = strokeColor
-      }
-      let fillColor = SystemUtils.parseColorString(itemInfo.fillColor)
-      if (fillColor) {
-        editorItem.fillColor = fillColor
-      }
-      if (itemInfo.lineWidth) {
-        editorItem.lineWidth = itemInfo.lineWidth
-      }
+    editorItem.themeName = itemInfo.themeName
+    // if (itemInfo.useTheme) {
+    //   if (itemInfo.category == Categories.CONNECTOR) {
+    //     editorItem.strokeColor = ThemeUtils.getConnectorStrokeColor(itemInfo.themeName)
+    //     editorItem.fillColor = ThemeUtils.getConnectorFillColor(itemInfo.themeName)
+    //     editorItem.fontColor = ThemeUtils.getConnectorFontColor(itemInfo.themeName)
+    //   } else {
+    //     editorItem.strokeColor = ThemeUtils.getShapeStrokeColor(itemInfo.themeName)
+    //     editorItem.fillColor = ThemeUtils.getShapeFillColor(itemInfo.themeName)
+    //     editorItem.fontColor = ThemeUtils.getShapeFontColor(itemInfo.themeName)
+    //   }
+    //   editorItem.lineWidth = ThemeUtils.lineWidth
+    // } else {
+    //   let strokeColor = SystemUtils.parseColorString(itemInfo.strokeColor)
+    //   if (strokeColor) {
+    //     editorItem.strokeColor = strokeColor
+    //   }
+    //   let fillColor = SystemUtils.parseColorString(itemInfo.fillColor)
+    //   if (fillColor) {
+    //     editorItem.fillColor = fillColor
+    //   }
+    //   if (itemInfo.lineWidth) {
+    //     editorItem.lineWidth = itemInfo.lineWidth
+    //   }
+    // }
+    let strokeColor = SystemUtils.parseColorString(itemInfo.strokeColor)
+    if (strokeColor) {
+      editorItem.strokeColor = strokeColor
+    }
+    let fillColor = SystemUtils.parseColorString(itemInfo.fillColor)
+    if (fillColor) {
+      editorItem.fillColor = fillColor
+    }
+    if (itemInfo.lineWidth) {
+      editorItem.lineWidth = itemInfo.lineWidth
     }
     editorItem.textAlignment = SystemUtils.parseTextAlignment(itemInfo.textAlignment)
     editorItem.textVerticalAlignment = SystemUtils.parseTextVerticalAligment(itemInfo.textVerticalAlignment)
@@ -633,15 +645,18 @@ export class OperationHelper {
     editorItemInfo.useTheme = editorItem.useTheme
     editorItemInfo.themeName = editorItem.themeName
     editorItemInfo.locked = editorItem.locked
-    if (editorItem.useTheme) {
-      editorItemInfo.strokeColor = null
-      editorItemInfo.fillColor = null
-      editorItemInfo.lineWidth = null
-    } else {
-      editorItemInfo.strokeColor = SystemUtils.generateColorString(editorItem.strokeColor)
-      editorItemInfo.fillColor = SystemUtils.generateColorString(editorItem.fillColor)
-      editorItemInfo.lineWidth = editorItem.lineWidth
-    }
+    // if (editorItem.useTheme) {
+    //   editorItemInfo.strokeColor = null
+    //   editorItemInfo.fillColor = null
+    //   editorItemInfo.lineWidth = null
+    // } else {
+    //   editorItemInfo.strokeColor = SystemUtils.generateColorString(editorItem.strokeColor)
+    //   editorItemInfo.fillColor = SystemUtils.generateColorString(editorItem.fillColor)
+    //   editorItemInfo.lineWidth = editorItem.lineWidth
+    // }
+    editorItemInfo.strokeColor = SystemUtils.generateColorString(editorItem.strokeColor)
+    editorItemInfo.fillColor = SystemUtils.generateColorString(editorItem.fillColor)
+    editorItemInfo.lineWidth = editorItem.lineWidth
 
     editorItemInfo.textAlignment = SystemUtils.generateTextAlignment(editorItem.textAlignment)
     editorItemInfo.textVerticalAlignment = SystemUtils.generateTextVerticalAligment(editorItem.textVerticalAlignment)
