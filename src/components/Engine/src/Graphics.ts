@@ -2310,14 +2310,7 @@ export class Graphics {
     this._engine.drawDRRect(outer.source, inner.source, paint.source)
   }
 
-  public drawGlyphs(
-    glyphs: number[],
-    positions: number[],
-    x: number,
-    y: number,
-    font: Font,
-    paint: Paint
-  ) {
+  public drawGlyphs(glyphs: number[], positions: number[], x: number, y: number, font: Font, paint: Paint) {
     this._engine.drawGlyphs(glyphs, positions, x, y, font.source, paint.source)
   }
 

@@ -103,6 +103,15 @@ export class EntityShape extends AbstractTextShape {
   private _thirdFill: Paint = Paint.makeColorPaint(Colors.White)
   private _fourthStroke: Paint = Paint.makeColorPaint(Colors.Black)
   private _fourthFill: Paint = Paint.makeColorPaint(Colors.White)
+  private _secondPath: Path
+  private _secondFilled: boolean
+  private _secondStroked: boolean
+  private _thirdPath: Path
+  private _thirdFilled: boolean
+  private _thirdStroked: boolean
+  private _fourthPath: Path
+  private _fourthFilled: boolean
+  private _fourthStroked: boolean
 
   constructor(text = '', left = 0, top = 0, width = 100, height = 100, typeInfo: ShapeTypeInfo = {
     name: '',
@@ -148,6 +157,15 @@ export class EntityShape extends AbstractTextShape {
     this.fourthStroke.setAntiAlias(true)
     this.fourthStroke.setPaintStyle(PaintStyle.STROKE)
     this.fourthFill.setPaintStyle(PaintStyle.FILL)
+    this._secondPath = new Path()
+    this._secondFilled = true
+    this._secondStroked = true
+    this._thirdPath = new Path()
+    this._thirdFilled = true
+    this._thirdStroked = true
+    this._fourthPath = new Path()
+    this._fourthFilled = true
+    this._fourthStroked = true
   }
 
   public set clipped(clipped: boolean) {
@@ -220,6 +238,42 @@ export class EntityShape extends AbstractTextShape {
 
   public get fourthFill() {
     return this._fourthFill
+  }
+
+  public get secondPath() {
+    return this._secondPath
+  }
+
+  public get thirdPath() {
+    return this._thirdPath
+  }
+
+  public get fourthPath() {
+    return this._fourthPath
+  }
+
+  public get secondFilled() {
+    return this._secondFilled
+  }
+
+  public get secondStroked() {
+    return this._secondStroked
+  }
+
+  public get thirdFilled() {
+    return this._thirdFilled
+  }
+
+  public get thirdStroked() {
+    return this._thirdStroked
+  }
+
+  public get fourthFilled() {
+    return this._fourthFilled
+  }
+
+  public get fourthStroked() {
+    return this._fourthStroked
   }
 
   public update() {
