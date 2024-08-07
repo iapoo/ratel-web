@@ -7,6 +7,7 @@ import { Style, StyleInfo } from "../../Shapes/src/EntityUtils";
 import { ImageUtils } from "./ImageUtils";
 import { MyShape, MyShapeType, MyShapes } from "@/components/Workspace/Utils/RequestUtils";
 import opentype from 'opentype.js'
+import { ConnectorArrowDisplayType, ConnectorMode, ConnectorType } from "../../Shapes";
 
 export class EditorHelper {
 
@@ -400,25 +401,111 @@ export class EditorHelper {
 
     private static generateSVGItem(item: Item) {
         const transformSVG = EditorHelper.generateSVGTransform(item)
-        const pathSvg = EditorHelper.generateSVGPath(item.shape.path)
-        const strokeSVG = EditorHelper.generateSVGPaint(item.shape.stroke, true, item.shape.stroked)
-        const fillSVG = EditorHelper.generateSVGPaint(item.shape.fill, false, item.shape.filled)
-        const disableSecond = item.shape.secondPath.isEmpty()
-        const disableThird = item.shape.thirdPath.isEmpty()
-        const disableFourth = item.shape.fourthPath.isEmpty()
-        const secondPathSvg = disableSecond ? '' : EditorHelper.generateSVGPath(item.shape.secondPath)
-        const secondStrokeSVG = disableSecond ? '' : EditorHelper.generateSVGPaint(item.shape.secondStroke, true, item.shape.secondStroked)
-        const secondFillSVG = disableSecond ? '' : EditorHelper.generateSVGPaint(item.shape.secondFill, false, item.shape.secondFilled)
-        const thirdPathSvg = disableThird ? '' : EditorHelper.generateSVGPath(item.shape.thirdPath)
-        const thirdtrokeSVG = disableThird ? '' : EditorHelper.generateSVGPaint(item.shape.thirdStroke, true, item.shape.thirdStroked)
-        const thirdFillSVG = disableThird ? '' : EditorHelper.generateSVGPaint(item.shape.thirdFill, false, item.shape.thirdFilled)
-        const fourthPathSvg = disableFourth ? '' : EditorHelper.generateSVGPath(item.shape.fourthPath)
-        const fourthStrokeSVG = disableFourth ? '' : EditorHelper.generateSVGPaint(item.shape.fourthStroke, true, item.shape.fourthStroked)
-        const fourthFillSVG = disableFourth ? '' : EditorHelper.generateSVGPaint(item.shape.fourthFill, false, item.shape.fourthFilled)
-        const secondSVG = disableSecond ? '' : `\n    <path ${secondFillSVG} ${secondStrokeSVG} ${secondPathSvg}/>`
-        const thirdSVG = disableThird ? '' : `\n    <path ${thirdFillSVG} ${thirdtrokeSVG} ${thirdPathSvg}/>`
-        const fourthSVG = disableFourth ? '' : `\n    <path ${fourthFillSVG} ${fourthStrokeSVG} ${fourthPathSvg}/>`
-        return `\n<g id="${item.id}" ${transformSVG}>\n    <path ${fillSVG} ${strokeSVG} ${pathSvg}/> ${secondSVG} ${thirdSVG} ${fourthSVG}\n</g>`
+        if (item instanceof Connector) {
+            const connectorArrowPathSVG = this.generateSVGConnectorArrow(item)
+            return `\n<g id="${item.id}" ${transformSVG}>${connectorArrowPathSVG}\n</g>`
+        } else {
+            const pathSvg = EditorHelper.generateSVGPath(item.shape.path)
+            const strokeSVG = EditorHelper.generateSVGPaint(item.shape.stroke, true, item.shape.stroked)
+            const fillSVG = EditorHelper.generateSVGPaint(item.shape.fill, false, item.shape.filled)
+            const disableSecond = item.shape.secondPath.isEmpty()
+            const disableThird = item.shape.thirdPath.isEmpty()
+            const disableFourth = item.shape.fourthPath.isEmpty()
+            const secondPathSvg = disableSecond ? '' : EditorHelper.generateSVGPath(item.shape.secondPath)
+            const secondStrokeSVG = disableSecond ? '' : EditorHelper.generateSVGPaint(item.shape.secondStroke, true, item.shape.secondStroked)
+            const secondFillSVG = disableSecond ? '' : EditorHelper.generateSVGPaint(item.shape.secondFill, false, item.shape.secondFilled)
+            const thirdPathSvg = disableThird ? '' : EditorHelper.generateSVGPath(item.shape.thirdPath)
+            const thirdtrokeSVG = disableThird ? '' : EditorHelper.generateSVGPaint(item.shape.thirdStroke, true, item.shape.thirdStroked)
+            const thirdFillSVG = disableThird ? '' : EditorHelper.generateSVGPaint(item.shape.thirdFill, false, item.shape.thirdFilled)
+            const fourthPathSvg = disableFourth ? '' : EditorHelper.generateSVGPath(item.shape.fourthPath)
+            const fourthStrokeSVG = disableFourth ? '' : EditorHelper.generateSVGPaint(item.shape.fourthStroke, true, item.shape.fourthStroked)
+            const fourthFillSVG = disableFourth ? '' : EditorHelper.generateSVGPaint(item.shape.fourthFill, false, item.shape.fourthFilled)
+            const secondSVG = disableSecond ? '' : `\n    <path ${secondFillSVG} ${secondStrokeSVG} ${secondPathSvg}/>`
+            const thirdSVG = disableThird ? '' : `\n    <path ${thirdFillSVG} ${thirdtrokeSVG} ${thirdPathSvg}/>`
+            const fourthSVG = disableFourth ? '' : `\n    <path ${fourthFillSVG} ${fourthStrokeSVG} ${fourthPathSvg}/>`
+
+            return `\n<g id="${item.id}" ${transformSVG}>\n    <path ${fillSVG} ${strokeSVG} ${pathSvg}/> ${secondSVG} ${thirdSVG} ${fourthSVG}\n</g>`
+        }
+    }
+
+    private static generateSVGConnectorArrow(connector: Connector) {
+        const connectorShape = connector.connectorShape
+        const pathSvg = EditorHelper.generateSVGPath(connectorShape.path)
+        const strokeSVG = EditorHelper.generateSVGPaint(connectorShape.stroke, true, connectorShape.stroked)
+        const fillSVG = EditorHelper.generateSVGPaint(connectorShape.fill, false, connectorShape.filled)
+        const startArrowPathSVG = EditorHelper.generateSVGPath(connectorShape.startArrowPath)
+        const endArrowPathSVG = EditorHelper.generateSVGPath(connectorShape.endArrowPath)
+        const connectorDoubleLinePathSVG = EditorHelper.generateSVGPath(connectorShape.connectorDoubleLinePath)
+        const arrowStrokeSVG = EditorHelper.generateSVGPaint(connectorShape.arrowStroke, false, true)
+        const arrowFillSVG = EditorHelper.generateSVGPaint(connectorShape.arrowFill, false, true)
+        const arrowOutlineSVG = EditorHelper.generateSVGPaint(connectorShape.arrowOutline, true, true)
+        const connectorDoubleLineStrokeSVG = EditorHelper.generateSVGPaint(connectorShape.connectorDoubleLineStroke, true, true)
+        const connectorDoubleLineFillSVG = EditorHelper.generateSVGPaint(connectorShape.connectorDoubleLineFill, true, true)
+        const connectorDoubleLinePaintSVG = EditorHelper.generateSVGPaint(connectorShape.connectorDoubleLinePaint, true, true)
+        let result = ''
+        // `<path ${fillSVG} ${strokeSVG} ${pathSvg}/>`
+        switch (connector.connectorType) {
+            case ConnectorType.Curve:
+                switch (connector.connectorMode) {
+                    case ConnectorMode.Double:
+                        result += `\n    <path fill='none' ${connectorDoubleLineStrokeSVG} ${pathSvg}/>`
+                        result += `\n    <path fill='none' ${connectorDoubleLineFillSVG} ${pathSvg}/>`
+                        break;
+                    case ConnectorMode.DoubleAndStartArrow:
+                    case ConnectorMode.DoubleAndEndArrow:
+                    case ConnectorMode.DoubleAndBothArrows:
+                    case ConnectorMode.Single:
+                    default:
+                        result += `\n    <path fill='none' ${strokeSVG} ${pathSvg}/>`
+                        break
+                }
+                break;
+            case ConnectorType.Orthogonal:
+                switch (connector.connectorMode) {
+                    case ConnectorMode.DoubleAndStartArrow:
+                    case ConnectorMode.DoubleAndEndArrow:
+                    case ConnectorMode.DoubleAndBothArrows:
+                        result += `\n    <path fill='none' ${connectorDoubleLinePaintSVG} ${connectorDoubleLinePathSVG}/>`
+                        break;
+                    case ConnectorMode.Double:
+                        result += `\n    <path fill='none' ${connectorDoubleLineStrokeSVG} ${pathSvg}/>`
+                        result += `\n    <path fill='none' ${connectorDoubleLineFillSVG} ${pathSvg}/>`
+                        break;
+                    case ConnectorMode.Single:
+                    default:
+                        result += `\n    <path fill='none' ${strokeSVG} ${pathSvg}/>`
+                        break
+                }
+                break;
+            case ConnectorType.StraightLine:
+            default:
+                result += `\n    <path fill='none' ${strokeSVG} ${pathSvg}/>`
+                break;
+        }
+        result += `<path ${fillSVG} ${strokeSVG} ${pathSvg}/>`
+        if (connector.connectorMode == ConnectorMode.Single) {
+            if (connector.startArrow.type != ConnectorArrowDisplayType.None) {
+                if (connector.startArrow.close) {
+                    if (connector.startArrow.outline) {
+                        result += `\n    <path ${arrowFillSVG} ${startArrowPathSVG}/>`
+                    } else {
+                        result += `\n    <path ${arrowStrokeSVG} ${startArrowPathSVG}/>`
+                    }
+                }
+                result += `\n    <path fill='none' ${arrowOutlineSVG} ${startArrowPathSVG}/>`
+            }
+            if (connector.endArrow.type != ConnectorArrowDisplayType.None) {
+                if (connector.endArrow.close) {
+                    if (connector.endArrow.outline) {
+                        result += `\n    <path ${arrowFillSVG} ${endArrowPathSVG}/>`
+                    } else {
+                        result += `\n    <path ${arrowStrokeSVG} ${endArrowPathSVG}/>`
+                    }
+                }
+                result += `\n    <path fill='none' ${arrowOutlineSVG} ${endArrowPathSVG}/>`
+            }
+        }
+        return result
     }
 
     private static generateSVGTransform(item: Item) {
