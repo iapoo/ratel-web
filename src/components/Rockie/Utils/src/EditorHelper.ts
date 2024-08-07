@@ -376,7 +376,7 @@ export class EditorHelper {
     private static generatEditorSVG(editor: Editor) {
         let content = ''
         editor.contentLayer.getAllEditorItems().forEach(editorItem => {
-            content += EditorHelper.generateSVGItem(editorItem as Item)
+            content += EditorHelper.generatEditorItemSVG(editorItem as Item, 0)
         })
         const backgroundColorSVG = SystemUtils.generateColorString(editor.backgroundColor)
         const backgroundSVG = editor.showBackground ? `style="background-color:${backgroundColorSVG}"` : ''
@@ -387,25 +387,33 @@ export class EditorHelper {
         return result
     }
 
-    private static generatEditorItemSVG(item: Item) {
-        const itemSVG = EditorHelper.generateSVGItem(item)
+    private static generatEditorItemSVG(item: Item, depth: number) {
+        const itemSVG = EditorHelper.generateSVGItem(item, depth)
         let itemsSVG = ''
-        if (item.items.length > 0) {
-            itemsSVG += '\n<g>'
-            item.items.forEach(child => {
-                itemsSVG += EditorHelper.generatEditorItemSVG(child as Item)
-            })
-            itemsSVG += '</g>'
+        let indent = ''
+        for (let i = 0; i < depth; i++) {
+            indent += '    '
         }
-        const result = itemSVG + itemsSVG
+        if (item.items.length > 0) {
+            itemsSVG += `\n${indent}    <g>`
+            item.items.forEach(child => {
+                itemsSVG += EditorHelper.generatEditorItemSVG(child as Item, depth + 2)
+            })
+            itemsSVG += `\n${indent}    </g>`
+        }
+        const result = itemSVG + itemsSVG + `\n${indent}</g>`
         return result
     }
 
-    private static generateSVGItem(item: Item) {
+    private static generateSVGItem(item: Item, depth: number) {
         const transformSVG = EditorHelper.generateSVGTransform(item)
+        let indent = ''
+        for (let i = 0; i < depth; i++) {
+            indent += '    '
+        }
         if (item instanceof Connector) {
-            const connectorArrowPathSVG = this.generateSVGConnectorArrow(item)
-            return `\n<g id="${item.id}" ${transformSVG}>${connectorArrowPathSVG}\n</g>`
+            const connectorArrowPathSVG = this.generateSVGConnectorArrow(item, indent + '    ')
+            return `\n${indent}<g id="${item.id}" ${transformSVG}>${connectorArrowPathSVG}`
         } else {
             const pathSvg = EditorHelper.generateSVGPath(item.shape.path)
             const strokeSVG = EditorHelper.generateSVGPaint(item.shape.stroke, true, item.shape.stroked)
@@ -422,15 +430,15 @@ export class EditorHelper {
             const fourthPathSvg = disableFourth ? '' : EditorHelper.generateSVGPath(item.shape.fourthPath)
             const fourthStrokeSVG = disableFourth ? '' : EditorHelper.generateSVGPaint(item.shape.fourthStroke, true, item.shape.fourthStroked)
             const fourthFillSVG = disableFourth ? '' : EditorHelper.generateSVGPaint(item.shape.fourthFill, false, item.shape.fourthFilled)
-            const secondSVG = disableSecond ? '' : `\n    <path ${secondFillSVG} ${secondStrokeSVG} ${secondPathSvg}/>`
-            const thirdSVG = disableThird ? '' : `\n    <path ${thirdFillSVG} ${thirdtrokeSVG} ${thirdPathSvg}/>`
-            const fourthSVG = disableFourth ? '' : `\n    <path ${fourthFillSVG} ${fourthStrokeSVG} ${fourthPathSvg}/>`
+            const secondSVG = disableSecond ? '' : `\n${indent}    <path ${secondFillSVG} ${secondStrokeSVG} ${secondPathSvg}/>`
+            const thirdSVG = disableThird ? '' : `\n${indent}    <path ${thirdFillSVG} ${thirdtrokeSVG} ${thirdPathSvg}/>`
+            const fourthSVG = disableFourth ? '' : `\n${indent}    <path ${fourthFillSVG} ${fourthStrokeSVG} ${fourthPathSvg}/>`
 
-            return `\n<g id="${item.id}" ${transformSVG}>\n    <path ${fillSVG} ${strokeSVG} ${pathSvg}/> ${secondSVG} ${thirdSVG} ${fourthSVG}\n</g>`
+            return `\n${indent}<g id="${item.id}" ${transformSVG}>\n${indent}    <path ${fillSVG} ${strokeSVG} ${pathSvg}/> ${secondSVG} ${thirdSVG} ${fourthSVG}`
         }
     }
 
-    private static generateSVGConnectorArrow(connector: Connector) {
+    private static generateSVGConnectorArrow(connector: Connector, indent: string) {
         const connectorShape = connector.connectorShape
         const pathSvg = EditorHelper.generateSVGPath(connectorShape.path)
         const strokeSVG = EditorHelper.generateSVGPaint(connectorShape.stroke, true, connectorShape.stroked)
@@ -449,15 +457,15 @@ export class EditorHelper {
             case ConnectorType.Curve:
                 switch (connector.connectorMode) {
                     case ConnectorMode.Double:
-                        result += `\n    <path fill="none" ${connectorDoubleLineStrokeSVG} ${pathSvg}/>`
-                        result += `\n    <path fill="none" ${connectorDoubleLineFillSVG} ${pathSvg}/>`
+                        result += `\n${indent}<path fill="none" ${connectorDoubleLineStrokeSVG} ${pathSvg}/>`
+                        result += `\n${indent}<path fill="none" ${connectorDoubleLineFillSVG} ${pathSvg}/>`
                         break;
                     case ConnectorMode.DoubleAndStartArrow:
                     case ConnectorMode.DoubleAndEndArrow:
                     case ConnectorMode.DoubleAndBothArrows:
                     case ConnectorMode.Single:
                     default:
-                        result += `\n    <path fill="none" ${strokeSVG} ${pathSvg}/>`
+                        result += `\n${indent}<path fill="none" ${strokeSVG} ${pathSvg}/>`
                         break
                 }
                 break;
@@ -466,44 +474,44 @@ export class EditorHelper {
                     case ConnectorMode.DoubleAndStartArrow:
                     case ConnectorMode.DoubleAndEndArrow:
                     case ConnectorMode.DoubleAndBothArrows:
-                        result += `\n    <path fill="none" ${connectorDoubleLinePaintSVG} ${connectorDoubleLinePathSVG}/>`
+                        result += `\n${indent}<path fill="none" ${connectorDoubleLinePaintSVG} ${connectorDoubleLinePathSVG}/>`
                         break;
                     case ConnectorMode.Double:
-                        result += `\n    <path fill="none" ${connectorDoubleLineStrokeSVG} ${pathSvg}/>`
-                        result += `\n    <path fill="none" ${connectorDoubleLineFillSVG} ${pathSvg}/>`
+                        result += `\n${indent}<path fill="none" ${connectorDoubleLineStrokeSVG} ${pathSvg}/>`
+                        result += `\n${indent}<path fill="none" ${connectorDoubleLineFillSVG} ${pathSvg}/>`
                         break;
                     case ConnectorMode.Single:
                     default:
-                        result += `\n    <path fill="none" ${strokeSVG} ${pathSvg}/>`
+                        result += `\n${indent}<path fill="none" ${strokeSVG} ${pathSvg}/>`
                         break
                 }
                 break;
             case ConnectorType.StraightLine:
             default:
-                result += `\n    <path fill="none" ${strokeSVG} ${pathSvg}/>`
+                result += `\n${indent}<path fill="none" ${strokeSVG} ${pathSvg}/>`
                 break;
         }
-        result += `<path ${fillSVG} ${strokeSVG} ${pathSvg}/>`
+        result += `\n${indent}<path ${fillSVG} ${strokeSVG} ${pathSvg}/>`
         if (connector.connectorMode == ConnectorMode.Single) {
             if (connector.startArrow.type != ConnectorArrowDisplayType.None) {
                 if (connector.startArrow.close) {
                     if (connector.startArrow.outline) {
-                        result += `\n    <path ${arrowFillSVG} ${startArrowPathSVG}/>`
+                        result += `\n${indent}<path ${arrowFillSVG} ${startArrowPathSVG}/>`
                     } else {
-                        result += `\n    <path ${arrowStrokeSVG} ${startArrowPathSVG}/>`
+                        result += `\n${indent}<path ${arrowStrokeSVG} ${startArrowPathSVG}/>`
                     }
                 }
-                result += `\n    <path fill="none" ${arrowOutlineSVG} ${startArrowPathSVG}/>`
+                result += `\n${indent}<path fill="none" ${arrowOutlineSVG} ${startArrowPathSVG}/>`
             }
             if (connector.endArrow.type != ConnectorArrowDisplayType.None) {
                 if (connector.endArrow.close) {
                     if (connector.endArrow.outline) {
-                        result += `\n    <path ${arrowFillSVG} ${endArrowPathSVG}/>`
+                        result += `\n${indent}<path ${arrowFillSVG} ${endArrowPathSVG}/>`
                     } else {
-                        result += `\n    <path ${arrowStrokeSVG} ${endArrowPathSVG}/>`
+                        result += `\n${indent}<path ${arrowStrokeSVG} ${endArrowPathSVG}/>`
                     }
                 }
-                result += `\n    <path fill="none" ${arrowOutlineSVG} ${endArrowPathSVG}/>`
+                result += `\n${indent}<path fill="none" ${arrowOutlineSVG} ${endArrowPathSVG}/>`
             }
         }
         return result
