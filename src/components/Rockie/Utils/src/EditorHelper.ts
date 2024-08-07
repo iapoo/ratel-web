@@ -378,8 +378,10 @@ export class EditorHelper {
         editor.contentLayer.getAllEditorItems().forEach(editorItem => {
             content += EditorHelper.generateSVGItem(editorItem as Item)
         })
+        const backgroundColorSVG = SystemUtils.generateColorString(editor.backgroundColor)
+        const backgroundSVG = editor.showBackground ? `style="background-color:${backgroundColorSVG}"` : ''
         const result = `<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.dev/svgjs" width="${editor.origWidth}" ` +
-            `height="${editor.origHeight}">` +
+            `height="${editor.origHeight}" ${backgroundSVG}>` +
             `${content}` +
             `\n</svg>`
         return result
@@ -443,20 +445,19 @@ export class EditorHelper {
         const connectorDoubleLineFillSVG = EditorHelper.generateSVGPaint(connectorShape.connectorDoubleLineFill, true, true)
         const connectorDoubleLinePaintSVG = EditorHelper.generateSVGPaint(connectorShape.connectorDoubleLinePaint, true, true)
         let result = ''
-        // `<path ${fillSVG} ${strokeSVG} ${pathSvg}/>`
         switch (connector.connectorType) {
             case ConnectorType.Curve:
                 switch (connector.connectorMode) {
                     case ConnectorMode.Double:
-                        result += `\n    <path fill='none' ${connectorDoubleLineStrokeSVG} ${pathSvg}/>`
-                        result += `\n    <path fill='none' ${connectorDoubleLineFillSVG} ${pathSvg}/>`
+                        result += `\n    <path fill="none" ${connectorDoubleLineStrokeSVG} ${pathSvg}/>`
+                        result += `\n    <path fill="none" ${connectorDoubleLineFillSVG} ${pathSvg}/>`
                         break;
                     case ConnectorMode.DoubleAndStartArrow:
                     case ConnectorMode.DoubleAndEndArrow:
                     case ConnectorMode.DoubleAndBothArrows:
                     case ConnectorMode.Single:
                     default:
-                        result += `\n    <path fill='none' ${strokeSVG} ${pathSvg}/>`
+                        result += `\n    <path fill="none" ${strokeSVG} ${pathSvg}/>`
                         break
                 }
                 break;
@@ -465,21 +466,21 @@ export class EditorHelper {
                     case ConnectorMode.DoubleAndStartArrow:
                     case ConnectorMode.DoubleAndEndArrow:
                     case ConnectorMode.DoubleAndBothArrows:
-                        result += `\n    <path fill='none' ${connectorDoubleLinePaintSVG} ${connectorDoubleLinePathSVG}/>`
+                        result += `\n    <path fill="none" ${connectorDoubleLinePaintSVG} ${connectorDoubleLinePathSVG}/>`
                         break;
                     case ConnectorMode.Double:
-                        result += `\n    <path fill='none' ${connectorDoubleLineStrokeSVG} ${pathSvg}/>`
-                        result += `\n    <path fill='none' ${connectorDoubleLineFillSVG} ${pathSvg}/>`
+                        result += `\n    <path fill="none" ${connectorDoubleLineStrokeSVG} ${pathSvg}/>`
+                        result += `\n    <path fill="none" ${connectorDoubleLineFillSVG} ${pathSvg}/>`
                         break;
                     case ConnectorMode.Single:
                     default:
-                        result += `\n    <path fill='none' ${strokeSVG} ${pathSvg}/>`
+                        result += `\n    <path fill="none" ${strokeSVG} ${pathSvg}/>`
                         break
                 }
                 break;
             case ConnectorType.StraightLine:
             default:
-                result += `\n    <path fill='none' ${strokeSVG} ${pathSvg}/>`
+                result += `\n    <path fill="none" ${strokeSVG} ${pathSvg}/>`
                 break;
         }
         result += `<path ${fillSVG} ${strokeSVG} ${pathSvg}/>`
@@ -492,7 +493,7 @@ export class EditorHelper {
                         result += `\n    <path ${arrowStrokeSVG} ${startArrowPathSVG}/>`
                     }
                 }
-                result += `\n    <path fill='none' ${arrowOutlineSVG} ${startArrowPathSVG}/>`
+                result += `\n    <path fill="none" ${arrowOutlineSVG} ${startArrowPathSVG}/>`
             }
             if (connector.endArrow.type != ConnectorArrowDisplayType.None) {
                 if (connector.endArrow.close) {
@@ -502,7 +503,7 @@ export class EditorHelper {
                         result += `\n    <path ${arrowStrokeSVG} ${endArrowPathSVG}/>`
                     }
                 }
-                result += `\n    <path fill='none' ${arrowOutlineSVG} ${endArrowPathSVG}/>`
+                result += `\n    <path fill="none" ${arrowOutlineSVG} ${endArrowPathSVG}/>`
             }
         }
         return result
