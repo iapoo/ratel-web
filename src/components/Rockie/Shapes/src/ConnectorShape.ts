@@ -299,6 +299,42 @@ export class ConnectorShape extends EntityShape {
     return this._startDirection
   }
 
+  public get startArrowPath() {
+    return this._startArrowPath
+  }
+
+  public get endArrowPath() {
+    return this._endArrowPath
+  }
+
+  public get connectorDoubleLinePath() {
+    return this._connectorDoubleLinePath
+  }
+
+  public get arrowStroke() {
+    return this._arrowStroke
+  }
+
+  public get arrowFill() {
+    return this._arrowFill
+  }
+
+  public get arrowOutline() {
+    return this._arrowOutline
+  }
+
+  public get connectorDoubleLineStroke() {
+    return this._connectorDoubleLineStroke
+  }
+
+  public get connectorDoubleLineFill() {
+    return this._connectorDoubleLineFill
+  }
+
+  public get connectorDoubleLinePaint() {
+    return this._connectorDoubleLinePaint
+  }
+
   public set boundary(boundary: Rectangle) {
     super.boundary = boundary
     // console.log(`ConnectorShape.boundary-> start.x = ${this._start.x} start.y = ${this._start.y} boundary.left = ${this.boundary.left} boundary.top = ${this.boundary.top}`)
