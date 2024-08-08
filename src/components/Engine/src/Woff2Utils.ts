@@ -5,7 +5,7 @@ import * as wawoff2 from 'wawoff2'
  * Compress WOFF2 font file so we can parse and generate text path for SVG export 
  */
 export class Woff2Utils {
-
+    private static fontMap = new Map<string, any>()
     /**
      * 
      * @param fontName 
@@ -18,13 +18,15 @@ export class Woff2Utils {
             const init = new Promise((done) => window.Module = { onRuntimeInitialized: done })
             await loadScript(path).then(() => init)
         }
-        const woff2 = wawoff2.decompress
-        //const fontData = FontUtils.webFontManager.fontDataMap.get(FontUtils.currentLanguageFont.defaultLatinFont)
-        const fontData = await FontUtils.loadSystemFontFile(SystemFonts[0].fontUrl)
-        console.log(`FONTDATA = ${fontData}`)
-        //const ttfdata = await wawoff2.decompress(fontData)
-        const ttfdata = await window.Module.decompress(fontData)
-        console.log(`WAWOFF2 =  ${ttfdata}`)
-        return ttfdata
+        if (Woff2Utils.fontMap.has(fontName)) {
+            return Woff2Utils.fontMap.get(fontName)
+        } else {
+            const fontData = await FontUtils.loadSystemFontFile(fontName)
+            const ttfdata = await window.Module.decompress(fontData)
+            const arrayBuffer = ttfdata.buffer.slice(ttfdata.byteOffset, ttfdata.byteLength + ttfdata.byteOffset)
+            Woff2Utils.fontMap.set(fontName, arrayBuffer)
+            // console.log(`WAWOFF2 =  ${ttfdata}`)
+            return arrayBuffer
+        }
     }
 }

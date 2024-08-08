@@ -1,4 +1,4 @@
-import { Paint, Path, Point2, Rectangle, Woff2Utils } from "@/components/Engine";
+import { Font, Matrix, Paint, Path, Point2, Rectangle, Woff2Utils } from "@/components/Engine";
 import { Editor } from "../../Editor";
 import { Categories, Connector, ConnectorInfo, EditorItem, EditorItemInfo, Entity, Item, ShapeEntity } from "../../Items";
 import { Operation, OperationHelper, OperationType } from "../../Operations";
@@ -361,34 +361,36 @@ export class EditorHelper {
     public static async exportToSVG(editor: Editor) {
         const a = new opentype.Path()
         const ttfdata = await Woff2Utils.decompress('a')
-        const arrayBuffer = ttfdata.buffer.slice(ttfdata.byteOffset, ttfdata.byteLength + ttfdata.byteOffset)
-        const font = opentype.parse(arrayBuffer)
+        //const arrayBuffer = ttfdata.buffer.slice(ttfdata.byteOffset, ttfdata.byteLength + ttfdata.byteOffset)
+        const font = opentype.parse(ttfdata)
         console.log(`Font info = ${font}`)
         const textPath = font.getPath('abc', 30, 30, 24)
-        const textSVG = textPath.toSVG()
+        const textSVG = textPath.toPathData(2)
         return textSVG
     }
 
     public static async exportSelectedToSVG(editor: Editor) {
-        return EditorHelper.generatEditorSVG(editor)
+        const result = await EditorHelper.generatEditorSVG(editor)
+        return result
     }
 
-    private static generatEditorSVG(editor: Editor) {
+    private static async generatEditorSVG(editor: Editor) {
         let content = ''
-        editor.contentLayer.getAllEditorItems().forEach(editorItem => {
-            content += EditorHelper.generatEditorItemSVG(editorItem as Item, 0)
-        })
+        for (let i = 0; i < editor.contentLayer.getEditorItemCount(); i++) {
+            const editorItem = editor.contentLayer.getEditorItem(i)
+            content += await EditorHelper.generatEditorItemSVG(editorItem as Item, 0)
+        }
         const backgroundColorSVG = SystemUtils.generateColorString(editor.backgroundColor)
         const backgroundSVG = editor.showBackground ? `style="background-color:${backgroundColorSVG}"` : ''
         const result = `<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.dev/svgjs" width="${editor.origWidth}" ` +
-            `height="${editor.origHeight}" ${backgroundSVG}>` +
+            `height="${editor.origHeight}" ${backgroundSVG} shape-rendering="geometricPrecision">` +
             `${content}` +
             `\n</svg>`
         return result
     }
 
-    private static generatEditorItemSVG(item: Item, depth: number) {
-        const itemSVG = EditorHelper.generateSVGItem(item, depth)
+    private static async generatEditorItemSVG(item: Item, depth: number) {
+        const itemSVG = await EditorHelper.generateSVGItem(item, depth)
         let itemsSVG = ''
         let indent = ''
         for (let i = 0; i < depth; i++) {
@@ -396,24 +398,26 @@ export class EditorHelper {
         }
         if (item.items.length > 0) {
             itemsSVG += `\n${indent}    <g>`
-            item.items.forEach(child => {
-                itemsSVG += EditorHelper.generatEditorItemSVG(child as Item, depth + 2)
-            })
+            for (let i = 0; i < item.items.length; i++) {
+                const child = item.items[i]
+                itemsSVG += await EditorHelper.generatEditorItemSVG(child as Item, depth + 2)
+            }
             itemsSVG += `\n${indent}    </g>`
         }
         const result = itemSVG + itemsSVG + `\n${indent}</g>`
         return result
     }
 
-    private static generateSVGItem(item: Item, depth: number) {
+    private static async generateSVGItem(item: Item, depth: number) {
         const transformSVG = EditorHelper.generateSVGTransform(item)
         let indent = ''
         for (let i = 0; i < depth; i++) {
             indent += '    '
         }
         if (item instanceof Connector) {
-            const connectorArrowPathSVG = this.generateSVGConnectorArrow(item, indent + '    ')
-            return `\n${indent}<g id="${item.id}" ${transformSVG}>${connectorArrowPathSVG}`
+            const connectorArrowPathSVG = EditorHelper.generateSVGConnectorArrow(item, indent + '    ')
+            const textSVG = await EditorHelper.generateSVGText(item, indent)
+            return `\n${indent}<g id="${item.id}" ${transformSVG}>${connectorArrowPathSVG}${textSVG}`
         } else {
             const pathSvg = EditorHelper.generateSVGPath(item.shape.path)
             const strokeSVG = EditorHelper.generateSVGPaint(item.shape.stroke, true, item.shape.stroked)
@@ -433,9 +437,158 @@ export class EditorHelper {
             const secondSVG = disableSecond ? '' : `\n${indent}    <path ${secondFillSVG} ${secondStrokeSVG} ${secondPathSvg}/>`
             const thirdSVG = disableThird ? '' : `\n${indent}    <path ${thirdFillSVG} ${thirdtrokeSVG} ${thirdPathSvg}/>`
             const fourthSVG = disableFourth ? '' : `\n${indent}    <path ${fourthFillSVG} ${fourthStrokeSVG} ${fourthPathSvg}/>`
+            const textSVG = await EditorHelper.generateSVGText(item, indent + '    ')
 
-            return `\n${indent}<g id="${item.id}" ${transformSVG}>\n${indent}    <path ${fillSVG} ${strokeSVG} ${pathSvg}/> ${secondSVG} ${thirdSVG} ${fourthSVG}`
+            return `\n${indent}<g id="${item.id}" ${transformSVG}>\n${indent}    <path ${fillSVG} ${strokeSVG} ${pathSvg}/> ${secondSVG} ${thirdSVG} ${fourthSVG} ${textSVG}`
         }
+    }
+
+
+    private static async generateSVGText(item: Item, indent: string) {
+        const shape = item.shape
+        const matrix = shape.getParagraphMatrix()
+        const transform = EditorHelper.generateSVGTextTransform(matrix)
+        const textIndent = indent + '    '
+        const runs = shape.runs
+        const styles = shape.styles
+        const fontPaint = shape.fontPaint
+
+        if (item.text.trim().length == 0) {
+            return ''
+        }
+        let textSVG = `\n${indent}<g ${transform}>`
+        let style = styles[0]
+        let styleIndex = 0
+        let styleStart = 0
+        let styleEnd = style.length
+
+        let run = runs[0]
+        let runIndex = 0
+
+        let start = 0
+        let end = 0
+        while (start < shape.text.length) {
+            if (!run) { // just R&L in text
+                break
+            }
+            while (run.textRange.end <= start) {
+                run = runs[++runIndex]
+                if (!run) { // space
+                    break
+                }
+            }
+            if (!run) { //space
+                break
+            }
+            while (styleEnd <= start) {
+                style = styles[++styleIndex]
+                if (!style) {
+                    break
+                }
+                styleStart = styleEnd
+                styleEnd += style.length
+            }
+            end = Math.min(run.textRange.end, styleEnd)
+
+            // check that we have anything to draw
+            if (run.textRange.start >= end) {
+                start = end
+                continue // could be a span of WS with no glyphs
+            }
+
+            const font = style.font
+            font.skewX = style.italic ? -0.2 : 0
+            fontPaint.setColor(style.color)
+
+            let gly = run.glyphs
+            let pos = run.positions
+            let textStart = run.textRange.start
+            let textEnd = run.textRange.end
+            let offsetX = pos[0]
+            let offsetY = pos[1]
+            //TODO: it may happend when run with & without italic
+            if (start > run.textRange.start || end < run.textRange.end) {
+                // search for the subset of glyphs to draw
+                let glyph_start = 0; let glyph_end = 0
+                for (let i = 0; i < run.indices.length; ++i) {
+                    if (run.indices[i] >= start) {
+                        glyph_start = i
+                        break
+                    }
+                }
+                for (let i = glyph_start + 1; i < run.indices.length; ++i) {
+                    if (run.indices[i] >= end) {
+                        glyph_end = i
+                        break
+                    }
+                }
+                // LOG('    glyph subrange', glyph_start, glyph_end)
+                textEnd = textStart + glyph_end
+                textStart = textStart + glyph_start
+                offsetX = pos[glyph_start * 2]
+                offsetY = pos[glyph_start * 2 + 1]
+                gly = gly.slice(glyph_start, glyph_end)
+                // +2 at the end so we can see the trailing position (esp. for underlines)
+                pos = pos.slice(glyph_start * 2, glyph_end * 2 + 2)
+            } else {
+                // LOG('    use entire glyph run')
+            }
+            // canvas.drawGlyphs(gly, pos, 0, 0, f, p)
+            let startX = shape.getTextPaddingX()
+            let startY = shape.getTextPaddingY()
+            //graphics.
+            //const glyphFont = new Font(run.typefaceName, run.size)
+            //graphics.drawGlyphs(gly, pos, startX, startY, font, fontPaint)
+            const textSVGData = await EditorHelper.generateSVGTextPath(shape.text.substring(textStart, textEnd), startX + offsetX, startY + offsetY, font, fontPaint, style.italic, style.bold)
+            textSVG += '\n' + textIndent + textSVGData
+            if (style.underline) {
+                const gap = 2
+                const Y = pos[1] // first Y
+                const lastX = pos[gly.length * 2]
+                const sects = font.getGlyphIntercepts(gly, pos, Y + 2, Y + 4)
+                const underlineColor = SystemUtils.generateColorString(fontPaint.getColor())
+
+                let x = pos[0]
+                for (let i = 0; i < sects.length; i += 2) {
+                    const end = sects[i] - gap
+                    if (x < end) {
+                        //graphics.drawRect4f(x + startX, Y + 2 + startY, end + startX, Y + 4 + startY, fontPaint)
+                        textSVG += `\n${textIndent}<rect x="${x + startX}" y="${Y + 2 + startY}" width="${end - x}" height="${2}" fill="${underlineColor}" />`
+                    }
+                    x = sects[i + 1] + gap
+                }
+                if (x < lastX) {
+                    //graphics.drawRect4f(x + startX, Y + 2 + startY, lastX + startX, Y + 4 + startY, fontPaint)
+                    textSVG += `\n${textIndent}<rect x="${x + startX}" y="${Y + 2 + startY}" width="${lastX - x}" height="${2}" fill="${underlineColor}" />`
+                }
+            }
+
+            start = end
+        }
+        textSVG += `\n${indent}</g>`
+        return textSVG
+    }
+
+    private static generateSVGTextTransform(matrix: Matrix) {
+        return `transform="matrix(${matrix.source[0]}, ${matrix.source[0]}, ${matrix.source[1]}, ${matrix.source[2]}, ${matrix.source[3]}, ${matrix.source[4]}, ${matrix.source[5]})"`
+    }
+
+    private static async generateSVGTextPath(text: string, startX: number, startY: number, font: Font, fontPaint: Paint, isItalic: boolean, isBold: boolean) {
+        const ttfdata = await Woff2Utils.decompress(font.fontName)
+        //const arrayBuffer = ttfdata.buffer.slice(ttfdata.byteOffset, ttfdata.byteLength + ttfdata.byteOffset)
+        const ttfFont = opentype.parse(ttfdata)
+        // console.log(`Font info = ${ttfFont}`)
+        const textPath = ttfFont.getPath(text, startX, startY, font.fontSize)
+        const textSVGData = textPath.toPathData(2)
+        //const textSVG = EditorHelper.generateSVGPath()
+        const fontColor = SystemUtils.generateColorString(fontPaint.getColor())
+        //TODO: Need to redesign this.
+        const offset = Math.tan(7 / 180 * Math.PI) * startY
+        const italicData = isItalic ? `transform="translate(${offset.toFixed(1)}), skewX(-7)"` : ''
+        const strokeWidth = isBold ? (font.fontSize < 20 ? 0.5 : font.fontSize / 24 * 0.5 + 0.5) : 0.1
+        const textSVG = `<path fill="${fontColor}" stroke="${fontColor}" stroke-linecap="round" stroke-linejoin="round" stroke-width="${strokeWidth}"  ${italicData} d="${textSVGData}"/>`
+
+        return textSVG
     }
 
     private static generateSVGConnectorArrow(connector: Connector, indent: string) {

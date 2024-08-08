@@ -76,6 +76,9 @@ export abstract class AbstractTextShape extends Shape {
     return this._cursor
   }
 
+  public get runs() {
+    return this._runs
+  }
   //public get font() {
   //  return this._font
   //}
@@ -84,9 +87,9 @@ export abstract class AbstractTextShape extends Shape {
   //  this._font = value
   //}
 
-  //public get fontPaint() {
-  //  return this._fontPaint
-  //}
+  public get fontPaint() {
+    return this._fontPaint
+  }
 
   //public set fontPaint(value: Paint) {
   //  this._fontPaint = value
@@ -1476,7 +1479,7 @@ export abstract class AbstractTextShape extends Shape {
     return run.indices[index]
   }
 
-  private getTextPaddingX() {
+  public getTextPaddingX() {
     return this._textMargin + this._textLeft
   }
 
@@ -1497,7 +1500,7 @@ export abstract class AbstractTextShape extends Shape {
     return newLeft
   }
 
-  private getTextPaddingY() {
+  public getTextPaddingY() {
     let startY = this._textMargin + this._textTop
     let paragraphHeight = this._paragraph.getHeight()
     if (paragraphHeight == 0) {
@@ -1520,7 +1523,7 @@ export abstract class AbstractTextShape extends Shape {
     return startY
   }
 
-  private getParagraphMatrix() {
+  public getParagraphMatrix() {
     let matrix = new Matrix()
     switch (this._paragraphDirection) {
       case ParagraphDirection.BottomTop:
