@@ -359,25 +359,20 @@ export class EditorHelper {
     }
 
     public static async exportToSVG(editor: Editor) {
-        const a = new opentype.Path()
-        const ttfdata = await Woff2Utils.decompress('a')
-        //const arrayBuffer = ttfdata.buffer.slice(ttfdata.byteOffset, ttfdata.byteLength + ttfdata.byteOffset)
-        const font = opentype.parse(ttfdata)
-        console.log(`Font info = ${font}`)
-        const textPath = font.getPath('abc', 30, 30, 24)
-        const textSVG = textPath.toPathData(2)
-        return textSVG
-    }
-
-    public static async exportSelectedToSVG(editor: Editor) {
-        const result = await EditorHelper.generatEditorSVG(editor)
+        const result = await EditorHelper.generatEditorSVG(editor, false)
         return result
     }
 
-    private static async generatEditorSVG(editor: Editor) {
+    public static async exportSelectedToSVG(editor: Editor) {
+        const result = await EditorHelper.generatEditorSVG(editor, true)
+        return result
+    }
+
+    private static async generatEditorSVG(editor: Editor, onlySelected: boolean) {
         let content = ''
-        for (let i = 0; i < editor.contentLayer.getEditorItemCount(); i++) {
-            const editorItem = editor.contentLayer.getEditorItem(i)
+        const layer = onlySelected ? editor.selectionLayer : editor.contentLayer
+        for (let i = 0; i < layer.getEditorItemCount(); i++) {
+            const editorItem = layer.getEditorItem(i)
             content += await EditorHelper.generatEditorItemSVG(editorItem as Item, 0)
         }
         const backgroundColorSVG = SystemUtils.generateColorString(editor.backgroundColor)
