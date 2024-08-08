@@ -669,6 +669,7 @@ const Header: FC<HeaderProps> = ({
       })
     }
   }
+
   const handleExport = (format: 'png' | 'jpg' = 'png') => {
     if (Utils.currentEditor) {
       const data = EditorHelper.export(Utils.currentEditor, format)
@@ -683,6 +684,19 @@ const Header: FC<HeaderProps> = ({
     }
   }
 
+  const handleExportSVG = async () => {
+    if (Utils.currentEditor) {
+      const data = await EditorHelper.exportToSVG(Utils.currentEditor)
+      SystemUtils.generateDownloadFile(data, selectedDocumentName + '.svg')
+    }
+  }
+
+  const handleExportSelectedSVG = async () => {
+    if (Utils.currentEditor) {
+      const data = await EditorHelper.exportSelectedToSVG(Utils.currentEditor)
+      SystemUtils.generateDownloadFile(data, selectedDocumentName + '.svg')
+    }
+  }
   const handleDownload = () => {
     const storage = new StorageService()
     storage.editors = Utils.editors
@@ -2353,6 +2367,7 @@ const Header: FC<HeaderProps> = ({
       children: [
         { key: 'ExportToPNG', label: <FormattedMessage id='workspace.header.menu-file-export-png' />, icon: <DownloadOutlined />, onClick: () => handleExport('png') },
         // { key: 'ExportToJPG', label: <FormattedMessage id='workspace.header.menu-file-export-jpg' />, icon: <DownloadOutlined />, onClick: () => handleExport('jpg') },
+        { key: 'ExportToSVG', label: <FormattedMessage id='workspace.header.menu-file-export-svg' />, icon: <DownloadOutlined />, onClick: () => handleExportSVG() },
         { key: 'ExportToDocment', label: <FormattedMessage id='workspace.header.menu-file-export-document' />, icon: <DownloadOutlined />, onClick: handleDownload },
       ]
     },
@@ -2361,6 +2376,7 @@ const Header: FC<HeaderProps> = ({
       children: [
         { key: 'ExportSelectedToPNG', label: <FormattedMessage id='workspace.header.menu-file-export-selected-png' />, icon: <DownloadOutlined />, onClick: () => handleExportSelected('png') },
         // { key: 'ExportSelectedToJPG', label: <FormattedMessage id='workspace.header.menu-file-export-selected-jpg' />, icon: <DownloadOutlined />, onClick: () => handleExportSelected('jpg') },
+        { key: 'ExportSelectedToSVG', label: <FormattedMessage id='workspace.header.menu-file-export-selected-svg' />, icon: <DownloadOutlined />, onClick: () => handleExportSelectedSVG() },
       ]
     },
   ];
