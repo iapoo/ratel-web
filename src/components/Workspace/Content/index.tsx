@@ -1981,7 +1981,8 @@ const Content: FC<ContentProps> = ({
       //const a = Utils.currentEditor.contentLayer.getEditorItem(0).shape.path.toSVGString()
       // const a = await Utils.currentEditor.exportToSVG()
       const a = await EditorHelper.exportSelectedToSVG(Utils.currentEditor)
-      console.log(`SVG = ${a}`)
+      //const a = await EditorHelper.exportToSVG(Utils.currentEditor)
+      console.log(`${a}`)
       if (RequestUtils.online) {
         await EditorHelper.addToMyShapes(Utils.currentEditor, onMyShapesUpdated)
       } else {

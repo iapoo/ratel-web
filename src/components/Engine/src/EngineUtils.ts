@@ -414,7 +414,7 @@ export class FontUtils {
   }
 
   public static async registerFont(fontName: string, fontUrl: string) {
-    const fontData = await FontUtils.loadSystemFontFile(fontUrl);
+    const fontData = await FontUtils.loadSystemFontFileByUrl(fontUrl);
     FontUtils.webFontManager.fontDataMap.set(fontName, fontData);
     FontUtils.webFontManager.typeFaceFontProvider.registerFont(
       fontData,
@@ -485,7 +485,19 @@ export class FontUtils {
     }
   }
 
-  public static async loadSystemFontFile(fontUrl: string) {
+
+  public static async loadSystemFontFile(fontName: string) {
+    let fontUrl = SystemFonts[0].fontUrl
+    SystemFonts.forEach(systemFont => {
+      if (fontName === systemFont.fontName) {
+        fontUrl = systemFont.fontUrl
+      }
+    })
+    const webFontFile = await FontUtils.getWebFontFile(fontUrl);
+    return webFontFile.data;
+  }
+
+  private static async loadSystemFontFileByUrl(fontUrl: string) {
     const webFontFile = await FontUtils.getWebFontFile(fontUrl);
     return webFontFile.data;
   }
