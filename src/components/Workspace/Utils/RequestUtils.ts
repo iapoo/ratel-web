@@ -461,4 +461,11 @@ export class RequestUtils {
         //console.log(response.data)
         return response.data
     }
+
+    public static async fetchSvgFile(url: string) {
+        const request = axios.get(url, { headers: { 'Content-Type': 'application/xml+svg' } })
+        const response = await request
+        //console.log(response.data)
+        return response.data
+    }
 }

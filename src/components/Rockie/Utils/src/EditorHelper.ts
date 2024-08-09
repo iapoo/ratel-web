@@ -378,7 +378,7 @@ export class EditorHelper {
         const backgroundColorSVG = SystemUtils.generateColorString(editor.backgroundColor)
         const backgroundSVG = editor.showBackground ? `style="background-color:${backgroundColorSVG}"` : ''
         const result = `<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.dev/svgjs" width="${editor.origWidth}" ` +
-            `height="${editor.origHeight}" ${backgroundSVG} shape-rendering="geometricPrecision">` +
+            `height="${editor.origHeight}" viewbox="0 0 ${editor.origWidth} ${editor.origHeight}"  ${backgroundSVG} shape-rendering="geometricPrecision">` +
             `${content}` +
             `\n</svg>`
         return result

@@ -5,20 +5,14 @@ import { Utils, RequestUtils, } from '../Utils'
 import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
 import { ConnectorAction, ContainerAction, CustomShapeAction, ImageContainerAction, SvgContainerAction, LineAction, ShapeAction, TableAction, CustomTableAction, ExtendedShapeAction, ExtendedContainerAction, FrameAction, CustomContainerAction, MyShapeAction, } from '../../Rockie/Actions'
 import { StorageService, } from '../Storage'
-import {
-  Rectangle, RoundRectangle, Text, Ellipse, Square, Circle, Process, Diamond, Parallelogram, Hexagon, Triangle,
-  Cylinder, Cloud, Document, InternalStorage, Cube, Step, Trapezoid, Tape, Note, Card, Callout, Actor, Container
-} from '@/components/Resource/LargeIcons'
 import { ContainerEntity, ContainerTypes, Containers, CustomConnector, CustomEntity, CustomTableEntity, EditorItemInfo, FrameEntity, ShapeTypes, Shapes } from '@/components/Rockie/Items'
 import { BasicShapes } from '@/components/Rockie/CustomItems/BasicShapes';
-import { ShapeTypeInfo } from '@/components/Rockie/Shapes/src/EntityShape';
 import { ShapeEntity, ShapeType } from '@/components/Rockie/Items/src/ShapeEntity';
 import { Arrows } from '@/components/Rockie/CustomItems/Arrows';
 import { AliyunShapes } from '@/components/Rockie/CustomItems/Aliyun';
 import { AwsShapes } from '@/components/Rockie/CustomItems/Aws';
 import { FlowChartShapes } from '@/components/Rockie/CustomItems/FlowChart';
 import { UMLBasicShapesForActivityState, UMLBasicShapesForClass, UMLBasicShapesForUseCase, UMLConnectors, UMLConnectorsForActivityState, UMLConnectorsForClass, UMLConnectorsForSequence, UMLConnectorsForUseCase, UMLContainerShapes, UMLContainerShapesForActivityState, UMLContainerShapesForClass, UMLContainerShapesForUseCase, UMLCustomShapesForActivityState, UMLCustomShapesForSequence, UMLFrameShapesForSequence, UMLCustomTables, UMLGridShapesForClass, UMLBasicShapes, UMLCustomShapesForOther, UMLGridShapesForOther, UMLCustomContainersForSequence } from '@/components/Rockie/CustomItems/UML';
-import { UMLBasicShapeTypes } from '@/components/Rockie/CustomItems/UML/src/UMLBasicShape';
 import { CustomConnectorAction } from '@/components/Rockie/Actions/src/CustomConnectorAction';
 import { CustomContainerEntity } from '@/components/Rockie/Items/src/CustomContainerEntity';
 import { MyShape, MyShapes } from '../Utils/RequestUtils';
@@ -26,6 +20,7 @@ import { EditOutlined } from '@ant-design/icons';
 import MyShapesWindowPage from './MyShapesWindow';
 import { ERCustomShapes } from '@/components/Rockie/CustomItems/EntityRelation';
 import { MockupShapes } from '@/components/Rockie/CustomItems/Mockup';
+import { Circle, Container, Element, Ellipse, G, Gradient, Line, Marker, Path, Pattern, PointArray, Polyline, Rect, SVG, Stop, Style, Svg, } from "@svgdotjs/svg.js";
 
 interface NavigatorProps {
   navigatorWidth: number
@@ -554,6 +549,79 @@ const Navigator: FC<NavigatorProps> = ({
     //console.log(`mouse is up`)
   }
 
+  const getSVGPopoverContent = (folder: string, name: string, width: number, height: number) => {
+    const margin = 32
+    return <div style={{ width: width + margin, display: 'table' }}>
+      <div style={{ display: 'table-cell', textAlign: 'center', verticalAlign: 'middle', borderTop: '0px solid gray', padding: '2px' }}>
+        <img id={process.env.PUBLIC_PATH + `/${folder}/${name}.svg`} src={process.env.PUBLIC_PATH + `/${folder}/${name}.svg`} />
+      </div>
+    </div>
+  }
+
+  const visitContainer = (container: Element, factor: number) => {
+    const children = container.children()
+    if (container instanceof Path) {
+      const oldStrokeWidth = container.attr('stroke-width')
+      if (oldStrokeWidth) {
+        container.attr('stroke-width', 5 * oldStrokeWidth)
+      }
+    }
+    children.forEach((element, index, array) => {
+      if (element instanceof Element) {
+        visitContainer(element, factor)
+      }
+    })
+
+  }
+
+  const updateSVG = async (id: string, src: string, width: number, height: number, iconWidth: number, iconheight: number) => {
+    const svgContent = await RequestUtils.fetchSvgFile(src)
+    //console.log(`${svgContent}`)
+    const img = document.getElementById(id) as HTMLImageElement
+    const svg = SVG(svgContent) as Svg
+    const factor = width / iconWidth
+    svg.viewbox(0, 0, width, height)
+    svg.width(iconWidth)
+    svg.height(iconheight)
+    // svg.attr('viewbox', `0 0 ${width} ${height}`)
+    //console.log(`${svg}`)
+    visitContainer(svg, factor)
+    const iconSvg = svg.svg()
+    //visitContainer(iconSvg)
+    console.log(`${iconSvg}`)
+    const svgData = 'data:image/svg+xml;base64,' + btoa(iconSvg)
+    if (img && !img.src.startsWith('data')) {
+      img.src = svgData
+      // console.log(`${svgData}`)
+      // svgSource.addTo(svg)
+      // console.log(svgContent)
+      //().fin.svg(`#${id}`)
+    }
+  }
+
+  const shapes2 = ShapeTypes.map(shapeType => {
+    const margin = 5
+    const folder = 'basic-icons'
+    const iconId = `svg-icon-${folder}-${shapeType.name}`
+    const src = process.env.PUBLIC_PATH + `/${folder}/${shapeType.name}.svg`
+    let width = 28
+    let height = 28
+    if (shapeType.width > shapeType.height) {
+      height = Math.round(28 * shapeType.height / shapeType.width)
+    } else {
+      width = 28
+    }
+    return <Popover title={shapeType.name} placement='right' content={getSVGPopoverContent(folder, shapeType.name, shapeType.width, shapeType.height)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 180, width: 180, }}>
+      <Button type='text' onMouseDown={() => addShape(shapeType.name, folder)} style={{ padding: 2, display: 'table' }} >
+        <img id={iconId} src={src}
+          width={width} height={height} style={{ display: 'table-cell' }}
+          draggable={false}
+          onLoad={() => updateSVG(iconId, src, shapeType.width + margin * 2, shapeType.height + margin * 2, width, height)} />
+      </Button>
+    </Popover>
+  }
+  )
+
   const shapes = ShapeTypes.map(shapeType => {
     let width = 28
     let height = 28
@@ -935,6 +1003,7 @@ const Navigator: FC<NavigatorProps> = ({
       label: <div style={{ fontWeight: 'bolder' }}><FormattedMessage id='workspace.navigator.panel.my-shapes' /></div>,
       children: <Space size={2} wrap>
         {myShapeItems}
+        {shapes2}
       </Space>,
       extra: <EditOutlined onClick={handleModifyMyShapes} />
     },
