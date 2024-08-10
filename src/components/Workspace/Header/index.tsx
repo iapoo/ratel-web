@@ -43,7 +43,8 @@ import { RcFile, UploadChangeParam } from 'antd/es/upload';
 import { parse, stringify } from 'querystringify';
 import { ERCustomShape, ERCustomShapeTypes } from '@/components/Rockie/CustomItems/EntityRelation/src/ERCustomShape';
 import { MockupCustomShape, MockupCustomShapeTypes } from '@/components/Rockie/CustomItems/Mockup/src/MockupCustomShape';
-import { ShapeType } from '@/components/Rockie/Items/src/ShapeEntity';
+import { Shapes, ShapeType } from '@/components/Rockie/Items/src/ShapeEntity';
+import { TableTypes } from '@/components/Rockie/Items/src/TableEntity';
 
 interface HeaderProps {
   previousEditor: Editor | undefined
@@ -1248,10 +1249,67 @@ const Header: FC<HeaderProps> = ({
     return { value: connectorArrowType.name, label: <img alt={connectorArrowType.description} src={process.env.PUBLIC_PATH + '/images/connector-line-end-arrow-' + connectorArrowType.name.toLowerCase() + '.png'} width='16' height='16' /> }
   })
 
-  const handleGenerateIcons = async (shapeTypes: ShapeType[]) => {
+  const handleGenerateIconsForTable = async (shapeTypes: ShapeType[]) => {
     if (currentEditor) {
       let count = shapeTypes.length
-      for (let i = 15; i < count; i++) {
+      for (let i = 0; i < count; i++) {
+        let shapeType = shapeTypes[i]
+        let margin = 5 //2
+        let lineFactor = 1 //1
+        let fontFactor = 1 //0.5
+        let sizeFactor = 1 //0.25
+        let modifierFactor = 1 //0.25
+        currentEditor.contentLayer.removeAllEditorItems()
+        let left = shapeType.left + margin
+        if (shapeType.width < shapeType.height) {
+          left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
+        }
+        let shapeEntity = new TableEntity(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor)
+        shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
+        shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
+        if (!shapeType.modifyInPercent) {
+          shapeEntity.shape.modifier = new Point2(Math.round(shapeEntity.shape.modifier.x * modifierFactor), Math.round(shapeEntity.shape.modifier.y * modifierFactor))
+        }
+        if (shapeType.width < shapeType.height) {
+          currentEditor.setup(1, shapeType.height * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+        } else {
+          currentEditor.setup(1, shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+        }
+        currentEditor.contentLayer.addEditorItem(shapeEntity)
+        currentEditor.render()
+        const data = await EditorHelper.exportToSVG(currentEditor)
+        SystemUtils.generateDownloadFile(data, `${shapeType.name}.svg`)
+      }
+    }
+  }
+  const handleGenerateIconsForConnector = async () => {
+    if (currentEditor) {
+      const connectorWidth = 128
+      const connectorHeight = 128
+      const connectorTypeName = 'Line'
+      let margin = 5 //2
+      let lineFactor = 1 //1
+      let fontFactor = 1 //0.5
+      let sizeFactor = 1 //0.25
+      let modifierFactor = 1 //0.25
+      currentEditor.contentLayer.removeAllEditorItems()
+      let left = margin
+      let top = margin
+      let shapeEntity = new Connector(new Point2(left, top), new Point2(left + connectorWidth, top + connectorHeight))
+      shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
+      shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
+      currentEditor.setup(1, connectorWidth * sizeFactor + margin * 2, connectorHeight * sizeFactor + margin * 2)
+      currentEditor.contentLayer.addEditorItem(shapeEntity)
+      currentEditor.render()
+      const data = await EditorHelper.exportToSVG(currentEditor)
+      SystemUtils.generateDownloadFile(data, `${connectorTypeName}.svg`)
+    }
+  }
+
+  const handleGenerateIconsForShape = async (shapeTypes: ShapeType[]) => {
+    if (currentEditor) {
+      let count = shapeTypes.length
+      for (let i = 0; i < count; i++) {
         let shapeType = shapeTypes[i]
         let margin = 5 //2
         let lineFactor = 1 //1
@@ -1282,6 +1340,21 @@ const Header: FC<HeaderProps> = ({
     }
   }
 
+
+  const handleGenerateIcons = async (shapeTypes: ShapeType[]) => {
+    const enableShapes = false
+    const enableLine = false
+    const enableTable = true
+    if (enableShapes) {
+      handleGenerateIconsForShape(ShapeTypes)
+    }
+    if (enableLine) {
+      handleGenerateIconsForConnector()
+    }
+    if (enableTable) {
+      handleGenerateIconsForTable(TableTypes)
+    }
+  }
   const handleExportDetail = async (editor: Editor, shapeName: string) => {
 
   }
@@ -2460,7 +2533,7 @@ const Header: FC<HeaderProps> = ({
   ]
 
   const developmentItems: MenuProps['items'] = [
-    { key: 'Generate Iconss', label: 'Generate Iconss', onClick: () => handleGenerateIcons(ShapeTypes) },
+    { key: 'Generate Icons', label: 'Generate Icons', onClick: () => handleGenerateIcons() },
     { key: 'Test Code', label: 'SaveAs', onClick: handleTestCode },
     { key: 'Test Shapes', label: 'Test Shapes', onClick: handleContainerShapesLarge, },
     { key: 'Test Container Shapes Large', label: 'Test Container Shapes Large', onClick: handleContainerShapesLarge, },

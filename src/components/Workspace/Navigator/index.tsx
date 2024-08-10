@@ -21,6 +21,7 @@ import MyShapesWindowPage from './MyShapesWindow';
 import { ERCustomShapes } from '@/components/Rockie/CustomItems/EntityRelation';
 import { MockupShapes } from '@/components/Rockie/CustomItems/Mockup';
 import { Circle, Container, Element, Ellipse, G, Gradient, Line, Marker, Path, Pattern, PointArray, Polyline, Rect, SVG, Stop, Style, Svg, } from "@svgdotjs/svg.js";
+import { TableTypes } from '@/components/Rockie/Items/src/TableEntity';
 
 interface NavigatorProps {
   navigatorWidth: number
@@ -29,6 +30,13 @@ interface NavigatorProps {
   // loginCompleted: boolean
   // logoutCompleted: boolean
 }
+const ICON_WIDTH = 28
+const ICON_HEIGHT = 28
+const POPOVER_ICON_MARGIN = 5
+const POPOVER_WIDTH = 180
+const POPOVER_MIN_WIDTH = 180
+const LINE_WIDTH = 128
+const LINE_HEIGHT = 128
 
 const NAVIGATOR_ID = 'navigator-id'
 const ACTION_IMAGE_ID = 'navigator-action-image-id'
@@ -130,7 +138,7 @@ const Navigator: FC<NavigatorProps> = ({
   const addShape = (type: string, folder: string) => {
     if (Utils.currentEditor) {
       Utils.currentEditor.action = new ShapeAction(Utils.currentEditor, type)
-      Utils.currentEditor.action.imageId = process.env.PUBLIC_PATH + `/${folder}/${type}.png`
+      Utils.currentEditor.action.imageId = process.env.PUBLIC_PATH + `/${folder}/${type}.svg`
     }
   }
 
@@ -179,7 +187,7 @@ const Navigator: FC<NavigatorProps> = ({
   const addLine = (type: string, folder: string) => {
     if (Utils.currentEditor) {
       Utils.currentEditor.action = new ConnectorAction(Utils.currentEditor)
-      Utils.currentEditor.action.imageId = process.env.PUBLIC_PATH + `/${folder}/${type}.png`
+      Utils.currentEditor.action.imageId = process.env.PUBLIC_PATH + `/${folder}/${type}.svg`
     }
   }
 
@@ -228,7 +236,7 @@ const Navigator: FC<NavigatorProps> = ({
   const addTable = (type: string, folder: string) => {
     if (Utils.currentEditor) {
       Utils.currentEditor.action = new TableAction(Utils.currentEditor)
-      Utils.currentEditor.action.imageId = process.env.PUBLIC_PATH + `/${folder}/${type}.png`
+      Utils.currentEditor.action.imageId = process.env.PUBLIC_PATH + `/${folder}/${type}.svg`
     }
     let str = encodeURI('ab')
     const base64 = btoa(str)
@@ -372,17 +380,17 @@ const Navigator: FC<NavigatorProps> = ({
     </div>
   }
 
-  const line = <Popover title={'Line'} placement='right' content={getPopoverContent('Line', 128, 128)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 180, width: 180, }}>
-    <Button type='text' onMouseDown={() => addLine('Line', 'shapes-large')} style={{ padding: 2, display: 'table' }}>
-      <img id={process.env.PUBLIC_PATH + `/shapes/Line.png`} src={process.env.PUBLIC_PATH + `/shapes/Line.png`} width={28} height={28} style={{ display: 'table-cell' }} />
-    </Button>
-  </Popover>
+  // const line = <Popover title={'Line'} placement='right' content={getPopoverContent('Line', 128, 128)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 180, width: 180, }}>
+  //   <Button type='text' onMouseDown={() => addLine('Line', 'shapes-large')} style={{ padding: 2, display: 'table' }}>
+  //     <img id={process.env.PUBLIC_PATH + `/shapes/Line.png`} src={process.env.PUBLIC_PATH + `/shapes/Line.png`} width={28} height={28} style={{ display: 'table-cell' }} />
+  //   </Button>
+  // </Popover>
 
-  const table = <Popover title={'Table'} placement='right' content={getPopoverContent('Table', 128, 128)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 180, width: 180, }}>
-    <Button type='text' onMouseDown={() => addTable('Table', 'shapes-large')} style={{ padding: 2, display: 'table' }}>
-      <img id={process.env.PUBLIC_PATH + `/shapes/Table.png`} src={process.env.PUBLIC_PATH + `/shapes/Table.png`} width={28} height={28} style={{ display: 'table-cell' }} />
-    </Button>
-  </Popover>
+  // const table2 = <Popover title={'Table'} placement='right' content={getPopoverContent('Table', 128, 128)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 180, width: 180, }}>
+  //   <Button type='text' onMouseDown={() => addTable('Table', 'shapes-large')} style={{ padding: 2, display: 'table' }}>
+  //     <img id={process.env.PUBLIC_PATH + `/shapes/Table.png`} src={process.env.PUBLIC_PATH + `/shapes/Table.png`} width={28} height={28} style={{ display: 'table-cell' }} />
+  //   </Button>
+  // </Popover>
 
   // const customTable = <Popover title={'Table'} placement='right' content={getPopoverContent('Table', 128, 128)} overlayStyle={{left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 180, width: 180,}}>
   // <Button type='text' onMouseDown={() => addCustomTable('Interface')} style={{padding: 2, display: 'table'}}>
@@ -561,9 +569,28 @@ const Navigator: FC<NavigatorProps> = ({
   const visitContainer = (container: Element, factor: number) => {
     const children = container.children()
     if (container instanceof Path) {
+      //update stroke width , but exclude if it is text
       const oldStrokeWidth = container.attr('stroke-width')
-      if (oldStrokeWidth) {
-        container.attr('stroke-width', 5 * oldStrokeWidth)
+      const strokeLineCap = container.attr('stroke-linecap')
+      if (oldStrokeWidth && strokeLineCap != 'round' && oldStrokeWidth != 0.1) {
+        container.attr('stroke-width', Number((factor * oldStrokeWidth).toFixed(2)))
+      }
+      //detect & update for text
+      let offsetX = 0
+      let offsetY = 0
+      const textFactor = 0.8
+      if (strokeLineCap == 'round') { //May need more robust way to check if text
+        const data = container.array()
+        if (data.length > 0) {
+          //First command must be Moveto ,we use it to detect text position
+          const pathCommand = data[0]
+          const x = pathCommand[1] as number
+          const y = pathCommand[2] as number
+          offsetX = - x * textFactor
+          offsetY = - y * textFactor
+        }
+        const transform = `scale(${factor * textFactor}, ${factor * textFactor}) translate(${offsetX}, ${offsetY})`
+        container.attr('transform', transform)
       }
     }
     children.forEach((element, index, array) => {
@@ -579,8 +606,9 @@ const Navigator: FC<NavigatorProps> = ({
     //console.log(`${svgContent}`)
     const img = document.getElementById(id) as HTMLImageElement
     const svg = SVG(svgContent) as Svg
-    const factor = width / iconWidth
-    svg.viewbox(0, 0, width, height)
+    const svgWidth = width > height ? width : height
+    const factor = Number((svgWidth / iconWidth).toFixed(2))
+    svg.viewbox(0, 0, svgWidth, height)
     svg.width(iconWidth)
     svg.height(iconheight)
     // svg.attr('viewbox', `0 0 ${width} ${height}`)
@@ -588,7 +616,7 @@ const Navigator: FC<NavigatorProps> = ({
     visitContainer(svg, factor)
     const iconSvg = svg.svg()
     //visitContainer(iconSvg)
-    console.log(`${iconSvg}`)
+    // console.log(`${iconSvg}`)
     const svgData = 'data:image/svg+xml;base64,' + btoa(iconSvg)
     if (img && !img.src.startsWith('data')) {
       img.src = svgData
@@ -599,19 +627,19 @@ const Navigator: FC<NavigatorProps> = ({
     }
   }
 
-  const shapes2 = ShapeTypes.map(shapeType => {
-    const margin = 5
+  const shapes = ShapeTypes.map(shapeType => {
+    const margin = POPOVER_ICON_MARGIN
     const folder = 'basic-icons'
     const iconId = `svg-icon-${folder}-${shapeType.name}`
     const src = process.env.PUBLIC_PATH + `/${folder}/${shapeType.name}.svg`
-    let width = 28
-    let height = 28
+    let width = ICON_WIDTH
+    let height = ICON_HEIGHT
     if (shapeType.width > shapeType.height) {
-      height = Math.round(28 * shapeType.height / shapeType.width)
+      height = Math.round(ICON_HEIGHT * shapeType.height / shapeType.width)
     } else {
-      width = 28
+      width = ICON_WIDTH
     }
-    return <Popover title={shapeType.name} placement='right' content={getSVGPopoverContent(folder, shapeType.name, shapeType.width, shapeType.height)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 180, width: 180, }}>
+    return <Popover title={shapeType.name} placement='right' content={getSVGPopoverContent(folder, shapeType.name, shapeType.width, shapeType.height)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: POPOVER_MIN_WIDTH, width: POPOVER_WIDTH, }}>
       <Button type='text' onMouseDown={() => addShape(shapeType.name, folder)} style={{ padding: 2, display: 'table' }} >
         <img id={iconId} src={src}
           width={width} height={height} style={{ display: 'table-cell' }}
@@ -622,27 +650,71 @@ const Navigator: FC<NavigatorProps> = ({
   }
   )
 
-  const shapes = ShapeTypes.map(shapeType => {
-    let width = 28
-    let height = 28
-    if (shapeType.width > shapeType.height) {
-      height = Math.round(28 * shapeType.height / shapeType.width)
-    } else {
-      width = 28
-    }
-    return <Popover title={shapeType.name} placement='right' content={getPopoverContent(shapeType.name, shapeType.width, shapeType.height)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 180, width: 180, }}>
-      <Button type='text' onMouseDown={() => addShape(shapeType.name, 'shapes-large')} style={{ padding: 2, display: 'table' }} >
-        <img src={process.env.PUBLIC_PATH + `/shapes/${shapeType.name}.png`} width={width} height={height} style={{ display: 'table-cell' }} draggable={false} />
+  const line = [1].map(value => {
+    const typeName = 'Line'
+    const margin = POPOVER_ICON_MARGIN
+    const folder = 'basic-icons'
+    const iconId = `svg-icon-${folder}-${typeName}`
+    const src = process.env.PUBLIC_PATH + `/${folder}/${typeName}.svg`
+    const shapeWidth = LINE_WIDTH
+    const shapeHeight = LINE_HEIGHT
+    const width = ICON_WIDTH
+    const height = ICON_HEIGHT
+    return <Popover title={typeName} placement='right' content={getSVGPopoverContent(folder, typeName, shapeWidth, shapeHeight)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: POPOVER_MIN_WIDTH, width: POPOVER_WIDTH, }}>
+      <Button type='text' onMouseDown={() => addLine(typeName, folder)} style={{ padding: 2, display: 'table' }}>
+        <img id={iconId} src={src} width={width} height={height} style={{ display: 'table-cell' }}
+          draggable={false}
+          onLoad={() => updateSVG(iconId, src, shapeWidth + margin * 2, shapeHeight + margin * 2, width, height)} />
       </Button>
     </Popover>
-  }
-  )
+  })
 
-  const containers2 = <Popover title={'Container'} placement='right' content={getPopoverContent('Rectangle', 128, 128)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 180, width: 180, }}>
-    <Button type='text' onMouseDown={() => addContainer(Containers.TYPE_CONTAINER, 'shapes-large')} style={{ padding: 2, display: 'table' }} >
-      <img src={process.env.PUBLIC_PATH + `/shapes/Rectangle.png`} width={28} height={19} style={{ display: 'table-cell' }} />
-    </Button>
-  </Popover>
+  const table = TableTypes.map(shapeType => {
+    const typeName = shapeType.name
+    const margin = POPOVER_ICON_MARGIN
+    const folder = 'basic-icons'
+    const iconId = `svg-icon-${folder}-${typeName}`
+    const src = process.env.PUBLIC_PATH + `/${folder}/${typeName}.svg`
+    const shapeWidth = shapeType.width
+    const shapeHeight = shapeType.height
+    const popoverWidth = POPOVER_WIDTH > shapeType.width + margin * 2 ? POPOVER_WIDTH : shapeType.width + margin * 2
+    let width = ICON_WIDTH
+    let height = ICON_HEIGHT
+    if (shapeType.width > shapeType.height) {
+      height = Math.round(ICON_HEIGHT * shapeType.height / shapeType.width)
+    } else {
+      width = ICON_WIDTH
+    }
+    return <Popover title={typeName} placement='right' content={getSVGPopoverContent(folder, typeName, shapeWidth, shapeHeight)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: POPOVER_MIN_WIDTH, width: popoverWidth, }}>
+      <Button type='text' onMouseDown={() => addTable(typeName, folder)} style={{ padding: 2, display: 'table' }}>
+        <img id={iconId} src={src} width={width} height={height} style={{ display: 'table-cell' }}
+          draggable={false}
+          onLoad={() => updateSVG(iconId, src, shapeWidth + margin * 2, shapeHeight + margin * 2, width, height)} />
+      </Button>
+    </Popover>
+  })
+
+  // const shapes = ShapeTypes.map(shapeType => {
+  //   let width = 28
+  //   let height = 28
+  //   if (shapeType.width > shapeType.height) {
+  //     height = Math.round(28 * shapeType.height / shapeType.width)
+  //   } else {
+  //     width = 28
+  //   }
+  //   return <Popover title={shapeType.name} placement='right' content={getPopoverContent(shapeType.name, shapeType.width, shapeType.height)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 180, width: 180, }}>
+  //     <Button type='text' onMouseDown={() => addShape(shapeType.name, 'shapes-large')} style={{ padding: 2, display: 'table' }} >
+  //       <img src={process.env.PUBLIC_PATH + `/shapes/${shapeType.name}.png`} width={width} height={height} style={{ display: 'table-cell' }} draggable={false} />
+  //     </Button>
+  //   </Popover>
+  // }
+  // )
+
+  // const containers2 = <Popover title={'Container'} placement='right' content={getPopoverContent('Rectangle', 128, 128)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 180, width: 180, }}>
+  //   <Button type='text' onMouseDown={() => addContainer(Containers.TYPE_CONTAINER, 'shapes-large')} style={{ padding: 2, display: 'table' }} >
+  //     <img src={process.env.PUBLIC_PATH + `/shapes/Rectangle.png`} width={28} height={19} style={{ display: 'table-cell' }} />
+  //   </Button>
+  // </Popover>
 
   const containers = ContainerTypes.map(containerType => {
     return <Popover title={containerType.name} placement='right' content={getPopoverContent(containerType.name, containerType.width, containerType.height)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 280, width: 280, }}>
@@ -1003,7 +1075,6 @@ const Navigator: FC<NavigatorProps> = ({
       label: <div style={{ fontWeight: 'bolder' }}><FormattedMessage id='workspace.navigator.panel.my-shapes' /></div>,
       children: <Space size={2} wrap>
         {myShapeItems}
-        {shapes2}
       </Space>,
       extra: <EditOutlined onClick={handleModifyMyShapes} />
     },
