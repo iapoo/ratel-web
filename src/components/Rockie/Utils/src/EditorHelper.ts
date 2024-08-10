@@ -565,7 +565,7 @@ export class EditorHelper {
     }
 
     private static generateSVGTextTransform(matrix: Matrix) {
-        return `transform="matrix(${matrix.source[0]}, ${matrix.source[0]}, ${matrix.source[1]}, ${matrix.source[2]}, ${matrix.source[3]}, ${matrix.source[4]}, ${matrix.source[5]})"`
+        return `transform="matrix(${matrix.source[0].toFixed(2)}, ${matrix.source[3].toFixed(2)}, ${matrix.source[1].toFixed(2)}, ${matrix.source[4].toFixed(2)}, ${matrix.source[2].toFixed(2)}, ${matrix.source[5].toFixed(2)})"`
     }
 
     private static async generateSVGTextPath(text: string, startX: number, startY: number, font: Font, fontPaint: Paint, isItalic: boolean, isBold: boolean) {

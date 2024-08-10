@@ -719,7 +719,7 @@ const Navigator: FC<NavigatorProps> = ({
   //   </Button>
   // </Popover>
 
-  const containers2 = ContainerTypes.map(shapeType => {
+  const containers = ContainerTypes.map(shapeType => {
     const typeName = shapeType.name
     const margin = POPOVER_ICON_MARGIN
     const folder = 'basic-icons'
@@ -744,14 +744,14 @@ const Navigator: FC<NavigatorProps> = ({
     </Popover>
   })
 
-  const containers = ContainerTypes.map(containerType => {
-    return <Popover title={containerType.name} placement='right' content={getPopoverContent(containerType.name, containerType.width, containerType.height)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 280, width: 280, }}>
-      <Button type='text' onMouseDown={() => addContainer(containerType.name, 'shapes-large')} style={{ padding: 2, display: 'table' }}>
-        <img src={process.env.PUBLIC_PATH + `/shapes/${containerType.name}.png`} width={28} height={28} style={{ display: 'table-cell' }} />
-      </Button>
-    </Popover>
-  }
-  )
+  // const containers = ContainerTypes.map(containerType => {
+  //   return <Popover title={containerType.name} placement='right' content={getPopoverContent(containerType.name, containerType.width, containerType.height)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 280, width: 280, }}>
+  //     <Button type='text' onMouseDown={() => addContainer(containerType.name, 'shapes-large')} style={{ padding: 2, display: 'table' }}>
+  //       <img src={process.env.PUBLIC_PATH + `/shapes/${containerType.name}.png`} width={28} height={28} style={{ display: 'table-cell' }} />
+  //     </Button>
+  //   </Popover>
+  // }
+  // )
 
   const customShapeBasicShapes = BasicShapes.map(
     basicType => {
@@ -1113,7 +1113,6 @@ const Navigator: FC<NavigatorProps> = ({
         {shapes}
         {line}
         {table}
-        {containers2}
         {containers}
       </Space>,
     },

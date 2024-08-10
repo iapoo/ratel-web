@@ -1320,10 +1320,10 @@ const Header: FC<HeaderProps> = ({
 
 
   const handleGenerateIcons = async (shapeTypes: ShapeType[]) => {
-    const enableShapes = false
+    const enableShapes = true
     const enableLine = false
     const enableTable = false
-    const enableContainer = true
+    const enableContainer = false
 
     if (enableShapes) handleGenerateIconsForShape(ShapeTypes, ShapeEntity)
     if (enableLine) handleGenerateIconsForConnector()
