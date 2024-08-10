@@ -820,24 +820,24 @@ const Navigator: FC<NavigatorProps> = ({
   //   }
   // )
 
-  //const customShapeArrows = Arrows.map(shapeType => generateIcons(shapeType.name, 'custom-icons/arrows', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/arrows')))
+  const customShapeFlowChartShapes = FlowChartShapes.map(shapeType => generateIcons(shapeType.name, 'custom-icons/flowchart', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/flowchart')))
 
-  const customShapeFlowChartShapes = FlowChartShapes.map(
-    basicType => {
-      let width = 28
-      let height = 28
-      if (basicType.typeInfo.width > basicType.typeInfo.height) {
-        height = Math.round(28 * basicType.typeInfo.height / basicType.typeInfo.width)
-      } else {
-        width = 28
-      }
-      return <Popover title={basicType.typeInfo.description} placement='right' content={getCustomShapeFlowChartShapesPopoverContent(basicType.name, basicType.typeInfo.width, basicType.typeInfo.height)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160, }}>
-        <Button type='text' onMouseDown={() => addCustomShape(basicType.name, basicType.type, basicType.typeInfo, 'custom-shapes-large/flowchart')} style={{ padding: 2, display: 'table' }}>
-          <img src={process.env.PUBLIC_PATH + `/custom-shapes/flowchart/${basicType.name}.png`} width={width} height={height} style={{ display: 'table-cell' }} />
-        </Button>
-      </Popover>
-    }
-  )
+  // const customShapeFlowChartShapes = FlowChartShapes.map(
+  //   basicType => {
+  //     let width = 28
+  //     let height = 28
+  //     if (basicType.typeInfo.width > basicType.typeInfo.height) {
+  //       height = Math.round(28 * basicType.typeInfo.height / basicType.typeInfo.width)
+  //     } else {
+  //       width = 28
+  //     }
+  //     return <Popover title={basicType.typeInfo.description} placement='right' content={getCustomShapeFlowChartShapesPopoverContent(basicType.name, basicType.typeInfo.width, basicType.typeInfo.height)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160, }}>
+  //       <Button type='text' onMouseDown={() => addCustomShape(basicType.name, basicType.type, basicType.typeInfo, 'custom-shapes-large/flowchart')} style={{ padding: 2, display: 'table' }}>
+  //         <img src={process.env.PUBLIC_PATH + `/custom-shapes/flowchart/${basicType.name}.png`} width={width} height={height} style={{ display: 'table-cell' }} />
+  //       </Button>
+  //     </Popover>
+  //   }
+  // )
 
   const customShapeArrows = Arrows.map(shapeType => generateIcons(shapeType.name, 'custom-icons/arrows', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/arrows')))
 

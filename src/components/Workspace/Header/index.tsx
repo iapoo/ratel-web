@@ -1345,7 +1345,8 @@ const Header: FC<HeaderProps> = ({
     const enableTable = false
     const enableContainer = false
     const enableBasicShapes = false
-    const enableArrows = true
+    const enableArrows = false
+    const enableFlowchartShapes = true
 
     if (enableShapes) handleGenerateIconsForShape(ShapeTypes, ShapeEntity)
     if (enableLine) handleGenerateIconsForConnector()
@@ -1353,6 +1354,7 @@ const Header: FC<HeaderProps> = ({
     if (enableContainer) handleGenerateIconsForShape(ContainerTypes, ContainerEntity)
     if (enableBasicShapes) handleGenerateIconsForCustomShape(BasicShapes)
     if (enableArrows) handleGenerateIconsForCustomShape(Arrows)
+    if (enableFlowchartShapes) handleGenerateIconsForCustomShape(FlowChartShapes)
   }
 
   const handleTestCode = () => {
@@ -2637,7 +2639,7 @@ const Header: FC<HeaderProps> = ({
       <div style={{ width: '100%', height: '50%', }}>
         <div style={{ float: 'left', height: '100%', display: 'table', marginLeft: '8px' }}>
           <Space direction="horizontal" wrap={false} style={{ display: 'table-cell', verticalAlign: 'middle' }}>
-            <Space wrap>
+            <Space wrap={false}>
               <Tooltip title={<FormattedMessage id='workspace.header.title.zoom' />}>
                 <Select style={{ width: 100 }} value={zoom} size='small' onChange={handleZoom} bordered={false}
                   options={zoomOptions}
