@@ -748,7 +748,6 @@ const Navigator: FC<NavigatorProps> = ({
   // </Popover>
 
   const containers = ContainerTypes.map(shapeType => generateIcons(shapeType.name, 'basic-icons', shapeType.width, shapeType.height, () => addContainer(shapeType.name, 'basic-icons')))
-
   // const containers = ContainerTypes.map(shapeType => {
   //   const typeName = shapeType.name
   //   const margin = POPOVER_ICON_MARGIN
@@ -942,6 +941,11 @@ const Navigator: FC<NavigatorProps> = ({
       </Popover>
     }
   )
+
+  const umlGridShapesForClass2 = UMLGridShapesForClass.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addCustomTable(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
+  const umlContainerShapesForClass2 = UMLContainerShapesForClass.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addExtendedContainer(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
+  const umlBasicShapesForClass2 = UMLBasicShapesForClass.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addExtendedShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
+  const umlConnectorsForClass2 = UMLConnectorsForClass.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', LINE_WIDTH, LINE_WIDTH, () => addCustomConnector(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
 
   const umlGridShapesForClass = UMLGridShapesForClass.map(
     shapeType => {
@@ -1236,7 +1240,11 @@ const Navigator: FC<NavigatorProps> = ({
       key: '7',
       label: <div style={{ fontWeight: 'bolder' }}><FormattedMessage id='workspace.navigator.panel.uml-class' /></div>,
       children: <Space size={2} wrap>
-        {umlGridShapesForClass}
+        {umlGridShapesForClass2}
+        {umlContainerShapesForClass2}
+        {umlBasicShapesForClass2}
+        {umlConnectorsForClass2}
+        {umlGridShapesForClass2}
         {umlContainerShapesForClass}
         {umlBasicShapesForClass}
         {umlConnectorsForClass}

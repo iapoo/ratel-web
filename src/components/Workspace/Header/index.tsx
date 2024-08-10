@@ -17,7 +17,7 @@ import { useIntl, setLocale, getLocale, FormattedMessage, useParams, } from 'umi
 import { useLocation } from 'react-router-dom'
 import { Placeholder, } from '@/components/Resource/Icons'
 import { Operation, OperationHelper, OperationType } from '@/components/Rockie/Operations';
-import { Connector, ContainerEntity, ContainerTypes, CustomEntity, ImageContainer, Item, ShapeEntity, ShapeTypes, SvgContainer, TableEntity } from '@/components/Rockie/Items';
+import { Connector, ContainerEntity, ContainerTypes, CustomEntity, CustomTableEntity, ImageContainer, Item, ShapeEntity, ShapeTypes, SvgContainer, TableEntity } from '@/components/Rockie/Items';
 import { ShapeAction } from '@/components/Rockie/Actions';
 import { ConnectorArrowTypes } from '@/components/Rockie/Items/src/Connector';
 import { ConnectorDirection } from '@/components/Rockie/Shapes';
@@ -33,7 +33,7 @@ import { EditorHelper } from '@/components/Rockie/Utils';
 import RegisterFormWindowPage from './RegisterFormWindow';
 import PasswordFormWindowPage from './PasswordFormWindow';
 import ProfileFormWindowPage from './ProfileFormWindow';
-import { UMLConnectors, UMLCustomTableTypes, UMLCustomTables } from '@/components/Rockie/CustomItems/UML';
+import { UMLConnectors, UMLContainerShapes, UMLCustomTable, UMLCustomTableTypes, UMLCustomTables } from '@/components/Rockie/CustomItems/UML';
 import { UMLContainerShape, UMLContainerTypes } from '@/components/Rockie/CustomItems/UML/src/UMLContainerShape';
 import { UMLBasicShape, UMLBasicShapeTypes } from '@/components/Rockie/CustomItems/UML/src/UMLBasicShape';
 import { UMLConnector } from '@/components/Rockie/CustomItems/UML/src/UMLConnector';
@@ -46,6 +46,7 @@ import { MockupCustomShape, MockupCustomShapeTypes } from '@/components/Rockie/C
 import { Shapes, ShapeType } from '@/components/Rockie/Items/src/ShapeEntity';
 import { TableTypes } from '@/components/Rockie/Items/src/TableEntity';
 import { CustomEntityTypeInfo } from '@/components/Rockie/Items/src/CustomEntity';
+import { CustomTableType } from '@/components/Rockie/Items/src/CustomTableEntity';
 
 interface HeaderProps {
   previousEditor: Editor | undefined
@@ -1274,8 +1275,9 @@ const Header: FC<HeaderProps> = ({
     }
   }
 
-  const handleGenerateIconsForShape = async (shapeTypes: ShapeType[], classType: typeof ShapeEntity |
-    typeof TableEntity | typeof Connector | typeof ContainerEntity | typeof CustomEntity) => {
+  const handleGenerateIconsForShape = async (shapeTypes: ShapeType[] | CustomTableType[], classType: typeof ShapeEntity |
+    typeof TableEntity | typeof Connector | typeof ContainerEntity | typeof CustomEntity |
+    typeof UMLCustomTable | typeof UMLContainerShape | typeof UMLBasicShape) => {
     if (currentEditor) {
       let count = shapeTypes.length
       for (let i = 0; i < count; i++) {
@@ -1292,6 +1294,15 @@ const Header: FC<HeaderProps> = ({
         }
         let shapeEntity
         switch (classType) {
+          case UMLBasicShape:
+            shapeEntity = new UMLBasicShape(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, { shapeType: shapeType.name }, shapeTypes)
+            break;
+          case UMLContainerShape:
+            shapeEntity = new UMLContainerShape(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, { shapeType: shapeType.name }, shapeTypes)
+            break;
+          case UMLCustomTable:
+            shapeEntity = new UMLCustomTable(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, shapeType.name, shapeTypes as CustomTableType[])
+            break;
           case TableEntity:
             shapeEntity = new TableEntity(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor)
             break;
@@ -1346,7 +1357,11 @@ const Header: FC<HeaderProps> = ({
     const enableContainer = false
     const enableBasicShapes = false
     const enableArrows = false
-    const enableFlowchartShapes = true
+    const enableFlowchartShapes = false
+    const enableUMLCustomTableShapes = false
+    const enableUMLContainerShapes = false
+    const enableUMLBasicShapes = true
+
 
     if (enableShapes) handleGenerateIconsForShape(ShapeTypes, ShapeEntity)
     if (enableLine) handleGenerateIconsForConnector()
@@ -1355,6 +1370,9 @@ const Header: FC<HeaderProps> = ({
     if (enableBasicShapes) handleGenerateIconsForCustomShape(BasicShapes)
     if (enableArrows) handleGenerateIconsForCustomShape(Arrows)
     if (enableFlowchartShapes) handleGenerateIconsForCustomShape(FlowChartShapes)
+    if (enableUMLCustomTableShapes) handleGenerateIconsForShape(UMLCustomTableTypes, UMLCustomTable)
+    if (enableUMLContainerShapes) handleGenerateIconsForShape(UMLContainerTypes, UMLContainerShape)
+    if (enableUMLBasicShapes) handleGenerateIconsForShape(UMLBasicShapeTypes, UMLBasicShape)
   }
 
   const handleTestCode = () => {

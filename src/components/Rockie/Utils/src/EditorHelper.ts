@@ -573,7 +573,9 @@ export class EditorHelper {
         //const arrayBuffer = ttfdata.buffer.slice(ttfdata.byteOffset, ttfdata.byteLength + ttfdata.byteOffset)
         const ttfFont = opentype.parse(ttfdata)
         // console.log(`Font info = ${ttfFont}`)
-        const textPath = ttfFont.getPath(text, startX, startY, font.fontSize)
+        //opentype can't handle some characters and we need to exclude them here
+        const newText = text.replaceAll('\n', '')
+        const textPath = ttfFont.getPath(newText, startX, startY, font.fontSize)
         const textSVGData = textPath.toPathData(2)
         //const textSVG = EditorHelper.generateSVGPath()
         const fontColor = SystemUtils.generateColorString(fontPaint.getColor())
