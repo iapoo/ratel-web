@@ -17,7 +17,7 @@ import { useIntl, setLocale, getLocale, FormattedMessage, useParams, } from 'umi
 import { useLocation } from 'react-router-dom'
 import { Placeholder, } from '@/components/Resource/Icons'
 import { Operation, OperationHelper, OperationType } from '@/components/Rockie/Operations';
-import { Connector, ContainerEntity, ContainerTypes, ImageContainer, Item, ShapeEntity, ShapeTypes, SvgContainer, TableEntity } from '@/components/Rockie/Items';
+import { Connector, ContainerEntity, ContainerTypes, CustomEntity, ImageContainer, Item, ShapeEntity, ShapeTypes, SvgContainer, TableEntity } from '@/components/Rockie/Items';
 import { ShapeAction } from '@/components/Rockie/Actions';
 import { ConnectorArrowTypes } from '@/components/Rockie/Items/src/Connector';
 import { ConnectorDirection } from '@/components/Rockie/Shapes';
@@ -45,6 +45,7 @@ import { ERCustomShape, ERCustomShapeTypes } from '@/components/Rockie/CustomIte
 import { MockupCustomShape, MockupCustomShapeTypes } from '@/components/Rockie/CustomItems/Mockup/src/MockupCustomShape';
 import { Shapes, ShapeType } from '@/components/Rockie/Items/src/ShapeEntity';
 import { TableTypes } from '@/components/Rockie/Items/src/TableEntity';
+import { CustomEntityTypeInfo } from '@/components/Rockie/Items/src/CustomEntity';
 
 interface HeaderProps {
   previousEditor: Editor | undefined
@@ -1273,7 +1274,8 @@ const Header: FC<HeaderProps> = ({
     }
   }
 
-  const handleGenerateIconsForShape = async (shapeTypes: ShapeType[], classType: typeof ShapeEntity | typeof TableEntity | typeof Connector | ContainerEntity) => {
+  const handleGenerateIconsForShape = async (shapeTypes: ShapeType[], classType: typeof ShapeEntity |
+    typeof TableEntity | typeof Connector | typeof ContainerEntity | typeof CustomEntity) => {
     if (currentEditor) {
       let count = shapeTypes.length
       for (let i = 0; i < count; i++) {
@@ -1318,20 +1320,39 @@ const Header: FC<HeaderProps> = ({
     }
   }
 
+  const handleGenerateIconsForCustomShape = async (shapeTypes: CustomEntityTypeInfo[]) => {
+    if (currentEditor) {
+      let count = shapeTypes.length
+      for (let i = 0; i < count; i++) {
+        const margin = 5
+        currentEditor.contentLayer.removeAllEditorItems()
+        const customShapeInfo = shapeTypes[i].typeInfo
+        const customShapeTypeName = shapeTypes[i].name
+        const customEntity = new shapeTypes[i].type(customShapeInfo.left + margin, customShapeInfo.top + margin, customShapeInfo.width, customShapeInfo.height, customShapeTypeName)
+        currentEditor.contentLayer.addEditorItem(customEntity)
+        currentEditor.setup(1, customShapeInfo.width + margin * 2, customShapeInfo.height + margin * 2)
+        currentEditor.render()
+        const data = await EditorHelper.exportToSVG(currentEditor)
+        console.log(`download file = ${customShapeInfo.name}.png`)
+        SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.svg`)
+      }
+    }
+  }
 
   const handleGenerateIcons = async (shapeTypes: ShapeType[]) => {
-    const enableShapes = true
+    const enableShapes = false
     const enableLine = false
     const enableTable = false
     const enableContainer = false
+    const enableBasicShapes = false
+    const enableArrows = true
 
     if (enableShapes) handleGenerateIconsForShape(ShapeTypes, ShapeEntity)
     if (enableLine) handleGenerateIconsForConnector()
     if (enableTable) handleGenerateIconsForShape(TableTypes, TableEntity)
     if (enableContainer) handleGenerateIconsForShape(ContainerTypes, ContainerEntity)
-  }
-  const handleExportDetail = async (editor: Editor, shapeName: string) => {
-
+    if (enableBasicShapes) handleGenerateIconsForCustomShape(BasicShapes)
+    if (enableArrows) handleGenerateIconsForCustomShape(Arrows)
   }
 
   const handleTestCode = () => {
