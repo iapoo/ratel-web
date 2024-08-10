@@ -1,32 +1,32 @@
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.dev/svgjs" width="250" height="130" viewbox="0 0 250 130"   shape-rendering="geometricPrecision">
-<g id="80c14a74459f471fbb4935b6fee04864" transform="translate(5, 5) ">
+<g id="5d53a2fc470944fe92dfed4f60c41157" transform="translate(5, 5) ">
     <path fill="#FFFFFFFF" stroke="#323232FF" stroke-width="2" d=""/>    
     <g>
-        <g id="ec9a57ad864747ccac975b4b965299c7" transform=" ">
+        <g id="3f8b032002184d8892cae575ef9c0d71" transform=" ">
             <path fill="#FFFFFFFF" stroke="#323232FF" stroke-width="1.5" d="M0 0L0 40L80 40L80 0L0 0Z"/>    
         </g>
-        <g id="b0271f3dd4d9426d8adc52460ae7e805" transform="translate(80, 0) ">
+        <g id="d1b63a45de8b4e86baa48a3a35e4bec0" transform="translate(80, 0) ">
             <path fill="#FFFFFFFF" stroke="#323232FF" stroke-width="1.5" d="M0 0L0 40L80 40L80 0L0 0Z"/>    
         </g>
-        <g id="892c0666ea23436e8ba7d660abe070ed" transform="translate(160, 0) ">
+        <g id="de57e945bc484c35bc4006dd10b1b3bf" transform="translate(160, 0) ">
             <path fill="#FFFFFFFF" stroke="#323232FF" stroke-width="1.5" d="M0 0L0 40L80 40L80 0L0 0Z"/>    
         </g>
-        <g id="459f2bb4891a4930969330ab44e9e174" transform="translate(0, 40) ">
+        <g id="4ed19b08d0164fb4ade93a7a968feb31" transform="translate(0, 40) ">
             <path fill="#FFFFFFFF" stroke="#323232FF" stroke-width="1.5" d="M0 0L0 40L80 40L80 0L0 0Z"/>    
         </g>
-        <g id="2d4f1c009d124206b9c27e78f50edf90" transform="translate(80, 40) ">
+        <g id="6e01a2a9d3eb417ebfc5fe1c3a0700bd" transform="translate(80, 40) ">
             <path fill="#FFFFFFFF" stroke="#323232FF" stroke-width="1.5" d="M0 0L0 40L80 40L80 0L0 0Z"/>    
         </g>
-        <g id="27d128a08bd14420822b2361ae1b3aa9" transform="translate(160, 40) ">
+        <g id="8ee1355c620341118cc7c9f6108b2582" transform="translate(160, 40) ">
             <path fill="#FFFFFFFF" stroke="#323232FF" stroke-width="1.5" d="M0 0L0 40L80 40L80 0L0 0Z"/>    
         </g>
-        <g id="54fd0f3762214ffd85b439223059aedf" transform="translate(0, 80) ">
+        <g id="2090f8400fb74701be6b516643f736d6" transform="translate(0, 80) ">
             <path fill="#FFFFFFFF" stroke="#323232FF" stroke-width="1.5" d="M0 0L0 40L80 40L80 0L0 0Z"/>    
         </g>
-        <g id="ee44b7615959411eaaeddeb188c7090c" transform="translate(80, 80) ">
+        <g id="33a0b5e81af64266bdb39916515b238c" transform="translate(80, 80) ">
             <path fill="#FFFFFFFF" stroke="#323232FF" stroke-width="1.5" d="M0 0L0 40L80 40L80 0L0 0Z"/>    
         </g>
-        <g id="5db765512e5943d2828075bab9569e8e" transform="translate(160, 80) ">
+        <g id="36726449602746d3996e24181db99a92" transform="translate(160, 80) ">
             <path fill="#FFFFFFFF" stroke="#323232FF" stroke-width="1.5" d="M0 0L0 40L80 40L80 0L0 0Z"/>    
         </g>
     </g>

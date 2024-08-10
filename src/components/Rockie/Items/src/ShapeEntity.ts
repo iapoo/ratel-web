@@ -61,7 +61,7 @@ export class Shapes {
 
   public static FREEZE_NONE = 'None'
   public static FREEZE_WIDTH = 'Width'
-  public static FREEZE_WIDTH_HEIGHT =  'WidthHeight'
+  public static FREEZE_WIDTH_HEIGHT = 'WidthHeight'
   public static FREEZE_HEIGHT = 'Height'
   public static FREEZE_ASPECT_RATIO = 'AspectRatio'
 
@@ -75,10 +75,10 @@ export interface ShapeType {
   description: string
   freeze: string
   text: string
-  left: number 
+  left: number
   top: number
   width: number
-  height: number, 
+  height: number,
   enableMask: boolean
   modifiable: boolean
   modifierX: number
@@ -100,7 +100,7 @@ export interface ShapeType {
   controlInPercent: boolean
   adaptable: boolean
   adapterX: number
-  adapterY: number 
+  adapterY: number
   adapterDirection: string
   adapterSize: number
   adapterStartX: number
@@ -112,98 +112,144 @@ export interface ShapeType {
 }
 
 export const ShapeTypes = [
-  { name: Shapes.TYPE_RECTANGLE, description: Shapes.DESC_RECTANGLE, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 120, height: 60, enableMask: false,
+  {
+    name: Shapes.TYPE_RECTANGLE, description: Shapes.DESC_RECTANGLE, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 120, height: 60, enableMask: false,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true  },
-  { name: Shapes.TYPE_ROUND_RECTANGLE, description: Shapes.DESC_ROUND_RECTANGLE, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 120, height: 60,  enableMask: false,
-    modifiable: true, modifierX: 0.2,modifierY: 0.2,  modifierStartX: 0, modifierStartY: 0, modifierEndX: 0.5, modifierEndY: 0.5, modifyInLine: true, modifyInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: Shapes.TYPE_ROUND_RECTANGLE, description: Shapes.DESC_ROUND_RECTANGLE, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 120, height: 60, enableMask: false,
+    modifiable: true, modifierX: 0.2, modifierY: 0.2, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0.5, modifierEndY: 0.5, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true  },
-  { name: Shapes.TYPE_TEXT, description: Shapes.DESC_TEXT, freeze: Shapes.FREEZE_NONE, text: 'Text', left: 0, top: 0, width: 120, height: 60,  enableMask: false,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: Shapes.TYPE_TEXT, description: Shapes.DESC_TEXT, freeze: Shapes.FREEZE_NONE, text: 'Text', left: 0, top: 0, width: 60, height: 30, enableMask: false,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true  },
-  { name: Shapes.TYPE_ELLIPSE, description: Shapes.DESC_ELLIPSE, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 120, height: 80,  enableMask: false,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: Shapes.TYPE_ELLIPSE, description: Shapes.DESC_ELLIPSE, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 120, height: 80, enableMask: false,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true  },
-  { name: Shapes.TYPE_SQUARE, description: Shapes.DESC_SQUARE, freeze: Shapes.FREEZE_ASPECT_RATIO, text: '', left: 0, top: 0, width: 120, height: 120,  enableMask: false,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: Shapes.TYPE_SQUARE, description: Shapes.DESC_SQUARE, freeze: Shapes.FREEZE_ASPECT_RATIO, text: '', left: 0, top: 0, width: 120, height: 120, enableMask: false,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true  },
-  { name: Shapes.TYPE_CIRCLE, description: Shapes.DESC_CIRCLE, freeze: Shapes.FREEZE_ASPECT_RATIO , text: '', left: 0, top: 0, width: 120, height: 120,  enableMask: false,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: Shapes.TYPE_CIRCLE, description: Shapes.DESC_CIRCLE, freeze: Shapes.FREEZE_ASPECT_RATIO, text: '', left: 0, top: 0, width: 120, height: 120, enableMask: false,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true },
-  { name: Shapes.TYPE_PROCESS, description: Shapes.DESC_PROCESS, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 120, height: 60,  enableMask: false,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: Shapes.TYPE_PROCESS, description: Shapes.DESC_PROCESS, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 120, height: 60, enableMask: false,
     modifiable: true, modifierX: 12, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0.5, modifierEndY: 0, modifyInLine: true, modifyInPercent: false,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true  },
-  { name: Shapes.TYPE_DIAMOND, description: Shapes.DESC_DIAMOND, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 120, height: 120,  enableMask: false,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: Shapes.TYPE_DIAMOND, description: Shapes.DESC_DIAMOND, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 120, height: 120, enableMask: false,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true  },
-  { name: Shapes.TYPE_PARALLELOGRAM, description: Shapes.DESC_PARALLELOGRAM, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 120, height: 80,  enableMask: false,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: Shapes.TYPE_PARALLELOGRAM, description: Shapes.DESC_PARALLELOGRAM, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 120, height: 80, enableMask: false,
     modifiable: true, modifierX: 12, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0.8, modifierEndY: 0, modifyInLine: true, modifyInPercent: false,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true  },
-  { name: Shapes.TYPE_HEXAGON, description: Shapes.DESC_HEXAGON, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 120, height: 80,  enableMask: false,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: Shapes.TYPE_HEXAGON, description: Shapes.DESC_HEXAGON, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 120, height: 80, enableMask: false,
     modifiable: true, modifierX: 0.3, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0.5, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true  },
-  { name: Shapes.TYPE_TRIANGLE, description: Shapes.DESC_TRIANGLE, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 120, height: 120,  enableMask: false,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: Shapes.TYPE_TRIANGLE, description: Shapes.DESC_TRIANGLE, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 120, height: 120, enableMask: false,
     modifiable: true, modifierX: 0.5, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 1, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true  },
-  { name: Shapes.TYPE_CYLINDER, description: Shapes.DESC_CYLINDER, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 80, height: 120,  enableMask: false,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: Shapes.TYPE_CYLINDER, description: Shapes.DESC_CYLINDER, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 80, height: 120, enableMask: false,
     modifiable: true, modifierX: 0, modifierY: 0.25, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0.5, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true  },
-  { name: Shapes.TYPE_CLOUD, description: Shapes.DESC_CLOUD, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 120, height: 80,  enableMask: false,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: Shapes.TYPE_CLOUD, description: Shapes.DESC_CLOUD, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 120, height: 80, enableMask: false,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true  },
-  { name: Shapes.TYPE_DOCUMENT, description: Shapes.DESC_DOCUMENT, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 120, height: 80,  enableMask: false,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: Shapes.TYPE_DOCUMENT, description: Shapes.DESC_DOCUMENT, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 120, height: 80, enableMask: false,
     modifiable: true, modifierX: 0, modifierY: 0.7, modifierStartX: 0, modifierStartY: 0.5, modifierEndX: 0, modifierEndY: 1, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true  },
-  { name: Shapes.TYPE_INTERNAL_STORAGE, description: Shapes.DESC_INTERNAL_STORAGE, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 120, height: 80,  enableMask: false,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: Shapes.TYPE_INTERNAL_STORAGE, description: Shapes.DESC_INTERNAL_STORAGE, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 120, height: 80, enableMask: false,
     modifiable: true, modifierX: 16, modifierY: 16, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0.5, modifierEndY: 0.5, modifyInLine: false, modifyInPercent: false,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true  },
-  { name: Shapes.TYPE_CUBE, description: Shapes.DESC_CUBE, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 120, height: 100,  enableMask: false,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: Shapes.TYPE_CUBE, description: Shapes.DESC_CUBE, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 120, height: 100, enableMask: false,
     modifiable: true, modifierX: 40, modifierY: 20, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0.6, modifierEndY: 0.6, modifyInLine: false, modifyInPercent: false,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true  },
-  { name: Shapes.TYPE_STEP, description: Shapes.DESC_STEP, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 120, height: 80,  enableMask: false,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: Shapes.TYPE_STEP, description: Shapes.DESC_STEP, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 120, height: 80, enableMask: false,
     modifiable: true, modifierX: 0.2, modifierY: 0, modifierStartX: 0, modifierStartY: 0.5, modifierEndX: 0.95, modifierEndY: 0.5, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true  },
-  { name: Shapes.TYPE_TRAPEZOID, description: Shapes.DESC_TRAPEZOID, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 120, height: 80,  enableMask: false,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: Shapes.TYPE_TRAPEZOID, description: Shapes.DESC_TRAPEZOID, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 120, height: 80, enableMask: false,
     modifiable: true, modifierX: 12, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0.5, modifierEndY: 0, modifyInLine: true, modifyInPercent: false,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true  },
-  { name: Shapes.TYPE_TAPE, description: Shapes.DESC_TAPE, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 120, height: 90,  enableMask: false,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: Shapes.TYPE_TAPE, description: Shapes.DESC_TAPE, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 120, height: 90, enableMask: false,
     modifiable: true, modifierX: 0, modifierY: 0.3, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0.45, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true  },
-  { name: Shapes.TYPE_NOTE, description: Shapes.DESC_NOTE, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 90, height: 120,  enableMask: false,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: Shapes.TYPE_NOTE, description: Shapes.DESC_NOTE, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 90, height: 120, enableMask: false,
     modifiable: true, modifierX: 0.4, modifierY: 0.4, modifierStartX: 0.5, modifierStartY: 0, modifierEndX: 1, modifierEndY: 0.5, modifyInLine: false, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true  },
-  { name: Shapes.TYPE_CARD, description: Shapes.DESC_CARD, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 90, height: 120,  enableMask: false,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: Shapes.TYPE_CARD, description: Shapes.DESC_CARD, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 90, height: 120, enableMask: false,
     modifiable: true, modifierX: 0.3, modifierY: 0.3, modifierStartX: 0, modifierStartY: 0, modifierEndX: 1, modifierEndY: 1, modifyInLine: false, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true  },
-  { name: Shapes.TYPE_CALLOUT, description: Shapes.DESC_CALLOUT, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 120, height: 80,  enableMask: false,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: Shapes.TYPE_CALLOUT, description: Shapes.DESC_CALLOUT, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 120, height: 80, enableMask: false,
     modifiable: true, modifierX: 0.3, modifierY: 0, modifierStartX: 0, modifierStartY: 1, modifierEndX: 1, modifierEndY: 1, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: true, adapterX: 0.3, adapterY: 0.7, adapterDirection: 'X', adapterSize: 0.3, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0.95, adapterEndY: 1, adaptInLine: false, adaptInPercent: true},
-  { name: Shapes.TYPE_ACTOR, description: Shapes.DESC_ACTOR, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 60, height: 120,  enableMask: true,
+    adaptable: true, adapterX: 0.3, adapterY: 0.7, adapterDirection: 'X', adapterSize: 0.3, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0.95, adapterEndY: 1, adaptInLine: false, adaptInPercent: true
+  },
+  {
+    name: Shapes.TYPE_ACTOR, description: Shapes.DESC_ACTOR, freeze: Shapes.FREEZE_NONE, text: '', left: 0, top: 0, width: 60, height: 120, enableMask: true,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true },
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
 ]
 
 export interface ShapeOptions {
@@ -214,8 +260,8 @@ export class ShapeEntity extends Entity {
   private _shapeType: ShapeType
   private _shapeTypes: ShapeType[]
 
-  public constructor(left: number, top: number, width: number, height: number, shapeOptions: ShapeOptions = { shapeType: Shapes.TYPE_RECTANGLE }, 
-      shapeTypes: ShapeType[] = ShapeTypes) {
+  public constructor(left: number, top: number, width: number, height: number, shapeOptions: ShapeOptions = { shapeType: Shapes.TYPE_RECTANGLE },
+    shapeTypes: ShapeType[] = ShapeTypes) {
     super(left, top, width, height)
     this._shapeTypes = shapeTypes
     this.type = shapeOptions.shapeType
@@ -234,7 +280,7 @@ export class ShapeEntity extends Entity {
     return Categories.SHAPE
   }
 
-  public get shapeType():  ShapeType {
+  public get shapeType(): ShapeType {
     return this._shapeType
   }
 
@@ -269,7 +315,7 @@ export class ShapeEntity extends Entity {
   protected getShapeType(): ShapeType {
     let theShapeType = this._shapeTypes[0]
     this._shapeTypes.forEach(shapeType => {
-      if(shapeType.name == this.type) {
+      if (shapeType.name == this.type) {
         theShapeType = shapeType
       }
     })
@@ -279,10 +325,10 @@ export class ShapeEntity extends Entity {
   private parseEntityShapeText(type: string): string {
     let text = ''
     this._shapeTypes.forEach(shapeType => {
-      if(shapeType.name == type) {
+      if (shapeType.name == type) {
         text = shapeType.text
       }
-    }) 
+    })
     return text
   }
 
@@ -298,11 +344,11 @@ export class ShapeEntity extends Entity {
       case Shapes.FREEZE_WIDTH_HEIGHT:
         entityFreezeType = EntityShapeFreezeType.WidthHeight
         break;
-        case Shapes.FREEZE_ASPECT_RATIO:
-          entityFreezeType = EntityShapeFreezeType.AspectRatio
-          break;
-        case Shapes.FREEZE_NONE:
-      default:  
+      case Shapes.FREEZE_ASPECT_RATIO:
+        entityFreezeType = EntityShapeFreezeType.AspectRatio
+        break;
+      case Shapes.FREEZE_NONE:
+      default:
         entityFreezeType = EntityShapeFreezeType.None
         break;
     }
@@ -312,7 +358,7 @@ export class ShapeEntity extends Entity {
 
   private parseAdaptDirection(adapterDirection: string) {
     let theAdaptDirection = AdapterDirection.X
-    switch(adapterDirection) {
+    switch (adapterDirection) {
       case Shapes.ADAPTER_DIRECTION_X:
         theAdaptDirection = AdapterDirection.X
         break;
@@ -323,19 +369,19 @@ export class ShapeEntity extends Entity {
     return theAdaptDirection
   }
 
-  protected parseTypeInfo(shapeOptions: ShapeOptions): ShapeTypeInfo{
+  protected parseTypeInfo(shapeOptions: ShapeOptions): ShapeTypeInfo {
     let theShapeType = this._shapeTypes[0]
     this._shapeTypes.forEach(shapeType => {
-      if(shapeType.name == shapeOptions.shapeType) {
+      if (shapeType.name == shapeOptions.shapeType) {
         theShapeType = shapeType
       }
-    }) 
+    })
     let freezeType = this.parseEntityShapeFreezeType(theShapeType.freeze)
     let shapeType = this.parseEntityShapeType(this.type)
     let adapterDirection = this.parseAdaptDirection(theShapeType.adapterDirection)
     return {
       name: theShapeType.name,
-      type: shapeType, 
+      type: shapeType,
       freeze: freezeType,
       text: theShapeType.text,
       left: theShapeType.left,
@@ -355,7 +401,7 @@ export class ShapeEntity extends Entity {
       controlInPercent: theShapeType.controlInPercent,
       adapter: new Point2(theShapeType.adapterX, theShapeType.adapterY),
       adapterSize: theShapeType.adapterSize,
-      adapterDirection:adapterDirection,
+      adapterDirection: adapterDirection,
       adapterStart: new Point2(theShapeType.adapterStartX, theShapeType.adapterStartY),
       adapterEnd: new Point2(theShapeType.adapterEndX, theShapeType.adapterEndY),
       adaptInLine: theShapeType.adaptInLine,

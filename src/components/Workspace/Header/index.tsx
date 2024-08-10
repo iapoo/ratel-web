@@ -1249,39 +1249,6 @@ const Header: FC<HeaderProps> = ({
     return { value: connectorArrowType.name, label: <img alt={connectorArrowType.description} src={process.env.PUBLIC_PATH + '/images/connector-line-end-arrow-' + connectorArrowType.name.toLowerCase() + '.png'} width='16' height='16' /> }
   })
 
-  const handleGenerateIconsForTable = async (shapeTypes: ShapeType[]) => {
-    if (currentEditor) {
-      let count = shapeTypes.length
-      for (let i = 0; i < count; i++) {
-        let shapeType = shapeTypes[i]
-        let margin = 5 //2
-        let lineFactor = 1 //1
-        let fontFactor = 1 //0.5
-        let sizeFactor = 1 //0.25
-        let modifierFactor = 1 //0.25
-        currentEditor.contentLayer.removeAllEditorItems()
-        let left = shapeType.left + margin
-        if (shapeType.width < shapeType.height) {
-          left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
-        }
-        let shapeEntity = new TableEntity(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor)
-        shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
-        shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
-        if (!shapeType.modifyInPercent) {
-          shapeEntity.shape.modifier = new Point2(Math.round(shapeEntity.shape.modifier.x * modifierFactor), Math.round(shapeEntity.shape.modifier.y * modifierFactor))
-        }
-        if (shapeType.width < shapeType.height) {
-          currentEditor.setup(1, shapeType.height * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
-        } else {
-          currentEditor.setup(1, shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
-        }
-        currentEditor.contentLayer.addEditorItem(shapeEntity)
-        currentEditor.render()
-        const data = await EditorHelper.exportToSVG(currentEditor)
-        SystemUtils.generateDownloadFile(data, `${shapeType.name}.svg`)
-      }
-    }
-  }
   const handleGenerateIconsForConnector = async () => {
     if (currentEditor) {
       const connectorWidth = 128
@@ -1306,7 +1273,7 @@ const Header: FC<HeaderProps> = ({
     }
   }
 
-  const handleGenerateIconsForShape = async (shapeTypes: ShapeType[]) => {
+  const handleGenerateIconsForShape = async (shapeTypes: ShapeType[], classType: typeof ShapeEntity | typeof TableEntity | typeof Connector | ContainerEntity) => {
     if (currentEditor) {
       let count = shapeTypes.length
       for (let i = 0; i < count; i++) {
@@ -1321,7 +1288,18 @@ const Header: FC<HeaderProps> = ({
         if (shapeType.width < shapeType.height) {
           left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
         }
-        let shapeEntity = new ShapeEntity(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, { shapeType: shapeType.name })
+        let shapeEntity
+        switch (classType) {
+          case TableEntity:
+            shapeEntity = new TableEntity(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor)
+            break;
+          case ContainerEntity:
+            shapeEntity = new ContainerEntity(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, { shapeType: shapeType.name }, shapeTypes)
+            break;
+          default:
+            shapeEntity = new ShapeEntity(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, { shapeType: shapeType.name }, shapeTypes)
+            break;
+        }
         shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
         shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
         if (!shapeType.modifyInPercent) {
@@ -1344,16 +1322,13 @@ const Header: FC<HeaderProps> = ({
   const handleGenerateIcons = async (shapeTypes: ShapeType[]) => {
     const enableShapes = false
     const enableLine = false
-    const enableTable = true
-    if (enableShapes) {
-      handleGenerateIconsForShape(ShapeTypes)
-    }
-    if (enableLine) {
-      handleGenerateIconsForConnector()
-    }
-    if (enableTable) {
-      handleGenerateIconsForTable(TableTypes)
-    }
+    const enableTable = false
+    const enableContainer = true
+
+    if (enableShapes) handleGenerateIconsForShape(ShapeTypes, ShapeEntity)
+    if (enableLine) handleGenerateIconsForConnector()
+    if (enableTable) handleGenerateIconsForShape(TableTypes, TableEntity)
+    if (enableContainer) handleGenerateIconsForShape(ContainerTypes, ContainerEntity)
   }
   const handleExportDetail = async (editor: Editor, shapeName: string) => {
 
