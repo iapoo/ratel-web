@@ -1,4 +1,4 @@
-import { Font, Matrix, Paint, Path, Point2, Rectangle, Woff2Utils } from "@/components/Engine";
+import { Font, Matrix, Paint, Path, Point2, Rectangle, StrokeDashStyle, Woff2Utils } from "@/components/Engine";
 import { Editor } from "../../Editor";
 import { Categories, Connector, ConnectorInfo, EditorItem, EditorItemInfo, Entity, Item, ShapeEntity } from "../../Items";
 import { Operation, OperationHelper, OperationType } from "../../Operations";
@@ -685,7 +685,25 @@ export class EditorHelper {
             color = SystemUtils.generateColorString(paint.getColor())
         }
         if (isStroke) {
-            const result = `stroke="${color}" stroke-width="${paint.getStroketWidth()}"`
+            let dashSVG = ''
+            switch (paint.getStrokeDashStyle()) {
+                case StrokeDashStyle.DASH:
+                    dashSVG = `stroke-dasharray="10, 2"`
+                    break;
+                case StrokeDashStyle.DASH_DOT:
+                    dashSVG = `stroke-dasharray="10, 2, 2, 2"`
+                    break;
+                case StrokeDashStyle.DASH_DOT_DOT:
+                    dashSVG = `stroke-dasharray="10, 2, 2, 2, 2, 2"`
+                    break;
+                case StrokeDashStyle.DOT:
+                    dashSVG = `stroke-dasharray="2, 2"`
+                    break;
+                case StrokeDashStyle.SOLID:
+                default:
+                    break;
+            }
+            const result = `stroke="${color}" stroke-width="${paint.getStroketWidth()}" ${dashSVG}`
             return result
         } else {
             const result = `fill="${color}"`

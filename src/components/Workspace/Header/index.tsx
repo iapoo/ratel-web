@@ -36,7 +36,7 @@ import ProfileFormWindowPage from './ProfileFormWindow';
 import { UMLConnectors, UMLContainerShapes, UMLCustomTable, UMLCustomTableTypes, UMLCustomTables } from '@/components/Rockie/CustomItems/UML';
 import { UMLContainerShape, UMLContainerTypes } from '@/components/Rockie/CustomItems/UML/src/UMLContainerShape';
 import { UMLBasicShape, UMLBasicShapeTypes } from '@/components/Rockie/CustomItems/UML/src/UMLBasicShape';
-import { UMLConnector } from '@/components/Rockie/CustomItems/UML/src/UMLConnector';
+import { UMLConnector, UMLConnectorTypeInfos } from '@/components/Rockie/CustomItems/UML/src/UMLConnector';
 import { UMLCustomShape, UMLCustomShapeTypes } from '@/components/Rockie/CustomItems/UML/src/UMLCustomShape';
 import { UMLFrameShape, UMLFrameShapeTypes } from '@/components/Rockie/CustomItems/UML/src/UMLFrameShape';
 import { RcFile, UploadChangeParam } from 'antd/es/upload';
@@ -47,6 +47,7 @@ import { Shapes, ShapeType } from '@/components/Rockie/Items/src/ShapeEntity';
 import { TableTypes } from '@/components/Rockie/Items/src/TableEntity';
 import { CustomEntityTypeInfo } from '@/components/Rockie/Items/src/CustomEntity';
 import { CustomTableType } from '@/components/Rockie/Items/src/CustomTableEntity';
+import { CustomConnector, CustomConnectorTypeInfo } from '@/components/Rockie/Items/src/CustomConnector';
 
 interface HeaderProps {
   previousEditor: Editor | undefined
@@ -1275,6 +1276,42 @@ const Header: FC<HeaderProps> = ({
     }
   }
 
+
+  const handleGenerateIconsForCustomConnector = async (connectorTypes: CustomConnectorTypeInfo[], connectorClass: typeof CustomConnector) => {
+    if (currentEditor) {
+      let count = connectorTypes.length
+      for (let i = 0; i < count; i++) {
+        let shapeType = connectorTypes[i]
+        let margin = 5
+        let lineFactor = 1
+        let fontFactor = 1
+        let sizeFactor = 1
+        currentEditor.contentLayer.removeAllEditorItems()
+        shapeType.startX *= sizeFactor
+        shapeType.endX *= sizeFactor
+        shapeType.startY *= sizeFactor
+        shapeType.endY *= sizeFactor
+        let start = new Point2(shapeType.startX, shapeType.startY)
+        let end = new Point2(shapeType.endX, shapeType.endY)
+        let width = shapeType.width
+        let height = shapeType.height
+        let shapeEntity = new connectorClass(start, end, shapeType.name, connectorTypes)
+        shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
+        shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
+        if (width < height) {
+          currentEditor.setup(1, height + margin * 2, height + margin * 2)
+        } else {
+          currentEditor.setup(1, width + margin * 2, width + margin * 2)
+        }
+        currentEditor.contentLayer.addEditorItem(shapeEntity)
+        currentEditor.render()
+        const data = await EditorHelper.exportToSVG(currentEditor)
+        SystemUtils.generateDownloadFile(data, `${shapeType.name}.svg`)
+        console.log(`download file: ${shapeType.name}.svg`)
+      }
+    }
+  }
+
   const handleGenerateIconsForShape = async (shapeTypes: ShapeType[] | CustomTableType[], classType: typeof ShapeEntity |
     typeof TableEntity | typeof Connector | typeof ContainerEntity | typeof CustomEntity |
     typeof UMLCustomTable | typeof UMLContainerShape | typeof UMLBasicShape) => {
@@ -1360,7 +1397,8 @@ const Header: FC<HeaderProps> = ({
     const enableFlowchartShapes = false
     const enableUMLCustomTableShapes = false
     const enableUMLContainerShapes = false
-    const enableUMLBasicShapes = true
+    const enableUMLBasicShapes = false
+    const enableUMLConnectorShapes = true
 
 
     if (enableShapes) handleGenerateIconsForShape(ShapeTypes, ShapeEntity)
@@ -1373,6 +1411,7 @@ const Header: FC<HeaderProps> = ({
     if (enableUMLCustomTableShapes) handleGenerateIconsForShape(UMLCustomTableTypes, UMLCustomTable)
     if (enableUMLContainerShapes) handleGenerateIconsForShape(UMLContainerTypes, UMLContainerShape)
     if (enableUMLBasicShapes) handleGenerateIconsForShape(UMLBasicShapeTypes, UMLBasicShape)
+    if (enableUMLConnectorShapes) handleGenerateIconsForCustomConnector(UMLConnectorTypeInfos, UMLConnector)
   }
 
   const handleTestCode = () => {

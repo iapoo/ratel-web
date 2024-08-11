@@ -278,7 +278,7 @@ const Navigator: FC<NavigatorProps> = ({
   const addCustomConnector = (type: string, classType: typeof CustomConnector, customConnectorTypeInfos: CustomConnectorTypeInfo, folder: string) => {
     if (Utils.currentEditor) {
       Utils.currentEditor.action = new CustomConnectorAction(Utils.currentEditor, type, classType, customConnectorTypeInfos)
-      Utils.currentEditor.action.imageId = process.env.PUBLIC_PATH + `/${folder}/${type}.png`
+      Utils.currentEditor.action.imageId = process.env.PUBLIC_PATH + `/${folder}/${type}.svg`
     }
   }
 
@@ -945,7 +945,7 @@ const Navigator: FC<NavigatorProps> = ({
   const umlGridShapesForClass2 = UMLGridShapesForClass.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addCustomTable(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
   const umlContainerShapesForClass2 = UMLContainerShapesForClass.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addExtendedContainer(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
   const umlBasicShapesForClass2 = UMLBasicShapesForClass.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addExtendedShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
-  const umlConnectorsForClass2 = UMLConnectorsForClass.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', LINE_WIDTH, LINE_WIDTH, () => addCustomConnector(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
+  const umlConnectorsForClass2 = UMLConnectorsForClass.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addCustomConnector(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
 
   const umlGridShapesForClass = UMLGridShapesForClass.map(
     shapeType => {
