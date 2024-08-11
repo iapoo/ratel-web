@@ -108,12 +108,12 @@ export const UMLConnectorTypeInfos: CustomConnectorTypeInfo[] = [
     startX: 0, startY: 30, endX: 60, endY: 30, startArrowTypeName: 'None', endArrowTypeName: 'Triangle-4', strokeDashStyle: StrokeDashStyle.SOLID, connectorType: ConnectorType.StraightLine
   },
   {
-    name: UMLConnectors.TYPE_INCLUDE, description: UMLConnectors.DESC_INCLUDE, text: UMLConnectors.TEXT_INCLUDE, width: 60, height: 60,
-    startX: 0, startY: 30, endX: 60, endY: 30, startArrowTypeName: 'None', endArrowTypeName: 'Triangle-1-2', strokeDashStyle: StrokeDashStyle.DASH, connectorType: ConnectorType.StraightLine
+    name: UMLConnectors.TYPE_INCLUDE, description: UMLConnectors.DESC_INCLUDE, text: UMLConnectors.TEXT_INCLUDE, width: 90, height: 60,
+    startX: 0, startY: 30, endX: 90, endY: 30, startArrowTypeName: 'None', endArrowTypeName: 'Triangle-1-2', strokeDashStyle: StrokeDashStyle.DASH, connectorType: ConnectorType.StraightLine
   },
   {
-    name: UMLConnectors.TYPE_EXTEND, description: UMLConnectors.DESC_EXTEND, text: UMLConnectors.TEXT_EXTEND, width: 60, height: 60,
-    startX: 0, startY: 30, endX: 60, endY: 30, startArrowTypeName: 'None', endArrowTypeName: 'Triangle-1-2', strokeDashStyle: StrokeDashStyle.DASH, connectorType: ConnectorType.StraightLine
+    name: UMLConnectors.TYPE_EXTEND, description: UMLConnectors.DESC_EXTEND, text: UMLConnectors.TEXT_EXTEND, width: 90, height: 60,
+    startX: 0, startY: 30, endX: 90, endY: 30, startArrowTypeName: 'None', endArrowTypeName: 'Triangle-1-2', strokeDashStyle: StrokeDashStyle.DASH, connectorType: ConnectorType.StraightLine
   },
   {
     name: UMLConnectors.TYPE_MESSAGE, description: UMLConnectors.DESC_MESSAGE, text: UMLConnectors.TEXT_MESSAGE, width: 60, height: 60,

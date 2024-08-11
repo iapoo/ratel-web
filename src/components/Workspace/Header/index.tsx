@@ -1314,7 +1314,7 @@ const Header: FC<HeaderProps> = ({
 
   const handleGenerateIconsForShape = async (shapeTypes: ShapeType[] | CustomTableType[], classType: typeof ShapeEntity |
     typeof TableEntity | typeof Connector | typeof ContainerEntity | typeof CustomEntity |
-    typeof UMLCustomTable | typeof UMLContainerShape | typeof UMLBasicShape) => {
+    typeof UMLCustomTable | typeof UMLContainerShape | typeof UMLBasicShape | typeof UMLCustomShape) => {
     if (currentEditor) {
       let count = shapeTypes.length
       for (let i = 0; i < count; i++) {
@@ -1331,6 +1331,9 @@ const Header: FC<HeaderProps> = ({
         }
         let shapeEntity
         switch (classType) {
+          case UMLCustomShape:
+            shapeEntity = new UMLCustomShape(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, shapeType.name)
+            break;
           case UMLBasicShape:
             shapeEntity = new UMLBasicShape(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, { shapeType: shapeType.name }, shapeTypes)
             break;
@@ -1398,7 +1401,8 @@ const Header: FC<HeaderProps> = ({
     const enableUMLCustomTableShapes = false
     const enableUMLContainerShapes = false
     const enableUMLBasicShapes = false
-    const enableUMLConnectorShapes = true
+    const enableUMLConnectorShapes = false
+    const enableUMLCustomShapes = true
 
 
     if (enableShapes) handleGenerateIconsForShape(ShapeTypes, ShapeEntity)
@@ -1412,6 +1416,7 @@ const Header: FC<HeaderProps> = ({
     if (enableUMLContainerShapes) handleGenerateIconsForShape(UMLContainerTypes, UMLContainerShape)
     if (enableUMLBasicShapes) handleGenerateIconsForShape(UMLBasicShapeTypes, UMLBasicShape)
     if (enableUMLConnectorShapes) handleGenerateIconsForCustomConnector(UMLConnectorTypeInfos, UMLConnector)
+    if (enableUMLCustomShapes) handleGenerateIconsForShape(UMLCustomShapeTypes, UMLCustomShape)
   }
 
   const handleTestCode = () => {
