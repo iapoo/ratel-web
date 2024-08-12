@@ -1,4 +1,4 @@
-import React, { FC, MouseEventHandler, SyntheticEvent, UIEvent, useEffect, useState, } from 'react'
+import React, { createRef, FC, MouseEventHandler, SyntheticEvent, UIEvent, useEffect, useState, } from 'react'
 import styles from './index.css'
 import { Button, Collapse, CollapseProps, Divider, Image, Popover, Space, Tooltip, message, } from 'antd'
 import { Utils, RequestUtils, } from '../Utils'
@@ -33,8 +33,8 @@ interface NavigatorProps {
 const ICON_WIDTH = 28
 const ICON_HEIGHT = 28
 const POPOVER_ICON_MARGIN = 5
-const POPOVER_WIDTH = 100
-const POPOVER_MIN_WIDTH = 100
+const POPOVER_WIDTH = 160
+const POPOVER_MIN_WIDTH = 160
 const POPOVER_MARGIN = 30
 const LINE_WIDTH = 128
 const LINE_HEIGHT = 128
@@ -559,8 +559,7 @@ const Navigator: FC<NavigatorProps> = ({
   }
 
   const getSVGPopoverContent = (folder: string, name: string, width: number, height: number) => {
-    const margin = 30
-    return <div style={{ width: width + margin, display: 'table' }}>
+    return <div style={{ width: '100%', display: 'table', }}>
       <div style={{ display: 'table-cell', textAlign: 'center', verticalAlign: 'middle', borderTop: '0px solid gray', padding: '2px' }}>
         <img id={process.env.PUBLIC_PATH + `/${folder}/${name}.svg`} src={process.env.PUBLIC_PATH + `/${folder}/${name}.svg`} />
       </div>
@@ -602,8 +601,9 @@ const Navigator: FC<NavigatorProps> = ({
 
   }
 
-  const updateSVG = async (id: string, src: string, width: number, height: number, iconWidth: number, iconheight: number) => {
+  const updateSVG = async (imgRef: React.RefObject<HTMLImageElement>, id: string, src: string, width: number, height: number, iconWidth: number, iconheight: number) => {
     const svgContent = await RequestUtils.fetchSvgFile(src)
+    // console.log(`update ${id}`)
     //console.log(`${svgContent}`)
     const img = document.getElementById(id) as HTMLImageElement
     const svg = SVG(svgContent) as Svg
@@ -619,33 +619,40 @@ const Navigator: FC<NavigatorProps> = ({
     //visitContainer(iconSvg)
     // console.log(`${iconSvg}`)
     const svgData = 'data:image/svg+xml;base64,' + btoa(iconSvg)
-    if (img && !img.src.startsWith('data')) {
-      img.src = svgData
+    if (imgRef.current && !imgRef.current.src.startsWith('data')) {
+      imgRef.current.src = svgData
       // console.log(`${svgData}`)
       // svgSource.addTo(svg)
       // console.log(svgContent)
       //().fin.svg(`#${id}`)
+    } else if (img && !img.src.startsWith('data')) {//Auto expanded icons have null imgRef right now
+      img.src = svgData
     }
   }
 
   const generateIcons = (shapeTypeName: string, folder: string, shapeWidth: number, shapeHeight: number, eventHandler: MouseEventHandler<HTMLElement>) => {
     const margin = POPOVER_ICON_MARGIN
+    const imgRef = createRef<HTMLImageElement>()
     const iconId = `svg-icon-${folder}-${shapeTypeName}`
+    //const oldImg = document.getElementById(iconId) as HTMLImageElement
     const src = process.env.PUBLIC_PATH + `/${folder}/${shapeTypeName}.svg`
+    // const imgData = RequestUtils.fetchSvgFile(src)
     let width = ICON_WIDTH
     let height = ICON_HEIGHT
-    const popoverWidth = POPOVER_WIDTH > shapeWidth + POPOVER_MARGIN * 2 ? POPOVER_WIDTH : shapeWidth + POPOVER_MARGIN * 2
+    let popoverWidth = POPOVER_WIDTH > shapeWidth + POPOVER_MARGIN * 2 ? POPOVER_WIDTH : shapeWidth + POPOVER_MARGIN * 2
+    popoverWidth = popoverWidth > shapeHeight + POPOVER_MARGIN * 2 ? popoverWidth : shapeHeight + POPOVER_MARGIN * 2
     if (shapeWidth > shapeHeight) {
       height = Math.round(ICON_HEIGHT * shapeHeight / shapeWidth)
     } else {
       width = ICON_WIDTH
     }
-    return <Popover title={shapeTypeName} placement='right' content={getSVGPopoverContent(folder, shapeTypeName, shapeWidth, shapeHeight)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: POPOVER_MIN_WIDTH, width: popoverWidth, }}>
+
+    return <Popover title={shapeTypeName + popoverWidth} placement='right' content={getSVGPopoverContent(folder, shapeTypeName, shapeWidth, shapeHeight)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: POPOVER_MIN_WIDTH, width: popoverWidth, }}>
       <Button type='text' onMouseDown={eventHandler} style={{ padding: 2, display: 'table' }} >
-        <img id={iconId} src={src}
+        <img ref={imgRef} id={iconId} src={src}
           width={width} height={height} style={{ display: 'table-cell' }}
           draggable={false}
-          onLoad={() => updateSVG(iconId, src, shapeWidth + margin * 2, shapeHeight + margin * 2, width, height)} />
+          onLoad={() => updateSVG(imgRef, iconId, src, shapeWidth + margin * 2, shapeHeight + margin * 2, width, height)} />
       </Button>
     </Popover>
   }

@@ -99,13 +99,13 @@ export class MockupCustomShapes {
 
 export const MockupCustomShapeTypes = [
   {
-    name: MockupCustomShapes.TYPE_HEADER, description: MockupCustomShapes.DESC_HEADER, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_HEADER, left: 0, top: 0, width: 120, height: 40, enableMask: false,
+    name: MockupCustomShapes.TYPE_HEADER, description: MockupCustomShapes.DESC_HEADER, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_HEADER, left: 0, top: 0, width: 100, height: 40, enableMask: false,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
   {
-    name: MockupCustomShapes.TYPE_LABEL, description: MockupCustomShapes.DESC_LABEL, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_LABEL, left: 0, top: 0, width: 100, height: 24, enableMask: false,
+    name: MockupCustomShapes.TYPE_LABEL, description: MockupCustomShapes.DESC_LABEL, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_LABEL, left: 0, top: 0, width: 60, height: 24, enableMask: false,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
@@ -117,7 +117,7 @@ export const MockupCustomShapeTypes = [
     adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
   {
-    name: MockupCustomShapes.TYPE_LINK, description: MockupCustomShapes.DESC_LINK, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_LINK, left: 0, top: 0, width: 100, height: 24, enableMask: false,
+    name: MockupCustomShapes.TYPE_LINK, description: MockupCustomShapes.DESC_LINK, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_LINK, left: 0, top: 0, width: 60, height: 24, enableMask: false,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
@@ -195,49 +195,49 @@ export const MockupCustomShapeTypes = [
     adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
   {
-    name: MockupCustomShapes.TYPE_BUTTON, description: MockupCustomShapes.DESC_BUTTON, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_BUTTON, left: 0, top: 0, width: 120, height: 24, enableMask: false,
+    name: MockupCustomShapes.TYPE_BUTTON, description: MockupCustomShapes.DESC_BUTTON, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_BUTTON, left: 0, top: 0, width: 70, height: 24, enableMask: false,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
   {
-    name: MockupCustomShapes.TYPE_INPUT, description: MockupCustomShapes.DESC_INPUT, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_INPUT, left: 0, top: 0, width: 160, height: 24, enableMask: false,
+    name: MockupCustomShapes.TYPE_INPUT, description: MockupCustomShapes.DESC_INPUT, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_INPUT, left: 0, top: 0, width: 100, height: 24, enableMask: false,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
   {
-    name: MockupCustomShapes.TYPE_DROPDOWN, description: MockupCustomShapes.DESC_DROPDOWN, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_DROPDOWN, left: 0, top: 0, width: 160, height: 24, enableMask: false,
+    name: MockupCustomShapes.TYPE_DROPDOWN, description: MockupCustomShapes.DESC_DROPDOWN, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_DROPDOWN, left: 0, top: 0, width: 100, height: 24, enableMask: false,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
   {
-    name: MockupCustomShapes.TYPE_SEARCH_BAR, description: MockupCustomShapes.DESC_SEARCH_BAR, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_SEARCH_BAR, left: 0, top: 0, width: 160, height: 24, enableMask: false,
+    name: MockupCustomShapes.TYPE_SEARCH_BAR, description: MockupCustomShapes.DESC_SEARCH_BAR, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_SEARCH_BAR, left: 0, top: 0, width: 100, height: 24, enableMask: false,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
   {
-    name: MockupCustomShapes.TYPE_CHECKBOX, description: MockupCustomShapes.DESC_CHECKBOX, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_CHECKBOX, left: 0, top: 0, width: 160, height: 24, enableMask: true,
+    name: MockupCustomShapes.TYPE_CHECKBOX, description: MockupCustomShapes.DESC_CHECKBOX, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_CHECKBOX, left: 0, top: 0, width: 100, height: 24, enableMask: true,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
   {
-    name: MockupCustomShapes.TYPE_CHECKBOX_CHECKED, description: MockupCustomShapes.DESC_CHECKBOX_CHECKED, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_CHECKBOX_CHECKED, left: 0, top: 0, width: 160, height: 24, enableMask: true,
+    name: MockupCustomShapes.TYPE_CHECKBOX_CHECKED, description: MockupCustomShapes.DESC_CHECKBOX_CHECKED, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_CHECKBOX_CHECKED, left: 0, top: 0, width: 100, height: 24, enableMask: true,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
   {
-    name: MockupCustomShapes.TYPE_RADIO, description: MockupCustomShapes.DESC_RADIO, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_RADIO, left: 0, top: 0, width: 160, height: 24, enableMask: true,
+    name: MockupCustomShapes.TYPE_RADIO, description: MockupCustomShapes.DESC_RADIO, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_RADIO, left: 0, top: 0, width: 100, height: 24, enableMask: true,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
   {
-    name: MockupCustomShapes.TYPE_RADIO_CHECKED, description: MockupCustomShapes.DESC_RADIO_CHECKED, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_RADIO_CHECKED, left: 0, top: 0, width: 160, height: 24, enableMask: true,
+    name: MockupCustomShapes.TYPE_RADIO_CHECKED, description: MockupCustomShapes.DESC_RADIO_CHECKED, freeze: Shapes.FREEZE_NONE, text: MockupCustomShapes.TEXT_RADIO_CHECKED, left: 0, top: 0, width: 100, height: 24, enableMask: true,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
     adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true

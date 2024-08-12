@@ -1316,12 +1316,12 @@ const Header: FC<HeaderProps> = ({
   const handleGenerateIconsForShape = async (shapeTypes: ShapeType[] | CustomTableType[], classType: typeof ShapeEntity |
     typeof TableEntity | typeof Connector | typeof ContainerEntity | typeof CustomEntity |
     typeof UMLCustomTable | typeof UMLContainerShape | typeof UMLBasicShape | typeof UMLCustomShape |
-    typeof UMLCustomContainer | typeof UMLFrameShape | typeof ERCustomShape | MockupCustomShape) => {
+    typeof UMLCustomContainer | typeof UMLFrameShape | typeof ERCustomShape | MockupCustomShape, margin: number) => {
     if (currentEditor) {
       let count = shapeTypes.length
       for (let i = 0; i < count; i++) {
         let shapeType = shapeTypes[i]
-        let margin = 5 //2
+        //let margin = 1 //2
         let lineFactor = 1 //1
         let fontFactor = 1 //0.5
         let sizeFactor = 1 //0.25
@@ -1423,22 +1423,22 @@ const Header: FC<HeaderProps> = ({
     const enableMockupCustomShapes = true
 
 
-    if (enableShapes) handleGenerateIconsForShape(ShapeTypes, ShapeEntity)
+    if (enableShapes) handleGenerateIconsForShape(ShapeTypes, ShapeEntity, 5)
     if (enableLine) handleGenerateIconsForConnector()
-    if (enableTable) handleGenerateIconsForShape(TableTypes, TableEntity)
-    if (enableContainer) handleGenerateIconsForShape(ContainerTypes, ContainerEntity)
+    if (enableTable) handleGenerateIconsForShape(TableTypes, TableEntity, 5)
+    if (enableContainer) handleGenerateIconsForShape(ContainerTypes, ContainerEntity, 5)
     if (enableBasicShapes) handleGenerateIconsForCustomShape(BasicShapes)
     if (enableArrows) handleGenerateIconsForCustomShape(Arrows)
     if (enableFlowchartShapes) handleGenerateIconsForCustomShape(FlowChartShapes)
-    if (enableUMLCustomTableShapes) handleGenerateIconsForShape(UMLCustomTableTypes, UMLCustomTable)
-    if (enableUMLContainerShapes) handleGenerateIconsForShape(UMLContainerTypes, UMLContainerShape)
-    if (enableUMLBasicShapes) handleGenerateIconsForShape(UMLBasicShapeTypes, UMLBasicShape)
+    if (enableUMLCustomTableShapes) handleGenerateIconsForShape(UMLCustomTableTypes, UMLCustomTable, 5)
+    if (enableUMLContainerShapes) handleGenerateIconsForShape(UMLContainerTypes, UMLContainerShape, 5)
+    if (enableUMLBasicShapes) handleGenerateIconsForShape(UMLBasicShapeTypes, UMLBasicShape, 5)
     if (enableUMLConnectorShapes) handleGenerateIconsForCustomConnector(UMLConnectorTypeInfos, UMLConnector)
-    if (enableUMLCustomShapes) handleGenerateIconsForShape(UMLCustomShapeTypes, UMLCustomShape)
-    if (enableUMLCustomContainers) handleGenerateIconsForShape(UMLCustomContainerTypes, UMLCustomContainer)
-    if (enableUMLFrameShapes) handleGenerateIconsForShape(UMLFrameShapeTypes, UMLFrameShape)
-    if (enableERCustomShapes) handleGenerateIconsForShape(ERCustomShapeTypes, ERCustomShape)
-    if (enableMockupCustomShapes) handleGenerateIconsForShape(MockupCustomShapeTypes, MockupCustomShape)
+    if (enableUMLCustomShapes) handleGenerateIconsForShape(UMLCustomShapeTypes, UMLCustomShape, 5)
+    if (enableUMLCustomContainers) handleGenerateIconsForShape(UMLCustomContainerTypes, UMLCustomContainer, 5)
+    if (enableUMLFrameShapes) handleGenerateIconsForShape(UMLFrameShapeTypes, UMLFrameShape, 5)
+    if (enableERCustomShapes) handleGenerateIconsForShape(ERCustomShapeTypes, ERCustomShape, 5)
+    if (enableMockupCustomShapes) handleGenerateIconsForShape(MockupCustomShapeTypes, MockupCustomShape, 1)
   }
 
   const handleTestCode = () => {

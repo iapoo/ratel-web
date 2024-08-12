@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.dev/svgjs" width="170" height="34" viewbox="0 0 170 34"   shape-rendering="geometricPrecision">
-<g id="4fea948420bb48a48864e60614b45b7c" transform="translate(5, 5) ">
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.dev/svgjs" width="162" height="26" viewbox="0 0 162 26"   shape-rendering="geometricPrecision">
+<g transform="translate(1, 1) ">
     <path fill="#FFFFFFFF" stroke="#808080FF" stroke-width="2"  d="M0 0L0 24L160 24L160 0L0 0Z"/> 
     <path fill="#00000000" stroke="#808080FF" stroke-width="2"  d="M136 0L136 24L160 24L160 0L136 0Z"/> 
     <path fill="#00000000" stroke="#696969FF" stroke-width="1.5"  d="M140.8 4.8L140.8 19.2L155.2 19.2L155.2 4.8L140.8 4.8Z"/> 

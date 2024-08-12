@@ -412,7 +412,7 @@ export class EditorHelper {
         if (item instanceof Connector) {
             const connectorArrowPathSVG = EditorHelper.generateSVGConnectorArrow(item, indent + '    ')
             const textSVG = await EditorHelper.generateSVGText(item, indent)
-            return `\n${indent}<g id="${item.id}" ${transformSVG}>${connectorArrowPathSVG}${textSVG}`
+            return `\n${indent}<g ${transformSVG}>${connectorArrowPathSVG}${textSVG}`
         } else {
             const pathSvg = EditorHelper.generateSVGPath(item.shape.path)
             const strokeSVG = EditorHelper.generateSVGPaint(item.shape.stroke, true, item.shape.stroked)
@@ -434,7 +434,7 @@ export class EditorHelper {
             const fourthSVG = disableFourth ? '' : `\n${indent}    <path ${fourthFillSVG} ${fourthStrokeSVG} ${fourthPathSvg}/>`
             const textSVG = await EditorHelper.generateSVGText(item, indent + '    ')
 
-            return `\n${indent}<g id="${item.id}" ${transformSVG}>\n${indent}    <path ${fillSVG} ${strokeSVG} ${pathSvg}/> ${secondSVG} ${thirdSVG} ${fourthSVG} ${textSVG}`
+            return `\n${indent}<g ${transformSVG}>\n${indent}    <path ${fillSVG} ${strokeSVG} ${pathSvg}/> ${secondSVG} ${thirdSVG} ${fourthSVG} ${textSVG}`
         }
     }
 
