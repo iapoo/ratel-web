@@ -646,10 +646,14 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
       </Tooltip>
     </div>
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontWeight: 'bold', padding: 4, }}>
-      <Tooltip title={<FormattedMessage id='workspace.header.title.line-width' />}>
-        <Select size='small' value={doubleLineGap} onChange={handleDoubleLineGapChange} style={{ width: 56, }} options={DoubleLineGapOptions} />
-        <Select size='small' value={connectorDoubleLineArrowLength} onChange={handleDoubleLineArrowLengthChange} style={{ width: 56, }} options={DoubleLineArrowLengthOptions} />
-        <Select size='small' value={connectorDoubleLineArrowDistance} onChange={handleDoubleLineArrowDistanceChange} style={{ width: 56, }} options={DoubleLineArrowDistanceOptions} />
+      <Tooltip title={<FormattedMessage id='workspace.header.title.connector-line-mode-link-width' />}>
+        <Select size='small' value={doubleLineGap} onChange={handleDoubleLineGapChange} style={{ width: 56, }} disabled={connectorLineMode == Consts.CONNECTOR_LINE_MODE_SIGNLE} options={DoubleLineGapOptions} />
+      </Tooltip>
+      <Tooltip title={<FormattedMessage id='connector-line-mode-link-arrow-length' />}>
+        <Select size='small' value={connectorDoubleLineArrowLength} onChange={handleDoubleLineArrowLengthChange} style={{ width: 56, }} disabled={connectorLineMode == Consts.CONNECTOR_LINE_MODE_SIGNLE} options={DoubleLineArrowLengthOptions} />
+      </Tooltip>
+      <Tooltip title={<FormattedMessage id='connector-line-mode-link-arrow-distance' />}>
+        <Select size='small' value={connectorDoubleLineArrowDistance} onChange={handleDoubleLineArrowDistanceChange} style={{ width: 56, }} disabled={connectorLineMode == Consts.CONNECTOR_LINE_MODE_SIGNLE} options={DoubleLineArrowDistanceOptions} />
       </Tooltip>
     </div>
   </div>

@@ -517,19 +517,23 @@ export class ConnectorShape extends EntityShape {
       this._arrowStroke.setPaintStyle(PaintStyle.FILL)
       this._arrowStroke.setColor(this.stroke.getColor())
       this._arrowOutline.setPaintStyle(PaintStyle.STROKE)
+      this._arrowOutline.setAntiAlias(true)
       this._arrowOutline.setColor(this.stroke.getColor())
       this._arrowOutline.setStrokeWidth(this.stroke.getStrokeWidth())
       this._connectorDoubleLinePaint.setStrokeWidth(this.stroke.getStrokeWidth())
       this._connectorDoubleLinePaint.setPaintStyle(PaintStyle.STROKE)
       this._connectorDoubleLinePaint.setColor(this.stroke.getColor())
       this._connectorDoubleLinePaint.setStrokeDashStyle(this.stroke.getStrokeDashStyle())
+      this._connectorDoubleLinePaint.setAntiAlias(true)
       this._connectorDoubleLineStroke.setStrokeWidth(this.stroke.getStrokeWidth() * 2 + this._connectorDoubleLineGap)
       this._connectorDoubleLineStroke.setPaintStyle(PaintStyle.STROKE)
       this._connectorDoubleLineStroke.setColor(this.stroke.getColor())
       this._connectorDoubleLineStroke.setStrokeDashStyle(this.stroke.getStrokeDashStyle())
+      this._connectorDoubleLineStroke.setAntiAlias(true)
       this._connectorDoubleLineFill.setStrokeWidth(this._connectorDoubleLineGap)
       this._connectorDoubleLineFill.setPaintStyle(PaintStyle.STROKE)
       this._connectorDoubleLineFill.setColor(this.fill.getColor())
+      this._connectorDoubleLineFill.setAntiAlias(true)
 
       switch (this.connectorMode) {
         case ConnectorMode.Double:

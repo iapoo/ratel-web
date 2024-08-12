@@ -1230,7 +1230,7 @@ const Header: FC<HeaderProps> = ({
   }
 
   const strokeDashStyles = StrokeDashStyles.map(strokeDashStyle => {
-    return { value: strokeDashStyle.name, label: <img alt='intl.formatMessage({ id: strokeDashStyle.label})' src={process.env.PUBLIC_PATH + '/images/line-' + strokeDashStyle.name.toLowerCase() + '.png'} width='64' height='24' /> }
+    return { value: strokeDashStyle.name, label: <img alt='intl.formatMessage({ id: strokeDashStyle.label})' src={process.env.PUBLIC_PATH + '/images/line-' + strokeDashStyle.name.toLowerCase() + '.png'} width='80' height='24' /> }
   })
 
   const connectorLineTypes = ConnectorLineTypes.map(connectorLineType => {
@@ -1420,7 +1420,7 @@ const Header: FC<HeaderProps> = ({
     const enableUMLCustomContainers = false
     const enableUMLFrameShapes = false
     const enableERCustomShapes = false
-    const enableMockupCustomShapes = true
+    const enableMockupCustomShapes = false
 
 
     if (enableShapes) handleGenerateIconsForShape(ShapeTypes, ShapeEntity, 5)
@@ -2798,7 +2798,7 @@ const Header: FC<HeaderProps> = ({
                 <Select size='small' value={lineWidth} onChange={handleLineWidthChange} style={{ width: 64, }} disabled={!selectionValid} options={LineWidthOptions} bordered={false} />
               </Tooltip>
               <Tooltip title={<FormattedMessage id='workspace.header.title.stroke-type' />}>
-                <Select size='small' value={strokeDashStyle} onChange={handleStrokeDashStyleChange} style={{ width: 110 }} dropdownStyle={{ width: 110 }} options={strokeDashStyles} bordered={false} disabled={!selectionValid} />
+                <Select size='small' value={strokeDashStyle} onChange={handleStrokeDashStyleChange} style={{ width: 130 }} dropdownStyle={{ width: 130 }} options={strokeDashStyles} bordered={false} disabled={!selectionValid} />
               </Tooltip>
               <Tooltip title={<FormattedMessage id='workspace.header.title.connector-line-type' />}>
                 <Select size='small' value={connectorLineType} onChange={handleConnectorLineTypeChange} style={{ width: 56 }} disabled={!connectorSelected} options={connectorLineTypes} bordered={false} />
@@ -2812,8 +2812,8 @@ const Header: FC<HeaderProps> = ({
               <Tooltip title={<FormattedMessage id='workspace.header.title.connector-line-mode' />}>
                 <Select size='small' value={connectorLineMode} onChange={handleConnectorLineModeChange} style={{ width: 56, }} disabled={!connectorSelected} options={connectorLineType == Consts.CONNECTOR_LINE_TYPE_CURVED ? connectorLineModesForCurve : connectorLineModes} bordered={false} />
               </Tooltip>
-              <Tooltip title={<FormattedMessage id='workspace.header.title.line-width' />}>
-                <Select size='small' value={doubleLineGap} onChange={handleDoubleLineGapChange} style={{ width: 64, }} disabled={!connectorSelected} options={DoubleLineGapOptions} bordered={false} />
+              <Tooltip title={<FormattedMessage id='workspace.header.title.connector-line-mode-link-width' />}>
+                <Select size='small' value={doubleLineGap} onChange={handleDoubleLineGapChange} style={{ width: 64, }} disabled={!(connectorSelected && connectorLineMode != Consts.CONNECTOR_LINE_MODE_SIGNLE)} options={DoubleLineGapOptions} bordered={false} />
               </Tooltip>
             </Space>
           </Space>
