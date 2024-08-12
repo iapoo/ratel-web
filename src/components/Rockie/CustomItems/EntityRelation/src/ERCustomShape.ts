@@ -187,7 +187,7 @@ export class ERCustomShape extends CustomEntity {
         const offsetWidth = theThis.height * 0.1
         const offsetHeight = theThis.height * 0.1
         theThis.secondStroke.setColor(theThis.stroke.getColor())
-        theThis.secondStroke.setStrokeWidth(theThis.stroke.getStroketWidth())
+        theThis.secondStroke.setStrokeWidth(theThis.stroke.getStrokeWidth())
         theThis.secondStroke.setStrokeDashStyle(theThis.stroke.getStrokeDashStyle())
         theThis.secondFill.setAlpha(0)
         theThis.path.addOval(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
@@ -206,7 +206,7 @@ export class ERCustomShape extends CustomEntity {
         const offsetWidth = theThis.width * 0.1
         const offsetHeight = theThis.height * 0.1
         theThis.secondStroke.setColor(theThis.stroke.getColor())
-        theThis.secondStroke.setStrokeWidth(theThis.stroke.getStroketWidth())
+        theThis.secondStroke.setStrokeWidth(theThis.stroke.getStrokeWidth())
         theThis.secondStroke.setStrokeDashStyle(theThis.stroke.getStrokeDashStyle())
         theThis.secondFill.setAlpha(0)
         theThis.path.moveTo(this.width / 2, 0)

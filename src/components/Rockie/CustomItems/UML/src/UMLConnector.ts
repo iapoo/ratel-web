@@ -20,7 +20,7 @@ export class UMLConnectors {
   public static TEXT_ASSOCIATION = 'Association'
   public static TYPE_DIRECTED_ASSOCIATION = 'Directed Association'
   public static DESC_DIRECTED_ASSOCIATION = 'Directed Association'
-  public static TEXT_RDIRECTED_ASSOCIATION = 'Directed Association'
+  public static TEXT_DIRECTED_ASSOCIATION = 'Directed Association'
   public static TYPE_AGGREGATION = 'Aggregation'
   public static DESC_AGGREGATION = 'Aggregation'
   public static TEXT_AGGREGATION = 'Aggregation'
@@ -84,7 +84,7 @@ export const UMLConnectorTypeInfos: CustomConnectorTypeInfo[] = [
     startX: 0, startY: 30, endX: 60, endY: 30, startArrowTypeName: 'None', endArrowTypeName: 'Triangle-1-2', strokeDashStyle: StrokeDashStyle.DASH, connectorType: ConnectorType.Orthogonal
   },
   {
-    name: UMLConnectors.TYPE_DIRECTED_ASSOCIATION, description: UMLConnectors.DESC_DIRECTED_ASSOCIATION, text: UMLConnectors.TEXT_RDIRECTED_ASSOCIATION, width: 60, height: 60,
+    name: UMLConnectors.TYPE_DIRECTED_ASSOCIATION, description: UMLConnectors.DESC_DIRECTED_ASSOCIATION, text: UMLConnectors.TEXT_DIRECTED_ASSOCIATION, width: 60, height: 60,
     startX: 0, startY: 30, endX: 60, endY: 30, startArrowTypeName: 'None', endArrowTypeName: 'Triangle-1-2', strokeDashStyle: StrokeDashStyle.SOLID, connectorType: ConnectorType.Orthogonal
   },
   {

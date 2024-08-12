@@ -597,7 +597,7 @@ export class MockupCustomShape extends CustomEntity {
         theThis.stroke.setStrokeWidth(0.5)
         theThis.stroke.setColor(MockupCustomShape.BORDER_COLOR)
         theThis.secondStroke.setColor(MockupCustomShape.BORDER_COLOR)
-        theThis.secondStroke.setStrokeWidth(theThis.stroke.getStroketWidth())
+        theThis.secondStroke.setStrokeWidth(theThis.stroke.getStrokeWidth())
         theThis.secondFill.setColor(MockupCustomShape.LIGHT_COLOR)
         theThis.thirdStroke.setColor(MockupCustomShape.DARK_COLOR)
         theThis.thirdFill.setColor(MockupCustomShape.DARK_COLOR)
@@ -632,7 +632,7 @@ export class MockupCustomShape extends CustomEntity {
         theThis.stroke.setStrokeWidth(0.5)
         theThis.stroke.setColor(MockupCustomShape.BORDER_COLOR)
         theThis.secondStroke.setColor(MockupCustomShape.BORDER_COLOR)
-        theThis.secondStroke.setStrokeWidth(theThis.stroke.getStroketWidth())
+        theThis.secondStroke.setStrokeWidth(theThis.stroke.getStrokeWidth())
         theThis.secondFill.setColor(MockupCustomShape.LIGHT_COLOR)
         theThis.thirdStroke.setColor(MockupCustomShape.DARK_COLOR)
         theThis.thirdFill.setColor(MockupCustomShape.DARK_COLOR)
@@ -657,7 +657,7 @@ export class MockupCustomShape extends CustomEntity {
         theThis.stroked = false
         theThis.filled = false
         theThis.secondStroke.setColor(MockupCustomShape.BORDER_COLOR)
-        theThis.secondStroke.setStrokeWidth(theThis.stroke.getStroketWidth())
+        theThis.secondStroke.setStrokeWidth(theThis.stroke.getStrokeWidth())
         theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
         theThis.secondPath.addRectangle(Rectangle.makeLTWH(0, theThis.height * 0.5, theThis.width, lineSize))
         break;
@@ -667,7 +667,7 @@ export class MockupCustomShape extends CustomEntity {
         theThis.stroked = false
         theThis.filled = false
         theThis.secondStroke.setColor(MockupCustomShape.BORDER_COLOR)
-        theThis.secondStroke.setStrokeWidth(theThis.stroke.getStroketWidth())
+        theThis.secondStroke.setStrokeWidth(theThis.stroke.getStrokeWidth())
         theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
         theThis.secondPath.addRectangle(Rectangle.makeLTWH(theThis.width * 0.5, 0, lineSize, theThis.height))
         break;
@@ -676,7 +676,7 @@ export class MockupCustomShape extends CustomEntity {
         theThis.stroked = false
         theThis.filled = false
         theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
-        theThis.secondStroke.setStrokeWidth(theThis.stroke.getStroketWidth())
+        theThis.secondStroke.setStrokeWidth(theThis.stroke.getStrokeWidth())
         theThis.secondPath.moveTo(0, 0)
         theThis.secondPath.lineTo(0, theThis.height)
         theThis.secondPath.lineTo(theThis.width, theThis.height)
@@ -738,15 +738,15 @@ export class MockupCustomShape extends CustomEntity {
         theThis.stroked = false
         theThis.filled = false
         theThis.secondStroke.setColor(theThis.stroke.getColor())
-        theThis.secondStroke.setStrokeWidth(theThis.stroke.getStroketWidth())
+        theThis.secondStroke.setStrokeWidth(theThis.stroke.getStrokeWidth())
         theThis.secondStroke.setAntiAlias(true)
         theThis.secondFill.setColor(theThis.fill.getColor())
         theThis.thirdStroke.setColor(theThis.stroke.getColor())
-        theThis.thirdStroke.setStrokeWidth(theThis.stroke.getStroketWidth())
+        theThis.thirdStroke.setStrokeWidth(theThis.stroke.getStrokeWidth())
         theThis.thirdStroke.setAntiAlias(true)
         theThis.thirdFill.setColor(MockupCustomShape.LIGHT_COLOR)
         theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
-        theThis.secondStroke.setStrokeWidth(theThis.stroke.getStroketWidth())
+        theThis.secondStroke.setStrokeWidth(theThis.stroke.getStrokeWidth())
         theThis.secondPath.moveTo(0, 0)
         theThis.secondPath.lineTo(0, theThis.height)
         theThis.secondPath.lineTo(theThis.width, theThis.height)
@@ -764,15 +764,15 @@ export class MockupCustomShape extends CustomEntity {
         theThis.stroked = false
         theThis.filled = false
         theThis.secondStroke.setColor(theThis.stroke.getColor())
-        theThis.secondStroke.setStrokeWidth(theThis.stroke.getStroketWidth())
+        theThis.secondStroke.setStrokeWidth(theThis.stroke.getStrokeWidth())
         theThis.secondStroke.setAntiAlias(true)
         theThis.secondFill.setColor(theThis.fill.getColor())
         theThis.thirdStroke.setColor(theThis.stroke.getColor())
-        theThis.thirdStroke.setStrokeWidth(theThis.stroke.getStroketWidth())
+        theThis.thirdStroke.setStrokeWidth(theThis.stroke.getStrokeWidth())
         theThis.thirdStroke.setAntiAlias(true)
         theThis.thirdFill.setColor(MockupCustomShape.LIGHT_COLOR)
         theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
-        theThis.secondStroke.setStrokeWidth(theThis.stroke.getStroketWidth())
+        theThis.secondStroke.setStrokeWidth(theThis.stroke.getStrokeWidth())
         theThis.secondPath.moveTo(0, 0)
         theThis.secondPath.lineTo(0, theThis.height)
         theThis.secondPath.lineTo(theThis.width, theThis.height)
@@ -802,7 +802,7 @@ export class MockupCustomShape extends CustomEntity {
         const iconWidth = buttonWidth * 0.4
         const iconHeight = theThis.height - iconTop * 2
         theThis.secondStroke.setColor(theThis.stroke.getColor())
-        theThis.secondStroke.setStrokeWidth(theThis.stroke.getStroketWidth())
+        theThis.secondStroke.setStrokeWidth(theThis.stroke.getStrokeWidth())
         theThis.secondFill.setColor(MockupCustomShape.LIGHT_COLOR)
         theThis.thirdStroke.setColor(MockupCustomShape.DARK_COLOR)
         theThis.thirdFill.setColor(MockupCustomShape.DARK_COLOR)
@@ -932,7 +932,7 @@ export class MockupCustomShape extends CustomEntity {
         const icon2Width = buttonWidth * 0.6
         const icon2Height = theThis.height * 0.5 - icon1Top * 2
         theThis.secondStroke.setColor(theThis.stroke.getColor())
-        theThis.secondStroke.setStrokeWidth(theThis.stroke.getStroketWidth())
+        theThis.secondStroke.setStrokeWidth(theThis.stroke.getStrokeWidth())
         theThis.secondFill.setColor(MockupCustomShape.LIGHT_COLOR)
         theThis.thirdStroke.setColor(MockupCustomShape.DARK_COLOR)
         theThis.thirdFill.setColor(MockupCustomShape.DARK_COLOR)
@@ -972,10 +972,10 @@ export class MockupCustomShape extends CustomEntity {
         // theThis.stroke.setStrokeWidth(0.5)
         // theThis.stroke.setColor(MockupCustomShape.BORDER_COLOR)
         theThis.secondStroke.setColor(theThis.stroke.getColor())
-        theThis.secondStroke.setStrokeWidth(theThis.stroke.getStroketWidth())
+        theThis.secondStroke.setStrokeWidth(theThis.stroke.getStrokeWidth())
         theThis.secondFill.setColor(MockupCustomShape.LIGHT_COLOR)
         theThis.thirdStroke.setColor(theThis.stroke.getColor())
-        theThis.thirdStroke.setStrokeWidth(theThis.stroke.getStroketWidth())
+        theThis.thirdStroke.setStrokeWidth(theThis.stroke.getStrokeWidth())
         theThis.thirdFill.setColor(theThis.fill.getColor())
         theThis.fourthStroke.setColor(MockupCustomShape.DARK_COLOR)
         theThis.fourthFill.setColor(MockupCustomShape.DARK_COLOR)
@@ -1003,7 +1003,7 @@ export class MockupCustomShape extends CustomEntity {
         const iconWidth = buttonWidth * 0.6
         const iconHeight = theThis.height - iconTop * 2
         theThis.secondStroke.setColor(theThis.stroke.getColor())
-        theThis.secondStroke.setStrokeWidth(theThis.stroke.getStroketWidth())
+        theThis.secondStroke.setStrokeWidth(theThis.stroke.getStrokeWidth())
         theThis.secondFill.setColor(Colors.Transparent)
         theThis.thirdStroke.setColor(MockupCustomShape.DARK_COLOR)
         theThis.thirdStroke.setStrokeWidth(1.5)

@@ -1482,7 +1482,7 @@ export class Paint {
     return strokeMiter
   }
 
-  public getStroketWidth(): number {
+  public getStrokeWidth(): number {
     const strokeWidth = this._source.getStrokeWidth()
     return strokeWidth
   }
