@@ -647,7 +647,7 @@ const Navigator: FC<NavigatorProps> = ({
       width = ICON_WIDTH
     }
 
-    return <Popover title={shapeTypeName + popoverWidth} placement='right' content={getSVGPopoverContent(folder, shapeTypeName, shapeWidth, shapeHeight)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: POPOVER_MIN_WIDTH, width: popoverWidth, }}>
+    return <Popover title={shapeTypeName} placement='right' content={getSVGPopoverContent(folder, shapeTypeName, shapeWidth, shapeHeight)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: POPOVER_MIN_WIDTH, width: popoverWidth, }}>
       <Button type='text' onMouseDown={eventHandler} style={{ padding: 2, display: 'table' }} >
         <img ref={imgRef} id={iconId} src={src}
           width={width} height={height} style={{ display: 'table-cell' }}
