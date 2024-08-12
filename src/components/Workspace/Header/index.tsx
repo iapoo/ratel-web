@@ -48,6 +48,7 @@ import { TableTypes } from '@/components/Rockie/Items/src/TableEntity';
 import { CustomEntityTypeInfo } from '@/components/Rockie/Items/src/CustomEntity';
 import { CustomTableType } from '@/components/Rockie/Items/src/CustomTableEntity';
 import { CustomConnector, CustomConnectorTypeInfo } from '@/components/Rockie/Items/src/CustomConnector';
+import { UMLCustomContainer, UMLCustomContainerTypes } from '@/components/Rockie/CustomItems/UML/src/UMLCustomContainer';
 
 interface HeaderProps {
   previousEditor: Editor | undefined
@@ -1314,7 +1315,8 @@ const Header: FC<HeaderProps> = ({
 
   const handleGenerateIconsForShape = async (shapeTypes: ShapeType[] | CustomTableType[], classType: typeof ShapeEntity |
     typeof TableEntity | typeof Connector | typeof ContainerEntity | typeof CustomEntity |
-    typeof UMLCustomTable | typeof UMLContainerShape | typeof UMLBasicShape | typeof UMLCustomShape) => {
+    typeof UMLCustomTable | typeof UMLContainerShape | typeof UMLBasicShape | typeof UMLCustomShape |
+    typeof UMLCustomContainer | typeof UMLFrameShape | typeof ERCustomShape | MockupCustomShape) => {
     if (currentEditor) {
       let count = shapeTypes.length
       for (let i = 0; i < count; i++) {
@@ -1331,6 +1333,18 @@ const Header: FC<HeaderProps> = ({
         }
         let shapeEntity
         switch (classType) {
+          case MockupCustomShape:
+            shapeEntity = new MockupCustomShape(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, shapeType.name)
+            break;
+          case ERCustomShape:
+            shapeEntity = new ERCustomShape(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, shapeType.name)
+            break;
+          case UMLFrameShape:
+            shapeEntity = new UMLFrameShape(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, { shapeType: shapeType.name }, shapeTypes)
+            break;
+          case UMLCustomContainer:
+            shapeEntity = new UMLCustomContainer(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, shapeType.name, shapeTypes)
+            break;
           case UMLCustomShape:
             shapeEntity = new UMLCustomShape(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, shapeType.name)
             break;
@@ -1402,7 +1416,11 @@ const Header: FC<HeaderProps> = ({
     const enableUMLContainerShapes = false
     const enableUMLBasicShapes = false
     const enableUMLConnectorShapes = false
-    const enableUMLCustomShapes = true
+    const enableUMLCustomShapes = false
+    const enableUMLCustomContainers = false
+    const enableUMLFrameShapes = false
+    const enableERCustomShapes = false
+    const enableMockupCustomShapes = true
 
 
     if (enableShapes) handleGenerateIconsForShape(ShapeTypes, ShapeEntity)
@@ -1417,6 +1435,10 @@ const Header: FC<HeaderProps> = ({
     if (enableUMLBasicShapes) handleGenerateIconsForShape(UMLBasicShapeTypes, UMLBasicShape)
     if (enableUMLConnectorShapes) handleGenerateIconsForCustomConnector(UMLConnectorTypeInfos, UMLConnector)
     if (enableUMLCustomShapes) handleGenerateIconsForShape(UMLCustomShapeTypes, UMLCustomShape)
+    if (enableUMLCustomContainers) handleGenerateIconsForShape(UMLCustomContainerTypes, UMLCustomContainer)
+    if (enableUMLFrameShapes) handleGenerateIconsForShape(UMLFrameShapeTypes, UMLFrameShape)
+    if (enableERCustomShapes) handleGenerateIconsForShape(ERCustomShapeTypes, ERCustomShape)
+    if (enableMockupCustomShapes) handleGenerateIconsForShape(MockupCustomShapeTypes, MockupCustomShape)
   }
 
   const handleTestCode = () => {

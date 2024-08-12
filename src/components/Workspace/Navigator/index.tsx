@@ -160,14 +160,14 @@ const Navigator: FC<NavigatorProps> = ({
   const addCustomContainer = (type: string, classType: typeof CustomContainerEntity, shapeType: ShapeType, folder: string) => {
     if (Utils.currentEditor) {
       Utils.currentEditor.action = new CustomContainerAction(Utils.currentEditor, type, classType, shapeType)
-      Utils.currentEditor.action.imageId = process.env.PUBLIC_PATH + `/${folder}/${type}.png`
+      Utils.currentEditor.action.imageId = process.env.PUBLIC_PATH + `/${folder}/${type}.svg`
     }
   }
 
   const addFrame = (type: string, classType: typeof FrameEntity, shapeType: ShapeType, folder: string) => {
     if (Utils.currentEditor) {
       Utils.currentEditor.action = new FrameAction(Utils.currentEditor, type, classType, shapeType)
-      Utils.currentEditor.action.imageId = process.env.PUBLIC_PATH + `/${folder}/${type}.png`
+      Utils.currentEditor.action.imageId = process.env.PUBLIC_PATH + `/${folder}/${type}.svg`
     }
   }
 
@@ -257,7 +257,7 @@ const Navigator: FC<NavigatorProps> = ({
   const addCustomTable = (typeName: string, classType: typeof CustomTableEntity, shapeType: CustomTableType, folder: string) => {
     if (Utils.currentEditor) {
       Utils.currentEditor.action = new CustomTableAction(Utils.currentEditor, typeName, classType, shapeType)
-      Utils.currentEditor.action.imageId = process.env.PUBLIC_PATH + `/${folder}/${typeName}.png`
+      Utils.currentEditor.action.imageId = process.env.PUBLIC_PATH + `/${folder}/${typeName}.svg`
     }
   }
 
@@ -1021,130 +1021,139 @@ const Navigator: FC<NavigatorProps> = ({
   //     </Popover>
   //   }
   // )
-  const umlBasicShapesForActivityState2 = UMLBasicShapesForActivityState.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addExtendedShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
-  const umlCustomShapesForActivityState2 = UMLCustomShapesForActivityState.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
-  const umlConnectorsForActivityState2 = UMLConnectorsForActivityState.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addCustomConnector(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
-  const umlContainerShapesForActivityState2 = UMLContainerShapesForActivityState.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addExtendedContainer(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
+  const umlBasicShapesForActivityState = UMLBasicShapesForActivityState.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addExtendedShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
+  const umlCustomShapesForActivityState = UMLCustomShapesForActivityState.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
+  const umlConnectorsForActivityState = UMLConnectorsForActivityState.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addCustomConnector(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
+  const umlContainerShapesForActivityState = UMLContainerShapesForActivityState.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addExtendedContainer(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
 
-  const umlBasicShapesForActivityState = UMLBasicShapesForActivityState.map(
-    shapeType => {
-      return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: shapeType.typeInfo.width + 60, width: shapeType.typeInfo.height + 60, }}>
-        <Button type='text' onMouseDown={() => addExtendedShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{ padding: 2, display: 'table' }}>
-          <img src={process.env.PUBLIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{ display: 'table-cell' }} />
-        </Button>
-      </Popover>
-    }
-  )
+  // const umlBasicShapesForActivityState = UMLBasicShapesForActivityState.map(
+  //   shapeType => {
+  //     return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: shapeType.typeInfo.width + 60, width: shapeType.typeInfo.height + 60, }}>
+  //       <Button type='text' onMouseDown={() => addExtendedShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{ padding: 2, display: 'table' }}>
+  //         <img src={process.env.PUBLIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{ display: 'table-cell' }} />
+  //       </Button>
+  //     </Popover>
+  //   }
+  // )
 
-  const umlCustomShapesForActivityState = UMLCustomShapesForActivityState.map(
-    shapeType => {
-      return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: shapeType.typeInfo.width + 60, width: shapeType.typeInfo.height + 60, }}>
-        <Button type='text' onMouseDown={() => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{ padding: 2, display: 'table' }}>
-          <img src={process.env.PUBLIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{ display: 'table-cell' }} />
-        </Button>
-      </Popover>
-    }
-  )
+  // const umlCustomShapesForActivityState = UMLCustomShapesForActivityState.map(
+  //   shapeType => {
+  //     return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: shapeType.typeInfo.width + 60, width: shapeType.typeInfo.height + 60, }}>
+  //       <Button type='text' onMouseDown={() => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{ padding: 2, display: 'table' }}>
+  //         <img src={process.env.PUBLIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{ display: 'table-cell' }} />
+  //       </Button>
+  //     </Popover>
+  //   }
+  // )
 
-  const umlConnectorsForActivityState = UMLConnectorsForActivityState.map(
-    shapeType => {
-      return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, 160, 160)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160 + 60, width: 160 + 60, }}>
-        <Button type='text' onMouseDown={() => addCustomConnector(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{ padding: 2, display: 'table' }}>
-          <img src={process.env.PUBLIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{ display: 'table-cell' }} />
-        </Button>
-      </Popover>
-    }
-  )
+  // const umlConnectorsForActivityState = UMLConnectorsForActivityState.map(
+  //   shapeType => {
+  //     return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, 160, 160)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160 + 60, width: 160 + 60, }}>
+  //       <Button type='text' onMouseDown={() => addCustomConnector(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{ padding: 2, display: 'table' }}>
+  //         <img src={process.env.PUBLIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{ display: 'table-cell' }} />
+  //       </Button>
+  //     </Popover>
+  //   }
+  // )
 
-  const umlContainerShapesForActivityState = UMLContainerShapesForActivityState.map(
-    shapeType => {
-      const iconWidth = shapeType.typeInfo.width >= shapeType.typeInfo.height ? 28 : 28 * shapeType.typeInfo.width / shapeType.typeInfo.height
-      const iconheight = shapeType.typeInfo.width >= shapeType.typeInfo.height ? 28 * shapeType.typeInfo.height / shapeType.typeInfo.width : 28
-      const iconSize = iconWidth >= iconheight ? iconWidth : iconheight
-      return <Popover title={shapeType.name} placement='right' content={getUMLContainerPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: shapeType.typeInfo.width + 60, width: shapeType.typeInfo.width + 60, }}>
-        <Button type='text' onMouseDown={() => addExtendedContainer(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{ padding: 2, display: 'table' }}>
-          <img src={process.env.PUBLIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={iconSize} height={iconSize} style={{ display: 'table-cell' }} />
-        </Button>
-      </Popover>
-    }
-  )
+  // const umlContainerShapesForActivityState = UMLContainerShapesForActivityState.map(
+  //   shapeType => {
+  //     const iconWidth = shapeType.typeInfo.width >= shapeType.typeInfo.height ? 28 : 28 * shapeType.typeInfo.width / shapeType.typeInfo.height
+  //     const iconheight = shapeType.typeInfo.width >= shapeType.typeInfo.height ? 28 * shapeType.typeInfo.height / shapeType.typeInfo.width : 28
+  //     const iconSize = iconWidth >= iconheight ? iconWidth : iconheight
+  //     return <Popover title={shapeType.name} placement='right' content={getUMLContainerPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: shapeType.typeInfo.width + 60, width: shapeType.typeInfo.width + 60, }}>
+  //       <Button type='text' onMouseDown={() => addExtendedContainer(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{ padding: 2, display: 'table' }}>
+  //         <img src={process.env.PUBLIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={iconSize} height={iconSize} style={{ display: 'table-cell' }} />
+  //       </Button>
+  //     </Popover>
+  //   }
+  // )
+
+  const umlCustomContainersForSequence = UMLCustomContainersForSequence.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addCustomContainer(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
+  const umlCustomShapesForSequence = UMLCustomShapesForSequence.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
+  const umlFrameShapesForSequence = UMLFrameShapesForSequence.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addFrame(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
+  const umlConnectorsForSequence = UMLConnectorsForSequence.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addCustomConnector(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
 
 
+  // const umlCustomContainersForSequence = UMLCustomContainersForSequence.map(
+  //   shapeType => {
+  //     const iconWidth = shapeType.typeInfo.width >= shapeType.typeInfo.height ? 28 : 28 * shapeType.typeInfo.width / shapeType.typeInfo.height
+  //     const iconheight = shapeType.typeInfo.width >= shapeType.typeInfo.height ? 28 * shapeType.typeInfo.height / shapeType.typeInfo.width : 28
+  //     const iconSize = iconWidth >= iconheight ? iconWidth : iconheight
+  //     return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: shapeType.typeInfo.width + 60, width: shapeType.typeInfo.height + 60, }}>
+  //       <Button type='text' onMouseDown={() => addCustomContainer(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{ padding: 2, display: 'table' }}>
+  //         <img src={process.env.PUBLIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={iconSize} height={iconSize} style={{ display: 'table-cell' }} />
+  //       </Button>
+  //     </Popover>
+  //   }
+  // )
 
-  const umlCustomContainersForSequence = UMLCustomContainersForSequence.map(
-    shapeType => {
-      const iconWidth = shapeType.typeInfo.width >= shapeType.typeInfo.height ? 28 : 28 * shapeType.typeInfo.width / shapeType.typeInfo.height
-      const iconheight = shapeType.typeInfo.width >= shapeType.typeInfo.height ? 28 * shapeType.typeInfo.height / shapeType.typeInfo.width : 28
-      const iconSize = iconWidth >= iconheight ? iconWidth : iconheight
-      return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: shapeType.typeInfo.width + 60, width: shapeType.typeInfo.height + 60, }}>
-        <Button type='text' onMouseDown={() => addCustomContainer(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{ padding: 2, display: 'table' }}>
-          <img src={process.env.PUBLIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={iconSize} height={iconSize} style={{ display: 'table-cell' }} />
-        </Button>
-      </Popover>
-    }
-  )
+  // const umlCustomShapesForSequence = UMLCustomShapesForSequence.map(
+  //   shapeType => {
+  //     const iconWidth = shapeType.typeInfo.width >= shapeType.typeInfo.height ? 28 : 28 * shapeType.typeInfo.width / shapeType.typeInfo.height
+  //     const iconheight = shapeType.typeInfo.width >= shapeType.typeInfo.height ? 28 * shapeType.typeInfo.height / shapeType.typeInfo.width : 28
+  //     const iconSize = iconWidth >= iconheight ? iconWidth : iconheight
+  //     return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: shapeType.typeInfo.width + 60, width: shapeType.typeInfo.height + 60, }}>
+  //       <Button type='text' onMouseDown={() => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{ padding: 2, display: 'table' }}>
+  //         <img src={process.env.PUBLIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={iconSize} height={iconSize} style={{ display: 'table-cell' }} />
+  //       </Button>
+  //     </Popover>
+  //   }
+  // )
 
-  const umlCustomShapesForSequence = UMLCustomShapesForSequence.map(
-    shapeType => {
-      const iconWidth = shapeType.typeInfo.width >= shapeType.typeInfo.height ? 28 : 28 * shapeType.typeInfo.width / shapeType.typeInfo.height
-      const iconheight = shapeType.typeInfo.width >= shapeType.typeInfo.height ? 28 * shapeType.typeInfo.height / shapeType.typeInfo.width : 28
-      const iconSize = iconWidth >= iconheight ? iconWidth : iconheight
-      return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: shapeType.typeInfo.width + 60, width: shapeType.typeInfo.height + 60, }}>
-        <Button type='text' onMouseDown={() => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{ padding: 2, display: 'table' }}>
-          <img src={process.env.PUBLIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={iconSize} height={iconSize} style={{ display: 'table-cell' }} />
-        </Button>
-      </Popover>
-    }
-  )
+  // const umlFrameShapesForSequence = UMLFrameShapesForSequence.map(
+  //   shapeType => {
+  //     const iconWidth = shapeType.typeInfo.width >= shapeType.typeInfo.height ? 28 : 28 * shapeType.typeInfo.width / shapeType.typeInfo.height
+  //     const iconheight = shapeType.typeInfo.width >= shapeType.typeInfo.height ? 28 * shapeType.typeInfo.height / shapeType.typeInfo.width : 28
+  //     const iconSize = iconWidth >= iconheight ? iconWidth : iconheight
+  //     return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: shapeType.typeInfo.width + 60, width: shapeType.typeInfo.height + 60, }}>
+  //       <Button type='text' onMouseDown={() => addFrame(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{ padding: 2, display: 'table' }}>
+  //         <img src={process.env.PUBLIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={iconSize} height={iconSize} style={{ display: 'table-cell' }} />
+  //       </Button>
+  //     </Popover>
+  //   }
+  // )
 
-  const umlFrameShapesForSequence = UMLFrameShapesForSequence.map(
-    shapeType => {
-      const iconWidth = shapeType.typeInfo.width >= shapeType.typeInfo.height ? 28 : 28 * shapeType.typeInfo.width / shapeType.typeInfo.height
-      const iconheight = shapeType.typeInfo.width >= shapeType.typeInfo.height ? 28 * shapeType.typeInfo.height / shapeType.typeInfo.width : 28
-      const iconSize = iconWidth >= iconheight ? iconWidth : iconheight
-      return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: shapeType.typeInfo.width + 60, width: shapeType.typeInfo.height + 60, }}>
-        <Button type='text' onMouseDown={() => addFrame(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{ padding: 2, display: 'table' }}>
-          <img src={process.env.PUBLIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={iconSize} height={iconSize} style={{ display: 'table-cell' }} />
-        </Button>
-      </Popover>
-    }
-  )
+  // const umlConnectorsForSequence = UMLConnectorsForSequence.map(
+  //   shapeType => {
+  //     return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, 160, 160)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160 + 60, width: 160 + 60, }}>
+  //       <Button type='text' onMouseDown={() => addCustomConnector(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{ padding: 2, display: 'table' }}>
+  //         <img src={process.env.PUBLIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{ display: 'table-cell' }} />
+  //       </Button>
+  //     </Popover>
+  //   }
+  // )
 
-  const umlConnectorsForSequence = UMLConnectorsForSequence.map(
-    shapeType => {
-      return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, 160, 160)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160 + 60, width: 160 + 60, }}>
-        <Button type='text' onMouseDown={() => addCustomConnector(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{ padding: 2, display: 'table' }}>
-          <img src={process.env.PUBLIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{ display: 'table-cell' }} />
-        </Button>
-      </Popover>
-    }
-  )
 
-  const umlGridShapesForOther = UMLGridShapesForOther.map(
-    shapeType => {
-      const iconWidth = shapeType.typeInfo.width >= shapeType.typeInfo.height ? 28 : 28 * shapeType.typeInfo.width / shapeType.typeInfo.height
-      const iconheight = shapeType.typeInfo.width >= shapeType.typeInfo.height ? 28 * shapeType.typeInfo.height / shapeType.typeInfo.width : 28
-      const iconSize = iconWidth >= iconheight ? iconWidth : iconheight
-      return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: shapeType.typeInfo.width + 60, width: shapeType.typeInfo.height + 60, }}>
-        <Button type='text' onMouseDown={() => addCustomTable(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{ padding: 2, display: 'table' }}>
-          <img src={process.env.PUBLIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={iconSize} height={iconSize} style={{ display: 'table-cell' }} />
-        </Button>
-      </Popover>
-    }
-  )
+  const umlGridShapesForOther = UMLGridShapesForOther.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addCustomTable(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
+  const umlCustomShapesForOther = UMLCustomShapesForOther.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
 
-  const umlCustomShapesForOther = UMLCustomShapesForOther.map(
-    shapeType => {
-      const iconWidth = shapeType.typeInfo.width >= shapeType.typeInfo.height ? 28 : 28 * shapeType.typeInfo.width / shapeType.typeInfo.height
-      const iconheight = shapeType.typeInfo.width >= shapeType.typeInfo.height ? 28 * shapeType.typeInfo.height / shapeType.typeInfo.width : 28
-      const iconSize = iconWidth >= iconheight ? iconWidth : iconheight
-      return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: shapeType.typeInfo.width + 60, width: shapeType.typeInfo.height + 60, }}>
-        <Button type='text' onMouseDown={() => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{ padding: 2, display: 'table' }}>
-          <img src={process.env.PUBLIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={iconSize} height={iconSize} style={{ display: 'table-cell' }} />
-        </Button>
-      </Popover>
-    }
-  )
+
+  // const umlGridShapesForOther = UMLGridShapesForOther.map(
+  //   shapeType => {
+  //     const iconWidth = shapeType.typeInfo.width >= shapeType.typeInfo.height ? 28 : 28 * shapeType.typeInfo.width / shapeType.typeInfo.height
+  //     const iconheight = shapeType.typeInfo.width >= shapeType.typeInfo.height ? 28 * shapeType.typeInfo.height / shapeType.typeInfo.width : 28
+  //     const iconSize = iconWidth >= iconheight ? iconWidth : iconheight
+  //     return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: shapeType.typeInfo.width + 60, width: shapeType.typeInfo.height + 60, }}>
+  //       <Button type='text' onMouseDown={() => addCustomTable(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{ padding: 2, display: 'table' }}>
+  //         <img src={process.env.PUBLIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={iconSize} height={iconSize} style={{ display: 'table-cell' }} />
+  //       </Button>
+  //     </Popover>
+  //   }
+  // )
+
+  // const umlCustomShapesForOther = UMLCustomShapesForOther.map(
+  //   shapeType => {
+  //     const iconWidth = shapeType.typeInfo.width >= shapeType.typeInfo.height ? 28 : 28 * shapeType.typeInfo.width / shapeType.typeInfo.height
+  //     const iconheight = shapeType.typeInfo.width >= shapeType.typeInfo.height ? 28 * shapeType.typeInfo.height / shapeType.typeInfo.width : 28
+  //     const iconSize = iconWidth >= iconheight ? iconWidth : iconheight
+  //     return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: shapeType.typeInfo.width + 60, width: shapeType.typeInfo.height + 60, }}>
+  //       <Button type='text' onMouseDown={() => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{ padding: 2, display: 'table' }}>
+  //         <img src={process.env.PUBLIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={iconSize} height={iconSize} style={{ display: 'table-cell' }} />
+  //       </Button>
+  //     </Popover>
+  //   }
+  // )
 
   const myShapeItems = myShapes.map(myShape => {
     const width = myShape.width > myShape.height ? 28 : Math.round(28 * myShape.width / myShape.height)
@@ -1157,26 +1166,29 @@ const Navigator: FC<NavigatorProps> = ({
     </Popover>
   })
 
+  const erCustomShapes = ERCustomShapes.map(shapeType => generateIcons(shapeType.name, 'custom-icons/entity-relation', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/entity-relation')))
 
-  const erCustomShapes = ERCustomShapes.map(
-    shapeType => {
-      return <Popover title={shapeType.name} placement='right' content={getCustomShapeERPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: shapeType.typeInfo.width + 60, width: shapeType.typeInfo.height + 60, }}>
-        <Button type='text' onMouseDown={() => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/entity-relation')} style={{ padding: 2, display: 'table' }}>
-          <img src={process.env.PUBLIC_PATH + `/custom-shapes/entity-relation/${shapeType.name}.png`} width={28} height={28} style={{ display: 'table-cell' }} />
-        </Button>
-      </Popover>
-    }
-  )
+  // const erCustomShapes = ERCustomShapes.map(
+  //   shapeType => {
+  //     return <Popover title={shapeType.name} placement='right' content={getCustomShapeERPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: shapeType.typeInfo.width + 60, width: shapeType.typeInfo.height + 60, }}>
+  //       <Button type='text' onMouseDown={() => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/entity-relation')} style={{ padding: 2, display: 'table' }}>
+  //         <img src={process.env.PUBLIC_PATH + `/custom-shapes/entity-relation/${shapeType.name}.png`} width={28} height={28} style={{ display: 'table-cell' }} />
+  //       </Button>
+  //     </Popover>
+  //   }
+  // )
 
-  const mockupCustomShapes = MockupShapes.map(
-    shapeType => {
-      return <Popover title={shapeType.name} placement='right' content={getCustomShapeMockupPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: shapeType.typeInfo.width + 60, width: shapeType.typeInfo.height + 60, }}>
-        <Button type='text' onMouseDown={() => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/mockup')} style={{ padding: 2, display: 'table' }}>
-          <img src={process.env.PUBLIC_PATH + `/custom-shapes/mockup/${shapeType.name}.png`} width={28} height={28} style={{ display: 'table-cell' }} />
-        </Button>
-      </Popover>
-    }
-  )
+  const mockupCustomShapes = MockupShapes.map(shapeType => generateIcons(shapeType.name, 'custom-icons/mockup', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/mockup')))
+
+  // const mockupCustomShapes = MockupShapes.map(
+  //   shapeType => {
+  //     return <Popover title={shapeType.name} placement='right' content={getCustomShapeMockupPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: shapeType.typeInfo.width + 60, width: shapeType.typeInfo.height + 60, }}>
+  //       <Button type='text' onMouseDown={() => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/mockup')} style={{ padding: 2, display: 'table' }}>
+  //         <img src={process.env.PUBLIC_PATH + `/custom-shapes/mockup/${shapeType.name}.png`} width={28} height={28} style={{ display: 'table-cell' }} />
+  //       </Button>
+  //     </Popover>
+  //   }
+  // )
 
   const handleModifyMyShapes = (event: MouseEvent) => {
     setMyShapesWindowVisible(!myShapesWindowVisiible)
@@ -1268,10 +1280,6 @@ const Navigator: FC<NavigatorProps> = ({
       key: '9',
       label: <div style={{ fontWeight: 'bolder' }}><FormattedMessage id='workspace.navigator.panel.uml-activity-state' /></div>,
       children: <Space size={2} wrap>
-        {umlBasicShapesForActivityState2}
-        {umlCustomShapesForActivityState2}
-        {umlConnectorsForActivityState2}
-        {umlContainerShapesForActivityState2}
         {umlBasicShapesForActivityState}
         {umlCustomShapesForActivityState}
         {umlConnectorsForActivityState}

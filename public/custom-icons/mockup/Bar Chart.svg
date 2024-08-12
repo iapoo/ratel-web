@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.dev/svgjs" width="210" height="170" viewbox="0 0 210 170"   shape-rendering="geometricPrecision">
+<g id="fd50863bf1bb492c8e974ff6ee3f882e" transform="translate(5, 5) ">
+    <path fill="none" stroke="none" stroke-width="2"  d="M0 0L0 160L200 160L200 0L0 0Z"/> 
+    <path fill="#FFFFFFFF" stroke="#808080FF" stroke-width="2"  d="M0 0L0 160L200 160L0 160L0 0M20 64L20 160L40 160L40 64L20 64ZM80 48L80 160L100 160L100 48L80 48ZM140 80L140 160L160 160L160 80L140 80Z"/> 
+    <path fill="#DCDCDCFF" stroke="#808080FF" stroke-width="2"  d="M40 48L40 160L60 160L60 48L40 48ZM100 64L100 160L120 160L120 64L100 64ZM160 96L160 160L180 160L180 96L160 96Z"/>  
+</g>
+</svg>

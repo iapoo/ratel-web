@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.dev/svgjs" width="190" height="170" viewbox="0 0 190 170"   shape-rendering="geometricPrecision">
+<g id="f2c851f2b5bd491cb397eb3786cf2802" transform="translate(5, 5) ">
+    <path fill="#FFFFFFFF" stroke="#808080FF" stroke-width="2"  d="M0 0L0 160L180 160L180 0L0 0Z"/> 
+    <path fill="#DCDCDCFF" stroke="#808080FF" stroke-width="2"  d="M160 0L160 20L180 20L180 0L160 0ZM160 140L160 160L180 160L180 140L160 140Z"/> 
+    <path fill="#FFFFFFFF" stroke="#808080FF" stroke-width="2"  d="M0 0L0 160L160 160L160 0L0 0ZM160 20L160 140L180 140L180 20L160 20Z"/> 
+    <path fill="#696969FF" stroke="#696969FF" stroke-width="1"  d="M170 5L164 15L176 15L170 5M170 155L164 145L176 145L170 155M166 52L166 85.6L174 85.6L174 52L166 52Z"/> 
+</g>
+</svg>

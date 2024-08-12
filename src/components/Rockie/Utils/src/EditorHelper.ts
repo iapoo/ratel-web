@@ -703,7 +703,8 @@ export class EditorHelper {
                 default:
                     break;
             }
-            const result = `stroke="${color}" stroke-width="${paint.getStroketWidth()}" ${dashSVG}`
+            const strokeWidth = paint.getStroketWidth()
+            const result = `stroke="${color}" stroke-width="${strokeWidth}" ${dashSVG}`
             return result
         } else {
             const result = `fill="${color}"`
