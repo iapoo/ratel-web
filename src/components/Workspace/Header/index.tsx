@@ -2542,27 +2542,27 @@ const Header: FC<HeaderProps> = ({
     { key: 'Open', label: <FormattedMessage id='workspace.header.menu-file-open' />, icon: <FolderOpenOutlined />, onClick: handleFileOpen, },
     { key: 'Save', label: <FormattedMessage id='workspace.header.menu-file-save' />, icon: <SaveOutlined />, onClick: handleFileSave },
     {
-      key: 'Import', label: <FormattedMessage id='workspace.header.menu-file-import' />, icon: <FolderOpenOutlined />,
-      children: [
-        {
-          key: 'ImportFromDocment',
-          label: <Upload showUploadList={false} maxCount={1} accept='.ratel,.txt'
-            beforeUpload={handleBeforeImportDocument} onChange={handleAfterImportDocument}>
-            <FolderOpenOutlined style={{ marginRight: 10 }} />
-            <FormattedMessage id='workspace.header.menu-file-import-document' />
-          </Upload>,
-          // icon: <FolderOpenOutlined />, 
-          // onClick: handleImportDocument 
-        },
-      ]
+      key: 'OpenLocal',
+      label: <Upload showUploadList={false} maxCount={1} accept='.ratel'
+        beforeUpload={handleBeforeImportDocument} onChange={handleAfterImportDocument}>
+        <FolderOpenOutlined style={{ marginRight: 10 }} />
+        <FormattedMessage id='workspace.header.menu-file-open-local-document' />
+      </Upload>,
+      // icon: <FolderOpenOutlined />, 
+      // onClick: handleImportDocument 
     },
+    { key: 'SaveToLocal', label: <FormattedMessage id='workspace.header.menu-file-save-local-document' />, icon: <DownloadOutlined />, onClick: handleDownload },
+    // {
+    //   key: 'Import', label: <FormattedMessage id='workspace.header.menu-file-import' />, icon: <FolderOpenOutlined />,
+    //   children: [
+    //   ]
+    // },
     {
       key: 'Export', label: <FormattedMessage id='workspace.header.menu-file-export' />, icon: <DownloadOutlined />,
       children: [
         { key: 'ExportToPNG', label: <FormattedMessage id='workspace.header.menu-file-export-png' />, icon: <DownloadOutlined />, onClick: () => handleExport('png') },
         // { key: 'ExportToJPG', label: <FormattedMessage id='workspace.header.menu-file-export-jpg' />, icon: <DownloadOutlined />, onClick: () => handleExport('jpg') },
         { key: 'ExportToSVG', label: <FormattedMessage id='workspace.header.menu-file-export-svg' />, icon: <DownloadOutlined />, onClick: () => handleExportSVG() },
-        { key: 'ExportToDocment', label: <FormattedMessage id='workspace.header.menu-file-export-document' />, icon: <DownloadOutlined />, onClick: handleDownload },
       ]
     },
     {
