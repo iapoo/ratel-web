@@ -55,10 +55,11 @@ interface HeaderProps {
   currentEditor: Editor | undefined
   onLogin: () => void
   onLogout: () => void
+  onMyShapesUpdated: () => void
 }
 
 const Header: FC<HeaderProps> = ({
-  previousEditor, currentEditor, onLogin, onLogout
+  previousEditor, currentEditor, onLogin, onLogout, onMyShapesUpdated
 }) => {
   const intl = useIntl();
   const [messageApi, contextHolder] = message.useMessage();
@@ -755,11 +756,283 @@ const Header: FC<HeaderProps> = ({
     { value: 4, label: '400%' },
   ]
 
+
+  const handleShowGrid = () => {
+    if (Utils.currentEditor) {
+      Utils.currentEditor.showGrid = !Utils.currentEditor.showGrid
+    }
+  }
+
+  const ifEditorSupportCopy = () => {
+    if (Utils.currentEditor) {
+      if (Utils.currentEditor.isTextEditting) {
+        if (Utils.currentEditor.selectionLayer.getEditorItemCount() == 1) {
+          const item = Utils.currentEditor.selectionLayer.getEditorItem(0) as Item
+          return item.shape.selection.length > 0
+        }
+      }
+      if (Utils.currentEditor.selectionLayer.getEditorItemCount() > 0) {
+        return true
+      }
+    }
+    return false
+  }
+
+  const ifEditorSupportCut = () => {
+    if (Utils.currentEditor) {
+      if (Utils.currentEditor.isTextEditting) {
+        if (Utils.currentEditor.selectionLayer.getEditorItemCount() == 1) {
+          const item = Utils.currentEditor.selectionLayer.getEditorItem(0) as Item
+          return item.shape.selection.length > 0
+        }
+      }
+      if (Utils.currentEditor.selectionLayer.getEditorItemCount() > 0) {
+        return true
+      }
+    }
+    return false
+  }
+
+  const ifEditorSupportPaste = () => {
+    if (Utils.currentEditor) {
+      if (Utils.currentEditor.isTextEditting) {
+        if (Utils.currentEditor.selectionLayer.getEditorItemCount() == 1) {
+          return true
+        }
+      }
+      if (Utils.currentEditor.selectionLayer.getEditorItemCount() > 0) {
+        return true
+      }
+    }
+    return false
+  }
+
+  const ifEditorSupportDuplicate = () => {
+    if (Utils.currentEditor && !Utils.currentEditor.isTextEditting && Utils.currentEditor.selectionLayer.getEditorItemCount() > 0) {
+      return true
+    }
+    return false
+  }
+  const ifEditorSupportDelete = () => {
+    if (Utils.currentEditor && !Utils.currentEditor.isTextEditting && Utils.currentEditor.selectionLayer.getEditorItemCount() > 0) {
+      return true
+    }
+    return false
+  }
+  const ifEditorSupportLock = () => {
+    if (Utils.currentEditor && !Utils.currentEditor.isTextEditting && Utils.currentEditor.selectionLayer.getEditorItemCount() > 0) {
+      return true
+    }
+    return false
+  }
+  const ifEditorSupportToFront = () => {
+    if (Utils.currentEditor && !Utils.currentEditor.isTextEditting && Utils.currentEditor.selectionLayer.getEditorItemCount() > 0) {
+      return true
+    }
+    return false
+  }
+  const ifEditorSupportToBack = () => {
+    if (Utils.currentEditor && !Utils.currentEditor.isTextEditting && Utils.currentEditor.selectionLayer.getEditorItemCount() > 0) {
+      return true
+    }
+    return false
+  }
+  const ifEditorSupportBringForeward = () => {
+    if (Utils.currentEditor && !Utils.currentEditor.isTextEditting && Utils.currentEditor.selectionLayer.getEditorItemCount() > 0) {
+      return true
+    }
+    return false
+  }
+  const ifEditorSupportSendBackward = () => {
+    if (Utils.currentEditor && !Utils.currentEditor.isTextEditting && Utils.currentEditor.selectionLayer.getEditorItemCount() > 0) {
+      return true
+    }
+    return false
+  }
+  const ifEditorSupportAddToMyShapes = () => {
+    if (Utils.currentEditor && !Utils.currentEditor.isTextEditting && Utils.currentEditor.selectionLayer.getEditorItemCount() > 0) {
+      return true
+    }
+    return false
+  }
+
+  const handleCopy = async () => {
+    if (Utils.currentEditor) {
+      if (Utils.currentEditor.isTextEditting && Utils.currentEditor.selectionLayer.getEditorItemCount() == 1) {
+        console.log(`text copy is triggered`)
+        let item = Utils.currentEditor.selectionLayer.getEditorItem(0) as Item
+        let data = item.shape.richSelection
+        if (data.length <= 0) {
+          return
+        }
+        let clipboard = navigator.clipboard
+        if (!clipboard) {
+          SystemUtils.handleInternalError(intl.formatMessage({ id: 'workspace.content.message-clipboard-not-supported' }))
+          return
+        }
+        await clipboard.writeText(data)
+      } else {
+        console.log(`copy is triggered`)
+        const data = EditorHelper.exportEditorSelections(Utils.currentEditor)
+
+        let clipboard = navigator.clipboard
+        if (!clipboard) {
+          SystemUtils.handleInternalError(intl.formatMessage({ id: 'workspace.content.message-clipboard-not-supported' }))
+          return
+        }
+        await clipboard.writeText(data)
+      }
+    }
+  }
+  const handleCut = async () => {
+    if (Utils.currentEditor) {
+      if (Utils.currentEditor.isTextEditting && Utils.currentEditor.selectionLayer.getEditorItemCount() == 1) {
+        console.log(`text cute is triggered`)
+        let item = Utils.currentEditor.selectionLayer.getEditorItem(0) as Item
+        let data = item.shape.selection
+        if (data.length <= 0) {
+          return
+        }
+        let clipboard = navigator.clipboard
+        if (!clipboard) {
+          SystemUtils.handleInternalError(intl.formatMessage({ id: 'workspace.content.message-clipboard-not-supported' }))
+          return
+        }
+        await clipboard.writeText(data)
+      } else {
+        console.log(`cut is triggered`)
+        let clipboard = navigator.clipboard
+        if (!clipboard) {
+          SystemUtils.handleInternalError(intl.formatMessage({ id: 'workspace.content.message-clipboard-not-supported' }))
+          return
+        }
+        const data = EditorHelper.exportEditorSelections(Utils.currentEditor)
+        EditorHelper.deleteSelections(Utils.currentEditor)
+        await clipboard.writeText(data)
+      }
+    }
+  }
+  const handlePaste = async () => {
+    if (Utils.currentEditor) {
+      if (Utils.currentEditor.isTextEditting && Utils.currentEditor.selectionLayer.getEditorItemCount() == 1) {
+        console.log(`text paste is triggered`)
+        //setPasteFromSystem(false)
+        const clipboard = navigator.clipboard
+        if (!clipboard) {
+          SystemUtils.handleInternalError(intl.formatMessage({ id: 'workspace.content.message-clipboard-not-supported' }))
+          return
+        }
+        const text = await clipboard.readText()
+        let dataTransfer = new DataTransfer()
+        dataTransfer.dropEffect = 'none'
+        dataTransfer.effectAllowed = "uninitialized"
+        //let data = EditorHelper.exportEditorSelections(Utils.currentEditor!)
+        dataTransfer.setData('text/plain', text)
+        dataTransfer.setData('text/retel', text)
+        window.dispatchEvent(new ClipboardEvent('paste', {
+          bubbles: true,
+          cancelable: true,
+          composed: true,
+          clipboardData: dataTransfer
+        }))
+      } else {
+        console.log(`paste is triggered`)
+        //setPasteFromSystem(false)
+        const clipboard = navigator.clipboard
+        if (!clipboard) {
+          SystemUtils.handleInternalError(intl.formatMessage({ id: 'workspace.content.message-clipboard-not-supported' }))
+          return
+        }
+        const text = await clipboard.readText()
+
+
+        let dataTransfer = new DataTransfer()
+        dataTransfer.dropEffect = 'none'
+        dataTransfer.effectAllowed = "uninitialized"
+        dataTransfer.setData('text/plain', text)
+        dataTransfer.setData('text/retel', text)
+        window.dispatchEvent(new ClipboardEvent('paste', {
+          bubbles: true,
+          cancelable: true,
+          composed: true,
+          clipboardData: dataTransfer
+        }))
+      }
+    }
+  }
+  const handleDuplicate = () => {
+    handleCopy()
+    handlePaste()
+  }
+  const handleDelete = () => {
+    if (Utils.currentEditor) {
+      if (!Utils.currentEditor.isTextEditting) {
+        EditorHelper.deleteSelections(Utils.currentEditor)
+      }
+    }
+  }
+  const handleLock = () => {
+    if (Utils.currentEditor) {
+      const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
+      const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
+      editorItems.forEach(editorItem => {
+        editorItem.locked = !editorItem.locked
+      })
+      Utils.currentEditor.invalideHolder()
+      const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
+      const operation: Operation = new Operation(Utils.currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
+      Utils.currentEditor.operationService.addOperation(operation)
+      Utils.currentEditor.triggerOperationChange()
+    }
+  }
+  const handleToFront = () => {
+    if (Utils.currentEditor) {
+      const selections = Utils.currentEditor.selectionLayer.getAllEditorItems()
+      Utils.currentEditor.toFront(selections)
+    }
+  }
+  const handleToBack = () => {
+    if (Utils.currentEditor) {
+      const selections = Utils.currentEditor.selectionLayer.getAllEditorItems()
+      Utils.currentEditor.toBack(selections)
+    }
+  }
+  const handleBringForewared = () => {
+    if (Utils.currentEditor) {
+      const selections = Utils.currentEditor.selectionLayer.getAllEditorItems()
+      if (selections.length == 1) {
+        Utils.currentEditor.bringForeward(selections[0])
+      }
+    }
+  }
+  const handleSendBackward = () => {
+    if (Utils.currentEditor) {
+      const selections = Utils.currentEditor.selectionLayer.getAllEditorItems()
+      if (selections.length == 1) {
+        Utils.currentEditor.sendBackward(selections[0])
+      }
+    }
+  }
+  const handleAddToMyShapes = async () => {
+    if (Utils.currentEditor) {
+      if (RequestUtils.online) {
+        await EditorHelper.addToMyShapes(Utils.currentEditor, onMyShapesUpdated)
+      } else {
+        SystemUtils.handleInternalError(intl.formatMessage({ id: 'workspace.content.message-login-is-required' }))
+      }
+    }
+
+  }
+
   const handleZoom = (value: number) => {
     setZoom(value)
     if (Utils.currentEditor) {
       Utils.currentEditor.zoom = value
     }
+  }
+
+  const handleResetView = () => {
+    handleZoom(1)
   }
 
   const handleZoomIn = () => {
@@ -1404,7 +1677,7 @@ const Header: FC<HeaderProps> = ({
     }
   }
 
-  const handleGenerateIcons = async (shapeTypes: ShapeType[]) => {
+  const handleGenerateIcons = async () => {
     const enableShapes = false
     const enableLine = false
     const enableTable = false
@@ -2576,35 +2849,48 @@ const Header: FC<HeaderProps> = ({
   ];
 
   const editItems: MenuProps['items'] = [
-    // { key: 'New', label: 'New', onClick: handleFontHelper },
-    // { key: 'OpenFrom', label: 'OpenFrom', },
-    // { key: 'Open', label: 'Open', },
-    // { key: 'Save', label: 'Save', },
-    // { key: 'SaveAs', label: 'SaveAs', },
-    // { key: 'Export', label: 'Export', },
+    { label: <FormattedMessage id='workspace.content.popup-editor-undo' />, key: '1', onClick: handleUndo, disabled: !editorUndoable, icon: <CheckOutlined style={{ visibility: 'hidden' }} /> },
+    { label: <FormattedMessage id='workspace.content.popup-editor-redo' />, key: '2', onClick: handleRedo, disabled: !editorRedoable, icon: <CheckOutlined style={{ visibility: 'hidden' }} /> },
+    { type: 'divider' },
+    { label: <FormattedMessage id='workspace.content.popup-shape-copy' />, key: '3', onClick: handleCopy, disabled: !ifEditorSupportCopy(), icon: <CheckOutlined style={{ visibility: 'hidden' }} /> },
+    { label: <FormattedMessage id='workspace.content.popup-shape-cut' />, key: '4', onClick: handleCut, disabled: !ifEditorSupportCut(), icon: <CheckOutlined style={{ visibility: 'hidden' }} /> },
+    { label: <FormattedMessage id='workspace.content.popup-shape-paste' />, key: '5', onClick: handlePaste, disabled: !ifEditorSupportPaste(), icon: <CheckOutlined style={{ visibility: 'hidden' }} /> },
+    { label: <FormattedMessage id='workspace.content.popup-shape-duplicate' />, key: '6', onClick: handleDuplicate, disabled: !ifEditorSupportDuplicate(), icon: <CheckOutlined style={{ visibility: 'hidden' }} /> },
+    { type: 'divider' },
+    { label: <FormattedMessage id='workspace.content.popup-shape-delete' />, key: '7', onClick: handleDelete, disabled: !ifEditorSupportDelete(), icon: <CheckOutlined style={{ visibility: 'hidden' }} /> },
+    { type: 'divider' },
+    { label: <FormattedMessage id='workspace.content.popup-shape-lock' />, key: '8', onClick: handleLock, disabled: !ifEditorSupportLock(), icon: <CheckOutlined style={{ visibility: 'hidden' }} /> },
+    { type: 'divider' },
+    { label: <FormattedMessage id='workspace.content.popup-shape-to-front' />, key: '9', onClick: handleToFront, disabled: !ifEditorSupportToFront(), icon: <CheckOutlined style={{ visibility: 'hidden' }} /> },
+    { label: <FormattedMessage id='workspace.content.popup-shape-to-back' />, key: '10', onClick: handleToBack, disabled: !ifEditorSupportToBack(), icon: <CheckOutlined style={{ visibility: 'hidden' }} /> },
+    { label: <FormattedMessage id='workspace.content.popup-shape-bring-foreward' />, key: '11', onClick: handleBringForewared, disabled: !ifEditorSupportBringForeward(), icon: <CheckOutlined style={{ visibility: 'hidden' }} /> },
+    { label: <FormattedMessage id='workspace.content.popup-shape-send-backward' />, key: '12', onClick: handleSendBackward, disabled: !ifEditorSupportSendBackward(), icon: <CheckOutlined style={{ visibility: 'hidden' }} /> },
+    { type: 'divider' },
+    { label: <FormattedMessage id='workspace.content.popup-shape-add-to-my-shapes' />, key: '13', onClick: handleAddToMyShapes, disabled: !ifEditorSupportAddToMyShapes(), icon: <CheckOutlined style={{ visibility: 'hidden' }} /> },
   ];
 
   const viewItems: MenuProps['items'] = [
-    // { key: 'New', label: 'New', },
-    // { key: 'OpenFrom', label: 'OpenFrom', },
-    // { key: 'Open', label: 'Open', },
-    // { key: 'Save', label: 'Save', },
-    // { key: 'SaveAs', label: 'SaveAs', },
-    // { key: 'Export', label: 'Export', },
+    { label: <FormattedMessage id='workspace.header.menu-view.show-property-editor' />, key: '1', onClick: handlePropertyEditorChange, icon: <CheckOutlined style={{ visibility: Utils.enablePropertyEditor ? 'visible' : 'hidden' }} /> },
+    { type: 'divider' },
+    { label: <FormattedMessage id='workspace.header.menu-view.show-grid' />, key: '2', onClick: handleShowGrid, icon: <CheckOutlined style={{ visibility: Utils.currentEditor?.showGrid ? 'visible' : 'hidden' }} /> },
+    { type: 'divider' },
+    { label: <FormattedMessage id='workspace.header.menu-view.zoom-reset' />, key: '3', onClick: handleResetView, icon: <CheckOutlined style={{ visibility: 'hidden' }} /> },
+    { label: <FormattedMessage id='workspace.header.menu-view.zoom-in' />, key: '4', onClick: handleZoomIn, icon: <CheckOutlined style={{ visibility: 'hidden' }} /> },
+    { label: <FormattedMessage id='workspace.header.menu-view.zoom-out' />, key: '5', onClick: handleZoomOut, icon: <CheckOutlined style={{ visibility: 'hidden' }} /> },
   ];
 
-  const operationItems: MenuProps['items'] = [
-    // { key: 'New', label: 'New', },
-    // { key: 'OpenFrom', label: 'OpenFrom', },
-    // { key: 'Open', label: 'Open', },
-    // { key: 'Save', label: 'Save', },
-    // { key: 'SaveAs', label: 'SaveAs', },
-    // { key: 'Export', label: 'Export', },
-  ];
+  // const operationItems: MenuProps['items'] = [
+  //   // { key: 'New', label: 'New', },
+  //   // { key: 'OpenFrom', label: 'OpenFrom', },
+  //   // { key: 'Open', label: 'Open', },
+  //   // { key: 'Save', label: 'Save', },
+  //   // { key: 'SaveAs', label: 'SaveAs', },
+  //   // { key: 'Export', label: 'Export', },
+  // ];
 
   const optionItems: MenuProps['items'] = [
     {
-      key: 'Language', label: 'Language', children: [
+      key: 'Language', label: 'Language', icon: <CheckOutlined style={{ visibility: 'hidden' }} />, children: [
         { key: 'zh-CN', label: '中文', onClick: () => handleLocale('zh-CN'), icon: getLocale() == 'zh-CN' ? <CheckOutlined /> : <Placeholder />, },
         { key: 'en-US', label: 'English(US)', onClick: () => handleLocale('en-US'), icon: getLocale() == 'en-US' ? <CheckOutlined /> : <Placeholder />, },
       ]
@@ -2682,9 +2968,9 @@ const Header: FC<HeaderProps> = ({
               <Dropdown menu={{ items: viewItems }}>
                 <Button type='text' size='small'><FormattedMessage id='workspace.header.menu-view' /></Button>
               </Dropdown>
-              <Dropdown menu={{ items: operationItems }}>
+              {/* <Dropdown menu={{ items: operationItems }}>
                 <Button type='text' size='small'><FormattedMessage id='workspace.header.menu-operation' /></Button>
-              </Dropdown>
+              </Dropdown> */}
               <Dropdown menu={{ items: optionItems }}>
                 <Button type='text' size='small'><FormattedMessage id='workspace.header.menu-option' /></Button>
               </Dropdown>
@@ -2694,9 +2980,9 @@ const Header: FC<HeaderProps> = ({
                 </Dropdown>
                 : ''
               }
-              <Dropdown menu={{ items: helpItems }}>
+              {/* <Dropdown menu={{ items: helpItems }}>
                 <Button type='text' size='small'><FormattedMessage id='workspace.header.menu-help' /></Button>
-              </Dropdown>
+              </Dropdown> */}
               <Button type='text' size='small' icon={<FileOutlined />} style={{ paddingLeft: '0px', fontSize: '11px', color: 'gray', fontStyle: 'italic', marginLeft: '24px' }}>{documentModifiedText}</Button>
               <FileTextOutlined />
               <Input placeholder='Document Name' type='text' value={selectedDocumentName} bordered={false} style={{ paddingLeft: '0px', paddingRight: '0px', width: '70px', fontWeight: 'bolder' }} onChange={handleUpdateDocumentName} />
@@ -2729,10 +3015,10 @@ const Header: FC<HeaderProps> = ({
                   options={zoomOptions}
                 />
               </Tooltip>
-              <Tooltip title={<FormattedMessage id='workspace.header.title.zoom-out' />}>
+              <Tooltip title={<FormattedMessage id='workspace.header.title.zoom-in' />}>
                 <Button type="text" size='small' icon={<ZoomInOutlined />} disabled={zoom >= zoomOptions[zoomOptions.length - 1].value} onClick={handleZoomIn} />
               </Tooltip>
-              <Tooltip title={<FormattedMessage id='workspace.header.title.zoom-in' />}>
+              <Tooltip title={<FormattedMessage id='workspace.header.title.zoom-out' />}>
                 <Button type="text" size='small' icon={<ZoomOutOutlined />} disabled={zoom <= zoomOptions[0].value} onClick={handleZoomOut} />
               </Tooltip>
               <Divider type='vertical' style={{ margin: 0 }} />

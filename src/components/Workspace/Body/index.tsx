@@ -17,10 +17,11 @@ interface BodyProps {
   onMyShapesNotified: () => void
   loginCompleted: boolean
   logoutCompleted: boolean
+  myShapesUpdateRequired: boolean
 }
 
 const Body: FC<BodyProps> = ({
-  previousEditor, currentEditor, onEditorChange, onMyShapesNotified, loginCompleted, logoutCompleted
+  previousEditor, currentEditor, onEditorChange, onMyShapesNotified, loginCompleted, logoutCompleted, myShapesUpdateRequired
 }) => {
   const [initialized, setInitialized,] = useState<boolean>(false)
   const [navigatorWidth, setNavigatorWidth,] = useState<number>(Utils.DEFAULT_NAVIGATOR_WIDTH)
@@ -30,7 +31,7 @@ const Body: FC<BodyProps> = ({
     if (!initialized) {
       initialize()
     }
-    if (loginCompleted || logoutCompleted) {
+    if (loginCompleted || logoutCompleted || myShapesUpdateRequired) {
       setMyShapesUpdated(true)
       if (onMyShapesNotified) {
         onMyShapesNotified()
