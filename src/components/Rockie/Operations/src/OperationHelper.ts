@@ -81,7 +81,7 @@ export class OperationHelper {
     //Need to use correct StyleInfo    
     OperationHelper.fixStyleInfo(itemInfo)
     editorItem.shape.styles = StyleInfo.makeStyles(itemInfo.styles)
-    if (itemInfo.category != Categories.TABLE && itemInfo.category != Categories.FRAME && itemInfo.category != Categories.CUSTOM_TABLE) {
+    if (!editorItem.isContainer) {
       itemInfo.items.forEach(childItemInfo => {
         let childItem = OperationHelper.loadItem(childItemInfo, editor)
         editorItem.addItem(childItem)
@@ -450,6 +450,7 @@ export class OperationHelper {
     const containerInfo = itemInfo as ContainerInfo
     const containerEntity = new ContainerEntity(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, { shapeType: containerInfo.type })
     containerEntity.id = containerInfo.id
+    containerEntity.text = containerInfo.text
     if (containerInfo.rotation) {
       containerEntity.rotation = new Rotation(containerInfo.rotation, containerInfo.width / 2, containerInfo.height / 2)
     }

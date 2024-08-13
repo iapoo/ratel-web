@@ -14,10 +14,10 @@ export interface FrameEntityType {
   description: string
   freeze: string
   text: string
-  left: number 
+  left: number
   top: number
   width: number
-  height: number 
+  height: number
   enableMask: boolean
   modifiable: boolean
   modifierX: number
@@ -30,7 +30,7 @@ export interface FrameEntityType {
   modifyInPercent: boolean
   adaptable: boolean
   adapterX: number
-  adapterY: number 
+  adapterY: number
   adapterDirection: string
   adapterSize: number
   adapterStartX: number
@@ -41,20 +41,21 @@ export interface FrameEntityType {
   adaptInPercent: boolean
 }
 
-export const FrameEntityTypes = [{ name: FrameEntities.TYPE_FRAME_SHAPE, description: FrameEntities.DESC_FRAME_SHAPE, 
-    freeze: Shapes.FREEZE_NONE, text: 'Frame Shape', left: 0, top: 0, width: 200, height: 200, enableMask: false, 
-    modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, 
-    modifierEndY: 0, modifyInLine: true, modifyInPercent: true, adaptable: false, adapterX: 0, adapterY: 0,
-    controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, 
-    adaptInLine: true, adaptInPercent: true
+export const FrameEntityTypes = [{
+  name: FrameEntities.TYPE_FRAME_SHAPE, description: FrameEntities.DESC_FRAME_SHAPE,
+  freeze: Shapes.FREEZE_NONE, text: 'Frame Shape', left: 0, top: 0, width: 200, height: 200, enableMask: false,
+  modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0,
+  modifierEndY: 0, modifyInLine: true, modifyInPercent: true, adaptable: false, adapterX: 0, adapterY: 0,
+  controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
+  adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0,
+  adaptInLine: true, adaptInPercent: true
 }]
 
 export class FrameEntity extends ShapeEntity {
-  
+
   public constructor(left: number, top: number, width: number, height: number,
-      shapeOptions: ShapeOptions = { shapeType: FrameEntities.TYPE_FRAME_SHAPE },
-      shapeTypes: ShapeType[] = FrameEntityTypes) {
+    shapeOptions: ShapeOptions = { shapeType: FrameEntities.TYPE_FRAME_SHAPE },
+    shapeTypes: ShapeType[] = FrameEntityTypes) {
     super(left, top, width, height, shapeOptions, shapeTypes)
     const customTypeInfo = this.parseTypeInfo(shapeOptions)
     this._shape = new FrameShape(left, top, width, height, this, this.buildShape, customTypeInfo)
@@ -62,6 +63,9 @@ export class FrameEntity extends ShapeEntity {
   // public get types(): Type[] {
   //   return FrameEntityTypes
   // }
+  public get isContainer(): boolean {
+    return true
+  }
 
   public get category(): string {
     return Categories.FRAME
@@ -75,5 +79,5 @@ export class FrameEntity extends ShapeEntity {
   protected parseEntityShapeType(type: string): EntityShapeType {
     let shapeType = EntityShapeType.Frame
     return shapeType
-  } 
+  }
 }

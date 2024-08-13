@@ -19,10 +19,10 @@ export interface CustomContainerEntityType {
   description: string
   freeze: string
   text: string
-  left: number 
+  left: number
   top: number
   width: number
-  height: number 
+  height: number
   enableMask: boolean
   modifiable: boolean
   modifierX: number
@@ -35,7 +35,7 @@ export interface CustomContainerEntityType {
   modifyInPercent: boolean
   adaptable: boolean
   adapterX: number
-  adapterY: number 
+  adapterY: number
   adapterDirection: string
   adapterSize: number
   adapterStartX: number
@@ -47,24 +47,32 @@ export interface CustomContainerEntityType {
 }
 
 export const CustomContainerEntityTypes = [
-  { name: CustomContainerEntities.TYPE_ACTOR_LIFELINE, description: CustomContainerEntities.DESC_ACTOR_LIFELINE, freeze: Shapes.FREEZE_NONE, text: CustomContainerEntities.TEXT_ACTOR_LIFELINE, left: 0, top: 0, width: 160, height: 300, enableMask: true, 
-    modifiable: true, modifierX: 0, modifierY: 40,  modifierStartX: 0.5, modifierStartY: 0, modifierEndX: 0.5, modifierEndY: 0.5, modifyInLine: true, modifyInPercent: false,
+  {
+    name: CustomContainerEntities.TYPE_ACTOR_LIFELINE, description: CustomContainerEntities.DESC_ACTOR_LIFELINE, freeze: Shapes.FREEZE_NONE, text: CustomContainerEntities.TEXT_ACTOR_LIFELINE, left: 0, top: 0, width: 160, height: 300, enableMask: true,
+    modifiable: true, modifierX: 0, modifierY: 40, modifierStartX: 0.5, modifierStartY: 0, modifierEndX: 0.5, modifierEndY: 0.5, modifyInLine: true, modifyInPercent: false,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true  },
-  { name: CustomContainerEntities.TYPE_OBJECT_LIFELINE, description: CustomContainerEntities.DESC_OBJECT_LIFELINE, freeze: Shapes.FREEZE_NONE, text: CustomContainerEntities.TEXT_OBJECT_LIFELINE, left: 0, top: 0, width: 160, height: 300, enableMask: true, 
-    modifiable: true, modifierX: 0, modifierY: 40,  modifierStartX: 0.5, modifierStartY: 0, modifierEndX: 0.5, modifierEndY: 0.5, modifyInLine: true, modifyInPercent: false,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
+  {
+    name: CustomContainerEntities.TYPE_OBJECT_LIFELINE, description: CustomContainerEntities.DESC_OBJECT_LIFELINE, freeze: Shapes.FREEZE_NONE, text: CustomContainerEntities.TEXT_OBJECT_LIFELINE, left: 0, top: 0, width: 160, height: 300, enableMask: true,
+    modifiable: true, modifierX: 0, modifierY: 40, modifierStartX: 0.5, modifierStartY: 0, modifierEndX: 0.5, modifierEndY: 0.5, modifyInLine: true, modifyInPercent: false,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true  },
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+  },
 ]
 
 export class CustomContainerEntity extends ContainerEntity {
-  
+
   public constructor(left: number, top: number, width: number, height: number, name: string = CustomContainerEntities.TYPE_OBJECT_LIFELINE,
-      shapeTypes: ShapeType[] = CustomContainerEntityTypes) {
+    shapeTypes: ShapeType[] = CustomContainerEntityTypes) {
     super(left, top, width, height, { shapeType: name }, shapeTypes)
     const shapeOptions = { shapeType: name }
     const customTypeInfo = this.parseTypeInfo(shapeOptions)
     this._shape = new CustomContainerShape(left, top, width, height, this.buildShape, customTypeInfo)
+  }
+
+  public get isContainer(): boolean {
+    return true
   }
 
   public get types(): Type[] {
@@ -83,5 +91,5 @@ export class CustomContainerEntity extends ContainerEntity {
   protected parseEntityShapeType(type: string): EntityShapeType {
     let shapeType = EntityShapeType.CustomContainer
     return shapeType
-  } 
+  }
 }

@@ -50,6 +50,10 @@ export class TableEntity extends ContainerEntity {
     this.refreshTable()
   }
 
+  public get isContainer(): boolean {
+    return true
+  }
+
   public get customizable() {
     return true
   }

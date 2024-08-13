@@ -122,6 +122,10 @@ export abstract class Item implements EditorItem {
     this.initializeTheme()
   }
 
+  public get isContainer(): boolean {
+    return false
+  }
+
   public get parent() {
     return this._parent
   }
