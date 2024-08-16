@@ -1,6 +1,7 @@
 import { defineConfig } from "umi";
 const CompressionPlugin = require("compression-webpack-plugin");
 //import { ThemeUtils, } from './src/utils/ThemeUtils'
+import { theme } from 'antd'
 
 export default defineConfig({
   locale: {
@@ -13,9 +14,11 @@ export default defineConfig({
     //'@table-header-bg': ThemeUtils.tableHeaderBg, // 表头背景
     //'@border-radius-base': ThemeUtils.borderRadiusBase, // '4px', // 组件/浮层圆角
     //'@font-size-base': '12px',
+    // 'algorithm': theme.darkAlgorithm
   },
   antd: {
     compact: true,
+    dark: true,
   },
   // 使用hash解决框架打包后浏览器不刷新问题
   hash: true,

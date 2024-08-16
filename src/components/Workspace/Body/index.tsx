@@ -18,10 +18,11 @@ interface BodyProps {
   loginCompleted: boolean
   logoutCompleted: boolean
   myShapesUpdateRequired: boolean
+  adRegionWidth: number
 }
 
 const Body: FC<BodyProps> = ({
-  previousEditor, currentEditor, onEditorChange, onMyShapesNotified, loginCompleted, logoutCompleted, myShapesUpdateRequired
+  previousEditor, currentEditor, onEditorChange, onMyShapesNotified, loginCompleted, logoutCompleted, myShapesUpdateRequired, adRegionWidth
 }) => {
   const [initialized, setInitialized,] = useState<boolean>(false)
   const [navigatorWidth, setNavigatorWidth,] = useState<number>(Utils.DEFAULT_NAVIGATOR_WIDTH)
@@ -87,7 +88,7 @@ const Body: FC<BodyProps> = ({
 
   // console.log(`Check myShapesUpdated = ${myShapesUpdated}`)
   return (
-    <div style={{ position: 'absolute', top: `${Utils.HEADER_HEIGHT}px`, bottom: `${Utils.FOOTER_HEIGHT}px`, right: '0px', left: '0px', }} >
+    <div style={{ position: 'absolute', top: `${Utils.HEADER_HEIGHT}px`, bottom: `${Utils.FOOTER_HEIGHT}px`, right: `${adRegionWidth}px`, left: '0px', }} >
       <Navigator navigatorWidth={navigatorWidth} myShapesUpdated={myShapesUpdated} onMyShapesLoaded={handleMyShapesLoaded} />
       <Draggable
         axis='x'

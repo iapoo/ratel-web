@@ -22,6 +22,7 @@ export default (props: any) => {
   const [loginCompleted, setLoginCompleted] = useState<boolean>(false)
   const [logoutCompleted, setLogoutCompleted] = useState<boolean>(false)
   const [myShapesUpdateRequired, setMyShapesUpdateRequired,] = useState<boolean>(false)
+  const [adRegionWidth, setAdRegionWidth,] = useState<number>(Utils.DEFAULT_AD_REGION_WIDTH)
 
   useEffect(() => {
     if (!initialized) {
@@ -80,9 +81,14 @@ export default (props: any) => {
   }
   return (
     <div style={{ width: '100%', height: '100%', }}>
-      <Header previousEditor={previousEditor} currentEditor={currentEditor} onLogin={handleLogin} onLogout={handleLogout} onMyShapesUpdated={handleMyShapesUpdated} />
-      <Body onEditorChange={handleEditorChange} previousEditor={previousEditor} currentEditor={currentEditor} loginCompleted={loginCompleted} logoutCompleted={logoutCompleted} onMyShapesNotified={handleMyShapesNotified} myShapesUpdateRequired={myShapesUpdateRequired} />
-      <Footer />
+      <div style={{ width: `calc(100% - ${adRegionWidth}px)`, height: '100%', float: 'left' }}>
+        <Header previousEditor={previousEditor} currentEditor={currentEditor} onLogin={handleLogin} onLogout={handleLogout} onMyShapesUpdated={handleMyShapesUpdated} adRegionWidth={adRegionWidth} />
+        <Body onEditorChange={handleEditorChange} previousEditor={previousEditor} currentEditor={currentEditor} loginCompleted={loginCompleted} logoutCompleted={logoutCompleted} onMyShapesNotified={handleMyShapesNotified} myShapesUpdateRequired={myShapesUpdateRequired} adRegionWidth={adRegionWidth} />
+        <Footer />
+      </div>
+      <div style={{ width: `${adRegionWidth}px`, height: '100%', float: 'right', backgroundColor: 'red' }}>
+
+      </div>
     </div>
 
   )

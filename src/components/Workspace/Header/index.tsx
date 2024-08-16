@@ -56,10 +56,11 @@ interface HeaderProps {
   onLogin: () => void
   onLogout: () => void
   onMyShapesUpdated: () => void
+  adRegionWidth: number
 }
 
 const Header: FC<HeaderProps> = ({
-  previousEditor, currentEditor, onLogin, onLogout, onMyShapesUpdated
+  previousEditor, currentEditor, onLogin, onLogout, onMyShapesUpdated, adRegionWidth
 }) => {
   const intl = useIntl();
   const [messageApi, contextHolder] = message.useMessage();
@@ -2953,7 +2954,7 @@ const Header: FC<HeaderProps> = ({
   ]
 
   return (
-    <div style={{ position: 'absolute', top: '0px', height: `${Utils.HEADER_HEIGHT}px`, width: '100%' }}>
+    <div style={{ position: 'absolute', top: '0px', height: `${Utils.HEADER_HEIGHT}px`, width: `calc(100% - ${adRegionWidth}px` }}>
       {contextHolder}
       <div style={{ width: '100%', height: '50%', borderBottomStyle: 'inset', borderBottomWidth: '1px' }}>
         <div style={{ width: '100%', height: '100%', float: 'left', display: 'table' }}>
