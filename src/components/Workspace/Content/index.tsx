@@ -2109,7 +2109,7 @@ const Content: FC<ContentProps> = ({
   }
 
   const textToolbars = <FloatButton.Group style={{ left: textToolbarLeft, top: textToolbarTop - 40, height: 32, display: textToolbarVisible ? 'block' : 'none' }}>
-    <Space direction='horizontal' style={{ backgroundColor: 'white', borderColor: 'silver', borderWidth: 1, borderStyle: 'solid', padding: 2 }}>
+    <Space direction='horizontal' style={{ backgroundColor: Utils.currentEditor?.enableDarkTheme ? workspaceBackground : 'white', borderColor: 'silver', borderWidth: 1, borderStyle: 'solid', padding: 2 }}>
       <Tooltip title={<FormattedMessage id='workspace.header.title.font-bold' />}>
         <Button type={fontBold ? 'primary' : 'text'} size='small' icon={<BoldOutlined />} onClick={handleBoldChanged} />
       </Tooltip>
@@ -2154,7 +2154,7 @@ const Content: FC<ContentProps> = ({
   </FloatButton.Group>
 
   const tableToolbars = <FloatButton.Group style={{ left: tableToolbarLeft, top: tableToolbarTop - 40 - (textToolbarVisible ? 40 : 0), height: 32, display: tableToolbarVisible ? 'block' : 'none' }}>
-    <Space direction='horizontal' style={{ backgroundColor: 'white', borderColor: 'silver', borderWidth: 1, borderStyle: 'solid', padding: 2 }}>
+    <Space direction='horizontal' style={{ backgroundColor: Utils.currentEditor?.enableDarkTheme ? workspaceBackground : 'white', borderColor: 'silver', borderWidth: 1, borderStyle: 'solid', padding: 2 }}>
       <Tooltip title={<FormattedMessage id='workspace.header.title.font-bold' />}>
         <Button type='text' size='small' icon={<InsertRowAboveOutlined />} onClick={handleInsertRowBefore} disabled={!tableEdittable} />
       </Tooltip>
