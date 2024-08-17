@@ -1,6 +1,6 @@
 {
   "name": "ratel",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "homepage": "https://ratel.ivipa.com",
   "author": {
     "name": "ivipa",
@@ -21,7 +21,7 @@
     "electron-builder": "^23.6.0"
   },
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=20.0.0"
   },
   "main": "main.js",
   "build": {

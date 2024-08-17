@@ -1,23 +1,3 @@
 {
-  "extends": "./node_modules/electron-webpack/tsconfig-base.json",
-    "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
-    "moduleResolution": "node",
-    "importHelpers": true,
-    "jsx": "react-jsx",
-    "esModuleInterop": true,
-    "sourceMap": true,
-    "baseUrl": ".",
-    "strict": true,
-    "paths": {
-      "@/*": ["src/*"],
-      "@tmp/*": ["src/pages/.umi/*"],
-      "@icons": ["/src/.umi/plugin-icons/index.ts"]
-    },
-    "allowSyntheticDefaultImports": true
-  },
-  "awesomeTypescriptLoaderOptions": {
-    "errorsAsWarnings": true
-  }
+  "extends": "./src/.umi/tsconfig.json"
 }

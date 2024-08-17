@@ -1,18 +1,20 @@
-import { Layout, Menu, Breadcrumb, } from 'antd'
+import { Layout, Menu, Breadcrumb, theme, } from 'antd'
 import { UserOutlined, LaptopOutlined, NotificationOutlined, } from '@ant-design/icons'
 import React, { useEffect, useState, } from 'react'
-import styles from './index.css'
+import Workspace from '@/components/Workspace'
 
 const { SubMenu, } = Menu
 const { Header, Content, Sider, Footer, } = Layout
 const BasicLayout: React.FC = props => {
   const origWindowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
   const origWindowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
+  const token = theme.useToken()
+  const workspaceBackground = token.token.colorBgElevated
 
-  const [ windowWidth, setWindowWidth, ] = useState<number>(origWindowWidth)
-  const [ windowHeight, setWindowHeight, ] = useState<number>(origWindowHeight)
-  const [ content, selectContent, ] = useState<any>(null)
-  const [ initialized, setInitialized, ] = useState<boolean>(false)
+  const [windowWidth, setWindowWidth,] = useState<number>(origWindowWidth)
+  const [windowHeight, setWindowHeight,] = useState<number>(origWindowHeight)
+  const [content, selectContent,] = useState<any>(null)
+  const [initialized, setInitialized,] = useState<boolean>(false)
 
   useEffect(() => {
     if (!initialized) {
@@ -39,9 +41,10 @@ const BasicLayout: React.FC = props => {
     setWindowHeight(newWindowHeight)
   }
   // `${windowHeight - 128}px`
+
   return (
     <div style={{ width: '100%', height: '100%', }}>
-      {props.children}
+      <Workspace />
     </div>
 
   )

@@ -5,7 +5,7 @@
 Ratel is general diagram editor. It can work online or offline(without network).
 Ratel Web is frontend of Ratel. There are 3 sub projects: Ratel-Web(frontend), Ratel-Server(backend) and Ratel-deployment(deployment).
 
-Demo site: https://ratel.ivipa.com
+Demo site: <https://ratel.ivipa.com>
 
 ## Try
 
@@ -25,13 +25,11 @@ Pleae check Ratel-Deployment
 
 ## Build & Run locally
 
-1. Install Node, require version 12.x. Other version may fail so far.
+1. Install Node, require version 20.x. Other version may fail so far.
 2. Build: npm run build
 3. Run: npm run start
 
 ## Build with Electron for desktop installation
 
-1. Run: npm run electron:build 
+1. Run: npm run electron:build
 2. Enter /app and Run: npm run electron:win for windows (or npm run electron:mac for MacOS)
-
-

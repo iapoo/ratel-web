@@ -1,32 +1,15 @@
-target/
-!.mvn/wrapper/maven-wrapper.jar
-#package-lock.json
-.DS_Store
-
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-
-.DS_Store
-.vscode/
-
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-classes
-
-### NetBeans ###
-nbproject/private/
-build/
-nbbuild/
-dist/
-nbdist/
-.nb-gradle/
-node_modules/
-src/.umi/
+/node_modules
+/app/node_modules
+/app/dist
+/.env.local
+/.umirc.local.ts
+/config/config.local.ts
+/src/.umi
+/src/.umi-production
+/src/.umi-test
+/.umi
+/.umi-production
+/.umi-test
+/dist
+/.mfsu
+.swc

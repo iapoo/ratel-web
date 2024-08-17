@@ -144,6 +144,7 @@ export class Editor extends Painter {
   private _horizontalSpace: number = Editor.HORIZONTAL_SPACE_DEFAULT
   private _verticalSpace: number = Editor.VERTICAL_SPACE_DEFAULT
   private _theme: DocumentThemeType = DocumentThemeTypes[0]
+  private _enableDarkTheme: boolean = true
 
   public constructor(canvasId: string | HTMLCanvasElement) {
     super(canvasId)
@@ -210,6 +211,7 @@ export class Editor extends Painter {
 
     this._textArea = document.createElement('textarea')
     this.initializeTextArea()
+    EditorUtils.enableDarkTheme = this._enableDarkTheme
 
     this.maskLayer.onPointerDown((e) => {
       this.handlePointerDown(e)
@@ -241,6 +243,15 @@ export class Editor extends Painter {
 
   public get id(): string {
     return this._id
+  }
+
+  public get enableDarkTheme() {
+    return this._enableDarkTheme
+  }
+
+  public set enableDarkTheme(value: boolean) {
+    this._enableDarkTheme = value
+    EditorUtils.enableDarkTheme = value
   }
 
   public get operationService() {

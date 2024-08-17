@@ -1,5 +1,5 @@
 /* eslint-disable max-params */
-import * as CanvasKitInit from "canvaskit-wasm";
+//import * as CanvasKitInit from "canvaskit-wasm";
 // eslint-disable-next-line no-unused-vars
 import {
   CanvasKit, Paint, RRect, FontMgr, Typeface, TypefaceFontProvider, PaintStyle, Canvas, Surface, Path, ClipOp, InputRect, InputRRect, InputMatrix, ColorIntArray, AngleInDegrees,
@@ -22,7 +22,7 @@ export class Engine {
   private static _canvaskitInitialized = false;
 
   public static async initialize() {
-    if (!this._initialized) {
+    if (!Engine._initialized) {
       await Engine.initilizeCanvasKit();
       //await Engine.initializeFonts()
       Engine._initialized = true;
@@ -137,7 +137,7 @@ export class Engine {
   public static makePathFromSVG(svg: string): Path {
     let path = Engine._canvasKit.Path.MakeFromSVGString(svg);
     if (!path) {
-      path = this.makePath();
+      path = Engine.makePath();
     }
 
     return path;
@@ -146,17 +146,18 @@ export class Engine {
   public static makePathFromCmds(commands: number[]) {
     let path = Engine._canvasKit.Path.MakeFromCmds(commands);
     if (!path) {
-      path = this.makePath();
+      path = Engine.makePath();
     }
 
     return path;
   }
 
   private static async initilizeCanvasKit() {
-    if (!this._canvaskitInitialized) {
+    if (!Engine._canvaskitInitialized) {
+      const CanvasKitInit = require('canvaskit-wasm/bin/canvaskit.js')
       const canvasKit: CanvasKit = await CanvasKitInit({
         locateFile: (file: any) =>
-          process.env.PUBLIC_PATH + "/resources/" + file,
+          process.env.BASIC_PATH + "/resources/" + file,
       });
       //console.log(canvasKit)
 

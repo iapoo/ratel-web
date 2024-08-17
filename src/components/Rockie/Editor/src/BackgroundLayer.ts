@@ -79,6 +79,8 @@ export class BackgroundLayer extends EditorLayer {
 
   public render(graphics: Graphics): void {
     super.render(graphics)
+    this._spacePaint.setColor(EditorUtils.backgroundSpaceColor)
+    this._workPaint.setColor(EditorUtils.backgroundWorkColor)
     if (this.editor) {
       graphics.drawRectangle(Rectangle.makeLTWH(-this.editor.horizontalSpace, -this.editor.verticalSpace, this.editor.width, this.editor.height), this._spacePaint)
     }

@@ -1,3 +1,5 @@
+import { EditorItem as IEditorItem } from './src/EditorItem'
+
 export { CellEntity } from './src/CellEntity'
 export { Connector } from './src/Connector'
 export { ConnectorInfo, } from './src/ConnectorInfo'
@@ -11,7 +13,7 @@ export { CustomShapeInfo } from './src/CustomShapeInfo'
 export { CustomTableEntity } from './src/CustomTableEntity'
 export { CustomTableInfo } from './src/CustomTableInfo'
 export { Entity } from './src/Entity'
-export { EditorItem } from './src/EditorItem'
+export type EditorItem = IEditorItem
 export { EditorItemInfo, } from './src/EditorItemInfo'
 export { FrameEntity } from './src/FrameEntity'
 export { FrameEntityInfo } from './src/FrameEntityInfo'

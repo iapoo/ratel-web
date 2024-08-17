@@ -161,6 +161,10 @@ const Content: FC<ContentProps> = ({
   const sensor = useSensor(PointerSensor, { activationConstraint: { distance: 10 } })
   // const [paneTititle, setPaneTitle, ] = useState<string>('hello')
   const paneTitleRef = useRef(null)
+  const token = theme.useToken()
+  const workspaceBackground = token.token.colorBgElevated
+  const scrollbarTrackColor = token.token.colorBgContainer
+  const scrollbarThumbColor = token.token.colorTextQuaternary
 
   // const handlePaneTitleChange = (text:string, position: Position) => {
   //   if(activePane) {
@@ -2138,9 +2142,9 @@ const Content: FC<ContentProps> = ({
       <Divider type='vertical' style={{ margin: 0 }} />
       <Tooltip title={<FormattedMessage id='workspace.header.title.font-size' />}>
         {/** TODO:  FIXME, HIDE TEMPORARY*/}
-        <InputNumber min={Consts.FONT_SIZE_MIN} max={Consts.FONT_SIZE_MAX} value={fontSize}
+        {/* <InputNumber min={Consts.FONT_SIZE_MIN} max={Consts.FONT_SIZE_MAX} value={fontSize}
           ref={(node) => { setFontSizeNode(node) }}
-          onChange={handleFontSizeChange} onStep={handleFontSizeStepChange} onBlur={handleFontSizeBlur} onPressEnter={handleFontSizePressEnter} size='small' style={{ width: 60, display: 'none' }} />
+          onChange={handleFontSizeChange} onStep={handleFontSizeStepChange} onBlur={handleFontSizeBlur} onPressEnter={handleFontSizePressEnter} size='small' style={{ width: 60, display: 'none' }} /> */}
         <Select size='small' value={fontSize} onChange={handleFontSizeChange} style={{ width: 64, }} options={FontSizeOptions} bordered={false} />
       </Tooltip>
       <Tooltip title={<FormattedMessage id='workspace.header.title.font-color' />}>
@@ -2174,15 +2178,15 @@ const Content: FC<ContentProps> = ({
   </FloatButton.Group>
 
   return (
-    <div style={{ position: 'absolute', top: '0px', bottom: '0px', left: x, right: y, backgroundColor: 'lightgray', }}>
+    <div style={{ position: 'absolute', top: '0px', bottom: '0px', left: x, right: y, backgroundColor: workspaceBackground, }}>
       <div style={{ position: 'absolute', width: '100%', height: `calc(100% - ${Utils.TITLE_HEIGHT}px + 0px) `, zIndex: 2, }} >
-        <div id='content-container' style={{ width: '100%', height: '100%', overflow: 'scroll', scrollbarWidth: 'thin', display: 'grid', placeItems: 'center', }} onScroll={handleScroll}>
+        <div id='content-container' style={{ width: '100%', height: '100%', overflow: 'scroll', scrollbarWidth: 'thin', display: 'grid', placeItems: 'center', scrollbarColor: Utils.currentEditor?.enableDarkTheme ? `${scrollbarThumbColor} ${scrollbarTrackColor}` : undefined }} onScroll={handleScroll}>
           {textToolbars}
           {tableToolbars}
           <div style={{ width: contentWidth, height: contentHeight, }}>
-            <div style={{ width: '100%', height: Editor.SHADOW_SIZE, backgroundColor: 'lightgray', }} />
+            <div style={{ width: '100%', height: Editor.SHADOW_SIZE, backgroundColor: workspaceBackground, }} />
             <div style={{ width: '100%', height: editorHeight, boxSizing: 'border-box', }}>
-              <div style={{ width: Editor.SHADOW_SIZE, height: '100%', float: 'left', backgroundColor: 'lightgray', }} />
+              <div style={{ width: Editor.SHADOW_SIZE, height: '100%', float: 'left', backgroundColor: workspaceBackground, }} />
               <Dropdown
                 menu={{ items: popupType == PopupType.SHAPES ? popupShapeItems : (popupType == PopupType.EDITOR ? popupEditorItems : popupText) }}
                 trigger={['contextMenu']} >
@@ -2194,9 +2198,9 @@ const Content: FC<ContentProps> = ({
                 >
                 </div>
               </Dropdown>
-              <div style={{ width: Editor.SHADOW_SIZE, height: '100%', float: 'left', backgroundColor: 'lightgray', }} />
+              <div style={{ width: Editor.SHADOW_SIZE, height: '100%', float: 'left', backgroundColor: workspaceBackground, }} />
             </div>
-            <div style={{ width: '100%', height: Editor.SHADOW_SIZE, backgroundColor: 'lightgray', }} />
+            <div style={{ width: '100%', height: Editor.SHADOW_SIZE, backgroundColor: workspaceBackground, }} />
           </div>
         </div>
       </div>

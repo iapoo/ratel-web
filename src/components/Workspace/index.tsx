@@ -1,4 +1,4 @@
-import { Button, Tabs, } from 'antd'
+import { Button, Tabs, theme, } from 'antd'
 import React, { useEffect, useState, PointerEvent, useRef, } from 'react'
 // import styles from './index.less'
 import { Engine, Rectangle2D, EngineUtils, Line2D, } from '../Engine'
@@ -14,6 +14,8 @@ import PropertyEditor from './PropertyEditor'
 import Content from './Content'
 
 export default (props: any) => {
+  const token = theme.useToken()
+  const workspaceBackground = token.token.colorBgElevated
   const [initialized, setInitialized,] = useState<boolean>(false)
   const [editor, setEditor,] = useState<Editor>()
   const [ready, setReady,] = useState<boolean>(false)
@@ -80,7 +82,7 @@ export default (props: any) => {
     setMyShapesUpdateRequired(true)
   }
   return (
-    <div style={{ width: '100%', height: '100%', }}>
+    <div style={{ width: '100%', height: '100%', backgroundColor: workspaceBackground }}>
       <div style={{ width: `calc(100% - ${adRegionWidth}px)`, height: '100%', float: 'left' }}>
         <Header previousEditor={previousEditor} currentEditor={currentEditor} onLogin={handleLogin} onLogout={handleLogout} onMyShapesUpdated={handleMyShapesUpdated} adRegionWidth={adRegionWidth} />
         <Body onEditorChange={handleEditorChange} previousEditor={previousEditor} currentEditor={currentEditor} loginCompleted={loginCompleted} logoutCompleted={logoutCompleted} onMyShapesNotified={handleMyShapesNotified} myShapesUpdateRequired={myShapesUpdateRequired} adRegionWidth={adRegionWidth} />

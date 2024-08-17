@@ -1,10 +1,20 @@
-import {  Colors, Color, FontWeight, FontWidth, FontSlant, TextAlignment, TextDirection, StrokeDashStyle, TextDecoration, PlaceholderAlignment, TextVerticalAlignment, } from '@/components/Engine'
+import { Colors, Color, FontWeight, FontWidth, FontSlant, TextAlignment, TextDirection, StrokeDashStyle, TextDecoration, PlaceholderAlignment, TextVerticalAlignment, EngineUtils, } from '@/components/Engine'
 import { ThemeConstants } from './Theme'
 
 export class EditorUtils {
 
+  private static _enableDarkTheme = false
+
+  public static set enableDarkTheme(value: boolean) {
+    EditorUtils._enableDarkTheme = value
+  }
+
+  public static get enableDarkTheme() {
+    return EditorUtils._enableDarkTheme
+  }
+
   public static get rangeSelectionFillAlpha(): number {
-      return 0.2
+    return 0.2
   }
 
   public static get rangeSelectionFillColor(): Color {
@@ -42,7 +52,7 @@ export class EditorUtils {
   public static get containerSelectionStrokeColor(): Color {
     return Colors.Blue
   }
-  
+
   public static get selectionOutlineStrokeDashStyle(): StrokeDashStyle {
     return StrokeDashStyle.DASH
   }
@@ -62,7 +72,7 @@ export class EditorUtils {
   public static get tableActiveCellStrokeDashStyle(): StrokeDashStyle {
     return StrokeDashStyle.SOLID
   }
-  
+
   public static get tableActiveCellStrokeColor(): Color {
     return Colors.DarkGreen
   }
@@ -80,11 +90,19 @@ export class EditorUtils {
   }
 
   public static get backgroundSpaceColor(): Color {
-    return Colors.Gainsboro
+    if (EditorUtils.enableDarkTheme) {
+      return new Color(60, 60, 60, 255)
+    } else {
+      return Colors.Gainsboro
+    }
   }
 
   public static get backgroundWorkColor(): Color {
-    return Colors.White
+    if (EditorUtils.enableDarkTheme) {
+      return Colors.White
+    } else {
+      return Colors.White
+    }
   }
 
   public static get anchorAdapterFillColor(): Color {

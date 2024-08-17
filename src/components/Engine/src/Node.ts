@@ -367,7 +367,7 @@ export abstract class Node {
 
   public dispose() {
     const count = this._nodes.length
-    for (const i = 0; i < count; i++) {
+    for (let i = 0; i < count; i++) {
       const child = this._nodes[i]
       child.dispose()
     }

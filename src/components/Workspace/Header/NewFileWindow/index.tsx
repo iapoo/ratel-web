@@ -22,11 +22,11 @@ interface TemplateInfo {
   image: string,
 }
 const templateMap: TemplateInfo[] = [
-  { category: 'Basic', name: 'Blank Diagram', path: process.env.PUBLIC_PATH + '/template/basic/BlankDiagram.ratel', image: process.env.PUBLIC_PATH + '/template/basic/BlankDiagram.png', },
-  { category: 'Basic', name: 'Flowchart', path: process.env.PUBLIC_PATH + '/template/basic/FlowChart.ratel', image: process.env.PUBLIC_PATH + '/template/basic/FlowChart.png', },
-  { category: 'Basic', name: 'UML Class Diagram', path: process.env.PUBLIC_PATH + '/template/basic/UMLClassDiagram.ratel', image: process.env.PUBLIC_PATH + '/template/basic/UMLClassDiagram.png', },
-  { category: 'FlowChart', name: 'FlowChart', path: process.env.PUBLIC_PATH + '/template/basic/FlowChart.ratel', image: process.env.PUBLIC_PATH + '/template/basic/FlowChart.png', },
-  { category: 'UML', name: 'UML Class Diagram', path: process.env.PUBLIC_PATH + '/template/basic/UMLClassDiagram.ratel', image: process.env.PUBLIC_PATH + '/template/basic/UMLClassDiagram.png', },
+  { category: 'Basic', name: 'Blank Diagram', path: process.env.BASIC_PATH + '/template/basic/BlankDiagram.ratel', image: process.env.BASIC_PATH + '/template/basic/BlankDiagram.png', },
+  { category: 'Basic', name: 'Flowchart', path: process.env.BASIC_PATH + '/template/basic/FlowChart.ratel', image: process.env.BASIC_PATH + '/template/basic/FlowChart.png', },
+  { category: 'Basic', name: 'UML Class Diagram', path: process.env.BASIC_PATH + '/template/basic/UMLClassDiagram.ratel', image: process.env.BASIC_PATH + '/template/basic/UMLClassDiagram.png', },
+  { category: 'FlowChart', name: 'FlowChart', path: process.env.BASIC_PATH + '/template/basic/FlowChart.ratel', image: process.env.BASIC_PATH + '/template/basic/FlowChart.png', },
+  { category: 'UML', name: 'UML Class Diagram', path: process.env.BASIC_PATH + '/template/basic/UMLClassDiagram.ratel', image: process.env.BASIC_PATH + '/template/basic/UMLClassDiagram.png', },
 ]
 
 interface NewFileWindowProps {

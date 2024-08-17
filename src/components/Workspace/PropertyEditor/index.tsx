@@ -600,28 +600,28 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
 
   const strokeDashStyles = StrokeDashStyles.map(strokeDashStyle => {
     //return {value: strokeDashStyle.name, label: intl.formatMessage({ id: strokeDashStyle.label})}
-    return { value: strokeDashStyle.name, label: <img alt='intl.formatMessage({ id: strokeDashStyle.label})' src={process.env.PUBLIC_PATH + '/images/line-' + strokeDashStyle.name + '.png'} width='64' height='12' /> }
+    return { value: strokeDashStyle.name, label: <img alt='intl.formatMessage({ id: strokeDashStyle.label})' src={process.env.BASIC_PATH + '/images/line-' + strokeDashStyle.name + '.png'} width='64' height='12' /> }
   })
 
 
   const connectorLineTypes = ConnectorLineTypes.map(connectorLineType => {
-    return { value: connectorLineType.name, label: <img alt='intl.formatMessage({ id: connectorLineType.label})' src={process.env.PUBLIC_PATH + '/images/connector-line-type-' + connectorLineType.name.toLowerCase() + '.png'} width='16' height='16' /> }
+    return { value: connectorLineType.name, label: <img alt='intl.formatMessage({ id: connectorLineType.label})' src={process.env.BASIC_PATH + '/images/connector-line-type-' + connectorLineType.name.toLowerCase() + '.png'} width='16' height='16' /> }
   })
 
   const connectorLineModes = ConnectorLineModes.map(connectorLineMode => {
-    return { value: connectorLineMode.name, label: <img alt='intl.formatMessage({ id: connectorLineMode.label})' src={process.env.PUBLIC_PATH + '/images/connector-line-mode-' + connectorLineMode.name.toLowerCase() + '.png'} width='16' height='16' /> }
+    return { value: connectorLineMode.name, label: <img alt='intl.formatMessage({ id: connectorLineMode.label})' src={process.env.BASIC_PATH + '/images/connector-line-mode-' + connectorLineMode.name.toLowerCase() + '.png'} width='16' height='16' /> }
   })
 
   const connectorLineModesForCurve = ConnectorLineModesForCurve.map(connectorLineMode => {
-    return { value: connectorLineMode.name, label: <img alt='intl.formatMessage({ id: connectorLineMode.label})' src={process.env.PUBLIC_PATH + '/images/connector-line-mode-' + connectorLineMode.name.toLowerCase() + '.png'} width='16' height='16' /> }
+    return { value: connectorLineMode.name, label: <img alt='intl.formatMessage({ id: connectorLineMode.label})' src={process.env.BASIC_PATH + '/images/connector-line-mode-' + connectorLineMode.name.toLowerCase() + '.png'} width='16' height='16' /> }
   })
 
   const connectorLineStartArrows = ConnectorArrowTypes.map(connectorArrowType => {
-    return { value: connectorArrowType.name, label: <img alt={connectorArrowType.description} src={process.env.PUBLIC_PATH + '/images/connector-line-start-arrow-' + connectorArrowType.name.toLowerCase() + '.png'} width='16' height='16' /> }
+    return { value: connectorArrowType.name, label: <img alt={connectorArrowType.description} src={process.env.BASIC_PATH + '/images/connector-line-start-arrow-' + connectorArrowType.name.toLowerCase() + '.png'} width='16' height='16' /> }
   })
 
   const connectorLineEndArrows = ConnectorArrowTypes.map(connectorArrowType => {
-    return { value: connectorArrowType.name, label: <img alt={connectorArrowType.description} src={process.env.PUBLIC_PATH + '/images/connector-line-end-arrow-' + connectorArrowType.name.toLowerCase() + '.png'} width='16' height='16' /> }
+    return { value: connectorArrowType.name, label: <img alt={connectorArrowType.description} src={process.env.BASIC_PATH + '/images/connector-line-end-arrow-' + connectorArrowType.name.toLowerCase() + '.png'} width='16' height='16' /> }
   })
 
   const connectorSettings = <div>

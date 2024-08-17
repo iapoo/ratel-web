@@ -1,13 +1,13 @@
 import React, { useEffect, useState, useRef, FC } from 'react'
 import styles from './index.css'
-import { Form, Input, Checkbox, Row, Col, Button, Modal, Menu, Space, Tooltip, Dropdown, Divider, Select, InputNumber, ColorPicker, message, Upload, } from 'antd'
-import type { GetProp, MenuProps, UploadProps } from 'antd';
+import { Form, Input, Checkbox, Row, Col, Button, Modal, Menu, Space, Tooltip, Dropdown, Divider, Select, InputNumber, ColorPicker, message, Upload, theme, } from 'antd'
+import type { ConfigProviderProps, GetProp, MappingAlgorithm, MenuProps, UploadProps } from 'antd';
 import { ConnectorLineEndArrows, ConnectorLineModes, ConnectorLineStartArrows, ConnectorLineTypes, Consts, FontSizeOptions, LineWidthOptions, RequestUtils, StrokeDashStyles, SystemUtils, Utils, } from '../Utils'
 import { setInterval } from 'timers'
 import { UserInfo } from '../Utils/RequestUtils'
 import LoginFormWindow from './LoginFormWindow'
 import NewFileWindow from './NewFileWindow';
-import { AlignCenterOutlined, AlignLeftOutlined, AlignRightOutlined, BoldOutlined, CheckOutlined, DownloadOutlined, FileAddOutlined, FileOutlined, FileTextOutlined, FolderOpenOutlined, FormOutlined, ItalicOutlined, RedoOutlined, SaveOutlined, SearchOutlined, SettingOutlined, SolutionOutlined, UnderlineOutlined, UndoOutlined, UserOutlined, VerticalAlignBottomOutlined, VerticalAlignMiddleOutlined, VerticalAlignTopOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons';
+import { AlignCenterOutlined, AlignLeftOutlined, AlignRightOutlined, BoldOutlined, CheckOutlined, DownloadOutlined, FileAddOutlined, FileOutlined, FileTextOutlined, FolderOpenOutlined, FormOutlined, ItalicOutlined, MoonOutlined, RedoOutlined, SaveOutlined, SearchOutlined, SettingOutlined, SolutionOutlined, SunOutlined, UnderlineOutlined, UndoOutlined, UserOutlined, VerticalAlignBottomOutlined, VerticalAlignMiddleOutlined, VerticalAlignTopOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons';
 import OpenFileWindow from './OpenFileWindow';
 import { StorageService } from '../Storage';
 import { Rectangle } from '@/components/Resource/LargeIcons';
@@ -49,6 +49,7 @@ import { CustomEntityTypeInfo } from '@/components/Rockie/Items/src/CustomEntity
 import { CustomTableType } from '@/components/Rockie/Items/src/CustomTableEntity';
 import { CustomConnector, CustomConnectorTypeInfo } from '@/components/Rockie/Items/src/CustomConnector';
 import { UMLCustomContainer, UMLCustomContainerTypes } from '@/components/Rockie/CustomItems/UML/src/UMLCustomContainer';
+import { useAntdConfig, useAntdConfigSetter } from 'umi'
 
 interface HeaderProps {
   previousEditor: Editor | undefined
@@ -62,6 +63,8 @@ interface HeaderProps {
 const Header: FC<HeaderProps> = ({
   previousEditor, currentEditor, onLogin, onLogout, onMyShapesUpdated, adRegionWidth
 }) => {
+  const setAntdConfig = useAntdConfigSetter()
+  const antdConfig = useAntdConfig()
   const intl = useIntl();
   const [messageApi, contextHolder] = message.useMessage();
   const { confirm } = Modal
@@ -128,6 +131,9 @@ const Header: FC<HeaderProps> = ({
   // const [exportForm, ] = Form.useForm()
   // const [downloadDocumentForm, ] = Form.useForm()
   const timerCountRef = useRef(0)
+  const token = theme.useToken()
+  const splitColor = token.token.colorSplit
+
 
   useEffect(() => {
     if (!initialized) {
@@ -726,6 +732,27 @@ const Header: FC<HeaderProps> = ({
 
   const cancelDiscardModifiedDocument = () => {
     setDiscardModifiedDocumentWindowVisible(false)
+  }
+
+  const handleThemeChange = () => {
+    setAntdConfig((config: ConfigProviderProps) => {
+      if (config.theme?.algorithm) {
+        const algorithmMap = config.theme.algorithm as MappingAlgorithm[]
+        const hasDark = algorithmMap.includes(theme.darkAlgorithm)
+        if (hasDark) {
+          config.theme.algorithm = [theme.defaultAlgorithm]
+          if (Utils.currentEditor) {
+            Utils.currentEditor.enableDarkTheme = false
+          }
+        } else {
+          config.theme.algorithm = [theme.darkAlgorithm]
+          if (Utils.currentEditor) {
+            Utils.currentEditor.enableDarkTheme = true
+          }
+        }
+      }
+      return config
+    })
   }
 
   const handlePropertyEditorChange = () => {
@@ -1504,27 +1531,27 @@ const Header: FC<HeaderProps> = ({
   }
 
   const strokeDashStyles = StrokeDashStyles.map(strokeDashStyle => {
-    return { value: strokeDashStyle.name, label: <img alt='intl.formatMessage({ id: strokeDashStyle.label})' src={process.env.PUBLIC_PATH + '/images/line-' + strokeDashStyle.name.toLowerCase() + '.png'} width='80' height='24' /> }
+    return { value: strokeDashStyle.name, label: <img alt='intl.formatMessage({ id: strokeDashStyle.label})' src={process.env.BASIC_PATH + '/images/line-' + strokeDashStyle.name.toLowerCase() + '.png'} width='80' height='24' /> }
   })
 
   const connectorLineTypes = ConnectorLineTypes.map(connectorLineType => {
-    return { value: connectorLineType.name, label: <img alt='intl.formatMessage({ id: connectorLineType.label})' src={process.env.PUBLIC_PATH + '/images/connector-line-type-' + connectorLineType.name.toLowerCase() + '.png'} width='16' height='16' /> }
+    return { value: connectorLineType.name, label: <img alt='intl.formatMessage({ id: connectorLineType.label})' src={process.env.BASIC_PATH + '/images/connector-line-type-' + connectorLineType.name.toLowerCase() + '.png'} width='16' height='16' /> }
   })
 
   const connectorLineModes = ConnectorLineModes.map(connectorLineMode => {
-    return { value: connectorLineMode.name, label: <img alt='intl.formatMessage({ id: connectorLineMode.label})' src={process.env.PUBLIC_PATH + '/images/connector-line-mode-' + connectorLineMode.name.toLowerCase() + '.png'} width='16' height='16' /> }
+    return { value: connectorLineMode.name, label: <img alt='intl.formatMessage({ id: connectorLineMode.label})' src={process.env.BASIC_PATH + '/images/connector-line-mode-' + connectorLineMode.name.toLowerCase() + '.png'} width='16' height='16' /> }
   })
 
   const connectorLineModesForCurve = ConnectorLineModesForCurve.map(connectorLineMode => {
-    return { value: connectorLineMode.name, label: <img alt='intl.formatMessage({ id: connectorLineMode.label})' src={process.env.PUBLIC_PATH + '/images/connector-line-mode-' + connectorLineMode.name.toLowerCase() + '.png'} width='16' height='16' /> }
+    return { value: connectorLineMode.name, label: <img alt='intl.formatMessage({ id: connectorLineMode.label})' src={process.env.BASIC_PATH + '/images/connector-line-mode-' + connectorLineMode.name.toLowerCase() + '.png'} width='16' height='16' /> }
   })
 
   const connectorLineStartArrows = ConnectorArrowTypes.map(connectorArrowType => {
-    return { value: connectorArrowType.name, label: <img alt={connectorArrowType.description} src={process.env.PUBLIC_PATH + '/images/connector-line-start-arrow-' + connectorArrowType.name.toLowerCase() + '.png'} width='16' height='16' /> }
+    return { value: connectorArrowType.name, label: <img alt={connectorArrowType.description} src={process.env.BASIC_PATH + '/images/connector-line-start-arrow-' + connectorArrowType.name.toLowerCase() + '.png'} width='16' height='16' /> }
   })
 
   const connectorLineEndArrows = ConnectorArrowTypes.map(connectorArrowType => {
-    return { value: connectorArrowType.name, label: <img alt={connectorArrowType.description} src={process.env.PUBLIC_PATH + '/images/connector-line-end-arrow-' + connectorArrowType.name.toLowerCase() + '.png'} width='16' height='16' /> }
+    return { value: connectorArrowType.name, label: <img alt={connectorArrowType.description} src={process.env.BASIC_PATH + '/images/connector-line-end-arrow-' + connectorArrowType.name.toLowerCase() + '.png'} width='16' height='16' /> }
   })
 
   const handleGenerateIconsForConnector = async () => {
@@ -2891,7 +2918,7 @@ const Header: FC<HeaderProps> = ({
 
   const optionItems: MenuProps['items'] = [
     {
-      key: 'Language', label: 'Language', icon: <CheckOutlined style={{ visibility: 'hidden' }} />, children: [
+      key: 'Language', label: <FormattedMessage id='workspace.header.menu-option-language' />, icon: <CheckOutlined style={{ visibility: 'hidden' }} />, children: [
         { key: 'zh-CN', label: '中文', onClick: () => handleLocale('zh-CN'), icon: getLocale() == 'zh-CN' ? <CheckOutlined /> : <Placeholder />, },
         { key: 'en-US', label: 'English(US)', onClick: () => handleLocale('en-US'), icon: getLocale() == 'en-US' ? <CheckOutlined /> : <Placeholder />, },
       ]
@@ -2954,9 +2981,9 @@ const Header: FC<HeaderProps> = ({
   ]
 
   return (
-    <div style={{ position: 'absolute', top: '0px', height: `${Utils.HEADER_HEIGHT}px`, width: `calc(100% - ${adRegionWidth}px` }}>
+    <div style={{ position: 'absolute', top: '0px', height: `${Utils.HEADER_HEIGHT}px`, width: `calc(100% - ${adRegionWidth}px`, }}>
       {contextHolder}
-      <div style={{ width: '100%', height: '50%', borderBottomStyle: 'inset', borderBottomWidth: '1px' }}>
+      <div style={{ width: '100%', height: '49%', }}>
         <div style={{ width: '100%', height: '100%', float: 'left', display: 'table' }}>
           <Space direction="horizontal" style={{ display: 'table-cell', verticalAlign: 'middle' }}>
             <Space wrap>
@@ -2993,7 +3020,7 @@ const Header: FC<HeaderProps> = ({
             </Space>
           </Space>
         </div>
-        <div style={{ position: 'absolute', height: '50%', width: '240px', right: '0px' }}>
+        <div style={{ position: 'absolute', height: '50%', width: '240px', right: `0px` }}>
           <div style={{ float: 'right', display: 'table', height: '100%', marginRight: '8px' }}>
             <div style={{ display: 'table-cell', verticalAlign: 'middle', }}>
               {/* {online ? intl.formatMessage({ id: 'workspace.header.welcome' }) + ' ' + userInfo?.customerName + ' ' : " "} */}
@@ -3001,12 +3028,13 @@ const Header: FC<HeaderProps> = ({
               <Dropdown menu={{ items: userProfileMenu }}>
                 <Button shape='circle' type='text' icon={<UserOutlined />} style={{ display: online ? 'inline' : 'none' }} />
               </Dropdown>
-              <Button type='text' style={{ display: online ? 'none' : 'inline', marginLeft: '8px' }} hidden={!online} onClick={() => login(ON_LOGIN_NONE)}><FormattedMessage id='workspace.header.button-login-title' /></Button>
-              <Button type='primary' style={{ display: online ? 'none' : 'inline', marginLeft: '8px' }} hidden={!online} onClick={() => register()}><FormattedMessage id='workspace.header.button-register-title' /></Button>
+              <Button type='text' style={{ display: online ? 'none' : 'inline', marginLeft: '8px' }} onClick={() => login(ON_LOGIN_NONE)}><FormattedMessage id='workspace.header.button-login-title' /></Button>
+              <Button type='primary' style={{ display: online ? 'none' : 'inline', marginLeft: '8px' }} onClick={() => register()}><FormattedMessage id='workspace.header.button-register-title' /></Button>
             </div>
           </div>
         </div>
       </div>
+      <div style={{ width: '100%', height: '1%', backgroundColor: splitColor }}></div>
       <div style={{ width: '100%', height: '50%', }}>
         <div style={{ float: 'left', height: '100%', display: 'table', marginLeft: '8px' }}>
           <Space direction="horizontal" wrap={false} style={{ display: 'table-cell', verticalAlign: 'middle' }}>
@@ -3035,9 +3063,9 @@ const Header: FC<HeaderProps> = ({
                 <Select size='small' value={fontName} onChange={handleFontNameChange} style={{ width: 120, }} popupMatchSelectWidth={false} disabled={!selectionValid} options={FontNameOptions} bordered={false} />
               </Tooltip>
               <Tooltip title={<FormattedMessage id='workspace.header.title.font-size' />}>
-                <InputNumber min={Consts.FONT_SIZE_MIN} max={Consts.FONT_SIZE_MAX} value={fontSize}
+                {/* <InputNumber min={Consts.FONT_SIZE_MIN} max={Consts.FONT_SIZE_MAX} value={fontSize}
                   ref={(node) => { setFontSizeNode(node) }}
-                  onChange={handleFontSizeChange} onStep={handleFontSizeStepChange} onBlur={handleFontSizeBlur} onPressEnter={handleFontSizePressEnter} size='small' style={{ width: 60, display: 'none' }} disabled={!selectionValid} />
+                  onChange={handleFontSizeChange} onStep={handleFontSizeStepChange} onBlur={handleFontSizeBlur} onPressEnter={handleFontSizePressEnter} size='small' style={{ width: 60, display: 'none' }} disabled={!selectionValid} /> */}
                 <Select size='small' value={fontSize} onChange={handleFontSizeChange} style={{ width: 64, }} disabled={!selectionValid} options={FontSizeOptions} bordered={false} />
               </Tooltip>
               <Tooltip title={<FormattedMessage id='workspace.header.title.font-bold' />}>
@@ -3105,10 +3133,13 @@ const Header: FC<HeaderProps> = ({
             </Space>
           </Space>
         </div>
-        <div style={{ float: 'right', height: '100%', display: 'table', marginRight: '8px' }}>
+        <div style={{ float: 'right', height: '100%', display: 'table', right: `${adRegionWidth}px` }}>
           <Space direction="horizontal" style={{ display: 'table-cell', verticalAlign: 'middle' }}>
             <Space wrap>
-              <Tooltip title="Property Editor">
+              <Tooltip title={<FormattedMessage id='workspace.header.title.theme-switch' />}>
+                <Button shape="circle" type="text" icon={Utils.currentEditor?.enableDarkTheme ? <SunOutlined /> : <MoonOutlined />} onClick={handleThemeChange} />
+              </Tooltip>
+              <Tooltip title={<FormattedMessage id='workspace.header.title.property-editor' />}>
                 <Button shape="circle" type="text" icon={<SettingOutlined />} onClick={handlePropertyEditorChange} />
               </Tooltip>
             </Space>

@@ -12,7 +12,7 @@ const createWindow = () => {
       // preload: path.join(__dirname, 'preload.js')
     },
   });
-  //win.webContents.openDevTools();
+  win.webContents.openDevTools();
   win.loadFile(`dist/index.html`); //本地地址
 };
 app.whenReady().then(createWindow);
