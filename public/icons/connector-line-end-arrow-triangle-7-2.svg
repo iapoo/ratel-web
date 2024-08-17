@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.dev/svgjs" width="32" height="32" viewbox="0 0 32 32"   shape-rendering="geometricPrecision">
+<g transform="translate(2, 15) ">
+    <path fill="none" stroke="#323232FF" stroke-width="3"  d="M30 0L30 0L15 0L15 0L0 0L0 0"/>
+    <path fill="none" stroke="#323232FF" stroke-width="3"  d="M30 0L30 0L15 0L15 0L0 0L0 0"/>
+    <path fill="#323232FF" d="M30 0L18 -6L28.8 0L18 6L30 0M18 0L6 -6L16.8 0L6 6L18 0"/>
+    <path fill="none" stroke="#323232FF" stroke-width="3"  d="M30 0L18 -6L28.8 0L18 6L30 0M18 0L6 -6L16.8 0L6 6L18 0"/>
+</g>
+</svg>

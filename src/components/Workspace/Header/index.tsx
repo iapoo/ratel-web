@@ -28,7 +28,7 @@ import { AliyunShapes } from '@/components/Rockie/CustomItems/Aliyun';
 import { AwsShapes } from '@/components/Rockie/CustomItems/Aws';
 import { FlowChartShapeTypes } from '@/components/Rockie/CustomItems/FlowChart/src/FlowChartShape';
 import { FlowChartShapes } from '@/components/Rockie/CustomItems/FlowChart';
-import { DocumentThemeTypes } from '@/components/Rockie/Theme';
+import { DocumentThemeTypes, EditorUtils } from '@/components/Rockie/Theme';
 import { EditorHelper } from '@/components/Rockie/Utils';
 import RegisterFormWindowPage from './RegisterFormWindow';
 import PasswordFormWindowPage from './PasswordFormWindow';
@@ -1547,11 +1547,17 @@ const Header: FC<HeaderProps> = ({
   })
 
   const connectorLineStartArrows = ConnectorArrowTypes.map(connectorArrowType => {
-    return { value: connectorArrowType.name, label: <img alt={connectorArrowType.description} src={process.env.BASIC_PATH + '/images/connector-line-start-arrow-' + connectorArrowType.name.toLowerCase() + '.png'} width='16' height='16' /> }
+    const path = process.env.BASIC_PATH + '/icons/connector-line-start-arrow-' + connectorArrowType.name.toLowerCase() + '.svg'
+    const id = 'header-' + path
+    return {
+      value: connectorArrowType.name, label: <img id={id} alt={connectorArrowType.description} src={path} width='16' height='16' style={{ filter: Utils.currentEditor?.enableDarkTheme ? 'invert(100%)' : '' }} />
+    }
   })
 
   const connectorLineEndArrows = ConnectorArrowTypes.map(connectorArrowType => {
-    return { value: connectorArrowType.name, label: <img alt={connectorArrowType.description} src={process.env.BASIC_PATH + '/images/connector-line-end-arrow-' + connectorArrowType.name.toLowerCase() + '.png'} width='16' height='16' /> }
+    const path = process.env.BASIC_PATH + '/icons/connector-line-end-arrow-' + connectorArrowType.name.toLowerCase() + '.svg'
+    const id = 'header' + path
+    return { value: connectorArrowType.name, label: <img id={id} alt={connectorArrowType.description} src={path} width='16' height='16' style={{ filter: Utils.currentEditor?.enableDarkTheme ? 'invert(100%)' : '' }} /> }
   })
 
   const handleGenerateIconsForConnector = async () => {
@@ -1865,50 +1871,46 @@ const Header: FC<HeaderProps> = ({
     }
   }
 
-  const handleTest3 = () => {
+  const handleGenerateStartArrows = async () => {
     if (currentEditor) {
       let count = ConnectorArrowTypes.length
-      let y = 16
-      let x = 0
+      let y = 15
+      let x = 2
+      let lineFactor = 1.5 //1
       for (let i = 0; i < count; i++) {
         currentEditor.contentLayer.removeAllEditorItems()
         let connectorArrowType = ConnectorArrowTypes[i]
-        let connector = new Connector(new Point2(x, y), new Point2(x + 32, y), ConnectorDirection.Right)
+        let connector = new Connector(new Point2(x, y), new Point2(x + 30, y), ConnectorDirection.Right)
         connector.startArrow = connectorArrowType
+        connector.lineWidth = connector.lineWidth * lineFactor
         currentEditor.contentLayer.addEditorItem(connector)
-        // y += 32
-        // if(i > 0 && i % 15 == 0) {
-        //   x += 64
-        //   y = 16
-        // }
-        currentEditor.resize(32, 32)
-        const data = EditorHelper.export(currentEditor)
-        console.log(`download file = connector-line-start-arrow-${connectorArrowType.name.toLowerCase()}.png`)
-        SystemUtils.generateDownloadFile(data, `connector-line-start-arrow-${connectorArrowType.name.toLowerCase()}.png`)
+        currentEditor.setup(1, 32, 32)
+        currentEditor.render()
+        const data = await EditorHelper.exportToSVG(currentEditor)
+        console.log(`download file = connector-line-start-arrow-${connectorArrowType.name.toLowerCase()}.svg`)
+        SystemUtils.generateDownloadFile(data, `connector-line-start-arrow-${connectorArrowType.name.toLowerCase()}.svg`)
       }
     }
   }
 
-  const handleTest4 = () => {
+  const handleGenerateEndArrows = async () => {
     if (currentEditor) {
       let count = ConnectorArrowTypes.length
-      let y = 16
-      let x = 0
+      let y = 15
+      let x = 2
+      let lineFactor = 1.5 //1
       for (let i = 0; i < count; i++) {
         currentEditor.contentLayer.removeAllEditorItems()
         let connectorArrowType = ConnectorArrowTypes[i]
-        let connector = new Connector(new Point2(x + 32, y), new Point2(x, y), ConnectorDirection.Left)
+        let connector = new Connector(new Point2(x + 30, y), new Point2(x, y), ConnectorDirection.Left)
         connector.startArrow = connectorArrowType
+        connector.lineWidth = connector.lineWidth * lineFactor
         currentEditor.contentLayer.addEditorItem(connector)
-        //y += 32
-        //if(i > 0 && i % 15 == 0) {
-        //  x += 64
-        //  y = 16
-        //}
-        currentEditor.resize(32, 32)
-        const data = EditorHelper.export(currentEditor)
-        console.log(`download file = connector-line-end-arrow-${connectorArrowType.name.toLowerCase()}.png`)
-        SystemUtils.generateDownloadFile(data, `connector-line-end-arrow-${connectorArrowType.name.toLowerCase()}.png`)
+        currentEditor.setup(1, 32, 32)
+        currentEditor.render()
+        const data = await EditorHelper.exportToSVG(currentEditor)
+        console.log(`download file = connector-line-end-arrow-${connectorArrowType.name.toLowerCase()}.svg`)
+        SystemUtils.generateDownloadFile(data, `connector-line-end-arrow-${connectorArrowType.name.toLowerCase()}.svg`)
       }
     }
   }
@@ -2931,38 +2933,38 @@ const Header: FC<HeaderProps> = ({
   const developmentItems: MenuProps['items'] = [
     { key: 'Generate Icons', label: 'Generate Icons', onClick: () => handleGenerateIcons() },
     { key: 'Test Code', label: 'SaveAs', onClick: handleTestCode },
-    { key: 'Test Shapes', label: 'Test Shapes', onClick: handleContainerShapesLarge, },
-    { key: 'Test Container Shapes Large', label: 'Test Container Shapes Large', onClick: handleContainerShapesLarge, },
-    { key: 'Test Container Shapes Small', label: 'Test Container Shapes Small', onClick: handleContainerShapesSmall, },
-    { key: 'Test Start Arrows', label: 'Test Start Arrows', onClick: handleTest3, },
-    { key: 'Test End Arrows', label: 'Test End Arrows', onClick: handleTest4, },
-    { key: 'Test Custom Shapes Large', label: 'Test Custom Shapes Large', onClick: handleTest5, },
-    { key: 'Test Custom Shapes Small', label: 'Test Custom Shapes Small', onClick: handleTest6, },
-    { key: 'Test Custom Shapes Arrow Large', label: 'Test Custom Shapes Arrow Large', onClick: handleTestArrows, },
-    { key: 'Test Custom Shapes Arrow Small', label: 'Test Custom Shapes Arrow Small', onClick: handleTestArrowsSmall, },
-    { key: 'Test Custom Shapes SVG Large', label: 'Test Custom Shapes SVG Large', onClick: handleTestSvgShapes, },
-    { key: 'Test Custom Shapes SVG Small', label: 'Test Custom Shapes SVG Small', onClick: handleTestSvgShapesSmall, },
-    { key: 'Test Custom Shapes Image Large', label: 'Test Custom Shapes Image Large', onClick: handleTestImageShapes, },
-    { key: 'Test Custom Shapes Image Small', label: 'Test Custom Shapes Image Small', onClick: handleTestImageShapesSmall, },
-    { key: 'Test Custom Shapes FlowChart Large', label: 'Test Custom Shapes FlowChart Large', onClick: handleTestFlowChartShapes, },
-    { key: 'Test Custom Shapes FlowChart Small', label: 'Test Custom Shapes FlowChart Small', onClick: handleTestFlowChartShapesSmall, },
-    { key: 'Test UML CustomTable Large', label: 'Test UML CustomTable Large', onClick: handleTestUMLCustomTableLarge, },
-    { key: 'Test UML CustomTable Small', label: 'Test UML CustomTable Small', onClick: handleTestUMLCustomTableSmall, },
-    { key: 'Test UML Container Large', label: 'Test UML Container Large', onClick: handleTestUMLContainerShapeLarge, },
-    { key: 'Test UML Container Small', label: 'Test UML Container Small', onClick: handleTestUMLContainerShapeSmall, },
-    { key: 'Test UML Basic Shape Large', label: 'Test UML Basic Shape Large', onClick: handleTestUMLBasicShapeLarge, },
-    { key: 'Test UML Basic Shape Small', label: 'Test UML Basic Shape Small', onClick: handleTestUMLBasicShapeSmall, },
-    { key: 'Test UML Connector Large', label: 'Test UML Connector Large', onClick: handleTestUMLConnectorShapeLarge, },
-    { key: 'Test UML Connector Small', label: 'Test UML Connector Small', onClick: handleTestUMLConnectorShapeSmall, },
-    { key: 'Test UML Custom Shape Large', label: 'Test UML Custom Shape Large', onClick: handleTestUMLCustomShapeLarge, },
-    { key: 'Test UML Custom Shape Small', label: 'Test UML Custom Shape Small', onClick: handleTestUMLCustomShapeSmall, },
-    { key: 'Test UML Frame Shape Large', label: 'Test UML Frame Shape Large', onClick: handleTestUMLFrameShapeLarge, },
-    { key: 'Test UML Frame Shape Small', label: 'Test UML Frame Shape Small', onClick: handleTestUMLFrameShapeSmall, },
+    { key: 'Test Start Arrows', label: 'Test Start Arrows', onClick: handleGenerateStartArrows, },
+    { key: 'Test End Arrows', label: 'Test End Arrows', onClick: handleGenerateEndArrows, },
     { key: 'Test Style', label: 'Test Style', onClick: handleTestStyle, },
-    { key: 'Test Mockup Shape Large', label: 'Test Mockup Shape Large', onClick: handleTestMockupShapeLarge, },
-    { key: 'Test Mockup Shape Small', label: 'Test Mockup Shape Small', onClick: handleTestMockupShapeSmall, },
-    { key: 'Test ER Shape Large', label: 'Test ER Shape Large', onClick: handleTestERShapeLarge, },
-    { key: 'Test ER Shape Small', label: 'Test ER Shape Small', onClick: handleTestERShapeSmall, },
+    // { key: 'Test Shapes', label: 'Test Shapes', onClick: handleContainerShapesLarge, },
+    // { key: 'Test Container Shapes Large', label: 'Test Container Shapes Large', onClick: handleContainerShapesLarge, },
+    // { key: 'Test Container Shapes Small', label: 'Test Container Shapes Small', onClick: handleContainerShapesSmall, },
+    // { key: 'Test Custom Shapes Large', label: 'Test Custom Shapes Large', onClick: handleTest5, },
+    // { key: 'Test Custom Shapes Small', label: 'Test Custom Shapes Small', onClick: handleTest6, },
+    // { key: 'Test Custom Shapes Arrow Large', label: 'Test Custom Shapes Arrow Large', onClick: handleTestArrows, },
+    // { key: 'Test Custom Shapes Arrow Small', label: 'Test Custom Shapes Arrow Small', onClick: handleTestArrowsSmall, },
+    // { key: 'Test Custom Shapes SVG Large', label: 'Test Custom Shapes SVG Large', onClick: handleTestSvgShapes, },
+    // { key: 'Test Custom Shapes SVG Small', label: 'Test Custom Shapes SVG Small', onClick: handleTestSvgShapesSmall, },
+    // { key: 'Test Custom Shapes Image Large', label: 'Test Custom Shapes Image Large', onClick: handleTestImageShapes, },
+    // { key: 'Test Custom Shapes Image Small', label: 'Test Custom Shapes Image Small', onClick: handleTestImageShapesSmall, },
+    // { key: 'Test Custom Shapes FlowChart Large', label: 'Test Custom Shapes FlowChart Large', onClick: handleTestFlowChartShapes, },
+    // { key: 'Test Custom Shapes FlowChart Small', label: 'Test Custom Shapes FlowChart Small', onClick: handleTestFlowChartShapesSmall, },
+    // { key: 'Test UML CustomTable Large', label: 'Test UML CustomTable Large', onClick: handleTestUMLCustomTableLarge, },
+    // { key: 'Test UML CustomTable Small', label: 'Test UML CustomTable Small', onClick: handleTestUMLCustomTableSmall, },
+    // { key: 'Test UML Container Large', label: 'Test UML Container Large', onClick: handleTestUMLContainerShapeLarge, },
+    // { key: 'Test UML Container Small', label: 'Test UML Container Small', onClick: handleTestUMLContainerShapeSmall, },
+    // { key: 'Test UML Basic Shape Large', label: 'Test UML Basic Shape Large', onClick: handleTestUMLBasicShapeLarge, },
+    // { key: 'Test UML Basic Shape Small', label: 'Test UML Basic Shape Small', onClick: handleTestUMLBasicShapeSmall, },
+    // { key: 'Test UML Connector Large', label: 'Test UML Connector Large', onClick: handleTestUMLConnectorShapeLarge, },
+    // { key: 'Test UML Connector Small', label: 'Test UML Connector Small', onClick: handleTestUMLConnectorShapeSmall, },
+    // { key: 'Test UML Custom Shape Large', label: 'Test UML Custom Shape Large', onClick: handleTestUMLCustomShapeLarge, },
+    // { key: 'Test UML Custom Shape Small', label: 'Test UML Custom Shape Small', onClick: handleTestUMLCustomShapeSmall, },
+    // { key: 'Test UML Frame Shape Large', label: 'Test UML Frame Shape Large', onClick: handleTestUMLFrameShapeLarge, },
+    // { key: 'Test UML Frame Shape Small', label: 'Test UML Frame Shape Small', onClick: handleTestUMLFrameShapeSmall, },
+    // { key: 'Test Mockup Shape Large', label: 'Test Mockup Shape Large', onClick: handleTestMockupShapeLarge, },
+    // { key: 'Test Mockup Shape Small', label: 'Test Mockup Shape Small', onClick: handleTestMockupShapeSmall, },
+    // { key: 'Test ER Shape Large', label: 'Test ER Shape Large', onClick: handleTestERShapeLarge, },
+    // { key: 'Test ER Shape Small', label: 'Test ER Shape Small', onClick: handleTestERShapeSmall, },
   ];
 
   const helpItems: MenuProps['items'] = [
