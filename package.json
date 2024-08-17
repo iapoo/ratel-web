@@ -10,7 +10,7 @@
   },
   "scripts": {
     "build": "max build",
-    "prod:build": "cross-env UMI_ENV=prod max build",
+    "prod:build": "cross-env UMI_ENV=production max build",
     "dev": "max dev",
     "format": "prettier --cache --write .",
     "postinstall": "max setup",
