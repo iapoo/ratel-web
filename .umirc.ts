@@ -25,6 +25,9 @@ export default defineConfig({
   },
   // icons: {
   // },
+  favicons: [
+    '/favicon.png'
+  ],
   plugins: [
   ],
   define: {
