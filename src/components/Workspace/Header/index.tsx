@@ -20,7 +20,7 @@ import { Operation, OperationHelper, OperationType } from '@/components/Rockie/O
 import { Connector, ContainerEntity, ContainerTypes, CustomEntity, CustomTableEntity, ImageContainer, Item, ShapeEntity, ShapeTypes, SvgContainer, TableEntity } from '@/components/Rockie/Items';
 import { ShapeAction } from '@/components/Rockie/Actions';
 import { ConnectorArrowTypes } from '@/components/Rockie/Items/src/Connector';
-import { ConnectorDirection } from '@/components/Rockie/Shapes';
+import { ConnectorDirection, ConnectorMode } from '@/components/Rockie/Shapes';
 import { ConnectorLineModesForCurve, DoubleLineGapOptions, FontNameOptions } from '../Utils/Consts';
 import { BasicShapes } from '@/components/Rockie/CustomItems/BasicShapes';
 import { Arrows } from '@/components/Rockie/CustomItems/Arrows';
@@ -1531,19 +1531,19 @@ const Header: FC<HeaderProps> = ({
   }
 
   const strokeDashStyles = StrokeDashStyles.map(strokeDashStyle => {
-    return { value: strokeDashStyle.name, label: <img alt='intl.formatMessage({ id: strokeDashStyle.label})' src={process.env.BASIC_PATH + '/images/line-' + strokeDashStyle.name.toLowerCase() + '.png'} width='80' height='24' /> }
+    return { value: strokeDashStyle.name, label: <img alt='intl.formatMessage({ id: strokeDashStyle.label})' src={process.env.BASIC_PATH + '/icons/line-' + strokeDashStyle.name.toLowerCase() + '.svg'} width='48' height='16' style={{ filter: Utils.currentEditor?.enableDarkTheme ? 'invert(100%)' : '' }} /> }
   })
 
   const connectorLineTypes = ConnectorLineTypes.map(connectorLineType => {
-    return { value: connectorLineType.name, label: <img alt='intl.formatMessage({ id: connectorLineType.label})' src={process.env.BASIC_PATH + '/images/connector-line-type-' + connectorLineType.name.toLowerCase() + '.png'} width='16' height='16' /> }
+    return { value: connectorLineType.name, label: <img alt='intl.formatMessage({ id: connectorLineType.label})' src={process.env.BASIC_PATH + '/icons/connector-line-type-' + connectorLineType.name.toLowerCase() + '.svg'} width='16' height='16' style={{ filter: Utils.currentEditor?.enableDarkTheme ? 'invert(100%)' : '' }} /> }
   })
 
   const connectorLineModes = ConnectorLineModes.map(connectorLineMode => {
-    return { value: connectorLineMode.name, label: <img alt='intl.formatMessage({ id: connectorLineMode.label})' src={process.env.BASIC_PATH + '/images/connector-line-mode-' + connectorLineMode.name.toLowerCase() + '.png'} width='16' height='16' /> }
+    return { value: connectorLineMode.name, label: <img alt='intl.formatMessage({ id: connectorLineMode.label})' src={process.env.BASIC_PATH + '/icons/connector-line-mode-' + connectorLineMode.name.toLowerCase() + '.svg'} width='16' height='16' style={{ filter: Utils.currentEditor?.enableDarkTheme ? 'invert(100%)' : '' }} /> }
   })
 
   const connectorLineModesForCurve = ConnectorLineModesForCurve.map(connectorLineMode => {
-    return { value: connectorLineMode.name, label: <img alt='intl.formatMessage({ id: connectorLineMode.label})' src={process.env.BASIC_PATH + '/images/connector-line-mode-' + connectorLineMode.name.toLowerCase() + '.png'} width='16' height='16' /> }
+    return { value: connectorLineMode.name, label: <img alt='intl.formatMessage({ id: connectorLineMode.label})' src={process.env.BASIC_PATH + '/icons/connector-line-mode-' + connectorLineMode.name.toLowerCase() + '.svg'} width='16' height='16' style={{ filter: Utils.currentEditor?.enableDarkTheme ? 'invert(100%)' : '' }} /> }
   })
 
   const connectorLineStartArrows = ConnectorArrowTypes.map(connectorArrowType => {
@@ -1871,7 +1871,7 @@ const Header: FC<HeaderProps> = ({
     }
   }
 
-  const handleGenerateStartArrows = async () => {
+  const handleGenerateConnectorStartArrows = async () => {
     if (currentEditor) {
       let count = ConnectorArrowTypes.length
       let y = 15
@@ -1880,7 +1880,7 @@ const Header: FC<HeaderProps> = ({
       for (let i = 0; i < count; i++) {
         currentEditor.contentLayer.removeAllEditorItems()
         let connectorArrowType = ConnectorArrowTypes[i]
-        let connector = new Connector(new Point2(x, y), new Point2(x + 30, y), ConnectorDirection.Right)
+        let connector = new Connector(new Point2(x, y), new Point2(x + 28, y), ConnectorDirection.Right)
         connector.startArrow = connectorArrowType
         connector.lineWidth = connector.lineWidth * lineFactor
         currentEditor.contentLayer.addEditorItem(connector)
@@ -1893,7 +1893,7 @@ const Header: FC<HeaderProps> = ({
     }
   }
 
-  const handleGenerateEndArrows = async () => {
+  const handleGenerateConnectorEndArrows = async () => {
     if (currentEditor) {
       let count = ConnectorArrowTypes.length
       let y = 15
@@ -1902,7 +1902,7 @@ const Header: FC<HeaderProps> = ({
       for (let i = 0; i < count; i++) {
         currentEditor.contentLayer.removeAllEditorItems()
         let connectorArrowType = ConnectorArrowTypes[i]
-        let connector = new Connector(new Point2(x + 30, y), new Point2(x, y), ConnectorDirection.Left)
+        let connector = new Connector(new Point2(x + 28, y), new Point2(x, y), ConnectorDirection.Left)
         connector.startArrow = connectorArrowType
         connector.lineWidth = connector.lineWidth * lineFactor
         currentEditor.contentLayer.addEditorItem(connector)
@@ -1915,6 +1915,73 @@ const Header: FC<HeaderProps> = ({
     }
   }
 
+  const handleGenerateConnectorLineModes = async () => {
+    if (currentEditor) {
+      let count = ConnectorLineModes.length
+      let y = 24
+      let x = 3
+      let lineFactor = 2 //1
+      for (let i = 0; i < count; i++) {
+        const connectorLineMode = ConnectorLineModes[i]
+        let connector = new Connector(new Point2(x + 42, y), new Point2(x, y), ConnectorDirection.Left)
+        currentEditor.contentLayer.removeAllEditorItems()
+        connector.connectorMode = SystemUtils.parseConnectorMode(connectorLineMode.name)
+        connector.connectorDoubleLineGap = 10
+        connector.lineWidth = connector.lineWidth * lineFactor
+        currentEditor.contentLayer.addEditorItem(connector)
+        currentEditor.setup(1, 48, 48)
+        currentEditor.render()
+        const data = await EditorHelper.exportToSVG(currentEditor)
+        console.log(`download file = connector-line-mode-${connectorLineMode.name}}.svg`)
+        SystemUtils.generateDownloadFile(data, `connector-line-mode-${connectorLineMode.name}.svg`)
+      }
+    }
+  }
+
+  const handleGenerateConnectorLineTypes = async () => {
+    if (currentEditor) {
+      let count = ConnectorLineTypes.length
+      let y = 3
+      let x = 3
+      let lineFactor = 2 //1
+      for (let i = 0; i < count; i++) {
+        const connectorLineType = ConnectorLineTypes[i]
+        let connector = new Connector(new Point2(x, y), new Point2(x + 42, y + 42), ConnectorDirection.Left)
+        currentEditor.contentLayer.removeAllEditorItems()
+        connector.connectorType = SystemUtils.parseConnectorType(connectorLineType.name)
+        connector.lineWidth = connector.lineWidth * lineFactor
+        connector.curveStartModifier = new Point2(1, 0.2)
+        connector.curveEndModifier = new Point2(-1, -0.2)
+        currentEditor.contentLayer.addEditorItem(connector)
+        currentEditor.setup(1, 48, 48)
+        currentEditor.render()
+        const data = await EditorHelper.exportToSVG(currentEditor)
+        console.log(`download file = connector-line-type-${connectorLineType.name}}.svg`)
+        SystemUtils.generateDownloadFile(data, `connector-line-type-${connectorLineType.name}.svg`)
+      }
+    }
+  }
+
+  const handleGenerateDashStyles = async () => {
+    if (currentEditor) {
+      let count = StrokeDashStyles.length
+      let y = 8
+      let x = 1
+      let lineFactor = 1
+      for (let i = 0; i < count; i++) {
+        const strokeDashStyle = StrokeDashStyles[i]
+        let connector = new Connector(new Point2(x, y), new Point2(x + 46, y), ConnectorDirection.Left)
+        currentEditor.contentLayer.removeAllEditorItems()
+        connector.strokeDashStyle = SystemUtils.parseStrokeDashStyle(strokeDashStyle.name)
+        currentEditor.contentLayer.addEditorItem(connector)
+        currentEditor.setup(1, 48, 16)
+        currentEditor.render()
+        const data = await EditorHelper.exportToSVG(currentEditor)
+        console.log(`download file = line-${strokeDashStyle.name}}.svg`)
+        SystemUtils.generateDownloadFile(data, `line-${strokeDashStyle.name}.svg`)
+      }
+    }
+  }
 
   const handleTest5 = () => {
     if (currentEditor) {
@@ -2932,10 +2999,13 @@ const Header: FC<HeaderProps> = ({
 
   const developmentItems: MenuProps['items'] = [
     { key: 'Generate Icons', label: 'Generate Icons', onClick: () => handleGenerateIcons() },
-    { key: 'Test Code', label: 'SaveAs', onClick: handleTestCode },
-    { key: 'Test Start Arrows', label: 'Test Start Arrows', onClick: handleGenerateStartArrows, },
-    { key: 'Test End Arrows', label: 'Test End Arrows', onClick: handleGenerateEndArrows, },
+    { key: 'Generate Connector Start Arrows', label: 'Generate Connector Start Arrows', onClick: handleGenerateConnectorStartArrows, },
+    { key: 'Generate Connector End Arrows', label: 'Generate Connector End Arrows', onClick: handleGenerateConnectorEndArrows, },
+    { key: 'Generate Connector Line Modes', label: 'Generate Connector Line Modes', onClick: handleGenerateConnectorLineModes, },
+    { key: 'Generate Connector Line Types', label: 'Generate Connector Line Types', onClick: handleGenerateConnectorLineTypes, },
+    { key: 'Generate Dash Styles', label: 'Generate Dash Styles', onClick: handleGenerateDashStyles, },
     { key: 'Test Style', label: 'Test Style', onClick: handleTestStyle, },
+    { key: 'Test Code', label: 'SaveAs', onClick: handleTestCode },
     // { key: 'Test Shapes', label: 'Test Shapes', onClick: handleContainerShapesLarge, },
     // { key: 'Test Container Shapes Large', label: 'Test Container Shapes Large', onClick: handleContainerShapesLarge, },
     // { key: 'Test Container Shapes Small', label: 'Test Container Shapes Small', onClick: handleContainerShapesSmall, },
@@ -3115,7 +3185,7 @@ const Header: FC<HeaderProps> = ({
                 <Select size='small' value={lineWidth} onChange={handleLineWidthChange} style={{ width: 64, }} disabled={!selectionValid} options={LineWidthOptions} bordered={false} />
               </Tooltip>
               <Tooltip title={<FormattedMessage id='workspace.header.title.stroke-type' />}>
-                <Select size='small' value={strokeDashStyle} onChange={handleStrokeDashStyleChange} style={{ width: 130 }} dropdownStyle={{ width: 130 }} options={strokeDashStyles} bordered={false} disabled={!selectionValid} />
+                <Select size='small' value={strokeDashStyle} onChange={handleStrokeDashStyleChange} style={{ width: 85 }} dropdownStyle={{ width: 85 }} options={strokeDashStyles} bordered={false} disabled={!selectionValid} />
               </Tooltip>
               <Tooltip title={<FormattedMessage id='workspace.header.title.connector-line-type' />}>
                 <Select size='small' value={connectorLineType} onChange={handleConnectorLineTypeChange} style={{ width: 56 }} disabled={!connectorSelected} options={connectorLineTypes} bordered={false} />

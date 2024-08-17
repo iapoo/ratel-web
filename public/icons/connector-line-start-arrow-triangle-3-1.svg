@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.dev/svgjs" width="32" height="32" viewbox="0 0 32 32"   shape-rendering="geometricPrecision">
 <g transform="translate(2, 15) ">
-    <path fill="none" stroke="#323232FF" stroke-width="3"  d="M0 0L0 0L15 0L15 0L30 0L30 0"/>
-    <path fill="none" stroke="#323232FF" stroke-width="3"  d="M0 0L0 0L15 0L15 0L30 0L30 0"/>
+    <path fill="none" stroke="#323232FF" stroke-width="3"  d="M0 0L0 0L14 0L14 0L28 0L28 0"/>
+    <path fill="none" stroke="#323232FF" stroke-width="3"  d="M0 0L0 0L14 0L14 0L28 0L28 0"/>
     <path fill="#323232FF" d="M0 0L8.4 0L12 6L0 0"/>
     <path fill="none" stroke="#323232FF" stroke-width="3"  d="M0 0L8.4 0L12 6L0 0"/>
 </g>

@@ -562,10 +562,10 @@ const Navigator: FC<NavigatorProps> = ({
     //console.log(`mouse is up`)
   }
 
-  const getSVGPopoverContent = (folder: string, name: string, width: number, height: number) => {
+  const getSVGPopoverContent = (folder: string, name: string, width: number, height: number, multicolor: boolean) => {
     return <div style={{ width: '100%', display: 'table', }}>
       <div style={{ display: 'table-cell', textAlign: 'center', verticalAlign: 'middle', borderTop: '0px solid gray', padding: '2px' }}>
-        <img id={process.env.BASIC_PATH + `/${folder}/${name}.svg`} src={process.env.BASIC_PATH + `/${folder}/${name}.svg`} />
+        <img id={process.env.BASIC_PATH + `/${folder}/${name}.svg`} src={process.env.BASIC_PATH + `/${folder}/${name}.svg`} style={{ filter: (!multicolor && Utils.currentEditor?.enableDarkTheme) ? 'invert(90%)' : '' }} />
       </div>
     </div>
   }
@@ -634,7 +634,7 @@ const Navigator: FC<NavigatorProps> = ({
     }
   }
 
-  const generateIcons = (shapeTypeName: string, folder: string, shapeWidth: number, shapeHeight: number, eventHandler: MouseEventHandler<HTMLElement>) => {
+  const generateIcons = (shapeTypeName: string, folder: string, shapeWidth: number, shapeHeight: number, multicolor: boolean, eventHandler: MouseEventHandler<HTMLElement>) => {
     const margin = POPOVER_ICON_MARGIN
     const imgRef = createRef<HTMLImageElement>()
     const iconId = `svg-icon-${folder}-${shapeTypeName}`
@@ -651,17 +651,17 @@ const Navigator: FC<NavigatorProps> = ({
       width = ICON_WIDTH
     }
 
-    return <Popover title={shapeTypeName} placement='right' content={getSVGPopoverContent(folder, shapeTypeName, shapeWidth, shapeHeight)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: POPOVER_MIN_WIDTH, width: popoverWidth, }}>
+    return <Popover title={shapeTypeName} placement='right' content={getSVGPopoverContent(folder, shapeTypeName, shapeWidth, shapeHeight, multicolor)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: POPOVER_MIN_WIDTH, width: popoverWidth, }}>
       <Button type='text' onMouseDown={eventHandler} style={{ padding: 2, display: 'table' }} >
         <img ref={imgRef} id={iconId} src={src}
-          width={width} height={height} style={{ display: 'table-cell' }}
+          width={width} height={height} style={{ display: 'table-cell', filter: (!multicolor && Utils.currentEditor?.enableDarkTheme) ? 'invert(90%)' : '' }}
           draggable={false}
           onLoad={() => updateSVG(imgRef, iconId, src, shapeWidth + margin * 2, shapeHeight + margin * 2, width, height)} />
       </Button>
     </Popover>
   }
 
-  const shapes = ShapeTypes.map(shapeType => generateIcons(shapeType.name, 'basic-icons', shapeType.width, shapeType.height, () => addShape(shapeType.name, 'basic-icons')))
+  const shapes = ShapeTypes.map(shapeType => generateIcons(shapeType.name, 'basic-icons', shapeType.width, shapeType.height, false, () => addShape(shapeType.name, 'basic-icons')))
 
   // const shapes = ShapeTypes.map(shapeType => {
   //   const margin = POPOVER_ICON_MARGIN
@@ -687,7 +687,7 @@ const Navigator: FC<NavigatorProps> = ({
   // }
   // )
 
-  const line = generateIcons('Line', 'basic-icons', LINE_WIDTH, LINE_HEIGHT, () => addLine('Line', 'basic-icons'))
+  const line = generateIcons('Line', 'basic-icons', LINE_WIDTH, LINE_HEIGHT, false, () => addLine('Line', 'basic-icons'))
 
   // const line = [1].map(value => {
   //   const typeName = 'Line'
@@ -709,7 +709,7 @@ const Navigator: FC<NavigatorProps> = ({
   //   </Popover>
   // })
 
-  const table = TableTypes.map(shapeType => generateIcons(shapeType.name, 'basic-icons', shapeType.width, shapeType.height, () => addTable(shapeType.name, 'basic-icons')))
+  const table = TableTypes.map(shapeType => generateIcons(shapeType.name, 'basic-icons', shapeType.width, shapeType.height, false, () => addTable(shapeType.name, 'basic-icons')))
 
   // const table = TableTypes.map(shapeType => {
   //   const typeName = shapeType.name
@@ -758,7 +758,7 @@ const Navigator: FC<NavigatorProps> = ({
   //   </Button>
   // </Popover>
 
-  const containers = ContainerTypes.map(shapeType => generateIcons(shapeType.name, 'basic-icons', shapeType.width, shapeType.height, () => addContainer(shapeType.name, 'basic-icons')))
+  const containers = ContainerTypes.map(shapeType => generateIcons(shapeType.name, 'basic-icons', shapeType.width, shapeType.height, false, () => addContainer(shapeType.name, 'basic-icons')))
   // const containers = ContainerTypes.map(shapeType => {
   //   const typeName = shapeType.name
   //   const margin = POPOVER_ICON_MARGIN
@@ -793,7 +793,7 @@ const Navigator: FC<NavigatorProps> = ({
   // }
   // )
 
-  const customShapeBasicShapes = BasicShapes.map(shapeType => generateIcons(shapeType.name, 'custom-icons/basic-shapes', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/basic-shapes')))
+  const customShapeBasicShapes = BasicShapes.map(shapeType => generateIcons(shapeType.name, 'custom-icons/basic-shapes', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/basic-shapes')))
 
   // const customShapeBasicShapes = BasicShapes.map(shapeType => {
   //   const typeName = shapeType.name
@@ -830,7 +830,7 @@ const Navigator: FC<NavigatorProps> = ({
   //   }
   // )
 
-  const customShapeFlowChartShapes = FlowChartShapes.map(shapeType => generateIcons(shapeType.name, 'custom-icons/flowchart', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/flowchart')))
+  const customShapeFlowChartShapes = FlowChartShapes.map(shapeType => generateIcons(shapeType.name, 'custom-icons/flowchart', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/flowchart')))
 
   // const customShapeFlowChartShapes = FlowChartShapes.map(
   //   basicType => {
@@ -849,7 +849,7 @@ const Navigator: FC<NavigatorProps> = ({
   //   }
   // )
 
-  const customShapeArrows = Arrows.map(shapeType => generateIcons(shapeType.name, 'custom-icons/arrows', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/arrows')))
+  const customShapeArrows = Arrows.map(shapeType => generateIcons(shapeType.name, 'custom-icons/arrows', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/arrows')))
 
   // const customShapeArrows = Arrows.map(shapeType => {
   //   const typeName = shapeType.name
@@ -953,10 +953,10 @@ const Navigator: FC<NavigatorProps> = ({
     }
   )
 
-  const umlGridShapesForClass = UMLGridShapesForClass.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addCustomTable(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
-  const umlContainerShapesForClass = UMLContainerShapesForClass.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addExtendedContainer(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
-  const umlBasicShapesForClass = UMLBasicShapesForClass.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addExtendedShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
-  const umlConnectorsForClass = UMLConnectorsForClass.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addCustomConnector(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
+  const umlGridShapesForClass = UMLGridShapesForClass.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () => addCustomTable(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
+  const umlContainerShapesForClass = UMLContainerShapesForClass.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () => addExtendedContainer(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
+  const umlBasicShapesForClass = UMLBasicShapesForClass.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () => addExtendedShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
+  const umlConnectorsForClass = UMLConnectorsForClass.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () => addCustomConnector(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
 
   // const umlGridShapesForClass = UMLGridShapesForClass.map(
   //   shapeType => {
@@ -998,9 +998,9 @@ const Navigator: FC<NavigatorProps> = ({
   //   }
   // )
 
-  const umlContainerShapesForUseCase = UMLContainerShapesForUseCase.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addExtendedContainer(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
-  const umlBasicShapesForUseCase = UMLBasicShapesForUseCase.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addExtendedShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
-  const umlConnectorsForUseCase = UMLConnectorsForUseCase.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addCustomConnector(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
+  const umlContainerShapesForUseCase = UMLContainerShapesForUseCase.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () => addExtendedContainer(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
+  const umlBasicShapesForUseCase = UMLBasicShapesForUseCase.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () => addExtendedShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
+  const umlConnectorsForUseCase = UMLConnectorsForUseCase.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () => addCustomConnector(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
 
 
   // const umlContainerShapesForUseCase = UMLContainerShapesForUseCase.map(
@@ -1032,10 +1032,10 @@ const Navigator: FC<NavigatorProps> = ({
   //     </Popover>
   //   }
   // )
-  const umlBasicShapesForActivityState = UMLBasicShapesForActivityState.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addExtendedShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
-  const umlCustomShapesForActivityState = UMLCustomShapesForActivityState.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
-  const umlConnectorsForActivityState = UMLConnectorsForActivityState.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addCustomConnector(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
-  const umlContainerShapesForActivityState = UMLContainerShapesForActivityState.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addExtendedContainer(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
+  const umlBasicShapesForActivityState = UMLBasicShapesForActivityState.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () => addExtendedShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
+  const umlCustomShapesForActivityState = UMLCustomShapesForActivityState.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
+  const umlConnectorsForActivityState = UMLConnectorsForActivityState.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () => addCustomConnector(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
+  const umlContainerShapesForActivityState = UMLContainerShapesForActivityState.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () => addExtendedContainer(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
 
   // const umlBasicShapesForActivityState = UMLBasicShapesForActivityState.map(
   //   shapeType => {
@@ -1080,10 +1080,10 @@ const Navigator: FC<NavigatorProps> = ({
   //   }
   // )
 
-  const umlCustomContainersForSequence = UMLCustomContainersForSequence.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addCustomContainer(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
-  const umlCustomShapesForSequence = UMLCustomShapesForSequence.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
-  const umlFrameShapesForSequence = UMLFrameShapesForSequence.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addFrame(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
-  const umlConnectorsForSequence = UMLConnectorsForSequence.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addCustomConnector(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
+  const umlCustomContainersForSequence = UMLCustomContainersForSequence.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () => addCustomContainer(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
+  const umlCustomShapesForSequence = UMLCustomShapesForSequence.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
+  const umlFrameShapesForSequence = UMLFrameShapesForSequence.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () => addFrame(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
+  const umlConnectorsForSequence = UMLConnectorsForSequence.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () => addCustomConnector(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
 
 
   // const umlCustomContainersForSequence = UMLCustomContainersForSequence.map(
@@ -1136,8 +1136,8 @@ const Navigator: FC<NavigatorProps> = ({
   // )
 
 
-  const umlGridShapesForOther = UMLGridShapesForOther.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addCustomTable(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
-  const umlCustomShapesForOther = UMLCustomShapesForOther.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
+  const umlGridShapesForOther = UMLGridShapesForOther.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () => addCustomTable(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
+  const umlCustomShapesForOther = UMLCustomShapesForOther.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
 
 
   // const umlGridShapesForOther = UMLGridShapesForOther.map(
@@ -1177,7 +1177,7 @@ const Navigator: FC<NavigatorProps> = ({
     </Popover>
   })
 
-  const erCustomShapes = ERCustomShapes.map(shapeType => generateIcons(shapeType.name, 'custom-icons/entity-relation', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/entity-relation')))
+  const erCustomShapes = ERCustomShapes.map(shapeType => generateIcons(shapeType.name, 'custom-icons/entity-relation', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/entity-relation')))
 
   // const erCustomShapes = ERCustomShapes.map(
   //   shapeType => {
@@ -1189,7 +1189,7 @@ const Navigator: FC<NavigatorProps> = ({
   //   }
   // )
 
-  const mockupCustomShapes = MockupShapes.map(shapeType => generateIcons(shapeType.name, 'custom-icons/mockup', shapeType.typeInfo.width, shapeType.typeInfo.height, () => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/mockup')))
+  const mockupCustomShapes = MockupShapes.map(shapeType => generateIcons(shapeType.name, 'custom-icons/mockup', shapeType.typeInfo.width, shapeType.typeInfo.height, shapeType.multicolor, () => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/mockup')))
 
   // const mockupCustomShapes = MockupShapes.map(
   //   shapeType => {
