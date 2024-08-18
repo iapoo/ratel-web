@@ -147,7 +147,7 @@ export class OperationHelper {
   }
 
   public static refreshItem(itemInfo: EditorItemInfo, items: EditorItem[]) {
-    if (itemInfo.category == Categories.CONNECTOR) {
+    if (itemInfo.category == Categories.CONNECTOR || itemInfo.category == Categories.CUSTOM_CONNECTOR) {
       let connectorInfo = itemInfo as ConnectorInfo
       let connector: Connector | null = null
       items.forEach(item => {
@@ -167,7 +167,7 @@ export class OperationHelper {
           entity.addTargetConnector(connector)
         }
       })
-      console.log(connector)
+      //console.log(connector)
     }
   }
 
