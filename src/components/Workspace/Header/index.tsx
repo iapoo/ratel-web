@@ -371,6 +371,8 @@ const Header: FC<HeaderProps> = ({
     let newIndex = newDocumentIndex + 1
     setNewDocumentIndex(newIndex)
     setSelectedDocumentName(DOCUMENT_NEW_NAME_PREFIX + newIndex)
+    setSelectedDocumentId(null)
+
   }
 
   const login = (onLogin: string) => {
