@@ -38,7 +38,7 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
   const draggleRef = useRef<HTMLDivElement>(null);
   const [addFolderForm,] = Form.useForm()
   const [errorVisible, setErrorVisible,] = useState<boolean>(false)
-  const [errorMessage, setErrorMessage, ] = useState<string>('')
+  const [errorMessage, setErrorMessage,] = useState<string>('')
   const [folders, setFolders] = useState<Folder[]>([])
   const [treeData, setTreeData,] = useState<DataNode[]>([])
   const [treeMap, setTreeMap,] = useState<Map<string, Folder | Document>>()
@@ -46,13 +46,13 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
   const [selectedFolderKey, setSelectedFolderKey,] = useState<string>('')
   const [confirmDeleteFolderWindowVisible, setConfirmDeleteFolderWindowVisible,] = useState<boolean>(false)
   const [confirmDeleteDocumentWindowVisible, setConfirmDeleteDocumentWindowVisible,] = useState<boolean>(false)
-  const [selectedFolderIsFolder, setSelectedFolderIsFolder, ] = useState<boolean>(false)
-  const [selectedFolderIsDocument, setSelectedFolderIsDocument, ] = useState<boolean>(false)
+  const [selectedFolderIsFolder, setSelectedFolderIsFolder,] = useState<boolean>(false)
+  const [selectedFolderIsDocument, setSelectedFolderIsDocument,] = useState<boolean>(false)
   const [confirmOverwriteWindowVisible, setConfirmOverwriteWindowVisible] = useState<boolean>(false)
-  const [confirmOverwriteInFolder, setConfirmOverwriteInFolder, ] = useState<boolean>(true)
-  const [confirmOverwriteFolderId, setConfirmOverwriteFolderId, ] = useState<number|null>(null)
-  const [confirmOverwriteDocumentId, setConfirmOverwriteDocumentId, ] = useState<number>(0)
-  const [confirmOverwriteDocumentName, setConfirmOverwriteDocumentName, ] = useState<string>('')
+  const [confirmOverwriteInFolder, setConfirmOverwriteInFolder,] = useState<boolean>(true)
+  const [confirmOverwriteFolderId, setConfirmOverwriteFolderId,] = useState<number | null>(null)
+  const [confirmOverwriteDocumentId, setConfirmOverwriteDocumentId,] = useState<number>(0)
+  const [confirmOverwriteDocumentName, setConfirmOverwriteDocumentName,] = useState<string>('')
 
   if (origModalX != x) {
     setOrigModalX(x)
@@ -98,7 +98,7 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
         let dataNode: DataNode = {
           key: key,
           title: record.folderName,
-          icon: <FolderOutlined/>,
+          icon: <FolderOutlined />,
           children: []
         }
         let folder: Folder = {
@@ -134,7 +134,7 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
         let dataNode: DataNode = {
           key: key,
           title: <label>{record.documentName} <small><i>({document.modifiedDate + ' ' + document.modifiedTime})</i></small></label>,
-          icon: <FileOutlined/>,
+          icon: <FileOutlined />,
           children: []
         }
         nodes.push(dataNode)
@@ -145,13 +145,13 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
   }
 
   const onOk = () => {
-    if(disableFileName) { //Save file
+    if (disableFileName) { //Save file
       handleSaveFile()
     } else { // Open File
-      if(selectedFolderKey?.length > 0) {
-        if(selectedFolderKey.startsWith(DOC)) {
+      if (selectedFolderKey?.length > 0) {
+        if (selectedFolderKey.startsWith(DOC)) {
           let documentId = Number(selectedFolderKey.substring(DOC.length))
-          if(onWindowOk) {
+          if (onWindowOk) {
             onWindowOk(documentId, null, null)
           }
         }
@@ -170,7 +170,7 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
     setErrorVisible(false)
     setErrorMessage('')
   }
-  
+
   const handleDeleteFolder = () => {
     setConfirmDeleteFolderWindowVisible(true)
   }
@@ -191,27 +191,27 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
     console.log('selected', selectedKeys, info);
     setSelectedFolderIsDocument(false)
     setSelectedFolderIsFolder(false)
-    if(selectedKeys.length > 0) {
+    if (selectedKeys.length > 0) {
       let selectedKey = selectedKeys[0].toString()
       setSelectedFolderKey(selectedKey)
-      if(selectedKey.startsWith(FOLDER)) {
-        setSelectedFolderIsFolder(true)        
+      if (selectedKey.startsWith(FOLDER)) {
+        setSelectedFolderIsFolder(true)
       }
-      if(selectedKey.startsWith(DOC)) {
-        setSelectedFolderIsDocument(true)        
+      if (selectedKey.startsWith(DOC)) {
+        setSelectedFolderIsDocument(true)
       }
     } else {
-      setSelectedFolderKey("");      
+      setSelectedFolderKey("");
     }
   }
 
-  const confirmDeleteFolder = ()=> {
-    if(selectedFolderKey?.length > 0) {
-      if(selectedFolderKey.startsWith(FOLDER)) {
+  const confirmDeleteFolder = () => {
+    if (selectedFolderKey?.length > 0) {
+      if (selectedFolderKey.startsWith(FOLDER)) {
         let folderId = Number(selectedFolderKey.substring(FOLDER.length))
         const fetchDeleteFolderData = async () => {
           const deleteFolderData = await RequestUtils.deleteFolder(folderId)
-          if(deleteFolderData.data?.success) {
+          if (deleteFolderData.data?.success) {
             console.log('Delete folder with data:', deleteFolderData.data.message)
           } else {
             console.log('Delete folder with error:', deleteFolderData.data)
@@ -224,16 +224,16 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
       }
     }
   }
-  const cancelDeleteFolder = ()=> {
+  const cancelDeleteFolder = () => {
     setConfirmDeleteFolderWindowVisible(false)
   }
-  const confirmDeleteDocument = ()=> {
-    if(selectedFolderKey?.length > 0) {
-      if(selectedFolderKey.startsWith(DOC)) {
+  const confirmDeleteDocument = () => {
+    if (selectedFolderKey?.length > 0) {
+      if (selectedFolderKey.startsWith(DOC)) {
         let documentId = Number(selectedFolderKey.substring(DOC.length))
         const fetchDeleteDocumentData = async () => {
           const deleteDocumentData = await RequestUtils.deleteDocument(documentId)
-          if(deleteDocumentData.data?.success) {
+          if (deleteDocumentData.data?.success) {
             console.log('Delete document with data:', deleteDocumentData.data.message)
           } else {
             console.log('Delete document with error:', deleteDocumentData.data)
@@ -247,7 +247,7 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
     }
   }
 
-  const cancelDeleteDocument = ()=> {
+  const cancelDeleteDocument = () => {
     setConfirmDeleteDocumentWindowVisible(false)
   }
 
@@ -264,9 +264,9 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
     if (selectedFolderKey?.startsWith(FOLDER)) {
       parentId = parseInt(selectedFolderKey.substring(7))
     } else if (selectedFolderKey?.startsWith(DOC)) {
-      if(treeMap) {
+      if (treeMap) {
         const documentNode = treeMap.get(selectedFolderKey)
-        if(isDocument(documentNode)) {
+        if (isDocument(documentNode)) {
           parentId = documentNode.folderId
         }
 
@@ -277,13 +277,13 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
       if (folderData.data?.success) {
         console.log('Add folder wwith data: ', folderData.data.message)
         setErrorMessage('')
-        setErrorVisible(false)     
-        setAddFolderWindowVisible(false)   
+        setErrorVisible(false)
+        setAddFolderWindowVisible(false)
         fetchData()
       } else {
         console.log('Add folder with error: ', folderData.data)
         setErrorMessage(`Add folder with error: ${folderData.data.message}`)
-        setErrorVisible(true)        
+        setErrorVisible(true)
       }
     }
     fetchFolderData()
@@ -291,7 +291,7 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
 
   const confirmOverwriteDocument = () => {
     setConfirmOverwriteWindowVisible(false)
-    if(confirmOverwriteInFolder) {
+    if (confirmOverwriteInFolder) {
       doSaveFile(confirmOverwriteFolderId, true, confirmOverwriteDocumentId, confirmOverwriteDocumentName)
     } else {
       doSaveFile(confirmOverwriteFolderId, true, confirmOverwriteDocumentId, confirmOverwriteDocumentName)
@@ -307,38 +307,38 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
     let documentId: number | null = null
     let saveInFolder = true
     if (selectedFolderKey?.startsWith(FOLDER)) {
-      folderId = parseInt(selectedFolderKey.substring(7))     
-      setConfirmOverwriteFolderId(folderId) 
+      folderId = parseInt(selectedFolderKey.substring(7))
+      setConfirmOverwriteFolderId(folderId)
     } else if (selectedFolderKey?.startsWith(DOC)) {
       documentId = parseInt(selectedFolderKey.substring(4))
       setConfirmOverwriteDocumentId(documentId)
-      saveInFolder = false      
+      saveInFolder = false
     } else if (selectedFolderKey == '') {
-      folderId = null      
+      folderId = null
     } else {
       SystemUtils.handleInternalError(`Unknown error occurs here with selectedFolderKey=${selectedFolderKey}`)
       return
     }
 
-    if(saveInFolder) {
+    if (saveInFolder) {
       let folderMap = treeMap?.get(selectedFolderKey);
       let hasDocumentName = false
-      let currentDocumentId : number = 0
+      let currentDocumentId: number = 0
       let currentDocumentName: string = ''
-      if(isFolder(folderMap)) {
+      if (isFolder(folderMap)) {
         folderMap.data.children?.forEach(child => {
-          if(child.title == selectedDocumentName) {
+          if (child.title == selectedDocumentName) {
             hasDocumentName = true
-            let document =  treeMap?.get('' + child.key)
-            if(isDocument(document)) {
+            let document = treeMap?.get('' + child.key)
+            if (isDocument(document)) {
               currentDocumentId = document.documentId
               currentDocumentName = document.documentName
             }
           }
         })
       }
-      if(selectedDocumentId == null) {
-        if(hasDocumentName) {
+      if (selectedDocumentId == null) {
+        if (hasDocumentName) {
           setConfirmOverwriteWindowVisible(true)
           setConfirmOverwriteInFolder(true)
           setConfirmOverwriteDocumentId(currentDocumentId)
@@ -347,7 +347,7 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
           doSaveFile(folderId, false, 0, '')
         }
       } else {
-        if(hasDocumentName) {
+        if (hasDocumentName) {
           setConfirmOverwriteWindowVisible(true)
           setConfirmOverwriteInFolder(true)
           setConfirmOverwriteDocumentId(currentDocumentId)
@@ -357,20 +357,20 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
         }
       }
     } else {
-     let documentData = treeMap?.get(DOC + documentId); 
-     if(isDocument(documentData)) {
-      if(selectedDocumentName == documentData.documentName && selectedDocumentId == documentData.documentId) {
-        doSaveFile(folderId, true, documentData.documentId, documentData.documentName)
+      let documentData = treeMap?.get(DOC + documentId);
+      if (isDocument(documentData)) {
+        if (selectedDocumentName == documentData.documentName && selectedDocumentId == documentData.documentId) {
+          doSaveFile(folderId, true, documentData.documentId, documentData.documentName)
+        } else {
+          setConfirmOverwriteWindowVisible(true)
+          setConfirmOverwriteInFolder(false)
+          setConfirmOverwriteFolderId(documentData.folderId)
+          setConfirmOverwriteDocumentId(documentData.documentId)
+          setConfirmOverwriteDocumentName(documentData.documentName)
+        }
       } else {
-        setConfirmOverwriteWindowVisible(true)
-        setConfirmOverwriteInFolder(false)
-        setConfirmOverwriteFolderId(documentData.folderId)
-        setConfirmOverwriteDocumentId(documentData.documentId)
-        setConfirmOverwriteDocumentName(documentData.documentName)
+        SystemUtils.handleInternalError(`Unknown documentData, documentId = ${documentId}`)
       }
-     } else {
-      SystemUtils.handleInternalError(`Unknown documentData, documentId = ${documentId}`)
-     }
     }
   }
 
@@ -385,16 +385,15 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
     let resultDocumentName = newDocumentName
     const saveDocumentData = async () => {
       let documentData = null
-      if(overwrite) {
+      if (overwrite) {
         documentData = await RequestUtils.updateDocument(documentId, newDocumentName, documentContent, folderId)
       } else {
         documentData = await RequestUtils.saveDocument(selectedDocumentName, documentContent, folderId)
       }
       if (documentData.data?.success) {
         console.log('Save document wwith data: ', documentData.data.data)
-        if(!overwrite) { //New Document
+        if (!overwrite) { //New Document
           resultDocumentId = documentData.data.data.documentId
-        } else {
           resultDocumentName = selectedDocumentName
         }
         Utils.editors.forEach(editor => {
@@ -402,8 +401,8 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
         })
         setErrorMessage('')
         setErrorVisible(false)
-        if(onWindowOk) {
-          onWindowOk(resultDocumentId, selectedDocumentName, folderId)
+        if (onWindowOk) {
+          onWindowOk(resultDocumentId, resultDocumentName, folderId)
         }
       } else {
         console.log('Save document with error: ', documentData.data)
@@ -416,15 +415,15 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
 
   return (
     <div>
-      <Modal title={<FormattedMessage id='workspace.header.window.open-file.title' />}  centered open={visible} onOk={onOk} onCancel={onCancel} maskClosable={false}  >
+      <Modal title={<FormattedMessage id='workspace.header.window.open-file.title' />} centered open={visible} onOk={onOk} onCancel={onCancel} maskClosable={false}  >
         <div style={{ width: '100%', height: '480px' }}>
           <Space wrap>
             <Button onClick={openAddFolder}><FormattedMessage id='workspace.header.window.open-file.add-folder' /></Button>
             <Button onClick={handleDeleteFolder} disabled={!selectedFolderIsFolder}><FormattedMessage id='workspace.header.window.open-file.delete-folder' /></Button>
             <Button onClick={handleDeleteDocument} disabled={!selectedFolderIsDocument}><FormattedMessage id='workspace.header.window.open-file.delete-document' /></Button>
           </Space>
-          <div style={{ width: '100%', height: '440px',borderWidth: '1px', borderColor: 'silver', borderStyle: 'solid', marginTop: '8px' }}>
-            <Tree style={{ width: '100%', height: '100%',  margin: '8px', }}
+          <div style={{ width: '100%', height: '440px', borderWidth: '1px', borderColor: 'silver', borderStyle: 'solid', marginTop: '8px' }}>
+            <Tree style={{ width: '100%', height: '100%', margin: '8px', }}
               height={420}
               showLine showIcon
               //checkable
@@ -445,8 +444,8 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
           <Form.Item label={<FormattedMessage id='workspace.header.window.open-file.add-folder.foler-name' />} name="folderName" rules={[{ required: true, message: <FormattedMessage id='workspace.header.window.open-file.add-folder.input-new-foler-name' /> }]} >
             <Input />
           </Form.Item>
-          {errorVisible ? <Alert message={errorMessage} type="error" showIcon/> : ''}          
-          </Form>
+          {errorVisible ? <Alert message={errorMessage} type="error" showIcon /> : ''}
+        </Form>
       </Modal>
       <Modal title={<FormattedMessage id='workspace.header.window.open-file.overwrite-document.title' />} centered open={confirmOverwriteWindowVisible} onOk={confirmOverwriteDocument} onCancel={cancelOverwriteDocument} okText="确认" cancelText="取消" >
         <FormattedMessage id='workspace.header.window.open-file.overwrite-document.content' />
