@@ -1,6 +1,6 @@
 # Ratel Web
 
-English: [README.MD](README.md), 中文 [README-CN.MD](README.md)
+[中文](README.md), [English](README.md)
 
 ## 关于 Ratel Web
 
