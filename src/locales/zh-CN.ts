@@ -28,6 +28,7 @@ export default {
   'workspace.content.popup-menu-duplicate-pane': '克隆',
   'workspace.content.popup-menu-delete-pane': '删除',
   'workspace.header.about-window.content-version': '版本',
+  'workspace.header.about-window.home-page': '主页',
   'workspace.header.about-window.window-title': '关于Ratel',
   'workspace.header.about-window.window-close': '关闭',
   'workspace.header.alert-failed-save-document': '文件保存失败, 消息: ',

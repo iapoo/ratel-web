@@ -28,6 +28,7 @@ export default {
   'workspace.content.popup-menu-duplicate-pane': 'Duplicate',
   'workspace.content.popup-menu-delete-pane': 'Delete',
   'workspace.header.about-window.content-version': 'Version',
+  'workspace.header.about-window.home-page': 'Home Page',
   'workspace.header.about-window.window-title': 'About Ratel',
   'workspace.header.about-window.window-close': 'Close',
   'workspace.header.alert-failed-save-document': 'Failed to save document, message: ',

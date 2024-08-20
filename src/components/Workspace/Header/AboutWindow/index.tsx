@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState, useRef } from 'react'
 import styles from './index.css'
-import { Form, Input, Checkbox, Row, Col, Button, Modal, Menu, message, Alert, Space, } from 'antd'
+import { Form, Input, Checkbox, Row, Col, Button, Modal, Menu, message, Alert, Space, Descriptions, } from 'antd'
 import { RequestUtils, Utils, } from '../../Utils'
 import type { DraggableData, DraggableEvent } from 'react-draggable';
 import Draggable from 'react-draggable';
@@ -92,6 +92,20 @@ const AboutWindowPage: FC<AboutWindowProps> = ({
     }
   }
 
+  const aboutItems = [
+    {
+      key: '1',
+      label: <FormattedMessage id='workspace.header.about-window.home-page' />,
+      children: <a href='https://www.ivipa.com' target='blank' >https://www.ivipa.com</a>,
+    },
+    {
+      key: '2',
+      label: <FormattedMessage id='workspace.header.about-window.content-version' />,
+      children: process.env.PRODUCTION_VERSION,
+    },
+  ]
+
+
   return (
     <div>
       {contextHolder}
@@ -132,7 +146,13 @@ const AboutWindowPage: FC<AboutWindowProps> = ({
         )}
       >
         <div style={{ paddingTop: '32px', }}>
-          <FormattedMessage id='workspace.header.about-window.content-version' />: {process.env.PRODUCTION_VERSION}
+          <div style={{ float: 'left', width: '20%' }}>
+            <img src={process.env.BASIC_PATH + '/favicon.png'} />
+          </div>
+          <div style={{ float: 'left', width: '80%', height: '80px', display: 'flex', flexDirection: 'column', justifyContent: 'end' }}>
+            <Descriptions bordered={false} items={aboutItems} column={1} labelStyle={{ width: 120 }} />
+
+          </div>
         </div>
       </Modal>
     </div>
