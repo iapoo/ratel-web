@@ -4,7 +4,7 @@
 
 ## 关于 Ratel Web
 
-Ratel是一个通用的图形编辑器，可以用于创作流程图、UML等. 可以在线使用也可以离线使用.
+Ratel是一个开源通用的图形编辑器，可以用于创作流程图、UML等. 可以在线使用也可以离线使用.
 Ratel Web是Ratel的前端项目. 总共3个子项目: Ratel-Web(frontend), Ratel-Server(backend) and Ratel-deployment(deployment).
 
 演示网站: <https://ratel.ivipa.com>
