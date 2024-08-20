@@ -41,6 +41,7 @@ export default defineConfig({
     "process.env.ROCKIE_WEB_SERVER": "ratel-rockie.ivipa.com",
     "process.env.ROCKIE_WEB_PORT": "443",
     "process.env.ROCKIE_WEB_PATH": "",
+    "process.env.PRODUCTION_VERSION": "0.1.0",
   },
   title: "Ratel",
   access: {},

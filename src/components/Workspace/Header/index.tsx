@@ -7,7 +7,7 @@ import { setInterval } from 'timers'
 import { UserInfo } from '../Utils/RequestUtils'
 import LoginFormWindow from './LoginFormWindow'
 import NewFileWindow from './NewFileWindow';
-import { AlignCenterOutlined, AlignLeftOutlined, AlignRightOutlined, BoldOutlined, CheckOutlined, DownloadOutlined, FileAddOutlined, FileOutlined, FileTextOutlined, FolderOpenOutlined, FormOutlined, ItalicOutlined, MoonOutlined, RedoOutlined, SaveOutlined, SearchOutlined, SettingOutlined, SolutionOutlined, SunOutlined, UnderlineOutlined, UndoOutlined, UserOutlined, VerticalAlignBottomOutlined, VerticalAlignMiddleOutlined, VerticalAlignTopOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons';
+import { AlignCenterOutlined, AlignLeftOutlined, AlignRightOutlined, BoldOutlined, CheckOutlined, DownloadOutlined, FileAddOutlined, FileOutlined, FileTextOutlined, FolderOpenOutlined, FormOutlined, GithubOutlined, ItalicOutlined, MoonOutlined, RedoOutlined, SaveOutlined, SearchOutlined, SettingOutlined, SolutionOutlined, SunOutlined, UnderlineOutlined, UndoOutlined, UserOutlined, VerticalAlignBottomOutlined, VerticalAlignMiddleOutlined, VerticalAlignTopOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons';
 import OpenFileWindow from './OpenFileWindow';
 import { StorageService } from '../Storage';
 import { Rectangle } from '@/components/Resource/LargeIcons';
@@ -50,6 +50,7 @@ import { CustomTableType } from '@/components/Rockie/Items/src/CustomTableEntity
 import { CustomConnector, CustomConnectorTypeInfo } from '@/components/Rockie/Items/src/CustomConnector';
 import { UMLCustomContainer, UMLCustomContainerTypes } from '@/components/Rockie/CustomItems/UML/src/UMLCustomContainer';
 import { useAntdConfig, useAntdConfigSetter } from 'umi'
+import AboutWindowPage from './AboutWindow';
 
 interface HeaderProps {
   previousEditor: Editor | undefined
@@ -92,6 +93,7 @@ const Header: FC<HeaderProps> = ({
   const [registerFormWindowVisible, setRegisterFormWindowVisible,] = useState<boolean>(false)
   const [passwordFormWindowVisible, setPasswordFormWindowVisible,] = useState<boolean>(false)
   const [profileFormWindowVisible, setProfileFormWindowVisible,] = useState<boolean>(false)
+  const [aboutWindowVisible, setAboutWindowVisible,] = useState<boolean>(false)
   const [newFileWindowVisible, setNewFileWindowVisible,] = useState<boolean>(false)
   const [openFileWindowVisible, setOpenFileWindowVisible,] = useState<boolean>(false)
   const [selectedDocumentName, setSelectedDocumentName,] = useState<string>(DOCUMENT_NEW_NAME_PREFIX)
@@ -432,6 +434,14 @@ const Header: FC<HeaderProps> = ({
     setProfileFormWindowVisible(false)
   }
 
+
+  const handleAboutWindowCancel = () => {
+    setAboutWindowVisible(false)
+  }
+
+  const handleAboutWindowOk = () => {
+    setAboutWindowVisible(false)
+  }
   const handleNewFileWindowCancel = () => {
     setNewFileWindowVisible(false)
   }
@@ -521,6 +531,10 @@ const Header: FC<HeaderProps> = ({
     if (onLogout) {
       onLogout()
     }
+  }
+
+  const handleAbout = () => {
+    setAboutWindowVisible(true)
   }
 
   const handleUpdatePassword = () => {
@@ -3040,7 +3054,7 @@ const Header: FC<HeaderProps> = ({
   ];
 
   const helpItems: MenuProps['items'] = [
-    // { key: 'New', label: 'New', },
+    { key: 'About', label: <FormattedMessage id='workspace.header.menu-help-about' />, onClick: handleAbout, },
     // { key: 'OpenFrom', label: 'OpenFrom', },
     // { key: 'Open', label: 'Open', },
     // { key: 'Save', label: 'Save', },
@@ -3082,9 +3096,9 @@ const Header: FC<HeaderProps> = ({
                 </Dropdown>
                 : ''
               }
-              {/* <Dropdown menu={{ items: helpItems }}>
+              <Dropdown menu={{ items: helpItems }}>
                 <Button type='text' size='small'><FormattedMessage id='workspace.header.menu-help' /></Button>
-              </Dropdown> */}
+              </Dropdown>
               <Button type='text' size='small' icon={<FileOutlined />} style={{ paddingLeft: '0px', fontSize: '11px', color: 'gray', fontStyle: 'italic', marginLeft: '24px' }}>{documentModifiedText}</Button>
               <FileTextOutlined />
               <Input placeholder='Document Name' type='text' value={selectedDocumentName} bordered={false} style={{ paddingLeft: '0px', paddingRight: '0px', width: '70px', fontWeight: 'bolder' }} onChange={handleUpdateDocumentName} />
@@ -3094,16 +3108,21 @@ const Header: FC<HeaderProps> = ({
             </Space>
           </Space>
         </div>
-        <div style={{ position: 'absolute', height: '50%', width: '240px', right: `0px` }}>
+        <div style={{ position: 'absolute', height: '50%', width: '320px', right: `0px` }}>
           <div style={{ float: 'right', display: 'table', height: '100%', marginRight: '8px' }}>
             <div style={{ display: 'table-cell', verticalAlign: 'middle', }}>
               {/* {online ? intl.formatMessage({ id: 'workspace.header.welcome' }) + ' ' + userInfo?.customerName + ' ' : " "} */}
               {/* <Button type='text' style={{ display: online ? 'inline' : 'none' }} onClick={logout}><FormattedMessage id='workspace.header.button-logout-title' /></Button> */}
+              <Button type='text' size='small' href='https://github.com/iapoo/ratel-web/issues' target='_blank'><FormattedMessage id='workspace.header.button-feedback' /></Button>
+              <Tooltip title={<FormattedMessage id='workspace.header.title.open-source-web-site' />}>
+                <Button shape='circle' type='text' size='small' icon={<GithubOutlined />} href='https://github.com/iapoo/ratel-web' target='_blank'></Button>
+              </Tooltip>
+              <Divider type='vertical' style={{ margin: 0, }} />
               <Dropdown menu={{ items: userProfileMenu }}>
-                <Button shape='circle' type='text' icon={<UserOutlined />} style={{ display: online ? 'inline' : 'none' }} />
+                <Button shape='circle' type='text' size='small' icon={<UserOutlined />} style={{ display: online ? 'inline' : 'none' }} />
               </Dropdown>
-              <Button type='text' style={{ display: online ? 'none' : 'inline', marginLeft: '8px' }} onClick={() => login(ON_LOGIN_NONE)}><FormattedMessage id='workspace.header.button-login-title' /></Button>
-              <Button type='primary' style={{ display: online ? 'none' : 'inline', marginLeft: '8px' }} onClick={() => register()}><FormattedMessage id='workspace.header.button-register-title' /></Button>
+              <Button type='text' size='small' style={{ display: online ? 'none' : 'inline', marginLeft: '8px' }} onClick={() => login(ON_LOGIN_NONE)}><FormattedMessage id='workspace.header.button-login-title' /></Button>
+              <Button type='primary' size='small' style={{ display: online ? 'none' : 'inline', marginLeft: '8px' }} onClick={() => register()}><FormattedMessage id='workspace.header.button-register-title' /></Button>
             </div>
           </div>
         </div>
@@ -3226,6 +3245,7 @@ const Header: FC<HeaderProps> = ({
       <ProfileFormWindowPage visible={profileFormWindowVisible} x={60} y={60} onWindowCancel={handleProfileFormWindowCancel} onWindowOk={handleProfileFormWindowOk} />
       <NewFileWindow visible={newFileWindowVisible} x={60} y={60} onWindowCancel={handleNewFileWindowCancel} onWindowOk={handleNewFileWindowOk} />
       <OpenFileWindow visible={openFileWindowVisible} x={60} y={60} onWindowCancel={handleOpenFileWindowCancel} onWindowOk={handleOpenFileWindowOk} disableFileName={disableFileName} selectedFolderId={selectedFolderId} selectedDocumentId={selectedDocumentId} selectedDocumentName={selectedDocumentName} />
+      <AboutWindowPage visible={aboutWindowVisible} x={60} y={60} onWindowCancel={handleAboutWindowCancel} onWindowOk={handleAboutWindowOk} />
       <Modal title={<FormattedMessage id='workspace.header.message-title-document-modified' />} centered open={discardModifiedDocumentWindowVisible}
         onOk={confirmDiscardModifiedDocument} onCancel={cancelDiscardModifiedDocument} >
         <FormattedMessage id='workspace.header.message-document-modified' />
