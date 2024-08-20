@@ -1,5 +1,7 @@
 # Ratel Web
 
+English: [README.MD](README.md), 中文 [README-CN.MD](README.md)
+
 ## About Ratel Web
 
 Ratel is open source general diagram editor for flowchart, UML and other diagram tpyes. It can work online or offline(without network).

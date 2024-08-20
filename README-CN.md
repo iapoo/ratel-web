@@ -1,5 +1,7 @@
 # Ratel Web
 
+English: [README.MD](README.md), 中文 [README-CN.MD](README.md)
+
 ## 关于 Ratel Web
 
 Ratel是一个通用的图形编辑器，可以用于创作流程图、UML等. 可以在线使用也可以离线使用.
