@@ -19,6 +19,8 @@ import { DndContext, PointerSensor, useSensor } from '@dnd-kit/core'
 import { arrayMove, horizontalListSortingStrategy, SortableContext, useSortable, } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { Position, useEditable, } from 'use-editable'
+import { SVG } from '@svgdotjs/svg.js'
+import { EditorUtils } from '@/components/Rockie/Theme'
 
 interface DraggableTabPaneProps extends React.HTMLAttributes<HTMLDivElement> {
   'data-node-key': string;
@@ -68,6 +70,7 @@ const DOCUMENT_CONTENT = 'Dummy'
 const DEFAULT_PAINTER_WIDTH = 801
 const DEFAULT_PAINTER_HEIGHT = 599
 const MIN_VISUAL_SIZE = 32
+const RULER_SIZE = 20
 
 const initialPanes: Pane[] = [
   { title: DOCUMENT_PREFIX + '1', content: DOCUMENT_CONTENT, key: '1', editor: null, initialized: false, scrollLeft: 0, scrollTop: 0, },
@@ -162,10 +165,13 @@ const Content: FC<ContentProps> = ({
   // const [paneTititle, setPaneTitle, ] = useState<string>('hello')
   const paneTitleRef = useRef(null)
   const token = theme.useToken()
+  const splitColor = token.token.colorSplit
   const workspaceBackground = token.token.colorBgElevated
   const scrollbarTrackColor = token.token.colorBgContainer
   const scrollbarThumbColor = token.token.colorTextQuaternary
-
+  const horizontalRulerRef = useRef(null)
+  const verticalRulerRef = useRef(null)
+  const textColor = token.token.colorText
   // const handlePaneTitleChange = (text:string, position: Position) => {
   //   if(activePane) {
   //     activePane.title = text
@@ -180,7 +186,7 @@ const Content: FC<ContentProps> = ({
     }
 
     refresh()
-
+    generateRulers()
     // 根据浏览器窗口大小来调整各子div的滚动范围
     window.addEventListener('resize', calculateViewSize)
     window.addEventListener('copy', handleCopyDetail)
@@ -1817,6 +1823,7 @@ const Content: FC<ContentProps> = ({
       activePane.scrollLeft = scrollLeft
       activePane.scrollTop = scrollTop
     }
+    generateRulers()
   }
 
   const onDragEnd = ({ active, over }: DragEndEvent) => {
@@ -1948,7 +1955,7 @@ const Content: FC<ContentProps> = ({
     //event.target.style.display = 'none'
   }
 
-  const clonePanes = () => {
+  const clonePanes =  () => {
     const newPanes: Pane[] = []
     const panes = panesRef.current
     panes.forEach(pane => {
@@ -2061,6 +2068,96 @@ const Content: FC<ContentProps> = ({
   //     }
   //   }
   // }
+
+  const generateRulers = () => {
+    const horizontalRuler = SVG()
+    const verticalRuler =SVG()
+    const container = document.getElementById('content-container') as HTMLDivElement
+    const width = container.clientWidth
+    const height = container.clientHeight
+    const scrollLeft = activePane ? activePane.scrollLeft : 0
+    const scrollTop = activePane ? activePane.scrollTop : 0
+    if(Utils.currentEditor && horizontalRulerRef.current) {
+      const divContainer = horizontalRulerRef.current as HTMLDivElement
+      while(divContainer.hasChildNodes()) {
+        divContainer.removeChild(divContainer.children[0])
+      }      
+      horizontalRuler.width(width)
+      horizontalRuler.height(RULER_SIZE)
+      const rulerLeft = Utils.currentEditor.horizontalSpace - scrollLeft
+      const rulerWidth = Utils.currentEditor.origWidth * Utils.currentEditor.zoom
+      const rulerOrigWidth =  Utils.currentEditor.origWidth
+      let rulerStep = 100
+      if(Utils.currentEditor.zoom <= 0.25) {
+        rulerStep = 200
+      }
+      if(Utils.currentEditor.zoom >= 2) {
+        rulerStep  = 50
+      }
+      if(Utils.currentEditor.zoom >= 4) {
+        rulerStep = 25
+      }
+
+      let position = 0
+      horizontalRuler.rect(rulerWidth, RULER_SIZE).attr('x', rulerLeft).attr('fill', workspaceBackground)
+      while(position <= rulerOrigWidth) {
+        for(let i = 0; i < 10; i ++) {
+          const x = rulerLeft + (position + rulerStep * i * 0.1) * Utils.currentEditor.zoom
+          const pointerHeight = (i === 0 || i  === 5 || i === 10) ? RULER_SIZE * 0.5 : RULER_SIZE *  0.25
+          const y = RULER_SIZE - pointerHeight
+          if(x <= rulerOrigWidth * Utils.currentEditor.zoom + rulerLeft) {
+            horizontalRuler.rect(1, 10).attr('x', x).attr('y', y).attr('fill', textColor).attr('opacity', 0.5)
+          }
+        }        
+        horizontalRuler.text('' + position).attr('x', rulerLeft + position * Utils.currentEditor.zoom + 2).attr('y', 11).attr('fill', textColor).attr('font-size', 9).attr('opacity', 0.5)
+        position += rulerStep
+      }
+      horizontalRuler.addTo(horizontalRulerRef.current)
+    }
+    if(Utils.currentEditor && verticalRulerRef.current) {
+      const divContainer = verticalRulerRef.current as HTMLDivElement
+      while(divContainer.hasChildNodes()) {
+        divContainer.removeChild(divContainer.children[0])
+      }      
+      verticalRuler.width(RULER_SIZE)
+      verticalRuler.height(height)
+      const rulerTop = Utils.currentEditor.verticalSpace - scrollTop
+      const rulerHeight = Utils.currentEditor.origHeight * Utils.currentEditor.zoom
+      const rulerOrigHeight =  Utils.currentEditor.origHeight
+      let rulerStep = 100
+      if(Utils.currentEditor.zoom <= 0.25) {
+        rulerStep = 200
+      }
+      if(Utils.currentEditor.zoom >= 2) {
+        rulerStep  = 50
+      }
+      if(Utils.currentEditor.zoom >= 4) {
+        rulerStep = 25
+      }
+
+      let position = 0
+      verticalRuler.rect(RULER_SIZE, rulerHeight).attr('y', rulerTop).attr('fill', workspaceBackground)
+      while(position <= rulerOrigHeight) {
+        for(let i = 0; i < 10; i ++) {
+          const y = rulerTop + (position + rulerStep * i * 0.1) * Utils.currentEditor.zoom
+          const pointerWidth = (i === 0 || i  === 5 || i === 10) ? RULER_SIZE * 0.5 : RULER_SIZE *  0.25
+          const x = RULER_SIZE - pointerWidth
+          if(y <= rulerOrigHeight * Utils.currentEditor.zoom + rulerTop) {
+            verticalRuler.rect(10, 1).attr('x', x).attr('y', y).attr('fill', textColor).attr('opacity', 0.5)
+          }
+        }        
+        const textSource = '' + position
+        //TODO: FIXME. Following offset is expertimental and should have better solution.
+        const yOffset = textSource.length  === 1 ?  6 : textSource.length * 4
+        const xOffset = textSource.length  === 1 ?  5 : 0
+        const text = verticalRuler.text(textSource)
+        text.attr('y', rulerTop + position * Utils.currentEditor.zoom + 2).attr('x', xOffset).attr('fill', textColor).attr('font-size', 9).attr('opacity', 0.5)       
+        text.rotate(270).translate(0, yOffset) //, textHeight * 0.5, textHeight * 0.5) //.transform({rotate: 270})
+        position += rulerStep
+      }
+      verticalRuler.addTo(verticalRulerRef.current)
+    }
+  }
 
   const popupShapeItems: MenuProps['items'] = [
     { label: <FormattedMessage id='workspace.content.popup-shape-delete' />, key: '1', onClick: handleDelete, },
@@ -2202,9 +2299,11 @@ const Content: FC<ContentProps> = ({
             </div>
             <div style={{ width: '100%', height: Editor.SHADOW_SIZE, backgroundColor: workspaceBackground, }} />
           </div>
+          <div ref={horizontalRulerRef} id='horizontalRuler' style={{  position: 'absolute', left: 0, top: 0, width: '100%', height: RULER_SIZE, backgroundColor: SystemUtils.generateColorString(EditorUtils.backgroundSpaceColor), borderBottom: `0.3px solid ${splitColor}`, borderTop: `0.3px solid ${splitColor}` }}/>      
+          <div ref={verticalRulerRef} id='verticalRuler' style={{  position: 'absolute', left: 0, top: 0, width: RULER_SIZE, height: '100%', backgroundColor: SystemUtils.generateColorString(EditorUtils.backgroundSpaceColor), borderRight: `0.3px solid ${splitColor}`, borderLeft: `0.3px solid ${splitColor}`}}/>
         </div>
       </div>
-      <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: `${Utils.TITLE_HEIGHT}px`, zIndex: 1, }} >
+      <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: `${Utils.TITLE_HEIGHT}px`, zIndex: 9999, }} >
         <ConfigProvider
           theme={{
             components: {

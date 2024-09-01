@@ -145,6 +145,7 @@ export class Editor extends Painter {
   private _verticalSpace: number = Editor.VERTICAL_SPACE_DEFAULT
   private _theme: DocumentThemeType = DocumentThemeTypes[0]
   private _enableDarkTheme: boolean = true
+  private _enableRuler: boolean = true
 
   public constructor(canvasId: string | HTMLCanvasElement) {
     super(canvasId)
@@ -254,6 +255,14 @@ export class Editor extends Painter {
     EditorUtils.enableDarkTheme = value
   }
 
+  public get enableRuler() {
+    return this._enableRuler
+  }
+
+  public set enableRuler(value: boolean) {
+    this._enableRuler = value
+  }
+  
   public get operationService() {
     return this._operationService
   }
