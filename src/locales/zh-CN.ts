@@ -63,6 +63,7 @@ export default {
   'workspace.header.menu-view': '视图',
   'workspace.header.menu-view.show-property-editor': '显示属性编辑器',
   'workspace.header.menu-view.show-grid': '显示网格',
+  'workspace.header.menu-view.show-ruler': '显示标尺',
   'workspace.header.menu-view.zoom-reset': '重置视图',
   'workspace.header.menu-view.zoom-in': '视图放大',
   'workspace.header.menu-view.zoom-out': '视图缩小',

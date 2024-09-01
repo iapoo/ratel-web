@@ -19,10 +19,11 @@ interface BodyProps {
   logoutCompleted: boolean
   myShapesUpdateRequired: boolean
   adRegionWidth: number
+  showRuler: boolean
 }
 
 const Body: FC<BodyProps> = ({
-  previousEditor, currentEditor, onEditorChange, onMyShapesNotified, loginCompleted, logoutCompleted, myShapesUpdateRequired, adRegionWidth
+  previousEditor, currentEditor, onEditorChange, onMyShapesNotified, loginCompleted, logoutCompleted, myShapesUpdateRequired, adRegionWidth, showRuler
 }) => {
   const [initialized, setInitialized,] = useState<boolean>(false)
   const [navigatorWidth, setNavigatorWidth,] = useState<number>(Utils.DEFAULT_NAVIGATOR_WIDTH)
@@ -103,7 +104,7 @@ const Body: FC<BodyProps> = ({
         onStop={handleDragStop}>
         <div className='handle' style={{ position: 'absolute', top: '0px', bottom: '0px', left: `${navigatorWidth} + px`, width: `${Utils.DEFAULT_DIVIDER_WIDTH}px`, cursor: 'ew-resize', zIndex: 999, }} />
       </Draggable>
-      <Content onEditorChange={handleEditorChange} onMyShapesUpdated={handleMyShapesUpdated} x={`${navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH}px`} y={`${enablePropertyEditor ? '220px' : '0px'} `} />
+      <Content onEditorChange={handleEditorChange} onMyShapesUpdated={handleMyShapesUpdated} x={`${navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH}px`} y={`${enablePropertyEditor ? '220px' : '0px'} `} showRuler={showRuler} />
       <Drawer placement='right' mask={false} closable={false} open={enablePropertyEditor} getContainer={false} bodyStyle={{ padding: 16 }} width={240} >
         <PropertyEditor previousEditor={previousEditor} currentEditor={currentEditor} />
       </Drawer>

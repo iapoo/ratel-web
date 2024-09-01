@@ -59,10 +59,12 @@ interface HeaderProps {
   onLogout: () => void
   onMyShapesUpdated: () => void
   adRegionWidth: number
+  onShowRulerChanged: () => void
+  showRuler: boolean
 }
 
 const Header: FC<HeaderProps> = ({
-  previousEditor, currentEditor, onLogin, onLogout, onMyShapesUpdated, adRegionWidth
+  previousEditor, currentEditor, onLogin, onLogout, onMyShapesUpdated, adRegionWidth, onShowRulerChanged, showRuler,
 }) => {
   const setAntdConfig = useAntdConfigSetter()
   const antdConfig = useAntdConfig()
@@ -804,6 +806,13 @@ const Header: FC<HeaderProps> = ({
   const handleShowGrid = () => {
     if (Utils.currentEditor) {
       Utils.currentEditor.showGrid = !Utils.currentEditor.showGrid
+    }
+  }
+
+
+  const handleShowRuler = () => {
+    if(onShowRulerChanged) {
+      onShowRulerChanged()
     }
   }
 
@@ -2986,6 +2995,7 @@ const Header: FC<HeaderProps> = ({
     { label: <FormattedMessage id='workspace.header.menu-view.show-property-editor' />, key: '1', onClick: handlePropertyEditorChange, icon: <CheckOutlined style={{ visibility: Utils.enablePropertyEditor ? 'visible' : 'hidden' }} /> },
     { type: 'divider' },
     { label: <FormattedMessage id='workspace.header.menu-view.show-grid' />, key: '2', onClick: handleShowGrid, icon: <CheckOutlined style={{ visibility: Utils.currentEditor?.showGrid ? 'visible' : 'hidden' }} /> },
+    { label: <FormattedMessage id='workspace.header.menu-view.show-ruler' />, key: '2', onClick: handleShowRuler, icon: <CheckOutlined style={{ visibility: showRuler ? 'visible' : 'hidden' }} /> },
     { type: 'divider' },
     { label: <FormattedMessage id='workspace.header.menu-view.zoom-reset' />, key: '3', onClick: handleResetView, icon: <CheckOutlined style={{ visibility: 'hidden' }} /> },
     { label: <FormattedMessage id='workspace.header.menu-view.zoom-in' />, key: '4', onClick: handleZoomIn, icon: <CheckOutlined style={{ visibility: 'hidden' }} /> },

@@ -25,6 +25,7 @@ export default (props: any) => {
   const [logoutCompleted, setLogoutCompleted] = useState<boolean>(false)
   const [myShapesUpdateRequired, setMyShapesUpdateRequired,] = useState<boolean>(false)
   const [adRegionWidth, setAdRegionWidth,] = useState<number>(Utils.DEFAULT_AD_REGION_WIDTH)
+  const [showRuler, setShowRuler, ] = useState<boolean>(true)
 
   useEffect(() => {
     if (!initialized) {
@@ -81,11 +82,16 @@ export default (props: any) => {
   const handleMyShapesUpdated = () => {
     setMyShapesUpdateRequired(true)
   }
+
+  const handleShowRulerChanged = () => {
+    setShowRuler(!showRuler)
+  }
+  
   return (
     <div style={{ width: '100%', height: '100%', backgroundColor: workspaceBackground }}>
       <div style={{ width: `calc(100% - ${adRegionWidth}px)`, height: '100%', float: 'left' }}>
-        <Header previousEditor={previousEditor} currentEditor={currentEditor} onLogin={handleLogin} onLogout={handleLogout} onMyShapesUpdated={handleMyShapesUpdated} adRegionWidth={adRegionWidth} />
-        <Body onEditorChange={handleEditorChange} previousEditor={previousEditor} currentEditor={currentEditor} loginCompleted={loginCompleted} logoutCompleted={logoutCompleted} onMyShapesNotified={handleMyShapesNotified} myShapesUpdateRequired={myShapesUpdateRequired} adRegionWidth={adRegionWidth} />
+        <Header previousEditor={previousEditor} currentEditor={currentEditor} onLogin={handleLogin} onLogout={handleLogout} onMyShapesUpdated={handleMyShapesUpdated} adRegionWidth={adRegionWidth} onShowRulerChanged={handleShowRulerChanged} showRuler={showRuler}/>
+        <Body onEditorChange={handleEditorChange} previousEditor={previousEditor} currentEditor={currentEditor} loginCompleted={loginCompleted} logoutCompleted={logoutCompleted} onMyShapesNotified={handleMyShapesNotified} myShapesUpdateRequired={myShapesUpdateRequired} adRegionWidth={adRegionWidth} showRuler={showRuler}/>
         <Footer />
       </div>
       <div style={{ width: `${adRegionWidth}px`, height: '100%', float: 'right', backgroundColor: 'red' }}>

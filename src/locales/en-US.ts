@@ -63,6 +63,7 @@ export default {
   'workspace.header.menu-view': 'View',
   'workspace.header.menu-view.show-property-editor': 'Show Property Editor',
   'workspace.header.menu-view.show-grid': 'Show Grid',
+  'workspace.header.menu-view.show-ruler': 'Show Ruler',
   'workspace.header.menu-view.zoom-reset': 'Reset View',
   'workspace.header.menu-view.zoom-in': 'Zoom In',
   'workspace.header.menu-view.zoom-out': 'Zoom Out',
