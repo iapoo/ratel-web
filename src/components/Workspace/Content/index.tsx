@@ -2300,8 +2300,8 @@ const Content: FC<ContentProps> = ({
             </div>
             <div style={{ width: '100%', height: Editor.SHADOW_SIZE, backgroundColor: workspaceBackground, }} />
           </div>
-          <div ref={horizontalRulerRef} id='horizontalRuler' style={{  position: 'absolute', left: 0, top: 0, width: '100%', height: RULER_SIZE, backgroundColor: SystemUtils.generateColorString(EditorUtils.backgroundSpaceColor), borderBottom: `0.3px solid ${splitColor}`, borderTop: `0.3px solid ${splitColor}`, display: showRuler? 'block': 'none' }}/>      
-          <div ref={verticalRulerRef} id='verticalRuler' style={{  position: 'absolute', left: 0, top: 0, width: RULER_SIZE, height: '100%', backgroundColor: SystemUtils.generateColorString(EditorUtils.backgroundSpaceColor), borderRight: `0.3px solid ${splitColor}`, borderLeft: `0.3px solid ${splitColor}`, display: showRuler? 'block': 'none' }}/>
+          <div ref={horizontalRulerRef} id='horizontalRuler' style={{  position: 'absolute', left: 0, top: 0, width: '100%', height: RULER_SIZE, backgroundColor: workspaceBackground, borderBottom: `0.3px solid ${splitColor}`, borderTop: `0.3px solid ${splitColor}`, display: showRuler? 'block': 'none' }}/>      
+          <div ref={verticalRulerRef} id='verticalRuler' style={{  position: 'absolute', left: 0, top: 0, width: RULER_SIZE, height: '100%', backgroundColor: workspaceBackground, borderRight: `0.3px solid ${splitColor}`, borderLeft: `0.3px solid ${splitColor}`, display: showRuler? 'block': 'none' }}/>
         </div>
       </div>
       <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: `${Utils.TITLE_HEIGHT}px`, zIndex: 9999, }} >
