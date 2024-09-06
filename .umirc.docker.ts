@@ -19,7 +19,7 @@ export default defineConfig({
   // 使用hash解决框架打包后浏览器不刷新问题
   hash: true,
   publicPath: "./",
-  outputPath: './app/dist5',
+  outputPath: './app/dist',
   history: {
     type: "memory",
   },
@@ -34,11 +34,11 @@ export default defineConfig({
     "process.env.BASIC_PATH": "",
     "process.env.PRODUCTION": "true",
     "process.env.SYSTEM_WEB_HTTP": "http://",
-    "process.env.SYSTEM_WEB_SERVER": "192.168.1.5",
+    "process.env.SYSTEM_WEB_SERVER": "192.168.0.106",
     "process.env.SYSTEM_WEB_PORT": "8080",
     "process.env.SYSTEM_WEB_PATH": "",
     "process.env.ROCKIE_WEB_HTTP": "http://",
-    "process.env.ROCKIE_WEB_SERVER": "192.168.1.5",
+    "process.env.ROCKIE_WEB_SERVER": "192.168.0.106",
     "process.env.ROCKIE_WEB_PORT": "8081",
     "process.env.ROCKIE_WEB_PATH": "",
     "process.env.PRODUCTION_VERSION": "0.1.0",
