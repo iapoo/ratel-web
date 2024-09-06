@@ -19,7 +19,7 @@ Ratel Web是Ratel的前端项目. 总共3个子项目: Ratel-Web(frontend), Rate
 
 docker run -d --name ratel -p 3306:3306 -p 6379:6379 -p 8000:8000 -p 8080:8080 -p 8081:8081 \
     -p 9000:9000 -p 9001:9001 -v ~/works/ratel/logs:/opt/logs -v ~/works/ratel/minio:/opt/minio/data \
-    topoo/ratel-allinone:0.1
+    topoo/ratel-allinone:0.1.0
 
 ### 构建本地Docker镜像版本
 
