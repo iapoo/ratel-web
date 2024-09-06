@@ -11,6 +11,7 @@
   "scripts": {
     "build": "max build",
     "prod:build": "cross-env UMI_ENV=production max build",
+    "docker:build": "cross-env UMI_ENV=docker max build",
     "dev": "max dev",
     "format": "prettier --cache --write .",
     "postinstall": "max setup",
