@@ -15,6 +15,7 @@ import { DocumentThemeTypes, DocumentThemes } from '@/components/Rockie/Theme'
 import { DocumentThemeType } from '@/components/Rockie/Theme/DocumentTheme'
 import { EditorHelper } from '@/components/Rockie/Utils'
 import { Operation, OperationType } from '@/components/Rockie/Operations'
+import { EditorItem } from '@/components/Rockie/Items'
 
 interface PropertyEditorProps {
   previousEditor: Editor | undefined
@@ -577,12 +578,19 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
     }
   }
 
+  const doHandleShapeStyleChange = (item: EditorItem, styleName: string) => {
+    item.themeName = styleName
+    item.items.forEach(child => {
+      doHandleShapeStyleChange(child, styleName)
+    })
+  }
+
   const handleDocumentStyleChange = (styleName: string, documentThemeType: DocumentThemeType) => {
     if (currentEditor) {
       setPageStyle(styleName)
       let editorItems = currentEditor.contentLayer.getAllEditorItems()
       editorItems.forEach(editorItem => {
-        editorItem.themeName = styleName
+        doHandleShapeStyleChange(editorItem, styleName)
       })
       currentEditor.theme = documentThemeType
     }
@@ -593,14 +601,13 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
       setPageStyle(styleName)
       let editorItems = currentEditor.selectionLayer.getAllEditorItems()
       editorItems.forEach(editorItem => {
-        editorItem.themeName = styleName
+        doHandleShapeStyleChange(editorItem, styleName)
       })
     }
   }
 
   const strokeDashStyles = StrokeDashStyles.map(strokeDashStyle => {
-    //return {value: strokeDashStyle.name, label: intl.formatMessage({ id: strokeDashStyle.label})}
-    return { value: strokeDashStyle.name, label: <img alt='intl.formatMessage({ id: strokeDashStyle.label})' src={process.env.BASIC_PATH + '/images/line-' + strokeDashStyle.name + '.png'} width='64' height='12' /> }
+    return { value: strokeDashStyle.name, label: <img alt='intl.formatMessage({ id: strokeDashStyle.label})' src={process.env.BASIC_PATH + '/icons/line-' + strokeDashStyle.name.toLowerCase() + '.svg'} width='48' height='16' style={{ filter: Utils.currentEditor?.enableDarkTheme ? 'invert(100%)' : '' }} /> }
   })
 
 

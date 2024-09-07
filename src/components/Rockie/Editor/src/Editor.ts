@@ -738,12 +738,20 @@ export class Editor extends Painter {
         this._action.items[0].fontColor = SystemUtils.parseColorString(this._theme.connectorFontColor)!
       } else if (this._action.items[0].useTheme && !(this._action.items[0] instanceof SvgContainer || this._action.items[0] instanceof ImageContainer) && !(this._action instanceof MyShapeAction)) {
         this._action.items.forEach(item => {
-          item.strokeColor = SystemUtils.parseColorString(this._theme.shapeStrokeColor)!
-          item.fillColor = SystemUtils.parseColorString(this._theme.shapeFillColor)!
-          item.fontColor = SystemUtils.parseColorString(this._theme.shapeFontColor)!
+          this.updateItemTheme(item)
         })
       }
     }
+  }
+
+  private updateItemTheme(item: EditorItem) {
+    item.themeName = this._theme.name
+    item.strokeColor = SystemUtils.parseColorString(this._theme.shapeStrokeColor)!
+    item.fillColor = SystemUtils.parseColorString(this._theme.shapeFillColor)!
+    item.fontColor = SystemUtils.parseColorString(this._theme.shapeFontColor)!
+    item.items.forEach(child => {
+      this.updateItemTheme(child)
+    })
   }
 
   public get title() {

@@ -70,7 +70,7 @@ export abstract class Item implements EditorItem {
 
   private _fillColor: Color = Colors.White
 
-  private _useTheme: boolean = false
+  private _useTheme: boolean = true
 
   private _themeName: string = DocumentThemes.TYPE_DEFAULT
 
