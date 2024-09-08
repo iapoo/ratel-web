@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState, useRef } from 'react'
 import styles from './index.css'
 import { Form, Input, Checkbox, Tree, Row, Col, Button, Modal, Menu, message, Alert, Space, } from 'antd'
-import { RequestUtils, SystemUtils, Utils, } from '../../Utils'
+import { Consts, RequestUtils, SystemUtils, Utils, } from '../../Utils'
 import axios from 'axios'
 import Avatar from 'antd/lib/avatar/avatar'
 import { Document, Folder, isDocument, isFolder } from '../../Utils/RequestUtils'
@@ -21,13 +21,14 @@ interface OpenFileWindowProps {
   selectedDocumentName: string;
   onWindowCancel: () => void;
   onWindowOk: (documentId: number, documentName: string | null, folderId: number | null) => void
+  documentThemeName: string
 }
 
 const FOLDER = 'FOLDER_'
 const DOC = "DOC_"
 
 const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
-  visible, x, y, disableFileName, selectedFolderId, selectedDocumentId, selectedDocumentName, onWindowCancel, onWindowOk,
+  visible, x, y, disableFileName, selectedFolderId, selectedDocumentId, selectedDocumentName, onWindowCancel, onWindowOk, documentThemeName,
 }) => {
   const [dataLoading, setDataLoading,] = useState<boolean>(false)
   const [modalX, setModalX,] = useState<number>(0)
@@ -377,7 +378,7 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
   const doSaveFile = (folderId: number | null, overwrite: boolean, documentId: number, newDocumentName: string) => {
     const storage = new StorageService()
     storage.editors = Utils.editors
-    storage.save()
+    storage.save(documentThemeName, Consts.DOCUMENT_VERSION)
     const documentData = storage.storageData
     const documentContent = JSON.stringify(documentData)
     console.log(documentContent)

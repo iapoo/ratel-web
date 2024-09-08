@@ -12,6 +12,8 @@ import Body from './Body'
 import Navigator from './Navigator'
 import PropertyEditor from './PropertyEditor'
 import Content from './Content'
+import { DocumentThemeTypes } from '../Rockie/Theme'
+import { DocumentThemeType } from '../Rockie/Theme/DocumentTheme'
 
 export default (props: any) => {
   const token = theme.useToken()
@@ -26,6 +28,7 @@ export default (props: any) => {
   const [myShapesUpdateRequired, setMyShapesUpdateRequired,] = useState<boolean>(false)
   const [adRegionWidth, setAdRegionWidth,] = useState<number>(Utils.DEFAULT_AD_REGION_WIDTH)
   const [showRuler, setShowRuler, ] = useState<boolean>(true)
+  const [documentThemeName, setDocumentThemeName, ] = useState<string>(DocumentThemeTypes[0].name)
 
   useEffect(() => {
     if (!initialized) {
@@ -87,11 +90,15 @@ export default (props: any) => {
     setShowRuler(!showRuler)
   }
   
+  const handleDocumentThemeChange = (newThemeName: string) => {
+    setDocumentThemeName(newThemeName)
+  }
+
   return (
     <div style={{ width: '100%', height: '100%', backgroundColor: workspaceBackground }}>
       <div style={{ width: `calc(100% - ${adRegionWidth}px)`, height: '100%', float: 'left' }}>
-        <Header previousEditor={previousEditor} currentEditor={currentEditor} onLogin={handleLogin} onLogout={handleLogout} onMyShapesUpdated={handleMyShapesUpdated} adRegionWidth={adRegionWidth} onShowRulerChanged={handleShowRulerChanged} showRuler={showRuler}/>
-        <Body onEditorChange={handleEditorChange} previousEditor={previousEditor} currentEditor={currentEditor} loginCompleted={loginCompleted} logoutCompleted={logoutCompleted} onMyShapesNotified={handleMyShapesNotified} myShapesUpdateRequired={myShapesUpdateRequired} adRegionWidth={adRegionWidth} showRuler={showRuler}/>
+        <Header previousEditor={previousEditor} currentEditor={currentEditor} onLogin={handleLogin} onLogout={handleLogout} onMyShapesUpdated={handleMyShapesUpdated} adRegionWidth={adRegionWidth} onShowRulerChanged={handleShowRulerChanged} showRuler={showRuler} onDocumentThemeChanged={handleDocumentThemeChange} documentThemeName={documentThemeName}/>
+        <Body onEditorChange={handleEditorChange} previousEditor={previousEditor} currentEditor={currentEditor} loginCompleted={loginCompleted} logoutCompleted={logoutCompleted} onMyShapesNotified={handleMyShapesNotified} myShapesUpdateRequired={myShapesUpdateRequired} adRegionWidth={adRegionWidth} showRuler={showRuler} onDocumentThemeChanged={handleDocumentThemeChange} documentThemeName={documentThemeName}/>
         <Footer />
       </div>
       <div style={{ width: `${adRegionWidth}px`, height: '100%', float: 'right', backgroundColor: 'red' }}>

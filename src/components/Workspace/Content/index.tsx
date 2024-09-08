@@ -20,7 +20,7 @@ import { arrayMove, horizontalListSortingStrategy, SortableContext, useSortable,
 import { CSS } from '@dnd-kit/utilities'
 import { Position, useEditable, } from 'use-editable'
 import { SVG } from '@svgdotjs/svg.js'
-import { EditorUtils } from '@/components/Rockie/Theme'
+import { EditorUtils, ThemeUtils } from '@/components/Rockie/Theme'
 
 interface DraggableTabPaneProps extends React.HTMLAttributes<HTMLDivElement> {
   'data-node-key': string;
@@ -62,6 +62,7 @@ interface ContentProps {
   x: string
   y: string
   showRuler: boolean
+  documentThemeName: string
 }
 
 const { TabPane, } = Tabs
@@ -88,7 +89,7 @@ enum PopupType {
 }
 
 const Content: FC<ContentProps> = ({
-  onEditorChange, onMyShapesUpdated, x, y, showRuler
+  onEditorChange, onMyShapesUpdated, x, y, showRuler, documentThemeName
 }) => {
   //const { token, } =  useToken()
   const intl = useIntl();
@@ -318,7 +319,7 @@ const Content: FC<ContentProps> = ({
       canvas.width = DEFAULT_PAINTER_WIDTH
       canvas.height = DEFAULT_PAINTER_HEIGHT
       canvas.id = canvasId
-      const editor = new Editor(canvas)
+      const editor = new Editor(canvas)      
       pane.editor = editor
       editor.key = pane.key
       editor.title = pane.title
@@ -574,6 +575,9 @@ const Content: FC<ContentProps> = ({
       refreshSelectionInfo(Utils.currentEditor)
       refreshPaneTitleValues()
     }
+    Utils.editors.forEach(editor => {
+      editor.theme = ThemeUtils.getDocumentTheme(documentThemeName)
+    })
   }
 
   const refreshPaneTitleValues = () => {
@@ -799,6 +803,7 @@ const Content: FC<ContentProps> = ({
     canvas.height = DEFAULT_PAINTER_HEIGHT
     canvas.id = canvasId
     const editor = fromEditor ? fromEditor : new Editor(canvas)
+    editor.theme = ThemeUtils.getDocumentTheme(documentThemeName)
     pane.editor = editor
     editor.key = pane.key
     editor.title = pane.title

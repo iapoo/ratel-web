@@ -28,7 +28,7 @@ import { AliyunShapes } from '@/components/Rockie/CustomItems/Aliyun';
 import { AwsShapes } from '@/components/Rockie/CustomItems/Aws';
 import { FlowChartShapeTypes } from '@/components/Rockie/CustomItems/FlowChart/src/FlowChartShape';
 import { FlowChartShapes } from '@/components/Rockie/CustomItems/FlowChart';
-import { DocumentThemeTypes, EditorUtils } from '@/components/Rockie/Theme';
+import { DocumentThemeTypes, EditorUtils, ThemeUtils } from '@/components/Rockie/Theme';
 import { EditorHelper } from '@/components/Rockie/Utils';
 import RegisterFormWindowPage from './RegisterFormWindow';
 import PasswordFormWindowPage from './PasswordFormWindow';
@@ -51,6 +51,7 @@ import { CustomConnector, CustomConnectorTypeInfo } from '@/components/Rockie/It
 import { UMLCustomContainer, UMLCustomContainerTypes } from '@/components/Rockie/CustomItems/UML/src/UMLCustomContainer';
 import { useAntdConfig, useAntdConfigSetter } from 'umi'
 import AboutWindowPage from './AboutWindow';
+import { DocumentThemeType } from '@/components/Rockie/Theme/DocumentTheme';
 
 interface HeaderProps {
   previousEditor: Editor | undefined
@@ -61,10 +62,12 @@ interface HeaderProps {
   adRegionWidth: number
   onShowRulerChanged: () => void
   showRuler: boolean
+  onDocumentThemeChanged: (newThemeName: string) => void
+  documentThemeName: string
 }
 
 const Header: FC<HeaderProps> = ({
-  previousEditor, currentEditor, onLogin, onLogout, onMyShapesUpdated, adRegionWidth, onShowRulerChanged, showRuler,
+  previousEditor, currentEditor, onLogin, onLogout, onMyShapesUpdated, adRegionWidth, onShowRulerChanged, showRuler, onDocumentThemeChanged, documentThemeName
 }) => {
   const setAntdConfig = useAntdConfigSetter()
   const antdConfig = useAntdConfig()
@@ -461,6 +464,9 @@ const Header: FC<HeaderProps> = ({
       Utils.loadData()
     }
     refreshNewDocumentName()
+    if(onDocumentThemeChanged) {
+      onDocumentThemeChanged(DocumentThemeTypes[0].name)
+    }
   }
 
   const handleOpenFileWindowCancel = () => {
@@ -503,7 +509,13 @@ const Header: FC<HeaderProps> = ({
           localStorage.setItem(STAGING_DOCUMENT_ID, `${documentId}`)
           localStorage.setItem(STAGING_FOLDER_ID, `${documentData.data.data.folderId}`)
           localStorage.setItem(STAGING_DOCUMENT_NAME, `${documentData.data.data.documentName}`)
-        } else {
+          //All editors have same theme name and so we use first one
+          if(storage.storageData.theme) {
+            onDocumentThemeChanged(storage.storageData.theme)
+          } else {
+            onDocumentThemeChanged(DocumentThemeTypes[0].name)
+          }
+          } else {
           console.log(`Load document failed: documentId = ${documentId}`)
         }
         setOpenFileWindowVisible(false)
@@ -612,7 +624,7 @@ const Header: FC<HeaderProps> = ({
   const doHandleAutoFileSave = (selectedDocumentId: number, selectedDocumentName: string, selectedFolderId: number | null) => {
     const storage = new StorageService()
     storage.editors = Utils.editors
-    storage.save()
+    storage.save(documentThemeName, Consts.DOCUMENT_VERSION)
     const documentData = storage.storageData
     const documentContent = JSON.stringify(documentData)
     console.log(documentContent)
@@ -697,7 +709,12 @@ const Header: FC<HeaderProps> = ({
         }
         setSelectedDocumentId(null)
         setSelectedFolderId(null)
-        setSelectedDocumentName(info.file.fileName ? info.file.fileName : DOCUMENT_NEW_NAME_PREFIX)
+        setSelectedDocumentName(info.file.fileName ? info.file.fileName : DOCUMENT_NEW_NAME_PREFIX)        
+        if(storage.storageData.theme) {
+          onDocumentThemeChanged(storage.storageData.theme)
+        } else {
+          onDocumentThemeChanged(DocumentThemeTypes[0].name)
+        }
       })
     }
   }
@@ -732,7 +749,7 @@ const Header: FC<HeaderProps> = ({
   const handleDownload = () => {
     const storage = new StorageService()
     storage.editors = Utils.editors
-    storage.save()
+    storage.save(documentThemeName, Consts.DOCUMENT_VERSION)
     const documentData = storage.storageData
     const documentContent = JSON.stringify(documentData)
     SystemUtils.generateDownloadFile(documentContent, selectedDocumentName + '.' + RATEL_FORMAT)
@@ -3254,7 +3271,7 @@ const Header: FC<HeaderProps> = ({
       <PasswordFormWindowPage visible={passwordFormWindowVisible} x={60} y={60} onWindowCancel={handlePasswordFormWindowCancel} onWindowOk={handlePasswordFormWindowOk} />
       <ProfileFormWindowPage visible={profileFormWindowVisible} x={60} y={60} onWindowCancel={handleProfileFormWindowCancel} onWindowOk={handleProfileFormWindowOk} />
       <NewFileWindow visible={newFileWindowVisible} x={60} y={60} onWindowCancel={handleNewFileWindowCancel} onWindowOk={handleNewFileWindowOk} />
-      <OpenFileWindow visible={openFileWindowVisible} x={60} y={60} onWindowCancel={handleOpenFileWindowCancel} onWindowOk={handleOpenFileWindowOk} disableFileName={disableFileName} selectedFolderId={selectedFolderId} selectedDocumentId={selectedDocumentId} selectedDocumentName={selectedDocumentName} />
+      <OpenFileWindow visible={openFileWindowVisible} x={60} y={60} onWindowCancel={handleOpenFileWindowCancel} onWindowOk={handleOpenFileWindowOk} disableFileName={disableFileName} selectedFolderId={selectedFolderId} selectedDocumentId={selectedDocumentId} selectedDocumentName={selectedDocumentName} documentThemeName={documentThemeName} />
       <AboutWindowPage visible={aboutWindowVisible} x={60} y={60} onWindowCancel={handleAboutWindowCancel} onWindowOk={handleAboutWindowOk} />
       <Modal title={<FormattedMessage id='workspace.header.message-title-document-modified' />} centered open={discardModifiedDocumentWindowVisible}
         onOk={confirmDiscardModifiedDocument} onCancel={cancelDiscardModifiedDocument} >

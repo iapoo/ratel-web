@@ -20,10 +20,11 @@ import { EditorItem } from '@/components/Rockie/Items'
 interface PropertyEditorProps {
   previousEditor: Editor | undefined
   currentEditor: Editor | undefined
+  onDocumentThemeChanged: (newThemeName: string) => void
 }
 
 const PropertyEditor: FC<PropertyEditorProps> = ({
-  previousEditor, currentEditor
+  previousEditor, currentEditor, onDocumentThemeChanged
 }) => {
 
   const intl = useIntl();
@@ -592,7 +593,10 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
       editorItems.forEach(editorItem => {
         doHandleShapeStyleChange(editorItem, styleName)
       })
-      currentEditor.theme = documentThemeType
+      //currentEditor.theme = documentThemeType
+      if(onDocumentThemeChanged) {
+        onDocumentThemeChanged(styleName)
+      }
     }
   }
 
@@ -600,9 +604,15 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
     if (currentEditor) {
       setPageStyle(styleName)
       let editorItems = currentEditor.selectionLayer.getAllEditorItems()
+      const beforeSelections = EditorHelper.generateEditorSelections(currentEditor)
       editorItems.forEach(editorItem => {
         doHandleShapeStyleChange(editorItem, styleName)
       })
+
+      const afterSelections = EditorHelper.generateEditorSelections(currentEditor)
+      const operation: Operation = new Operation(currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
+      currentEditor.operationService.addOperation(operation)
+      currentEditor.triggerOperationChange()
     }
   }
 

@@ -203,34 +203,34 @@ const Navigator: FC<NavigatorProps> = ({
     }
   }
 
-  const save = () => {
-    const storage = new StorageService()
-    storage.editors = Utils.editors
-    storage.save()
-    const data = storage.storageData
-  }
+  // const save = () => {
+  //   const storage = new StorageService()
+  //   storage.editors = Utils.editors
+  //   storage.save()
+  //   const data = storage.storageData
+  // }
 
-  const load = () => {
-    const storage = new StorageService()
-    storage.editors = Utils.editors
-    storage.load()
-    Utils.storageData = storage.storageData
-    if (Utils.loadData) {
-      Utils.loadData()
-    }
-  }
+  // const load = () => {
+  //   const storage = new StorageService()
+  //   storage.editors = Utils.editors
+  //   storage.load()
+  //   Utils.storageData = storage.storageData
+  //   if (Utils.loadData) {
+  //     Utils.loadData()
+  //   }
+  // }
 
-  const resize = () => {
-    if (Utils.currentEditor) {
-      Utils.currentEditor.resize(800, 800)
-    }
-  }
+  // const resize = () => {
+  //   if (Utils.currentEditor) {
+  //     Utils.currentEditor.resize(800, 800)
+  //   }
+  // }
 
-  const zoom = () => {
-    if (Utils.currentEditor) {
-      Utils.currentEditor.zoom = 1.5
-    }
-  }
+  // const zoom = () => {
+  //   if (Utils.currentEditor) {
+  //     Utils.currentEditor.zoom = 1.5
+  //   }
+  // }
 
   // const addSvgContainer = () => {
   //   if (Utils.currentEditor) {

@@ -8,6 +8,7 @@ import PropertyEditor from './../PropertyEditor'
 import Draggable, { DraggableData, DraggableEvent, } from 'react-draggable' // Both at the same time
 import { setInterval } from 'timers'
 import Content from '../Content'
+import { DocumentThemeTypes } from '@/components/Rockie/Theme'
 
 
 interface BodyProps {
@@ -20,15 +21,18 @@ interface BodyProps {
   myShapesUpdateRequired: boolean
   adRegionWidth: number
   showRuler: boolean
+  onDocumentThemeChanged: (newThemeName: string) => void
+  documentThemeName: string
 }
 
 const Body: FC<BodyProps> = ({
-  previousEditor, currentEditor, onEditorChange, onMyShapesNotified, loginCompleted, logoutCompleted, myShapesUpdateRequired, adRegionWidth, showRuler
+  previousEditor, currentEditor, onEditorChange, onMyShapesNotified, loginCompleted, logoutCompleted, myShapesUpdateRequired, adRegionWidth, showRuler,onDocumentThemeChanged, documentThemeName
 }) => {
   const [initialized, setInitialized,] = useState<boolean>(false)
   const [navigatorWidth, setNavigatorWidth,] = useState<number>(Utils.DEFAULT_NAVIGATOR_WIDTH)
   const [enablePropertyEditor, setEnablePropertyEditor] = useState<boolean>(false)
   const [myShapesUpdated, setMyShapesUpdated,] = useState<boolean>(false)
+
   useEffect(() => {
     if (!initialized) {
       initialize()
@@ -87,6 +91,12 @@ const Body: FC<BodyProps> = ({
     setMyShapesUpdated(false)
   }
 
+  const handleDocumentThemeChange = (newThemeName: string) => {
+    if(onDocumentThemeChanged) {
+      onDocumentThemeChanged(newThemeName)
+    }
+  }
+
   // console.log(`Check myShapesUpdated = ${myShapesUpdated}`)
   return (
     <div style={{ position: 'absolute', top: `${Utils.HEADER_HEIGHT}px`, bottom: `${Utils.FOOTER_HEIGHT}px`, right: `${adRegionWidth}px`, left: '0px', }} >
@@ -104,9 +114,9 @@ const Body: FC<BodyProps> = ({
         onStop={handleDragStop}>
         <div className='handle' style={{ position: 'absolute', top: '0px', bottom: '0px', left: `${navigatorWidth} + px`, width: `${Utils.DEFAULT_DIVIDER_WIDTH}px`, cursor: 'ew-resize', zIndex: 999, }} />
       </Draggable>
-      <Content onEditorChange={handleEditorChange} onMyShapesUpdated={handleMyShapesUpdated} x={`${navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH}px`} y={`${enablePropertyEditor ? '220px' : '0px'} `} showRuler={showRuler} />
+      <Content onEditorChange={handleEditorChange} onMyShapesUpdated={handleMyShapesUpdated} x={`${navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH}px`} y={`${enablePropertyEditor ? '220px' : '0px'} `} showRuler={showRuler} documentThemeName={documentThemeName} />
       <Drawer placement='right' mask={false} closable={false} open={enablePropertyEditor} getContainer={false} bodyStyle={{ padding: 16 }} width={240} >
-        <PropertyEditor previousEditor={previousEditor} currentEditor={currentEditor} />
+        <PropertyEditor previousEditor={previousEditor} currentEditor={currentEditor} onDocumentThemeChanged={handleDocumentThemeChange}/>
       </Drawer>
 
     </div>

@@ -1,6 +1,8 @@
 import { EngineUtils, SystemFonts } from "@/components/Engine"
 
 export class Consts {
+
+  public static DOCUMENT_VERSION = '1.0'
   public static ZOOM_DEFAULT = 1
 
   public static FONT_NAME_DEFAULT = EngineUtils.FONT_NAME_DEFAULT

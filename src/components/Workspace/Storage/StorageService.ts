@@ -148,7 +148,9 @@ export class StorageService {
     StorageService.testdata = data
   }
 
-  public save() {
+  public save(documentThemeName: string, version: string ) {
+    this._storageData.theme = documentThemeName
+    this._storageData.version = version
     this._storageData.sheets.length = 0
     const count = this._editors.length
     for (let i = 0; i < count; i++) {
