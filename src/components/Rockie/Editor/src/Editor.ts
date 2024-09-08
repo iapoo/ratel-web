@@ -874,6 +874,9 @@ export class Editor extends Painter {
           break;
         case OperationType.REMOVE_ITEMS_FROM_CONTAINER:
           break;
+        case OperationType.UPDATE_DOCUMENT_THEME:
+          this.triggerEditorOperationEvent(operation, true)
+          break;
         default:
           break;
       }
@@ -925,6 +928,9 @@ export class Editor extends Painter {
         case OperationType.ADD_ITEMS_TO_CONTAINER:
           break;
         case OperationType.REMOVE_ITEMS_FROM_CONTAINER:
+          break;
+        case OperationType.UPDATE_DOCUMENT_THEME:
+          this.triggerEditorOperationEvent(operation, false)
           break;
         default:
           break;

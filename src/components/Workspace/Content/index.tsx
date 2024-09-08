@@ -10,7 +10,7 @@ import { Engine, Rectangle2D, EngineUtils, Line2D, FontWeight, FontSlant, TextDe
 import { StorageService, } from '../Storage'
 import { Operation, OperationHelper, OperationType } from '@/components/Rockie/Operations'
 import { AlignCenterOutlined, AlignLeftOutlined, AlignRightOutlined, BoldOutlined, DeleteColumnOutlined, DeleteRowOutlined, InsertRowAboveOutlined, InsertRowBelowOutlined, InsertRowLeftOutlined, InsertRowRightOutlined, ItalicOutlined, QuestionCircleOutlined, UnderlineOutlined, VerticalAlignBottomOutlined, VerticalAlignMiddleOutlined, VerticalAlignTopOutlined } from '@ant-design/icons'
-import { Item, ShapeEntity, TableEntity } from '@/components/Rockie/Items'
+import { EditorItem, Item, ShapeEntity, TableEntity } from '@/components/Rockie/Items'
 import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
 import ClipboardJS from 'clipboard'
 import { EditorHelper } from '@/components/Rockie/Utils'
@@ -63,6 +63,7 @@ interface ContentProps {
   y: string
   showRuler: boolean
   documentThemeName: string
+  onDocumentThemeChanged: (newThemeName: string) => void
 }
 
 const { TabPane, } = Tabs
@@ -89,7 +90,7 @@ enum PopupType {
 }
 
 const Content: FC<ContentProps> = ({
-  onEditorChange, onMyShapesUpdated, x, y, showRuler, documentThemeName
+  onEditorChange, onMyShapesUpdated, x, y, showRuler, documentThemeName, onDocumentThemeChanged
 }) => {
   //const { token, } =  useToken()
   const intl = useIntl();
@@ -570,6 +571,13 @@ const Content: FC<ContentProps> = ({
     panesRef.current = panes
   }
 
+  const doHandleShapeStyleChange = (item: EditorItem, styleName: string) => {
+    item.themeName = styleName
+    item.items.forEach(child => {
+      doHandleShapeStyleChange(child, styleName)
+    })
+  }
+  
   const refresh = () => {
     if (Utils.currentEditor) {
       refreshSelectionInfo(Utils.currentEditor)
@@ -577,6 +585,10 @@ const Content: FC<ContentProps> = ({
     }
     Utils.editors.forEach(editor => {
       editor.theme = ThemeUtils.getDocumentTheme(documentThemeName)
+      let editorItems = editor.contentLayer.getAllEditorItems()
+      editorItems.forEach(editorItem => {
+        doHandleShapeStyleChange(editorItem, documentThemeName)
+      })
     })
   }
 
@@ -1088,6 +1100,13 @@ const Content: FC<ContentProps> = ({
           handleUndoMoveEditor(event.operation)
         } else {
           handleRedoMoveEditor(event.operation)
+        }
+        break;
+      case OperationType.UPDATE_DOCUMENT_THEME:
+        if (event.isUndo) {
+          onDocumentThemeChanged(event.operation.origDocumentThemeName)
+        } else {
+          onDocumentThemeChanged(event.operation.documentThemeName)
         }
         break;
       default:

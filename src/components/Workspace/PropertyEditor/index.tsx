@@ -21,10 +21,11 @@ interface PropertyEditorProps {
   previousEditor: Editor | undefined
   currentEditor: Editor | undefined
   onDocumentThemeChanged: (newThemeName: string) => void
+  documentThemeName: string
 }
 
 const PropertyEditor: FC<PropertyEditorProps> = ({
-  previousEditor, currentEditor, onDocumentThemeChanged
+  previousEditor, currentEditor, onDocumentThemeChanged, documentThemeName
 }) => {
 
   const intl = useIntl();
@@ -589,14 +590,20 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
   const handleDocumentStyleChange = (styleName: string, documentThemeType: DocumentThemeType) => {
     if (currentEditor) {
       setPageStyle(styleName)
-      let editorItems = currentEditor.contentLayer.getAllEditorItems()
-      editorItems.forEach(editorItem => {
-        doHandleShapeStyleChange(editorItem, styleName)
+      Utils.editors.forEach(editor => {
+        let editorItems = editor.contentLayer.getAllEditorItems()
+        editorItems.forEach(editorItem => {
+          doHandleShapeStyleChange(editorItem, styleName)
+        })
       })
-      //currentEditor.theme = documentThemeType
+      const origDocumentThemeName = documentThemeName
       if(onDocumentThemeChanged) {
         onDocumentThemeChanged(styleName)
       }
+      const newDocumentThemeName = styleName
+      const operation: Operation = new Operation(currentEditor, OperationType.UPDATE_DOCUMENT_THEME, [], true, [], '', null, null, null, null, false, 0, 0, 0, 0, '', '', null, 0, newDocumentThemeName, origDocumentThemeName)
+      currentEditor.operationService.addOperation(operation)
+      currentEditor.triggerOperationChange()
     }
   }
 
