@@ -577,7 +577,7 @@ const Content: FC<ContentProps> = ({
       doHandleShapeStyleChange(child, styleName)
     })
   }
-  
+
   const refresh = () => {
     if (Utils.currentEditor) {
       refreshSelectionInfo(Utils.currentEditor)
@@ -1701,7 +1701,7 @@ const Content: FC<ContentProps> = ({
   }
 
   const handleUndoSelectEditor = (operation: Operation) => {
-    //const panes = panesRef.current
+    const panes = panesRef.current
     for (let i = 0; i < panes.length; i++) {
       const pane = panes[i]
       if (pane.editor == operation.afterEditor) {
@@ -1711,7 +1711,7 @@ const Content: FC<ContentProps> = ({
   }
 
   const handleRedoSelectEditor = (operation: Operation) => {
-    //const panes = panesRef.current
+    const panes = panesRef.current
     for (let i = 0; i < panes.length; i++) {
       const pane = panes[i]
       if (pane.editor == operation.editor) {
