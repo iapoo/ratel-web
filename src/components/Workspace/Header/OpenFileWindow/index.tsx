@@ -128,7 +128,7 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
           documentId: record.documentId,
           documentName: record.documentName,
           content: record.content,
-          modifiedDate: SystemUtils.extractDateFromServerCalendar(record.createdDate),
+          modifiedDate: SystemUtils.extractDateFromServerCalendar(record.updatedDate),
           modifiedTime: SystemUtils.extractTimeFromServerCalendar(record.updatedDate),
         }
         let key = DOC + record.documentId
