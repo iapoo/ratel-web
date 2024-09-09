@@ -137,6 +137,7 @@ const LoginFormWindowPage: FC<LoginFormWindowProps> = ({
       <Modal
         title={
           <div style={{ width: '100%', cursor: 'move', }}
+            className='drag-handler'
             onMouseOver={() => {
               if (disabled) {
                 setDisabled(false);
@@ -161,7 +162,8 @@ const LoginFormWindowPage: FC<LoginFormWindowProps> = ({
         maskClosable={false}
         modalRender={(modal) => (
           <Draggable
-            //disabled={disable}
+            // disabled={true}
+            handle='.drag-handler'
             bounds={bounds}
             onStart={handleDragStart}
           >

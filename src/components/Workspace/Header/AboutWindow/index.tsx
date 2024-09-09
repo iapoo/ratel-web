@@ -112,6 +112,7 @@ const AboutWindowPage: FC<AboutWindowProps> = ({
       <Modal
         title={
           <div style={{ width: '100%', cursor: 'move', }}
+            className='drag-handler'
             onMouseOver={() => {
               if (disabled) {
                 setDisabled(false);
@@ -138,6 +139,7 @@ const AboutWindowPage: FC<AboutWindowProps> = ({
         modalRender={(modal) => (
           <Draggable
             //disabled={disable}
+            handle='.drag-handler'
             bounds={bounds}
             onStart={handleDragStart}
           >

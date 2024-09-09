@@ -138,6 +138,7 @@ const RegisterFormWindowPage: FC<RegisterFormWindowProps> = ({
       <Modal
         title={
           <div style={{ width: '100%', cursor: 'move', }}
+            className='drag-handler'
             onMouseOver={() => {
               if (disabled) {
                 setDisabled(false);
@@ -163,6 +164,7 @@ const RegisterFormWindowPage: FC<RegisterFormWindowProps> = ({
         modalRender={(modal) => (
           <Draggable
             //disabled={disable}
+            handle='.drag-handler'
             bounds={bounds}
             onStart={handleDragStart}
           >

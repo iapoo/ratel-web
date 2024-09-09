@@ -152,6 +152,7 @@ const ProfileFormWindowPage: FC<ProfileFormWindowProps> = ({
       <Modal
         title={
           <div style={{ width: '100%', cursor: 'move', }}
+            className='drag-handler'
             onMouseOver={() => {
               if (disabled) {
                 setDisabled(false);
@@ -177,6 +178,7 @@ const ProfileFormWindowPage: FC<ProfileFormWindowProps> = ({
         modalRender={(modal) => (
           <Draggable
             //disabled={disable}
+            handle='.drag-handler'
             bounds={bounds}
             onStart={handleDragStart}
           >
