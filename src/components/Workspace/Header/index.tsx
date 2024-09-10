@@ -140,7 +140,7 @@ const Header: FC<HeaderProps> = ({
   const timerCountRef = useRef(0)
   const token = theme.useToken()
   const splitColor = token.token.colorSplit
-
+  const workspaceBackground = token.token.colorBgElevated
 
   useEffect(() => {
     if (!initialized) {
@@ -3156,7 +3156,7 @@ const Header: FC<HeaderProps> = ({
       </div>
       <div style={{ width: '100%', height: '1%', backgroundColor: splitColor }}></div>
       <div style={{ width: '100%', height: '50%', }}>
-        <div style={{ float: 'left', height: '100%', display: 'table', marginLeft: '8px' }}>
+        <div style={{ float: 'left', height: '100%', display: 'table', marginLeft: '8px', }}>
           <Space direction="horizontal" wrap={false} style={{ display: 'table-cell', verticalAlign: 'middle' }}>
             <Space wrap={false}>
               <Tooltip title={<FormattedMessage id='workspace.header.title.zoom' />}>
@@ -3253,9 +3253,9 @@ const Header: FC<HeaderProps> = ({
             </Space>
           </Space>
         </div>
-        <div style={{ float: 'right', height: '100%', display: 'table', right: `${adRegionWidth}px` }}>
+        <div style={{position:'absolute', top: `${Utils.HEADER_HEIGHT * 0.5}px`, height: '50%', display: 'table', right: `${adRegionWidth}px`, backgroundColor: workspaceBackground }}>
           <Space direction="horizontal" style={{ display: 'table-cell', verticalAlign: 'middle' }}>
-            <Space wrap>
+            <Space wrap={false}>
               <Tooltip title={<FormattedMessage id='workspace.header.title.theme-switch' />}>
                 <Button shape="circle" type="text" icon={Utils.currentEditor?.enableDarkTheme ? <SunOutlined /> : <MoonOutlined />} onClick={handleThemeChange} />
               </Tooltip>
