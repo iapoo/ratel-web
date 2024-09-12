@@ -52,6 +52,7 @@ import { UMLCustomContainer, UMLCustomContainerTypes } from '@/components/Rockie
 import { useAntdConfig, useAntdConfigSetter } from 'umi'
 import AboutWindowPage from './AboutWindow';
 import { DocumentThemeType } from '@/components/Rockie/Theme/DocumentTheme';
+import { OSType } from '../Utils/SystemUtils';
 
 interface HeaderProps {
   previousEditor: Editor | undefined
@@ -141,6 +142,7 @@ const Header: FC<HeaderProps> = ({
   const token = theme.useToken()
   const splitColor = token.token.colorSplit
   const workspaceBackground = token.token.colorBgElevated
+  const osType = SystemUtils.getOS()
 
   useEffect(() => {
     if (!initialized) {
@@ -3098,59 +3100,60 @@ const Header: FC<HeaderProps> = ({
   return (
     <div style={{ position: 'absolute', top: '0px', height: `${Utils.HEADER_HEIGHT}px`, width: `calc(100% - ${adRegionWidth}px`, }}>
       {contextHolder}
-      <div style={{ width: '100%', height: '49%', }}>
+      <div style={{ width: '100%', height: '49%', userSelect: 'none', webkitAppRegion: 'drag'}}>
         <div style={{ width: '100%', height: '100%', float: 'left', display: 'table' }}>
-          <Space direction="horizontal" style={{ display: 'table-cell', verticalAlign: 'middle' }}>
-            <Space wrap>
+          <Space direction="horizontal" style={{ display: 'table-cell', verticalAlign: 'middle' , }}>
+            <Space wrap={false}>
+              <div style={{width: osType === OSType.MACOS ?  65 : 0, height: '100%'}}/>
               <Dropdown menu={{ items: fileItems }}>
-                <Button type='text' size='small'><FormattedMessage id='workspace.header.menu-file' /></Button>
+                <Button type='text' size='small' style={{webkitAppRegion: 'no-drag'}}><FormattedMessage id='workspace.header.menu-file' /></Button>
               </Dropdown>
               <Dropdown menu={{ items: editItems }}>
-                <Button type='text' size='small'><FormattedMessage id='workspace.header.menu-edit' /></Button>
+                <Button type='text' size='small' style={{webkitAppRegion: 'no-drag'}}><FormattedMessage id='workspace.header.menu-edit' /></Button>
               </Dropdown>
               <Dropdown menu={{ items: viewItems }}>
-                <Button type='text' size='small'><FormattedMessage id='workspace.header.menu-view' /></Button>
+                <Button type='text' size='small' style={{webkitAppRegion: 'no-drag'}}><FormattedMessage id='workspace.header.menu-view' /></Button>
               </Dropdown>
               {/* <Dropdown menu={{ items: operationItems }}>
                 <Button type='text' size='small'><FormattedMessage id='workspace.header.menu-operation' /></Button>
               </Dropdown> */}
               <Dropdown menu={{ items: optionItems }}>
-                <Button type='text' size='small'><FormattedMessage id='workspace.header.menu-option' /></Button>
+                <Button type='text' size='small' style={{webkitAppRegion: 'no-drag'}}><FormattedMessage id='workspace.header.menu-option' /></Button>
               </Dropdown>
               {"false" == process.env.PRODUCTION
                 ? <Dropdown menu={{ items: developmentItems }}>
-                  <Button type='text' size='small'>Development Menu</Button>
+                  <Button type='text' size='small' style={{webkitAppRegion: 'no-drag'}}>Development Menu</Button>
                 </Dropdown>
                 : ''
               }
               <Dropdown menu={{ items: helpItems }}>
-                <Button type='text' size='small'><FormattedMessage id='workspace.header.menu-help' /></Button>
+                <Button type='text' size='small' style={{webkitAppRegion: 'no-drag'}}><FormattedMessage id='workspace.header.menu-help' /></Button>
               </Dropdown>
-              <Button type='text' size='small' icon={<FileOutlined />} style={{ paddingLeft: '0px', fontSize: '11px', color: 'gray', fontStyle: 'italic', marginLeft: '24px' }}>{documentModifiedText}</Button>
+              <Button type='text' size='small' icon={<FileOutlined />} style={{ paddingLeft: '0px', fontSize: '11px', color: 'gray', fontStyle: 'italic', marginLeft: '24px', webkitAppRegion: 'no-drag' }}>{documentModifiedText}</Button>
               <FileTextOutlined />
-              <Input placeholder='Document Name' type='text' value={selectedDocumentName} bordered={false} style={{ paddingLeft: '0px', paddingRight: '0px', width: '70px', fontWeight: 'bolder' }} onChange={handleUpdateDocumentName} />
+              <Input placeholder='Document Name' type='text' value={selectedDocumentName} bordered={false} style={{ paddingLeft: '0px', paddingRight: '0px', width: '70px', fontWeight: 'bolder', webkitAppRegion: 'no-drag' }} onChange={handleUpdateDocumentName} />
               {/* <div style={{fontSize: 14, color: 'red', fontWeight: 'bold'}}>
                 Demo purpose only and reset periodically
               </div> */}
             </Space>
           </Space>
         </div>
-        <div style={{ position: 'absolute', height: '50%', width: '320px', right: `0px` }}>
+        <div style={{ position: 'absolute', height: '50%', right: `0px`, }}>
           <div style={{ float: 'right', display: 'table', height: '100%', marginRight: '8px' }}>
-            <div style={{ display: 'table-cell', verticalAlign: 'middle', }}>
-              {/* {online ? intl.formatMessage({ id: 'workspace.header.welcome' }) + ' ' + userInfo?.customerName + ' ' : " "} */}
-              {/* <Button type='text' style={{ display: online ? 'inline' : 'none' }} onClick={logout}><FormattedMessage id='workspace.header.button-logout-title' /></Button> */}
-              <Button type='text' size='small' href='https://github.com/iapoo/ratel-web/issues' target='_blank'><FormattedMessage id='workspace.header.button-feedback' /></Button>
-              <Tooltip title={<FormattedMessage id='workspace.header.title.open-source-web-site' />}>
-                <Button shape='circle' type='text' size='small' icon={<GithubOutlined />} href='https://github.com/iapoo/ratel-web' target='_blank'></Button>
-              </Tooltip>
-              <Divider type='vertical' style={{ margin: 0, }} />
-              <Dropdown menu={{ items: userProfileMenu }}>
-                <Button shape='circle' type='text' size='small' icon={<UserOutlined />} style={{ display: online ? 'inline' : 'none' }} />
-              </Dropdown>
-              <Button type='text' size='small' style={{ display: online ? 'none' : 'inline', marginLeft: '8px' }} onClick={() => login(ON_LOGIN_NONE)}><FormattedMessage id='workspace.header.button-login-title' /></Button>
-              <Button type='primary' size='small' style={{ display: online ? 'none' : 'inline', marginLeft: '8px' }} onClick={() => register()}><FormattedMessage id='workspace.header.button-register-title' /></Button>
-            </div>
+            <Space direction="horizontal" style={{ display: 'table-cell', verticalAlign: 'middle' }}>
+              <Space wrap={false}>
+                <Button type='text' size='small' href='https://github.com/iapoo/ratel-web/issues' target='_blank'><FormattedMessage id='workspace.header.button-feedback' style={{webkitAppRegion: 'no-drag'}}/></Button>
+                <Tooltip title={<FormattedMessage id='workspace.header.title.open-source-web-site' />}>
+                  <Button shape='circle' type='text' size='small' icon={<GithubOutlined />} href='https://github.com/iapoo/ratel-web' target='_blank' style={{webkitAppRegion: 'no-drag'}}></Button>
+                </Tooltip>
+                <Dropdown menu={{ items: userProfileMenu }}>
+                  <Button shape='circle' type='text' size='small' icon={<UserOutlined />} style={{ display: online ? 'inline' : 'none', webkitAppRegion: 'no-drag' }} />
+                </Dropdown>
+                <Button type='text' size='small' style={{ display: online ? 'none' : 'inline', webkitAppRegion: 'no-drag'  }} onClick={() => login(ON_LOGIN_NONE)}><FormattedMessage id='workspace.header.button-login-title' /></Button>
+                <Button type='primary' size='small' style={{ display: online ? 'none' : 'inline', webkitAppRegion: 'no-drag' }} onClick={() => register()}><FormattedMessage id='workspace.header.button-register-title' /></Button>
+                <div style={{width: osType === OSType.WINDOWS ? 65 : 0, height: '100%' }}/>
+              </Space>
+            </Space>
           </div>
         </div>
       </div>

@@ -11,6 +11,15 @@ import { ConnectorArrowInfo } from "@/components/Rockie/Items";
 import { EditorMode } from "@/components/Rockie/Editor";
 import moment from 'moment'
 
+export enum OSType {
+    MACOS,
+    WINDOWS,
+    IOS,
+    ANDROID,
+    LINUX,
+    UNKNOWN
+}
+
 export class SystemUtils {
 
     public static extractDateFromServerCalendar(dateTime: number) {
@@ -627,6 +636,25 @@ export class SystemUtils {
                 return Consts.EDITOR_CURSOR_AUTO
         }
     }
+
+    public static getOS() {
+        const userAgent = navigator.userAgent
+        const platform = navigator.platform
+        const macOS = /Mac OS/.test(userAgent)
+        const windows = /win16|win8|win32|win64|x64|x32/.test(userAgent) || /wow64/.test(userAgent)
+        const ios = /iPhone|iPad|iPod/.test(userAgent) && /OS [1-9]_/.test(userAgent)
+        const android = /Android/.test(userAgent)
+        const linux = /Linux/.test(platform)
+
+        if (macOS) return OSType.MACOS;
+        if (windows) return OSType.WINDOWS;
+        if (ios) return OSType.IOS;
+        if (android) return OSType.ANDROID;
+        if (linux) return OSType.LINUX;
+
+        return 'Unknown OS';
+    }
+
 }
 
 
