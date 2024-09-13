@@ -466,7 +466,7 @@ const Header: FC<HeaderProps> = ({
       Utils.loadData()
     }
     refreshNewDocumentName()
-    if(onDocumentThemeChanged) {
+    if (onDocumentThemeChanged) {
       onDocumentThemeChanged(DocumentThemeTypes[0].name)
     }
   }
@@ -512,12 +512,12 @@ const Header: FC<HeaderProps> = ({
           localStorage.setItem(STAGING_FOLDER_ID, `${documentData.data.data.folderId}`)
           localStorage.setItem(STAGING_DOCUMENT_NAME, `${documentData.data.data.documentName}`)
           //All editors have same theme name and so we use first one
-          if(storage.storageData.theme) {
+          if (storage.storageData.theme) {
             onDocumentThemeChanged(storage.storageData.theme)
           } else {
             onDocumentThemeChanged(DocumentThemeTypes[0].name)
           }
-          } else {
+        } else {
           console.log(`Load document failed: documentId = ${documentId}`)
         }
         setOpenFileWindowVisible(false)
@@ -711,8 +711,8 @@ const Header: FC<HeaderProps> = ({
         }
         setSelectedDocumentId(null)
         setSelectedFolderId(null)
-        setSelectedDocumentName(info.file.fileName ? info.file.fileName : DOCUMENT_NEW_NAME_PREFIX)        
-        if(storage.storageData.theme) {
+        setSelectedDocumentName(info.file.fileName ? info.file.fileName : DOCUMENT_NEW_NAME_PREFIX)
+        if (storage.storageData.theme) {
           onDocumentThemeChanged(storage.storageData.theme)
         } else {
           onDocumentThemeChanged(DocumentThemeTypes[0].name)
@@ -830,7 +830,7 @@ const Header: FC<HeaderProps> = ({
 
 
   const handleShowRuler = () => {
-    if(onShowRulerChanged) {
+    if (onShowRulerChanged) {
       onShowRulerChanged()
     }
   }
@@ -3100,34 +3100,37 @@ const Header: FC<HeaderProps> = ({
   return (
     <div style={{ position: 'absolute', top: '0px', height: `${Utils.HEADER_HEIGHT}px`, width: `calc(100% - ${adRegionWidth}px`, }}>
       {contextHolder}
-      <div style={{ width: '100%', height: '49%', userSelect: 'none', webkitAppRegion: 'drag'}}>
+      <div style={{ width: '100%', height: '49%', userSelect: 'none', webkitAppRegion: 'drag' }}>
         <div style={{ width: '100%', height: '100%', float: 'left', display: 'table' }}>
-          <Space direction="horizontal" style={{ display: 'table-cell', verticalAlign: 'middle' , }}>
+          <Space direction="horizontal" style={{ display: 'table-cell', verticalAlign: 'middle', }}>
             <Space wrap={false}>
-              <div style={{width: osType === OSType.MACOS ?  65 : 0, height: '100%'}}/>
+              <div style={{ width: osType === OSType.MACOS && process.env.ENV_NAME === 'electron' ? 65 : 0, height: '100%' }} />
+              <div style={{ width: osType === OSType.WINDOWS && process.env.ENV_NAME !== 'electron' ? 20 : 0, height: '100%', display: 'table' }} >
+                <img src={process.env.BASIC_PATH + 'favicon.png'} width={18} height={18} style={{ display: 'table-cell', verticalAlign: 'middle' }} />
+              </div>
               <Dropdown menu={{ items: fileItems }}>
-                <Button type='text' size='small' style={{webkitAppRegion: 'no-drag'}}><FormattedMessage id='workspace.header.menu-file' /></Button>
+                <Button type='text' size='small' style={{ webkitAppRegion: 'no-drag' }}><FormattedMessage id='workspace.header.menu-file' /></Button>
               </Dropdown>
               <Dropdown menu={{ items: editItems }}>
-                <Button type='text' size='small' style={{webkitAppRegion: 'no-drag'}}><FormattedMessage id='workspace.header.menu-edit' /></Button>
+                <Button type='text' size='small' style={{ webkitAppRegion: 'no-drag' }}><FormattedMessage id='workspace.header.menu-edit' /></Button>
               </Dropdown>
               <Dropdown menu={{ items: viewItems }}>
-                <Button type='text' size='small' style={{webkitAppRegion: 'no-drag'}}><FormattedMessage id='workspace.header.menu-view' /></Button>
+                <Button type='text' size='small' style={{ webkitAppRegion: 'no-drag' }}><FormattedMessage id='workspace.header.menu-view' /></Button>
               </Dropdown>
               {/* <Dropdown menu={{ items: operationItems }}>
                 <Button type='text' size='small'><FormattedMessage id='workspace.header.menu-operation' /></Button>
               </Dropdown> */}
               <Dropdown menu={{ items: optionItems }}>
-                <Button type='text' size='small' style={{webkitAppRegion: 'no-drag'}}><FormattedMessage id='workspace.header.menu-option' /></Button>
+                <Button type='text' size='small' style={{ webkitAppRegion: 'no-drag' }}><FormattedMessage id='workspace.header.menu-option' /></Button>
               </Dropdown>
               {"false" == process.env.PRODUCTION
                 ? <Dropdown menu={{ items: developmentItems }}>
-                  <Button type='text' size='small' style={{webkitAppRegion: 'no-drag'}}>Development Menu</Button>
+                  <Button type='text' size='small' style={{ webkitAppRegion: 'no-drag' }}>Development Menu</Button>
                 </Dropdown>
                 : ''
               }
               <Dropdown menu={{ items: helpItems }}>
-                <Button type='text' size='small' style={{webkitAppRegion: 'no-drag'}}><FormattedMessage id='workspace.header.menu-help' /></Button>
+                <Button type='text' size='small' style={{ webkitAppRegion: 'no-drag' }}><FormattedMessage id='workspace.header.menu-help' /></Button>
               </Dropdown>
               <Button type='text' size='small' icon={<FileOutlined />} style={{ paddingLeft: '0px', fontSize: '11px', color: 'gray', fontStyle: 'italic', marginLeft: '24px', webkitAppRegion: 'no-drag' }}>{documentModifiedText}</Button>
               <FileTextOutlined />
@@ -3142,16 +3145,16 @@ const Header: FC<HeaderProps> = ({
           <div style={{ float: 'right', display: 'table', height: '100%', marginRight: '8px' }}>
             <Space direction="horizontal" style={{ display: 'table-cell', verticalAlign: 'middle' }}>
               <Space wrap={false}>
-                <Button type='text' size='small' href='https://github.com/iapoo/ratel-web/issues' target='_blank'><FormattedMessage id='workspace.header.button-feedback' style={{webkitAppRegion: 'no-drag'}}/></Button>
+                <Button type='text' size='small' href='https://github.com/iapoo/ratel-web/issues' target='_blank'><FormattedMessage id='workspace.header.button-feedback' style={{ webkitAppRegion: 'no-drag' }} /></Button>
                 <Tooltip title={<FormattedMessage id='workspace.header.title.open-source-web-site' />}>
-                  <Button shape='circle' type='text' size='small' icon={<GithubOutlined />} href='https://github.com/iapoo/ratel-web' target='_blank' style={{webkitAppRegion: 'no-drag'}}></Button>
+                  <Button shape='circle' type='text' size='small' icon={<GithubOutlined />} href='https://github.com/iapoo/ratel-web' target='_blank' style={{ webkitAppRegion: 'no-drag' }}></Button>
                 </Tooltip>
                 <Dropdown menu={{ items: userProfileMenu }}>
                   <Button shape='circle' type='text' size='small' icon={<UserOutlined />} style={{ display: online ? 'inline' : 'none', webkitAppRegion: 'no-drag' }} />
                 </Dropdown>
-                <Button type='text' size='small' style={{ display: online ? 'none' : 'inline', webkitAppRegion: 'no-drag'  }} onClick={() => login(ON_LOGIN_NONE)}><FormattedMessage id='workspace.header.button-login-title' /></Button>
+                <Button type='text' size='small' style={{ display: online ? 'none' : 'inline', webkitAppRegion: 'no-drag' }} onClick={() => login(ON_LOGIN_NONE)}><FormattedMessage id='workspace.header.button-login-title' /></Button>
                 <Button type='primary' size='small' style={{ display: online ? 'none' : 'inline', webkitAppRegion: 'no-drag' }} onClick={() => register()}><FormattedMessage id='workspace.header.button-register-title' /></Button>
-                <div style={{width: osType === OSType.WINDOWS ? 65 : 0, height: '100%' }}/>
+                <div style={{ width: osType === OSType.WINDOWS && process.env.ENV_NAME === 'electron' ? 135 : 0, height: '100%' }} />
               </Space>
             </Space>
           </div>
@@ -3256,7 +3259,7 @@ const Header: FC<HeaderProps> = ({
             </Space>
           </Space>
         </div>
-        <div style={{position:'absolute', top: `${Utils.HEADER_HEIGHT * 0.5}px`, height: '50%', display: 'table', right: `${adRegionWidth}px`, backgroundColor: workspaceBackground }}>
+        <div style={{ position: 'absolute', top: `${Utils.HEADER_HEIGHT * 0.5}px`, height: '50%', display: 'table', right: `${adRegionWidth}px`, backgroundColor: workspaceBackground }}>
           <Space direction="horizontal" style={{ display: 'table-cell', verticalAlign: 'middle' }}>
             <Space wrap={false}>
               <Tooltip title={<FormattedMessage id='workspace.header.title.theme-switch' />}>

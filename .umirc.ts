@@ -42,6 +42,7 @@ export default defineConfig({
     "process.env.ROCKIE_WEB_PORT": "8081",
     "process.env.ROCKIE_WEB_PATH": "",
     "process.env.PRODUCTION_VERSION": "0.1.0",
+    "process.env.ENV_NAME": "default",
   },
   title: "Ratel",
   access: {},
