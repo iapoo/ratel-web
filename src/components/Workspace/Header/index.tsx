@@ -3104,9 +3104,11 @@ const Header: FC<HeaderProps> = ({
         <div style={{ width: '100%', height: '100%', float: 'left', display: 'table' }}>
           <Space direction="horizontal" style={{ display: 'table-cell', verticalAlign: 'middle', }}>
             <Space wrap={false}>
-              {osType === OSType.MACOS && process.env.ENV_NAME === 'electron' ? <div style={{ width: 65, height: '100%' }} /> : ''}              
-              {osType === OSType.WINDOWS && process.env.ENV_NAME === 'electron' ? <div style={{ width: 20, height: '100%', display: 'table' }} >
-                <img src={process.env.BASIC_PATH + 'favicon.png'} width={18} height={18} style={{ display: 'table-cell', verticalAlign: 'middle' }} />
+              {osType === OSType.MACOS && process.env.ENV_NAME === 'electron' ? <div style={{ width: 65, height: '100%' }} /> : ''}
+              {osType === OSType.WINDOWS && process.env.ENV_NAME === 'electron' ? <div style={{ width: 28, height: '100%', display: 'table' }} >
+                <div style={{ display: 'table-cell', verticalAlign: 'middle', textAlign: 'right' }} >
+                  <img src={process.env.BASIC_PATH + 'favicon.png'} width={18} height={18} />
+                </div>
               </div> : ''
               }
               <Dropdown menu={{ items: fileItems }}>
