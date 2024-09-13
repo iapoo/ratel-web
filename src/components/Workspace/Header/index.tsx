@@ -3104,10 +3104,12 @@ const Header: FC<HeaderProps> = ({
         <div style={{ width: '100%', height: '100%', float: 'left', display: 'table' }}>
           <Space direction="horizontal" style={{ display: 'table-cell', verticalAlign: 'middle', }}>
             <Space wrap={false}>
+              {osType === OSType.MACOS && process.env.ENV_NAME === 'electron' ? <div style={{ width: 65, height: '100%' }} /> : ''}
               <div style={{ width: osType === OSType.MACOS && process.env.ENV_NAME === 'electron' ? 65 : 0, height: '100%' }} />
-              <div style={{ width: osType === OSType.WINDOWS && process.env.ENV_NAME !== 'electron' ? 20 : 0, height: '100%', display: 'table' }} >
+              {osType === OSType.WINDOWS && process.env.ENV_NAME === 'electron' ? <div style={{ width: 20, height: '100%', display: 'table' }} >
                 <img src={process.env.BASIC_PATH + 'favicon.png'} width={18} height={18} style={{ display: 'table-cell', verticalAlign: 'middle' }} />
-              </div>
+              </div> : ''
+              }
               <Dropdown menu={{ items: fileItems }}>
                 <Button type='text' size='small' style={{ webkitAppRegion: 'no-drag' }}><FormattedMessage id='workspace.header.menu-file' /></Button>
               </Dropdown>
@@ -3154,7 +3156,7 @@ const Header: FC<HeaderProps> = ({
                 </Dropdown>
                 <Button type='text' size='small' style={{ display: online ? 'none' : 'inline', webkitAppRegion: 'no-drag' }} onClick={() => login(ON_LOGIN_NONE)}><FormattedMessage id='workspace.header.button-login-title' /></Button>
                 <Button type='primary' size='small' style={{ display: online ? 'none' : 'inline', webkitAppRegion: 'no-drag' }} onClick={() => register()}><FormattedMessage id='workspace.header.button-register-title' /></Button>
-                <div style={{ width: osType === OSType.WINDOWS && process.env.ENV_NAME === 'electron' ? 135 : 0, height: '100%' }} />
+                {osType === OSType.WINDOWS && process.env.ENV_NAME === 'electron' ? <div style={{ width: 135, height: '100%' }} /> : ''}
               </Space>
             </Space>
           </div>

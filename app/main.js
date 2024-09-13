@@ -16,10 +16,10 @@ const createWindow = () => {
     titleBarOverlay:
       platform === 'win32'
         ? {
-            color: 'rgba(0,0,0,0)',
-            height: 38,
-            symbolColor: 'white',
-          }
+          color: 'rgba(0,0,0,0)',
+          height: 38,
+          symbolColor: 'darkgray',
+        }
         : undefined,
     webPreferences: {
       nodeIntegration: true,
