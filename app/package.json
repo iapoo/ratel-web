@@ -2,6 +2,7 @@
   "name": "ratel",
   "version": "0.1.0",
   "homepage": "https://ratel.ivipa.com",
+  "description": "Ratel is a general diagram editor",
   "author": {
     "name": "ivipa",
     "email": "ivipa@qq.com",
@@ -76,11 +77,30 @@
       ]
     },
     "linux": {
-      "icon": "dist/favicon-512.png",
+      "icon": "dist/favicon-256.png",
+      "synopsis": "A general diagram editor",
+      "description": "Ratel is a innovative general diagram editor.",
+      "category": "Utility",
+      "executableName": "ratel",
+      "desktop": {
+        "Name": "Ratel",
+        "Comment": "A general diagram editor",
+        "Icon": "dist/favicon-512.png",
+        "Keywords": "Ratel;Online;Diagram;Editor",
+        "StartupNotify": "true",
+        "Terminal": "false"
+      },
       "target": [
         "deb",
+        "rpm",
+        "snap",
         "zip"
       ]
+    },
+    "deb": {
+    },
+    "snap": {
+      "grade": "devel"
     }
   }
 }
