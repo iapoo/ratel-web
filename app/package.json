@@ -92,13 +92,11 @@
       },
       "target": [
         "deb",
-        "rpm",
         "snap",
         "zip"
       ]
     },
-    "deb": {
-    },
+    "deb": {},
     "snap": {
       "grade": "devel"
     }

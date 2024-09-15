@@ -101,7 +101,7 @@ export default (props: any) => {
         <Body onEditorChange={handleEditorChange} previousEditor={previousEditor} currentEditor={currentEditor} loginCompleted={loginCompleted} logoutCompleted={logoutCompleted} onMyShapesNotified={handleMyShapesNotified} myShapesUpdateRequired={myShapesUpdateRequired} adRegionWidth={adRegionWidth} showRuler={showRuler} onDocumentThemeChanged={handleDocumentThemeChange} documentThemeName={documentThemeName}/>
         <Footer />
       </div>
-      <div style={{ width: `${adRegionWidth}px`, height: '100%', float: 'right', backgroundColor: 'red' }}>
+      <div style={{ width: `${adRegionWidth}px`, height: '100%', float: 'right', backgroundColor: workspaceBackground }}>
 
       </div>
     </div>

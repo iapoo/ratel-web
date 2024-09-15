@@ -43,6 +43,7 @@ export default defineConfig({
     "process.env.ROCKIE_WEB_PATH": "",
     "process.env.PRODUCTION_VERSION": "0.1.0",
     "process.env.ENV_NAME": "default",
+    "process.env.AD_ENABLED": "false",
   },
   title: "Ratel",
   access: {},
@@ -54,6 +55,10 @@ export default defineConfig({
     {
       path: '/',
     },
+  ],
+  metas: [
+    { name: 'keywords', content: 'ivipa, ratel, diagram, open source, online, offline, flow chart, flowchart, UML, ER' },
+    { name: 'description', content: 'Ivipa - Ratel, A open source general online diagram editor for making flowcharts, process diagrams, UML, ER and other diagrams' },
   ],
   npmClient: 'npm'
 });

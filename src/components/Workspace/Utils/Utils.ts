@@ -9,7 +9,7 @@ export class Utils {
     public static MIN_NAVIGATOR_WIDTH = 32
     public static MAX_NAVIGATOR_WIDTH = 480
     public static DEFAULT_DIVIDER_WIDTH = 6
-    public static DEFAULT_AD_REGION_WIDTH = 0 // For Ad of outside in production
+    public static DEFAULT_AD_REGION_WIDTH = process.env.AD_ENABLED === 'true' ? 180 : 0 // For Ad of outside in production
 
     public static enablePropertyEditor: boolean = false
 
