@@ -451,6 +451,19 @@ export class RequestUtils {
         return axios.post(this.rockieServerAddress + `/utils/google-fonts`, data, config)
     }
 
+    public static async sendVerificationCode(toMail: string) {        
+        const data = {
+            to: toMail
+        }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Token': RequestUtils.token
+            }
+        }
+        return axios.post(this.systemServerAddress + `/sendVerificationCode`, data, config)
+    }
+
     public static async fetchTextFileAsBlob(url: string) {
         return axios.get(url, { responseType: 'blob' })
     }
@@ -468,4 +481,6 @@ export class RequestUtils {
         //console.log(response.data)
         return response.data
     }
+
+
 }

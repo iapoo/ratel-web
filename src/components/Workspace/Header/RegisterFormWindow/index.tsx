@@ -34,6 +34,7 @@ const RegisterFormWindowPage: FC<RegisterFormWindowProps> = ({
   const [errorVisible, setErrorVisible,] = useState<boolean>(false)
   const [errorMessage, setErrorMessage,] = useState<string>('')
   const [bounds, setBounds,] = useState({ left: 0, top: 0, bottom: 0, right: 0 })
+  const verificationRef = useRef<HTMLButtonElement>(null);
 
   if (origModalX != x) {
     setOrigModalX(x)
@@ -56,10 +57,10 @@ const RegisterFormWindowPage: FC<RegisterFormWindowProps> = ({
       setDataLoading(true)
       setErrorVisible(false)
       const fetchData = async () => {
-
       }
-      fetchData()
+      fetchData()       
     }
+
   })
 
   const handleDragStart = (e: DraggableEvent, data: DraggableData) => {
@@ -87,15 +88,16 @@ const RegisterFormWindowPage: FC<RegisterFormWindowProps> = ({
     }
   }
 
-  const onFinish = (values: any) => {
+  const onFinish = async (values: any) => {
     console.log('Receive values:', values)
-    const { userName, userPassword, userPasswordConfirmation, alias, email } = values
+    const { userName, userPassword, userPasswordConfirmation, alias, email, code, } = values
     const data = {
       'customerName': userName,
       'password': CryptoJs.SHA512(userPassword).toString(),
       'userPasswordConfirmation': CryptoJs.SHA512(userPasswordConfirmation).toString(),
       'nickName': alias,
       'email': email,
+      'code': code
     }
     const config = {
       headers: {
@@ -105,7 +107,7 @@ const RegisterFormWindowPage: FC<RegisterFormWindowProps> = ({
     setErrorVisible(false)
     axios.post(`${RequestUtils.systemServerAddress}/register`, data, config)
       .then(response => {
-        if (response.status == 200 && response.data.success) {
+        if (response.status === 200 && response.data.success) {
           messageApi.open({
             type: 'success',
             content: intl.formatMessage({ id: 'workspace.header.register-form-window.window-success-message' })
@@ -114,7 +116,7 @@ const RegisterFormWindowPage: FC<RegisterFormWindowProps> = ({
           if (onWindowOk) {
             onWindowOk()
           }
-        } else if (response.status == 200 && !response.data.success) {
+        } else if (response.status === 200 && !response.data.success) {
           console.log('Register failed')
           setErrorVisible(true)
           setErrorMessage(response.data.message)
@@ -127,9 +129,44 @@ const RegisterFormWindowPage: FC<RegisterFormWindowProps> = ({
       })
   }
 
-  const sendValidationCode = () => {
+  const sendValidationCode = async () => {
+    const mail = registerForm.getFieldValue('email')
     const form = registerForm.getFieldValue('validation')
+    const defaultLabel = intl.formatMessage({id: 'workspace.header.register-form-window.email-validation-button-title'})
+    const waitLabel = intl.formatMessage({id: 'workspace.header.register-form-window.email-validation-button-title-wait'})
     console.log(`${form}`)
+    let timerTick = 60
+
+    if(verificationRef.current) {
+      verificationRef.current.disabled = true
+    }
+    const sendMailResult = await RequestUtils.sendVerificationCode(mail)
+    if (sendMailResult.status === 200 && sendMailResult.data.success) {
+      console.log(`mail is sent successfully`)
+    } else {
+      setErrorMessage('System error internally, please contact to administrator')
+    }
+    if(verificationRef.current) {
+      verificationRef.current.innerText = defaultLabel
+      const timer = setInterval(() => {
+         if(timerTick > 0) {
+          if(verificationRef.current) {
+            verificationRef.current.disabled = true
+            const newLabel = waitLabel.replace(`$$$`, `${timerTick}`)
+            verificationRef.current.innerText = newLabel
+          }
+          timerTick --
+         } else {
+          if(verificationRef.current) {
+            verificationRef.current.disabled = false
+            verificationRef.current.innerText = `${defaultLabel}` 
+          }
+          clearInterval(timer)
+         }
+       }, 1000)
+    }
+
+    
   }
 
   return (
@@ -157,10 +194,11 @@ const RegisterFormWindowPage: FC<RegisterFormWindowProps> = ({
           </div>
         }
         centered
+        width={500}
         open={visible}
         onOk={onOk}
         onCancel={onCancel}
-        maskClosable={false}
+        maskClosable={false}        
         modalRender={(modal) => (
           <Draggable
             //disabled={disable}
@@ -180,7 +218,7 @@ const RegisterFormWindowPage: FC<RegisterFormWindowProps> = ({
             onFinish={onFinish}
             style={{ maxWidth: '100%', }}
           >
-            <Form.Item name='userName' rules={[{ required: true, message: <FormattedMessage id='workspace.header.register-form-window.user-name-message' />, },]} style={{ marginBottom: '4px', }} >
+            <Form.Item name='userName' rules={[{ required: true, message: <FormattedMessage id='workspace.header.register-form-window.user-name-message' />, },]} style={{ marginBottom: '4px', width: '100%', }} >
               <Input
                 prefix={<UserOutlined />}
                 placeholder={intl.formatMessage({ id: 'workspace.header.register-form-window.user-name-placeholder' })}
@@ -189,14 +227,14 @@ const RegisterFormWindowPage: FC<RegisterFormWindowProps> = ({
                 style={{ width: '100%', }}
               />
             </Form.Item>
-            <div style={{ marginLeft: '40px', width: '280px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', }} />
+            <div style={{ marginLeft: '24px', width: '400px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', }} />
             <Form.Item name='userPassword'
               hasFeedback
               rules={[
                 { required: true, message: <FormattedMessage id='workspace.header.register-form-window.user-password-message' />, },
                 { pattern: /^(?![A-Za-z]+$)(?![A-Z\d]+$)(?![A-Z\W]+$)(?![a-z\d]+$)(?![a-z\W]+$)(?![\d\W]+$)\S{8,32}$/, message: <FormattedMessage id='workspace.header.register-form-window.user-password-message' />, },
               ]}
-              style={{ marginBottom: '4px', }}>
+              style={{ marginBottom: '4px', width: '60%',  }}>
               <Input.Password
                 prefix={<LockOutlined />}
                 type='password'
@@ -206,7 +244,7 @@ const RegisterFormWindowPage: FC<RegisterFormWindowProps> = ({
                 style={{ width: '100%', }}
               />
             </Form.Item>
-            <div style={{ marginLeft: '40px', width: '280px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', }} />
+            <div style={{ marginLeft: '24px', width: '250px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', }} />
             <Form.Item name='userPasswordConfirmation'
               dependencies={['userPassword']} hasFeedback
               rules={[
@@ -220,7 +258,7 @@ const RegisterFormWindowPage: FC<RegisterFormWindowProps> = ({
                   }
                 })
               ]}
-              style={{ marginBottom: '4px', }}>
+              style={{ marginBottom: '4px',  width: '60%', }}>
               <Input.Password
                 prefix={<LockOutlined />}
                 type='password'
@@ -230,8 +268,8 @@ const RegisterFormWindowPage: FC<RegisterFormWindowProps> = ({
                 style={{ width: '100%', }}
               />
             </Form.Item>
-            <div style={{ marginLeft: '40px', width: '280px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', }} />
-            <Form.Item name='alias' rules={[{ required: true, message: <FormattedMessage id='workspace.header.register-form-window.alias-message' />, },]} style={{ marginBottom: '4px', }} >
+            <div style={{ marginLeft: '24px', width: '250px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', }} />
+            <Form.Item name='alias' rules={[{ required: true, message: <FormattedMessage id='workspace.header.register-form-window.alias-message' />, },]} style={{ marginBottom: '4px',  width: '60%', }} >
               <Input
                 prefix={<UserOutlined />}
                 placeholder={intl.formatMessage({ id: 'workspace.header.register-form-window.alias-placeholder' })}
@@ -240,12 +278,12 @@ const RegisterFormWindowPage: FC<RegisterFormWindowProps> = ({
                 style={{ width: '100%', }}
               />
             </Form.Item>
-            <div style={{ marginLeft: '40px', width: '280px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', }} />
+            <div style={{ marginLeft: '24px', width: '250px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', }} />
             <Form.Item name='email' hasFeedback
               rules={[
                 { type: 'email', message: <FormattedMessage id='workspace.header.register-form-window.email-message' />, },
               ]}
-              style={{ marginBottom: '4px', }} >
+              style={{ marginBottom: '4px', width: '60%',  }} >
               <Input
                 prefix={<MailOutlined />}
                 placeholder={intl.formatMessage({ required: true, id: 'workspace.header.register-form-window.email-placeholder' })}
@@ -254,19 +292,18 @@ const RegisterFormWindowPage: FC<RegisterFormWindowProps> = ({
                 style={{ width: '100%', }}
               />
             </Form.Item>
-            {/* <div style={{ marginLeft: '40px', width: '280px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', }} />
-            <Space>
-              <Button type='primary' size='middle' onClick={sendValidationCode}><FormattedMessage id='workspace.header.register-form-window.email-validation-button-title' /></Button>
-              <Form.Item name='validation' rules={[{ message: <FormattedMessage id='workspace.header.register-form-window.email-validation-message' />, },]} style={{ marginBottom: '4px', }} >
+            <div style={{ marginLeft: '24px', width: '250px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', }} />
+            <Form.Item name='code' rules={[{ message: <FormattedMessage id='workspace.header.register-form-window.email-validation-message' />, },]} style={{ marginBottom: '4px', width: '100%'}} >
                 <Input
                   prefix={<CodeOutlined/>}
                   placeholder={intl.formatMessage({required: true, id: 'workspace.header.register-form-window.email-validation-placeholder'})}
                   size='small'
                   bordered={false}
-                />
-              </Form.Item>
-            </Space> */}
-            <div style={{ marginLeft: '40px', width: '280px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', }} />
+                  style={{width: '100%',}}
+                />                
+            </Form.Item>
+            <div style={{ marginLeft: '24px', width: '400px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', }} />
+            <Button ref={verificationRef} type='primary' size='middle' onClick={sendValidationCode}  style={{}}><FormattedMessage id='workspace.header.register-form-window.email-validation-button-title' /></Button>
             {errorVisible && (<Alert message={errorMessage} type="error" closable />)}
           </Form>
         </div>

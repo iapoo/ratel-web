@@ -49,7 +49,7 @@ import { CustomEntityTypeInfo } from '@/components/Rockie/Items/src/CustomEntity
 import { CustomTableType } from '@/components/Rockie/Items/src/CustomTableEntity';
 import { CustomConnector, CustomConnectorTypeInfo } from '@/components/Rockie/Items/src/CustomConnector';
 import { UMLCustomContainer, UMLCustomContainerTypes } from '@/components/Rockie/CustomItems/UML/src/UMLCustomContainer';
-import { useAntdConfig, useAntdConfigSetter } from 'umi'
+import { useAntdConfig, useAntdConfigSetter, useNavigate, } from 'umi'
 import AboutWindowPage from './AboutWindow';
 import { DocumentThemeType } from '@/components/Rockie/Theme/DocumentTheme';
 import { OSType } from '../Utils/SystemUtils';
@@ -72,6 +72,7 @@ const Header: FC<HeaderProps> = ({
 }) => {
   const setAntdConfig = useAntdConfigSetter()
   const antdConfig = useAntdConfig()
+  const navigate = useNavigate()
   const intl = useIntl();
   const [messageApi, contextHolder] = message.useMessage();
   const { confirm } = Modal
@@ -551,6 +552,14 @@ const Header: FC<HeaderProps> = ({
 
   const handleAbout = () => {
     setAboutWindowVisible(true)
+  }
+
+  const handleFeedback = () => {
+    window.open("https://www.github.com/iapoo/ratel-web/issues", '_blank')
+  }
+
+  const handleGithub = () => {
+    window.open("https://www.github.com/iapoo/ratel-web", '_blank')
   }
 
   const handleUpdatePassword = () => {
@@ -3083,6 +3092,8 @@ const Header: FC<HeaderProps> = ({
   ];
 
   const helpItems: MenuProps['items'] = [
+    { key: 'FeedBack', label: <FormattedMessage id='workspace.header.menu-help-feedback' />, onClick: handleFeedback, },
+    { key: 'Github', label: <FormattedMessage id='workspace.header.menu-help-github' />, onClick: handleGithub, },
     { key: 'About', label: <FormattedMessage id='workspace.header.menu-help-about' />, onClick: handleAbout, },
     // { key: 'OpenFrom', label: 'OpenFrom', },
     // { key: 'Open', label: 'Open', },
@@ -3148,10 +3159,6 @@ const Header: FC<HeaderProps> = ({
           <div style={{ float: 'right', display: 'table', height: '100%', marginRight: '8px' }}>
             <Space direction="horizontal" style={{ display: 'table-cell', verticalAlign: 'middle' }}>
               <Space wrap={false}>
-                <Button type='text' size='small' href='https://github.com/iapoo/ratel-web/issues' target='_blank'><FormattedMessage id='workspace.header.button-feedback' style={{ webkitAppRegion: 'no-drag' }} /></Button>
-                <Tooltip title={<FormattedMessage id='workspace.header.title.open-source-web-site' />}>
-                  <Button shape='circle' type='text' size='small' icon={<GithubOutlined />} href='https://github.com/iapoo/ratel-web' target='_blank' style={{ webkitAppRegion: 'no-drag' }}></Button>
-                </Tooltip>
                 <Dropdown menu={{ items: userProfileMenu }}>
                   <Button shape='circle' type='text' size='small' icon={<UserOutlined />} style={{ display: online ? 'inline' : 'none', webkitAppRegion: 'no-drag' }} />
                 </Dropdown>

@@ -108,7 +108,7 @@ const ProfileFormWindowPage: FC<ProfileFormWindowProps> = ({
     const { alias, email } = values
     const data = {
       'nickName': alias,
-      'email': email,
+      //'email': email,  //Email can't be updated.
     }
     const config = {
       headers: {
@@ -213,23 +213,12 @@ const ProfileFormWindowPage: FC<ProfileFormWindowProps> = ({
                 prefix={<MailOutlined />}
                 placeholder={intl.formatMessage({ required: true, id: 'workspace.header.profile-form-window.email-placeholder' })}
                 size='small'
+                disabled
                 bordered={false}
                 style={{ width: '100%', }}
               />
             </Form.Item>
-            <div style={{ marginLeft: '40px', width: '280px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', }} />
-            <Space>
-              <Button type='primary' size='middle' onClick={sendValidationCode}><FormattedMessage id='workspace.header.profile-form-window.email-validation-button-title' /></Button>
-              <Form.Item name='validation' rules={[{ message: <FormattedMessage id='workspace.header.profile-form-window.email-validation-message' />, },]} style={{ marginBottom: '4px', }} >
-                <Input
-                  prefix={<CodeOutlined />}
-                  placeholder={intl.formatMessage({ required: true, id: 'workspace.header.profile-form-window.email-validation-placeholder' })}
-                  size='small'
-                  bordered={false}
-                />
-              </Form.Item>
-            </Space>
-            <div style={{ marginLeft: '40px', width: '280px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', }} />
+            <div style={{ marginLeft: '40px', width: '280px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', }} />            
             {errorVisible && (<Alert message={errorMessage} type="error" closable />)}
           </Form>
         </div>
