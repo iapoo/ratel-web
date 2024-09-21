@@ -7,7 +7,7 @@
 Ratel is open source general diagram editor for flowchart, UML and other diagram tpyes. It can work online or offline(without network).
 Ratel Web is frontend of Ratel. There are 3 sub projects: Ratel-Web(frontend), Ratel-Server(backend) and Ratel-deployment(deployment).
 
-Demo site: <https://ratel.ivipa.com>
+Please visit: <https://www.ivipa.com>
 
 ## Try
 
