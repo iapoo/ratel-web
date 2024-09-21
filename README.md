@@ -11,9 +11,9 @@ Please visit: <https://www.ivipa.com>
 
 ## Try
 
-### Try online demo (in progress)
+### Try online site
 
-Try oneline demo.
+Please visit: <https://www.ivipa.com>.
 
 ### Try all-in-one docker image locally
 
