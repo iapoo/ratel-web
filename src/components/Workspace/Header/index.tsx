@@ -9,6 +9,9 @@ import LoginFormWindow from './LoginFormWindow'
 import NewFileWindow from './NewFileWindow';
 import { AlignCenterOutlined, AlignLeftOutlined, AlignRightOutlined, BoldOutlined, CheckOutlined, DownloadOutlined, FileAddOutlined, FileOutlined, FileTextOutlined, FolderOpenOutlined, FormOutlined, GithubOutlined, ItalicOutlined, MoonOutlined, RedoOutlined, SaveOutlined, SearchOutlined, SettingOutlined, SolutionOutlined, SunOutlined, UnderlineOutlined, UndoOutlined, UserOutlined, VerticalAlignBottomOutlined, VerticalAlignMiddleOutlined, VerticalAlignTopOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons';
 import OpenFileWindow from './OpenFileWindow';
+import OpenFileManagementWindow from './OpenFileManagementWindow'
+import OperatorWindow from './OperatorWindow'
+import CustomerWindow from './CustomerWindow'
 import { StorageService } from '../Storage';
 import { Rectangle } from '@/components/Resource/LargeIcons';
 import { EngineUtils, Font, FontSlant, FontUtils, FontWeight, GraphicsUtils, Matrix, Point2, TextDecoration, TextShape } from '@/components/Engine';
@@ -103,6 +106,9 @@ const Header: FC<HeaderProps> = ({
   const [aboutWindowVisible, setAboutWindowVisible,] = useState<boolean>(false)
   const [newFileWindowVisible, setNewFileWindowVisible,] = useState<boolean>(false)
   const [openFileWindowVisible, setOpenFileWindowVisible,] = useState<boolean>(false)
+  const [openFileManagementWindowVisible, setOpenFileManagementWindowVisible,] = useState<boolean>(false)
+  const [operatorWindowVisible, setOperatorWindowVisible,] = useState<boolean>(false)
+  const [customerWindowVisible, setCustomerWindowVisible,] = useState<boolean>(false)
   const [selectedDocumentName, setSelectedDocumentName,] = useState<string>(DOCUMENT_NEW_NAME_PREFIX)
   const [selectedFolderId, setSelectedFolderId,] = useState<number | null>(null)
   const [selectedDocumentId, setSelectedDocumentId,] = useState<number | null>(null);
@@ -476,7 +482,70 @@ const Header: FC<HeaderProps> = ({
     setOpenFileWindowVisible(false)
   }
 
+  const handleOpenFileManagementWindowCancel = () => {
+    setOpenFileManagementWindowVisible(false)
+  }
+
+  const handleOperatorWindowCancel = () => {
+    setOperatorWindowVisible(false)
+  }
+
+  const handleCustomerWindowCancel = () => {
+    setCustomerWindowVisible(false)
+  }
+
   const handleOpenFileWindowOk = (documentId: number, documentName: string | null, folderId: number | null) => {
+    if (disableFileName) { // Save File, will do in popup window
+      if (documentName !== null) {
+        setOpenFileWindowVisible(false)
+        setSelectedDocumentId(documentId)
+        setSelectedDocumentName(documentName)
+        setSelectedFolderId(folderId)
+      } else {
+        messageApi.error(intl.formatMessage({ id: 'workspace.header.message-invalid-document-name' }))
+      }
+    } else { // Open File
+      if (documentId === null) {
+        messageApi.error(intl.formatMessage({ id: 'workspace.header.message-invalid-document-id' }))
+        return
+      }
+      const fetchDocumentData = async () => {
+        const documentData = await RequestUtils.loadDocument(documentId)
+        if (documentData.data?.success) {
+          console.log(`Load document successfully: documentId = ${documentId}`)
+          let content = documentData.data.data.content.content
+          const storage = new StorageService()
+          storage.editors = Utils.editors
+          storage.loadDocument(content)
+          Utils.storageData = storage.storageData
+          if (Utils.loadData) {
+            Utils.loadData()
+          }
+          if (Utils.checkIfModified) {
+            Utils.checkIfModified(false)
+          }
+          setSelectedDocumentId(documentId)
+          setSelectedFolderId(documentData.data.data.folderId)
+          setSelectedDocumentName(documentData.data.data.documentName)
+          localStorage.setItem(STAGING_DOCUMENT_ID, `${documentId}`)
+          localStorage.setItem(STAGING_FOLDER_ID, `${documentData.data.data.folderId}`)
+          localStorage.setItem(STAGING_DOCUMENT_NAME, `${documentData.data.data.documentName}`)
+          //All editors have same theme name and so we use first one
+          if (storage.storageData.theme) {
+            onDocumentThemeChanged(storage.storageData.theme)
+          } else {
+            onDocumentThemeChanged(DocumentThemeTypes[0].name)
+          }
+        } else {
+          console.log(`Load document failed: documentId = ${documentId}`)
+        }
+        setOpenFileWindowVisible(false)
+      }
+      fetchDocumentData()
+    }
+  }
+
+  const handleOpenFileManagementWindowOk = (documentId: number, documentName: string | null, folderId: number | null) => {
     if (disableFileName) { // Save File, will do in popup window
       if (documentName != null) {
         setOpenFileWindowVisible(false)
@@ -487,7 +556,109 @@ const Header: FC<HeaderProps> = ({
         messageApi.error(intl.formatMessage({ id: 'workspace.header.message-invalid-document-name' }))
       }
     } else { // Open File
-      if (documentId == null) {
+      if (documentId === null) {
+        messageApi.error(intl.formatMessage({ id: 'workspace.header.message-invalid-document-id' }))
+        return
+      }
+      const fetchDocumentData = async () => {
+        const documentData = await RequestUtils.loadDocument(documentId)
+        if (documentData.data?.success) {
+          console.log(`Load document successfully: documentId = ${documentId}`)
+          let content = documentData.data.data.content.content
+          const storage = new StorageService()
+          storage.editors = Utils.editors
+          storage.loadDocument(content)
+          Utils.storageData = storage.storageData
+          if (Utils.loadData) {
+            Utils.loadData()
+          }
+          if (Utils.checkIfModified) {
+            Utils.checkIfModified(false)
+          }
+          setSelectedDocumentId(documentId)
+          setSelectedFolderId(documentData.data.data.folderId)
+          setSelectedDocumentName(documentData.data.data.documentName)
+          localStorage.setItem(STAGING_DOCUMENT_ID, `${documentId}`)
+          localStorage.setItem(STAGING_FOLDER_ID, `${documentData.data.data.folderId}`)
+          localStorage.setItem(STAGING_DOCUMENT_NAME, `${documentData.data.data.documentName}`)
+          //All editors have same theme name and so we use first one
+          if (storage.storageData.theme) {
+            onDocumentThemeChanged(storage.storageData.theme)
+          } else {
+            onDocumentThemeChanged(DocumentThemeTypes[0].name)
+          }
+        } else {
+          console.log(`Load document failed: documentId = ${documentId}`)
+        }
+        setOpenFileWindowVisible(false)
+      }
+      fetchDocumentData()
+    }
+  }
+
+  const handleOperatorWindowOk = (documentId: number, documentName: string | null, folderId: number | null) => {
+    if (disableFileName) { // Save File, will do in popup window
+      if (documentName !== null) {
+        setOpenFileWindowVisible(false)
+        setSelectedDocumentId(documentId)
+        setSelectedDocumentName(documentName)
+        setSelectedFolderId(folderId)
+      } else {
+        messageApi.error(intl.formatMessage({ id: 'workspace.header.message-invalid-document-name' }))
+      }
+    } else { // Open File
+      if (documentId === null) {
+        messageApi.error(intl.formatMessage({ id: 'workspace.header.message-invalid-document-id' }))
+        return
+      }
+      const fetchDocumentData = async () => {
+        const documentData = await RequestUtils.loadDocument(documentId)
+        if (documentData.data?.success) {
+          console.log(`Load document successfully: documentId = ${documentId}`)
+          let content = documentData.data.data.content.content
+          const storage = new StorageService()
+          storage.editors = Utils.editors
+          storage.loadDocument(content)
+          Utils.storageData = storage.storageData
+          if (Utils.loadData) {
+            Utils.loadData()
+          }
+          if (Utils.checkIfModified) {
+            Utils.checkIfModified(false)
+          }
+          setSelectedDocumentId(documentId)
+          setSelectedFolderId(documentData.data.data.folderId)
+          setSelectedDocumentName(documentData.data.data.documentName)
+          localStorage.setItem(STAGING_DOCUMENT_ID, `${documentId}`)
+          localStorage.setItem(STAGING_FOLDER_ID, `${documentData.data.data.folderId}`)
+          localStorage.setItem(STAGING_DOCUMENT_NAME, `${documentData.data.data.documentName}`)
+          //All editors have same theme name and so we use first one
+          if (storage.storageData.theme) {
+            onDocumentThemeChanged(storage.storageData.theme)
+          } else {
+            onDocumentThemeChanged(DocumentThemeTypes[0].name)
+          }
+        } else {
+          console.log(`Load document failed: documentId = ${documentId}`)
+        }
+        setOpenFileWindowVisible(false)
+      }
+      fetchDocumentData()
+    }
+  }
+
+  const handleCustomerWindowOk = (documentId: number, documentName: string | null, folderId: number | null) => {
+    if (disableFileName) { // Save File, will do in popup window
+      if (documentName !== null) {
+        setOpenFileWindowVisible(false)
+        setSelectedDocumentId(documentId)
+        setSelectedDocumentName(documentName)
+        setSelectedFolderId(folderId)
+      } else {
+        messageApi.error(intl.formatMessage({ id: 'workspace.header.message-invalid-document-name' }))
+      }
+    } else { // Open File
+      if (documentId === null) {
         messageApi.error(intl.formatMessage({ id: 'workspace.header.message-invalid-document-id' }))
         return
       }
@@ -601,6 +772,13 @@ const Header: FC<HeaderProps> = ({
     }
   }
 
+
+  const doHandleFileOpen = () => {
+    setOpenFileWindowVisible(!openFileManagementWindowVisible)
+    setDisableFileName(false)
+  }
+
+
   const handleFileOpen = () => {
     if (online) {
       doHandleFileOpen()
@@ -609,9 +787,52 @@ const Header: FC<HeaderProps> = ({
     }
   }
 
-  const doHandleFileOpen = () => {
-    setOpenFileWindowVisible(!openFileWindowVisible)
+
+  const doHandleFileManagementOpen = () => {
+    setOpenFileManagementWindowVisible(!openFileManagementWindowVisible)
     setDisableFileName(false)
+  }
+
+  const handleOpenManagementWindow = () => {
+    if (online) {
+      doHandleFileManagementOpen()
+    } else {
+      login(ON_LOGIN_OPEN)
+    }
+  }
+
+
+  const doHandleOperatorOpen = () => {
+    setOperatorWindowVisible(!operatorWindowVisible)
+  }
+
+  const handleOperatorWindow = () => {
+    if (online) {
+      doHandleOperatorOpen()
+    } else {
+      login(ON_LOGIN_OPEN)
+    }
+  }
+
+  const doHandleCustomerOpen = () => {
+    setCustomerWindowVisible(!customerWindowVisible)
+  }
+
+  const handleCustomerWindow = () => {
+    if (online) {
+      doHandleCustomerOpen()
+    } else {
+      login(ON_LOGIN_OPEN)
+    }
+  }
+
+  const handleAdminLogin = async () => {
+    const loginData = await RequestUtils.loginAsAdmin()
+    if (loginData.status === 200 && loginData.data.success) {
+      alert('Login successfully')
+    } else {
+      alert('Login failed')
+    }
   }
 
   const handleAutoSave = () => {
@@ -3091,6 +3312,13 @@ const Header: FC<HeaderProps> = ({
     // { key: 'Test ER Shape Small', label: 'Test ER Shape Small', onClick: handleTestERShapeSmall, },
   ];
 
+  const managementItems: MenuProps['items'] = [
+    { key: 'Admin Login', label: <FormattedMessage id='workspace.header.menu-management-open-file' />, onClick: handleAdminLogin, },
+    { key: 'Opem File Mangement Window', label: <FormattedMessage id='workspace.header.menu-management-open-file' />, onClick: handleOpenManagementWindow, },
+    { key: 'Opem Operator Window', label: <FormattedMessage id='workspace.header.menu-management-open-operator' />, onClick: handleOperatorWindow, },
+    { key: 'Opem Customer Window', label: <FormattedMessage id='workspace.header.menu-management-open-customer' />, onClick: handleCustomerWindow, },
+  ];
+
   const helpItems: MenuProps['items'] = [
     { key: 'FeedBack', label: <FormattedMessage id='workspace.header.menu-help-feedback' />, onClick: handleFeedback, },
     { key: 'Github', label: <FormattedMessage id='workspace.header.menu-help-github' />, onClick: handleGithub, },
@@ -3137,9 +3365,15 @@ const Header: FC<HeaderProps> = ({
               <Dropdown menu={{ items: optionItems }}>
                 <Button type='text' size='small' style={{ webkitAppRegion: 'no-drag' }}><FormattedMessage id='workspace.header.menu-option' /></Button>
               </Dropdown>
-              {"false" == process.env.PRODUCTION
+              {"false" === process.env.PRODUCTION
                 ? <Dropdown menu={{ items: developmentItems }}>
-                  <Button type='text' size='small' style={{ webkitAppRegion: 'no-drag' }}>Development Menu</Button>
+                  <Button type='text' size='small' style={{ webkitAppRegion: 'no-drag' }}><FormattedMessage id='workspace.header.menu-development' /></Button>
+                </Dropdown>
+                : ''
+              }
+              {"false" === process.env.PRODUCTION
+                ? <Dropdown menu={{ items: managementItems }}>
+                  <Button type='text' size='small' style={{ webkitAppRegion: 'no-drag' }}><FormattedMessage id='workspace.header.menu-management' /></Button>
                 </Dropdown>
                 : ''
               }
@@ -3288,6 +3522,9 @@ const Header: FC<HeaderProps> = ({
       <ProfileFormWindowPage visible={profileFormWindowVisible} x={60} y={60} onWindowCancel={handleProfileFormWindowCancel} onWindowOk={handleProfileFormWindowOk} />
       <NewFileWindow visible={newFileWindowVisible} x={60} y={60} onWindowCancel={handleNewFileWindowCancel} onWindowOk={handleNewFileWindowOk} />
       <OpenFileWindow visible={openFileWindowVisible} x={60} y={60} onWindowCancel={handleOpenFileWindowCancel} onWindowOk={handleOpenFileWindowOk} disableFileName={disableFileName} selectedFolderId={selectedFolderId} selectedDocumentId={selectedDocumentId} selectedDocumentName={selectedDocumentName} documentThemeName={documentThemeName} />
+      <OpenFileManagementWindow visible={openFileManagementWindowVisible} x={60} y={60} onWindowCancel={handleOpenFileManagementWindowCancel} onWindowOk={handleOpenFileManagementWindowOk} disableFileName={disableFileName} selectedFolderId={selectedFolderId} selectedDocumentId={selectedDocumentId} selectedDocumentName={selectedDocumentName} documentThemeName={documentThemeName} />
+      <OperatorWindow visible={operatorWindowVisible} x={60} y={60} onWindowCancel={handleOperatorWindowCancel} onWindowOk={handleOperatorWindowOk} disableFileName={disableFileName} selectedFolderId={selectedFolderId} selectedDocumentId={selectedDocumentId} selectedDocumentName={selectedDocumentName} documentThemeName={documentThemeName} />
+      <CustomerWindow visible={customerWindowVisible} x={60} y={60} onWindowCancel={handleCustomerWindowCancel} onWindowOk={handleCustomerWindowOk} disableFileName={disableFileName} selectedFolderId={selectedFolderId} selectedDocumentId={selectedDocumentId} selectedDocumentName={selectedDocumentName} documentThemeName={documentThemeName} />
       <AboutWindowPage visible={aboutWindowVisible} x={60} y={60} onWindowCancel={handleAboutWindowCancel} onWindowOk={handleAboutWindowOk} />
       <Modal title={<FormattedMessage id='workspace.header.message-title-document-modified' />} centered open={discardModifiedDocumentWindowVisible}
         onOk={confirmDiscardModifiedDocument} onCancel={cancelDiscardModifiedDocument} >

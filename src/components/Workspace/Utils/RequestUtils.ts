@@ -78,7 +78,7 @@ export class RequestUtils {
     private static rockieAddress_: string = ''
     //private static serverAddress_: string = 'http://127.0.0.1:8080'
     private static lastCheckTime_: number = 0;
-    private static checkTimeInterval_: number = 60000;
+    private static checkTimeInterval_: number = 600000;
     private static userInfo_: UserInfo | null = null
 
     public static get systemServerAddress(): string {
@@ -437,6 +437,165 @@ export class RequestUtils {
             }
         }
         return axios.post(this.rockieServerAddress + `/folder/delete`, data, config)
+    }
+
+
+    public static loginAsAdmin() {
+        const data = {
+        }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Token': RequestUtils.token
+            }
+        }
+        return axios.post(this.systemServerAddress + `/admin`, data, config)
+    }
+
+    public static getOperators() {
+        const data = {
+            pageSize: 5,
+            pageNum: 1,
+        }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Token': RequestUtils.token
+            }
+        }
+        return axios.post(this.systemServerAddress + `/operator/operators`, data, config)
+    }
+
+
+    public static getOperator() {
+        const data = {
+            pageSize: 5,
+            pageNum: 1,
+        }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Token': RequestUtils.token
+            }
+        }
+        return axios.post(this.systemServerAddress + `/operator/operators`, data, config)
+    }
+
+
+    public static addOperator() {
+        const data = {
+            pageSize: 5,
+            pageNum: 1,
+        }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Token': RequestUtils.token
+            }
+        }
+        return axios.post(this.systemServerAddress + `/operator/operators`, data, config)
+    }
+
+    public static updateOperator() {
+        const data = {
+            pageSize: 5,
+            pageNum: 1,
+        }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Token': RequestUtils.token
+            }
+        }
+        return axios.post(this.systemServerAddress + `/operator/operators`, data, config)
+    }
+
+
+    public static deleteOperator() {
+        const data = {
+            pageSize: 5,
+            pageNum: 1,
+        }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Token': RequestUtils.token
+            }
+        }
+        return axios.post(this.systemServerAddress + `/operator/operators`, data, config)
+    }
+
+    public static getCustomers() {
+        const data = {
+            pageSize: 5,
+            pageNum: 1,
+        }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Token': RequestUtils.token
+            }
+        }
+        return axios.post(this.systemServerAddress + `/customer/customers`, data, config)
+    }
+
+
+    public static getCustomer() {
+        const data = {
+            pageSize: 5,
+            pageNum: 1,
+        }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Token': RequestUtils.token
+            }
+        }
+        return axios.post(this.systemServerAddress + `/customer/customers`, data, config)
+    }
+
+
+    public static addCustomer() {
+        const data = {
+            pageSize: 5,
+            pageNum: 1,
+        }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Token': RequestUtils.token
+            }
+        }
+        return axios.post(this.systemServerAddress + `/customer/customers`, data, config)
+    }
+
+    public static updateCustomer() {
+        const data = {
+            pageSize: 5,
+            pageNum: 1,
+        }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Token': RequestUtils.token
+            }
+        }
+        return axios.post(this.systemServerAddress + `/customer/customers`, data, config)
+    }
+
+
+    public static deleteCustomer() {
+        const data = {
+            pageSize: 5,
+            pageNum: 1,
+        }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Token': RequestUtils.token
+            }
+        }
+        return axios.post(this.systemServerAddress + `/customer/customers`, data, config)
     }
 
     public static getGoogleFonts() {
