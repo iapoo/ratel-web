@@ -10,6 +10,7 @@ import { DeleteFilled, EditFilled, FileFilled, FileOutlined, FolderFilled, Folde
 import { StorageService } from '../../Storage'
 import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
 import { ProColumns, ProTable } from '@ant-design/pro-components'
+import OperatorFormWindow from './OperatorFormWindow'
 
 
 interface OperatorWindowProps {
@@ -21,20 +22,11 @@ interface OperatorWindowProps {
 }
 
 interface SingleOperatorType {
-  id: number;
-  name: string;
-  logoUrl: string;
-  contactPerson: string;
-  contactTelephone: string;
-  address: string;
-  regionId: number;
-  regionIdPath: string;
-  regionName: string;
-  regionsName: string;
-  createBy: number;
-  createTime: number;
-  updateBy: number;
-  updateTime: number;
+  operatorId: number;
+  operatorType: number;
+  customerId: number;
+  customerName: string;
+  email: string;
 }
 
 interface OperatorsType {
@@ -58,62 +50,15 @@ const OperatorWindowPage: FC<OperatorWindowProps> = ({
   const [windowVisible, setWindowVisible,] = useState<boolean>(false)
   const [errorVisible, setErrorVisible,] = useState<boolean>(false)
   const [errorMessage, setErrorMessage,] = useState<string>('')
-
+  const [operatorFormWindowVisible, setOperatorFormWindowVisible, ] = useState<boolean>(false)
   const [data, setData,] = useState<OperatorsType>( defaultData)
-
+  const [customerId,setCustomerId, ] = useState<number>(0)
+  const [customerName, setCustomerName, ] = useState<string>('')
+  const [email, setEmail, ] = useState<string>('')
+  const [operatorType, setOperatorType, ] = useState<number>(0)
+  const [isUpdate, setIsUpdate, ] = useState<boolean>(false)
+  const [operatorId, setOperatorId, ] = useState<number>(0)
   const intl = useIntl();
-
-  const columns: ProColumns<SingleOperatorType>[] = [
-    {
-      title: <FormattedMessage id='workspace.header.operator-window.column-operator-id' />,
-      dataIndex: 'id',
-      valueType: 'digit',
-      key: 'id',
-      hideInSearch: true,
-      hideInTable: true,
-      hideInForm: true,
-    },
-    {
-      title: <FormattedMessage id='workspace.header.operator-window.column-operator-id' />,
-      dataIndex: 'name',
-      key: 'name',
-      valueType: 'text',
-      render: (text: any, record: SingleOperatorType) => <Button type='link' onClick={() => goEditHandler(record)} >{text}</Button>,
-    },
-    {
-      title: <FormattedMessage id='workspace.header.operator-window.column-customer-name' />,
-      dataIndex: 'regionsName',
-      valueType: 'text',
-      key: 'contactPerson',
-    },
-    {
-      title: <FormattedMessage id='workspace.header.operator-window.column-customer-email' />,
-      dataIndex: 'address',
-      key: 'address',
-      valueType: 'text',
-    },
-    {
-      title: <FormattedMessage id='workspace.header.operator-window.column-operator-type' />,
-      dataIndex: 'createTime',
-      valueType: 'date',
-      key: 'createTime',
-      renderText: (text: any) => new Date(text),
-    },
-    {
-      title: <FormattedMessage id='workspace.header.operator-window.operation' />,
-      key: 'action',
-      valueType: 'option',
-      render: (text: any, record: SingleOperatorType) => [
-        <Tooltip key='editButton' title='编辑'>
-          <Button icon={<EditFilled />} onClick={() => { }} />
-        </Tooltip>,
-        <Tooltip key='deleteButton' title='删除'>
-          <Button icon={<DeleteFilled />} onClick={() => {  }} />
-        </Tooltip>,
-      ],
-    },
-  ]
-
 
   if (windowVisible !== visible) {
     setDataLoading(false)
@@ -122,7 +67,7 @@ const OperatorWindowPage: FC<OperatorWindowProps> = ({
 
 
   const fetchData = async () => {
-    const operatorData = await RequestUtils.getOperators()
+    const operatorData = await RequestUtils.getOperatorDetails()
     if (operatorData.status === 200 && operatorData.data.success) {
       const operators = operatorData.data.data
       setData(operators)
@@ -130,7 +75,6 @@ const OperatorWindowPage: FC<OperatorWindowProps> = ({
       setData(defaultData)
     }
   }
-
   
   useEffect(() => {
     if (!dataLoading) {
@@ -152,6 +96,99 @@ const OperatorWindowPage: FC<OperatorWindowProps> = ({
       onWindowCancel()
     }
   }  
+
+  const openOperatorFormWindow = (isUpdate: boolean, operatorId: number, customerId: number, customerName: string, email: string, operatorType: number) => {
+    setOperatorFormWindowVisible(true)
+    setIsUpdate(isUpdate)
+    setOperatorId(operatorId)
+    setCustomerId(customerId)
+    setCustomerName(customerName)
+    setEmail(email)
+    setOperatorType(operatorType)
+  }
+
+  const handleAddOperator = () => {
+    openOperatorFormWindow(false, 0, 0, '', '', 0)
+  }
+
+  const handleUpdateOperator = (operator: SingleOperatorType) => {
+    setOperatorFormWindowVisible(true)
+    setIsUpdate(true)
+    setOperatorId(operator.operatorId)
+    setCustomerId(operator.customerId)
+    setCustomerName(operator.customerName)
+    setEmail(operator.email)
+    setOperatorType(operator.operatorType)
+  }
+
+  const handleDeleteOperator = (operator: SingleOperatorType) => {
+
+  }
+
+  const handleOperatorFormWindowOk = () => {
+    setOperatorFormWindowVisible(false)
+  }
+
+  const handleOperatorFormWindowCancel = () => {
+    setOperatorFormWindowVisible(false)
+  }
+
+  const handleCustomerSelectorChange = (customerId: number, customerName: string, email: string) => {
+    setCustomerId(customerId)
+    setCustomerName(customerName)
+    setEmail(email)
+  }
+
+  const columns: ProColumns<SingleOperatorType>[] = [
+    {
+      title: <FormattedMessage id='workspace.header.operator-window.column-operator-id' />,
+      dataIndex: 'operatorId',
+      valueType: 'digit',
+      key: 'operatorId',
+      hideInSearch: true,
+      hideInTable: true,
+      hideInForm: true,
+    },
+    {
+      title: <FormattedMessage id='workspace.header.operator-window.column-customer-id' />,
+      dataIndex: 'customerId',
+      key: 'customerId',
+      valueType: 'text',
+//      render: (text: any, record: SingleOperatorType) => <Button type='link' onClick={() => goEditHandler(record)} >{text}</Button>,
+    },
+    {
+      title: <FormattedMessage id='workspace.header.operator-window.column-customer-name' />,
+      dataIndex: 'customerName',
+      valueType: 'text',
+      key: 'customerName',
+    },
+    {
+      title: <FormattedMessage id='workspace.header.operator-window.column-customer-email' />,
+      dataIndex: 'email',
+      key: 'email',
+      valueType: 'text',
+    },
+    {
+      title: <FormattedMessage id='workspace.header.operator-window.column-operator-type' />,
+      dataIndex: 'operatorType',
+      valueType: 'digit',
+      key: 'operatorType',
+      renderText: (text: any) => new Date(text),
+    },
+    {
+      title: <FormattedMessage id='workspace.header.operator-window.operation' />,
+      key: 'operatorId',
+      valueType: 'digit',
+      render: (text: any, record: SingleOperatorType) => [
+        <Tooltip key='editButton' title='编辑'>
+          <Button icon={<EditFilled />} onClick={() => handleUpdateOperator(record)} />
+        </Tooltip>,
+        <Tooltip key='deleteButton' title='删除'>
+          <Button icon={<DeleteFilled />} onClick={() => handleDeleteOperator(record) } />
+        </Tooltip>,
+      ],
+    },
+  ]
 
   return (
     <div>
@@ -178,7 +215,7 @@ const OperatorWindowPage: FC<OperatorWindowProps> = ({
               <Button key='searchButton' type='primary' style={{ marginLeft: '24px', }} ><FormattedMessage id='workspace.header.operator-window.button-search' /></Button>
             </Col>
             <Col span={6}>
-              <Button key='addButton' type='primary' icon={<PlusOutlined/>} style={{ position: 'absolute', right: '16px', }} ><FormattedMessage id='workspace.header.operator-window.button-add' /></Button>
+              <Button key='addButton' type='primary' icon={<PlusOutlined/>} style={{ position: 'absolute', right: '16px', }} onClick={handleAddOperator}><FormattedMessage id='workspace.header.operator-window.button-add' /></Button>
             </Col>
           </Row>,
         ]}
@@ -201,6 +238,9 @@ const OperatorWindowPage: FC<OperatorWindowProps> = ({
       </div>
           </div>
         </div>
+        <OperatorFormWindow visible={operatorFormWindowVisible} onWindowOk={handleOperatorFormWindowOk} onWindowCancel={handleOperatorFormWindowCancel} 
+          onCustomerSelectorChanged={handleCustomerSelectorChange}
+        isUpdate={isUpdate} operatorId={operatorId} customerId={customerId} customerName={customerName} email={email} operatorType={operatorType} />
       </Modal>
 
     </div>

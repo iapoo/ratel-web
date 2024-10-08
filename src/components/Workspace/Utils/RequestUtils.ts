@@ -465,6 +465,19 @@ export class RequestUtils {
         }
         return axios.post(this.systemServerAddress + `/operator/operators`, data, config)
     }
+    public static getOperatorDetails() {
+        const data = {
+            pageSize: 5,
+            pageNum: 1,
+        }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Token': RequestUtils.token
+            }
+        }
+        return axios.post(this.systemServerAddress + `/operator/operatorDetails`, data, config)
+    }
 
 
     public static getOperator() {
@@ -540,6 +553,22 @@ export class RequestUtils {
     }
 
 
+    public static getOperatorCustomers(like: string | null,excludeCustomerId: number | null, pageNum: number = 1, pageSize: number = 5) {
+        const data = {
+            like: like ? like : null,
+            excludeCustomerId: excludeCustomerId,
+            pageSize: pageSize,
+            pageNum: pageNum,
+        }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Token': RequestUtils.token
+            }
+        }
+        return axios.post(this.systemServerAddress + `/customer/operatorCustomers`, data, config)
+    }
+
     public static getCustomer() {
         const data = {
             pageSize: 5,
@@ -566,7 +595,7 @@ export class RequestUtils {
                 'Token': RequestUtils.token
             }
         }
-        return axios.post(this.systemServerAddress + `/customer/customers`, data, config)
+        return axios.post(this.systemServerAddress + `/customer/add`, data, config)
     }
 
     public static updateCustomer() {
