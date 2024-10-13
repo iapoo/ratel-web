@@ -54,7 +54,7 @@ const CustomerWindowPage: FC<CustomerWindowProps> = ({
 
   const columns: ProColumns<SingleCustomerType>[] = [
     {
-      title: <FormattedMessage id='workspace.header.customer-window.column-customer-id' />,
+      title: <FormattedMessage id='workspace.header.customer-selector-window.column-customer-id' />,
       dataIndex: 'customerId',
       valueType: 'digit',
       key: 'customerId',
@@ -63,19 +63,19 @@ const CustomerWindowPage: FC<CustomerWindowProps> = ({
       hideInForm: true,
     },
     {
-      title: <FormattedMessage id='workspace.header.customer-window.column-customer-id' />,
+      title: <FormattedMessage id='workspace.header.customer-selector-window.column-customer-name' />,
       dataIndex: 'customerName',
       key: 'customerName',
       valueType: 'text',
     },
     {
-      title: <FormattedMessage id='workspace.header.customer-window.column-customer-name' />,
+      title: <FormattedMessage id='workspace.header.customer-selector-window.column-customer-email' />,
       dataIndex: 'email',
       valueType: 'text',
       key: 'email',
     },
     {
-      title: <FormattedMessage id='workspace.header.customer-window.column-customer-email' />,
+      title: <FormattedMessage id='workspace.header.customer-selector-window.column-customer-nickname' />,
       dataIndex: 'nickName',
       key: 'nickName',
       valueType: 'text',
@@ -148,9 +148,9 @@ const CustomerWindowPage: FC<CustomerWindowProps> = ({
 
   return (
     <div>
-      <Modal title={<FormattedMessage id='workspace.header.customer-window.title' />} width={800} centered open={visible} onOk={onOk} onCancel={onCancel} maskClosable={false}  >
-        <div style={{ width: '100%', height: '440px',}}>
-          <div style={{ width: '100%', height: '400px',  }}>
+      <Modal title={<FormattedMessage id='workspace.header.customer-selector-window.title' />} width={800} centered open={visible} onOk={onOk} onCancel={onCancel} maskClosable={false}  >
+        <div style={{ width: '100%', height: '420px',}}>
+          <div style={{ width: '100%', height: '380px',  }}>
           <ProTable
         columns={columns}
         dataSource={data.records}
@@ -160,6 +160,7 @@ const CustomerWindowPage: FC<CustomerWindowProps> = ({
         pagination={false}
         rowSelection={rowSelection}                
         //onChange={handleCustomerSelectionChange}
+        tableAlertRender={false}
         options={{
           density: false,
           fullScreen: false,
@@ -169,8 +170,8 @@ const CustomerWindowPage: FC<CustomerWindowProps> = ({
         title={() => [
           <Row key='searchRow'>
             <Col span={18} >
-              <Input key='searchInput' placeholder={intl.formatMessage({ id: 'workspace.header.customer-window.search-placeholder' })} style={{ width: '360px', marginLeft: '16px', }} onChange={(e) => { setSearchText(e.target.value) }}/>
-              <Button key='searchButton' type='primary' style={{ marginLeft: '24px', }} onClick={handleSearch} ><FormattedMessage id='workspace.header.customer-window.button-search' /></Button>
+              <Input key='searchInput' placeholder={intl.formatMessage({ id: 'workspace.header.customer-selector-window.search-placeholder' })} style={{ width: '360px', marginLeft: '16px', }} onChange={(e) => { setSearchText(e.target.value) }}/>
+              <Button key='searchButton' type='primary' style={{ marginLeft: '24px', }} onClick={handleSearch} ><FormattedMessage id='workspace.header.customer-selector-window.button-search' /></Button>
             </Col>
           </Row>,
         ]}
@@ -188,7 +189,7 @@ const CustomerWindowPage: FC<CustomerWindowProps> = ({
           showSizeChanger={false}
           showQuickJumper
           //locale='zhCN'
-          //showTotal={total => `${intl.formatMessage({ id: 'workspace.header.customer-window.search-placeholder' }} ${total}`}
+          //showTotal={total => `${intl.formatMessage({ id: 'workspace.header.customer-selector-window.search-placeholder' }} ${total}`}
         />
       </div>
           </div>

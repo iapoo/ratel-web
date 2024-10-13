@@ -10,6 +10,7 @@ import { DeleteFilled, EditFilled, FileFilled, FileOutlined, FolderFilled, Folde
 import { StorageService } from '../../Storage'
 import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
 import { ProColumns, ProTable } from '@ant-design/pro-components'
+import CustomerFormWindow from './CustomerFormWindow'
 
 
 interface CustomerWindowProps {
@@ -21,16 +22,10 @@ interface CustomerWindowProps {
 }
 
 interface SingleCustomerType {
-  id: number;
-  name: string;
-  logoUrl: string;
-  contactPerson: string;
-  contactTelephone: string;
-  address: string;
-  regionId: number;
-  regionIdPath: string;
-  regionName: string;
-  regionsName: string;
+  customerId: number;
+  customerName: string;
+  email: string;
+  nickName: string;
   createBy: number;
   createTime: number;
   updateBy: number;
@@ -50,7 +45,16 @@ interface FormValues {
 }
 
 const defaultData = { records: [], size: 0, current: 0, total: 0, pages: 0 }
-
+const defaultCustomer = {
+  customerId: 0,
+  customerName: '',
+  email: '',
+  nickName: '',
+  createBy: 0,
+  createTime: 0,
+  updateBy: 0,
+  updateTime: 0,
+}
 const CustomerWindowPage: FC<CustomerWindowProps> = ({
   visible, x, y, onWindowCancel, onWindowOk,
 }) => {
@@ -58,62 +62,13 @@ const CustomerWindowPage: FC<CustomerWindowProps> = ({
   const [windowVisible, setWindowVisible,] = useState<boolean>(false)
   const [errorVisible, setErrorVisible,] = useState<boolean>(false)
   const [errorMessage, setErrorMessage,] = useState<string>('')
-
   const [data, setData,] = useState<CustomersType>( defaultData)
+  const [customer, setCustomer, ] = useState<SingleCustomerType>(defaultCustomer)
+  const [searchText, setSearchText, ] = useState<string>('')
+  const [customerFormWindowVisible, setCustomerFormWindowVisible, ] = useState<boolean>(false)
+  const [isUpdate, setIsUpdate, ] = useState<boolean>(false)
 
   const intl = useIntl();
-
-  const columns: ProColumns<SingleCustomerType>[] = [
-    {
-      title: <FormattedMessage id='workspace.header.customer-window.column-customer-id' />,
-      dataIndex: 'id',
-      valueType: 'digit',
-      key: 'id',
-      hideInSearch: true,
-      hideInTable: true,
-      hideInForm: true,
-    },
-    {
-      title: <FormattedMessage id='workspace.header.customer-window.column-customer-id' />,
-      dataIndex: 'name',
-      key: 'name',
-      valueType: 'text',
-      render: (text: any, record: SingleCustomerType) => <Button type='link' onClick={() => goEditHandler(record)} >{text}</Button>,
-    },
-    {
-      title: <FormattedMessage id='workspace.header.customer-window.column-customer-name' />,
-      dataIndex: 'regionsName',
-      valueType: 'text',
-      key: 'contactPerson',
-    },
-    {
-      title: <FormattedMessage id='workspace.header.customer-window.column-customer-email' />,
-      dataIndex: 'address',
-      key: 'address',
-      valueType: 'text',
-    },
-    {
-      title: <FormattedMessage id='workspace.header.customer-window.column-customer-type' />,
-      dataIndex: 'createTime',
-      valueType: 'date',
-      key: 'createTime',
-      renderText: (text: any) => new Date(text),
-    },
-    {
-      title: <FormattedMessage id='workspace.header.customer-window.operation' />,
-      key: 'action',
-      valueType: 'option',
-      render: (text: any, record: SingleCustomerType) => [
-        <Tooltip key='editButton' title='编辑'>
-          <Button icon={<EditFilled />} onClick={() => { }} />
-        </Tooltip>,
-        <Tooltip key='deleteButton' title='删除'>
-          <Button icon={<DeleteFilled />} onClick={() => {  }} />
-        </Tooltip>,
-      ],
-    },
-  ]
-
 
   if (windowVisible !== visible) {
     setDataLoading(false)
@@ -121,8 +76,8 @@ const CustomerWindowPage: FC<CustomerWindowProps> = ({
   }
 
 
-  const fetchData = async () => {
-    const customerData = await RequestUtils.getCustomers()
+  const fetchData = async (customerName: string | null, pageNum: number = 1, pageSize: number = 5) => {
+    const customerData = await RequestUtils.getCustomers(customerName, pageNum, pageSize)
     if (customerData.status === 200 && customerData.data.success) {
       const customers = customerData.data.data
       setData(customers)
@@ -136,7 +91,7 @@ const CustomerWindowPage: FC<CustomerWindowProps> = ({
     if (!dataLoading) {
       setDataLoading(true)
       setErrorVisible(false)
-      fetchData()
+      fetchData(searchText)
     }
   })
 
@@ -152,6 +107,103 @@ const CustomerWindowPage: FC<CustomerWindowProps> = ({
       onWindowCancel()
     }
   }  
+
+  const handleCustomerFormWindowOk = () => {
+    setCustomerFormWindowVisible(false)
+    fetchData(searchText)
+  }
+
+  const handleCustomerFormWindowCancel = () => {
+    setCustomerFormWindowVisible(false)
+  }
+
+  const handlePageChange = (current: number, size?: number) => {
+    fetchData(searchText, current)
+  }
+
+  const handleSearch = ()=> {
+    fetchData(searchText)
+  }
+
+  const handleUpdateCustomer = (customer: SingleCustomerType) => {
+    setCustomerFormWindowVisible(true)
+    setIsUpdate(true)
+    setCustomer(customer)
+  }
+
+  const handleAddCustomer = () => {
+    setCustomerFormWindowVisible(true)
+    setIsUpdate(false)
+    setCustomer(defaultCustomer)
+  }
+
+  const handleDeleteCustomer = (operator: SingleCustomerType) => {
+    setErrorVisible(false)
+    setErrorMessage('')
+    const confirmModal = Modal.confirm({
+      centered: true,
+      title: intl.formatMessage({id: 'workspace.header.operator-window.confirm-delete-title'}),
+      content: intl.formatMessage({id: 'workspace.header.operator-window.confirm-delete-content'}),
+      onOk: async () => {
+        const responseData = await RequestUtils.deleteOperator(operator.operatorId)
+        if (responseData.status === 200 && responseData.data.success) {
+          fetchData(searchText)
+        } else if (responseData.status === 200) {
+          setErrorVisible(true)
+          setErrorMessage(responseData.data.message)
+        } else {
+          setErrorVisible(true)
+          setErrorMessage('System error happened')
+        }
+        confirmModal.destroy()
+      },
+      onCancel: () => {
+        confirmModal.destroy()
+      }
+    })
+  }
+  const columns: ProColumns<SingleCustomerType>[] = [
+    {
+      title: <FormattedMessage id='workspace.header.customer-window.column-customer-id' />,
+      dataIndex: 'customerId',
+      valueType: 'digit',
+      key: 'customerId',
+      hideInSearch: true,
+      hideInTable: true,
+      hideInForm: true,
+    },
+    {
+      title: <FormattedMessage id='workspace.header.customer-window.column-customer-name' />,
+      dataIndex: 'customerName',
+      key: 'customerName',
+      valueType: 'text',
+    },
+    {
+      title: <FormattedMessage id='workspace.header.customer-window.column-customer-email' />,
+      dataIndex: 'email',
+      valueType: 'text',
+      key: 'email',
+    },
+    {
+      title: <FormattedMessage id='workspace.header.customer-window.column-customer-nickname' />,
+      dataIndex: 'nickName',
+      key: 'nickName',
+      valueType: 'text',
+    },
+    {
+      title: <FormattedMessage id='workspace.header.customer-window.operation' />,
+      key: 'action',
+      valueType: 'option',
+      render: (text: any, record: SingleCustomerType) => [
+        <Tooltip key='editButton' title={intl.formatMessage({id: 'workspace.header.customer-window.button-tooltip-edit'})}>
+          <Button icon={<EditFilled />} onClick={() => {handleUpdateCustomer(record) }} />
+        </Tooltip>,
+        <Tooltip key='deleteButton' title={intl.formatMessage({id: 'workspace.header.customer-window.button-tooltip-delete'})}>
+          <Button icon={<DeleteFilled />} onClick={() => { handleDeleteCustomer(record) }} />
+        </Tooltip>,
+      ],
+    },
+  ]
 
   return (
     <div>
@@ -174,11 +226,11 @@ const CustomerWindowPage: FC<CustomerWindowProps> = ({
         title={() => [
           <Row key='searchRow'>
             <Col span={18} >
-              <Input key='searchInput' placeholder={intl.formatMessage({ id: 'workspace.header.customer-window.search-placeholder' })} style={{ width: '360px', marginLeft: '16px', }} onChange={(e) => {  }}/>
-              <Button key='searchButton' type='primary' style={{ marginLeft: '24px', }} ><FormattedMessage id='workspace.header.customer-window.button-search' /></Button>
+              <Input key='searchInput' placeholder={intl.formatMessage({ id: 'workspace.header.customer-window.search-placeholder' })} style={{ width: '360px', marginLeft: '16px', }} onChange={(e) => { setSearchText(e.target.value)  }}/>
+              <Button key='searchButton' type='primary' style={{ marginLeft: '24px', }} onClick={handleSearch}><FormattedMessage id='workspace.header.customer-window.button-search' /></Button>
             </Col>
             <Col span={6}>
-              <Button key='addButton' type='primary' icon={<PlusOutlined/>} style={{ position: 'absolute', right: '16px', }} ><FormattedMessage id='workspace.header.customer-window.button-add' /></Button>
+              <Button key='addButton' type='primary' icon={<PlusOutlined/>} style={{ position: 'absolute', right: '16px', }} onClick={handleAddCustomer}><FormattedMessage id='workspace.header.customer-window.button-add' /></Button>
             </Col>
           </Row>,
         ]}
@@ -189,18 +241,19 @@ const CustomerWindowPage: FC<CustomerWindowProps> = ({
         <Pagination
           className='list-page' style={{ float: 'right', margin: '16px', }}
           total={data.total}
-          //onChange={paginationHandler}
+          onChange={handlePageChange}
           //onShowSizeChange={pageSizeHandler}
           current={data.current}
           pageSize={data.size}
-          //showSizeChanger
+          showSizeChanger={false}
           showQuickJumper
           //locale='zhCN'
-          showTotal={total => `总计 ${total}`}
+          //showTotal={total => `总计 ${total}`}
         />
       </div>
           </div>
         </div>
+        <CustomerFormWindow onWindowOk={handleCustomerFormWindowOk} onWindowCancel={handleCustomerFormWindowCancel} visible={customerFormWindowVisible} isUpdate={isUpdate} customerId={customer.customerId} customerName={customer.customerName} email={customer.email} nickname={customer.nickName}/>
       </Modal>
 
     </div>

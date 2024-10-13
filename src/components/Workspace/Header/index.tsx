@@ -3313,7 +3313,7 @@ const Header: FC<HeaderProps> = ({
   ];
 
   const managementItems: MenuProps['items'] = [
-    { key: 'Admin Login', label: <FormattedMessage id='workspace.header.menu-management-open-file' />, onClick: handleAdminLogin, },
+    // { key: 'Admin Login', label: <FormattedMessage id='workspace.header.menu-management-open-file' />, onClick: handleAdminLogin, },
     { key: 'Opem File Mangement Window', label: <FormattedMessage id='workspace.header.menu-management-open-file' />, onClick: handleOpenManagementWindow, },
     { key: 'Opem Operator Window', label: <FormattedMessage id='workspace.header.menu-management-open-operator' />, onClick: handleOperatorWindow, },
     { key: 'Opem Customer Window', label: <FormattedMessage id='workspace.header.menu-management-open-customer' />, onClick: handleCustomerWindow, },

@@ -465,10 +465,11 @@ export class RequestUtils {
         }
         return axios.post(this.systemServerAddress + `/operator/operators`, data, config)
     }
-    public static getOperatorDetails() {
+    public static getOperatorDetails(like: string | null, pageNum: number = 1, pageSize = 5) {
         const data = {
-            pageSize: 5,
-            pageNum: 1,
+            pageSize: pageSize,
+            pageNum: pageNum,
+            like: like,
         }
         const config = {
             headers: {
@@ -495,10 +496,10 @@ export class RequestUtils {
     }
 
 
-    public static addOperator() {
+    public static addOperator(customerId: number, operatorType: number) {
         const data = {
-            pageSize: 5,
-            pageNum: 1,
+            operatorType: operatorType,
+            customerId: customerId,
         }
         const config = {
             headers: {
@@ -506,13 +507,14 @@ export class RequestUtils {
                 'Token': RequestUtils.token
             }
         }
-        return axios.post(this.systemServerAddress + `/operator/operators`, data, config)
+        return axios.post(this.systemServerAddress + `/operator/add`, data, config)
     }
 
-    public static updateOperator() {
+    public static updateOperator(operatorId: number, customerId: number, operatorType: number) {
         const data = {
-            pageSize: 5,
-            pageNum: 1,
+            operatorId: operatorId,
+            operatorType: operatorType,
+            customerId: customerId,
         }
         const config = {
             headers: {
@@ -520,14 +522,13 @@ export class RequestUtils {
                 'Token': RequestUtils.token
             }
         }
-        return axios.post(this.systemServerAddress + `/operator/operators`, data, config)
+        return axios.post(this.systemServerAddress + `/operator/update`, data, config)
     }
 
 
-    public static deleteOperator() {
+    public static deleteOperator(operatorId: number) {
         const data = {
-            pageSize: 5,
-            pageNum: 1,
+            operatorId: operatorId
         }
         const config = {
             headers: {
@@ -535,13 +536,14 @@ export class RequestUtils {
                 'Token': RequestUtils.token
             }
         }
-        return axios.post(this.systemServerAddress + `/operator/operators`, data, config)
+        return axios.post(this.systemServerAddress + `/operator/delete`, data, config)
     }
 
-    public static getCustomers() {
+    public static getCustomers(customerName: string | null, pageNum: number = 1, pageSize: number = 5) {
         const data = {
-            pageSize: 5,
-            pageNum: 1,
+            customerName: customerName,
+            pageSize: pageSize,
+            pageNum: pageNum,
         }
         const config = {
             headers: {
@@ -584,10 +586,13 @@ export class RequestUtils {
     }
 
 
-    public static addCustomer() {
+    public static addCustomer(customerName: string, email: string, nickName: string, password: string, confirmPassword: string) {
         const data = {
-            pageSize: 5,
-            pageNum: 1,
+            customerName: customerName,
+            password: password,
+            confirmPassword: confirmPassword,
+            email: email,
+            nickName: nickName,
         }
         const config = {
             headers: {
@@ -598,7 +603,26 @@ export class RequestUtils {
         return axios.post(this.systemServerAddress + `/customer/add`, data, config)
     }
 
-    public static updateCustomer() {
+    public static updateCustomer(customerId: number, customerName: string, email: string, nickName: string, password: string, confirmPassword: string) {
+        const data = {
+            customerId: customerId,
+            customerName: customerName,
+            password: password,
+            confirmPassword: confirmPassword,
+            email: email,
+            nickName: nickName,
+        }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Token': RequestUtils.token
+            }
+        }
+        return axios.post(this.systemServerAddress + `/customer/update`, data, config)
+    }
+
+
+    public static deleteCustomer(customerId: number) {
         const data = {
             pageSize: 5,
             pageNum: 1,
@@ -613,10 +637,12 @@ export class RequestUtils {
     }
 
 
-    public static deleteCustomer() {
+    /**
+     * Retrieve System properties. For example, enable-mail-validation.  Web UI can hide for this.
+     * @returns 
+     */
+    public static getProperties() {
         const data = {
-            pageSize: 5,
-            pageNum: 1,
         }
         const config = {
             headers: {
@@ -624,7 +650,7 @@ export class RequestUtils {
                 'Token': RequestUtils.token
             }
         }
-        return axios.post(this.systemServerAddress + `/customer/customers`, data, config)
+        return axios.post(this.systemServerAddress + `/properties`, data, config)
     }
 
     public static getGoogleFonts() {

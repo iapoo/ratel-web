@@ -24,7 +24,7 @@ interface OperatorFormWindowProps {
 }
 
 const OperatorFormWindowPage: FC<OperatorFormWindowProps> = ({
-  visible, isUpdate, operatorId, customerId, customerName, email, onWindowCancel, onWindowOk, onCustomerSelectorChanged
+  visible, isUpdate, operatorId, customerId, customerName, email, onWindowCancel, onWindowOk, onCustomerSelectorChanged, operatorType
 }) => {
   const intl = useIntl();
   const [messageApi, contextHolder,] = message.useMessage()
@@ -41,9 +41,9 @@ const OperatorFormWindowPage: FC<OperatorFormWindowProps> = ({
     }
     if((operatorId !== operatorForm.getFieldValue('operatorId')) || (customerId !== operatorForm.getFieldValue('customerId'))) {
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
-      refreshCustomer(operatorId, customerId, customerName, email, false)
+      refreshCustomer(operatorId, operatorType, customerId, customerName, email, false)
       //console.log(`customer is reset to ${customerName}`)
-  }
+    }
   })
 
   const onOk = () => {
@@ -60,10 +60,11 @@ const OperatorFormWindowPage: FC<OperatorFormWindowProps> = ({
     setCustomerSelectorVisible(true)
   }
 
-  const refreshCustomer = (operatorId: number, customerId: number, customerName: string, email: string, customerChanged: boolean) => {
+  const refreshCustomer = (operatorId: number, operatorType: number, customerId: number, customerName: string, email: string, customerChanged: boolean) => {
     if(!customerChanged) {
       operatorForm.setFieldValue('operatorId', operatorId)
     }
+    operatorForm.setFieldValue('operatorType', operatorType)
     operatorForm.setFieldValue('customerId', customerId)
     operatorForm.setFieldValue('customerName', customerName)
     operatorForm.setFieldValue('customer', customerName ? `${customerName} / ${email}` : '')
@@ -72,9 +73,7 @@ const OperatorFormWindowPage: FC<OperatorFormWindowProps> = ({
   }
 
   const handleCustomerSelectorOk = (customerId: number, customerName: string, email: string) => {
-    //refreshCustomer(0, customerId, customerName, email, true)
     setCustomerSelectorVisible(false)
-    //setForceUpdate(!forceUpdate)    
     if(onCustomerSelectorChanged) {
       onCustomerSelectorChanged(customerId, customerName, email)
     }
@@ -84,50 +83,51 @@ const OperatorFormWindowPage: FC<OperatorFormWindowProps> = ({
     setCustomerSelectorVisible(false)
   }
 
-  const onFinish = (values: any) => {
+  const onFinish = async (values: any) => {
     console.log('Receive values:', values)
-    const { alias, email } = values
-    const data = {
-      'nickName': alias,
-      //'email': email,  //Email can't be updated.
-    }
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        'Token': RequestUtils.token
+    const { operatorId, operatorType, customerId, } = values
+    setErrorVisible(false)
+    setErrorMessage('')
+    if(isUpdate) {
+      let operatorData = await RequestUtils.updateOperator(operatorId, customerId, operatorType)
+      if (operatorData.status === 200 && operatorData.data.success) {
+        const operator = operatorData.data.data
+        console.log(operator)
+        if (onWindowOk) {
+          onWindowOk()
+        }
+      } else if(operatorData.status === 200){
+        setErrorVisible(true)
+        setErrorMessage(operatorData.data.message)
+      } else {
+        setErrorVisible(true)
+        setErrorMessage('System error happened')
+      }
+    } else {
+      let operatorData = await RequestUtils.addOperator(customerId, operatorType)
+      if (operatorData.status === 200 && operatorData.data.success) {
+        const operator = operatorData.data.data
+        console.log(operator)
+        if (onWindowOk) {
+          onWindowOk()
+        }
+      } else if(operatorData.status === 200){
+        setErrorVisible(true)
+        setErrorMessage(operatorData.data.message)
+      } else {
+        setErrorVisible(true)
+        setErrorMessage('System error happened')
       }
     }
-    setErrorVisible(false)
-    axios.post(`${RequestUtils.systemServerAddress}/update`, data, config)
-      .then(response => {
-        if (response.status === 200 && response.data.success) {
-          messageApi.open({
-            type: 'success',
-            content: intl.formatMessage({ id: 'workspace.header.operator-form-window.window-success-message' })
-          })
-          console.log('Operator succeed')
-          if (onWindowOk) {
-            onWindowOk()
-          }
-        } else if (response.status === 200 && !response.data.success) {
-          console.log('Operator failed')
-          setErrorVisible(true)
-          setErrorMessage(response.data.message)
-        }
-        console.log('Operator data: ', response.data)
-      })
-      .catch(error => {
-        console.log('Operator error: ', error)
-        setErrorMessage('System error internally')
-      })
   }
 
+
   const operatorTypes = [
-    {value: '0', label: <FormattedMessage id='workspace.header.operator-form-window.operator-type-0' />},
-    {value: '1', label: <FormattedMessage id='workspace.header.operator-form-window.operator-type-1' />},
-    {value: '2', label: <FormattedMessage id='workspace.header.operator-form-window.operator-type-2' />},
-    {value: '3', label: <FormattedMessage id='workspace.header.operator-form-window.operator-type-3' />},
-    {value: '4', label: <FormattedMessage id='workspace.header.operator-form-window.operator-type-4' />},
+    {value: 0, label: <FormattedMessage id='workspace.header.operator-form-window.operator-type-0' />},
+    {value: 1, label: <FormattedMessage id='workspace.header.operator-form-window.operator-type-1' />},
+    {value: 2, label: <FormattedMessage id='workspace.header.operator-form-window.operator-type-2' />},
+    {value: 3, label: <FormattedMessage id='workspace.header.operator-form-window.operator-type-3' />},
+    {value: 4, label: <FormattedMessage id='workspace.header.operator-form-window.operator-type-4' />},
   ]
 
   //console.log(`customerName = ${customerName}`)
@@ -154,6 +154,13 @@ const OperatorFormWindowPage: FC<OperatorFormWindowProps> = ({
             layout='vertical'
             // labelAlign='right'
             >
+
+          <Form.Item label='operatorId' name='operatorId' hidden>
+            <Input />
+          </Form.Item>
+          <Form.Item label='customerId' name='customerId' hidden>
+            <Input />
+          </Form.Item>
             <Form.Item name='customer' style={{ marginBottom: '4px', }}             
                   label={<FormattedMessage id='workspace.header.operator-form-window.label-select-customer' />} 
                   rules={[{ required: true, message: <FormattedMessage id='workspace.header.operator-form-window.message-select-customer' /> },]}>
@@ -176,7 +183,7 @@ const OperatorFormWindowPage: FC<OperatorFormWindowProps> = ({
                   { required: true, message: <FormattedMessage id='workspace.header.operator-form-window.message-operator-type' />, },
                 ]}
                 style={{ marginBottom: '4px', }} >
-              <Select defaultValue='3' style={{width: '45%'}} options={operatorTypes}/>                
+              <Select style={{width: '45%'}} options={operatorTypes}/>                
             </Form.Item>
             {errorVisible && (<Alert message={errorMessage} type="error" closable />)}
           </Form>

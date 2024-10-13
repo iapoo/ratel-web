@@ -58,7 +58,8 @@ const OperatorWindowPage: FC<OperatorWindowProps> = ({
   const [operatorType, setOperatorType, ] = useState<number>(0)
   const [isUpdate, setIsUpdate, ] = useState<boolean>(false)
   const [operatorId, setOperatorId, ] = useState<number>(0)
-  const intl = useIntl();
+  const [searchText, setSearchText, ] = useState<string>('')
+  const intl = useIntl()
 
   if (windowVisible !== visible) {
     setDataLoading(false)
@@ -66,8 +67,8 @@ const OperatorWindowPage: FC<OperatorWindowProps> = ({
   }
 
 
-  const fetchData = async () => {
-    const operatorData = await RequestUtils.getOperatorDetails()
+  const fetchData = async (like: string | null, pageNum: number = 1, pageSize: number = 5) => {
+    const operatorData = await RequestUtils.getOperatorDetails(like, pageNum, pageSize)
     if (operatorData.status === 200 && operatorData.data.success) {
       const operators = operatorData.data.data
       setData(operators)
@@ -80,7 +81,7 @@ const OperatorWindowPage: FC<OperatorWindowProps> = ({
     if (!dataLoading) {
       setDataLoading(true)
       setErrorVisible(false)
-      fetchData()
+      fetchData(searchText)
     }
   })
 
@@ -122,11 +123,42 @@ const OperatorWindowPage: FC<OperatorWindowProps> = ({
   }
 
   const handleDeleteOperator = (operator: SingleOperatorType) => {
+    setErrorVisible(false)
+    setErrorMessage('')
+    const confirmModal = Modal.confirm({
+      centered: true,
+      title: intl.formatMessage({id: 'workspace.header.operator-window.confirm-delete-title'}),
+      content: intl.formatMessage({id: 'workspace.header.operator-window.confirm-delete-content'}),
+      onOk: async () => {
+        const responseData = await RequestUtils.deleteOperator(operator.operatorId)
+        if (responseData.status === 200 && responseData.data.success) {
+          fetchData(searchText)
+        } else if (responseData.status === 200) {
+          setErrorVisible(true)
+          setErrorMessage(responseData.data.message)
+        } else {
+          setErrorVisible(true)
+          setErrorMessage('System error happened')
+        }
+        confirmModal.destroy()
+      },
+      onCancel: () => {
+        confirmModal.destroy()
+      }
+    })
+  }
 
+  const handlePageChange = (current: number, size?: number) => {
+    fetchData(searchText, current)
+  }
+
+  const handleSearch = ()=> {
+    fetchData(searchText)
   }
 
   const handleOperatorFormWindowOk = () => {
     setOperatorFormWindowVisible(false)
+    fetchData(searchText)
   }
 
   const handleOperatorFormWindowCancel = () => {
@@ -180,10 +212,10 @@ const OperatorWindowPage: FC<OperatorWindowProps> = ({
       key: 'operatorId',
       valueType: 'digit',
       render: (text: any, record: SingleOperatorType) => [
-        <Tooltip key='editButton' title='编辑'>
+        <Tooltip key='editButton' title={intl.formatMessage({id: 'workspace.header.operator-window.button-tooltip-edit'})}>
           <Button icon={<EditFilled />} onClick={() => handleUpdateOperator(record)} />
         </Tooltip>,
-        <Tooltip key='deleteButton' title='删除'>
+        <Tooltip key='deleteButton' title={intl.formatMessage({id: 'workspace.header.operator-window.button-tooltip-delete'})}>
           <Button icon={<DeleteFilled />} onClick={() => handleDeleteOperator(record) } />
         </Tooltip>,
       ],
@@ -198,7 +230,7 @@ const OperatorWindowPage: FC<OperatorWindowProps> = ({
           <ProTable
         columns={columns}
         dataSource={data.records}
-        rowKey='id'
+        rowKey='operatorId'
         //loading={operatorListLoading}
         search={false}
         pagination={false}
@@ -211,8 +243,8 @@ const OperatorWindowPage: FC<OperatorWindowProps> = ({
         title={() => [
           <Row key='searchRow'>
             <Col span={18} >
-              <Input key='searchInput' placeholder={intl.formatMessage({ id: 'workspace.header.operator-window.search-placeholder' })} style={{ width: '360px', marginLeft: '16px', }} onChange={(e) => {  }}/>
-              <Button key='searchButton' type='primary' style={{ marginLeft: '24px', }} ><FormattedMessage id='workspace.header.operator-window.button-search' /></Button>
+              <Input key='searchInput' placeholder={intl.formatMessage({ id: 'workspace.header.operator-window.search-placeholder' })} style={{ width: '360px', marginLeft: '16px', }} onChange={(e) => { setSearchText(e.target.value)  }}/>
+              <Button key='searchButton' type='primary' style={{ marginLeft: '24px', }} onClick={handleSearch}><FormattedMessage id='workspace.header.operator-window.button-search' /></Button>
             </Col>
             <Col span={6}>
               <Button key='addButton' type='primary' icon={<PlusOutlined/>} style={{ position: 'absolute', right: '16px', }} onClick={handleAddOperator}><FormattedMessage id='workspace.header.operator-window.button-add' /></Button>
@@ -226,14 +258,14 @@ const OperatorWindowPage: FC<OperatorWindowProps> = ({
         <Pagination
           className='list-page' style={{ float: 'right', margin: '16px', }}
           total={data.total}
-          //onChange={paginationHandler}
+          onChange={handlePageChange}
           //onShowSizeChange={pageSizeHandler}
           current={data.current}
           pageSize={data.size}
-          //showSizeChanger
+          showSizeChanger={false}
           showQuickJumper
           //locale='zhCN'
-          showTotal={total => `总计 ${total}`}
+          //showTotal={total => `总计 ${total}`}
         />
       </div>
           </div>

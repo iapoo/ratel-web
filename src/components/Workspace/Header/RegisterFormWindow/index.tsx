@@ -34,6 +34,7 @@ const RegisterFormWindowPage: FC<RegisterFormWindowProps> = ({
   const [errorVisible, setErrorVisible,] = useState<boolean>(false)
   const [errorMessage, setErrorMessage,] = useState<string>('')
   const [bounds, setBounds,] = useState({ left: 0, top: 0, bottom: 0, right: 0 })
+  const [enableMailValidation, setEnableMailValidation, ] = useState<boolean>(true)
   const verificationRef = useRef<HTMLButtonElement>(null);
 
   if (origModalX != x) {
@@ -57,6 +58,19 @@ const RegisterFormWindowPage: FC<RegisterFormWindowProps> = ({
       setDataLoading(true)
       setErrorVisible(false)
       const fetchData = async () => {
+        const propertiesData = await RequestUtils.getProperties()
+        console.log(propertiesData)
+        if (propertiesData.status === 200 && propertiesData.data.success) {
+          const properties = propertiesData.data.data
+          setEnableMailValidation('true' === properties['enable-mail-validation'])
+          console.log(properties)
+        } else if (propertiesData.status === 200) {
+          setErrorVisible(true)
+          setErrorMessage(propertiesData.data.message)
+        } else {
+          setErrorVisible(true)
+          setErrorMessage('System error happened')
+        }
       }
       fetchData()       
     }
@@ -298,12 +312,13 @@ const RegisterFormWindowPage: FC<RegisterFormWindowProps> = ({
                   prefix={<CodeOutlined/>}
                   placeholder={intl.formatMessage({required: true, id: 'workspace.header.register-form-window.email-validation-placeholder'})}
                   size='small'
+                  hidden={!enableMailValidation} 
                   bordered={false}
                   style={{width: '100%',}}
                 />                
             </Form.Item>
-            <div style={{ marginLeft: '24px', width: '400px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', }} />
-            <Button ref={verificationRef} type='primary' size='middle' onClick={sendValidationCode}  style={{}}><FormattedMessage id='workspace.header.register-form-window.email-validation-button-title' /></Button>
+            <div style={{ marginLeft: '24px', width: '400px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', display: enableMailValidation ? 'block' : 'none' }} />
+            <Button ref={verificationRef} hidden={!enableMailValidation} type='primary' size='middle' onClick={sendValidationCode}  style={{}}><FormattedMessage id='workspace.header.register-form-window.email-validation-button-title' /></Button>
             {errorVisible && (<Alert message={errorMessage} type="error" closable />)}
           </Form>
         </div>

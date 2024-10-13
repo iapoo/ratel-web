@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState, useRef } from 'react'
 import styles from './index.css'
 import { Form, Input, Checkbox, Row, Col, Button, Modal, Menu, message, Alert, } from 'antd'
-import { RequestUtils, Utils, } from '../../Utils'
+import { RequestUtils, SystemUtils, Utils, } from '../../Utils'
 import type { DraggableData, DraggableEvent } from 'react-draggable';
 import Draggable from 'react-draggable';
 import axios from 'axios'
@@ -87,6 +87,38 @@ const LoginFormWindowPage: FC<LoginFormWindowProps> = ({
     }
   }
 
+  const checkAdinLink = () => {
+    const url = document.URL
+    const urlObject = SystemUtils.parseUrl(url)
+    // console.log(`check admin = ${urlObject}`)
+    if (urlObject?.path) {
+      if (urlObject.path === '/admin') {
+        return true
+      }
+    }
+    return false
+  }
+
+
+
+  const checkAndLoginAsAdmin = async () => {
+    const checkIsAdminLink = checkAdinLink()
+    if(checkIsAdminLink) {
+      const loginData = await RequestUtils.loginAsAdmin()
+      if (loginData.status === 200 && loginData.data.success) {
+        messageApi.open({
+          type: 'success',
+          content: intl.formatMessage({ id: 'workspace.header.login-form-window.login-as-admin-success' })
+        })
+      } else {
+        messageApi.open({
+          type: 'error',
+          content: intl.formatMessage({ id: 'workspace.header.login-form-window.login-as-admin-failure' })
+        })
+      }
+    }
+  }
+
   const onFinish = (values: any) => {
     console.log('Receive values:', values)
     const { userName, userPassword } = values
@@ -103,7 +135,7 @@ const LoginFormWindowPage: FC<LoginFormWindowProps> = ({
     setErrorVisible(false)
     axios.post(`${RequestUtils.systemServerAddress}/login`, data, config)
       .then(response => {
-        if (response.status == 200 && response.data.success) {
+        if (response.status === 200 && response.data.success) {
           messageApi.open({
             type: 'success',
             content: intl.formatMessage({ id: 'workspace.header.login-form-window.window-success-message' })
@@ -115,10 +147,11 @@ const LoginFormWindowPage: FC<LoginFormWindowProps> = ({
           RequestUtils.online = true
           localStorage.setItem('auth.token', response.data.data)
           RequestUtils.checkOnline()
+          checkAndLoginAsAdmin()
           if (onWindowOk) {
             onWindowOk()
           }
-        } else if (response.status == 200 && !response.data.success) {
+        } else if (response.status === 200 && !response.data.success) {
           console.log('Login failed')
           setErrorVisible(true)
           setErrorMessage(response.data.message)
