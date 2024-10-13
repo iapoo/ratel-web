@@ -11,7 +11,7 @@ import { StorageService } from '../../Storage'
 import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
 
 
-interface OpenFileManagementWindowProps {
+interface FileManagementWindowProps {
   visible: boolean;
   x: number;
   y: number;
@@ -27,7 +27,7 @@ interface OpenFileManagementWindowProps {
 const FOLDER = 'FOLDER_'
 const DOC = "DOC_"
 
-const OpenFileManagementWindowPage: FC<OpenFileManagementWindowProps> = ({
+const FileManagementWindowPage: FC<FileManagementWindowProps> = ({
   visible, x, y, disableFileName, selectedFolderId, selectedDocumentId, selectedDocumentName, onWindowCancel, onWindowOk, documentThemeName,
 }) => {
   const [dataLoading, setDataLoading,] = useState<boolean>(false)
@@ -478,4 +478,4 @@ const OpenFileManagementWindowPage: FC<OpenFileManagementWindowProps> = ({
   )
 }
 
-export default OpenFileManagementWindowPage
+export default FileManagementWindowPage

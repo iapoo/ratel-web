@@ -571,6 +571,22 @@ export class RequestUtils {
         return axios.post(this.systemServerAddress + `/customer/operatorCustomers`, data, config)
     }
 
+
+    public static getOperatorDocuments(like: string | null,pageNum: number = 1, pageSize: number = 10) {
+        const data = {
+            like: like ? like : null,
+            pageSize: pageSize,
+            pageNum: pageNum,
+        }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Token': RequestUtils.token
+            }
+        }
+        return axios.post(this.rockieServerAddress + `/document/operatorDocuments`, data, config)
+    }
+
     public static getCustomer() {
         const data = {
             pageSize: 5,

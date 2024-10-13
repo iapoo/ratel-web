@@ -87,7 +87,7 @@ const LoginFormWindowPage: FC<LoginFormWindowProps> = ({
     }
   }
 
-  const checkAdinLink = () => {
+  const checkAdminLink = () => {
     const url = document.URL
     const urlObject = SystemUtils.parseUrl(url)
     // console.log(`check admin = ${urlObject}`)
@@ -102,7 +102,7 @@ const LoginFormWindowPage: FC<LoginFormWindowProps> = ({
 
 
   const checkAndLoginAsAdmin = async () => {
-    const checkIsAdminLink = checkAdinLink()
+    const checkIsAdminLink = checkAdminLink()
     if(checkIsAdminLink) {
       const loginData = await RequestUtils.loginAsAdmin()
       if (loginData.status === 200 && loginData.data.success) {
