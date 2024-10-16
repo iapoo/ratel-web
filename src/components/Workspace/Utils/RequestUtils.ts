@@ -652,6 +652,151 @@ export class RequestUtils {
         return axios.post(this.systemServerAddress + `/customer/customers`, data, config)
     }
 
+    public static getTeams(teamName: string | null, pageNum: number = 1, pageSize: number = 5) {
+        const data = {
+            teamName: teamName,
+            pageSize: pageSize,
+            pageNum: pageNum,
+        }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Token': RequestUtils.token
+            }
+        }
+        return axios.post(this.rockieServerAddress + `/team/teams`, data, config)
+    }
+
+
+    public static getTeam(teamId: number) {
+        const data = {
+            teamId: teamId,
+            pageSize: 5,
+            pageNum: 1,
+        }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Token': RequestUtils.token
+            }
+        }
+        return axios.post(this.rockieServerAddress + `/team/team`, data, config)
+    }
+
+    public static addTeam(teamName: string) {
+        const data = {
+            teamName: teamName,
+        }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Token': RequestUtils.token
+            }
+        }
+        return axios.post(this.rockieServerAddress + `/team/add`, data, config)
+    }
+
+    public static updateTeam(teamId: number, teamName: string) {
+        const data = {
+            teamId: teamId,
+            teamName: teamName,
+        }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Token': RequestUtils.token
+            }
+        }
+        return axios.post(this.rockieServerAddress + `/team/update`, data, config)
+    }
+
+
+    public static deleteTeam(teamId: number) {
+        const data = {
+            teamId: teamId
+        }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Token': RequestUtils.token
+            }
+        }
+        return axios.post(this.rockieServerAddress + `/team/delete`, data, config)
+    }
+
+    public static getTeamMembers(teamId: number, like: string, pageNum: number = 1, pageSize = 5) {
+        const data = {
+            teamId: teamId,
+            like: like,
+            pageSize: pageSize,
+            pageNum: pageNum,
+        }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Token': RequestUtils.token
+            }
+        }
+        return axios.post(this.rockieServerAddress + `/teamMember/teamMembers`, data, config)
+    }
+
+    public static getTeamMemberDetails(teamId: number, like: string | null, pageNum: number = 1, pageSize = 5) {
+        const data = {
+            teamId: teamId,
+            like: like,
+            pageSize: pageSize,
+            pageNum: pageNum,
+        }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Token': RequestUtils.token
+            }
+        }
+        return axios.post(this.rockieServerAddress + `/teamMember/teamMemberDetails`, data, config)
+    }
+
+    public static addTeamMember(teamId: number, customerName: string) {
+        const data = {
+            teamId: teamId,
+            customerName: customerName,
+        }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Token': RequestUtils.token
+            }
+        }
+        return axios.post(this.rockieServerAddress + `/teamMember/add`, data, config)
+    }
+
+    // public static updateTeamMember(teamId: number, customerId: number) {
+    //     const data = {
+    //         teamId: teamId,
+    //         customerId: customerId,
+    //     }
+    //     const config = {
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //             'Token': RequestUtils.token
+    //         }
+    //     }
+    //     return axios.post(this.rockieServerAddress + `/teamMember/update`, data, config)
+    // }
+
+    public static deleteTeamMember(teamId: number, customerId: number) {
+        const data = {
+            teamId: teamId,
+            customerId: customerId,
+        }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Token': RequestUtils.token
+            }
+        }
+        return axios.post(this.rockieServerAddress + `/teamMember/delete`, data, config)
+    }
 
     /**
      * Retrieve System properties. For example, enable-mail-validation.  Web UI can hide for this.

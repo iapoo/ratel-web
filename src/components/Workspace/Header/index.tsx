@@ -7,7 +7,7 @@ import { setInterval } from 'timers'
 import { UserInfo } from '../Utils/RequestUtils'
 import LoginFormWindow from './LoginFormWindow'
 import NewFileWindow from './NewFileWindow';
-import { AlignCenterOutlined, AlignLeftOutlined, AlignRightOutlined, BoldOutlined, CheckOutlined, DownloadOutlined, FileAddOutlined, FileOutlined, FileTextOutlined, FolderOpenOutlined, FormOutlined, GithubOutlined, ItalicOutlined, MoonOutlined, RedoOutlined, SaveOutlined, SearchOutlined, SettingOutlined, SolutionOutlined, SunOutlined, UnderlineOutlined, UndoOutlined, UserOutlined, VerticalAlignBottomOutlined, VerticalAlignMiddleOutlined, VerticalAlignTopOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons';
+import { AlignCenterOutlined, AlignLeftOutlined, AlignRightOutlined, BoldOutlined, CheckOutlined, DownloadOutlined, FileAddOutlined, FileOutlined, FileTextOutlined, FolderOpenOutlined, FormOutlined, GithubOutlined, ItalicOutlined, MoonOutlined, RedoOutlined, SaveOutlined, SearchOutlined, SettingOutlined, SolutionOutlined, SunOutlined, TeamOutlined, UnderlineOutlined, UndoOutlined, UserOutlined, VerticalAlignBottomOutlined, VerticalAlignMiddleOutlined, VerticalAlignTopOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons';
 import OpenFileWindow from './OpenFileWindow';
 import FileManagementWindow from './FileManagementWindow'
 import OperatorWindow from './OperatorWindow'
@@ -36,6 +36,7 @@ import { EditorHelper } from '@/components/Rockie/Utils';
 import RegisterFormWindowPage from './RegisterFormWindow';
 import PasswordFormWindowPage from './PasswordFormWindow';
 import ProfileFormWindowPage from './ProfileFormWindow';
+import TeamWindow from './TeamWindow'
 import DocumentSelector from  './DocumentSelector'
 import { UMLConnectors, UMLContainerShapes, UMLCustomTable, UMLCustomTableTypes, UMLCustomTables } from '@/components/Rockie/CustomItems/UML';
 import { UMLContainerShape, UMLContainerTypes } from '@/components/Rockie/CustomItems/UML/src/UMLContainerShape';
@@ -149,6 +150,8 @@ const Header: FC<HeaderProps> = ({
   const [connectorLineStartArrow, setConnectorLineStartArrow,] = useState<string>(ConnectorArrowTypes[0].name)
   const [connectorLineEndArrow, setConnectorLineEndArrow,] = useState<string>(ConnectorArrowTypes[0].name)
   const [connectorSelected, setConnectorSelected,] = useState<boolean>(false)
+  const [teamWindowVisible, setTeamWindowVisible, ] = useState<boolean>(false)
+
   // const [exportForm, ] = Form.useForm()
   // const [downloadDocumentForm, ] = Form.useForm()
   const timerCountRef = useRef(0)
@@ -642,6 +645,17 @@ const Header: FC<HeaderProps> = ({
     setCustomerWindowVisible(false)
   }
 
+  const handleTeamWindow = () => {
+    setTeamWindowVisible(true)
+  }
+
+  const handleTeamWindowOk = () => {
+    setTeamWindowVisible(false)
+  }
+
+  const handleTeamWindowCancel = () => {
+    setTeamWindowVisible(false)
+  }
   const logout = () => {
     if (Utils.isModified) {
       confirm({
@@ -3388,6 +3402,10 @@ const Header: FC<HeaderProps> = ({
           <div style={{ float: 'right', display: 'table', height: '100%', marginRight: '8px' }}>
             <Space direction="horizontal" style={{ display: 'table-cell', verticalAlign: 'middle' }}>
               <Space wrap={false}>
+                <Button type='primary' size='small' style={{ display: online ? 'inline' : 'none', webkitAppRegion: 'no-drag' }} ><FormattedMessage id='workspace.header.button-share-title'/></Button>
+                <Tooltip title={<FormattedMessage id='workspace.header.title.team' />}>
+                  <Button shape='circle' type='text' size='small' icon={<TeamOutlined />} onClick={handleTeamWindow} style={{ display: online ? 'inline' : 'none', webkitAppRegion: 'no-drag' }} />
+                </Tooltip>
                 <Dropdown menu={{ items: userProfileMenu }}>
                   <Button shape='circle' type='text' size='small' icon={<UserOutlined />} style={{ display: online ? 'inline' : 'none', webkitAppRegion: 'no-drag' }} />
                 </Dropdown>
@@ -3522,6 +3540,7 @@ const Header: FC<HeaderProps> = ({
       <OperatorWindow visible={operatorWindowVisible} x={60} y={60} onWindowCancel={handleOperatorWindowCancel} onWindowOk={handleOperatorWindowOk} disableFileName={disableFileName} selectedFolderId={selectedFolderId} selectedDocumentId={selectedDocumentId} selectedDocumentName={selectedDocumentName} documentThemeName={documentThemeName} />
       <CustomerWindow visible={customerWindowVisible} x={60} y={60} onWindowCancel={handleCustomerWindowCancel} onWindowOk={handleCustomerWindowOk} disableFileName={disableFileName} selectedFolderId={selectedFolderId} selectedDocumentId={selectedDocumentId} selectedDocumentName={selectedDocumentName} documentThemeName={documentThemeName} />
       <AboutWindowPage visible={aboutWindowVisible} x={60} y={60} onWindowCancel={handleAboutWindowCancel} onWindowOk={handleAboutWindowOk} />
+      <TeamWindow visible={teamWindowVisible} x={60} y={60} onWindowCancel={handleTeamWindowCancel} onWindowOk={handleTeamWindowOk} />
       <Modal title={<FormattedMessage id='workspace.header.message-title-document-modified' />} centered open={discardModifiedDocumentWindowVisible}
         onOk={confirmDiscardModifiedDocument} onCancel={cancelDiscardModifiedDocument} >
         <FormattedMessage id='workspace.header.message-document-modified' />

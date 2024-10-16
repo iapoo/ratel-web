@@ -121,7 +121,7 @@ const CustomerFormWindowPage: FC<CustomerFormWindowProps> = ({
             className='customer-form'
             onFinish={onFinish}
             style={{ maxWidth: '100%', }}
-            initialValues={{customer: 'abcc', customerName: 'abc'}}
+            // initialValues={{customer: 'abcc', customerName: 'abc'}}
             layout='vertical'
             // labelAlign='right'
             >

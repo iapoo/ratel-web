@@ -212,7 +212,7 @@ const OperatorWindowPage: FC<OperatorWindowProps> = ({
       key: 'operatorId',
       valueType: 'digit',
       render: (text: any, record: SingleOperatorType) => [
-        <Tooltip key='editButton' title={intl.formatMessage({id: 'workspace.header.operator-window.button-tooltip-edit'})}>
+        <Tooltip key='editButton' title={intl.formatMessage({id: 'workspace.header.operator-window.button-tip-update'})}>
           <Button icon={<EditFilled />} onClick={() => handleUpdateOperator(record)} />
         </Tooltip>,
         <Tooltip key='deleteButton' title={intl.formatMessage({id: 'workspace.header.operator-window.button-tooltip-delete'})}>
