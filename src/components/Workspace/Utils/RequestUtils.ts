@@ -798,6 +798,55 @@ export class RequestUtils {
         return axios.post(this.rockieServerAddress + `/teamMember/delete`, data, config)
     }
 
+    public static getDocumentAccessDetails(documentId: number, like: string | null, pageNum: number = 1, pageSize: number = 8) {
+        const data = {
+            documentId: documentId,
+            like: like,
+            pageSize: pageSize,
+            pageNum: pageNum,
+        }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Token': RequestUtils.token
+            }
+        }
+        return axios.post(this.rockieServerAddress + `/documentAccess/documentAccessDetails`, data, config)
+    }
+
+    public static deleteDocumentAccess(documentId: number, like: string | null, pageNum: number = 1, pageSize: number = 8) {
+        const data = {
+            documentId: documentId,
+            like: like,
+            pageSize: pageSize,
+            pageNum: pageNum,
+        }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Token': RequestUtils.token
+            }
+        }
+        return axios.post(this.rockieServerAddress + `/documentAccess/delete`, data, config)
+    }
+
+    public static addDocumentAccess(documentId: number, customerName: string, pageNum: number = 1, pageSize: number = 8) {
+        const data = {
+            documentId: documentId,
+            customerName: customerName,
+            pageSize: pageSize,
+            pageNum: pageNum,
+            accessMode: 0,
+        }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Token': RequestUtils.token
+            }
+        }
+        return axios.post(this.rockieServerAddress + `/documentAccess/add`, data, config)
+    }
+
     /**
      * Retrieve System properties. For example, enable-mail-validation.  Web UI can hide for this.
      * @returns 

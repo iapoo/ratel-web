@@ -37,6 +37,7 @@ import RegisterFormWindowPage from './RegisterFormWindow';
 import PasswordFormWindowPage from './PasswordFormWindow';
 import ProfileFormWindowPage from './ProfileFormWindow';
 import TeamWindow from './TeamWindow'
+import ShareWindow from './ShareWindow'
 import DocumentSelector from  './DocumentSelector'
 import { UMLConnectors, UMLContainerShapes, UMLCustomTable, UMLCustomTableTypes, UMLCustomTables } from '@/components/Rockie/CustomItems/UML';
 import { UMLContainerShape, UMLContainerTypes } from '@/components/Rockie/CustomItems/UML/src/UMLContainerShape';
@@ -151,6 +152,7 @@ const Header: FC<HeaderProps> = ({
   const [connectorLineEndArrow, setConnectorLineEndArrow,] = useState<string>(ConnectorArrowTypes[0].name)
   const [connectorSelected, setConnectorSelected,] = useState<boolean>(false)
   const [teamWindowVisible, setTeamWindowVisible, ] = useState<boolean>(false)
+  const [shareWindowVisible, setShareWindowVisible, ] = useState<boolean>(false)
 
   // const [exportForm, ] = Form.useForm()
   // const [downloadDocumentForm, ] = Form.useForm()
@@ -656,6 +658,19 @@ const Header: FC<HeaderProps> = ({
   const handleTeamWindowCancel = () => {
     setTeamWindowVisible(false)
   }
+
+  const handleShareWindow = () => {
+    setShareWindowVisible(true)
+  }
+
+  const handleShareWindowOk = () => {
+    setShareWindowVisible(false)
+  }
+
+  const handleShareWindowCancel = () => {
+    setShareWindowVisible(false)
+  }
+
   const logout = () => {
     if (Utils.isModified) {
       confirm({
@@ -3402,7 +3417,7 @@ const Header: FC<HeaderProps> = ({
           <div style={{ float: 'right', display: 'table', height: '100%', marginRight: '8px' }}>
             <Space direction="horizontal" style={{ display: 'table-cell', verticalAlign: 'middle' }}>
               <Space wrap={false}>
-                <Button type='primary' size='small' style={{ display: online ? 'inline' : 'none', webkitAppRegion: 'no-drag' }} ><FormattedMessage id='workspace.header.button-share-title'/></Button>
+                <Button type='primary' size='small' style={{ display: online ? 'inline' : 'none', webkitAppRegion: 'no-drag' }} onClick={handleShareWindow} disabled={selectedDocumentId === null} ><FormattedMessage id='workspace.header.button-share-title'/></Button>
                 <Tooltip title={<FormattedMessage id='workspace.header.title.team' />}>
                   <Button shape='circle' type='text' size='small' icon={<TeamOutlined />} onClick={handleTeamWindow} style={{ display: online ? 'inline' : 'none', webkitAppRegion: 'no-drag' }} />
                 </Tooltip>
@@ -3541,6 +3556,7 @@ const Header: FC<HeaderProps> = ({
       <CustomerWindow visible={customerWindowVisible} x={60} y={60} onWindowCancel={handleCustomerWindowCancel} onWindowOk={handleCustomerWindowOk} disableFileName={disableFileName} selectedFolderId={selectedFolderId} selectedDocumentId={selectedDocumentId} selectedDocumentName={selectedDocumentName} documentThemeName={documentThemeName} />
       <AboutWindowPage visible={aboutWindowVisible} x={60} y={60} onWindowCancel={handleAboutWindowCancel} onWindowOk={handleAboutWindowOk} />
       <TeamWindow visible={teamWindowVisible} x={60} y={60} onWindowCancel={handleTeamWindowCancel} onWindowOk={handleTeamWindowOk} />
+      <ShareWindow documentId={selectedDocumentId!} visible={shareWindowVisible} x={60} y={60} onWindowCancel={handleShareWindowCancel} onWindowOk={handleShareWindowOk} />
       <Modal title={<FormattedMessage id='workspace.header.message-title-document-modified' />} centered open={discardModifiedDocumentWindowVisible}
         onOk={confirmDiscardModifiedDocument} onCancel={cancelDiscardModifiedDocument} >
         <FormattedMessage id='workspace.header.message-document-modified' />
