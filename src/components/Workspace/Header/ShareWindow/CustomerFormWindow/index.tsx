@@ -15,7 +15,7 @@ interface CustomerFormWindowProps {
   visible: boolean;
   documentId: number;
   onWindowCancel: () => void;
-  onWindowOk: () => void
+  onWindowOk: (customerId: number, customerName: string) => void
 }
 
 const CustomerFormWindowPage: FC<CustomerFormWindowProps> = ({
@@ -47,15 +47,19 @@ const CustomerFormWindowPage: FC<CustomerFormWindowProps> = ({
 
   const onFinish = async (values: any) => {
     console.log('Receive values:', values)
-    const { customerName } = values
+    const { customerId, customerName, } = values
     setErrorVisible(false)
     setErrorMessage('')
     let teamData = await RequestUtils.addDocumentAccess(documentId, customerName)
     if (teamData.status === 200 && teamData.data.success) {
       const team = teamData.data.data
       console.log(team)
+      messageApi.open({
+        type: 'success',
+        content: intl.formatMessage({ id: 'workspace.header.share-window.customer-form-window.window-success-message' })
+      })
       if (onWindowOk) {
-        onWindowOk()
+        onWindowOk(customerId, customerName)
       }
     } else if(teamData.status === 200){
       setErrorVisible(true)
@@ -70,7 +74,7 @@ const CustomerFormWindowPage: FC<CustomerFormWindowProps> = ({
     <div>
       {contextHolder}
       <Modal
-        title={<FormattedMessage id='workspace.header.team-member-form-window.window-title' />}
+        title={<FormattedMessage id='workspace.header.share-window.customer-form-window.window-title' />}
         centered
         open={visible}
         onOk={onOk}
@@ -93,10 +97,10 @@ const CustomerFormWindowPage: FC<CustomerFormWindowProps> = ({
           <Form.Item label='customerId' name='customerId' hidden>
             <Input />
           </Form.Item>
-          <Form.Item name='customerName' label={intl.formatMessage({ id: 'workspace.header.team-member-form-window.customer-name' })} rules={[{ required: true, message: <FormattedMessage id='workspace.header.team-member-window.team-name-message' />, },]} style={{ marginBottom: '4px', width: '100%', }} >
+          <Form.Item name='customerName' label={intl.formatMessage({ id: 'workspace.header.share-window.customer-form-window.customer-name' })} rules={[{ required: true, message: <FormattedMessage id='workspace.header.team-member-window.team-name-message' />, },]} style={{ marginBottom: '4px', width: '100%', }} >
               <Input
                 //prefix={false}
-                placeholder={intl.formatMessage({ id: 'workspace.header.team-member-form-window.customer-name-placeholder' })}
+                placeholder={intl.formatMessage({ id: 'workspace.header.share-window.customer-form-window.customer-name-placeholder' })}
                 size='small'
                 style={{ width: '100%', }}
               />

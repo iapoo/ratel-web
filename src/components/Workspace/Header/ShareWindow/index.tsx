@@ -11,7 +11,7 @@ import { StorageService } from '../../Storage'
 import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
 import { ProColumns, ProTable } from '@ant-design/pro-components'
 import CustomerFormWindow from './CustomerFormWindow'
-
+import TeamSelector from './TeamSelector'
 
 interface ShareWindowProps {
   visible: boolean;
@@ -22,9 +22,29 @@ interface ShareWindowProps {
   onWindowOk: () => void
 }
 
-interface SingleTeamType {
-  teamId: number;
+interface SingleDocumentAccessType {
+  documentId: number;
   customerId: number;
+  customerName: string;
+  customerEmail: string;
+  customerNickname: string;
+  createBy: number;
+  createTime: number;
+  updateBy: number;
+  updateTime: number;
+}
+
+interface DocumentAccesssType {
+  records: SingleDocumentAccessType[];
+  total: number;
+  size: number;
+  pages: number;
+  current: number;
+}
+
+interface SingleDocumentTeamAccessType {
+  documentId: number;
+  teamId: number;
   teamName: string;
   createBy: number;
   createTime: number;
@@ -32,28 +52,40 @@ interface SingleTeamType {
   updateTime: number;
 }
 
-interface TeamsType {
-  records: SingleTeamType[];
+interface DocumentTeamAccesssType {
+  records: SingleDocumentTeamAccessType[];
   total: number;
   size: number;
   pages: number;
   current: number;
 }
 
-interface FormValues {
-  [name: string]: any;
-}
+const defaultDocumentAccessData = { records: [], size: 0, current: 0, total: 0, pages: 0 }
 
-const defaultData = { records: [], size: 0, current: 0, total: 0, pages: 0 }
-const defaultTeam = {
-  teamId: 0,
-  teamName: '',
+const defaultDocumentAccess = {
+  documentId: 0,
+  customerName: '',
   customerId: 0,
+  customerEmail: '',
+  customerNickname: '',
   createBy: 0,
   createTime: 0,
   updateBy: 0,
   updateTime: 0,
 }
+
+const defaultDocumentTeamAccessData = { records: [], size: 0, current: 0, total: 0, pages: 0 }
+
+const defaultDocumentTeamAccess = {
+  documentId: 0,
+  teamName: '',
+  teamId: 0,
+  createBy: 0,
+  createTime: 0,
+  updateBy: 0,
+  updateTime: 0,
+}
+
 const ShareWindowPage: FC<ShareWindowProps> = ({
   visible, documentId, x, y, onWindowCancel, onWindowOk,
 }) => {
@@ -61,11 +93,12 @@ const ShareWindowPage: FC<ShareWindowProps> = ({
   const [windowVisible, setWindowVisible,] = useState<boolean>(false)
   const [errorVisible, setErrorVisible,] = useState<boolean>(false)
   const [errorMessage, setErrorMessage,] = useState<string>('')
-  const [data, setData,] = useState<TeamsType>( defaultData)
-  const [team, setTeam, ] = useState<SingleTeamType>(defaultTeam)
+  const [documentAccessData, setDocumentAccessData,] = useState<DocumentAccesssType>( defaultDocumentAccessData)
+  const [documentTeamAccessData, setDocumentTeamAccessData,] = useState<DocumentTeamAccesssType>( defaultDocumentTeamAccessData)
   const [searchCustomerText, setSearchCustomerText, ] = useState<string>('')
-  const [isUpdate, setIsUpdate, ] = useState<boolean>(false)
+  const [searchTeamText, setSearchTeamText, ] = useState<string>('')
   const [customerFormWindowVisible, setCustomerFormWindowVisible, ] = useState<boolean>(false)
+  const [teamSelectorVisible, setTeamSelectorVisible, ] = useState<boolean>(false)
 
   const intl = useIntl();
   const [messageApi, contextHolder,] = message.useMessage()
@@ -75,22 +108,32 @@ const ShareWindowPage: FC<ShareWindowProps> = ({
     setWindowVisible(visible)
   }
 
-
   const fetchDocumentAccessData = async (documentId: number, like: string | null, pageNum: number = 1, pageSize: number = 5) => {
-    const teamData = await RequestUtils.getDocumentAccessDetails(documentId, like, pageNum, pageSize)
-    if (teamData.status === 200 && teamData.data.success) {
-      const teams = teamData.data.data
-      setData(teams)
+    const documentAccessData = await RequestUtils.getDocumentAccessDetails(documentId, like, pageNum, pageSize)
+    if (documentAccessData.status === 200 && documentAccessData.data.success) {
+      const documentAccesss = documentAccessData.data.data
+      setDocumentAccessData(documentAccesss)
     } else {
-      setData(defaultData)
+      setDocumentAccessData(defaultDocumentAccessData)
     }
   }
   
+  const fetchDocumentTeamAccessData = async (documentId: number, like: string | null, pageNum: number = 1, pageSize: number = 5) => {
+    const documentTeamAccessData = await RequestUtils.getDocumentTeamAccessDetails(documentId, like, pageNum, pageSize)
+    if (documentTeamAccessData.status === 200 && documentTeamAccessData.data.success) {
+      const documentTeamAccesss = documentTeamAccessData.data.data
+      setDocumentTeamAccessData(documentTeamAccesss)
+    } else {
+      setDocumentTeamAccessData(defaultDocumentTeamAccessData)
+    }
+  }
+
   useEffect(() => {
     if (!dataLoading) {
       setDataLoading(true)
       setErrorVisible(false)
       fetchDocumentAccessData(documentId, searchCustomerText)
+      fetchDocumentTeamAccessData(documentId, searchTeamText)
     }
   })
 
@@ -107,34 +150,15 @@ const ShareWindowPage: FC<ShareWindowProps> = ({
     }
   }  
 
-  const handleTeamFormWindowOk = () => {
-    setTeamFormWindowVisible(false)
-    fetchDocumentAccessData(documentId, searchCustomerText)
-  }
-
-  const handleTeamFormWindowCancel = () => {
-    setTeamFormWindowVisible(false)
-  }
-
-  const handlePageChange = (current: number, size?: number) => {
+  const handleDocumentAccessPageChange = (current: number) => {
     fetchDocumentAccessData(documentId, searchCustomerText, current)
-  }
-
-
-  const handleTeamMemberWindowOk = () => {
-    setTeamMemberWindowVisible(false)
-    fetchDocumentAccessData(documentId, searchCustomerText)
-  }
-
-  const handleTeamMemberWindowCancel = () => {
-    setTeamMemberWindowVisible(false)
   }
 
   const handleSelectCustomoer = () => {
     setCustomerFormWindowVisible(true)
   }
 
-  const handleCustomerFormWindowOk = (customerId: number, customerName: string, email: string) => {
+  const handleCustomerFormWindowOk = () => {
     setCustomerFormWindowVisible(false)
     fetchDocumentAccessData(documentId, searchCustomerText)
   }
@@ -143,28 +167,11 @@ const ShareWindowPage: FC<ShareWindowProps> = ({
     setCustomerFormWindowVisible(false)
   }
 
-  const handleSearch = ()=> {
+  const handleCustomerSearch = ()=> {
     fetchDocumentAccessData(documentId, searchCustomerText)
   }
-
-  const handleUpdateTeam = (team: SingleTeamType) => {
-    setTeamFormWindowVisible(true)
-    setIsUpdate(true)
-    setTeam(team)
-  }
-
-  const handleUpdateTeamMember = (team: SingleTeamType) => {
-    setTeamMemberWindowVisible(true)
-    setTeam(team)
-  }
-
-  const handleAddTeam = () => {
-    setTeamFormWindowVisible(true)
-    setIsUpdate(false)
-    setTeam(defaultTeam)
-  }
-
-  const handleDeleteTeam = (team: SingleTeamType) => {
+  
+  const handleDeleteDocumentAccess = (documentAccess: SingleDocumentAccessType) => {
     setErrorVisible(false)
     setErrorMessage('')
     const confirmModal = Modal.confirm({
@@ -172,12 +179,12 @@ const ShareWindowPage: FC<ShareWindowProps> = ({
       title: intl.formatMessage({id: 'workspace.header.share-window.confirm-delete-title'}),
       content: intl.formatMessage({id: 'workspace.header.share-window.confirm-delete-content'}),
       onOk: async () => {
-        const responseData = await RequestUtils.deleteTeam(team.teamId)
+        const responseData = await RequestUtils.deleteDocumentAccess(documentAccess.documentId, documentAccess.customerId)
         if (responseData.status === 200 && responseData.data.success) {
           fetchDocumentAccessData(documentId, searchCustomerText)
           messageApi.open({
             type: 'success',
-            content: intl.formatMessage({ id: 'workspace.header.share-window.delete-success-message' })
+            content: intl.formatMessage({ id: 'workspace.header.share-window.delete-customer-success-message' })
           })
         } else if (responseData.status === 200) {
           setErrorVisible(true)
@@ -193,7 +200,73 @@ const ShareWindowPage: FC<ShareWindowProps> = ({
       }
     })
   }
-  const documentAccessColumns: ProColumns<SingleTeamType>[] = [
+
+
+  const handleDocumentTeamAccessPageChange = (current: number) => {
+    fetchDocumentTeamAccessData(documentId, searchTeamText, current)
+  }
+
+  const handleSelectTeam = () => {
+    setTeamSelectorVisible(true)
+  }
+
+  const handleTeamSelectorOk = async (teamId: number) => {
+    setTeamSelectorVisible(false)
+    const responseData = await RequestUtils.addDocumentTeamAccess(documentId, teamId)
+    if (responseData.status === 200 && responseData.data.success) {
+      messageApi.open({
+        type: 'success',
+        content: intl.formatMessage({ id: 'workspace.header.share-window.add-success-message' })
+      })
+      fetchDocumentTeamAccessData(documentId, searchCustomerText)
+    } else if (responseData.status === 200) {
+      setErrorVisible(true)
+      setErrorMessage(responseData.data.message)
+    } else {
+      setErrorVisible(true)
+      setErrorMessage('System error happened')
+    }
+  }
+
+  const handleTeamSelectorCancel = () => {
+    setTeamSelectorVisible(false)
+  }
+
+  const handleTeamSearch = ()=> {
+    fetchDocumentTeamAccessData(documentId, searchTeamText)
+  }
+
+  const handleDeleteDocumentTeamAccess = (documentTeamAccess: SingleDocumentTeamAccessType) => {
+    setErrorVisible(false)
+    setErrorMessage('')
+    const confirmModal = Modal.confirm({
+      centered: true,
+      title: intl.formatMessage({id: 'workspace.header.share-window.confirm-delete-title'}),
+      content: intl.formatMessage({id: 'workspace.header.share-window.confirm-delete-content'}),
+      onOk: async () => {
+        const responseData = await RequestUtils.deleteDocumentTeamAccess(documentTeamAccess.documentId, documentTeamAccess.teamId)
+        if (responseData.status === 200 && responseData.data.success) {
+          fetchDocumentTeamAccessData(documentId, searchCustomerText)
+          messageApi.open({
+            type: 'success',
+            content: intl.formatMessage({ id: 'workspace.header.share-window.delete-team-success-message' })
+          })
+        } else if (responseData.status === 200) {
+          setErrorVisible(true)
+          setErrorMessage(responseData.data.message)
+        } else {
+          setErrorVisible(true)
+          setErrorMessage('System error happened')
+        }
+        confirmModal.destroy()
+      },
+      onCancel: () => {
+        confirmModal.destroy()
+      }
+    })
+  }
+
+  const documentAccessColumns: ProColumns<SingleDocumentAccessType>[] = [
     {
       title: <FormattedMessage id='workspace.header.share-window.column-document-id' />,
       dataIndex: 'documentId',
@@ -234,15 +307,47 @@ const ShareWindowPage: FC<ShareWindowProps> = ({
       title: <FormattedMessage id='workspace.header.share-window.operation' />,
       key: 'action',
       valueType: 'option',
-      render: (text: any, record: SingleTeamType) => [
-        <Tooltip key='editButton' title={intl.formatMessage({id: 'workspace.header.share-window.button-tooltip-edit-member'})}>
-          <Button icon={<TeamOutlined />} onClick={() => {handleUpdateTeamMember(record) }} />
-        </Tooltip>,
-        <Tooltip key='editMemberButton' title={intl.formatMessage({id: 'workspace.header.share-window.button-tooltip-edit'})}>
-          <Button icon={<EditFilled />} onClick={() => {handleUpdateTeam(record) }} />
-        </Tooltip>,
+      render: (text: any, record: SingleDocumentAccessType) => [
         <Tooltip key='deleteButton' title={intl.formatMessage({id: 'workspace.header.share-window.button-tooltip-delete'})}>
-          <Button icon={<DeleteFilled />} onClick={() => { handleDeleteTeam(record) }} />
+          <Button icon={<DeleteFilled />} onClick={() => { handleDeleteDocumentAccess(record) }} />
+        </Tooltip>,
+      ],
+    },
+  ]
+
+
+  const documentTeamAccessColumns: ProColumns<SingleDocumentTeamAccessType>[] = [
+    {
+      title: <FormattedMessage id='workspace.header.share-window.column-document-id' />,
+      dataIndex: 'documentId',
+      valueType: 'digit',
+      key: 'documentId',
+      hideInSearch: true,
+      hideInTable: true,
+      hideInForm: true,
+    },
+    {
+      title: <FormattedMessage id='workspace.header.share-window.column-team-id' />,
+      dataIndex: 'teamId',
+      valueType: 'digit',
+      key: 'teamId',
+      hideInSearch: true,
+      hideInTable: true,
+      hideInForm: true,
+    },
+    {
+      title: <FormattedMessage id='workspace.header.share-window.column-team-name' />,
+      dataIndex: 'teamName',
+      key: 'teamName',
+      valueType: 'text',
+    },
+    {
+      title: <FormattedMessage id='workspace.header.share-window.operation' />,
+      key: 'action',
+      valueType: 'option',
+      render: (text: any, record: SingleDocumentTeamAccessType) => [
+        <Tooltip key='deleteTeamButton' title={intl.formatMessage({id: 'workspace.header.share-window.button-tooltip-delete'})}>
+          <Button icon={<DeleteFilled />} onClick={() => { handleDeleteDocumentTeamAccess(record) }} />
         </Tooltip>,
       ],
     },
@@ -252,9 +357,9 @@ const ShareWindowPage: FC<ShareWindowProps> = ({
   <div style={{ width: '100%', height: '400px',  }}>
     <ProTable
       columns={documentAccessColumns}
-      dataSource={data.records}
+      dataSource={documentAccessData.records}
       rowKey='id'
-      //loading={teamListLoading}
+      //loading={documentAccessListLoading}
       search={false}
       pagination={false}
       options={{
@@ -266,8 +371,8 @@ const ShareWindowPage: FC<ShareWindowProps> = ({
       title={() => [
         <Row key='searchRow'>
           <Col span={18} >
-            <Input key='searchInput' placeholder={intl.formatMessage({ id: 'workspace.header.share-window.search-placeholder' })} style={{ width: '240px', marginLeft: '16px', }} onChange={(e) => { setSearchCustomerText(e.target.value)  }}/>
-            <Button key='searchButton' type='primary' style={{ marginLeft: '24px', }} onClick={handleSearch}><FormattedMessage id='workspace.header.share-window.button-search' /></Button>
+            <Input key='searchInput' placeholder={intl.formatMessage({ id: 'workspace.header.share-window.search-customer-placeholder' })} style={{ width: '240px', marginLeft: '16px', }} onChange={(e) => { setSearchCustomerText(e.target.value)  }}/>
+            <Button key='searchButton' type='primary' style={{ marginLeft: '24px', }} onClick={handleCustomerSearch}><FormattedMessage id='workspace.header.share-window.button-search' /></Button>
           </Col>
           <Col span={6}>
             <Button key='addButton' type='primary' icon={<PlusOutlined/>} style={{ position: 'absolute', right: '16px', }} onClick={handleSelectCustomoer}><FormattedMessage id='workspace.header.share-window.button-add' /></Button>
@@ -280,11 +385,11 @@ const ShareWindowPage: FC<ShareWindowProps> = ({
     <div style={{ width: '100%', height: '64px', }}>
       <Pagination
         className='list-page' style={{ float: 'right', margin: '16px', }}
-        total={data.total}
-        onChange={handlePageChange}
+        total={documentAccessData.total}
+        onChange={handleDocumentAccessPageChange}
         //onShowSizeChange={pageSizeHandler}
-        current={data.current}
-        pageSize={data.size}
+        current={documentAccessData.current}
+        pageSize={documentAccessData.size}
         showSizeChanger={false}
         showQuickJumper
         //locale='zhCN'
@@ -294,13 +399,13 @@ const ShareWindowPage: FC<ShareWindowProps> = ({
   </div>
 </div>
 
-const customer2Selector =  <div style={{ width: '100%', height: '440px',}}>
+const documentTeamAccessList =  <div style={{ width: '100%', height: '440px',}}>
 <div style={{ width: '100%', height: '400px',  }}>
   <ProTable
-    columns={documentAccessColumns}
-    dataSource={data.records}
+    columns={documentTeamAccessColumns}
+    dataSource={documentTeamAccessData.records}
     rowKey='id'
-    //loading={teamListLoading}
+    //loading={documentAccessListLoading}
     search={false}
     pagination={false}
     options={{
@@ -312,11 +417,11 @@ const customer2Selector =  <div style={{ width: '100%', height: '440px',}}>
     title={() => [
       <Row key='searchRow'>
         <Col span={18} >
-          <Input key='searchInput' placeholder={intl.formatMessage({ id: 'workspace.header.share-window.search-placeholder' })} style={{ width: '240px', marginLeft: '16px', }} onChange={(e) => { setSearchCustomerText(e.target.value)  }}/>
-          <Button key='searchButton' type='primary' style={{ marginLeft: '24px', }} onClick={handleSearch}><FormattedMessage id='workspace.header.share-window.button-search' /></Button>
+          <Input key='searchTeamInput' placeholder={intl.formatMessage({ id: 'workspace.header.share-window.search-team-placeholder' })} style={{ width: '240px', marginLeft: '16px', }} onChange={(e) => { setSearchTeamText(e.target.value)  }}/>
+          <Button key='searchTeamButton' type='primary' style={{ marginLeft: '24px', }} onClick={handleTeamSearch}><FormattedMessage id='workspace.header.share-window.button-search' /></Button>
         </Col>
         <Col span={6}>
-          <Button key='addButton' type='primary' icon={<PlusOutlined/>} style={{ position: 'absolute', right: '16px', }} onClick={handleAddTeam}><FormattedMessage id='workspace.header.share-window.button-add' /></Button>
+          <Button key='addTeamButton' type='primary' icon={<PlusOutlined/>} style={{ position: 'absolute', right: '16px', }} onClick={handleSelectTeam}><FormattedMessage id='workspace.header.share-window.button-add' /></Button>
         </Col>
       </Row>,
     ]}
@@ -326,11 +431,11 @@ const customer2Selector =  <div style={{ width: '100%', height: '440px',}}>
   <div style={{ width: '100%', height: '64px', }}>
     <Pagination
       className='list-page' style={{ float: 'right', margin: '16px', }}
-      total={data.total}
-      onChange={handlePageChange}
+      total={documentTeamAccessData.total}
+      onChange={handleDocumentTeamAccessPageChange}
       //onShowSizeChange={pageSizeHandler}
-      current={data.current}
-      pageSize={data.size}
+      current={documentTeamAccessData.current}
+      pageSize={documentTeamAccessData.size}
       showSizeChanger={false}
       showQuickJumper
       //locale='zhCN'
@@ -339,6 +444,7 @@ const customer2Selector =  <div style={{ width: '100%', height: '440px',}}>
   </div>
 </div>
 </div>
+
 
 
 const items: TabsProps['items'] = [
@@ -350,7 +456,7 @@ const items: TabsProps['items'] = [
   {
     key: '2',
     label: <FormattedMessage id='workspace.header.share-window.label-share-team' />,
-    children: 'a'
+    children: documentTeamAccessList
   },
   {
     key: '3',
@@ -366,6 +472,7 @@ const items: TabsProps['items'] = [
         <Tabs tabPosition='left' items={items} defaultActiveKey='1' style={{width: '100%', height: 500}}/>
       </Modal>
       <CustomerFormWindow visible={customerFormWindowVisible} documentId={documentId} onWindowOk={handleCustomerFormWindowOk} onWindowCancel={handleCustomerFormWindowCancel}/>
+      <TeamSelector visible={teamSelectorVisible} onWindowOk={handleTeamSelectorOk} onWindowCancel={handleTeamSelectorCancel}/>
       </div>
   )
 }

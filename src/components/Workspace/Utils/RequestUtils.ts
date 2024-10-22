@@ -814,12 +814,10 @@ export class RequestUtils {
         return axios.post(this.rockieServerAddress + `/documentAccess/documentAccessDetails`, data, config)
     }
 
-    public static deleteDocumentAccess(documentId: number, like: string | null, pageNum: number = 1, pageSize: number = 8) {
+    public static deleteDocumentAccess(documentId: number, customerId: number) {
         const data = {
             documentId: documentId,
-            like: like,
-            pageSize: pageSize,
-            pageNum: pageNum,
+            customerId: customerId,            
         }
         const config = {
             headers: {
@@ -845,6 +843,51 @@ export class RequestUtils {
             }
         }
         return axios.post(this.rockieServerAddress + `/documentAccess/add`, data, config)
+    }
+
+    public static getDocumentTeamAccessDetails(documentId: number, like: string | null, pageNum: number = 1, pageSize: number = 8) {
+        const data = {
+            documentId: documentId,
+            like: like,
+            pageSize: pageSize,
+            pageNum: pageNum,
+        }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Token': RequestUtils.token
+            }
+        }
+        return axios.post(this.rockieServerAddress + `/documentTeamAccess/documentTeamAccessDetails`, data, config)
+    }
+
+    public static deleteDocumentTeamAccess(documentId: number, teamId: number) {
+        const data = {
+            documentId: documentId,
+            teamId: teamId,            
+        }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Token': RequestUtils.token
+            }
+        }
+        return axios.post(this.rockieServerAddress + `/documentTeamAccess/delete`, data, config)
+    }
+
+    public static addDocumentTeamAccess(documentId: number, teamId: number) {
+        const data = {
+            documentId: documentId,
+            teamId: teamId,
+            accessMode: 0,
+        }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Token': RequestUtils.token
+            }
+        }
+        return axios.post(this.rockieServerAddress + `/documentTeamAccess/add`, data, config)
     }
 
     /**
