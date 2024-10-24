@@ -199,11 +199,8 @@ const Header: FC<HeaderProps> = ({
     // }, 60000)
 
     const delayTimer = setTimeout(() => {
-      const hasLink = checkLink()
-      if (!hasLink) {
-        loadStagingDocument()
-      }
-    }, 2000)
+      checkLinkAndLoaddDocument()
+    }, 4000)
     return () => {
       clearInterval(timer)
       clearTimeout(delayTimer)
@@ -211,16 +208,21 @@ const Header: FC<HeaderProps> = ({
     }
   }
 
-  const checkLink = async () => {
+  const checkLinkAndLoaddDocument = async () => {
     const url = document.URL
     const urlObject = SystemUtils.parseUrl(url)
+    let loaded = false
     if (urlObject?.query && urlObject?.path) {
+      loaded = true
       if (urlObject.path == '/document' && urlObject.query.id) {
-        loadLinkDocument(urlObject.query.id)
-        return true
-      }
+        loadDocument(urlObject.query.id)
+      } else if (urlObject.path == '/document' && urlObject.query.link) {
+        loadLinkDocument(urlObject.query.link)
+      } 
     }
-    return false
+    if(!loaded) {
+      loadStagingDocument()
+    }
   }
 
   const checkAdminLink = () => {
@@ -235,11 +237,60 @@ const Header: FC<HeaderProps> = ({
     return false
   }
 
-
-  const loadLinkDocument = async (id: string) => {
-    const onlineResult = await RequestUtils.isOnline()
-    // handleOpenFileWindowOk(parseInt(id), '', 0)
-    console.log(`load link document now.`)
+  const doLoadDocument = (id: string, isLink: boolean) => {
+    let linkCode = ''
+    let documentId = 0
+    if(isLink) {
+      linkCode = id
+      if (linkCode === null) {
+        messageApi.error(intl.formatMessage({ id: 'workspace.header.message-invalid-document-link' }))
+        return
+      }
+    } else {
+      documentId = Number.parseInt(id)
+      if (linkCode === null) {
+        messageApi.error(intl.formatMessage({ id: 'workspace.header.message-invalid-document-id' }))
+        return
+      }
+    }
+    const fetchDocumentData = async () => {
+      let documentData;
+      if(isLink) {
+        documentData = await RequestUtils.loadDocumentByLink(linkCode)
+      } else {
+        documentData = await RequestUtils.loadDocument(documentId, true)
+      }
+      if (documentData.data?.success) {
+        console.log(`Load document successfully: documentId = ${linkCode}`)
+        let content = documentData.data.data.content.content
+        const storage = new StorageService()
+        storage.editors = Utils.editors
+        storage.loadDocument(content)
+        Utils.storageData = storage.storageData
+        if (Utils.loadData) {
+          Utils.loadData()
+        }
+        if (Utils.checkIfModified) {
+          Utils.checkIfModified(false)
+        }
+        setSelectedDocumentId(documentData.data.data.documentId)
+        setSelectedFolderId(documentData.data.data.folderId)
+        setSelectedDocumentName(documentData.data.data.documentName)
+        localStorage.setItem(STAGING_DOCUMENT_ID, `${documentData.data.data.documentId}`)
+        localStorage.setItem(STAGING_FOLDER_ID, `${documentData.data.data.folderId}`)
+        localStorage.setItem(STAGING_DOCUMENT_NAME, `${documentData.data.data.documentName}`)
+        //All editors have same theme name and so we use first one
+        if (storage.storageData.theme) {
+          onDocumentThemeChanged(storage.storageData.theme)
+        } else {
+          onDocumentThemeChanged(DocumentThemeTypes[0].name)
+        }
+      } else {
+        console.log(`Load document failed: source = ${id}`)
+      }
+      setOpenFileWindowVisible(false)
+    }
+    fetchDocumentData()
   }
 
   const loadStagingDocument = async () => {
@@ -254,6 +305,21 @@ const Header: FC<HeaderProps> = ({
       handleOpenFileWindowOk(parseInt(documentId), documentName, folderId as number)
     }
   }
+
+  const loadDocument = async (id: string) => {
+    const onlineResult = await RequestUtils.isOnline()
+    // handleOpenFileWindowOk(parseInt(id), '', 0)
+    console.log(`load document now.`)
+    doLoadDocument(id, false)
+  }
+
+  const loadLinkDocument = async (id: string) => {
+    const onlineResult = await RequestUtils.isOnline()
+    // handleOpenFileWindowOk(parseInt(id), '', 0)
+    console.log(`load link document now.`)
+    doLoadDocument(id, true)
+  }
+  
   const refresh = () => {
     if (previousEditor) {
       previousEditor.removeSelectionChange(handleSelectionChange)

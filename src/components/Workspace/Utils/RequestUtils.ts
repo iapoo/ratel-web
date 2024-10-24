@@ -349,9 +349,10 @@ export class RequestUtils {
         return axios.post(this.rockieServerAddress + `/document/documents`, data, config)
     }
 
-    public static loadDocument(documentId: number) {
+    public static loadDocument(documentId: number, withContent: boolean = true) {
         const data = {
-            documentId: documentId
+            documentId: documentId,
+            withContent: withContent,
         }
         const config = {
             headers: {
@@ -362,7 +363,20 @@ export class RequestUtils {
         return axios.post(this.rockieServerAddress + `/document/document`, data, config)
     }
 
-    public static saveDocument(documentName: String, content: string, folderId: number | null) {
+    public static loadDocumentByLink(linkCode: string) {
+        const data = {
+            linkCode: linkCode,
+        }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Token': RequestUtils.token
+            }
+        }
+        return axios.post(this.rockieServerAddress + `/document/link`, data, config)
+    }
+
+    public static saveDocument(documentName: string, content: string, folderId: number | null) {
         const data = {
             documentName: documentName,
             content: {
@@ -380,7 +394,7 @@ export class RequestUtils {
         return axios.post(this.rockieServerAddress + `/document/add`, data, config)
     }
 
-    public static updateDocument(documentId: number, documentName: String, content: string, folderId: number | null) {
+    public static updateDocument(documentId: number, documentName: string, content: string, folderId: number | null) {
         const data = {
             documentId: documentId,
             documentName: documentName,
@@ -397,6 +411,22 @@ export class RequestUtils {
             }
         }
         return axios.post(this.rockieServerAddress + `/document/update`, data, config)
+    }
+
+    public static updateDocumentShare(documentId: number, shareStatus: number, shareCode: string, shareCodeStatus: number) {
+        const data = {
+            documentId: documentId,
+            shareStatus: shareStatus,
+            shareCode: shareCode,
+            shareCodeStatus: shareCodeStatus
+        }
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Token': RequestUtils.token
+            }
+        }
+        return axios.post(this.rockieServerAddress + `/document/share`, data, config)
     }
 
     public static deleteDocument(documentId: number) {

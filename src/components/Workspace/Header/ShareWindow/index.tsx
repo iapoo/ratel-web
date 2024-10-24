@@ -1,6 +1,6 @@
-import React, { FC, useEffect, useState, useRef } from 'react'
+import React, { FC, useEffect, useState, useRef, ChangeEvent } from 'react'
 import styles from './index.css'
-import { Form, Input, Checkbox, Tree, Row, Col, Button, Modal, Menu, message, Alert, Space, Pagination, Switch, Tooltip, Tabs, TabsProps} from 'antd'
+import { Form, Input, Select, Checkbox, Tree, Row, Col, Button, Modal, Menu, message, Alert, Space, Pagination, Switch, Tooltip, Tabs, TabsProps, DatePicker} from 'antd'
 import { Consts, RequestUtils, SystemUtils, Utils, } from '../../Utils'
 import axios from 'axios'
 import Avatar from 'antd/lib/avatar/avatar'
@@ -60,34 +60,22 @@ interface DocumentTeamAccesssType {
   current: number;
 }
 
-const defaultDocumentAccessData = { records: [], size: 0, current: 0, total: 0, pages: 0 }
-
-const defaultDocumentAccess = {
-  documentId: 0,
-  customerName: '',
-  customerId: 0,
-  customerEmail: '',
-  customerNickname: '',
-  createBy: 0,
-  createTime: 0,
-  updateBy: 0,
-  updateTime: 0,
+interface DocumentShareType {
+  documentId: number;
+  linkCode: string;
+  shareStatus: number;
+  shareCodeStatus: number;
+  shareCode: string;
 }
+
+const defaultDocumentAccessData = { records: [], size: 0, current: 0, total: 0, pages: 0 }
 
 const defaultDocumentTeamAccessData = { records: [], size: 0, current: 0, total: 0, pages: 0 }
 
-const defaultDocumentTeamAccess = {
-  documentId: 0,
-  teamName: '',
-  teamId: 0,
-  createBy: 0,
-  createTime: 0,
-  updateBy: 0,
-  updateTime: 0,
-}
+const defaultDocumentShareData = { documentId: 0, linkCode: '', shareStatus: 0, shareCode: '', shareCodeStatus: 0 }
 
 const ShareWindowPage: FC<ShareWindowProps> = ({
-  visible, documentId, x, y, onWindowCancel, onWindowOk,
+  visible, documentId, x, y, onWindowCancel, onWindowOk, 
 }) => {
   const [dataLoading, setDataLoading,] = useState<boolean>(false)
   const [windowVisible, setWindowVisible,] = useState<boolean>(false)
@@ -99,9 +87,12 @@ const ShareWindowPage: FC<ShareWindowProps> = ({
   const [searchTeamText, setSearchTeamText, ] = useState<string>('')
   const [customerFormWindowVisible, setCustomerFormWindowVisible, ] = useState<boolean>(false)
   const [teamSelectorVisible, setTeamSelectorVisible, ] = useState<boolean>(false)
-
+  const [documentShare, setDocumentShare, ] = useState<DocumentShareType>(defaultDocumentShareData)
+  const [shareLinkPrefix, setShareLinkPrefix, ] = useState<string>('')
   const intl = useIntl();
   const [messageApi, contextHolder,] = message.useMessage()
+  const {RangePicker, } = DatePicker
+
 
   if (windowVisible !== visible) {
     setDataLoading(false)
@@ -128,12 +119,31 @@ const ShareWindowPage: FC<ShareWindowProps> = ({
     }
   }
 
+  const refreshLinkCode = () => {
+    const url = document.URL
+    const urlObject = SystemUtils.parseUrl(url)
+    console.log(`check admin = ${urlObject}`)
+    setShareLinkPrefix(urlObject.protocol + '://' + urlObject.host + '/document?link=')
+  }
+  
+  const fetchDocumentShare = async (documentId: number) => {
+    const documentShareData = await RequestUtils.loadDocument(documentId, false)
+    if (documentShareData.status === 200 && documentShareData.data.success) {
+      const documentShare = documentShareData.data.data
+      setDocumentShare(documentShare)
+    } else {
+      setDocumentShare(defaultDocumentShareData)
+    }
+  }
+
   useEffect(() => {
     if (!dataLoading) {
       setDataLoading(true)
       setErrorVisible(false)
       fetchDocumentAccessData(documentId, searchCustomerText)
       fetchDocumentTeamAccessData(documentId, searchTeamText)
+      fetchDocumentShare(documentId)
+      refreshLinkCode()
     }
   })
 
@@ -266,6 +276,57 @@ const ShareWindowPage: FC<ShareWindowProps> = ({
     })
   }
 
+  const handleUpdateDocumentShare = async (documentId: number, shareStatus: number, shareCode: string, shareCodeStatus: number) => {
+    setErrorVisible(false)
+    setErrorMessage('')
+    const responseData = await RequestUtils.updateDocumentShare(documentId, shareStatus, shareCode, shareCodeStatus)
+    if (responseData.status === 200 && responseData.data.success) {
+      fetchDocumentShare(documentId)
+    } else if (responseData.status === 200) {
+      setErrorVisible(true)
+      setErrorMessage(responseData.data.message)
+    } else {
+      setErrorVisible(true)
+      setErrorMessage('System error happened')
+    }
+  }
+
+  const handleShareStatusChange = (checked: boolean) => {
+    handleUpdateDocumentShare(documentId, checked ? 1 : 0, documentShare.shareCode, documentShare.shareCodeStatus)
+  }
+
+  const handleShareCodeStatusChange = (checked: boolean) => {
+    let shareCode = documentShare.shareCode
+    if(checked) {
+      shareCode = SystemUtils.generateRandomString(4)
+    }
+    handleUpdateDocumentShare(documentId, documentShare.shareStatus, shareCode, checked ? 1 : 0)
+  }
+
+  const handleShareCodeChange = (e: ChangeEvent<HTMLInputElement>) => {
+    handleUpdateDocumentShare(documentId, documentShare.shareStatus, e.target.value, documentShare.shareCodeStatus)
+  }
+
+  const handleCopyLink = async () => {
+    let clipboard = navigator.clipboard
+    if (!clipboard) {
+      SystemUtils.handleInternalError(intl.formatMessage({ id: 'workspace.content.message-clipboard-not-supported' }))
+      return
+    }
+    await clipboard.writeText(shareLinkPrefix + documentShare.linkCode)
+  }
+
+  const shareExpirationOptions = [
+    { value: 1, label: <FormattedMessage id='workspace.header.share-window.expiration-option-1' />},
+    { value: 2, label: <FormattedMessage id='workspace.header.share-window.expiration-option-2' />},
+    { value: 3, label: <FormattedMessage id='workspace.header.share-window.expiration-option-3' />},
+    { value: 5, label: <FormattedMessage id='workspace.header.share-window.expiration-option-4' />},
+    { value: 7, label: <FormattedMessage id='workspace.header.share-window.expiration-option-5' />},
+    { value: 14, label: <FormattedMessage id='workspace.header.share-window.expiration-option-6' />},
+    { value: 30, label: <FormattedMessage id='workspace.header.share-window.expiration-option-7' />},
+    { value: 999, label: <FormattedMessage id='workspace.header.share-window.expiration-option-8' />},
+  ]
+
   const documentAccessColumns: ProColumns<SingleDocumentAccessType>[] = [
     {
       title: <FormattedMessage id='workspace.header.share-window.column-document-id' />,
@@ -314,7 +375,6 @@ const ShareWindowPage: FC<ShareWindowProps> = ({
       ],
     },
   ]
-
 
   const documentTeamAccessColumns: ProColumns<SingleDocumentTeamAccessType>[] = [
     {
@@ -445,7 +505,30 @@ const documentTeamAccessList =  <div style={{ width: '100%', height: '440px',}}>
 </div>
 </div>
 
-
+const publicShareSection = <div style={{width: '100%', height: '500px'}}>
+  <div style={{width: '100%', height: '60%'}}>
+    <div style={{padding: '8px'}}>
+      <FormattedMessage id='workspace.header.share-window.public-share-turn-on-share' />
+      <Switch style={{marginLeft: 32}} value={documentShare.shareStatus === 1} onChange={handleShareStatusChange}/>
+    </div>
+    <div style={{padding: '8px', display: documentShare.shareStatus === 1 ? 'block' : 'none'}}>
+      <FormattedMessage id='workspace.header.share-window.public-share-access-code' />
+      <Switch style={{marginLeft: 32}} value={documentShare.shareCodeStatus === 1} onChange={handleShareCodeStatusChange}/>
+      <Input style={{marginLeft: 32, width: 60, }} hidden={documentShare.shareCodeStatus !== 1} value={documentShare.shareCode} onChange={handleShareCodeChange}/>
+    </div>
+    <div style={{padding: '8px', display: documentShare.shareStatus === 1 ? 'block' : 'none'}}>
+      <FormattedMessage id='workspace.header.share-window.public-share-setup-expiration-date' /><Select style={{width: 140, marginLeft: 32}} options={shareExpirationOptions} />
+    </div>
+    <div style={{padding: '8px', display: documentShare.shareStatus === 1 ? 'block' : 'none'}}>
+      <Input value={shareLinkPrefix + documentShare.linkCode} disabled style={{width: '65%', cursor: 'default'}}/>
+      <Button type='primary' style={{width: '30%'}} onClick={handleCopyLink}>
+        <FormattedMessage id='workspace.header.share-window.public-share-copy-link' />
+      </Button>
+    </div>
+  </div>
+  <div style={{width: '100%', height: '40%', }}>
+  </div>
+</div>
 
 const items: TabsProps['items'] = [
   {
@@ -461,7 +544,7 @@ const items: TabsProps['items'] = [
   {
     key: '3',
     label: <FormattedMessage id='workspace.header.share-window.label-share-public' />,
-    children: 'a'
+    children: publicShareSection
   },
 ]
 

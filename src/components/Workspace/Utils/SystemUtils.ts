@@ -655,6 +655,20 @@ export class SystemUtils {
         return 'Unknown OS';
     }
 
+    /**
+     * Generate random string with specified length
+     * @param length 
+     * @returns 
+     */
+    public static generateRandomString(length: number) {
+        let result = ''
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        for (let i = 0; i < length; i++) {
+            const randomChar = characters.charAt(Math.floor(Math.random() * characters.length));
+            result += randomChar;
+        }
+        return result;
+    }
 }
 
 
