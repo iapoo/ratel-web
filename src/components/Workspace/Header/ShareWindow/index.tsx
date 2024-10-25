@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState, useRef, ChangeEvent } from 'react'
 import styles from './index.css'
-import { Form, Input, Select, Checkbox, Tree, Row, Col, Button, Modal, Menu, message, Alert, Space, Pagination, Switch, Tooltip, Tabs, TabsProps, DatePicker} from 'antd'
+import { Form, Input, Select, Checkbox, Tree, Row, Col, Button, Modal, Menu, message, Alert, Space, Pagination, Switch, Tooltip, Tabs, TabsProps, DatePicker, DatePickerProps, GetProps} from 'antd'
 import { Consts, RequestUtils, SystemUtils, Utils, } from '../../Utils'
 import axios from 'axios'
 import Avatar from 'antd/lib/avatar/avatar'
@@ -12,6 +12,7 @@ import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
 import { ProColumns, ProTable } from '@ant-design/pro-components'
 import CustomerFormWindow from './CustomerFormWindow'
 import TeamSelector from './TeamSelector'
+import moment from 'moment'
 
 interface ShareWindowProps {
   visible: boolean;
@@ -66,13 +67,15 @@ interface DocumentShareType {
   shareStatus: number;
   shareCodeStatus: number;
   shareCode: string;
+  effectiveDate: number | null;
+  expireDate: number | null;
 }
 
 const defaultDocumentAccessData = { records: [], size: 0, current: 0, total: 0, pages: 0 }
 
 const defaultDocumentTeamAccessData = { records: [], size: 0, current: 0, total: 0, pages: 0 }
 
-const defaultDocumentShareData = { documentId: 0, linkCode: '', shareStatus: 0, shareCode: '', shareCodeStatus: 0 }
+const defaultDocumentShareData = { documentId: 0, linkCode: '', shareStatus: 0, shareCode: '', shareCodeStatus: 0, effectiveDate: null, expireDate: null }
 
 const ShareWindowPage: FC<ShareWindowProps> = ({
   visible, documentId, x, y, onWindowCancel, onWindowOk, 
@@ -93,6 +96,7 @@ const ShareWindowPage: FC<ShareWindowProps> = ({
   const [messageApi, contextHolder,] = message.useMessage()
   const {RangePicker, } = DatePicker
 
+  type RangePickerProps = GetProps<typeof DatePicker.RangePicker>
 
   if (windowVisible !== visible) {
     setDataLoading(false)
@@ -276,10 +280,10 @@ const ShareWindowPage: FC<ShareWindowProps> = ({
     })
   }
 
-  const handleUpdateDocumentShare = async (documentId: number, shareStatus: number, shareCode: string, shareCodeStatus: number) => {
+  const handleUpdateDocumentShare = async (documentId: number, shareStatus: number, shareCode: string, shareCodeStatus: number, effectiveDate: number | null, expireDate: number | null) => {
     setErrorVisible(false)
     setErrorMessage('')
-    const responseData = await RequestUtils.updateDocumentShare(documentId, shareStatus, shareCode, shareCodeStatus)
+    const responseData = await RequestUtils.updateDocumentShare(documentId, shareStatus, shareCode, shareCodeStatus, effectiveDate, expireDate)
     if (responseData.status === 200 && responseData.data.success) {
       fetchDocumentShare(documentId)
     } else if (responseData.status === 200) {
@@ -292,7 +296,7 @@ const ShareWindowPage: FC<ShareWindowProps> = ({
   }
 
   const handleShareStatusChange = (checked: boolean) => {
-    handleUpdateDocumentShare(documentId, checked ? 1 : 0, documentShare.shareCode, documentShare.shareCodeStatus)
+    handleUpdateDocumentShare(documentId, checked ? 1 : 0, documentShare.shareCode, documentShare.shareCodeStatus, documentShare.effectiveDate, documentShare.expireDate)
   }
 
   const handleShareCodeStatusChange = (checked: boolean) => {
@@ -300,11 +304,23 @@ const ShareWindowPage: FC<ShareWindowProps> = ({
     if(checked) {
       shareCode = SystemUtils.generateRandomString(4)
     }
-    handleUpdateDocumentShare(documentId, documentShare.shareStatus, shareCode, checked ? 1 : 0)
+    handleUpdateDocumentShare(documentId, documentShare.shareStatus, shareCode, checked ? 1 : 0, documentShare.effectiveDate, documentShare.expireDate)
   }
 
   const handleShareCodeChange = (e: ChangeEvent<HTMLInputElement>) => {
-    handleUpdateDocumentShare(documentId, documentShare.shareStatus, e.target.value, documentShare.shareCodeStatus)
+    handleUpdateDocumentShare(documentId, documentShare.shareStatus, e.target.value, documentShare.shareCodeStatus, documentShare.effectiveDate, documentShare.expireDate)
+  }
+
+  const handleShareExpirationChange = (value, dateStrings) => {
+    console.log(`Select time: ${value}`)
+    console.log(`Select date: ${dateStrings}`)
+    const effectiveDate = moment(dateStrings[0], 'YYYY-MM-DD HH:mm')
+    const expireDate = moment(dateStrings[1], 'YYYY-MM-DD HH:mm')
+    handleUpdateDocumentShare(documentId, documentShare.shareStatus, documentShare.shareCode, documentShare.shareCodeStatus, effectiveDate.valueOf(), expireDate.valueOf())
+  }
+
+  const handleShareExpirationOk = (value: DatePickerProps['value'] | RangePickerProps) => {
+    //console.log(`Select onok: ${value}`)
   }
 
   const handleCopyLink = async () => {
@@ -313,7 +329,7 @@ const ShareWindowPage: FC<ShareWindowProps> = ({
       SystemUtils.handleInternalError(intl.formatMessage({ id: 'workspace.content.message-clipboard-not-supported' }))
       return
     }
-    await clipboard.writeText(shareLinkPrefix + documentShare.linkCode)
+    await clipboard.writeText(shareLinkPrefix + documentShare.linkCode + (documentShare.shareCodeStatus === 1 ? `&code=${documentShare.shareCode}` : ''))
   }
 
   const shareExpirationOptions = [
@@ -517,12 +533,14 @@ const publicShareSection = <div style={{width: '100%', height: '500px'}}>
       <Input style={{marginLeft: 32, width: 60, }} hidden={documentShare.shareCodeStatus !== 1} value={documentShare.shareCode} onChange={handleShareCodeChange}/>
     </div>
     <div style={{padding: '8px', display: documentShare.shareStatus === 1 ? 'block' : 'none'}}>
-      <FormattedMessage id='workspace.header.share-window.public-share-setup-expiration-date' /><Select style={{width: 140, marginLeft: 32}} options={shareExpirationOptions} />
+      <FormattedMessage id='workspace.header.share-window.public-share-setup-expiration-date' />
+      {/* <Select style={{width: 140, marginLeft: 32}} options={shareExpirationOptions} /> */}
+      <RangePicker value={(documentShare.effectiveDate && documentShare.expireDate) ? [moment(documentShare.effectiveDate), moment(documentShare.expireDate)] : null} showTime={{format: 'HH:mm'}} format='YYYY-MM-DD HH:mm' onChange={handleShareExpirationChange} onOk={handleShareExpirationOk} style={{marginLeft: 32}}/>
     </div>
     <div style={{padding: '8px', display: documentShare.shareStatus === 1 ? 'block' : 'none'}}>
-      <Input value={shareLinkPrefix + documentShare.linkCode} disabled style={{width: '65%', cursor: 'default'}}/>
+      <Input value={shareLinkPrefix + documentShare.linkCode + (documentShare.shareCodeStatus === 1 ? `&code=${documentShare.shareCode}` : '')} disabled style={{width: '65%', cursor: 'default'}}/>
       <Button type='primary' style={{width: '30%'}} onClick={handleCopyLink}>
-        <FormattedMessage id='workspace.header.share-window.public-share-copy-link' />
+        {documentShare.shareCodeStatus === 1 ? <FormattedMessage id='workspace.header.share-window.public-share-copy-link-code' /> : <FormattedMessage id='workspace.header.share-window.public-share-copy-link' />}
       </Button>
     </div>
   </div>
@@ -548,10 +566,16 @@ const items: TabsProps['items'] = [
   },
 ]
 
+  // const test = documentShare.effectiveDate ? [moment(documentShare.effectiveDate).format('YYYY-MM-DD HH:mm'), moment(documentShare.expireDate).format('YYYY-MM-DD HH:mm')] : ''
+  // console.log(test)
   return (
     <div>
       {contextHolder}
-      <Modal title={<FormattedMessage id='workspace.header.share-window.title' />} width={900} centered open={visible} onOk={onOk} onCancel={onCancel} maskClosable={false}  >
+      <Modal title={<FormattedMessage id='workspace.header.share-window.title' />} 
+          width={900} centered open={visible} onOk={onOk} onCancel={onCancel} maskClosable={false} 
+          footer={
+            (_, {OkBtn, cancelBtn}) => (<><OkBtn/></>)
+          } >
         <Tabs tabPosition='left' items={items} defaultActiveKey='1' style={{width: '100%', height: 500}}/>
       </Modal>
       <CustomerFormWindow visible={customerFormWindowVisible} documentId={documentId} onWindowOk={handleCustomerFormWindowOk} onWindowCancel={handleCustomerFormWindowCancel}/>

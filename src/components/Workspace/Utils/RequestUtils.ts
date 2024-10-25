@@ -363,9 +363,10 @@ export class RequestUtils {
         return axios.post(this.rockieServerAddress + `/document/document`, data, config)
     }
 
-    public static loadDocumentByLink(linkCode: string) {
+    public static loadDocumentByLink(linkCode: string, shareCode: string) {
         const data = {
             linkCode: linkCode,
+            shareCode: shareCode,
         }
         const config = {
             headers: {
@@ -413,12 +414,14 @@ export class RequestUtils {
         return axios.post(this.rockieServerAddress + `/document/update`, data, config)
     }
 
-    public static updateDocumentShare(documentId: number, shareStatus: number, shareCode: string, shareCodeStatus: number) {
+    public static updateDocumentShare(documentId: number, shareStatus: number, shareCode: string, shareCodeStatus: number, effectiveDate: number | null, expireDate: number | null) {
         const data = {
             documentId: documentId,
             shareStatus: shareStatus,
             shareCode: shareCode,
-            shareCodeStatus: shareCodeStatus
+            shareCodeStatus: shareCodeStatus,
+            effectiveDate: effectiveDate,
+            expireDate: expireDate
         }
         const config = {
             headers: {

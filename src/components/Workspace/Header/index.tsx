@@ -217,7 +217,7 @@ const Header: FC<HeaderProps> = ({
       if (urlObject.path == '/document' && urlObject.query.id) {
         loadDocument(urlObject.query.id)
       } else if (urlObject.path == '/document' && urlObject.query.link) {
-        loadLinkDocument(urlObject.query.link)
+        loadLinkDocument(urlObject.query.link, urlObject.query.code)
       } 
     }
     if(!loaded) {
@@ -237,7 +237,7 @@ const Header: FC<HeaderProps> = ({
     return false
   }
 
-  const doLoadDocument = (id: string, isLink: boolean) => {
+  const doLoadDocument = (id: string, isLink: boolean, shareCode: string | null = null) => {
     let linkCode = ''
     let documentId = 0
     if(isLink) {
@@ -256,7 +256,7 @@ const Header: FC<HeaderProps> = ({
     const fetchDocumentData = async () => {
       let documentData;
       if(isLink) {
-        documentData = await RequestUtils.loadDocumentByLink(linkCode)
+        documentData = await RequestUtils.loadDocumentByLink(linkCode, shareCode)
       } else {
         documentData = await RequestUtils.loadDocument(documentId, true)
       }
@@ -287,6 +287,7 @@ const Header: FC<HeaderProps> = ({
         }
       } else {
         console.log(`Load document failed: source = ${id}`)
+        messageApi.error(intl.formatMessage({ id: 'workspace.header.message-failed-to-load-document-with'})+ `:${documentData.data.message}`)
       }
       setOpenFileWindowVisible(false)
     }
@@ -313,11 +314,11 @@ const Header: FC<HeaderProps> = ({
     doLoadDocument(id, false)
   }
 
-  const loadLinkDocument = async (id: string) => {
+  const loadLinkDocument = async (id: string, code: string | null = null) => {
     const onlineResult = await RequestUtils.isOnline()
     // handleOpenFileWindowOk(parseInt(id), '', 0)
     console.log(`load link document now.`)
-    doLoadDocument(id, true)
+    doLoadDocument(id, true, code)
   }
   
   const refresh = () => {
