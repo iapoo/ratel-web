@@ -1,22 +1,18 @@
-import React, { useEffect, useState, } from 'react'
-import Workspace from '@/components/Workspace'
-import { Button, ConfigProvider, } from 'antd'
+import { useEffect, useState } from 'react';
 
-export default (props: any) => {
-  const [initialized, setInitialized,] = useState<boolean>(false)
+export default () => {
+  const [initialized, setInitialized] = useState<boolean>(false);
 
   useEffect(() => {
     if (!initialized) {
-      initialize()
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      initialize();
     }
-  })
+  });
 
   const initialize = async () => {
-    setInitialized(true)
-  }
+    setInitialized(true);
+  };
 
-  return (
-    <div style={{ width: '100%', height: '100%', }}>
-    </div>
-  )
-}
+  return <div style={{ width: '100%', height: '100%' }}></div>;
+};
