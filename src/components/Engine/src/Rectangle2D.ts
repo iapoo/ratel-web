@@ -4,12 +4,12 @@ import { Colors, FontStyle, Graphics, Paint, PaintStyle, Rectangle, } from './Gr
 import { Shape, } from './Shape'
 
 export class Rectangle2D extends Shape {
-  constructor (left: number, top: number, width: number, height: number) {
+  constructor(left: number, top: number, width: number, height: number) {
     super(left, top, width, height)
     this.path.addRectangle(Rectangle.makeLTWH(0, 0, width, height))
   }
 
-  public update () {
+  public update() {
     super.update()
     if (this.dirty) {
       this.path.reset()

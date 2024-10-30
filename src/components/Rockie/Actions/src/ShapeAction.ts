@@ -12,7 +12,7 @@ export class ShapeAction extends Action {
     let width = 100
     let height = 100
     ShapeTypes.forEach(shapeType => {
-      if(shapeType.name == this.type) {
+      if (shapeType.name == this.type) {
         left = shapeType.left
         top = shapeType.top
         width = shapeType.width

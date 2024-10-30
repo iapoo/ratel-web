@@ -5,40 +5,40 @@ import { Consts, RequestUtils, SystemUtils, Utils, } from '../../Utils'
 import axios from 'axios'
 import Avatar from 'antd/lib/avatar/avatar'
 import { Document, Folder, isDocument, isFolder } from '../../Utils/RequestUtils'
-import type { DataNode, TreeProps, } from 'antd/es/tree';
+import type { DataNode, TreeProps, } from 'antd/es/tree'
 import { DeleteFilled, EditFilled, FileFilled, FileOutlined, FolderFilled, FolderOutlined, PlusOutlined } from '@ant-design/icons'
 import { StorageService } from '../../Storage'
-import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
+import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi'
 import { ProColumns, ProTable } from '@ant-design/pro-components'
 import OperatorFormWindow from './OperatorFormWindow'
 
 
 interface OperatorWindowProps {
-  visible: boolean;
-  x: number;
-  y: number;
-  onWindowCancel: () => void;
+  visible: boolean
+  x: number
+  y: number
+  onWindowCancel: () => void
   onWindowOk: () => void
 }
 
 interface SingleOperatorType {
-  operatorId: number;
-  operatorType: number;
-  customerId: number;
-  customerName: string;
-  email: string;
+  operatorId: number
+  operatorType: number
+  customerId: number
+  customerName: string
+  email: string
 }
 
 interface OperatorsType {
-  records: SingleOperatorType[];
-  total: number;
-  size: number;
-  pages: number;
-  current: number;
+  records: SingleOperatorType[]
+  total: number
+  size: number
+  pages: number
+  current: number
 }
 
 interface FormValues {
-  [name: string]: any;
+  [name: string]: any
 }
 
 const defaultData = { records: [], size: 0, current: 0, total: 0, pages: 0 }
@@ -50,15 +50,15 @@ const OperatorWindowPage: FC<OperatorWindowProps> = ({
   const [windowVisible, setWindowVisible,] = useState<boolean>(false)
   const [errorVisible, setErrorVisible,] = useState<boolean>(false)
   const [errorMessage, setErrorMessage,] = useState<string>('')
-  const [operatorFormWindowVisible, setOperatorFormWindowVisible, ] = useState<boolean>(false)
-  const [data, setData,] = useState<OperatorsType>( defaultData)
-  const [customerId,setCustomerId, ] = useState<number>(0)
-  const [customerName, setCustomerName, ] = useState<string>('')
-  const [email, setEmail, ] = useState<string>('')
-  const [operatorType, setOperatorType, ] = useState<number>(0)
-  const [isUpdate, setIsUpdate, ] = useState<boolean>(false)
-  const [operatorId, setOperatorId, ] = useState<number>(0)
-  const [searchText, setSearchText, ] = useState<string>('')
+  const [operatorFormWindowVisible, setOperatorFormWindowVisible,] = useState<boolean>(false)
+  const [data, setData,] = useState<OperatorsType>(defaultData)
+  const [customerId, setCustomerId,] = useState<number>(0)
+  const [customerName, setCustomerName,] = useState<string>('')
+  const [email, setEmail,] = useState<string>('')
+  const [operatorType, setOperatorType,] = useState<number>(0)
+  const [isUpdate, setIsUpdate,] = useState<boolean>(false)
+  const [operatorId, setOperatorId,] = useState<number>(0)
+  const [searchText, setSearchText,] = useState<string>('')
   const intl = useIntl()
 
   if (windowVisible !== visible) {
@@ -76,7 +76,7 @@ const OperatorWindowPage: FC<OperatorWindowProps> = ({
       setData(defaultData)
     }
   }
-  
+
   useEffect(() => {
     if (!dataLoading) {
       setDataLoading(true)
@@ -96,7 +96,7 @@ const OperatorWindowPage: FC<OperatorWindowProps> = ({
     if (onWindowCancel) {
       onWindowCancel()
     }
-  }  
+  }
 
   const openOperatorFormWindow = (isUpdate: boolean, operatorId: number, customerId: number, customerName: string, email: string, operatorType: number) => {
     setOperatorFormWindowVisible(true)
@@ -127,8 +127,8 @@ const OperatorWindowPage: FC<OperatorWindowProps> = ({
     setErrorMessage('')
     const confirmModal = Modal.confirm({
       centered: true,
-      title: intl.formatMessage({id: 'workspace.header.operator-window.confirm-delete-title'}),
-      content: intl.formatMessage({id: 'workspace.header.operator-window.confirm-delete-content'}),
+      title: intl.formatMessage({ id: 'workspace.header.operator-window.confirm-delete-title' }),
+      content: intl.formatMessage({ id: 'workspace.header.operator-window.confirm-delete-content' }),
       onOk: async () => {
         const responseData = await RequestUtils.deleteOperator(operator.operatorId)
         if (responseData.status === 200 && responseData.data.success) {
@@ -152,7 +152,7 @@ const OperatorWindowPage: FC<OperatorWindowProps> = ({
     fetchData(searchText, current)
   }
 
-  const handleSearch = ()=> {
+  const handleSearch = () => {
     fetchData(searchText)
   }
 
@@ -186,7 +186,7 @@ const OperatorWindowPage: FC<OperatorWindowProps> = ({
       dataIndex: 'customerId',
       key: 'customerId',
       valueType: 'text',
-//      render: (text: any, record: SingleOperatorType) => <Button type='link' onClick={() => goEditHandler(record)} >{text}</Button>,
+      //      render: (text: any, record: SingleOperatorType) => <Button type='link' onClick={() => goEditHandler(record)} >{text}</Button>,
     },
     {
       title: <FormattedMessage id='workspace.header.operator-window.column-customer-name' />,
@@ -212,11 +212,11 @@ const OperatorWindowPage: FC<OperatorWindowProps> = ({
       key: 'operatorId',
       valueType: 'digit',
       render: (text: any, record: SingleOperatorType) => [
-        <Tooltip key='editButton' title={intl.formatMessage({id: 'workspace.header.operator-window.button-tip-update'})}>
+        <Tooltip key='editButton' title={intl.formatMessage({ id: 'workspace.header.operator-window.button-tip-update' })}>
           <Button icon={<EditFilled />} onClick={() => handleUpdateOperator(record)} />
         </Tooltip>,
-        <Tooltip key='deleteButton' title={intl.formatMessage({id: 'workspace.header.operator-window.button-tooltip-delete'})}>
-          <Button icon={<DeleteFilled />} onClick={() => handleDeleteOperator(record) } />
+        <Tooltip key='deleteButton' title={intl.formatMessage({ id: 'workspace.header.operator-window.button-tooltip-delete' })}>
+          <Button icon={<DeleteFilled />} onClick={() => handleDeleteOperator(record)} />
         </Tooltip>,
       ],
     },
@@ -225,54 +225,54 @@ const OperatorWindowPage: FC<OperatorWindowProps> = ({
   return (
     <div>
       <Modal title={<FormattedMessage id='workspace.header.operator-window.title' />} width={800} centered open={visible} onOk={onOk} onCancel={onCancel} maskClosable={false}  >
-        <div style={{ width: '100%', height: '440px',}}>
-          <div style={{ width: '100%', height: '400px',  }}>
-          <ProTable
-        columns={columns}
-        dataSource={data.records}
-        rowKey='operatorId'
-        //loading={operatorListLoading}
-        search={false}
-        pagination={false}
-        options={{
-          density: false,
-          fullScreen: false,
-          reload: false,
-          setting: false,
-        }}
-        title={() => [
-          <Row key='searchRow'>
-            <Col span={18} >
-              <Input key='searchInput' placeholder={intl.formatMessage({ id: 'workspace.header.operator-window.search-placeholder' })} style={{ width: '360px', marginLeft: '16px', }} onChange={(e) => { setSearchText(e.target.value)  }}/>
-              <Button key='searchButton' type='primary' style={{ marginLeft: '24px', }} onClick={handleSearch}><FormattedMessage id='workspace.header.operator-window.button-search' /></Button>
-            </Col>
-            <Col span={6}>
-              <Button key='addButton' type='primary' icon={<PlusOutlined/>} style={{ position: 'absolute', right: '16px', }} onClick={handleAddOperator}><FormattedMessage id='workspace.header.operator-window.button-add' /></Button>
-            </Col>
-          </Row>,
-        ]}
-        headerTitle={false}
-        toolBarRender={false}
-      />
-      <div style={{ width: '100%', height: '64px', }}>
-        <Pagination
-          className='list-page' style={{ float: 'right', margin: '16px', }}
-          total={data.total}
-          onChange={handlePageChange}
-          //onShowSizeChange={pageSizeHandler}
-          current={data.current}
-          pageSize={data.size}
-          showSizeChanger={false}
-          showQuickJumper
-          //locale='zhCN'
-          //showTotal={total => `总计 ${total}`}
-        />
-      </div>
+        <div style={{ width: '100%', height: '440px', }}>
+          <div style={{ width: '100%', height: '400px', }}>
+            <ProTable
+              columns={columns}
+              dataSource={data.records}
+              rowKey='operatorId'
+              //loading={operatorListLoading}
+              search={false}
+              pagination={false}
+              options={{
+                density: false,
+                fullScreen: false,
+                reload: false,
+                setting: false,
+              }}
+              title={() => [
+                <Row key='searchRow'>
+                  <Col span={18} >
+                    <Input key='searchInput' placeholder={intl.formatMessage({ id: 'workspace.header.operator-window.search-placeholder' })} style={{ width: '360px', marginLeft: '16px', }} onChange={(e) => { setSearchText(e.target.value) }} />
+                    <Button key='searchButton' type='primary' style={{ marginLeft: '24px', }} onClick={handleSearch}><FormattedMessage id='workspace.header.operator-window.button-search' /></Button>
+                  </Col>
+                  <Col span={6}>
+                    <Button key='addButton' type='primary' icon={<PlusOutlined />} style={{ position: 'absolute', right: '16px', }} onClick={handleAddOperator}><FormattedMessage id='workspace.header.operator-window.button-add' /></Button>
+                  </Col>
+                </Row>,
+              ]}
+              headerTitle={false}
+              toolBarRender={false}
+            />
+            <div style={{ width: '100%', height: '64px', }}>
+              <Pagination
+                className='list-page' style={{ float: 'right', margin: '16px', }}
+                total={data.total}
+                onChange={handlePageChange}
+                //onShowSizeChange={pageSizeHandler}
+                current={data.current}
+                pageSize={data.size}
+                showSizeChanger={false}
+                showQuickJumper
+              //locale='zhCN'
+              //showTotal={total => `总计 ${total}`}
+              />
+            </div>
           </div>
         </div>
-        <OperatorFormWindow visible={operatorFormWindowVisible} onWindowOk={handleOperatorFormWindowOk} onWindowCancel={handleOperatorFormWindowCancel} 
+        <OperatorFormWindow visible={operatorFormWindowVisible} onWindowOk={handleOperatorFormWindowOk} onWindowCancel={handleOperatorFormWindowCancel}
           onCustomerSelectorChanged={handleCustomerSelectorChange}
-        isUpdate={isUpdate} operatorId={operatorId} customerId={customerId} customerName={customerName} email={email} operatorType={operatorType} />
+          isUpdate={isUpdate} operatorId={operatorId} customerId={customerId} customerName={customerName} email={email} operatorType={operatorType} />
       </Modal>
 
     </div>

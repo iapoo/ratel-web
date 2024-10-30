@@ -2,26 +2,26 @@ import React, { createRef, FC, MouseEventHandler, SyntheticEvent, UIEvent, useEf
 import styles from './index.css'
 import { Button, Collapse, CollapseProps, Divider, Image, Popover, Space, Tooltip, message, theme, } from 'antd'
 import { Utils, RequestUtils, } from '../Utils'
-import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
+import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi'
 import { ConnectorAction, ContainerAction, CustomShapeAction, ImageContainerAction, SvgContainerAction, LineAction, ShapeAction, TableAction, CustomTableAction, ExtendedShapeAction, ExtendedContainerAction, FrameAction, CustomContainerAction, MyShapeAction, } from '../../Rockie/Actions'
 import { StorageService, } from '../Storage'
 import { ContainerEntity, ContainerTypes, Containers, CustomConnector, CustomEntity, CustomTableEntity, EditorItemInfo, FrameEntity, ShapeTypes, Shapes } from '@/components/Rockie/Items'
-import { BasicShapes } from '@/components/Rockie/CustomItems/BasicShapes';
-import { ShapeEntity, ShapeType } from '@/components/Rockie/Items/src/ShapeEntity';
-import { Arrows } from '@/components/Rockie/CustomItems/Arrows';
-import { AliyunShapes } from '@/components/Rockie/CustomItems/Aliyun';
-import { AwsShapes } from '@/components/Rockie/CustomItems/Aws';
-import { FlowChartShapes } from '@/components/Rockie/CustomItems/FlowChart';
-import { UMLBasicShapesForActivityState, UMLBasicShapesForClass, UMLBasicShapesForUseCase, UMLConnectors, UMLConnectorsForActivityState, UMLConnectorsForClass, UMLConnectorsForSequence, UMLConnectorsForUseCase, UMLContainerShapes, UMLContainerShapesForActivityState, UMLContainerShapesForClass, UMLContainerShapesForUseCase, UMLCustomShapesForActivityState, UMLCustomShapesForSequence, UMLFrameShapesForSequence, UMLCustomTables, UMLGridShapesForClass, UMLBasicShapes, UMLCustomShapesForOther, UMLGridShapesForOther, UMLCustomContainersForSequence } from '@/components/Rockie/CustomItems/UML';
-import { CustomConnectorAction } from '@/components/Rockie/Actions/src/CustomConnectorAction';
-import { CustomContainerEntity } from '@/components/Rockie/Items/src/CustomContainerEntity';
-import { MyShape, MyShapes } from '../Utils/RequestUtils';
-import { EditOutlined } from '@ant-design/icons';
-import MyShapesWindowPage from './MyShapesWindow';
-import { ERCustomShapes } from '@/components/Rockie/CustomItems/EntityRelation';
-import { MockupShapes } from '@/components/Rockie/CustomItems/Mockup';
-import { Circle, Container, Element, Ellipse, G, Gradient, Line, Marker, Path, Pattern, PointArray, Polyline, Rect, SVG, Stop, Style, Svg, } from "@svgdotjs/svg.js";
-import { TableTypes } from '@/components/Rockie/Items/src/TableEntity';
+import { BasicShapes } from '@/components/Rockie/CustomItems/BasicShapes'
+import { ShapeEntity, ShapeType } from '@/components/Rockie/Items/src/ShapeEntity'
+import { Arrows } from '@/components/Rockie/CustomItems/Arrows'
+import { AliyunShapes } from '@/components/Rockie/CustomItems/Aliyun'
+import { AwsShapes } from '@/components/Rockie/CustomItems/Aws'
+import { FlowChartShapes } from '@/components/Rockie/CustomItems/FlowChart'
+import { UMLBasicShapesForActivityState, UMLBasicShapesForClass, UMLBasicShapesForUseCase, UMLConnectors, UMLConnectorsForActivityState, UMLConnectorsForClass, UMLConnectorsForSequence, UMLConnectorsForUseCase, UMLContainerShapes, UMLContainerShapesForActivityState, UMLContainerShapesForClass, UMLContainerShapesForUseCase, UMLCustomShapesForActivityState, UMLCustomShapesForSequence, UMLFrameShapesForSequence, UMLCustomTables, UMLGridShapesForClass, UMLBasicShapes, UMLCustomShapesForOther, UMLGridShapesForOther, UMLCustomContainersForSequence } from '@/components/Rockie/CustomItems/UML'
+import { CustomConnectorAction } from '@/components/Rockie/Actions/src/CustomConnectorAction'
+import { CustomContainerEntity } from '@/components/Rockie/Items/src/CustomContainerEntity'
+import { MyShape, MyShapes } from '../Utils/RequestUtils'
+import { EditOutlined } from '@ant-design/icons'
+import MyShapesWindowPage from './MyShapesWindow'
+import { ERCustomShapes } from '@/components/Rockie/CustomItems/EntityRelation'
+import { MockupShapes } from '@/components/Rockie/CustomItems/Mockup'
+import { Circle, Container, Element, Ellipse, G, Gradient, Line, Marker, Path, Pattern, PointArray, Polyline, Rect, SVG, Stop, Style, Svg, } from "@svgdotjs/svg.js"
+import { TableTypes } from '@/components/Rockie/Items/src/TableEntity'
 
 interface NavigatorProps {
   navigatorWidth: number

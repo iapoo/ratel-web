@@ -1,7 +1,7 @@
-import { Editor } from "./Editor";
+import { Editor } from "./Editor"
 
 export class EditorEvent {
-    
+
     readonly source: Editor
 
     constructor(source: Editor) {

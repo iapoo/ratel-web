@@ -1,1 +1,1 @@
-export class Rockie {}
+export class Rockie { }

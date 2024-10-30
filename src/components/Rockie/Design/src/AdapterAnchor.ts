@@ -32,30 +32,30 @@ export class AdapterAnchor extends Anchor {
   }
 
   public handlePointerEnter(): void {
-    
+
   }
 
   public handlePointerLeave(): void {
-    
+
   }
   public handlePointerClick(x: number, y: number) {
 
   }
   public handlePointerDown(x: number, y: number) {
     if (!this.target) {
-      return;
+      return
     }
-    this._adaptering = true;
-    this._startX = x;
-    this._startY = y;
+    this._adaptering = true
+    this._startX = x
+    this._startY = y
     this.editor.beginOperation(this.target)
 
   }
   public handlePointerUp(x: number, y: number) {
     if (!this.target) {
-      return;
+      return
     }
-    this._adaptering = false;
+    this._adaptering = false
     this.editor.finishOperation(this.target)
   }
   public handlePointerMove(x: number, y: number) {
@@ -119,8 +119,8 @@ export class AdapterAnchor extends Anchor {
               adapterSize = endX - startX - newAdapterXValue
             }
             //restore adapter size if it is too small 
-            if(newAdapterXValue < adapterX && adapterSize < adapterDefaultSize) {
-              if(adapterSize + newAdapterXValue - adapterX > adapterDefaultSize) {
+            if (newAdapterXValue < adapterX && adapterSize < adapterDefaultSize) {
+              if (adapterSize + newAdapterXValue - adapterX > adapterDefaultSize) {
                 adapterSize = adapterDefaultSize
               } else {
                 adapterSize = adapterSize + adapterX - newAdapterXValue
@@ -148,7 +148,7 @@ export class AdapterAnchor extends Anchor {
           if (shapeType.adaptInPercent) {
             endXForBegin = endX
             endYForBegin = startY + (endY - startY) * this.target.shape.adapter.y + (endY - startY) * this.target.shape.adapterSize
-            if(endYForBegin > endY) {
+            if (endYForBegin > endY) {
               endYForBegin = endY
             }
             adapterX = (endX - startX) * this.target.shape.adapter.x + startX
@@ -177,12 +177,12 @@ export class AdapterAnchor extends Anchor {
             let newAdapterYValue = newAdapterY - startY
             newAdapterXValue = newAdapterXValue < startX ? startX : (newAdapterXValue > endXForBegin ? endXForBegin : newAdapterXValue)
             newAdapterYValue = newAdapterYValue < startY ? startY : (newAdapterYValue > endYForBegin ? endYForBegin : newAdapterYValue)
-            if(startY + newAdapterYValue + adapterSize > endY) {
+            if (startY + newAdapterYValue + adapterSize > endY) {
               adapterSize = endY - startY - newAdapterYValue
             }
             //restore adapter size if it is too small 
-            if(newAdapterYValue < adapterY && adapterSize < adapterDefaultSize) {
-              if(adapterSize + newAdapterYValue - adapterY > adapterDefaultSize) {
+            if (newAdapterYValue < adapterY && adapterSize < adapterDefaultSize) {
+              if (adapterSize + newAdapterYValue - adapterY > adapterDefaultSize) {
                 adapterSize = adapterDefaultSize
               } else {
                 adapterSize = adapterSize + adapterY - newAdapterYValue

@@ -11,7 +11,7 @@ export class ContainerAction extends Action {
     let width = 100
     let height = 100
     ContainerTypes.forEach(containerType => {
-      if(containerType.name == this.type) {
+      if (containerType.name == this.type) {
         left = containerType.left
         top = containerType.top
         width = containerType.width

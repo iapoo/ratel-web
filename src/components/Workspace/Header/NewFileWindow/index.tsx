@@ -4,11 +4,11 @@ import { Form, Input, Checkbox, Row, Col, Button, Modal, Menu, message, Alert, T
 import { RequestUtils, Utils, } from '../../Utils'
 import axios from 'axios'
 import Avatar from 'antd/lib/avatar/avatar'
-import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
+import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi'
 import { EventDataNode } from 'antd/es/tree'
 import { FolderOutlined } from '@ant-design/icons'
 
-const { Search } = Input;
+const { Search } = Input
 const categoryInitData: TreeDataNode[] = [
   { title: 'Basic', key: 'Basic', },
   { title: 'FlowChart', key: 'FlowChart', },
@@ -30,18 +30,18 @@ const templateMap: TemplateInfo[] = [
 ]
 
 interface NewFileWindowProps {
-  visible: boolean;
-  x: number;
-  y: number;
-  onWindowCancel: () => void;
+  visible: boolean
+  x: number
+  y: number
+  onWindowCancel: () => void
   onWindowOk: (documentContent: string) => void
 }
 
 const NewFileWindowPage: FC<NewFileWindowProps> = ({
   visible, x, y, onWindowCancel, onWindowOk,
 }) => {
-  const intl = useIntl();
-  const [messageApi, contextHolder] = message.useMessage();
+  const intl = useIntl()
+  const [messageApi, contextHolder] = message.useMessage()
 
   const [dataLoading, setDataLoading,] = useState<boolean>(false)
   const [modalX, setModalX,] = useState<number>(0)
@@ -50,9 +50,9 @@ const NewFileWindowPage: FC<NewFileWindowProps> = ({
   const [origModalY, setOrigModalY,] = useState<number>(0)
   const [windowVisible, setWindowVisible,] = useState<boolean>(false)
   const [errorVisible, setErrorVisible,] = useState<boolean>(false)
-  const [searchCategoryData, setSearchCategoryData,] = useState<TreeDataNode[]>(categoryInitData);
+  const [searchCategoryData, setSearchCategoryData,] = useState<TreeDataNode[]>(categoryInitData)
   const [selectedCategoryKeys, setSelectedCategoryKeys,] = useState<React.Key[]>([categoryInitData[0].key])
-  const [categoryTemplates, setCategoryTemplates,] = useState<TemplateInfo[]>([]);
+  const [categoryTemplates, setCategoryTemplates,] = useState<TemplateInfo[]>([])
   const [selectedTemplate, setSelectedTemplate,] = useState<TemplateInfo | null>(null)
 
   if (origModalX != x) {
@@ -96,7 +96,7 @@ const NewFileWindowPage: FC<NewFileWindowProps> = ({
       reader.readAsText(fetchBlob.data)
       //const templateContent = JSON.stringify(textData)
     } else {
-      message.error(`${intl.formatMessage({ id: 'workspace.header.window.new-file.message.no-template-selected' })}`);
+      message.error(`${intl.formatMessage({ id: 'workspace.header.window.new-file.message.no-template-selected' })}`)
     }
   }
 

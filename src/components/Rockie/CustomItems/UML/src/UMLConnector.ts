@@ -158,7 +158,7 @@ export class UMLConnector extends CustomConnector {
         textBox.fillColor = Colors.Transparent
         textBox.strokeColor = Colors.Transparent
         this.addItem(textBox)
-        break;
+        break
       }
       case UMLConnectors.TYPE_EXTEND: {
         const textBox = new ShapeEntity(width / 2 - 50, height / 2 - 25, 100, 30)
@@ -166,13 +166,13 @@ export class UMLConnector extends CustomConnector {
         textBox.fillColor = Colors.Transparent
         textBox.strokeColor = Colors.Transparent
         this.addItem(textBox)
-        break;
+        break
       }
       case UMLConnectors.TYPE_SELF_MESSAGE: {
         this.startDirection = ConnectorDirection.Right
         this.endDirection = ConnectorDirection.Right
         this.orthogonalPoints = [new Point2(0, 0), new Point2(12, 0), new Point2(40, 0), new Point2(40, 40), new Point2(12, 40), new Point2(0, 40),]
-        break;
+        break
       }
     }
   }

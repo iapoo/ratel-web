@@ -1,4 +1,4 @@
-import {  Colors, Color, } from '@/components/Engine'
+import { Colors, Color, } from '@/components/Engine'
 
 export interface ShapeThemeType {
   name: string
@@ -14,7 +14,7 @@ export class ShapeThemes {
 }
 
 export const ShapeThemeTypes = [
-  {name: ShapeThemes.TYPE_DEFAULT, description: ShapeThemes.DESC_DEFAULT, shapeStrokeColor: Colors.Black, shapeFillColor: Colors.White, shapeFontColor: Colors.Black},
+  { name: ShapeThemes.TYPE_DEFAULT, description: ShapeThemes.DESC_DEFAULT, shapeStrokeColor: Colors.Black, shapeFillColor: Colors.White, shapeFontColor: Colors.Black },
 ]
 
 export class ShapeTheme {

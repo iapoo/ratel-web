@@ -1,4 +1,4 @@
-import {  Colors, Color, } from '@/components/Engine'
+import { Colors, Color, } from '@/components/Engine'
 import { ClassicTheme } from './ClassicTheme'
 import { DarkTheme } from './DarkTheme'
 
@@ -9,7 +9,7 @@ export enum ThemeKind {
 
 export enum Theme {
   STROKE_COLOR = 'StrokeColor',
-  FILL_COLOR = 'FillColor'  
+  FILL_COLOR = 'FillColor'
 }
 
 export class ThemeConstants {
@@ -38,8 +38,8 @@ export abstract class Themes {
   }
 
   public static set kind(value: ThemeKind) {
-    this._kind = value  
-    switch(value) {
+    this._kind = value
+    switch (value) {
       case ThemeKind.CLASSIC:
         Themes._current = new ClassicTheme()
         break

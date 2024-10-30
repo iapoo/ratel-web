@@ -1,16 +1,16 @@
-import { Arrows } from "../../CustomItems/Arrows";
-import { BasicShapes } from "../../CustomItems/BasicShapes";
-import { ERCustomShapes } from "../../CustomItems/EntityRelation";
-import { FlowChartShapes } from "../../CustomItems/FlowChart";
-import { MockupShapes } from "../../CustomItems/Mockup";
-import { MockupCustomShapeTypes } from "../../CustomItems/Mockup/src/MockupCustomShape";
-import { UMLBasicShapes, UMLConnectors, UMLContainerShapes, UMLCustomContainers, UMLCustomShapes, UMLCustomTables, UMLFrameShapes, } from "../../CustomItems/UML";
-import { ContainerEntity, CustomConnector, CustomEntity, CustomTableEntity, FrameEntity } from "../../Items";
-import { CustomConnectorTypeInfo } from "../../Items/src/CustomConnector";
-import { CustomContainerEntity } from "../../Items/src/CustomContainerEntity";
-import { CustomTableType } from "../../Items/src/CustomTableEntity";
-import { ShapeEntity, ShapeType } from "../../Items/src/ShapeEntity";
-import { ConnectorType } from "../../Shapes";
+import { Arrows } from "../../CustomItems/Arrows"
+import { BasicShapes } from "../../CustomItems/BasicShapes"
+import { ERCustomShapes } from "../../CustomItems/EntityRelation"
+import { FlowChartShapes } from "../../CustomItems/FlowChart"
+import { MockupShapes } from "../../CustomItems/Mockup"
+import { MockupCustomShapeTypes } from "../../CustomItems/Mockup/src/MockupCustomShape"
+import { UMLBasicShapes, UMLConnectors, UMLContainerShapes, UMLCustomContainers, UMLCustomShapes, UMLCustomTables, UMLFrameShapes, } from "../../CustomItems/UML"
+import { ContainerEntity, CustomConnector, CustomEntity, CustomTableEntity, FrameEntity } from "../../Items"
+import { CustomConnectorTypeInfo } from "../../Items/src/CustomConnector"
+import { CustomContainerEntity } from "../../Items/src/CustomContainerEntity"
+import { CustomTableType } from "../../Items/src/CustomTableEntity"
+import { ShapeEntity, ShapeType } from "../../Items/src/ShapeEntity"
+import { ConnectorType } from "../../Shapes"
 
 export interface CustomShapeType {
     type: typeof CustomEntity
@@ -93,14 +93,14 @@ export class CommonUtils {
         switch (connectorType) {
             case ConnectorType.Curve:
                 return this.CONNECTOR_TYPE_CURVE
-                break;
+                break
             case ConnectorType.Orthogonal:
                 return this.CONNECTOR_TYPE_CROSS_LINE
-                break;
+                break
             case ConnectorType.StraightLine:
             default:
                 return this.CONNECTOR_TYPE_STRAIGHT_LINE
-                break;
+                break
         }
     }
 
@@ -108,14 +108,14 @@ export class CommonUtils {
         switch (connectorType) {
             case this.CONNECTOR_TYPE_CURVE:
                 return ConnectorType.Curve
-                break;
+                break
             case this.CONNECTOR_TYPE_CROSS_LINE:
                 return ConnectorType.Orthogonal
-                break;
+                break
             case this.CONNECTOR_TYPE_STRAIGHT_LINE:
             default:
                 return ConnectorType.StraightLine
-                break;
+                break
         }
     }
 

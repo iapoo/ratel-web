@@ -51,89 +51,103 @@ const TEXT_CUSTOM_TABLE__PACKAGE_3 = 'Package 3'
 
 
 export const UMLCustomTableTypes: CustomTableType[] = [
-  { name: TYPE_CUSTOM_TABLE__CLASS, description: DESC_CUSTOM_TABLE__CLASS, freeze: Shapes.FREEZE_NONE, text: TEXT_CUSTOM_TABLE__CLASS, left: 0, top: 0, width: 250, height: 160, enableMask: false, 
+  {
+    name: TYPE_CUSTOM_TABLE__CLASS, description: DESC_CUSTOM_TABLE__CLASS, freeze: Shapes.FREEZE_NONE, text: TEXT_CUSTOM_TABLE__CLASS, left: 0, top: 0, width: 250, height: 160, enableMask: false,
     rowCount: 3, columnCount: 1, fixedFirstRow: true, firstRowHeight: 32, fixedFirstColumn: false, firstColumnWidth: 0,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: false, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
-  { name: TYPE_CUSTOM_TABLE__CLASS_2, description: DESC_CUSTOM_TABLE__CLASS_2, freeze: Shapes.FREEZE_NONE, text: TEXT_CUSTOM_TABLE__CLASS_2, left: 0, top: 0, width: 250, height: 90, enableMask: false, 
+  {
+    name: TYPE_CUSTOM_TABLE__CLASS_2, description: DESC_CUSTOM_TABLE__CLASS_2, freeze: Shapes.FREEZE_NONE, text: TEXT_CUSTOM_TABLE__CLASS_2, left: 0, top: 0, width: 250, height: 90, enableMask: false,
     rowCount: 2, columnCount: 1, fixedFirstRow: true, firstRowHeight: 32, fixedFirstColumn: false, firstColumnWidth: 0,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: false, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
-  { name: TYPE_CUSTOM_TABLE__CLASS_3, description: DESC_CUSTOM_TABLE__CLASS_3, freeze: Shapes.FREEZE_NONE, text: TEXT_CUSTOM_TABLE__CLASS_3, left: 0, top: 0, width: 120, height: 80, enableMask: false, 
+  {
+    name: TYPE_CUSTOM_TABLE__CLASS_3, description: DESC_CUSTOM_TABLE__CLASS_3, freeze: Shapes.FREEZE_NONE, text: TEXT_CUSTOM_TABLE__CLASS_3, left: 0, top: 0, width: 120, height: 80, enableMask: false,
     rowCount: 1, columnCount: 1, fixedFirstRow: false, firstRowHeight: 0, fixedFirstColumn: false, firstColumnWidth: 0,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: false, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
-  { name: TYPE_CUSTOM_TABLE__CLASS_4, description: DESC_CUSTOM_TABLE__CLASS_4, freeze: Shapes.FREEZE_NONE, text: TEXT_CUSTOM_TABLE__CLASS_4, left: 0, top: 0, width: 120, height: 80, enableMask: false, 
+  {
+    name: TYPE_CUSTOM_TABLE__CLASS_4, description: DESC_CUSTOM_TABLE__CLASS_4, freeze: Shapes.FREEZE_NONE, text: TEXT_CUSTOM_TABLE__CLASS_4, left: 0, top: 0, width: 120, height: 80, enableMask: false,
     rowCount: 3, columnCount: 1, fixedFirstRow: true, firstRowHeight: 32, fixedFirstColumn: false, firstColumnWidth: 0,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: false, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
-  { name: TYPE_CUSTOM_TABLE__CLASS_5, description: DESC_CUSTOM_TABLE__CLASS_5, freeze: Shapes.FREEZE_NONE, text: TEXT_CUSTOM_TABLE__CLASS_5, left: 0, top: 0, width: 120, height: 80, enableMask: false, 
+  {
+    name: TYPE_CUSTOM_TABLE__CLASS_5, description: DESC_CUSTOM_TABLE__CLASS_5, freeze: Shapes.FREEZE_NONE, text: TEXT_CUSTOM_TABLE__CLASS_5, left: 0, top: 0, width: 120, height: 80, enableMask: false,
     rowCount: 2, columnCount: 1, fixedFirstRow: true, firstRowHeight: 32, fixedFirstColumn: false, firstColumnWidth: 0,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: false, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
-  { name: TYPE_CUSTOM_TABLE__INTERFACE, description: DESC_CUSTOM_TABLE__INTERFACE, freeze: Shapes.FREEZE_NONE, text: TEXT_CUSTOM_TABLE__INTERFACE, left: 0, top: 0, width: 250, height: 160, enableMask: false, 
+  {
+    name: TYPE_CUSTOM_TABLE__INTERFACE, description: DESC_CUSTOM_TABLE__INTERFACE, freeze: Shapes.FREEZE_NONE, text: TEXT_CUSTOM_TABLE__INTERFACE, left: 0, top: 0, width: 250, height: 160, enableMask: false,
     rowCount: 3, columnCount: 1, fixedFirstRow: true, firstRowHeight: 50, fixedFirstColumn: false, firstColumnWidth: 0,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: false, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
-  { name: TYPE_CUSTOM_TABLE__INTERFACE_2, description: DESC_CUSTOM_TABLE__INTERFACE_2, freeze: Shapes.FREEZE_NONE, text: TEXT_CUSTOM_TABLE__INTERFACE_2, left: 0, top: 0, width: 250, height: 100, enableMask: false, 
+  {
+    name: TYPE_CUSTOM_TABLE__INTERFACE_2, description: DESC_CUSTOM_TABLE__INTERFACE_2, freeze: Shapes.FREEZE_NONE, text: TEXT_CUSTOM_TABLE__INTERFACE_2, left: 0, top: 0, width: 250, height: 100, enableMask: false,
     rowCount: 2, columnCount: 1, fixedFirstRow: true, firstRowHeight: 50, fixedFirstColumn: false, firstColumnWidth: 0,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: false, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
-  { name: TYPE_CUSTOM_TABLE__INTERFACE_3, description: DESC_CUSTOM_TABLE__INTERFACE_3, freeze: Shapes.FREEZE_NONE, text: TEXT_CUSTOM_TABLE__INTERFACE_3, left: 0, top: 0, width: 120, height: 60, enableMask: false, 
+  {
+    name: TYPE_CUSTOM_TABLE__INTERFACE_3, description: DESC_CUSTOM_TABLE__INTERFACE_3, freeze: Shapes.FREEZE_NONE, text: TEXT_CUSTOM_TABLE__INTERFACE_3, left: 0, top: 0, width: 120, height: 60, enableMask: false,
     rowCount: 1, columnCount: 1, fixedFirstRow: false, firstRowHeight: 0, fixedFirstColumn: false, firstColumnWidth: 0,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: false, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
-  { name: TYPE_CUSTOM_TABLE__OBJECT, description: DESC_CUSTOM_TABLE__OBJECT, freeze: Shapes.FREEZE_NONE, text: TEXT_CUSTOM_TABLE__OBJECT, left: 0, top: 0, width: 140, height: 60, enableMask: false, 
+  {
+    name: TYPE_CUSTOM_TABLE__OBJECT, description: DESC_CUSTOM_TABLE__OBJECT, freeze: Shapes.FREEZE_NONE, text: TEXT_CUSTOM_TABLE__OBJECT, left: 0, top: 0, width: 140, height: 60, enableMask: false,
     rowCount: 1, columnCount: 1, fixedFirstRow: false, firstRowHeight: 0, fixedFirstColumn: false, firstColumnWidth: 0,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: false, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
-  { name: TYPE_CUSTOM_TABLE__OBJECT_2, description: DESC_CUSTOM_TABLE__OBJECT_2, freeze: Shapes.FREEZE_NONE, text: TEXT_CUSTOM_TABLE__OBJECT_2, left: 0, top: 0, width: 140, height: 80, enableMask: false, 
+  {
+    name: TYPE_CUSTOM_TABLE__OBJECT_2, description: DESC_CUSTOM_TABLE__OBJECT_2, freeze: Shapes.FREEZE_NONE, text: TEXT_CUSTOM_TABLE__OBJECT_2, left: 0, top: 0, width: 140, height: 80, enableMask: false,
     rowCount: 2, columnCount: 1, fixedFirstRow: true, firstRowHeight: 50, fixedFirstColumn: false, firstColumnWidth: 0,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: false, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
-  { name: TYPE_CUSTOM_TABLE__OBJECT_3, description: DESC_CUSTOM_TABLE__OBJECT_3, freeze: Shapes.FREEZE_NONE, text: TEXT_CUSTOM_TABLE__OBJECT_2, left: 0, top: 0, width: 140, height: 80, enableMask: false, 
+  {
+    name: TYPE_CUSTOM_TABLE__OBJECT_3, description: DESC_CUSTOM_TABLE__OBJECT_3, freeze: Shapes.FREEZE_NONE, text: TEXT_CUSTOM_TABLE__OBJECT_2, left: 0, top: 0, width: 140, height: 80, enableMask: false,
     rowCount: 2, columnCount: 1, fixedFirstRow: true, firstRowHeight: 50, fixedFirstColumn: false, firstColumnWidth: 0,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: false, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
-  { name: TYPE_CUSTOM_TABLE__PACKAGE, description: DESC_CUSTOM_TABLE__PACKAGE, freeze: Shapes.FREEZE_NONE, text: TEXT_CUSTOM_TABLE__PACKAGE, left: 0, top: 0, width: 120, height: 100, enableMask: false, 
+  {
+    name: TYPE_CUSTOM_TABLE__PACKAGE, description: DESC_CUSTOM_TABLE__PACKAGE, freeze: Shapes.FREEZE_NONE, text: TEXT_CUSTOM_TABLE__PACKAGE, left: 0, top: 0, width: 120, height: 100, enableMask: false,
     rowCount: 2, columnCount: 1, fixedFirstRow: true, firstRowHeight: 32, fixedFirstColumn: false, firstColumnWidth: 0,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: false, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
-  { name: TYPE_CUSTOM_TABLE__PACKAGE_2, description: DESC_CUSTOM_TABLE__PACKAGE_2, freeze: Shapes.FREEZE_NONE, text: TEXT_CUSTOM_TABLE__PACKAGE_2, left: 0, top: 0, width: 120, height: 100, enableMask: false, 
+  {
+    name: TYPE_CUSTOM_TABLE__PACKAGE_2, description: DESC_CUSTOM_TABLE__PACKAGE_2, freeze: Shapes.FREEZE_NONE, text: TEXT_CUSTOM_TABLE__PACKAGE_2, left: 0, top: 0, width: 120, height: 100, enableMask: false,
     rowCount: 2, columnCount: 1, fixedFirstRow: true, firstRowHeight: 32, fixedFirstColumn: false, firstColumnWidth: 0,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: false, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
-  { name: TYPE_CUSTOM_TABLE__PACKAGE_3, description: DESC_CUSTOM_TABLE__PACKAGE_3, freeze: Shapes.FREEZE_NONE, text: TEXT_CUSTOM_TABLE__PACKAGE_3, left: 0, top: 0, width: 120, height: 100, enableMask: false, 
+  {
+    name: TYPE_CUSTOM_TABLE__PACKAGE_3, description: DESC_CUSTOM_TABLE__PACKAGE_3, freeze: Shapes.FREEZE_NONE, text: TEXT_CUSTOM_TABLE__PACKAGE_3, left: 0, top: 0, width: 120, height: 100, enableMask: false,
     rowCount: 2, columnCount: 1, fixedFirstRow: true, firstRowHeight: 32, fixedFirstColumn: false, firstColumnWidth: 0,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: false, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
 ]
 
@@ -143,49 +157,49 @@ export class UMLCustomTable extends CustomTableEntity {
     this.buildShape()
   }
 
-  public buildShape() {    
-    for(let i = 0; i < this.customTableeType.rowCount - 1; i ++) {
+  public buildShape() {
+    for (let i = 0; i < this.customTableeType.rowCount - 1; i++) {
       this.insertRowAfter(this.rowCount - 1, false)
     }
-    for(let i = 0; i < this.customTableeType.columnCount - 1; i ++) {
+    for (let i = 0; i < this.customTableeType.columnCount - 1; i++) {
       this.insertColumnAfter(this.columnCount - 1, false)
     }
     //this.boundary =  Rectangle.makeLTWH(0, 0, this.width, this.height)
     this.refreshGrid()
-    switch(this.customTableeType.name) {
-      case TYPE_CUSTOM_TABLE__CLASS_2: {   
+    switch (this.customTableeType.name) {
+      case TYPE_CUSTOM_TABLE__CLASS_2: {
         this.items[0].shape.selectionStyle.bold = true
         this.items[0].shape.text = 'Class Name'
         this.items[1].textAlignment = TextAlignment.LEFT
         this.items[1].shape.text = ' + attribute1: Type\r\n + attribute2: Type\r\n - attribute3: Type'
-        break;
+        break
       }
       case TYPE_CUSTOM_TABLE__CLASS_3: {
         this.items[0].shape.selectionStyle.bold = true
         this.items[0].shape.text = 'Class Name'
-        break;
+        break
       }
       case TYPE_CUSTOM_TABLE__CLASS_4: {
         this.items[0].shape.selectionStyle.bold = true
         this.items[0].shape.text = 'Class Name'
-        break;
+        break
       }
       case TYPE_CUSTOM_TABLE__CLASS_5: {
         this.items[0].shape.selectionStyle.bold = true
         this.items[0].shape.text = 'Class Name'
-        break;
+        break
       }
       case TYPE_CUSTOM_TABLE__OBJECT: {
         this.items[0].shape.selectionStyle.underline = true
         this.items[0].shape.selectionStyle.bold = true
         this.items[0].shape.text = 'Object'
-        break;
+        break
       }
       case TYPE_CUSTOM_TABLE__OBJECT_2: {
         this.items[0].shape.selectionStyle.underline = true
         this.items[0].shape.selectionStyle.bold = true
         this.items[0].shape.text = 'Object:Class'
-        break;
+        break
       }
       case TYPE_CUSTOM_TABLE__OBJECT_3: {
         this.items[0].shape.selectionStyle.underline = true
@@ -193,7 +207,7 @@ export class UMLCustomTable extends CustomTableEntity {
         this.items[0].shape.text = 'Object:Class'
         this.items[1].textAlignment = TextAlignment.LEFT
         this.items[1].shape.text = ' + attribute = data'
-        break;
+        break
       }
       case TYPE_CUSTOM_TABLE__INTERFACE: {
         this.items[0].shape.selectionStyle.italic = true
@@ -205,7 +219,7 @@ export class UMLCustomTable extends CustomTableEntity {
         this.items[1].shape.text = ' + attribute1: Type\r\n + attribute2: Type\r\n - attribute3: Type'
         this.items[2].textAlignment = TextAlignment.LEFT
         this.items[2].shape.text = ' + operation1(params): returnType\r\n + operation2(params)\r\n - operation3()'
-        break;
+        break
       }
       case TYPE_CUSTOM_TABLE__INTERFACE_2: {
         this.items[0].shape.selectionStyle.italic = true
@@ -215,7 +229,7 @@ export class UMLCustomTable extends CustomTableEntity {
         this.items[0].shape.insert('Interface')
         this.items[1].textAlignment = TextAlignment.LEFT
         this.items[1].shape.text = ' + attribute1: Type\r\n + attribute2: Type\r\n - attribute3: Type'
-        break;
+        break
       }
       case TYPE_CUSTOM_TABLE__INTERFACE_3: {
         this.items[0].shape.selectionStyle.italic = true
@@ -223,7 +237,7 @@ export class UMLCustomTable extends CustomTableEntity {
         this.items[0].shape.selectionStyle.italic = false
         this.items[0].shape.selectionStyle.bold = true
         this.items[0].shape.insert('Interface')
-        break;
+        break
       }
       case TYPE_CUSTOM_TABLE__PACKAGE: {
         this.items[0].boundary = Rectangle.makeLTWH(this.items[0].left, this.items[0].top, 90, this.items[0].height)
@@ -231,7 +245,7 @@ export class UMLCustomTable extends CustomTableEntity {
         this.items[0].shape.text = 'Package'
         this.items[1].textAlignment = TextAlignment.LEFT
         this.items[1].textVerticalAlignment = TextVerticalAlignment.TOP
-        break;
+        break
       }
       case TYPE_CUSTOM_TABLE__PACKAGE_2: {
         this.items[0].boundary = Rectangle.makeLTWH(this.items[0].left, this.items[0].top, 90, this.items[0].height)
@@ -239,7 +253,7 @@ export class UMLCustomTable extends CustomTableEntity {
         this.items[1].shape.selectionStyle.bold = true
         this.items[1].shape.text = 'Package'
         this.items[1].textVerticalAlignment = TextVerticalAlignment.TOP
-        break;
+        break
       }
       case TYPE_CUSTOM_TABLE__PACKAGE_3: {
         this.items[0].boundary = Rectangle.makeLTWH(this.items[0].left, this.items[0].top, 90, this.items[0].height)
@@ -248,9 +262,9 @@ export class UMLCustomTable extends CustomTableEntity {
         this.items[1].textAlignment = TextAlignment.LEFT
         this.items[1].shape.text = 'Attributes'
         this.items[1].textVerticalAlignment = TextVerticalAlignment.TOP
-        break;
+        break
       }
-      case TYPE_CUSTOM_TABLE__CLASS: 
+      case TYPE_CUSTOM_TABLE__CLASS:
       default: {
         this.items[0].shape.selectionStyle.bold = true
         this.items[0].shape.text = 'Class Name'
@@ -258,7 +272,7 @@ export class UMLCustomTable extends CustomTableEntity {
         this.items[1].shape.text = ' + attribute1: Type\r\n + attribute2: Type\r\n - attribute3: Type'
         this.items[2].textAlignment = TextAlignment.LEFT
         this.items[2].shape.text = ' + operation1(params): returnType\r\n + operation2(params)\r\n - operation3()'
-        break;
+        break
       }
     }
 
@@ -267,7 +281,7 @@ export class UMLCustomTable extends CustomTableEntity {
   protected parseEntityShapeType(type: string): EntityShapeType {
     let shapeType = EntityShapeType.Table
     return shapeType
-  } 
+  }
 
 
   private refreshGrid() {

@@ -4,11 +4,11 @@ import { Colors, Graphics, Paint, PaintStyle, Path, PathOp, Rectangle, } from '.
 import { Point2, } from '..'
 
 export abstract class Shape extends Node {
-  private _stroke: Paint;
-  private _fill: Paint;
-  private _filled: boolean;
-  private _stroked: boolean;
-  private _path: Path;
+  private _stroke: Paint
+  private _fill: Paint
+  private _filled: boolean
+  private _stroked: boolean
+  private _path: Path
   private _boundary: Rectangle
   private _clipped: boolean
   private _clip: Path

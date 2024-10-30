@@ -2,11 +2,11 @@
 import { EditorLayer, } from './EditorLayer'
 
 export class ControllerLayer extends EditorLayer {
-  public constructor (left = 0, top = 0, width = 100, height = 100) {
+  public constructor(left = 0, top = 0, width = 100, height = 100) {
     super(left, top, width, height, true)
   }
 
-  protected buildLayer () {
+  protected buildLayer() {
 
   }
 }

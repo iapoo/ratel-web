@@ -7,15 +7,15 @@ export class ImageUtils {
     public static convertBase64StringToBlob(base64Text: string) {
         const attrs = base64Text.split(',')
         const matches = attrs[0].match(/:(.*?);/)
-        if(matches) {
-            const mime = matches[1];
+        if (matches) {
+            const mime = matches[1]
             const blobStr = atob(attrs[1])
             let n = blobStr.length
             const u8Data = new Uint8Array(n)
-            while(n--) {
+            while (n--) {
                 u8Data[n] = blobStr.charCodeAt(n)
-            } 
-            return new Blob([u8Data], {type: mime})
+            }
+            return new Blob([u8Data], { type: mime })
         } else {
             return undefined
         }
@@ -28,14 +28,14 @@ export class ImageUtils {
     public static convertBase64StringToUInt8Array(base64Text: string) {
         const attrs = base64Text.split(',')
         const matches = attrs[0].match(/:(.*?);/)
-        if(matches) {
-            const mime = matches[1];
+        if (matches) {
+            const mime = matches[1]
             const blobStr = atob(attrs[1])
             let n = blobStr.length
             const u8Data = new Uint8Array(n)
-            while(n--) {
+            while (n--) {
                 u8Data[n] = blobStr.charCodeAt(n)
-            } 
+            }
             return u8Data
         } else {
             return undefined
@@ -51,32 +51,32 @@ export class ImageUtils {
      * @returns 
      */
     public static convertUint8ArrayToBase64(u8Array: Uint8Array) {
-        const CHUNK_SIZE = 0x8000; // 32K chunks
-        let base64 = '';
+        const CHUNK_SIZE = 0x8000 // 32K chunks
+        let base64 = ''
         for (let i = 0; i < u8Array.length; i += CHUNK_SIZE) {
-            const chunk = u8Array.subarray(i, i + CHUNK_SIZE);
-            const chunkBase64 = btoa(String.fromCharCode.apply(null, chunk));
-            base64 += chunkBase64.match(/.{2}/g).join('');
+            const chunk = u8Array.subarray(i, i + CHUNK_SIZE)
+            const chunkBase64 = btoa(String.fromCharCode.apply(null, chunk))
+            base64 += chunkBase64.match(/.{2}/g).join('')
         }
-        return base64;
+        return base64
     }
 
     public static convertBase64ImageToString(base64Text: string) {
         const attrs = base64Text.split(',')
         const matches = attrs[0].match(/:(.*?);/)
-        if(matches) {
-            const mime = matches[1];
+        if (matches) {
+            const mime = matches[1]
             const blobStr = atob(attrs[1])
             let n = blobStr.length
             const u8Data = new Uint8Array(n)
-            while(n--) {
+            while (n--) {
                 u8Data[n] = blobStr.charCodeAt(n)
-            } 
+            }
             const decoder = new TextDecoder('utf-8')
             return decoder.decode(u8Data)
         } else {
             return ''
-        } 
+        }
     }
- 
+
 }

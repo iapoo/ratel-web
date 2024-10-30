@@ -1,5 +1,5 @@
-import { CustomEntityTypeInfo } from "../../Items/src/CustomEntity";
-import { Arrow, ArrowTypes } from "./src/Arrow";
+import { CustomEntityTypeInfo } from "../../Items/src/CustomEntity"
+import { Arrow, ArrowTypes } from "./src/Arrow"
 
 export { Arrow } from './src/Arrow'
 

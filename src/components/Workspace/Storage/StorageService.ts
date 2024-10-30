@@ -148,7 +148,7 @@ export class StorageService {
     StorageService.testdata = data
   }
 
-  public save(documentThemeName: string, version: string ) {
+  public save(documentThemeName: string, version: string) {
     this._storageData.theme = documentThemeName
     this._storageData.version = version
     this._storageData.sheets.length = 0

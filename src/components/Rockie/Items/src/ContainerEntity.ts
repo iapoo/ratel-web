@@ -55,13 +55,13 @@ export class ContainerEntity extends ShapeEntity {
       case Containers.TYPE_HORIZONTAL_CONTAINER:
       case Containers.TYPE_HORIZONTAL_CONTAINER_2:
         this.shape.paragraphDirection = ParagraphDirection.BottomTop
-        break;
+        break
       case Containers.TYPE_VERTICAL_CONTAINER:
       case Containers.TYPE_VERTICAL_CONTAINER_2:
-        break;
+        break
       default:
       case Containers.TYPE_CONTAINER:
-        break;
+        break
     }
   }
 
@@ -82,15 +82,15 @@ export class ContainerEntity extends ShapeEntity {
     switch (type) {
       case Containers.TYPE_CONTAINER:
         shapeType = EntityShapeType.Container
-        break;
+        break
       case Containers.TYPE_HORIZONTAL_CONTAINER:
       case Containers.TYPE_HORIZONTAL_CONTAINER_2:
         shapeType = EntityShapeType.HorizontalContainer
-        break;
+        break
       case Containers.TYPE_VERTICAL_CONTAINER:
       case Containers.TYPE_VERTICAL_CONTAINER_2:
         shapeType = EntityShapeType.VerticalContainer
-        break;
+        break
     }
     return shapeType
   }

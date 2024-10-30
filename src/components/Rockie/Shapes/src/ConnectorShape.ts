@@ -69,7 +69,7 @@ export class ConnectorShape extends EntityShape {
   public static DEFAULT_SEGMENT = 16
   private _start: Point2
   private _end: Point2
-  private _connectorType: ConnectorType;
+  private _connectorType: ConnectorType
   private _startArrow: ConnectorArrowTypeInfo
   private _endArrow: ConnectorArrowTypeInfo
   private _connectorMode: ConnectorMode
@@ -376,14 +376,14 @@ export class ConnectorShape extends EntityShape {
       switch (this.connectorType) {
         case ConnectorType.Orthogonal:
           distance = this.getOrthogonalNearstDistance(invesePoint.x, invesePoint.y)
-          break;
+          break
         case ConnectorType.Curve:
           distance = this.getCurveNearstDistance(invesePoint.x, invesePoint.y)
-          break;
+          break
         case ConnectorType.StraightLine:
         default:
           distance = this.getStraightNearstDistance(invesePoint.x, invesePoint.y)
-          break;
+          break
       }
       //console.log(`distance = ${distance} left=${left} y=${top} width=${width} height=${height} left2=${this.left} top2=${this.top}  x=${point.x} y=${point.y}  xx=${invesePoint.x}  yy= ${invesePoint.y}`)
       return distance <= ConnectorShape.DETECTION_DISTANCE
@@ -398,7 +398,7 @@ export class ConnectorShape extends EntityShape {
           case ConnectorMode.Double:
             graphics.drawPath(this.path, this._connectorDoubleLineStroke)
             graphics.drawPath(this.path, this._connectorDoubleLineFill)
-            break;
+            break
           case ConnectorMode.DoubleAndStartArrow:
           case ConnectorMode.DoubleAndEndArrow:
           case ConnectorMode.DoubleAndBothArrows:
@@ -407,7 +407,7 @@ export class ConnectorShape extends EntityShape {
             graphics.drawPath(this.path, this.stroke)
             break
         }
-        break;
+        break
       case ConnectorType.Orthogonal:
         switch (this.connectorMode) {
           case ConnectorMode.DoubleAndStartArrow:
@@ -416,21 +416,21 @@ export class ConnectorShape extends EntityShape {
             //graphics.drawPath(this.path, this._connectorDoubleLineStroke)
             //graphics.drawPath(this.path, this._connectorDoubleLineFill)
             graphics.drawPath(this._connectorDoubleLinePath, this._connectorDoubleLinePaint)
-            break;
+            break
           case ConnectorMode.Double:
             graphics.drawPath(this.path, this._connectorDoubleLineStroke)
             graphics.drawPath(this.path, this._connectorDoubleLineFill)
-            break;
+            break
           case ConnectorMode.Single:
           default:
             graphics.drawPath(this.path, this.stroke)
             break
         }
-        break;
+        break
       case ConnectorType.StraightLine:
       default:
         graphics.drawPath(this.path, this.stroke)
-        break;
+        break
     }
     super.render(graphics)
     //Arrows only work for Single Solid lines
@@ -493,14 +493,14 @@ export class ConnectorShape extends EntityShape {
       switch (this.connectorType) {
         case ConnectorType.Orthogonal:
           this.updateOrthogonalPath()
-          break;
+          break
         case ConnectorType.Curve:
           this.updateCurvePath()
-          break;
+          break
         case ConnectorType.StraightLine:
         default:
           this.updateStraightLinePath()
-          break;
+          break
 
       }
       if (this._orthogonalPoints.length > 0) {
@@ -542,7 +542,7 @@ export class ConnectorShape extends EntityShape {
         case ConnectorMode.DoubleAndBothArrows:
           this.stroked = false
           this.filled = false
-          break;
+          break
         case ConnectorMode.Single:
         default:
           this.stroked = true
@@ -568,39 +568,39 @@ export class ConnectorShape extends EntityShape {
     switch (this._startDirection) {
       case ConnectorDirection.Left: {
         startOffsetPoint = new Point2(start.x - hint, start.y)
-        break;
+        break
       }
       case ConnectorDirection.Top: {
         startOffsetPoint = new Point2(start.x, start.y - hint)
-        break;
+        break
       }
       case ConnectorDirection.Bottom: {
         startOffsetPoint = new Point2(start.x, start.y + hint)
-        break;
+        break
       }
       case ConnectorDirection.Right:
       default: {
         startOffsetPoint = new Point2(start.x + hint, start.y)
-        break;
+        break
       }
     }
     switch (this._endDirection) {
       case ConnectorDirection.Left: {
         endOffsetPoint = new Point2(end.x - hint, end.y)
-        break;
+        break
       }
       case ConnectorDirection.Top: {
         endOffsetPoint = new Point2(end.x, end.y - hint)
-        break;
+        break
       }
       case ConnectorDirection.Bottom: {
         endOffsetPoint = new Point2(end.x, end.y + hint)
-        break;
+        break
       }
       case ConnectorDirection.Right:
       default: {
         endOffsetPoint = new Point2(end.x + hint, end.y)
-        break;
+        break
       }
     }
     const startAngle = MathUtils.getAngleIn3PointsEx(start.x, start.y, startModifier.x, startModifier.y, startOffsetPoint.x, startOffsetPoint.y)
@@ -616,60 +616,60 @@ export class ConnectorShape extends EntityShape {
     switch (arrow.type) {
       case ConnectorArrowDisplayType.Triangle: {
         this.updateArrayTypeTriangle(point, direction, arrow, arrowPath)
-        break;
+        break
       }
       case ConnectorArrowDisplayType.Diamond: {
         this.updateArrayTypeDiamond(point, direction, arrow, arrowPath)
-        break;
+        break
       }
       case ConnectorArrowDisplayType.Ellipse: {
         this.updateArrayTypeEllipse(point, direction, arrow, arrowPath)
-        break;
+        break
       }
       case ConnectorArrowDisplayType.LeftParenthesis: {
         this.updateArrayTypeLeftParenthesis(point, direction, arrow, arrowPath)
-        break;
+        break
       }
       case ConnectorArrowDisplayType.RightParenthesis: {
         this.updateArrayTypeRightParenthesis(point, direction, arrow, arrowPath)
-        break;
+        break
       }
       case ConnectorArrowDisplayType.Orthogonal: {
         this.updateArrayTypeOrthogonal(point, direction, arrow, arrowPath)
-        break;
+        break
       }
       case ConnectorArrowDisplayType.ForewardSlash: {
         this.updateArrayTypeForewardSlash(point, direction, arrow, arrowPath)
-        break;
+        break
       }
       case ConnectorArrowDisplayType.Backslashe: {
         this.updateArrayTypeBackslashe(point, direction, arrow, arrowPath)
-        break;
+        break
       }
       case ConnectorArrowDisplayType.VerticalLine: {
         this.updateArrayTypeVerticalLine(point, direction, arrow, arrowPath)
-        break;
+        break
       }
       case ConnectorArrowDisplayType.LeftAngleBracket: {
         this.updateArrayTypeLeftAngleBracket(point, direction, arrow, arrowPath)
-        break;
+        break
       }
       case ConnectorArrowDisplayType.VerticaleLineAndLeftAngleBacket: {
         this.updateArrayTypeVerticaleLineAndLeftAngleBacket(point, direction, arrow, arrowPath)
-        break;
+        break
       }
       case ConnectorArrowDisplayType.CircleAndVerticalLine: {
         this.updateArrayTypeCircleAndVerticalLine(point, direction, arrow, arrowPath)
-        break;
+        break
       }
       case ConnectorArrowDisplayType.CircleAndLeftBacket: {
         this.updateArrayTypeCircleAndLeftBacket(point, direction, arrow, arrowPath)
-        break;
+        break
       }
       default:
       case ConnectorArrowDisplayType.None: {
         arrowPath.reset()
-        break;
+        break
       }
     }
   }
@@ -684,13 +684,13 @@ export class ConnectorShape extends EntityShape {
             arrowPath.lineTo(start.x - arrowTypeInfo.width, start.y - arrowTypeInfo.height / 2)
             arrowPath.lineTo(start.x - arrowTypeInfo.width + arrowTypeInfo.modifier * arrowTypeInfo.width, start.y)
             arrowPath.lineTo(start.x, start.y)
-            break;
+            break
           case ConnectorArrowDisplayMode.Bottom:
             arrowPath.moveTo(start.x, start.y)
             arrowPath.lineTo(start.x - arrowTypeInfo.width + arrowTypeInfo.modifier * arrowTypeInfo.width, start.y)
             arrowPath.lineTo(start.x - arrowTypeInfo.width, start.y + arrowTypeInfo.height / 2)
             arrowPath.lineTo(start.x, start.y)
-            break;
+            break
           case ConnectorArrowDisplayMode.Full:
           default:
             arrowPath.moveTo(start.x, start.y)
@@ -705,9 +705,9 @@ export class ConnectorShape extends EntityShape {
               arrowPath.lineTo(start.x - arrowTypeInfo.width * 2, start.y + arrowTypeInfo.height / 2)
               arrowPath.lineTo(start.x - arrowTypeInfo.width, start.y)
             }
-            break;
+            break
         }
-        break;
+        break
       case ConnectorDirection.Top:
         switch (arrowTypeInfo.displayMode) {
           case ConnectorArrowDisplayMode.Top:
@@ -715,13 +715,13 @@ export class ConnectorShape extends EntityShape {
             arrowPath.lineTo(start.x - arrowTypeInfo.height / 2, start.y - arrowTypeInfo.width)
             arrowPath.lineTo(start.x, start.y - arrowTypeInfo.width + arrowTypeInfo.modifier * arrowTypeInfo.width)
             arrowPath.lineTo(start.x, start.y)
-            break;
+            break
           case ConnectorArrowDisplayMode.Bottom:
             arrowPath.moveTo(start.x, start.y)
             arrowPath.lineTo(start.x, start.y - arrowTypeInfo.width + arrowTypeInfo.modifier * arrowTypeInfo.width)
             arrowPath.lineTo(start.x + arrowTypeInfo.height / 2, start.y - arrowTypeInfo.width)
             arrowPath.lineTo(start.x, start.y)
-            break;
+            break
           case ConnectorArrowDisplayMode.Full:
           default:
             arrowPath.moveTo(start.x, start.y)
@@ -736,9 +736,9 @@ export class ConnectorShape extends EntityShape {
               arrowPath.lineTo(start.x + arrowTypeInfo.height / 2, start.y - arrowTypeInfo.width * 2)
               arrowPath.lineTo(start.x, start.y - arrowTypeInfo.width)
             }
-            break;
+            break
         }
-        break;
+        break
       case ConnectorDirection.Right:
         switch (arrowTypeInfo.displayMode) {
           case ConnectorArrowDisplayMode.Top:
@@ -746,13 +746,13 @@ export class ConnectorShape extends EntityShape {
             arrowPath.lineTo(start.x + arrowTypeInfo.width, start.y - arrowTypeInfo.height / 2)
             arrowPath.lineTo(start.x + arrowTypeInfo.width - arrowTypeInfo.modifier * arrowTypeInfo.width, start.y)
             arrowPath.lineTo(start.x, start.y)
-            break;
+            break
           case ConnectorArrowDisplayMode.Bottom:
             arrowPath.moveTo(start.x, start.y)
             arrowPath.lineTo(start.x + arrowTypeInfo.width - arrowTypeInfo.modifier * arrowTypeInfo.width, start.y)
             arrowPath.lineTo(start.x + arrowTypeInfo.width, start.y + arrowTypeInfo.height / 2)
             arrowPath.lineTo(start.x, start.y)
-            break;
+            break
           case ConnectorArrowDisplayMode.Full:
           default:
             arrowPath.moveTo(start.x, start.y)
@@ -767,9 +767,9 @@ export class ConnectorShape extends EntityShape {
               arrowPath.lineTo(start.x + arrowTypeInfo.width * 2, start.y + arrowTypeInfo.height / 2)
               arrowPath.lineTo(start.x + arrowTypeInfo.width, start.y)
             }
-            break;
+            break
         }
-        break;
+        break
       case ConnectorDirection.Bottom:
       default:
         switch (arrowTypeInfo.displayMode) {
@@ -778,13 +778,13 @@ export class ConnectorShape extends EntityShape {
             arrowPath.lineTo(start.x - arrowTypeInfo.height / 2, start.y + arrowTypeInfo.width)
             arrowPath.lineTo(start.x, start.y + arrowTypeInfo.width - arrowTypeInfo.modifier * arrowTypeInfo.width)
             arrowPath.lineTo(start.x, start.y)
-            break;
+            break
           case ConnectorArrowDisplayMode.Bottom:
             arrowPath.moveTo(start.x, start.y)
             arrowPath.lineTo(start.x, start.y + arrowTypeInfo.width - arrowTypeInfo.modifier * arrowTypeInfo.width)
             arrowPath.lineTo(start.x + arrowTypeInfo.height / 2, start.y + arrowTypeInfo.width)
             arrowPath.lineTo(start.x, start.y)
-            break;
+            break
           case ConnectorArrowDisplayMode.Full:
           default:
             arrowPath.moveTo(start.x, start.y)
@@ -799,9 +799,9 @@ export class ConnectorShape extends EntityShape {
               arrowPath.lineTo(start.x + arrowTypeInfo.height / 2, start.y + arrowTypeInfo.width * 2)
               arrowPath.lineTo(start.x, start.y + arrowTypeInfo.width)
             }
-            break;
+            break
         }
-        break;
+        break
     }
   }
 
@@ -821,7 +821,7 @@ export class ConnectorShape extends EntityShape {
           arrowPath.lineTo(start.x - arrowTypeInfo.width * 1.5, start.y + arrowTypeInfo.height / 2)
           arrowPath.lineTo(start.x - arrowTypeInfo.width, start.y)
         }
-        break;
+        break
       case ConnectorDirection.Top:
         arrowPath.moveTo(start.x, start.y)
         arrowPath.lineTo(start.x - arrowTypeInfo.height / 2, start.y - arrowTypeInfo.width / 2)
@@ -835,7 +835,7 @@ export class ConnectorShape extends EntityShape {
           arrowPath.lineTo(start.x + arrowTypeInfo.height / 2, start.y - arrowTypeInfo.width * 1.5)
           arrowPath.lineTo(start.x, start.y - arrowTypeInfo.width)
         }
-        break;
+        break
       case ConnectorDirection.Right:
         arrowPath.moveTo(start.x, start.y)
         arrowPath.lineTo(start.x + arrowTypeInfo.width / 2, start.y - arrowTypeInfo.height / 2)
@@ -849,7 +849,7 @@ export class ConnectorShape extends EntityShape {
           arrowPath.lineTo(start.x + arrowTypeInfo.width * 1.5, start.y + arrowTypeInfo.height / 2)
           arrowPath.lineTo(start.x + arrowTypeInfo.width, start.y)
         }
-        break;
+        break
       case ConnectorDirection.Bottom:
       default:
         arrowPath.moveTo(start.x, start.y)
@@ -864,7 +864,7 @@ export class ConnectorShape extends EntityShape {
           arrowPath.lineTo(start.x + arrowTypeInfo.height / 2, start.y + arrowTypeInfo.width * 1.5)
           arrowPath.lineTo(start.x, start.y + arrowTypeInfo.width)
         }
-        break;
+        break
     }
   }
 
@@ -876,26 +876,26 @@ export class ConnectorShape extends EntityShape {
         if (arrowTypeInfo.count > 1) {
           arrowPath.addOval(Rectangle.makeLTWH(start.x - arrowTypeInfo.width * 2, start.y - arrowTypeInfo.height / 2, arrowTypeInfo.width, arrowTypeInfo.height))
         }
-        break;
+        break
       case ConnectorDirection.Top:
         arrowPath.addOval(Rectangle.makeLTWH(start.x - arrowTypeInfo.height / 2, start.y - arrowTypeInfo.width, arrowTypeInfo.height, arrowTypeInfo.width))
         if (arrowTypeInfo.count > 1) {
           arrowPath.addOval(Rectangle.makeLTWH(start.x - arrowTypeInfo.height / 2, start.y - arrowTypeInfo.width * 2, arrowTypeInfo.height, arrowTypeInfo.width))
         }
-        break;
+        break
       case ConnectorDirection.Right:
         arrowPath.addOval(Rectangle.makeLTWH(start.x, start.y - arrowTypeInfo.height / 2, arrowTypeInfo.width, arrowTypeInfo.height))
         if (arrowTypeInfo.count > 1) {
           arrowPath.addOval(Rectangle.makeLTWH(start.x + arrowTypeInfo.width, start.y - arrowTypeInfo.height / 2, arrowTypeInfo.width, arrowTypeInfo.height))
         }
-        break;
+        break
       case ConnectorDirection.Bottom:
       default:
         arrowPath.addOval(Rectangle.makeLTWH(start.x - arrowTypeInfo.height / 2, start.y, arrowTypeInfo.height, arrowTypeInfo.width))
         if (arrowTypeInfo.count > 1) {
           arrowPath.addOval(Rectangle.makeLTWH(start.x - arrowTypeInfo.height / 2, start.y + arrowTypeInfo.width, arrowTypeInfo.height, arrowTypeInfo.width))
         }
-        break;
+        break
     }
   }
 
@@ -904,17 +904,17 @@ export class ConnectorShape extends EntityShape {
     switch (direction) {
       case ConnectorDirection.Left:
         arrowPath.addArc(Rectangle.makeLTWH(start.x - arrowTypeInfo.width, start.y - arrowTypeInfo.height / 2, arrowTypeInfo.width, arrowTypeInfo.height), 90, 180)
-        break;
+        break
       case ConnectorDirection.Top:
         arrowPath.addArc(Rectangle.makeLTWH(start.x - arrowTypeInfo.height / 2, start.y - arrowTypeInfo.width, arrowTypeInfo.height, arrowTypeInfo.width), 180, 180)
-        break;
+        break
       case ConnectorDirection.Right:
         arrowPath.addArc(Rectangle.makeLTWH(start.x, start.y - arrowTypeInfo.height / 2, arrowTypeInfo.width, arrowTypeInfo.height), 270, 180)
-        break;
+        break
       case ConnectorDirection.Bottom:
       default:
         arrowPath.addArc(Rectangle.makeLTWH(start.x - arrowTypeInfo.height / 2, start.y, arrowTypeInfo.height, arrowTypeInfo.width), 0, 180)
-        break;
+        break
     }
   }
 
@@ -924,17 +924,17 @@ export class ConnectorShape extends EntityShape {
     switch (direction) {
       case ConnectorDirection.Left:
         arrowPath.addArc(Rectangle.makeLTWH(start.x - arrowTypeInfo.width, start.y - arrowTypeInfo.height / 2, arrowTypeInfo.width, arrowTypeInfo.height), 270, 180)
-        break;
+        break
       case ConnectorDirection.Top:
         arrowPath.addArc(Rectangle.makeLTWH(start.x - arrowTypeInfo.height / 2, start.y - arrowTypeInfo.width, arrowTypeInfo.height, arrowTypeInfo.width), 0, 180)
-        break;
+        break
       case ConnectorDirection.Right:
         arrowPath.addArc(Rectangle.makeLTWH(start.x, start.y - arrowTypeInfo.height / 2, arrowTypeInfo.width, arrowTypeInfo.height), 90, 180)
-        break;
+        break
       case ConnectorDirection.Bottom:
       default:
         arrowPath.addArc(Rectangle.makeLTWH(start.x - arrowTypeInfo.height / 2, start.y, arrowTypeInfo.height, arrowTypeInfo.width), 180, 180)
-        break;
+        break
     }
   }
 
@@ -946,26 +946,26 @@ export class ConnectorShape extends EntityShape {
         arrowPath.lineTo(start.x, start.y + arrowTypeInfo.height / 2)
         arrowPath.moveTo(start.x - arrowTypeInfo.width, start.y + arrowTypeInfo.height / 2)
         arrowPath.lineTo(start.x, start.y - arrowTypeInfo.height / 2)
-        break;
+        break
       case ConnectorDirection.Top:
         arrowPath.moveTo(start.x - arrowTypeInfo.height / 2, start.y - arrowTypeInfo.width)
         arrowPath.lineTo(start.x + arrowTypeInfo.height / 2, start.y)
         arrowPath.moveTo(start.x + arrowTypeInfo.height / 2, start.y - arrowTypeInfo.width)
         arrowPath.lineTo(start.x - arrowTypeInfo.height / 2, start.y)
-        break;
+        break
       case ConnectorDirection.Right:
         arrowPath.moveTo(start.x, start.y - arrowTypeInfo.height / 2)
         arrowPath.lineTo(start.x + arrowTypeInfo.width, start.y + arrowTypeInfo.height / 2)
         arrowPath.moveTo(start.x, start.y + arrowTypeInfo.height / 2)
         arrowPath.lineTo(start.x + arrowTypeInfo.width, start.y - arrowTypeInfo.height / 2)
-        break;
+        break
       case ConnectorDirection.Bottom:
       default:
         arrowPath.moveTo(start.x - arrowTypeInfo.height / 2, start.y + arrowTypeInfo.width)
         arrowPath.lineTo(start.x + arrowTypeInfo.height / 2, start.y)
         arrowPath.moveTo(start.x + arrowTypeInfo.height / 2, start.y + arrowTypeInfo.width)
         arrowPath.lineTo(start.x - arrowTypeInfo.height / 2, start.y)
-        break;
+        break
     }
   }
 
@@ -975,20 +975,20 @@ export class ConnectorShape extends EntityShape {
       case ConnectorDirection.Left:
         arrowPath.moveTo(start.x - arrowTypeInfo.width, start.y + arrowTypeInfo.height / 2)
         arrowPath.lineTo(start.x, start.y - arrowTypeInfo.height / 2)
-        break;
+        break
       case ConnectorDirection.Top:
         arrowPath.moveTo(start.x + arrowTypeInfo.height / 2, start.y - arrowTypeInfo.width)
         arrowPath.lineTo(start.x - arrowTypeInfo.height / 2, start.y)
-        break;
+        break
       case ConnectorDirection.Right:
         arrowPath.moveTo(start.x, start.y + arrowTypeInfo.height / 2)
         arrowPath.lineTo(start.x + arrowTypeInfo.width, start.y - arrowTypeInfo.height / 2)
-        break;
+        break
       case ConnectorDirection.Bottom:
       default:
         arrowPath.moveTo(start.x - arrowTypeInfo.height / 2, start.y + arrowTypeInfo.width)
         arrowPath.lineTo(start.x + arrowTypeInfo.height / 2, start.y)
-        break;
+        break
     }
   }
 
@@ -998,20 +998,20 @@ export class ConnectorShape extends EntityShape {
       case ConnectorDirection.Left:
         arrowPath.moveTo(start.x - arrowTypeInfo.width, start.y - arrowTypeInfo.height / 2)
         arrowPath.lineTo(start.x, start.y + arrowTypeInfo.height / 2)
-        break;
+        break
       case ConnectorDirection.Top:
         arrowPath.moveTo(start.x - arrowTypeInfo.height / 2, start.y - arrowTypeInfo.width)
         arrowPath.lineTo(start.x + arrowTypeInfo.height / 2, start.y)
-        break;
+        break
       case ConnectorDirection.Right:
         arrowPath.moveTo(start.x, start.y - arrowTypeInfo.height / 2)
         arrowPath.lineTo(start.x + arrowTypeInfo.width, start.y + arrowTypeInfo.height / 2)
-        break;
+        break
       case ConnectorDirection.Bottom:
       default:
         arrowPath.moveTo(start.x + arrowTypeInfo.height / 2, start.y + arrowTypeInfo.width)
         arrowPath.lineTo(start.x - arrowTypeInfo.height / 2, start.y)
-        break;
+        break
     }
   }
 
@@ -1021,20 +1021,20 @@ export class ConnectorShape extends EntityShape {
       case ConnectorDirection.Left:
         arrowPath.moveTo(start.x - arrowTypeInfo.width * arrowTypeInfo.modifier, start.y - arrowTypeInfo.height / 2)
         arrowPath.lineTo(start.x - arrowTypeInfo.width * arrowTypeInfo.modifier, start.y + arrowTypeInfo.height / 2)
-        break;
+        break
       case ConnectorDirection.Top:
         arrowPath.moveTo(start.x - arrowTypeInfo.height / 2, start.y - arrowTypeInfo.width * arrowTypeInfo.modifier)
         arrowPath.lineTo(start.x + arrowTypeInfo.height / 2, start.y - arrowTypeInfo.width * arrowTypeInfo.modifier)
-        break;
+        break
       case ConnectorDirection.Right:
         arrowPath.moveTo(start.x + arrowTypeInfo.width * arrowTypeInfo.modifier, start.y - arrowTypeInfo.height / 2)
         arrowPath.lineTo(start.x + arrowTypeInfo.width * arrowTypeInfo.modifier, start.y + arrowTypeInfo.height / 2)
-        break;
+        break
       case ConnectorDirection.Bottom:
       default:
         arrowPath.moveTo(start.x - arrowTypeInfo.height / 2, start.y + arrowTypeInfo.width * arrowTypeInfo.modifier)
         arrowPath.lineTo(start.x + arrowTypeInfo.height / 2, start.y + arrowTypeInfo.width * arrowTypeInfo.modifier)
-        break;
+        break
     }
   }
 
@@ -1045,23 +1045,23 @@ export class ConnectorShape extends EntityShape {
         arrowPath.moveTo(start.x, start.y - arrowTypeInfo.height / 2)
         arrowPath.lineTo(start.x - arrowTypeInfo.width, start.y)
         arrowPath.lineTo(start.x, start.y + arrowTypeInfo.height / 2)
-        break;
+        break
       case ConnectorDirection.Top:
         arrowPath.moveTo(start.x - arrowTypeInfo.height / 2, start.y)
         arrowPath.lineTo(start.x, start.y - arrowTypeInfo.width)
         arrowPath.lineTo(start.x + arrowTypeInfo.height / 2, start.y)
-        break;
+        break
       case ConnectorDirection.Right:
         arrowPath.moveTo(start.x, start.y - arrowTypeInfo.height / 2)
         arrowPath.lineTo(start.x + arrowTypeInfo.width, start.y)
         arrowPath.lineTo(start.x, start.y + arrowTypeInfo.height / 2)
-        break;
+        break
       case ConnectorDirection.Bottom:
       default:
         arrowPath.moveTo(start.x - arrowTypeInfo.height / 2, start.y)
         arrowPath.lineTo(start.x, start.y + arrowTypeInfo.width)
         arrowPath.lineTo(start.x + arrowTypeInfo.height / 2, start.y)
-        break;
+        break
     }
   }
 
@@ -1074,21 +1074,21 @@ export class ConnectorShape extends EntityShape {
         arrowPath.moveTo(start.x, start.y - arrowTypeInfo.height / 2)
         arrowPath.lineTo(start.x - arrowTypeInfo.width, start.y)
         arrowPath.lineTo(start.x, start.y + arrowTypeInfo.height / 2)
-        break;
+        break
       case ConnectorDirection.Top:
         arrowPath.moveTo(start.x - arrowTypeInfo.height / 2, start.y - arrowTypeInfo.width)
         arrowPath.lineTo(start.x + arrowTypeInfo.height / 2, start.y - arrowTypeInfo.width)
         arrowPath.moveTo(start.x - arrowTypeInfo.height / 2, start.y)
         arrowPath.lineTo(start.x, start.y - arrowTypeInfo.width)
         arrowPath.lineTo(start.x + arrowTypeInfo.height / 2, start.y)
-        break;
+        break
       case ConnectorDirection.Right:
         arrowPath.moveTo(start.x + arrowTypeInfo.width, start.y - arrowTypeInfo.height / 2)
         arrowPath.lineTo(start.x + arrowTypeInfo.width, start.y + arrowTypeInfo.height / 2)
         arrowPath.moveTo(start.x, start.y - arrowTypeInfo.height / 2)
         arrowPath.lineTo(start.x + arrowTypeInfo.width, start.y)
         arrowPath.lineTo(start.x, start.y + arrowTypeInfo.height / 2)
-        break;
+        break
       case ConnectorDirection.Bottom:
       default:
         arrowPath.moveTo(start.x - arrowTypeInfo.height / 2, start.y + arrowTypeInfo.width)
@@ -1096,7 +1096,7 @@ export class ConnectorShape extends EntityShape {
         arrowPath.moveTo(start.x - arrowTypeInfo.height / 2, start.y)
         arrowPath.lineTo(start.x, start.y + arrowTypeInfo.width)
         arrowPath.lineTo(start.x + arrowTypeInfo.height / 2, start.y)
-        break;
+        break
     }
   }
 
@@ -1107,23 +1107,23 @@ export class ConnectorShape extends EntityShape {
         arrowPath.moveTo(start.x - arrowTypeInfo.width / 4, start.y - arrowTypeInfo.height / 2)
         arrowPath.lineTo(start.x - arrowTypeInfo.width / 4, start.y + arrowTypeInfo.height / 2)
         arrowPath.addOval(Rectangle.makeLTWH(start.x - arrowTypeInfo.width, start.y - arrowTypeInfo.height / 2, arrowTypeInfo.width / 2, arrowTypeInfo.height))
-        break;
+        break
       case ConnectorDirection.Top:
         arrowPath.moveTo(start.x - arrowTypeInfo.height / 2, start.y - arrowTypeInfo.width / 4)
         arrowPath.lineTo(start.x + arrowTypeInfo.height / 2, start.y - arrowTypeInfo.width / 4)
         arrowPath.addOval(Rectangle.makeLTWH(start.x - arrowTypeInfo.height / 2, start.y - arrowTypeInfo.width, arrowTypeInfo.height, arrowTypeInfo.width / 2))
-        break;
+        break
       case ConnectorDirection.Right:
         arrowPath.moveTo(start.x + arrowTypeInfo.width / 4, start.y - arrowTypeInfo.height / 2)
         arrowPath.lineTo(start.x + arrowTypeInfo.width / 4, start.y + arrowTypeInfo.height / 2)
         arrowPath.addOval(Rectangle.makeLTWH(start.x + arrowTypeInfo.width / 2, start.y - arrowTypeInfo.height / 2, arrowTypeInfo.width / 2, arrowTypeInfo.height))
-        break;
+        break
       case ConnectorDirection.Bottom:
       default:
         arrowPath.moveTo(start.x - arrowTypeInfo.height / 2, start.y + arrowTypeInfo.width / 4)
         arrowPath.lineTo(start.x + arrowTypeInfo.height / 2, start.y + arrowTypeInfo.width / 4)
         arrowPath.addOval(Rectangle.makeLTWH(start.x - arrowTypeInfo.height / 2, start.y + arrowTypeInfo.width / 2, arrowTypeInfo.height, arrowTypeInfo.width / 2))
-        break;
+        break
     }
   }
 
@@ -1135,26 +1135,26 @@ export class ConnectorShape extends EntityShape {
         arrowPath.lineTo(start.x - arrowTypeInfo.width / 2, start.y)
         arrowPath.lineTo(start.x, start.y + arrowTypeInfo.height / 2)
         arrowPath.addOval(Rectangle.makeLTWH(start.x - arrowTypeInfo.width, start.y - arrowTypeInfo.height / 2, arrowTypeInfo.width / 2, arrowTypeInfo.height))
-        break;
+        break
       case ConnectorDirection.Top:
         arrowPath.moveTo(start.x - arrowTypeInfo.height / 2, start.y)
         arrowPath.lineTo(start.x, start.y - arrowTypeInfo.width / 2)
         arrowPath.lineTo(start.x + arrowTypeInfo.height / 2, start.y)
         arrowPath.addOval(Rectangle.makeLTWH(start.x - arrowTypeInfo.height / 2, start.y - arrowTypeInfo.width, arrowTypeInfo.height, arrowTypeInfo.width / 2))
-        break;
+        break
       case ConnectorDirection.Right:
         arrowPath.moveTo(start.x, start.y - arrowTypeInfo.height / 2)
         arrowPath.lineTo(start.x + arrowTypeInfo.width / 2, start.y)
         arrowPath.lineTo(start.x, start.y + arrowTypeInfo.height / 2)
         arrowPath.addOval(Rectangle.makeLTWH(start.x + arrowTypeInfo.width / 2, start.y - arrowTypeInfo.height / 2, arrowTypeInfo.width / 2, arrowTypeInfo.height))
-        break;
+        break
       case ConnectorDirection.Bottom:
       default:
         arrowPath.moveTo(start.x - arrowTypeInfo.height / 2, start.y)
         arrowPath.lineTo(start.x, start.y + arrowTypeInfo.width / 2)
         arrowPath.lineTo(start.x + arrowTypeInfo.height / 2, start.y)
         arrowPath.addOval(Rectangle.makeLTWH(start.x - arrowTypeInfo.height / 2, start.y + arrowTypeInfo.width / 2, arrowTypeInfo.height, arrowTypeInfo.width / 2))
-        break;
+        break
     }
   }
 
@@ -1199,7 +1199,7 @@ export class ConnectorShape extends EntityShape {
         this.path.lineTo(leftX2, leftY2)
         this.path.moveTo(rightX1, rightY1)
         this.path.lineTo(rightX2, rightY2)
-        break;
+        break
       case ConnectorMode.DoubleAndStartArrow:
         this.path.moveTo(leftX2, leftY2)
         this.path.lineTo(leftStart1.x, leftStart1.y)
@@ -1208,7 +1208,7 @@ export class ConnectorShape extends EntityShape {
         this.path.lineTo(rightStart3.x, rightStart3.y)
         this.path.lineTo(rightStart1.x, rightStart1.y)
         this.path.lineTo(rightX2, rightY2)
-        break;
+        break
       case ConnectorMode.DoubleAndEndArrow:
         this.path.moveTo(leftX1, leftY1)
         this.path.lineTo(leftStart2.x, leftStart2.y)
@@ -1217,7 +1217,7 @@ export class ConnectorShape extends EntityShape {
         this.path.lineTo(rightStart4.x, rightStart4.y)
         this.path.lineTo(rightStart2.x, rightStart2.y)
         this.path.lineTo(rightX1, rightY1)
-        break;
+        break
       case ConnectorMode.DoubleAndBothArrows:
         this.path.moveTo(leftStart1.x, leftStart1.y)
         this.path.lineTo(leftStart3.x, leftStart3.y)
@@ -1231,12 +1231,12 @@ export class ConnectorShape extends EntityShape {
         this.path.lineTo(leftStart2.x, leftStart2.y)
         this.path.lineTo(leftStart1.x, leftStart1.y)
         this.path.close()
-        break;
+        break
       case ConnectorMode.Single:
       default:
         this.path.moveTo(x1, y1)
         this.path.lineTo(x2, y2)
-        break;
+        break
     }
   }
 
@@ -1362,7 +1362,7 @@ export class ConnectorShape extends EntityShape {
           }
         })
         this._connectorDoubleLinePath = newPath
-        break;
+        break
       }
       case ConnectorMode.DoubleAndEndArrow: {
         let startIndex = 1
@@ -1385,7 +1385,7 @@ export class ConnectorShape extends EntityShape {
         })
         this._connectorDoubleLinePath = newPath
 
-        break;
+        break
       }
       case ConnectorMode.DoubleAndBothArrows: {
         let startIndex = 1
@@ -1422,7 +1422,7 @@ export class ConnectorShape extends EntityShape {
           }
         })
         this._connectorDoubleLinePath = newPath
-        break;
+        break
       }
       case ConnectorMode.Double:
       case ConnectorMode.Single:
@@ -1440,7 +1440,7 @@ export class ConnectorShape extends EntityShape {
           //const point = this._orthogonalPoints[i]
           //this.path.lineTo(Math.round(point.x), Math.round(point.y))
         }
-        break;
+        break
       }
     }
     //if(count == 2) {

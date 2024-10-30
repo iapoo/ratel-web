@@ -5,9 +5,9 @@ import { Holder, } from './Holder'
 
 export abstract class Anchor extends Shape {
   protected static readonly MIN_MOVING_INTERVAL = 100;
-  private _target: Item | undefined;
-  private _editor: Editor;
-  private _holder: Holder;
+  private _target: Item | undefined
+  private _editor: Editor
+  private _holder: Holder
   private _lastMovingTime = new Date().getTime();
 
   public constructor(editor: Editor, holder: Holder) {
@@ -76,5 +76,5 @@ export abstract class Anchor extends Shape {
     this._target = value
   }
 
-  protected abstract buildAnchor(): void;
+  protected abstract buildAnchor(): void
 }

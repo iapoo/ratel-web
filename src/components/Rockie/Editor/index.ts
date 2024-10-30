@@ -1,5 +1,5 @@
 export { Rockie } from './src/Rockie'
-export { Editor,EditorMode } from './src/Editor'
+export { Editor, EditorMode } from './src/Editor'
 export { EditorInfo } from './src/EditorInfo'
-export { EditorEvent} from './src/EditorEvent'
-export { EditorOperationEvent} from './src/EditorOperationEvent'
+export { EditorEvent } from './src/EditorEvent'
+export { EditorOperationEvent } from './src/EditorOperationEvent'

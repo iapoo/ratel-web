@@ -100,40 +100,40 @@ export class ERCustomShape extends CustomEntity {
     switch (this._shape.typeInfo.name) {
       case ERCustomShapes.TYPE_ENTITY: {
         this.text = this._shape.typeInfo.text
-        break;
+        break
       }
       case ERCustomShapes.TYPE_ENTITY_2: {
         this.text = this._shape.typeInfo.text
-        break;
+        break
       }
       case ERCustomShapes.TYPE_ATTRIBUTE: {
         this.text = this._shape.typeInfo.text
-        break;
+        break
       }
       case ERCustomShapes.TYPE_ATTRIBUTE_2: {
         this.textDecoration = TextDecoration.UNDERLINE
         this.text = this._shape.typeInfo.text
-        break;
+        break
       }
       case ERCustomShapes.TYPE_ATTRIBUTE_3: {
         this.strokeDashStyle = StrokeDashStyle.DASH
         this.text = this._shape.typeInfo.text
-        break;
+        break
       }
       case ERCustomShapes.TYPE_ATTRIBUTE_4: {
         this.text = this._shape.typeInfo.text
-        break;
+        break
       }
       case ERCustomShapes.TYPE_RELATIONSHIP: {
         this.text = this._shape.typeInfo.text
-        break;
+        break
       }
       case ERCustomShapes.TYPE_RELATIONSHIP_2: {
         this.text = this._shape.typeInfo.text
-        break;
+        break
       }
       default:
-        break;
+        break
     }
   }
 
@@ -165,23 +165,23 @@ export class ERCustomShape extends CustomEntity {
     switch (theThis.typeInfo.name) {
       case ERCustomShapes.TYPE_ENTITY: {
         theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
-        break;
+        break
       }
       case ERCustomShapes.TYPE_ENTITY_2: {
         theThis.path.addRRect(new RoundRectangle(0, 0, this.width, this.height, modifierWidth, modifierHeight))
-        break;
+        break
       }
       case ERCustomShapes.TYPE_ATTRIBUTE: {
         theThis.path.addOval(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
-        break;
+        break
       }
       case ERCustomShapes.TYPE_ATTRIBUTE_2: {
         theThis.path.addOval(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
-        break;
+        break
       }
       case ERCustomShapes.TYPE_ATTRIBUTE_3: {
         theThis.path.addOval(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
-        break;
+        break
       }
       case ERCustomShapes.TYPE_ATTRIBUTE_4: {
         const offsetWidth = theThis.height * 0.1
@@ -192,7 +192,7 @@ export class ERCustomShape extends CustomEntity {
         theThis.secondFill.setAlpha(0)
         theThis.path.addOval(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
         theThis.secondPath.addOval(Rectangle.makeLTWH(offsetWidth, offsetHeight, theThis.width - offsetWidth * 2, theThis.height - offsetHeight * 2))
-        break;
+        break
       }
       case ERCustomShapes.TYPE_RELATIONSHIP: {
         theThis.path.moveTo(this.width / 2, 0)
@@ -200,7 +200,7 @@ export class ERCustomShape extends CustomEntity {
         theThis.path.lineTo(this.width / 2, this.height)
         theThis.path.lineTo(0, this.height / 2)
         theThis.path.lineTo(this.width / 2, 0)
-        break;
+        break
       }
       case ERCustomShapes.TYPE_RELATIONSHIP_2: {
         const offsetWidth = theThis.width * 0.1
@@ -219,7 +219,7 @@ export class ERCustomShape extends CustomEntity {
         theThis.secondPath.lineTo(this.width / 2, this.height - offsetHeight)
         theThis.secondPath.lineTo(offsetWidth, this.height / 2)
         theThis.secondPath.lineTo(this.width / 2, offsetHeight)
-        break;
+        break
       }
     }
   }

@@ -5,7 +5,7 @@ import { RequestUtils, Utils, } from '../../Utils'
 import axios from 'axios'
 import Avatar from 'antd/lib/avatar/avatar'
 import { MyShape, MyShapeType, MyShapes } from '../../Utils/RequestUtils'
-import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
+import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi'
 import { DeleteOutlined, EditOutlined, UploadOutlined } from '@ant-design/icons'
 import Meta from 'antd/es/card/Meta'
 import { RcFile, UploadChangeParam } from 'antd/es/upload'
@@ -13,8 +13,8 @@ import { UploadFile } from 'electron/main'
 import { EditorHelper } from '@/components/Rockie/Utils'
 
 interface MyShapesWindowProps {
-  visible: boolean;
-  onWindowCancel: () => void;
+  visible: boolean
+  onWindowCancel: () => void
   onWindowOk: () => void
   onMyShapesChanged: () => void
 }
@@ -22,7 +22,7 @@ interface MyShapesWindowProps {
 const MyShapesWindowPage: FC<MyShapesWindowProps> = ({
   visible, onWindowCancel, onWindowOk, onMyShapesChanged,
 }) => {
-  const intl = useIntl();
+  const intl = useIntl()
   const [dataLoading, setDataLoading,] = useState<boolean>(false)
   const [windowVisible, setWindowVisible,] = useState<boolean>(false)
   const [renameErrorVisible, setRenameErrorVisible,] = useState<boolean>(false)
@@ -191,27 +191,27 @@ const MyShapesWindowPage: FC<MyShapesWindowProps> = ({
   })
 
   const handleSVGBeforeUpload = (file: RcFile, FileList: RcFile[]) => {
-    const isSVG = file.type === 'image/svg+xml';
+    const isSVG = file.type === 'image/svg+xml'
     if (!isSVG) {
-      message.error(`${file.name} ${intl.formatMessage({ id: 'workspace.navigator.my-shapes.message-upload-is-not-svg-file' })}`);
+      message.error(`${file.name} ${intl.formatMessage({ id: 'workspace.navigator.my-shapes.message-upload-is-not-svg-file' })}`)
     }
     const isLessThan256k = file.size < 256 * 1024
     if (!isLessThan256k) {
-      message.error(`${file.name} ${intl.formatMessage({ id: 'workspace.navigator.my-shapes.message-must-be-smaller-than' })}`);
+      message.error(`${file.name} ${intl.formatMessage({ id: 'workspace.navigator.my-shapes.message-must-be-smaller-than' })}`)
     }
-    return (isSVG && isLessThan256k) || Upload.LIST_IGNORE;
+    return (isSVG && isLessThan256k) || Upload.LIST_IGNORE
   }
 
-  type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
+  type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0]
 
   const getSvgFromFile = (img: FileType, callback: (url: string) => void) => {
-    const reader = new FileReader();
+    const reader = new FileReader()
     reader.addEventListener('load', () => callback(reader.result as string))
     reader.readAsDataURL(img)
   }
 
   const getImageBase64FromFile = (img: FileType, callback: (url: string) => void) => {
-    const reader = new FileReader();
+    const reader = new FileReader()
     reader.addEventListener('load', () => callback(reader.result as string))
     reader.readAsDataURL(img)
   }
@@ -245,13 +245,13 @@ const MyShapesWindowPage: FC<MyShapesWindowProps> = ({
   const handleImageBeforeUpload = (file: RcFile, FileList: RcFile[]) => {
     const isImage = (file.type === 'image/png') || (file.type === 'image/jpg') || (file.type === 'image/jpeg')
     if (!isImage) {
-      message.error(`${file.name} ${intl.formatMessage({ id: 'workspace.navigator.my-shapes.message-upload-is-not-png-jpg-file' })}`);
+      message.error(`${file.name} ${intl.formatMessage({ id: 'workspace.navigator.my-shapes.message-upload-is-not-png-jpg-file' })}`)
     }
     const isLessThan256k = file.size < 256 * 1024
     if (!isLessThan256k) {
-      message.error(`${file.name} ${intl.formatMessage({ id: 'workspace.navigator.my-shapes.message-upload-must-be-smaller-than' })}`);
+      message.error(`${file.name} ${intl.formatMessage({ id: 'workspace.navigator.my-shapes.message-upload-must-be-smaller-than' })}`)
     }
-    return (isImage && isLessThan256k) || Upload.LIST_IGNORE;
+    return (isImage && isLessThan256k) || Upload.LIST_IGNORE
   }
 
   const handleImageDetail = async (imageData: string, imageWidth: number, imageHeight: number) => {

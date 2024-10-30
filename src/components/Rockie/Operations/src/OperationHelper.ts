@@ -599,43 +599,43 @@ export class OperationHelper {
         break
       case Categories.CONNECTOR:
         editorItemInfo = this.saveConnector(editorItem as Connector)
-        break;
+        break
       case Categories.TABLE:
         editorItemInfo = this.saveTable(editorItem as TableEntity)
-        break;
+        break
       case Categories.CONTAINER:
         editorItemInfo = this.saveContainer(editorItem as ContainerEntity)
-        break;
+        break
       case Categories.FRAME:
         editorItemInfo = this.saveFrame(editorItem as FrameEntity)
-        break;
+        break
       case Categories.GROUP:
         editorItemInfo = this.saveGroup(editorItem as GroupEntity)
-        break;
+        break
       case Categories.CUSTOM_SHAPE:
         editorItemInfo = this.saveCustomShape(editorItem as CustomEntity)
-        break;
+        break
       case Categories.CUSTOM_SVG_SHAPE:
         editorItemInfo = this.saveCustomSvgShape(editorItem as SvgContainer)
-        break;
+        break
       case Categories.CUSTOM_IMAGE_SHAPE:
         editorItemInfo = this.saveCustomImageShape(editorItem as ImageContainer)
-        break;
+        break
       case Categories.EXTENDED_CONTAINER:
         editorItemInfo = this.saveExtendedContainer(editorItem as CustomContainerEntity)
-        break;
+        break
       case Categories.EXTENDED_SHAPE:
         editorItemInfo = this.saveExtendedShape(editorItem as ShapeEntity)
-        break;
+        break
       case Categories.CUSTOM_CONNECTOR:
         editorItemInfo = this.saveCustomConnector(editorItem as CustomConnector)
-        break;
+        break
       case Categories.CUSTOM_CONTAINER:
         editorItemInfo = this.saveCustomContainer(editorItem as CustomContainerEntity)
-        break;
+        break
       case Categories.CUSTOM_TABLE:
         editorItemInfo = this.saveCustomTable(editorItem as CustomTableEntity)
-        break;
+        break
       case Categories.SHAPE:
       default:
         editorItemInfo = this.saveShape(editorItem as ShapeEntity)

@@ -24,7 +24,7 @@ export enum ResizeType {
  * 调整大小
  */
 export class ResizeAnchor extends Anchor {
-  private _resizeType: ResizeType;
+  private _resizeType: ResizeType
   private _inResizing = false;
   private _startX = 0;
   private _startY = 0;
@@ -150,7 +150,7 @@ export class ResizeAnchor extends Anchor {
               newWidth = this.target.width - resizeX >= this.target.minWidth ? this.target.width - resizeX : this.target.minWidth
               //newHeight = this.target.height - resizeY >= this.target.minHeight ? this.target.height - resizeY : this.target.minHeight
               newHeight = this.target.height * newWidth / this.target.width
-              break;
+              break
             case EntityShapeFreezeType.None:
             default:
               newLeft = this.target.left + resizeX
@@ -213,7 +213,7 @@ export class ResizeAnchor extends Anchor {
               newWidth = this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
               //newHeight = this.target.height - resizeY >= this.target.minHeight ? this.target.height - resizeY : this.target.minHeight
               newHeight = this.target.height * newWidth / this.target.width
-              break;
+              break
             case EntityShapeFreezeType.None:
             default:
               newTop = this.target.top + resizeY

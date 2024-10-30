@@ -1,8 +1,8 @@
-import { Operation } from "../../Operations";
-import { Editor } from "./Editor";
+import { Operation } from "../../Operations"
+import { Editor } from "./Editor"
 
 export class EditorOperationEvent {
-    
+
     readonly source: Editor
     readonly operation: Operation
     readonly isUndo: boolean

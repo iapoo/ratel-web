@@ -184,7 +184,7 @@ export class TableEntity extends ContainerEntity {
       }
       this.boundary = Rectangle.makeLTWH(this.left, this.top, this.width, this.height - this.items[rowIndex * this._rowCount].height)
       for (let i = 0; i < this._columnCount; i++) {
-        this.removeItemAt(rowIndex * this._columnCount);
+        this.removeItemAt(rowIndex * this._columnCount)
       }
       this._rowCount--
     }
@@ -201,7 +201,7 @@ export class TableEntity extends ContainerEntity {
       }
       this.boundary = Rectangle.makeLTWH(this.left, this.top, this.width - this.items[columnIndex].width, this.height)
       for (let i = this._rowCount - 1; i >= 0; i--) {
-        this.removeItemAt(i * this._columnCount + columnIndex);
+        this.removeItemAt(i * this._columnCount + columnIndex)
       }
       this._columnCount--
     }

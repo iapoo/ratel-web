@@ -6,13 +6,13 @@ import { EntityShape, ShapeTypeInfo, } from './EntityShape'
 
 export class CustomSvgShape extends EntityShape {
 
-  private _buildShape: (theThis: CustomSvgShape)=> void
+  private _buildShape: (theThis: CustomSvgShape) => void
   private _svg: string
   private _enableStrokeColor: boolean
   private _enableFillColor: boolean
   private _svgInitialized: boolean
 
-  public constructor (left: number, top: number, width: number, height: number, svg: string, buildShape: (_this: CustomSvgShape)=> void, shapeTypeInfo: ShapeTypeInfo) {
+  public constructor(left: number, top: number, width: number, height: number, svg: string, buildShape: (_this: CustomSvgShape) => void, shapeTypeInfo: ShapeTypeInfo) {
     super('', left, top, width, height, shapeTypeInfo)
     this._svg = svg
     this._buildShape = buildShape
@@ -32,13 +32,13 @@ export class CustomSvgShape extends EntityShape {
   public set svgInitialized(value: boolean) {
     this._svgInitialized = value
   }
-  
+
   public get enableStrokeColor() {
     return this._enableStrokeColor
   }
 
   public set enableStrokeColor(value: boolean) {
-    this._enableStrokeColor =value
+    this._enableStrokeColor = value
     this.markDirty()
   }
 
@@ -51,11 +51,11 @@ export class CustomSvgShape extends EntityShape {
     this.markDirty()
   }
 
-  public render (graphics: Graphics): void {
+  public render(graphics: Graphics): void {
     super.render(graphics)
   }
 
-  public update () {
+  public update() {
     super.update()
     this._buildShape(this)
   }

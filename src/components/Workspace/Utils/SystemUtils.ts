@@ -2,13 +2,13 @@
  * 定义一些全局方法和状态信息
  */
 
-import { Color, Colors, TextVerticalAlignment, Point2, StrokeDashStyle, TextAlignment } from "@/components/Engine";
-import { Consts } from "./Consts";
-import { ConnectorArrowDisplayType, ConnectorType } from "@/components/Rockie/Shapes";
-import { ConnectorArrowDisplayMode, ConnectorArrowTypeInfo, ConnectorDirection, ConnectorMode } from "@/components/Rockie/Shapes/src/ConnectorShape";
-import { ConnectorArrowType, ConnectorArrowTypes } from "@/components/Rockie/Items/src/Connector";
-import { ConnectorArrowInfo } from "@/components/Rockie/Items";
-import { EditorMode } from "@/components/Rockie/Editor";
+import { Color, Colors, TextVerticalAlignment, Point2, StrokeDashStyle, TextAlignment } from "@/components/Engine"
+import { Consts } from "./Consts"
+import { ConnectorArrowDisplayType, ConnectorType } from "@/components/Rockie/Shapes"
+import { ConnectorArrowDisplayMode, ConnectorArrowTypeInfo, ConnectorDirection, ConnectorMode } from "@/components/Rockie/Shapes/src/ConnectorShape"
+import { ConnectorArrowType, ConnectorArrowTypes } from "@/components/Rockie/Items/src/Connector"
+import { ConnectorArrowInfo } from "@/components/Rockie/Items"
+import { EditorMode } from "@/components/Rockie/Editor"
 import moment from 'moment'
 
 export enum OSType {
@@ -37,7 +37,7 @@ export class SystemUtils {
     public static convertDocumentData(documentData: any) {
         let content = documentData.data.data.content.content
         let data = JSON.parse(content)
-        return data;
+        return data
     }
 
     public static handleInternalError(message: string) {
@@ -75,11 +75,11 @@ export class SystemUtils {
             d += performance.now()
         }
         let id = 'xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-            const r = (d + Math.random() * 16) % 16 | 0;
-            d = Math.floor(d / 16);
-            return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-        });
-        return id;
+            const r = (d + Math.random() * 16) % 16 | 0
+            d = Math.floor(d / 16)
+            return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16)
+        })
+        return id
     }
 
     public static isNumeric(str: string): boolean {
@@ -171,13 +171,13 @@ export class SystemUtils {
             let g = parseInt(rgba.slice(3, 5), 16)
             let b = parseInt(rgba.slice(5, 7), 16)
             let a = parseInt(rgba.slice(7, 9), 16)
-            return new Color(r, g, b, a);
+            return new Color(r, g, b, a)
         } else if (rgba && rgba.length == 7 && rgba[0] == '#') {
             let r = parseInt(rgba.slice(1, 3), 16)
             let g = parseInt(rgba.slice(3, 5), 16)
             let b = parseInt(rgba.slice(5, 7), 16)
             let a = 255
-            return new Color(r, g, b, a);
+            return new Color(r, g, b, a)
         }
 
         return Colors.White
@@ -192,34 +192,34 @@ export class SystemUtils {
      * @param fileType 
      */
     public static generateDownloadFile(content: any, fileName: string) {
-        let alink = document.createElement('a');
-        alink.download = fileName;
-        alink.style.display = 'none';
-        let blob = new Blob([content]);
-        alink.href = URL.createObjectURL(blob);
-        document.body.appendChild(alink);
-        alink.click();
-        document.body.removeChild(alink);
+        let alink = document.createElement('a')
+        alink.download = fileName
+        alink.style.display = 'none'
+        let blob = new Blob([content])
+        alink.href = URL.createObjectURL(blob)
+        document.body.appendChild(alink)
+        alink.click()
+        document.body.removeChild(alink)
     }
 
     public static parseStrokeDashStyle(strokeDashStyle: string): StrokeDashStyle {
         switch (strokeDashStyle) {
             case Consts.STROKE_DASH_STYLE_DASH:
                 return StrokeDashStyle.DASH
-                break;
+                break
             case Consts.STROKE_DASH_STYLE_DOT:
                 return StrokeDashStyle.DOT
-                break;
+                break
             case Consts.STROKE_DASH_STYLE_DASH_DOT:
                 return StrokeDashStyle.DASH_DOT
-                break;
+                break
             case Consts.STROKE_DASH_STYLE_DASH_DOT_DOT:
                 return StrokeDashStyle.DASH_DOT_DOT
-                break;
+                break
             case Consts.STROKE_DASH_STYLE_SOLID:
             default:
                 return StrokeDashStyle.SOLID
-                break;
+                break
         }
     }
 
@@ -227,23 +227,23 @@ export class SystemUtils {
         switch (strokeDashStyle) {
             case StrokeDashStyle.DASH: {
                 return Consts.STROKE_DASH_STYLE_DASH
-                break;
+                break
             }
             case StrokeDashStyle.DOT: {
                 return Consts.STROKE_DASH_STYLE_DOT
             }
             case StrokeDashStyle.DASH_DOT: {
                 return Consts.STROKE_DASH_STYLE_DASH_DOT
-                break;
+                break
             }
             case StrokeDashStyle.DASH_DOT_DOT: {
                 return Consts.STROKE_DASH_STYLE_DASH_DOT_DOT
-                break;
+                break
             }
             case StrokeDashStyle.SOLID:
             default:
                 return Consts.STROKE_DASH_STYLE_SOLID
-                break;
+                break
         }
     }
 
@@ -251,23 +251,23 @@ export class SystemUtils {
         switch (textAlignment) {
             case Consts.TEXT_ALIGNMENT_CENTER:
                 return TextAlignment.CENTER
-                break;
+                break
             case Consts.TEXT_ALIGNMENT_END:
                 return TextAlignment.END
-                break;
+                break
             case Consts.TEXT_ALIGNMENT_JUSTIFY:
                 return TextAlignment.JUSTIFY
-                break;
+                break
             case Consts.TEXT_ALIGNMENT_RIGHT:
                 return TextAlignment.RIGHT
-                break;
+                break
             case Consts.TEXT_ALIGNMENT_START:
                 return TextAlignment.START
-                break;
+                break
             case Consts.TEXT_ALIGNMENT_LEFT:
             default:
                 return TextAlignment.LEFT
-                break;
+                break
         }
     }
 
@@ -275,23 +275,23 @@ export class SystemUtils {
         switch (textAlignment) {
             case TextAlignment.CENTER:
                 return Consts.TEXT_ALIGNMENT_CENTER
-                break;
+                break
             case TextAlignment.END:
                 return Consts.TEXT_ALIGNMENT_END
-                break;
+                break
             case TextAlignment.JUSTIFY:
                 return Consts.TEXT_ALIGNMENT_JUSTIFY
-                break;
+                break
             case TextAlignment.RIGHT:
                 return Consts.TEXT_ALIGNMENT_RIGHT
-                break;
+                break
             case TextAlignment.START:
                 return Consts.TEXT_ALIGNMENT_START
-                break;
+                break
             case TextAlignment.LEFT:
             default:
                 return Consts.TEXT_ALIGNMENT_LEFT
-                break;
+                break
         }
     }
 
@@ -646,13 +646,13 @@ export class SystemUtils {
         const android = /Android/.test(userAgent)
         const linux = /Linux/.test(platform)
 
-        if (macOS) return OSType.MACOS;
-        if (windows) return OSType.WINDOWS;
-        if (ios) return OSType.IOS;
-        if (android) return OSType.ANDROID;
-        if (linux) return OSType.LINUX;
+        if (macOS) return OSType.MACOS
+        if (windows) return OSType.WINDOWS
+        if (ios) return OSType.IOS
+        if (android) return OSType.ANDROID
+        if (linux) return OSType.LINUX
 
-        return 'Unknown OS';
+        return 'Unknown OS'
     }
 
     /**
@@ -662,12 +662,12 @@ export class SystemUtils {
      */
     public static generateRandomString(length: number) {
         let result = ''
-        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
         for (let i = 0; i < length; i++) {
-            const randomChar = characters.charAt(Math.floor(Math.random() * characters.length));
-            result += randomChar;
+            const randomChar = characters.charAt(Math.floor(Math.random() * characters.length))
+            result += randomChar
         }
-        return result;
+        return result
     }
 }
 

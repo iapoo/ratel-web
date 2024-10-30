@@ -25,41 +25,41 @@ export class CubicControllerAnchor extends Anchor {
   }
 
   public handlePointerEnter(): void {
-    
+
   }
 
   public handlePointerLeave(): void {
-    
-  }
-  public handlePointerClick (x: number, y: number) {
 
   }
-  public handlePointerDown (x: number, y: number) {
+  public handlePointerClick(x: number, y: number) {
+
+  }
+  public handlePointerDown(x: number, y: number) {
     if (!this.target) {
-      return;
+      return
     }
     this._moving = true
-    this._startX = x;
-    this._startY = y;
+    this._startX = x
+    this._startY = y
     this.editor.beginOperation(this.target)
 
   }
-  public handlePointerUp (x: number, y: number) {
+  public handlePointerUp(x: number, y: number) {
     if (!this.target) {
-      return;
+      return
     }
     this._moving = false
     this.editor.finishOperation(this.target)
   }
-  public handlePointerMove (x: number, y: number) {
+  public handlePointerMove(x: number, y: number) {
     if (!this.target) {
       console.log(`'anchor Pointer moving bad target' x=${x} y =${y}`)
       return
     }
-    if(this._moving && this.target instanceof Connector) {
+    if (this._moving && this.target instanceof Connector) {
       const moveX = x - this._startX
       const moveY = y - this._startY
-      if(this._isStartController) {
+      if (this._isStartController) {
         const startModifierX = this.target.curveStartModifier.x + moveX / this.target.width
         const startModifierY = this.target.curveStartModifier.y + moveY / this.target.height
         this.target.curveStartModifier = new Point2(startModifierX, startModifierY)
@@ -78,7 +78,7 @@ export class CubicControllerAnchor extends Anchor {
     this.holder.layoutAnchors()
   }
 
-  protected buildAnchor () {
+  protected buildAnchor() {
     this.path.reset()
     this.path.addOval(Rectangle.makeLTWH(0, 0, this.width, this.height))
   }

@@ -1,5 +1,5 @@
-import { Editor, } from "../../Editor";
-import { EditorItemInfo } from "../../Items";
+import { Editor, } from "../../Editor"
+import { EditorItemInfo } from "../../Items"
 
 
 export enum OperationType {
@@ -42,12 +42,12 @@ export class Operation {
     private _origEditor: Editor | null
     private _tableCellIndex: number
     private _documentThemeName: string
-    private _origDocumentThemeName: string 
+    private _origDocumentThemeName: string
 
-    public constructor(editor: Editor, type: OperationType, itemInfos: Array<EditorItemInfo>, selected: boolean = false, 
-        origItemInfos: Array<EditorItemInfo> = [], description: string = '', afterEditor: Editor | null = null, afterItemId: string | null = null, 
-        beforeEditor: Editor | null = null, beforeItemId: string | null = null, inTextEditting: boolean = false, textStart: number = 0, 
-        textEnd: number = 0, origTextStart: number = 0, origTextEnd: number = 0,  editorTitle: string = '', origEditorTitle: string = '', origEditor: Editor | null = null, tableCellIndex: number = 0, documentThemeName: string = '', origDocumentThemeName: string = '') {
+    public constructor(editor: Editor, type: OperationType, itemInfos: Array<EditorItemInfo>, selected: boolean = false,
+        origItemInfos: Array<EditorItemInfo> = [], description: string = '', afterEditor: Editor | null = null, afterItemId: string | null = null,
+        beforeEditor: Editor | null = null, beforeItemId: string | null = null, inTextEditting: boolean = false, textStart: number = 0,
+        textEnd: number = 0, origTextStart: number = 0, origTextEnd: number = 0, editorTitle: string = '', origEditorTitle: string = '', origEditor: Editor | null = null, tableCellIndex: number = 0, documentThemeName: string = '', origDocumentThemeName: string = '') {
         this._editor = editor
         this._type = type
         this._description = description
@@ -135,7 +135,7 @@ export class Operation {
         return this._editorTitle
     }
 
-    public get  origEditorTitle() {
+    public get origEditorTitle() {
         return this._origEditorTitle
     }
 

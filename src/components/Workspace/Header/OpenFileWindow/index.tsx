@@ -5,21 +5,21 @@ import { Consts, RequestUtils, SystemUtils, Utils, } from '../../Utils'
 import axios from 'axios'
 import Avatar from 'antd/lib/avatar/avatar'
 import { Document, Folder, isDocument, isFolder } from '../../Utils/RequestUtils'
-import type { DataNode, TreeProps, } from 'antd/es/tree';
+import type { DataNode, TreeProps, } from 'antd/es/tree'
 import { FileFilled, FileOutlined, FolderFilled, FolderOutlined } from '@ant-design/icons'
 import { StorageService } from '../../Storage'
-import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
+import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi'
 
 
 interface OpenFileWindowProps {
-  visible: boolean;
-  x: number;
-  y: number;
-  disableFileName: boolean;
-  selectedFolderId: number | null;
-  selectedDocumentId: number | null;
-  selectedDocumentName: string;
-  onWindowCancel: () => void;
+  visible: boolean
+  x: number
+  y: number
+  disableFileName: boolean
+  selectedFolderId: number | null
+  selectedDocumentId: number | null
+  selectedDocumentName: string
+  onWindowCancel: () => void
   onWindowOk: (documentId: number, documentName: string | null, folderId: number | null) => void
   documentThemeName: string
 }
@@ -36,7 +36,7 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
   const [origModalX, setOrigModalX,] = useState<number>(0)
   const [origModalY, setOrigModalY,] = useState<number>(0)
   const [windowVisible, setWindowVisible,] = useState<boolean>(false)
-  const draggleRef = useRef<HTMLDivElement>(null);
+  const draggleRef = useRef<HTMLDivElement>(null)
   const [addFolderForm,] = Form.useForm()
   const [errorVisible, setErrorVisible,] = useState<boolean>(false)
   const [errorMessage, setErrorMessage,] = useState<string>('')
@@ -189,7 +189,7 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
   }
 
   const onFolderSelect: TreeProps['onSelect'] = (selectedKeys, info) => {
-    console.log('selected', selectedKeys, info);
+    console.log('selected', selectedKeys, info)
     setSelectedFolderIsDocument(false)
     setSelectedFolderIsFolder(false)
     if (selectedKeys.length > 0) {
@@ -202,7 +202,7 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
         setSelectedFolderIsDocument(true)
       }
     } else {
-      setSelectedFolderKey("");
+      setSelectedFolderKey("")
     }
   }
 
@@ -253,8 +253,8 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
   }
 
   const onCheck: TreeProps['onCheck'] = (checkedKeys, info) => {
-    console.log('onCheck', checkedKeys, info);
-  };
+    console.log('onCheck', checkedKeys, info)
+  }
 
   const onFormFinish = (values: any) => {
     console.log('Receive values:', values)
@@ -322,7 +322,7 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
     }
 
     if (saveInFolder) {
-      let folderMap = treeMap?.get(selectedFolderKey);
+      let folderMap = treeMap?.get(selectedFolderKey)
       let hasDocumentName = false
       let currentDocumentId: number = 0
       let currentDocumentName: string = ''
@@ -358,7 +358,7 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
         }
       }
     } else {
-      let documentData = treeMap?.get(DOC + documentId);
+      let documentData = treeMap?.get(DOC + documentId)
       if (isDocument(documentData)) {
         if (selectedDocumentName == documentData.documentName && selectedDocumentId == documentData.documentId) {
           doSaveFile(folderId, true, documentData.documentId, documentData.documentName)

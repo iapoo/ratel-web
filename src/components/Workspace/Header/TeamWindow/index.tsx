@@ -5,43 +5,43 @@ import { Consts, RequestUtils, SystemUtils, Utils, } from '../../Utils'
 import axios from 'axios'
 import Avatar from 'antd/lib/avatar/avatar'
 import { Document, Folder, isDocument, isFolder } from '../../Utils/RequestUtils'
-import type { DataNode, TreeProps, } from 'antd/es/tree';
+import type { DataNode, TreeProps, } from 'antd/es/tree'
 import { DeleteFilled, EditFilled, FileFilled, FileOutlined, FolderFilled, FolderOutlined, PlusOutlined, TeamOutlined } from '@ant-design/icons'
 import { StorageService } from '../../Storage'
-import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
+import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi'
 import { ProColumns, ProTable } from '@ant-design/pro-components'
 import TeamFormWindow from './TeamFormWindow'
 import TeamMemberWindow from './TeamMemberWindow'
 
 
 interface TeamWindowProps {
-  visible: boolean;
-  x: number;
-  y: number;
-  onWindowCancel: () => void;
+  visible: boolean
+  x: number
+  y: number
+  onWindowCancel: () => void
   onWindowOk: () => void
 }
 
 interface SingleTeamType {
-  teamId: number;
-  customerId: number;
-  teamName: string;
-  createBy: number;
-  createTime: number;
-  updateBy: number;
-  updateTime: number;
+  teamId: number
+  customerId: number
+  teamName: string
+  createBy: number
+  createTime: number
+  updateBy: number
+  updateTime: number
 }
 
 interface TeamsType {
-  records: SingleTeamType[];
-  total: number;
-  size: number;
-  pages: number;
-  current: number;
+  records: SingleTeamType[]
+  total: number
+  size: number
+  pages: number
+  current: number
 }
 
 interface FormValues {
-  [name: string]: any;
+  [name: string]: any
 }
 
 const defaultData = { records: [], size: 0, current: 0, total: 0, pages: 0 }
@@ -61,14 +61,14 @@ const TeamWindowPage: FC<TeamWindowProps> = ({
   const [windowVisible, setWindowVisible,] = useState<boolean>(false)
   const [errorVisible, setErrorVisible,] = useState<boolean>(false)
   const [errorMessage, setErrorMessage,] = useState<string>('')
-  const [data, setData,] = useState<TeamsType>( defaultData)
-  const [team, setTeam, ] = useState<SingleTeamType>(defaultTeam)
-  const [searchText, setSearchText, ] = useState<string>('')
-  const [teamFormWindowVisible, setTeamFormWindowVisible, ] = useState<boolean>(false)
-  const [teamMemberWindowVisible, setTeamMemberWindowVisible, ] = useState<boolean>(false)
-  const [isUpdate, setIsUpdate, ] = useState<boolean>(false)
+  const [data, setData,] = useState<TeamsType>(defaultData)
+  const [team, setTeam,] = useState<SingleTeamType>(defaultTeam)
+  const [searchText, setSearchText,] = useState<string>('')
+  const [teamFormWindowVisible, setTeamFormWindowVisible,] = useState<boolean>(false)
+  const [teamMemberWindowVisible, setTeamMemberWindowVisible,] = useState<boolean>(false)
+  const [isUpdate, setIsUpdate,] = useState<boolean>(false)
 
-  const intl = useIntl();
+  const intl = useIntl()
   const [messageApi, contextHolder,] = message.useMessage()
 
   if (windowVisible !== visible) {
@@ -78,7 +78,7 @@ const TeamWindowPage: FC<TeamWindowProps> = ({
 
 
   const fetchData = async (teamName: string | null, pageNum: number = 1, pageSize: number = 5) => {
-    const teamData = await RequestUtils.getTeams(teamName,pageNum, pageSize)
+    const teamData = await RequestUtils.getTeams(teamName, pageNum, pageSize)
     if (teamData.status === 200 && teamData.data.success) {
       const teams = teamData.data.data
       setData(teams)
@@ -87,7 +87,7 @@ const TeamWindowPage: FC<TeamWindowProps> = ({
     }
   }
 
-  
+
   useEffect(() => {
     if (!dataLoading) {
       setDataLoading(true)
@@ -107,7 +107,7 @@ const TeamWindowPage: FC<TeamWindowProps> = ({
     if (onWindowCancel) {
       onWindowCancel()
     }
-  }  
+  }
 
   const handleTeamFormWindowOk = () => {
     setTeamFormWindowVisible(false)
@@ -133,7 +133,7 @@ const TeamWindowPage: FC<TeamWindowProps> = ({
   }
 
 
-  const handleSearch = ()=> {
+  const handleSearch = () => {
     fetchData(searchText)
   }
 
@@ -159,8 +159,8 @@ const TeamWindowPage: FC<TeamWindowProps> = ({
     setErrorMessage('')
     const confirmModal = Modal.confirm({
       centered: true,
-      title: intl.formatMessage({id: 'workspace.header.team-window.confirm-delete-title'}),
-      content: intl.formatMessage({id: 'workspace.header.team-window.confirm-delete-content'}),
+      title: intl.formatMessage({ id: 'workspace.header.team-window.confirm-delete-title' }),
+      content: intl.formatMessage({ id: 'workspace.header.team-window.confirm-delete-content' }),
       onOk: async () => {
         const responseData = await RequestUtils.deleteTeam(team.teamId)
         if (responseData.status === 200 && responseData.data.success) {
@@ -204,13 +204,13 @@ const TeamWindowPage: FC<TeamWindowProps> = ({
       key: 'action',
       valueType: 'option',
       render: (text: any, record: SingleTeamType) => [
-        <Tooltip key='editButton' title={intl.formatMessage({id: 'workspace.header.team-window.button-tooltip-edit-member'})}>
-          <Button icon={<TeamOutlined />} onClick={() => {handleUpdateTeamMember(record) }} />
+        <Tooltip key='editButton' title={intl.formatMessage({ id: 'workspace.header.team-window.button-tooltip-edit-member' })}>
+          <Button icon={<TeamOutlined />} onClick={() => { handleUpdateTeamMember(record) }} />
         </Tooltip>,
-        <Tooltip key='editMemberButton' title={intl.formatMessage({id: 'workspace.header.team-window.button-tooltip-edit'})}>
-          <Button icon={<EditFilled />} onClick={() => {handleUpdateTeam(record) }} />
+        <Tooltip key='editMemberButton' title={intl.formatMessage({ id: 'workspace.header.team-window.button-tooltip-edit' })}>
+          <Button icon={<EditFilled />} onClick={() => { handleUpdateTeam(record) }} />
         </Tooltip>,
-        <Tooltip key='deleteButton' title={intl.formatMessage({id: 'workspace.header.team-window.button-tooltip-delete'})}>
+        <Tooltip key='deleteButton' title={intl.formatMessage({ id: 'workspace.header.team-window.button-tooltip-delete' })}>
           <Button icon={<DeleteFilled />} onClick={() => { handleDeleteTeam(record) }} />
         </Tooltip>,
       ],
@@ -221,49 +221,49 @@ const TeamWindowPage: FC<TeamWindowProps> = ({
     <div>
       {contextHolder}
       <Modal title={<FormattedMessage id='workspace.header.team-window.title' />} width={800} centered open={visible} onOk={onOk} onCancel={onCancel} maskClosable={false}  >
-        <div style={{ width: '100%', height: '440px',}}>
-          <div style={{ width: '100%', height: '400px',  }}>
-          <ProTable
-        columns={columns}
-        dataSource={data.records}
-        rowKey='id'
-        //loading={teamListLoading}
-        search={false}
-        pagination={false}
-        options={{
-          density: false,
-          fullScreen: false,
-          reload: false,
-          setting: false,
-        }}
-        title={() => [
-          <Row key='searchRow'>
-            <Col span={18} >
-              <Input key='searchInput' placeholder={intl.formatMessage({ id: 'workspace.header.team-window.search-placeholder' })} style={{ width: '360px', marginLeft: '16px', }} onChange={(e) => { setSearchText(e.target.value)  }}/>
-              <Button key='searchButton' type='primary' style={{ marginLeft: '24px', }} onClick={handleSearch}><FormattedMessage id='workspace.header.team-window.button-search' /></Button>
-            </Col>
-            <Col span={6}>
-              <Button key='addButton' type='primary' icon={<PlusOutlined/>} style={{ position: 'absolute', right: '16px', }} onClick={handleAddTeam}><FormattedMessage id='workspace.header.team-window.button-add' /></Button>
-            </Col>
-          </Row>,
-        ]}
-        headerTitle={false}
-        toolBarRender={false}
-      />
-      <div style={{ width: '100%', height: '64px', }}>
-        <Pagination
-          className='list-page' style={{ float: 'right', margin: '16px', }}
-          total={data.total}
-          onChange={handlePageChange}
-          //onShowSizeChange={pageSizeHandler}
-          current={data.current}
-          pageSize={data.size}
-          showSizeChanger={false}
-          showQuickJumper
-          //locale='zhCN'
-          //showTotal={total => `总计 ${total}`}
-        />
-      </div>
+        <div style={{ width: '100%', height: '440px', }}>
+          <div style={{ width: '100%', height: '400px', }}>
+            <ProTable
+              columns={columns}
+              dataSource={data.records}
+              rowKey='id'
+              //loading={teamListLoading}
+              search={false}
+              pagination={false}
+              options={{
+                density: false,
+                fullScreen: false,
+                reload: false,
+                setting: false,
+              }}
+              title={() => [
+                <Row key='searchRow'>
+                  <Col span={18} >
+                    <Input key='searchInput' placeholder={intl.formatMessage({ id: 'workspace.header.team-window.search-placeholder' })} style={{ width: '360px', marginLeft: '16px', }} onChange={(e) => { setSearchText(e.target.value) }} />
+                    <Button key='searchButton' type='primary' style={{ marginLeft: '24px', }} onClick={handleSearch}><FormattedMessage id='workspace.header.team-window.button-search' /></Button>
+                  </Col>
+                  <Col span={6}>
+                    <Button key='addButton' type='primary' icon={<PlusOutlined />} style={{ position: 'absolute', right: '16px', }} onClick={handleAddTeam}><FormattedMessage id='workspace.header.team-window.button-add' /></Button>
+                  </Col>
+                </Row>,
+              ]}
+              headerTitle={false}
+              toolBarRender={false}
+            />
+            <div style={{ width: '100%', height: '64px', }}>
+              <Pagination
+                className='list-page' style={{ float: 'right', margin: '16px', }}
+                total={data.total}
+                onChange={handlePageChange}
+                //onShowSizeChange={pageSizeHandler}
+                current={data.current}
+                pageSize={data.size}
+                showSizeChanger={false}
+                showQuickJumper
+              //locale='zhCN'
+              //showTotal={total => `总计 ${total}`}
+              />
+            </div>
           </div>
         </div>
         <TeamFormWindow onWindowOk={handleTeamFormWindowOk} onWindowCancel={handleTeamFormWindowCancel} visible={teamFormWindowVisible} isUpdate={isUpdate} customerId={team.customerId} teamId={team.teamId} teamName={team.teamName} />

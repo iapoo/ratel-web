@@ -7,20 +7,20 @@ export class HoverLayer extends EditorLayer {
   private _holders: Holder[] = [];
   private _inHolder = true;
 
-  public constructor (left = 0, top = 0, width = 100, height = 100) {
+  public constructor(left = 0, top = 0, width = 100, height = 100) {
     super(left, top, width, height, false)
     this.hittable = false
   }
 
-  public get inHolder (): boolean {
+  public get inHolder(): boolean {
     return this._inHolder
   }
 
-  public set inHolder (value: boolean) {
+  public set inHolder(value: boolean) {
     this._inHolder = value
   }
 
-  protected buildLayer () {
+  protected buildLayer() {
     // console.log(`checking holder = ${this.inHolder}`)
     if (this.requireRebuild) {
       this.clear()

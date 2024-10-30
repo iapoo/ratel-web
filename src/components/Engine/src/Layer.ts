@@ -3,12 +3,12 @@
 import { Shape, } from './Shape'
 
 export class Layer extends Shape {
-  constructor (left: number, top: number, width: number, height: number) {
+  constructor(left: number, top: number, width: number, height: number) {
     super(left, top, width, height)
     this.clipped = false
   }
 
-  public update () {
+  public update() {
     super.update()
   }
 }

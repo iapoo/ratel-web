@@ -4,8 +4,8 @@ import test3 from '@/components/Resource/svg/test3.txt'
 import test4 from '@/components/Resource/svg/test4.txt'
 
 export const AliyunShapes = [
-    {name: 'test1', data: test1, width: 100, height: 100},
-    {name: 'test2', data: test2, width: 100, height: 100},
-    {name: 'test3', data: test3, width: 100, height: 100},
-    {name: 'test4', data: test4, width: 100, height: 100},
+    { name: 'test1', data: test1, width: 100, height: 100 },
+    { name: 'test2', data: test2, width: 100, height: 100 },
+    { name: 'test3', data: test3, width: 100, height: 100 },
+    { name: 'test4', data: test4, width: 100, height: 100 },
 ]

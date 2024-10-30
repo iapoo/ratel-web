@@ -1,29 +1,29 @@
 import React, { FC, useEffect, useState, useRef } from 'react'
 import styles from './index.css'
 import { Form, Input, Checkbox, Row, Col, Button, Modal, Menu, message, Alert, Space, Dropdown, Select, } from 'antd'
-import type { DraggableData, DraggableEvent } from 'react-draggable';
-import Draggable from 'react-draggable';
+import type { DraggableData, DraggableEvent } from 'react-draggable'
+import Draggable from 'react-draggable'
 import axios from 'axios'
-import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
-import { CodeFilled, CodeOutlined, LockOutlined, MailFilled, MailOutlined, SolutionOutlined, UserOutlined } from '@ant-design/icons';
-import { UserInfo } from '../../Utils/RequestUtils';
-import { RequestUtils } from '@/components/Workspace/Utils';
+import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi'
+import { CodeFilled, CodeOutlined, LockOutlined, MailFilled, MailOutlined, SolutionOutlined, UserOutlined } from '@ant-design/icons'
+import { UserInfo } from '../../Utils/RequestUtils'
+import { RequestUtils } from '@/components/Workspace/Utils'
 import TeamSelector from './TeamSelector'
 import CryptoJs from 'crypto-js'
 
 interface TeamMemberWindowProps {
-  visible: boolean;
-  customerId: number;
-  teamId: number;
-  teamName: string;
-  onWindowCancel: () => void;
+  visible: boolean
+  customerId: number
+  teamId: number
+  teamName: string
+  onWindowCancel: () => void
   onWindowOk: () => void
 }
 
 const TeamMemberWindowPage: FC<TeamMemberWindowProps> = ({
   visible, customerId, teamId, teamName, onWindowCancel, onWindowOk
 }) => {
-  const intl = useIntl();
+  const intl = useIntl()
   const [messageApi, contextHolder,] = message.useMessage()
   //const [forceUpdate, setForceUpdate, ] = useState<boolean>(false)
   const [dataLoading, setDataLoading,] = useState<boolean>(false)
@@ -32,7 +32,7 @@ const TeamMemberWindowPage: FC<TeamMemberWindowProps> = ({
   const [errorMessage, setErrorMessage,] = useState<string>('')
 
   useEffect(() => {
-    if(!dataLoading) {
+    if (!dataLoading) {
       setDataLoading(true)
     }
   })
@@ -59,14 +59,14 @@ const TeamMemberWindowPage: FC<TeamMemberWindowProps> = ({
       if (onWindowOk) {
         onWindowOk()
       }
-    } else if(teamData.status === 200){
+    } else if (teamData.status === 200) {
       setErrorVisible(true)
       setErrorMessage(teamData.data.message)
     } else {
       setErrorVisible(true)
       setErrorMessage('System error happened')
     }
-}
+  }
 
   return (
     <div>
@@ -87,15 +87,15 @@ const TeamMemberWindowPage: FC<TeamMemberWindowProps> = ({
             onFinish={onFinish}
             style={{ maxWidth: '100%', }}
             layout='vertical'
-            // labelAlign='right'
-            >
-          <Form.Item label='teamId' name='teamId' hidden>
-            <Input />
-          </Form.Item>
-          <Form.Item label='customerId' name='customerId' hidden>
-            <Input />
-          </Form.Item>
-          <Form.Item name='customerName' label={intl.formatMessage({ id: 'workspace.header.team-member-form-window.customer-name' })} rules={[{ required: true, message: <FormattedMessage id='workspace.header.team-member-window.team-name-message' />, },]} style={{ marginBottom: '4px', width: '100%', }} >
+          // labelAlign='right'
+          >
+            <Form.Item label='teamId' name='teamId' hidden>
+              <Input />
+            </Form.Item>
+            <Form.Item label='customerId' name='customerId' hidden>
+              <Input />
+            </Form.Item>
+            <Form.Item name='customerName' label={intl.formatMessage({ id: 'workspace.header.team-member-form-window.customer-name' })} rules={[{ required: true, message: <FormattedMessage id='workspace.header.team-member-window.team-name-message' />, },]} style={{ marginBottom: '4px', width: '100%', }} >
               <Input
                 //prefix={false}
                 placeholder={intl.formatMessage({ id: 'workspace.header.team-member-form-window.customer-name-placeholder' })}

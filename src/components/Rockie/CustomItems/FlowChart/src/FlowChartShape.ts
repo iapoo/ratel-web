@@ -105,173 +105,205 @@ const DESC_FLOWCHART_ANNOTATION_RIGHT_BRACE = 'Annotation'
 const TEXT_FLOWCHART_ANNOTATION_RIGHT_BRACE = ''
 
 export const FlowChartShapeTypes = [
-  { name: TYPE_FLOWCHART_PROCESS, description: DESC_FLOWCHART_PROCESS, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_PROCESS, left: 0, top: 0, width: 120, height: 60, enableMask: false, 
+  {
+    name: TYPE_FLOWCHART_PROCESS, description: DESC_FLOWCHART_PROCESS, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_PROCESS, left: 0, top: 0, width: 120, height: 60, enableMask: false,
     modifiable: true, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0.5, modifierEndY: 0.5, modifyInLine: false, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true
   },
-  { name: TYPE_FLOWCHART_DECISION, description: DESC_FLOWCHART_DECISION, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_DECISION, left: 0, top: 0, width: 120, height: 60, enableMask: false, 
+  {
+    name: TYPE_FLOWCHART_DECISION, description: DESC_FLOWCHART_DECISION, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_DECISION, left: 0, top: 0, width: 120, height: 60, enableMask: false,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: false, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true
   },
-  { name: TYPE_FLOWCHART_START_END, description: DESC_FLOWCHART_START_END, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_START_END, left: 0, top: 0, width: 120, height: 60, enableMask: false, 
+  {
+    name: TYPE_FLOWCHART_START_END, description: DESC_FLOWCHART_START_END, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_START_END, left: 0, top: 0, width: 120, height: 60, enableMask: false,
     modifiable: true, modifierX: 0.5, modifierY: 1, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0.5, modifierEndY: 0.5, modifyInLine: false, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true
   },
-  { name: TYPE_FLOWCHART_START_ELLIPSE, description: DESC_FLOWCHART_START_ELLIPSE, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_START_ELLIPSE, left: 0, top: 0, width: 120, height: 60, enableMask: false, 
+  {
+    name: TYPE_FLOWCHART_START_ELLIPSE, description: DESC_FLOWCHART_START_ELLIPSE, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_START_ELLIPSE, left: 0, top: 0, width: 120, height: 60, enableMask: false,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: false, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true
   },
-  { name: TYPE_FLOWCHART_START_CIRCLE, description: DESC_FLOWCHART_START_CIRCLE, freeze: Shapes.FREEZE_ASPECT_RATIO, text: TEXT_FLOWCHART_START_CIRCLE, left: 0, top: 0, width: 100, height: 100, enableMask: false, 
+  {
+    name: TYPE_FLOWCHART_START_CIRCLE, description: DESC_FLOWCHART_START_CIRCLE, freeze: Shapes.FREEZE_ASPECT_RATIO, text: TEXT_FLOWCHART_START_CIRCLE, left: 0, top: 0, width: 100, height: 100, enableMask: false,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: false, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true
   },
-  { name: TYPE_FLOWCHART_DOCUMENT, description: DESC_FLOWCHART_DOCUMENT, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_DOCUMENT, left: 0, top: 0, width: 120, height: 80, enableMask: false, 
+  {
+    name: TYPE_FLOWCHART_DOCUMENT, description: DESC_FLOWCHART_DOCUMENT, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_DOCUMENT, left: 0, top: 0, width: 120, height: 80, enableMask: false,
     modifiable: true, modifierX: 0, modifierY: 0.7, modifierStartX: 0, modifierStartY: 0.5, modifierEndX: 0, modifierEndY: 1, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true,
   },
-  { name: TYPE_FLOWCHART_DATA, description: DESC_FLOWCHART_DATA, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_DATA, left: 0, top: 0, width: 120, height: 80, enableMask: false, 
+  {
+    name: TYPE_FLOWCHART_DATA, description: DESC_FLOWCHART_DATA, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_DATA, left: 0, top: 0, width: 120, height: 80, enableMask: false,
     modifiable: true, modifierX: 12, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0.8, modifierEndY: 0, modifyInLine: true, modifyInPercent: false,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true,
   },
-  { name: TYPE_FLOWCHART_PREDEFINED_PROCESS, description: DESC_FLOWCHART_PREDEFINED_PROCESS, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_PREDEFINED_PROCESS, left: 0, top: 0, width: 120, height: 60, enableMask: false, 
+  {
+    name: TYPE_FLOWCHART_PREDEFINED_PROCESS, description: DESC_FLOWCHART_PREDEFINED_PROCESS, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_PREDEFINED_PROCESS, left: 0, top: 0, width: 120, height: 60, enableMask: false,
     modifiable: true, modifierX: 12, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0.5, modifierEndY: 0, modifyInLine: true, modifyInPercent: false,
     controllable: true, controllerX: 0.7, controllerY: 0.3, controllerStartX: 0.5, controllerStartY: 0, controllerEndX: 1, controllerEndY: 0.5, controlInLine: false, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true,
   },
-  { name: TYPE_FLOWCHART_STORED_DATA, description: DESC_FLOWCHART_STORED_DATA, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_STORED_DATA, left: 0, top: 0, width: 120, height: 60, enableMask: false, 
+  {
+    name: TYPE_FLOWCHART_STORED_DATA, description: DESC_FLOWCHART_STORED_DATA, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_STORED_DATA, left: 0, top: 0, width: 120, height: 60, enableMask: false,
     modifiable: true, modifierX: 0.25, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0.5, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true,
   },
-  { name: TYPE_FLOWCHART_INTERNAL_STORAGE, description: DESC_FLOWCHART_INTERNAL_STORAGE, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_INTERNAL_STORAGE, left: 0, top: 0, width: 120, height: 60, enableMask: false, 
+  {
+    name: TYPE_FLOWCHART_INTERNAL_STORAGE, description: DESC_FLOWCHART_INTERNAL_STORAGE, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_INTERNAL_STORAGE, left: 0, top: 0, width: 120, height: 60, enableMask: false,
     modifiable: true, modifierX: 16, modifierY: 16, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0.5, modifierEndY: 0.5, modifyInLine: false, modifyInPercent: false,
     controllable: true, controllerX: 0.7, controllerY: 0.3, controllerStartX: 0.5, controllerStartY: 0, controllerEndX: 1, controllerEndY: 0.5, controlInLine: false, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true,
   },
-  { name: TYPE_FLOWCHART_SEQUENTIAL_DATA, description: DESC_FLOWCHART_SEQUENTIAL_DATA, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_SEQUENTIAL_DATA, left: 0, top: 0, width: 100, height: 100, enableMask: false, 
+  {
+    name: TYPE_FLOWCHART_SEQUENTIAL_DATA, description: DESC_FLOWCHART_SEQUENTIAL_DATA, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_SEQUENTIAL_DATA, left: 0, top: 0, width: 100, height: 100, enableMask: false,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: false, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true
   },
-  { name: TYPE_FLOWCHART_DATABASE, description: DESC_FLOWCHART_DATABASE, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_DATABASE, left: 0, top: 0, width: 80, height: 120, enableMask: false, 
+  {
+    name: TYPE_FLOWCHART_DATABASE, description: DESC_FLOWCHART_DATABASE, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_DATABASE, left: 0, top: 0, width: 80, height: 120, enableMask: false,
     modifiable: true, modifierX: 0, modifierY: 0.25, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0.5, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
-  { name: TYPE_FLOWCHART_DIRECT_DATA, description: DESC_FLOWCHART_DIRECT_DATA, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_DIRECT_DATA, left: 0, top: 0, width: 100, height: 60, enableMask: false, 
+  {
+    name: TYPE_FLOWCHART_DIRECT_DATA, description: DESC_FLOWCHART_DIRECT_DATA, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_DIRECT_DATA, left: 0, top: 0, width: 100, height: 60, enableMask: false,
     modifiable: true, modifierX: 0.25, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0.5, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true,
   },
-  { name: TYPE_FLOWCHART_MANUAL_INPUT, description: DESC_FLOWCHART_MANUAL_INPUT, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_MANUAL_INPUT, left: 0, top: 0, width: 120, height: 60, enableMask: false, 
+  {
+    name: TYPE_FLOWCHART_MANUAL_INPUT, description: DESC_FLOWCHART_MANUAL_INPUT, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_MANUAL_INPUT, left: 0, top: 0, width: 120, height: 60, enableMask: false,
     modifiable: true, modifierX: 0, modifierY: 0.5, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 1, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true
   },
-  { name: TYPE_FLOWCHART_CARD, description: DESC_FLOWCHART_CARD, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_CARD, left: 0, top: 0, width: 100, height: 60, enableMask: false, 
+  {
+    name: TYPE_FLOWCHART_CARD, description: DESC_FLOWCHART_CARD, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_CARD, left: 0, top: 0, width: 100, height: 60, enableMask: false,
     modifiable: true, modifierX: 0.3, modifierY: 0.3, modifierStartX: 0, modifierStartY: 0, modifierEndX: 1, modifierEndY: 1, modifyInLine: false, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true,
   },
-  { name: TYPE_FLOWCHART_TAPE, description: DESC_FLOWCHART_TAPE, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_TAPE, left: 0, top: 0, width: 100, height: 70, enableMask: false, 
+  {
+    name: TYPE_FLOWCHART_TAPE, description: DESC_FLOWCHART_TAPE, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_TAPE, left: 0, top: 0, width: 100, height: 70, enableMask: false,
     modifiable: true, modifierX: 0, modifierY: 0.3, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0.45, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true,
   },
-  { name: TYPE_FLOWCHART_DISPLAY, description: DESC_FLOWCHART_DISPLAY, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_DISPLAY, left: 0, top: 0, width: 120, height: 60, enableMask: false, 
+  {
+    name: TYPE_FLOWCHART_DISPLAY, description: DESC_FLOWCHART_DISPLAY, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_DISPLAY, left: 0, top: 0, width: 120, height: 60, enableMask: false,
     modifiable: true, modifierX: 0.6, modifierY: 0, modifierStartX: 0.5, modifierStartY: 0, modifierEndX: 1, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: true, controllerX: 0.9, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0.5, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true
   },
-  { name: TYPE_FLOWCHART_MANUAL_OPERATION, description: DESC_FLOWCHART_MANUAL_OPERATION, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_MANUAL_OPERATION, left: 0, top: 0, width: 120, height: 60, enableMask: false, 
+  {
+    name: TYPE_FLOWCHART_MANUAL_OPERATION, description: DESC_FLOWCHART_MANUAL_OPERATION, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_MANUAL_OPERATION, left: 0, top: 0, width: 120, height: 60, enableMask: false,
     modifiable: true, modifierX: 0.3, modifierY: 0, modifierStartX: 0, modifierStartY: 1, modifierEndX: 0.5, modifierEndY: 1, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true,
   },
-  { name: TYPE_FLOWCHART_PREPARATION, description: DESC_FLOWCHART_PREPARATION, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_PREPARATION, left: 0, top: 0, width: 120, height: 60, enableMask: false, 
+  {
+    name: TYPE_FLOWCHART_PREPARATION, description: DESC_FLOWCHART_PREPARATION, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_PREPARATION, left: 0, top: 0, width: 120, height: 60, enableMask: false,
     modifiable: true, modifierX: 0.3, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0.5, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true,
   },
-  { name: TYPE_FLOWCHART_PARALLEL_MODE, description: DESC_FLOWCHART_PARALLEL_MODE, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_PARALLEL_MODE, left: 0, top: 0, width: 120, height: 60, enableMask: true, 
+  {
+    name: TYPE_FLOWCHART_PARALLEL_MODE, description: DESC_FLOWCHART_PARALLEL_MODE, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_PARALLEL_MODE, left: 0, top: 0, width: 120, height: 60, enableMask: true,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: false, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true
   },
-  { name: TYPE_FLOWCHART_LOOP_LIMIT, description: DESC_FLOWCHART_LOOP_LIMIT, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_LOOP_LIMIT, left: 0, top: 0, width: 120, height: 60, enableMask: false, 
+  {
+    name: TYPE_FLOWCHART_LOOP_LIMIT, description: DESC_FLOWCHART_LOOP_LIMIT, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_LOOP_LIMIT, left: 0, top: 0, width: 120, height: 60, enableMask: false,
     modifiable: true, modifierX: 0.4, modifierY: 0.5, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0.5, modifierEndY: 0.5, modifyInLine: false, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true,
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0, adapterStartX: 0, adapterStartY: 0, adapterEndX: 0, adapterEndY: 0, adaptInLine: true, adaptInPercent: true,
   },
-  { name: TYPE_FLOWCHART_ON_PAGE_REFERENCE, description: DESC_FLOWCHART_ON_PAGE_REFERENCE, freeze: Shapes.FREEZE_ASPECT_RATIO, text: TEXT_FLOWCHART_ON_PAGE_REFERENCE, left: 0, top: 0, width: 100, height: 100, enableMask: false, 
+  {
+    name: TYPE_FLOWCHART_ON_PAGE_REFERENCE, description: DESC_FLOWCHART_ON_PAGE_REFERENCE, freeze: Shapes.FREEZE_ASPECT_RATIO, text: TEXT_FLOWCHART_ON_PAGE_REFERENCE, left: 0, top: 0, width: 100, height: 100, enableMask: false,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: false, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true
   },
-  { name: TYPE_FLOWCHART_OR, description: DESC_FLOWCHART_OR, freeze: Shapes.FREEZE_ASPECT_RATIO, text: TEXT_FLOWCHART_OR, left: 0, top: 0, width: 100, height: 100, enableMask: false, 
+  {
+    name: TYPE_FLOWCHART_OR, description: DESC_FLOWCHART_OR, freeze: Shapes.FREEZE_ASPECT_RATIO, text: TEXT_FLOWCHART_OR, left: 0, top: 0, width: 100, height: 100, enableMask: false,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: false, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true
   },
-  { name: TYPE_FLOWCHART_SUMMING_JUNCTION, description: DESC_FLOWCHART_SUMMING_JUNCTION, freeze: Shapes.FREEZE_ASPECT_RATIO, text: TEXT_FLOWCHART_SUMMING_JUNCTION, left: 0, top: 0, width: 100, height: 100, enableMask: false, 
+  {
+    name: TYPE_FLOWCHART_SUMMING_JUNCTION, description: DESC_FLOWCHART_SUMMING_JUNCTION, freeze: Shapes.FREEZE_ASPECT_RATIO, text: TEXT_FLOWCHART_SUMMING_JUNCTION, left: 0, top: 0, width: 100, height: 100, enableMask: false,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: false, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true
   },
-  { name: TYPE_FLOWCHART_OFF_PAGE_REFERENCE, description: DESC_FLOWCHART_OFF_PAGE_REFERENCE, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_OFF_PAGE_REFERENCE, left: 0, top: 0, width: 100, height: 100, enableMask: false, 
+  {
+    name: TYPE_FLOWCHART_OFF_PAGE_REFERENCE, description: DESC_FLOWCHART_OFF_PAGE_REFERENCE, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_OFF_PAGE_REFERENCE, left: 0, top: 0, width: 100, height: 100, enableMask: false,
     modifiable: true, modifierX: 0, modifierY: 0.5, modifierStartX: 0.5, modifierStartY: 0, modifierEndX: 0.5, modifierEndY: 1, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true
   },
-  { name: TYPE_FLOWCHART_SORT, description: DESC_FLOWCHART_SORT, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_SORT, left: 0, top: 0, width: 100, height: 100, enableMask: false, 
+  {
+    name: TYPE_FLOWCHART_SORT, description: DESC_FLOWCHART_SORT, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_SORT, left: 0, top: 0, width: 100, height: 100, enableMask: false,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: false, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true
   },
-  { name: TYPE_FLOWCHART_ANNOTATION_LEFT_BRACKET, description: DESC_FLOWCHART_ANNOTATION_LEFT_BRACKET, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_ANNOTATION_LEFT_BRACKET, left: 0, top: 0, width: 100, height: 100, enableMask: true, 
+  {
+    name: TYPE_FLOWCHART_ANNOTATION_LEFT_BRACKET, description: DESC_FLOWCHART_ANNOTATION_LEFT_BRACKET, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_ANNOTATION_LEFT_BRACKET, left: 0, top: 0, width: 100, height: 100, enableMask: true,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: true, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 0.2, adapterStartX: 0, adapterStartY: 0, adapterEndX: 1, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+    adaptable: true, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 0.2, adapterStartX: 0, adapterStartY: 0, adapterEndX: 1, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
-  { name: TYPE_FLOWCHART_ANNOTATION_RIGHT_BRACKET, description: DESC_FLOWCHART_ANNOTATION_RIGHT_BRACKET, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_ANNOTATION_RIGHT_BRACKET, left: 0, top: 0, width: 100, height: 100, enableMask: true, 
+  {
+    name: TYPE_FLOWCHART_ANNOTATION_RIGHT_BRACKET, description: DESC_FLOWCHART_ANNOTATION_RIGHT_BRACKET, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_ANNOTATION_RIGHT_BRACKET, left: 0, top: 0, width: 100, height: 100, enableMask: true,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: true, adapterX: 0.8, adapterY: 0,adapterDirection: 'X', adapterSize: 0.2, adapterStartX: 0, adapterStartY: 0, adapterEndX: 1, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+    adaptable: true, adapterX: 0.8, adapterY: 0, adapterDirection: 'X', adapterSize: 0.2, adapterStartX: 0, adapterStartY: 0, adapterEndX: 1, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
-  { name: TYPE_FLOWCHART_ANNOTATION_LEFT_BRACKET_EX, description: DESC_FLOWCHART_ANNOTATION_LEFT_BRACKET_EX, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_ANNOTATION_LEFT_BRACKET_EX, left: 0, top: 0, width: 100, height: 100, enableMask: true, 
+  {
+    name: TYPE_FLOWCHART_ANNOTATION_LEFT_BRACKET_EX, description: DESC_FLOWCHART_ANNOTATION_LEFT_BRACKET_EX, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_ANNOTATION_LEFT_BRACKET_EX, left: 0, top: 0, width: 100, height: 100, enableMask: true,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: true, adapterX: 0.15, adapterY: 0,adapterDirection: 'X', adapterSize: 0.15, adapterStartX: 0, adapterStartY: 0, adapterEndX: 1, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+    adaptable: true, adapterX: 0.15, adapterY: 0, adapterDirection: 'X', adapterSize: 0.15, adapterStartX: 0, adapterStartY: 0, adapterEndX: 1, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
-  { name: TYPE_FLOWCHART_ANNOTATION_RIGHT_BRACKET_EX, description: DESC_FLOWCHART_ANNOTATION_RIGHT_BRACKET_EX, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_ANNOTATION_RIGHT_BRACKET_EX, left: 0, top: 0, width: 100, height: 100, enableMask: true, 
+  {
+    name: TYPE_FLOWCHART_ANNOTATION_RIGHT_BRACKET_EX, description: DESC_FLOWCHART_ANNOTATION_RIGHT_BRACKET_EX, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_ANNOTATION_RIGHT_BRACKET_EX, left: 0, top: 0, width: 100, height: 100, enableMask: true,
     modifiable: false, modifierX: 0, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: true, adapterX: 0.7, adapterY: 0,adapterDirection: 'X', adapterSize: 0.15, adapterStartX: 0, adapterStartY: 0, adapterEndX: 1, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
+    adaptable: true, adapterX: 0.7, adapterY: 0, adapterDirection: 'X', adapterSize: 0.15, adapterStartX: 0, adapterStartY: 0, adapterEndX: 1, adapterEndY: 0, adaptInLine: true, adaptInPercent: true
   },
-  { name: TYPE_FLOWCHART_ANNOTATION_LEFT_BRACE, description: DESC_FLOWCHART_ANNOTATION_LEFT_BRACE, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_ANNOTATION_LEFT_BRACE, left: 0, top: 0, width: 100, height: 100, enableMask: true, 
+  {
+    name: TYPE_FLOWCHART_ANNOTATION_LEFT_BRACE, description: DESC_FLOWCHART_ANNOTATION_LEFT_BRACE, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_ANNOTATION_LEFT_BRACE, left: 0, top: 0, width: 100, height: 100, enableMask: true,
     modifiable: true, modifierX: 0.4, modifierY: 0, modifierStartX: 0, modifierStartY: 0, modifierEndX: 0.5, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true
   },
-  { name: TYPE_FLOWCHART_ANNOTATION_RIGHT_BRACE, description: DESC_FLOWCHART_ANNOTATION_RIGHT_BRACE, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_ANNOTATION_RIGHT_BRACE, left: 0, top: 0, width: 100, height: 100, enableMask: true, 
+  {
+    name: TYPE_FLOWCHART_ANNOTATION_RIGHT_BRACE, description: DESC_FLOWCHART_ANNOTATION_RIGHT_BRACE, freeze: Shapes.FREEZE_NONE, text: TEXT_FLOWCHART_ANNOTATION_RIGHT_BRACE, left: 0, top: 0, width: 100, height: 100, enableMask: true,
     modifiable: true, modifierX: 0.6, modifierY: 0, modifierStartX: 0.5, modifierStartY: 0, modifierEndX: 1, modifierEndY: 0, modifyInLine: true, modifyInPercent: true,
     controllable: false, controllerX: 0, controllerY: 0, controllerStartX: 0, controllerStartY: 0, controllerEndX: 0, controllerEndY: 0, controlInLine: true, controlInPercent: true,
-    adaptable: false, adapterX: 0, adapterY: 0,adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true
+    adaptable: false, adapterX: 0, adapterY: 0, adapterDirection: 'X', adapterSize: 1, adapterStartX: 0, adapterStartY: 1, adapterEndX: 1, adapterEndY: 1, adaptInLine: true, adaptInPercent: true
   },
 ]
 
 export class FlowChartShape extends CustomEntity {
-  
+
   public constructor(left: number, top: number, width: number, height: number, flowChartType: string) {
-    super(left, top, width, height, '', {shapeType: flowChartType}, FlowChartShapeTypes)
-    const customTypeInfo = this.parseTypeInfo({shapeType: flowChartType})
+    super(left, top, width, height, '', { shapeType: flowChartType }, FlowChartShapeTypes)
+    const customTypeInfo = this.parseTypeInfo({ shapeType: flowChartType })
     this._shape = new CustomShape(left, top, width, height, this.buildShape, customTypeInfo)
     this.initializeTheme()
   }
@@ -287,60 +319,60 @@ export class FlowChartShape extends CustomEntity {
     let modifierHeight = theThis.modifier.y + theThis.typeInfo.modifierStart.y * theThis.height
     let controllerWidth = theThis.controller.x + theThis.typeInfo.controllerStart.x * theThis.width
     let controllerHeight = theThis.controller.y + theThis.typeInfo.controllerStart.y * theThis.height
-    let adapterWidth = theThis.adapter.x +theThis.typeInfo.adapterStart.x * theThis.width
+    let adapterWidth = theThis.adapter.x + theThis.typeInfo.adapterStart.x * theThis.width
     let adapterHeight = theThis.adapter.y + theThis.typeInfo.adapterStart.y * theThis.height
     let adapterSizeX = theThis.adapterSize
     let adapterSizeY = theThis.adapterSize
-    if(theThis.typeInfo.modifyInPercent) {
+    if (theThis.typeInfo.modifyInPercent) {
       modifierWidth = theThis.width * theThis.modifier.x * (theThis.typeInfo.modifierEnd.x - theThis.typeInfo.modifierStart.x) + theThis.typeInfo.modifierStart.x * theThis.width
       modifierHeight = theThis.height * theThis.modifier.y * (theThis.typeInfo.modifierEnd.y - theThis.typeInfo.modifierStart.y) + theThis.typeInfo.modifierStart.y * theThis.height
     }
-    if(theThis.typeInfo.controlInPercent) {
+    if (theThis.typeInfo.controlInPercent) {
       controllerWidth = theThis.width * theThis.controller.x * (theThis.typeInfo.controllerEnd.x - theThis.typeInfo.controllerStart.x) + theThis.typeInfo.controllerStart.x * theThis.width
       controllerHeight = theThis.height * theThis.controller.y * (theThis.typeInfo.controllerEnd.y - theThis.typeInfo.controllerStart.y) + theThis.typeInfo.controllerStart.y * theThis.height
     }
-    if(theThis.typeInfo.adaptInPercent) {
+    if (theThis.typeInfo.adaptInPercent) {
       adapterWidth = theThis.width * theThis.adapter.x * (theThis.typeInfo.adapterEnd.x - theThis.typeInfo.adapterStart.x) + theThis.typeInfo.adapterStart.x * theThis.width
       adapterHeight = theThis.height * theThis.adapter.y * (theThis.typeInfo.adapterEnd.y - theThis.typeInfo.adapterStart.y) + theThis.typeInfo.adapterStart.y * theThis.height
       adapterSizeX = theThis.adapterSize * (theThis.typeInfo.adapterEnd.x - theThis.typeInfo.adapterStart.x) * this.width
       adapterSizeY = theThis.adapterSize * (theThis.typeInfo.adapterEnd.y - theThis.typeInfo.adapterStart.y) * this.height
     }
-    switch(theThis.typeInfo.name) {
+    switch (theThis.typeInfo.name) {
       case TYPE_FLOWCHART_DECISION:
         theThis.path.moveTo(this.width / 2, 0)
         theThis.path.lineTo(this.width, this.height / 2)
         theThis.path.lineTo(this.width / 2, this.height)
         theThis.path.lineTo(0, this.height / 2)
         theThis.path.lineTo(this.width / 2, 0)
-        break;
+        break
       case TYPE_FLOWCHART_START_END:
         theThis.path.addRRect(new RoundRectangle(0, 0, this.width, this.height, modifierWidth, modifierHeight))
-        break;
+        break
       case TYPE_FLOWCHART_START_ELLIPSE:
         theThis.path.addOval(Rectangle.makeLTWH(0, 0, this.width, this.height))
-        break;
+        break
       case TYPE_FLOWCHART_START_CIRCLE:
         theThis.path.addOval(Rectangle.makeLTWH(0, 0, this.width, this.height))
-        break;
+        break
       case TYPE_FLOWCHART_DOCUMENT:
         modifierHeight = this.height - modifierHeight
         let k = modifierHeight / 0.35
         theThis.path.moveTo(0, 0)
         theThis.path.lineTo(0, this.height - modifierHeight)
-        theThis.path.cubicTo(this.width * 0.5, this.height  - modifierHeight + k, this.width * 0.5, this.height  - modifierHeight - k, this.width, this.height  - modifierHeight)
+        theThis.path.cubicTo(this.width * 0.5, this.height - modifierHeight + k, this.width * 0.5, this.height - modifierHeight - k, this.width, this.height - modifierHeight)
         theThis.path.lineTo(this.width, 0)
         theThis.path.lineTo(0, 0)
-        break;
+        break
       case TYPE_FLOWCHART_DATA:
         theThis.path.moveTo(modifierWidth, 0)
         theThis.path.lineTo(this.width, 0)
         theThis.path.lineTo(this.width - modifierWidth, this.height)
         theThis.path.lineTo(0, this.height)
         theThis.path.lineTo(modifierWidth, 0)
-        break;
+        break
       case TYPE_FLOWCHART_PREDEFINED_PROCESS:
         //Avoid the line out of the boundary
-        if(modifierWidth < this.width - controllerWidth) {
+        if (modifierWidth < this.width - controllerWidth) {
           modifierWidth = this.width - controllerWidth
         }
         theThis.path.addRRect(new RoundRectangle(0, 0, this.width, this.height, this.width - controllerWidth, controllerHeight))
@@ -348,7 +380,7 @@ export class FlowChartShape extends CustomEntity {
         theThis.path.lineTo(modifierWidth + 1, this.height)
         theThis.path.moveTo(this.width - modifierWidth - 1, 0)
         theThis.path.lineTo(this.width - modifierWidth - 1, this.height)
-        break;
+        break
       case TYPE_FLOWCHART_STORED_DATA: {
         //Ref to: https://www.ibashu.cn/news/show_261576.html
         //Ref to: https://blog.csdn.net/jeremyjone/article/details/102069294
@@ -358,11 +390,11 @@ export class FlowChartShape extends CustomEntity {
         theThis.path.cubicTo(this.width - k, 0, this.width - k, this.height, this.width, this.height)
         theThis.path.lineTo(modifierWidth, this.height)
         theThis.path.cubicTo(modifierWidth - k, this.height, modifierWidth - k, 0, modifierWidth, 0)
-        break;
+        break
       }
       case TYPE_FLOWCHART_INTERNAL_STORAGE: {
         //Avoid the line out of the boundary
-        if(modifierWidth < this.width - controllerWidth) {
+        if (modifierWidth < this.width - controllerWidth) {
           modifierWidth = this.width - controllerWidth
         }
         theThis.path.addRRect(new RoundRectangle(0, 0, this.width, this.height, this.width - controllerWidth, controllerHeight))
@@ -372,13 +404,13 @@ export class FlowChartShape extends CustomEntity {
         theThis.path.lineTo(modifierWidth + 1, this.height)
         theThis.path.moveTo(0, modifierHeight + 1)
         theThis.path.lineTo(this.width, modifierHeight + 1)
-        break;
+        break
       }
       case TYPE_FLOWCHART_SEQUENTIAL_DATA: {
         theThis.path.addOval(Rectangle.makeLTWH(0, 0, this.width, this.height))
-        theThis.path.moveTo(this.width * 0.5 , this.height)
+        theThis.path.moveTo(this.width * 0.5, this.height)
         theThis.path.lineTo(this.width, this.height)
-        break;
+        break
       }
       case TYPE_FLOWCHART_DATABASE: {
         //Ref to: https://www.ibashu.cn/news/show_261576.html
@@ -403,7 +435,7 @@ export class FlowChartShape extends CustomEntity {
         theThis.path.cubicTo(this.width - modifierWidth - k, 0, this.width - modifierWidth - k, this.height, this.width - modifierWidth, this.height)
         theThis.path.lineTo(modifierWidth, this.height)
         theThis.path.cubicTo(modifierWidth - k, this.height, modifierWidth - k, 0, modifierWidth, 0)
-        break;
+        break
       }
       case TYPE_FLOWCHART_MANUAL_INPUT: {
         theThis.path.moveTo(0, modifierHeight)
@@ -411,7 +443,7 @@ export class FlowChartShape extends CustomEntity {
         theThis.path.lineTo(this.width, this.height)
         theThis.path.lineTo(this.width, 0)
         theThis.path.lineTo(0, modifierHeight)
-        break;
+        break
       }
       case TYPE_FLOWCHART_CARD: {
         theThis.path.moveTo(0, modifierHeight)
@@ -420,13 +452,13 @@ export class FlowChartShape extends CustomEntity {
         theThis.path.lineTo(this.width, 0)
         theThis.path.lineTo(modifierWidth, 0)
         theThis.path.lineTo(0, modifierHeight)
-        break;
+        break
       }
       case TYPE_FLOWCHART_TAPE: {
         let k = modifierHeight / 0.35
         theThis.path.moveTo(0, modifierHeight)
         theThis.path.lineTo(0, this.height - modifierHeight)
-        theThis.path.cubicTo(this.width * 0.5, this.height - modifierHeight + k, this.width * 0.5 , this.height - modifierHeight - k, this.width, this.height  - modifierHeight)
+        theThis.path.cubicTo(this.width * 0.5, this.height - modifierHeight + k, this.width * 0.5, this.height - modifierHeight - k, this.width, this.height - modifierHeight)
         theThis.path.lineTo(this.width, modifierHeight)
         theThis.path.cubicTo(this.width * 0.5, modifierHeight - k, this.width * 0.5, modifierHeight + k, 0, modifierHeight)
         break
@@ -459,7 +491,7 @@ export class FlowChartShape extends CustomEntity {
         theThis.path.lineTo(modifierWidth, this.height)
         theThis.path.lineTo(0, this.height / 2)
         theThis.path.lineTo(modifierWidth, 0)
-        break;
+        break
       }
       case TYPE_FLOWCHART_PARALLEL_MODE: {
         theThis.path.moveTo(0, 0)
@@ -468,7 +500,7 @@ export class FlowChartShape extends CustomEntity {
         theThis.path.moveTo(0, this.height)
         theThis.path.lineTo(this.width, this.height)
         theThis.path.lineTo(0, this.height)
-        break;
+        break
       }
       case TYPE_FLOWCHART_LOOP_LIMIT: {
         theThis.path.moveTo(modifierWidth, 0)
@@ -478,11 +510,11 @@ export class FlowChartShape extends CustomEntity {
         theThis.path.lineTo(0, this.height)
         theThis.path.lineTo(0, modifierHeight)
         theThis.path.lineTo(modifierWidth, 0)
-        break;
+        break
       }
       case TYPE_FLOWCHART_ON_PAGE_REFERENCE: {
         theThis.path.addOval(Rectangle.makeLTWH(0, 0, this.width, this.height))
-        break;
+        break
       }
       case TYPE_FLOWCHART_OR: {
         theThis.path.addOval(Rectangle.makeLTWH(0, 0, this.width, this.height))
@@ -490,18 +522,18 @@ export class FlowChartShape extends CustomEntity {
         theThis.path.lineTo(this.width * 0.5, this.height)
         theThis.path.moveTo(0, this.height * 0.5)
         theThis.path.lineTo(this.width, this.height * 0.5)
-        break;
+        break
       }
       case TYPE_FLOWCHART_SUMMING_JUNCTION: {
         //const matrix = new Matrix()
         //matrix.rotate(0.01, this.width / 2, this.height /2)
-        const value = this.width * 0.5 * Math.sin(Math.PI  / 4)
+        const value = this.width * 0.5 * Math.sin(Math.PI / 4)
         theThis.path.addOval(Rectangle.makeLTWH(0, 0, this.width, this.height))
         theThis.path.moveTo(this.width * 0.5 - value, this.width * 0.5 - value)
         theThis.path.lineTo(this.width * 0.5 + value, this.height * 0.5 + value)
         theThis.path.moveTo(this.width * 0.5 - value, this.width * 0.5 + value)
         theThis.path.lineTo(this.width * 0.5 + value, this.height * 0.5 - value)
-        break;
+        break
       }
       case TYPE_FLOWCHART_OFF_PAGE_REFERENCE: {
         theThis.path.moveTo(0, 0)
@@ -510,7 +542,7 @@ export class FlowChartShape extends CustomEntity {
         theThis.path.lineTo(this.width, modifierHeight)
         theThis.path.lineTo(this.width, 0)
         theThis.path.lineTo(0, 0)
-        break;
+        break
       }
       case TYPE_FLOWCHART_SORT: {
         theThis.path.moveTo(this.width * 0.5, 0)
@@ -520,7 +552,7 @@ export class FlowChartShape extends CustomEntity {
         theThis.path.lineTo(this.width * 0.5, 0)
         theThis.path.moveTo(0, this.height * 0.5)
         theThis.path.lineTo(this.width, this.height * 0.5)
-        break;
+        break
       }
       case TYPE_FLOWCHART_ANNOTATION_LEFT_BRACKET: {
         theThis.path.moveTo(adapterWidth + adapterSizeX, 0)
@@ -533,7 +565,7 @@ export class FlowChartShape extends CustomEntity {
         theThis.path.moveTo(0, this.height * 0.5)
         theThis.path.lineTo(adapterWidth, this.height * 0.5)
         theThis.path.lineTo(0, this.height * 0.5)
-        break;
+        break
       }
       case TYPE_FLOWCHART_ANNOTATION_RIGHT_BRACKET: {
         theThis.path.moveTo(adapterWidth, 0)
@@ -546,7 +578,7 @@ export class FlowChartShape extends CustomEntity {
         theThis.path.moveTo(this.width, this.height * 0.5)
         theThis.path.lineTo(adapterWidth + adapterSizeX, this.height * 0.5)
         theThis.path.lineTo(this.width, this.height * 0.5)
-        break;
+        break
       }
       case TYPE_FLOWCHART_ANNOTATION_LEFT_BRACKET_EX: {
         theThis.path.moveTo(adapterWidth + adapterSizeX, 0)
@@ -559,7 +591,7 @@ export class FlowChartShape extends CustomEntity {
         theThis.path.moveTo(0, this.height * 0.5)
         theThis.path.lineTo(adapterWidth, this.height * 0.5)
         theThis.path.lineTo(0, this.height * 0.5)
-        break;
+        break
       }
       case TYPE_FLOWCHART_ANNOTATION_RIGHT_BRACKET_EX: {
         theThis.path.moveTo(adapterWidth, 0)
@@ -572,46 +604,46 @@ export class FlowChartShape extends CustomEntity {
         theThis.path.moveTo(this.width, this.height * 0.5)
         theThis.path.lineTo(adapterWidth + adapterSizeX, this.height * 0.5)
         theThis.path.lineTo(this.width, this.height * 0.5)
-        break;
+        break
       }
       case TYPE_FLOWCHART_ANNOTATION_LEFT_BRACE: {
         const radius = modifierWidth * 0.5
         const diameter = radius * 2
-        theThis.path.moveTo(0 , 0)
-        theThis.path.addArc(Rectangle.makeLTWH(- radius, 0, diameter, diameter),270, 90)
+        theThis.path.moveTo(0, 0)
+        theThis.path.addArc(Rectangle.makeLTWH(- radius, 0, diameter, diameter), 270, 90)
         theThis.path.lineTo(radius, this.height * 0.5 - radius)
         theThis.path.moveTo(diameter, this.height * 0.5)
-        theThis.path.addArc(Rectangle.makeLTWH(radius, this.height * 0.5 -  diameter, diameter, diameter),90, 90)
-        theThis.path.moveTo(radius, this.height * 0.5 +  radius)
-        theThis.path.addArc(Rectangle.makeLTWH(radius, this.height * 0.5, diameter, diameter),180, 90)
-        theThis.path.moveTo(radius, this.height * 0.5 +  radius)
+        theThis.path.addArc(Rectangle.makeLTWH(radius, this.height * 0.5 - diameter, diameter, diameter), 90, 90)
+        theThis.path.moveTo(radius, this.height * 0.5 + radius)
+        theThis.path.addArc(Rectangle.makeLTWH(radius, this.height * 0.5, diameter, diameter), 180, 90)
+        theThis.path.moveTo(radius, this.height * 0.5 + radius)
         theThis.path.lineTo(radius, this.height - radius)
         theThis.path.addArc(Rectangle.makeLTWH(- radius, this.height - diameter, diameter, diameter), 0, 90)
-        break;
+        break
       }
       case TYPE_FLOWCHART_ANNOTATION_RIGHT_BRACE: {
         const radius = (this.width - modifierWidth) * 0.5
         const diameter = radius * 2
-        theThis.path.moveTo(this.width - radius , radius)
-        theThis.path.addArc(Rectangle.makeLTWH(this.width - radius, 0, diameter, diameter),180, 90)
-        theThis.path.moveTo(this.width - radius , radius)
+        theThis.path.moveTo(this.width - radius, radius)
+        theThis.path.addArc(Rectangle.makeLTWH(this.width - radius, 0, diameter, diameter), 180, 90)
+        theThis.path.moveTo(this.width - radius, radius)
         theThis.path.lineTo(this.width - radius, this.height * 0.5 - radius)
-        theThis.path.addArc(Rectangle.makeLTWH(this.width - diameter - radius, this.height * 0.5 -  diameter, diameter, diameter),0, 90)
-        theThis.path.addArc(Rectangle.makeLTWH(this.width - diameter - radius, this.height * 0.5, diameter, diameter),270, 90)
+        theThis.path.addArc(Rectangle.makeLTWH(this.width - diameter - radius, this.height * 0.5 - diameter, diameter, diameter), 0, 90)
+        theThis.path.addArc(Rectangle.makeLTWH(this.width - diameter - radius, this.height * 0.5, diameter, diameter), 270, 90)
         theThis.path.lineTo(this.width - radius, this.height - radius)
         theThis.path.addArc(Rectangle.makeLTWH(this.width - radius, this.height - diameter, diameter, diameter), 90, 90)
-        break;
+        break
       }
       case TYPE_FLOWCHART_PROCESS:
-        default:
+      default:
         theThis.path.addRRect(new RoundRectangle(0, 0, this.width, this.height, modifierWidth, modifierHeight))
-        break;
-      }
+        break
+    }
   }
 
   protected parseEntityShapeType(type: string): EntityShapeType {
     let shapeType = EntityShapeType.CustomShape
     return shapeType
-  } 
+  }
 
 }

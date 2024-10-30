@@ -8,4 +8,3 @@ export class ClassicTheme {
   public static strokeColor = ClassicTheme.DEFAULT_STROKE_COLOR
   public static fillColor = ClassicTheme.DEFAULT_STROKE_COLOR
 }
-  

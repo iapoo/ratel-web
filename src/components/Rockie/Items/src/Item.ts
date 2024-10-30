@@ -3,14 +3,14 @@ import { Color, Colors, FontWeight, FontWidth, FontSlant, Paint, PaintStyle, Rec
 import { Connector, } from './Connector'
 import { EntityShape, } from '../../Shapes'
 import { Editor, } from '../../Editor'
-import { SystemUtils } from '@/components/Workspace/Utils';
-import { EditorItemInfo } from './EditorItemInfo';
-import { EditorItem } from './EditorItem';
-import { DocumentThemes, ThemeUtils } from '@/components/Rockie/Theme';
+import { SystemUtils } from '@/components/Workspace/Utils'
+import { EditorItemInfo } from './EditorItemInfo'
+import { EditorItem } from './EditorItem'
+import { DocumentThemes, ThemeUtils } from '@/components/Rockie/Theme'
 
 export interface Type {
-  name: string;
-  description: string;
+  name: string
+  description: string
 }
 
 export class Categories {
@@ -50,9 +50,9 @@ export abstract class Item implements EditorItem {
 
   public static DEFAULT_FONT_SIZE = 14;
 
-  protected _shape: EntityShape;
+  protected _shape: EntityShape
 
-  private _boundary: Rectangle;
+  private _boundary: Rectangle
 
   private _rotation: Rotation = new Rotation(0, 0, 0);
 
@@ -757,7 +757,7 @@ export abstract class Item implements EditorItem {
 
   public abstract get types(): Type[]
 
-  public abstract get category(): string;
+  public abstract get category(): string
 
   protected abstract save(): EditorItemInfo
 

@@ -1,27 +1,27 @@
 import React, { FC, useEffect, useState, useRef } from 'react'
 import styles from './index.css'
 import { Form, Input, Checkbox, Row, Col, Button, Modal, Menu, message, Alert, Space, Dropdown, Select, } from 'antd'
-import type { DraggableData, DraggableEvent } from 'react-draggable';
-import Draggable from 'react-draggable';
+import type { DraggableData, DraggableEvent } from 'react-draggable'
+import Draggable from 'react-draggable'
 import axios from 'axios'
-import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
-import { CodeFilled, CodeOutlined, LockOutlined, MailFilled, MailOutlined, SolutionOutlined, UserOutlined } from '@ant-design/icons';
-import { UserInfo } from '../../Utils/RequestUtils';
-import { RequestUtils } from '@/components/Workspace/Utils';
+import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi'
+import { CodeFilled, CodeOutlined, LockOutlined, MailFilled, MailOutlined, SolutionOutlined, UserOutlined } from '@ant-design/icons'
+import { UserInfo } from '../../Utils/RequestUtils'
+import { RequestUtils } from '@/components/Workspace/Utils'
 import TeamSelector from './TeamSelector'
 import CryptoJs from 'crypto-js'
 
 interface CustomerFormWindowProps {
-  visible: boolean;
-  documentId: number;
-  onWindowCancel: () => void;
+  visible: boolean
+  documentId: number
+  onWindowCancel: () => void
   onWindowOk: (customerId: number, customerName: string) => void
 }
 
 const CustomerFormWindowPage: FC<CustomerFormWindowProps> = ({
-  visible, documentId,  onWindowCancel, onWindowOk
+  visible, documentId, onWindowCancel, onWindowOk
 }) => {
-  const intl = useIntl();
+  const intl = useIntl()
   const [messageApi, contextHolder,] = message.useMessage()
   //const [forceUpdate, setForceUpdate, ] = useState<boolean>(false)
   const [dataLoading, setDataLoading,] = useState<boolean>(false)
@@ -30,7 +30,7 @@ const CustomerFormWindowPage: FC<CustomerFormWindowProps> = ({
   const [errorMessage, setErrorMessage,] = useState<string>('')
 
   useEffect(() => {
-    if(!dataLoading) {
+    if (!dataLoading) {
       setDataLoading(true)
     }
   })
@@ -61,14 +61,14 @@ const CustomerFormWindowPage: FC<CustomerFormWindowProps> = ({
       if (onWindowOk) {
         onWindowOk(customerId, customerName)
       }
-    } else if(teamData.status === 200){
+    } else if (teamData.status === 200) {
       setErrorVisible(true)
       setErrorMessage(teamData.data.message)
     } else {
       setErrorVisible(true)
       setErrorMessage('System error happened')
     }
-}
+  }
 
   return (
     <div>
@@ -89,15 +89,15 @@ const CustomerFormWindowPage: FC<CustomerFormWindowProps> = ({
             onFinish={onFinish}
             style={{ maxWidth: '100%', }}
             layout='vertical'
-            // labelAlign='right'
-            >
-          <Form.Item label='teamId' name='teamId' hidden>
-            <Input />
-          </Form.Item>
-          <Form.Item label='customerId' name='customerId' hidden>
-            <Input />
-          </Form.Item>
-          <Form.Item name='customerName' label={intl.formatMessage({ id: 'workspace.header.share-window.customer-form-window.customer-name' })} rules={[{ required: true, message: <FormattedMessage id='workspace.header.team-member-window.team-name-message' />, },]} style={{ marginBottom: '4px', width: '100%', }} >
+          // labelAlign='right'
+          >
+            <Form.Item label='teamId' name='teamId' hidden>
+              <Input />
+            </Form.Item>
+            <Form.Item label='customerId' name='customerId' hidden>
+              <Input />
+            </Form.Item>
+            <Form.Item name='customerName' label={intl.formatMessage({ id: 'workspace.header.share-window.customer-form-window.customer-name' })} rules={[{ required: true, message: <FormattedMessage id='workspace.header.team-member-window.team-name-message' />, },]} style={{ marginBottom: '4px', width: '100%', }} >
               <Input
                 //prefix={false}
                 placeholder={intl.formatMessage({ id: 'workspace.header.share-window.customer-form-window.customer-name-placeholder' })}

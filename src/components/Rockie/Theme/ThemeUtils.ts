@@ -1,4 +1,4 @@
-import {  Colors, Color, FontWeight, FontWidth, FontSlant, TextAlignment, TextDirection, StrokeDashStyle, TextDecoration, PlaceholderAlignment, TextVerticalAlignment, } from '@/components/Engine'
+import { Colors, Color, FontWeight, FontWidth, FontSlant, TextAlignment, TextDirection, StrokeDashStyle, TextDecoration, PlaceholderAlignment, TextVerticalAlignment, } from '@/components/Engine'
 import { ClassicTheme } from './ClassicTheme'
 import { DarkTheme } from './DarkTheme'
 import { ThemeConstants } from './Theme'
@@ -16,11 +16,11 @@ export class ThemeUtils {
   }
 
   public static isDefault(themeName: string): boolean {
-    if(!ThemeUtils.initialized) {
+    if (!ThemeUtils.initialized) {
       ThemeUtils.initializeTheme()
     }
     const documentThemeType = ThemeUtils.documentThemeMap.get(themeName)
-    if(documentThemeType) {
+    if (documentThemeType) {
       return documentThemeType.isDefault
     } else {
       return true
@@ -28,11 +28,11 @@ export class ThemeUtils {
   }
 
   public static getDocumentTheme(themeName: string): DocumentThemeType {
-    if(!ThemeUtils.initialized) {
+    if (!ThemeUtils.initialized) {
       ThemeUtils.initializeTheme()
     }
     const documentThemeType = ThemeUtils.documentThemeMap.get(themeName)
-    if(documentThemeType) {
+    if (documentThemeType) {
       return documentThemeType
     } else {
       return DocumentThemeTypes[0]
@@ -40,20 +40,20 @@ export class ThemeUtils {
   }
 
   public static getShapeStrokeColor(themeName: string): Color {
-    if(!ThemeUtils.initialized) {
+    if (!ThemeUtils.initialized) {
       ThemeUtils.initializeTheme()
     }
     const documentThemeType = ThemeUtils.documentThemeMap.get(themeName)
-    if(documentThemeType) {
+    if (documentThemeType) {
       const color = SystemUtils.parseColorString(documentThemeType.shapeStrokeColor)
-      if(color) {
+      if (color) {
         return color
       } else {
         return Colors.Black
       }
     } else {
-      const color =  SystemUtils.parseColorString(DocumentThemeTypes[0].shapeStrokeColor)
-      if(color) {
+      const color = SystemUtils.parseColorString(DocumentThemeTypes[0].shapeStrokeColor)
+      if (color) {
         return color
       } else {
         return Colors.Black
@@ -62,20 +62,20 @@ export class ThemeUtils {
   }
 
   public static getShapeFillColor(themeName: string): Color {
-    if(!ThemeUtils.initialized) {
+    if (!ThemeUtils.initialized) {
       ThemeUtils.initializeTheme()
     }
     const documentThemeType = ThemeUtils.documentThemeMap.get(themeName)
-    if(documentThemeType) {
-      const color =  SystemUtils.parseColorString(documentThemeType.shapeFillColor)
-      if(color) {
+    if (documentThemeType) {
+      const color = SystemUtils.parseColorString(documentThemeType.shapeFillColor)
+      if (color) {
         return color
       } else {
         return Colors.White
       }
     } else {
-      const color =  SystemUtils.parseColorString(DocumentThemeTypes[0].shapeFillColor)
-      if(color) {
+      const color = SystemUtils.parseColorString(DocumentThemeTypes[0].shapeFillColor)
+      if (color) {
         return color
       } else {
         return Colors.White
@@ -84,20 +84,20 @@ export class ThemeUtils {
   }
 
   public static getShapeFontColor(themeName: string): Color {
-    if(!ThemeUtils.initialized) {
+    if (!ThemeUtils.initialized) {
       ThemeUtils.initializeTheme()
     }
     const documentThemeType = ThemeUtils.documentThemeMap.get(themeName)
-    if(documentThemeType) {
-      const color =  SystemUtils.parseColorString(documentThemeType.shapeFontColor)
-      if(color) {
+    if (documentThemeType) {
+      const color = SystemUtils.parseColorString(documentThemeType.shapeFontColor)
+      if (color) {
         return color
       } else {
         return Colors.Black
       }
     } else {
-      const color =  SystemUtils.parseColorString(DocumentThemeTypes[0].shapeFontColor)
-      if(color) {
+      const color = SystemUtils.parseColorString(DocumentThemeTypes[0].shapeFontColor)
+      if (color) {
         return color
       } else {
         return Colors.Black
@@ -106,20 +106,20 @@ export class ThemeUtils {
   }
 
   public static getConnectorStrokeColor(themeName: string): Color {
-    if(!ThemeUtils.initialized) {
+    if (!ThemeUtils.initialized) {
       ThemeUtils.initializeTheme()
     }
     const documentThemeType = ThemeUtils.documentThemeMap.get(themeName)
-    if(documentThemeType) {
-      const color =  SystemUtils.parseColorString(documentThemeType.connectorStrokeColor)
-      if(color) {
+    if (documentThemeType) {
+      const color = SystemUtils.parseColorString(documentThemeType.connectorStrokeColor)
+      if (color) {
         return color
       } else {
         return Colors.Black
       }
     } else {
-      const color =  SystemUtils.parseColorString(DocumentThemeTypes[0].connectorStrokeColor)
-      if(color) {
+      const color = SystemUtils.parseColorString(DocumentThemeTypes[0].connectorStrokeColor)
+      if (color) {
         return color
       } else {
         return Colors.Black
@@ -128,20 +128,20 @@ export class ThemeUtils {
   }
 
   public static getConnectorFillColor(themeName: string): Color {
-    if(!ThemeUtils.initialized) {
+    if (!ThemeUtils.initialized) {
       ThemeUtils.initializeTheme()
     }
     const documentThemeType = ThemeUtils.documentThemeMap.get(themeName)
-    if(documentThemeType) {
-      const color =  SystemUtils.parseColorString(documentThemeType.connectorFillColor)
-      if(color) {
+    if (documentThemeType) {
+      const color = SystemUtils.parseColorString(documentThemeType.connectorFillColor)
+      if (color) {
         return color
       } else {
         return Colors.White
       }
     } else {
-      const color =  SystemUtils.parseColorString(DocumentThemeTypes[0].connectorFillColor)
-      if(color) {
+      const color = SystemUtils.parseColorString(DocumentThemeTypes[0].connectorFillColor)
+      if (color) {
         return color
       } else {
         return Colors.White
@@ -150,20 +150,20 @@ export class ThemeUtils {
   }
 
   public static getConnectorFontColor(themeName: string): Color {
-    if(!ThemeUtils.initialized) {
+    if (!ThemeUtils.initialized) {
       ThemeUtils.initializeTheme()
     }
     const documentThemeType = ThemeUtils.documentThemeMap.get(themeName)
-    if(documentThemeType) {
-      const color =  SystemUtils.parseColorString(documentThemeType.connectorFontColor)
-      if(color) {
+    if (documentThemeType) {
+      const color = SystemUtils.parseColorString(documentThemeType.connectorFontColor)
+      if (color) {
         return color
       } else {
         return Colors.Black
       }
     } else {
-      const color =  SystemUtils.parseColorString(DocumentThemeTypes[0].connectorFontColor)
-      if(color) {
+      const color = SystemUtils.parseColorString(DocumentThemeTypes[0].connectorFontColor)
+      if (color) {
         return color
       } else {
         return Colors.Black

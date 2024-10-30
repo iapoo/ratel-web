@@ -1,4 +1,4 @@
-import { MockupCustomShape, MockupCustomShapeTypes } from "./src/MockupCustomShape";
+import { MockupCustomShape, MockupCustomShapeTypes } from "./src/MockupCustomShape"
 
 
 export const MockupShapes = [

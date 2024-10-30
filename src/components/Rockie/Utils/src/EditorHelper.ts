@@ -1,13 +1,13 @@
-import { Font, Matrix, Paint, Path, Point2, Rectangle, StrokeDashStyle, Woff2Utils } from "@/components/Engine";
-import { Editor } from "../../Editor";
-import { Categories, Connector, ConnectorInfo, EditorItem, EditorItemInfo, Entity, Item, ShapeEntity } from "../../Items";
-import { Operation, OperationHelper, OperationType } from "../../Operations";
-import { RequestUtils, SystemUtils } from "@/components/Workspace/Utils";
-import { Style, StyleInfo } from "../../Shapes/src/EntityUtils";
-import { ImageUtils } from "./ImageUtils";
-import { MyShape, MyShapeType, MyShapes } from "@/components/Workspace/Utils/RequestUtils";
+import { Font, Matrix, Paint, Path, Point2, Rectangle, StrokeDashStyle, Woff2Utils } from "@/components/Engine"
+import { Editor } from "../../Editor"
+import { Categories, Connector, ConnectorInfo, EditorItem, EditorItemInfo, Entity, Item, ShapeEntity } from "../../Items"
+import { Operation, OperationHelper, OperationType } from "../../Operations"
+import { RequestUtils, SystemUtils } from "@/components/Workspace/Utils"
+import { Style, StyleInfo } from "../../Shapes/src/EntityUtils"
+import { ImageUtils } from "./ImageUtils"
+import { MyShape, MyShapeType, MyShapes } from "@/components/Workspace/Utils/RequestUtils"
 import opentype from 'opentype.js'
-import { ConnectorArrowDisplayType, ConnectorMode, ConnectorType } from "../../Shapes";
+import { ConnectorArrowDisplayType, ConnectorMode, ConnectorType } from "../../Shapes"
 
 export class EditorHelper {
 
@@ -609,7 +609,7 @@ export class EditorHelper {
                     case ConnectorMode.Double:
                         result += `\n${indent}<path fill="none" ${connectorDoubleLineStrokeSVG} ${pathSvg}/>`
                         result += `\n${indent}<path fill="none" ${connectorDoubleLineFillSVG} ${pathSvg}/>`
-                        break;
+                        break
                     case ConnectorMode.DoubleAndStartArrow:
                     case ConnectorMode.DoubleAndEndArrow:
                     case ConnectorMode.DoubleAndBothArrows:
@@ -618,28 +618,28 @@ export class EditorHelper {
                         result += `\n${indent}<path fill="none" ${strokeSVG} ${pathSvg}/>`
                         break
                 }
-                break;
+                break
             case ConnectorType.Orthogonal:
                 switch (connector.connectorMode) {
                     case ConnectorMode.DoubleAndStartArrow:
                     case ConnectorMode.DoubleAndEndArrow:
                     case ConnectorMode.DoubleAndBothArrows:
                         result += `\n${indent}<path fill="none" ${connectorDoubleLinePaintSVG} ${connectorDoubleLinePathSVG}/>`
-                        break;
+                        break
                     case ConnectorMode.Double:
                         result += `\n${indent}<path fill="none" ${connectorDoubleLineStrokeSVG} ${pathSvg}/>`
                         result += `\n${indent}<path fill="none" ${connectorDoubleLineFillSVG} ${pathSvg}/>`
-                        break;
+                        break
                     case ConnectorMode.Single:
                     default:
                         result += `\n${indent}<path fill="none" ${strokeSVG} ${pathSvg}/>`
                         break
                 }
-                break;
+                break
             case ConnectorType.StraightLine:
             default:
                 result += `\n${indent}<path fill="none" ${strokeSVG} ${pathSvg}/>`
-                break;
+                break
         }
         result += `\n${indent}<path ${fillSVG} ${strokeSVG} ${pathSvg}/>`
         if (connector.connectorMode == ConnectorMode.Single) {
@@ -689,19 +689,19 @@ export class EditorHelper {
             switch (paint.getStrokeDashStyle()) {
                 case StrokeDashStyle.DASH:
                     dashSVG = `stroke-dasharray="10, 2"`
-                    break;
+                    break
                 case StrokeDashStyle.DASH_DOT:
                     dashSVG = `stroke-dasharray="10, 2, 2, 2"`
-                    break;
+                    break
                 case StrokeDashStyle.DASH_DOT_DOT:
                     dashSVG = `stroke-dasharray="10, 2, 2, 2, 2, 2"`
-                    break;
+                    break
                 case StrokeDashStyle.DOT:
                     dashSVG = `stroke-dasharray="2, 2"`
-                    break;
+                    break
                 case StrokeDashStyle.SOLID:
                 default:
-                    break;
+                    break
             }
             const strokeWidth = paint.getStrokeWidth()
             const result = `stroke="${color}" stroke-width="${strokeWidth}" ${dashSVG}`

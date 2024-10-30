@@ -315,13 +315,13 @@ export class MockupCustomShape extends CustomEntity {
         this.fontWeight = FontWeight.BOLD
         this.fontSize = 26
         this.text = this._shape.typeInfo.text
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_LABEL: {
         this.filled = false
         this.stroked = false
         this.text = this._shape.typeInfo.text
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_PARAGRAPH: {
         this.filled = false
@@ -329,7 +329,7 @@ export class MockupCustomShape extends CustomEntity {
         this.text = this._shape.typeInfo.text
         this.textAlignment = TextAlignment.LEFT
         this.textVerticalAlignment = TextVerticalAlignment.TOP
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_LINK: {
         this.filled = false
@@ -338,107 +338,107 @@ export class MockupCustomShape extends CustomEntity {
         this.text = this._shape.typeInfo.text
         this.fontColor = Colors.Blue
         this.useTheme = false
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_COMMENT: {
         this.useTheme = false
         this.fillColor = new Color(255, 247, 189, 255)
         //this.strokeColor = strokeColor
         this.text = this._shape.typeInfo.text
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_CALLOUT: {
         this.text = this._shape.typeInfo.text
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_PICTURE: {
         this.text = this._shape.typeInfo.text
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_VIDEO: {
         this.text = this._shape.typeInfo.text
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_HORIZONTAL_SCROLLBAR: {
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_VERTICAL_SCROLLBAR: {
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_HORIZONTAL_LINE: {
         this.lineWidth = 1
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_VERTICAL_LINE: {
         this.lineWidth = 1
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_LINE_CHART: {
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_PIE_CHART: {
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_BAR_CHART: {
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_COLUMN_CHART: {
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_BUTTON: {
         this.fillColor = MockupCustomShape.LIGHT_COLOR
         this.text = this._shape.typeInfo.text
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_INPUT: {
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_DROPDOWN: {
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_SEARCH_BAR: {
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_CHECKBOX: {
         this.text = this._shape.typeInfo.text
         this.textAlignment = TextAlignment.LEFT
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_CHECKBOX_CHECKED: {
         this.text = this._shape.typeInfo.text
         this.textAlignment = TextAlignment.LEFT
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_RADIO: {
         this.text = this._shape.typeInfo.text
         this.textAlignment = TextAlignment.LEFT
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_RADIO_CHECKED: {
         this.text = this._shape.typeInfo.text
         this.textAlignment = TextAlignment.LEFT
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_INPUT_NUMBER: {
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_TEXT_AREA: {
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_LISTBOX: {
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_DATE_PICKER: {
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_SLIDER: {
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_SLIDER_VERTICAL: {
-        break;
+        break
       }
       default:
-        break;
+        break
     }
   }
 
@@ -472,19 +472,19 @@ export class MockupCustomShape extends CustomEntity {
     switch (theThis.typeInfo.name) {
       case MockupCustomShapes.TYPE_HEADER: {
         theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_LABEL: {
         theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_PARAGRAPH: {
         theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_LINK: {
         theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_COMMENT: {
         theThis.path.moveTo(0, 0)
@@ -498,7 +498,7 @@ export class MockupCustomShape extends CustomEntity {
         theThis.path.lineTo(modifierWidth, modifierHeight)
         theThis.path.lineTo(this.width, modifierHeight)
         theThis.path.lineTo(modifierWidth, 0)
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_CALLOUT: {
         theThis.textHeight = adapterHeight
@@ -526,7 +526,7 @@ export class MockupCustomShape extends CustomEntity {
         theThis.path.quadTo(0, this.height, 0, this.height - arcHeight)
         theThis.path.lineTo(0, adapterHeight + arcHeight)
 
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_PICTURE: {
         theThis.secondPath.moveTo(theThis.width * 0.1, theThis.height * 0.85)
@@ -537,7 +537,7 @@ export class MockupCustomShape extends CustomEntity {
         theThis.secondPath.lineTo(theThis.width * 0.1, theThis.height * 0.85)
         theThis.secondPath.addOval(Rectangle.makeLTWH(theThis.width * 0.3, theThis.height * 0.2, theThis.width * 0.1, theThis.width * 0.1))
         theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_VIDEO: {
         const videoWidth = 40 // theThis.width * 0.15
@@ -582,7 +582,7 @@ export class MockupCustomShape extends CustomEntity {
         theThis.thirdPath.addOval(Rectangle.makeLTWH(indicatorLeft, indicatorTop, indicatorWidth, indicatorWidth))
         theThis.path.addRectangle(Rectangle.makeLTWH(0, videoRegionHeight, theThis.width, seperatorHeight))
         theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_HORIZONTAL_SCROLLBAR: {
         const scrollbarButtonWidth = 24
@@ -617,7 +617,7 @@ export class MockupCustomShape extends CustomEntity {
         //theThis.path.addRectangle(Rectangle.makeLTWH(scrollbarButtonWidth, 0, theThis.width - scrollbarButtonWidth * 2, theThis.height))
         theThis.fourthPath.addRectangle(Rectangle.makeLTWH(scrollbarThumbPosition, scrollbarThumbBorder, scrollbarThumbWidth, theThis.height - scrollbarThumbBorder * 2))
         theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_VERTICAL_SCROLLBAR: {
         const scrollbarButtonHeight = 24
@@ -650,7 +650,7 @@ export class MockupCustomShape extends CustomEntity {
         theThis.thirdPath.lineTo(theThis.width * 0.5, scrollbarButtonIcon2Top + scrollbarButtonIconHeight)
         theThis.fourthPath.addRectangle(Rectangle.makeLTWH(scrollbarThumbBorder, scrollbarThumbPosition, theThis.width - scrollbarThumbBorder * 2, scrollbarThumbHeight))
         theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_HORIZONTAL_LINE: {
         const lineSize = 1
@@ -660,7 +660,7 @@ export class MockupCustomShape extends CustomEntity {
         theThis.secondStroke.setStrokeWidth(theThis.stroke.getStrokeWidth())
         theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
         theThis.secondPath.addRectangle(Rectangle.makeLTWH(0, theThis.height * 0.5, theThis.width, lineSize))
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_VERTICAL_LINE: {
         const lineSize = 1
@@ -670,7 +670,7 @@ export class MockupCustomShape extends CustomEntity {
         theThis.secondStroke.setStrokeWidth(theThis.stroke.getStrokeWidth())
         theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
         theThis.secondPath.addRectangle(Rectangle.makeLTWH(theThis.width * 0.5, 0, lineSize, theThis.height))
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_LINE_CHART: {
         theThis.stroked = false
@@ -704,7 +704,7 @@ export class MockupCustomShape extends CustomEntity {
         theThis.secondPath.lineTo(theThis.width * 0.4, theThis.height * 0.4)
         theThis.secondPath.lineTo(theThis.width * 0.2, theThis.height * 0.3)
         theThis.secondPath.lineTo(0, theThis.height * 0.6)
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_PIE_CHART: {
         theThis.path.addOval(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
@@ -732,7 +732,7 @@ export class MockupCustomShape extends CustomEntity {
         theThis.path.lineTo(p2x, p2y)
         theThis.path.moveTo(cx, cy)
         theThis.path.lineTo(p3x, p3y)
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_BAR_CHART: {
         theThis.stroked = false
@@ -758,7 +758,7 @@ export class MockupCustomShape extends CustomEntity {
         theThis.thirdPath.addRectangle(Rectangle.makeLTWH(theThis.width * 0.2, theThis.height * 0.3, theThis.width * 0.1, theThis.height * 0.7))
         theThis.thirdPath.addRectangle(Rectangle.makeLTWH(theThis.width * 0.5, theThis.height * 0.4, theThis.width * 0.1, theThis.height * 0.6))
         theThis.thirdPath.addRectangle(Rectangle.makeLTWH(theThis.width * 0.8, theThis.height * 0.6, theThis.width * 0.1, theThis.height * 0.4))
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_COLUMN_CHART: {
         theThis.stroked = false
@@ -784,15 +784,15 @@ export class MockupCustomShape extends CustomEntity {
         theThis.thirdPath.addRectangle(Rectangle.makeLTWH(0, theThis.height * 0.2, theThis.width * 0.7, theThis.height * 0.1))
         theThis.thirdPath.addRectangle(Rectangle.makeLTWH(0, theThis.height * 0.5, theThis.width * 0.6, theThis.height * 0.1))
         theThis.thirdPath.addRectangle(Rectangle.makeLTWH(0, theThis.height * 0.8, theThis.width * 0.4, theThis.height * 0.1))
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_BUTTON: {
         theThis.path.addRRect(new RoundRectangle(0, 0, theThis.width, theThis.height, 3, 3))
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_INPUT: {
         theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_DROPDOWN: {
         const buttonWidth = 24
@@ -812,7 +812,7 @@ export class MockupCustomShape extends CustomEntity {
         theThis.thirdPath.lineTo(iconLeft + iconWidth, iconTop)
         theThis.thirdPath.lineTo(iconLeft, iconTop)
         theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_SEARCH_BAR: {
         const iconLeft = 8
@@ -834,7 +834,7 @@ export class MockupCustomShape extends CustomEntity {
         theThis.secondPath.lineTo(circleCenterX, circleCenterY)
         theThis.thirdPath.addOval(Rectangle.makeLTWH(iconLeft, iconTop, circleRadius * 2, circleRadius * 2))
         theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_CHECKBOX: {
         theThis.stroked = false
@@ -851,7 +851,7 @@ export class MockupCustomShape extends CustomEntity {
         theThis.secondFill.setColor(MockupCustomShape.BACKGROUND_COLOR)
         theThis.secondPath.addRectangle(Rectangle.makeLTWH(iconLeft, iconTop, iconWidth, iconHeight))
         theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_CHECKBOX_CHECKED: {
         theThis.stroked = false
@@ -876,7 +876,7 @@ export class MockupCustomShape extends CustomEntity {
         theThis.thirdPath.lineTo(iconLeft + iconWidth * 0.5, iconTop + iconHeight * 0.8)
         theThis.thirdPath.lineTo(iconLeft + iconWidth * 0.2, iconTop + iconHeight * 0.5)
         theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_RADIO: {
         theThis.stroked = false
@@ -893,7 +893,7 @@ export class MockupCustomShape extends CustomEntity {
         theThis.secondFill.setColor(MockupCustomShape.BACKGROUND_COLOR)
         theThis.secondPath.addOval(Rectangle.makeLTWH(iconLeft, iconTop, iconWidth, iconHeight))
         theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_RADIO_CHECKED: {
         theThis.stroked = false
@@ -918,7 +918,7 @@ export class MockupCustomShape extends CustomEntity {
         theThis.secondPath.addOval(Rectangle.makeLTWH(iconLeft, iconTop, iconWidth, iconHeight))
         theThis.thirdPath.addOval(Rectangle.makeLTWH(icon2Left, icon2Top, icon2Width, icon2Height))
         theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_INPUT_NUMBER: {
         const buttonWidth = 20
@@ -949,11 +949,11 @@ export class MockupCustomShape extends CustomEntity {
         theThis.thirdPath.lineTo(icon2Left + icon2Width, icon2Top)
         theThis.thirdPath.lineTo(icon2Left, icon2Top)
         theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_TEXT_AREA: {
         theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_LISTBOX: {
         const scrollbarButtonHeight = 20
@@ -993,7 +993,7 @@ export class MockupCustomShape extends CustomEntity {
         theThis.fourthPath.lineTo(scrollbarButtonIconLeft + scrollbarButtonIconWidth, scrollbarButtonIcon2Top)
         theThis.fourthPath.lineTo(scrollbarButtonIconLeft + scrollbarButtonIconWidth * 0.5, scrollbarButtonIcon2Top + scrollbarButtonIconHeight)
         theThis.fourthPath.addRectangle(Rectangle.makeLTWH(scrollbarThumbLeft, scrollbarThumbPosition, scrollbarThumbWidth, scrollbarThumbHeight))
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_DATE_PICKER: {
         const buttonWidth = 24
@@ -1026,7 +1026,7 @@ export class MockupCustomShape extends CustomEntity {
         theThis.fourthPath.addRectangle(Rectangle.makeLTWH(iconLeft + iconWidth * 0.45, iconTop + iconHeight * 0.75, iconWidth * 0.1, iconHeight * 0.1))
         theThis.fourthPath.addRectangle(Rectangle.makeLTWH(iconLeft + iconWidth * 0.75, iconTop + iconHeight * 0.75, iconWidth * 0.1, iconHeight * 0.1))
         theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_SLIDER: {
         const sliderLeft = 0
@@ -1047,7 +1047,7 @@ export class MockupCustomShape extends CustomEntity {
         theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
         theThis.secondPath.addRectangle(Rectangle.makeLTWH(sliderLeft, sliderTop, sliderWidth, sliderHeight))
         theThis.thirdPath.addOval(Rectangle.makeLTWH(iconLeft, iconTop, iconWidth, iconHeight))
-        break;
+        break
       }
       case MockupCustomShapes.TYPE_SLIDER_VERTICAL: {
         const sliderTop = 0
@@ -1068,7 +1068,7 @@ export class MockupCustomShape extends CustomEntity {
         theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
         theThis.secondPath.addRectangle(Rectangle.makeLTWH(sliderLeft, sliderTop, sliderWidth, sliderHeight))
         theThis.thirdPath.addOval(Rectangle.makeLTWH(iconLeft, iconTop, iconWidth, iconHeight))
-        break;
+        break
       }
     }
   }

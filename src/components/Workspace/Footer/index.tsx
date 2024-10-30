@@ -5,7 +5,7 @@ import { Button, } from 'antd'
 import { Utils, } from '../Utils'
 
 export default (props: any) => {
-  const [ initialized, setInitialized, ] = useState<boolean>(false)
+  const [initialized, setInitialized,] = useState<boolean>(false)
 
   useEffect(() => {
     if (!initialized) {

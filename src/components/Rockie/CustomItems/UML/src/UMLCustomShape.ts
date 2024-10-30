@@ -108,29 +108,29 @@ export class UMLCustomShape extends CustomEntity {
   private initializeShape() {
     switch (this._shape.typeInfo.name) {
       case UMLCustomShapes.TYPE_ACTIVATION: {
-        break;
+        break
       }
       case UMLCustomShapes.TYPE_INITIAL_NODE: {
-        break;
+        break
       }
       case UMLCustomShapes.TYPE_FINAL_NODE: {
-        break;
+        break
       }
       case UMLCustomShapes.TYPE_NODE: {
         this.fontWeight = FontWeight.BOLD
         this.text = this._shape.typeInfo.text
-        break;
+        break
       }
       case UMLCustomShapes.TYPE_NODE_2: {
         this.fontWeight = FontWeight.BOLD
         this.textDecoration = TextDecoration.UNDERLINE
         this.text = this._shape.typeInfo.text
-        break;
+        break
       }
       case UMLCustomShapes.TYPE_MODULE: {
         this.fontWeight = FontWeight.BOLD
         this.text = this._shape.typeInfo.text
-        break;
+        break
       }
       case UMLCustomShapes.TYPE_COMPONENT: {
         this.shape.selectionStyle.italic = true
@@ -138,10 +138,10 @@ export class UMLCustomShape extends CustomEntity {
         this.shape.selectionStyle.italic = false
         this.shape.selectionStyle.bold = true
         this.shape.insert('Component')
-        break;
+        break
       }
       default:
-        break;
+        break
     }
   }
 
@@ -175,19 +175,19 @@ export class UMLCustomShape extends CustomEntity {
     switch (theThis.typeInfo.name) {
       case UMLCustomShapes.TYPE_ACTIVATION: {
         theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
-        break;
+        break
       }
       case UMLCustomShapes.TYPE_INITIAL_NODE: {
         theThis.secondFill.setColor(theThis.stroke.getColor())
         theThis.path.addOval(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
         theThis.secondPath.addOval(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
-        break;
+        break
       }
       case UMLCustomShapes.TYPE_FINAL_NODE: {
         theThis.secondFill.setColor(theThis.stroke.getColor())
         theThis.path.addOval(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
         theThis.secondPath.addOval(Rectangle.makeLTWH(theThis.width * 0.1, theThis.width * 0.1, theThis.width * 0.8, theThis.height * 0.8))
-        break;
+        break
       }
       case UMLCustomShapes.TYPE_NODE_2:
       case UMLCustomShapes.TYPE_NODE: {
@@ -202,7 +202,7 @@ export class UMLCustomShape extends CustomEntity {
         theThis.path.lineTo(theThis.width, theThis.height - modifierHeight)
         theThis.path.lineTo(theThis.width, 0)
         theThis.path.addRectangle(Rectangle.makeLTWH(0, modifierHeight, modifierWidth, this.height - modifierHeight))
-        break;
+        break
       }
       case UMLCustomShapes.TYPE_MODULE: {
         theThis.textLeft = modifierWidth * 2
@@ -220,7 +220,7 @@ export class UMLCustomShape extends CustomEntity {
         theThis.path.lineTo(this.width, this.height)
         theThis.path.lineTo(this.width, 0)
         theThis.path.lineTo(modifierWidth, 0)
-        break;
+        break
       }
       case UMLCustomShapes.TYPE_COMPONENT: {
         theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, this.width, this.height))
@@ -242,7 +242,7 @@ export class UMLCustomShape extends CustomEntity {
         theThis.path.lineTo(moduleLeft + moduleWidth, moduleTop + moduleHeight)
         theThis.path.lineTo(moduleLeft + moduleWidth, moduleTop)
         theThis.path.lineTo(moduleLeft + width * 0.5, moduleTop)
-        break;
+        break
       }
       case UMLCustomShapes.TYPE_LOLLIPOP_NOTATION: {
         if (this.width > this.height) {
@@ -269,7 +269,7 @@ export class UMLCustomShape extends CustomEntity {
           theThis.path.moveTo(this.width * 0.5, 0)
           theThis.path.cubicTo(this.width * 0.5 + k, 0, this.width * 0.5 + k, this.height, this.width * 0.5, this.height)
         }
-        break;
+        break
       }
       case UMLCustomShapes.TYPE_REQUIRED_INTERFACE: {
         if (this.width > this.height * 0.5) {
@@ -287,7 +287,7 @@ export class UMLCustomShape extends CustomEntity {
           theThis.path.moveTo(0, 0)
           theThis.path.cubicTo(k, 0, k, this.height, 0, this.height)
         }
-        break;
+        break
       }
     }
   }

@@ -31,22 +31,22 @@ export class ConnectionAnchor extends Anchor {
   }
 
   public handlePointerEnter(): void {
-    
+
   }
 
   public handlePointerLeave(): void {
-    
+
   }
-  public handlePointerClick (x: number, y: number) {
+  public handlePointerClick(x: number, y: number) {
 
   }
 
-  public handlePointerDown (x: number, y: number) {
+  public handlePointerDown(x: number, y: number) {
     this._moving = true
     const point = this.worldTransform.makePoint(new Point2(x, y))
-    this._startX = point.x;
-    this._startY = point.y;
-    if(this.target instanceof Connector) {
+    this._startX = point.x
+    this._startY = point.y
+    if (this.target instanceof Connector) {
       this._sourceX = this.target.start.x
       this._sourceY = this.target.start.y
       this._targetX = this.target.end.x
@@ -55,7 +55,7 @@ export class ConnectionAnchor extends Anchor {
     }
   }
 
-  public handlePointerUp (x: number, y: number) {
+  public handlePointerUp(x: number, y: number) {
     this._moving = false
     const theSelectionLayer = this.editor.selectionLayer as SelectionLayer
     if (!this.target) {
@@ -71,12 +71,12 @@ export class ConnectionAnchor extends Anchor {
     this.editor.finishOperation(this.target)
   }
 
-  public handlePointerMove (x: number, y: number) {
+  public handlePointerMove(x: number, y: number) {
     if (!this.target) {
       //console.log(`'anchor Pointer moving bad target' x=${x} y =${y}`)
       return
     }
-    if(!this._moving) {
+    if (!this._moving) {
       this.editor.updateEditorMode(EditorMode.AUTO)
       return
     }
@@ -84,7 +84,7 @@ export class ConnectionAnchor extends Anchor {
     const moveX = point.x - this._startX
     const moveY = point.y - this._startY
     let newStartX, newStartY, newEndX, newEndY, newWidth, newHeight
-    if(this._fromSource) {
+    if (this._fromSource) {
       newStartX = this._sourceX + moveX
       newStartY = this._sourceY + moveY
       newWidth = Math.abs(this._targetX - newStartX)
@@ -98,10 +98,10 @@ export class ConnectionAnchor extends Anchor {
     // TODO: 鼠标移动会导致Anchor重定位，结果导致鼠标位置突变而引起图形突变。这里延缓变化频率以修复问题
     const nowTime = new Date().getTime()
     if (nowTime - this.lastMovingTime > Anchor.MIN_MOVING_INTERVAL) {
-      if(this._moving && this.target instanceof Connector) {       
+      if (this._moving && this.target instanceof Connector) {
         this.holder.width = newWidth
         this.holder.height = newHeight
-        if(this._fromSource) {
+        if (this._fromSource) {
           this.target.start = new Point2(newStartX, newStartY)
         } else {
           this.target.end = new Point2(newEndX, newEndY)
@@ -111,10 +111,10 @@ export class ConnectionAnchor extends Anchor {
         const editorItem = item as Item
         const isEdge = editorItem ? this.editor.hasEditorItemJoint(editorItem, point.x, point.y) : false
         // console.log(`editorItem= ${editorItem} isEdge=${isEdge}`)
-        if(this._fromSource) {
-          if(this.target.source) {
-            if(editorItem && isEdge) {
-              if(this.target.source != editorItem) {
+        if (this._fromSource) {
+          if (this.target.source) {
+            if (editorItem && isEdge) {
+              if (this.target.source != editorItem) {
                 const inEditorItem = this.editor.isInEditorItem(editorItem, point.x, point.y)
                 const sourceJoint = this.editor.findEditorItemJoint(editorItem, point.x, point.y, inEditorItem)
                 const startDirection = this.editor.findConnectorDirection(editorItem, point.x, point.y)
@@ -138,7 +138,7 @@ export class ConnectionAnchor extends Anchor {
               // console.log(`source is removed`)
             }
           } else {
-            if(editorItem && isEdge) {
+            if (editorItem && isEdge) {
               const inEditorItem = this.editor.isInEditorItem(editorItem, point.x, point.y)
               const sourceJoint = this.editor.findEditorItemJoint(editorItem, point.x, point.y, inEditorItem)
               const startDirection = this.editor.findConnectorDirection(editorItem, point.x, point.y)
@@ -152,9 +152,9 @@ export class ConnectionAnchor extends Anchor {
             }
           }
         } else {
-          if(this.target.target) {
-            if(editorItem && isEdge) {
-              if(this.target.target != editorItem) {
+          if (this.target.target) {
+            if (editorItem && isEdge) {
+              if (this.target.target != editorItem) {
                 const inEditorItem = this.editor.isInEditorItem(editorItem, point.x, point.y)
                 const targetJoint = this.editor.findEditorItemJoint(editorItem, point.x, point.y, inEditorItem)
                 const endDirection = this.editor.findConnectorDirection(editorItem, point.x, point.y)
@@ -178,7 +178,7 @@ export class ConnectionAnchor extends Anchor {
               // console.log(`target is removed`)
             }
           } else {
-            if(editorItem && isEdge) {
+            if (editorItem && isEdge) {
               const inEditorItem = this.editor.isInEditorItem(editorItem, point.x, point.y)
               const targetJoint = this.editor.findEditorItemJoint(editorItem, point.x, point.y, inEditorItem)
               const endDirection = this.editor.findConnectorDirection(editorItem, point.x, point.y)
@@ -201,7 +201,7 @@ export class ConnectionAnchor extends Anchor {
     }
   }
 
-  protected buildAnchor () {
+  protected buildAnchor() {
     this.path.reset()
     this.path.addOval(Rectangle.makeLTWH(0, 0, this.width, this.height))
   }

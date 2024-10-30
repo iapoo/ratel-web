@@ -2,25 +2,25 @@ import React, { FC, useEffect, useState, useRef } from 'react'
 import styles from './index.css'
 import { Form, Input, Checkbox, Row, Col, Button, Modal, Menu, message, Alert, } from 'antd'
 import { RequestUtils, SystemUtils, Utils, } from '../../Utils'
-import type { DraggableData, DraggableEvent } from 'react-draggable';
-import Draggable from 'react-draggable';
+import type { DraggableData, DraggableEvent } from 'react-draggable'
+import Draggable from 'react-draggable'
 import axios from 'axios'
 import CryptoJs from 'crypto-js'
-import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi'
+import { LockOutlined, UserOutlined } from '@ant-design/icons'
 
 interface LoginFormWindowProps {
-  visible: boolean;
-  x: number;
-  y: number;
-  onWindowCancel: () => void;
+  visible: boolean
+  x: number
+  y: number
+  onWindowCancel: () => void
   onWindowOk: () => void
 }
 
 const LoginFormWindowPage: FC<LoginFormWindowProps> = ({
   visible, x, y, onWindowCancel, onWindowOk,
 }) => {
-  const intl = useIntl();
+  const intl = useIntl()
   const [messageApi, contextHolder,] = message.useMessage()
   const [dataLoading, setDataLoading,] = useState<boolean>(false)
   const [modalX, setModalX,] = useState<number>(0)
@@ -29,7 +29,7 @@ const LoginFormWindowPage: FC<LoginFormWindowProps> = ({
   const [origModalX, setOrigModalX,] = useState<number>(0)
   const [origModalY, setOrigModalY,] = useState<number>(0)
   const [windowVisible, setWindowVisible,] = useState<boolean>(false)
-  const draggleRef = useRef<HTMLDivElement>(null);
+  const draggleRef = useRef<HTMLDivElement>(null)
   const [loginForm,] = Form.useForm()
   const [errorVisible, setErrorVisible,] = useState<boolean>(false)
   const [errorMessage, setErrorMessage,] = useState<string>('')
@@ -64,17 +64,17 @@ const LoginFormWindowPage: FC<LoginFormWindowProps> = ({
 
   const handleDragStart = (e: DraggableEvent, data: DraggableData) => {
     console.log('start = ', data)
-    const { clientWidth, clientHeight } = window.document.documentElement;
-    const targetRect = draggleRef.current?.getBoundingClientRect();
+    const { clientWidth, clientHeight } = window.document.documentElement
+    const targetRect = draggleRef.current?.getBoundingClientRect()
     if (!targetRect) {
-      return;
+      return
     }
     setBounds({
       left: -targetRect.left + data.x,
       right: clientWidth - (targetRect.right - data.x),
       top: -targetRect.top + data.y,
       bottom: clientHeight - (targetRect.bottom - data.y),
-    });
+    })
   }
 
   const onOk = () => {
@@ -103,7 +103,7 @@ const LoginFormWindowPage: FC<LoginFormWindowProps> = ({
 
   const checkAndLoginAsAdmin = async () => {
     const checkIsAdminLink = checkAdminLink()
-    if(checkIsAdminLink) {
+    if (checkIsAdminLink) {
       const loginData = await RequestUtils.loginAsAdmin()
       if (loginData.status === 200 && loginData.data.success) {
         messageApi.open({
@@ -173,11 +173,11 @@ const LoginFormWindowPage: FC<LoginFormWindowProps> = ({
             className='drag-handler'
             onMouseOver={() => {
               if (disabled) {
-                setDisabled(false);
+                setDisabled(false)
               }
             }}
             onMouseOut={() => {
-              setDisabled(true);
+              setDisabled(true)
             }}
             // fix eslintjsx-a11y/mouse-events-have-key-events
             // https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/blob/master/docs/rules/mouse-events-have-key-events.md

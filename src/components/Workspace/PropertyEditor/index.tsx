@@ -4,7 +4,7 @@ import Workspace from '@/components/Workspace'
 import { Button, Checkbox, ColorPicker, Descriptions, DescriptionsProps, Divider, InputNumber, Radio, RadioChangeEvent, Select, Tabs, TabsProps, Tooltip, } from 'antd'
 import { ConnectorLineModes, ConnectorLineTypes, Consts, LineWidthOptions, PageTypes, StrokeDashStyles, SystemUtils, Utils, } from '../Utils'
 import { Editor, EditorEvent } from '@/components/Rockie/Editor'
-import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
+import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi'
 import { DescriptionsItemProps } from 'antd/es/descriptions/Item'
 import { wrap } from 'module'
 import { Color, Colors, StrokeCap, StrokeDashStyle, StrokeJoin } from '@/components/Engine'
@@ -28,7 +28,7 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
   previousEditor, currentEditor, onDocumentThemeChanged, documentThemeName
 }) => {
 
-  const intl = useIntl();
+  const intl = useIntl()
   const [initialized, setInitialized,] = useState<boolean>(false)
   const [gridSize, setGridSize,] = useState<number>(Consts.GRID_SIZE_DEFAULT)
   const [gridColor, setGridColor,] = useState<string>(Consts.COLOR_GRID_DEFAULT)
@@ -597,7 +597,7 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
         })
       })
       const origDocumentThemeName = documentThemeName
-      if(onDocumentThemeChanged) {
+      if (onDocumentThemeChanged) {
         onDocumentThemeChanged(styleName)
       }
       const newDocumentThemeName = styleName

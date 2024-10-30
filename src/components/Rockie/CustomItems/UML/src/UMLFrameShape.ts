@@ -89,7 +89,7 @@ export class UMLFrameShape extends FrameEntity {
         this._label.filled = false
         this._label.fontWeight = FontWeight.BOLD
         this._label.text = this._shape.typeInfo.text
-        break;
+        break
       }
     }
   }
@@ -134,7 +134,7 @@ export class UMLFrameShape extends FrameEntity {
         theThis.path.lineTo(modifierWidth + modifierHeight * 0.4, modifierHeight * 0.6)
         theThis.path.lineTo(modifierWidth + modifierHeight * 0.4, 0)
         theThis.path.close()
-        break;
+        break
       }
       case UMLFrameShapes.TYPE_ALT: {
         frameEntity._label.boundary = Rectangle.makeLTWH(0, 0, modifierWidth, modifierHeight)
@@ -147,7 +147,7 @@ export class UMLFrameShape extends FrameEntity {
         theThis.path.lineTo(modifierWidth + modifierHeight * 0.4, modifierHeight * 0.6)
         theThis.path.lineTo(modifierWidth + modifierHeight * 0.4, 0)
         theThis.path.close()
-        break;
+        break
       }
       case UMLFrameShapes.TYPE_OPT: {
         frameEntity._label.boundary = Rectangle.makeLTWH(0, 0, modifierWidth, modifierHeight)
@@ -160,7 +160,7 @@ export class UMLFrameShape extends FrameEntity {
         theThis.path.lineTo(modifierWidth + modifierHeight * 0.4, modifierHeight * 0.6)
         theThis.path.lineTo(modifierWidth + modifierHeight * 0.4, 0)
         theThis.path.close()
-        break;
+        break
       }
       case UMLFrameShapes.TYPE_PAR: {
         frameEntity._label.boundary = Rectangle.makeLTWH(0, 0, modifierWidth, modifierHeight)
@@ -173,7 +173,7 @@ export class UMLFrameShape extends FrameEntity {
         theThis.path.lineTo(modifierWidth + modifierHeight * 0.4, modifierHeight * 0.6)
         theThis.path.lineTo(modifierWidth + modifierHeight * 0.4, 0)
         theThis.path.close()
-        break;
+        break
       }
       case UMLFrameShapes.TYPE_OTHER: {
         frameEntity._label.boundary = Rectangle.makeLTWH(0, 0, modifierWidth, modifierHeight)
@@ -186,7 +186,7 @@ export class UMLFrameShape extends FrameEntity {
         theThis.path.lineTo(modifierWidth + modifierHeight * 0.4, modifierHeight * 0.6)
         theThis.path.lineTo(modifierWidth + modifierHeight * 0.4, 0)
         theThis.path.close()
-        break;
+        break
       }
     }
     theThis.path.close()

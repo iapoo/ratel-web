@@ -13,31 +13,31 @@ export class PointAnchor extends Anchor {
   private _inMoving = false;
   private _startX = 0;
   private _startY = 0;
-  private _isStart;
+  private _isStart
 
-  public constructor (editor: Editor, holder: Holder, isStart: boolean) {
+  public constructor(editor: Editor, holder: Holder, isStart: boolean) {
     super(editor, holder)
     this._isStart = isStart
   }
   public handlePointerEnter(): void {
-    
+
   }
 
   public handlePointerLeave(): void {
-    
+
   }
-  public handlePointerClick (x: number, y: number) {
+  public handlePointerClick(x: number, y: number) {
 
   }
 
-  public handlePointerDown (x: number, y: number) {
+  public handlePointerDown(x: number, y: number) {
     this._inMoving = true
     this._startX = x
     this._startY = y
     // console.log(`'anchor Pointer down' x=${x} y =${y}`)
   }
 
-  public handlePointerUp (x: number, y: number) {
+  public handlePointerUp(x: number, y: number) {
     this._inMoving = false
     // console.log(`'anchor Pointer up' x=${x} y =${y}`)
     const theSelectionLayer = this.editor.selectionLayer as SelectionLayer
@@ -52,7 +52,7 @@ export class PointAnchor extends Anchor {
     }
   }
 
-  public handlePointerMove (x: number, y: number) {
+  public handlePointerMove(x: number, y: number) {
     // console.log(`'anchor Pointer moving' x=${x} y =${y}`)
     if (!this.target) {
       console.log(`'anchor Pointer moving bad target' x=${x} y =${y}`)
@@ -85,7 +85,7 @@ export class PointAnchor extends Anchor {
     }
   }
 
-  public handlePointerMove2 (x: number, y: number) {
+  public handlePointerMove2(x: number, y: number) {
     // console.log(`'anchor Pointer moving' x=${x} y =${y}`)
     if (!this.target) {
       console.log(`'anchor Pointer moving bad target' x=${x} y =${y}`)
@@ -102,49 +102,49 @@ export class PointAnchor extends Anchor {
 
       if (this._isStart) {
         switch (lineEntity.lineType) {
-        case LineType.LEFT_TOP:
-          newLeft = this.target.left + resizeX
-          newTop = this.target.top + resizeY
-          newWidth = this.target.width - resizeX >= this.target.minWidth ? this.target.width - resizeX : this.target.minWidth
-          newHeight = this.target.height - resizeY >= this.target.minHeight ? this.target.height - resizeY : this.target.minHeight
-          break
-        case LineType.LEFT_BOTTOM:
-          newLeft = this.target.left + resizeX
-          newWidth = this.target.width - resizeX >= this.target.minWidth ? this.target.width - resizeX : this.target.minWidth
-          newHeight = this.target.height + resizeY >= this.target.minHeight ? this.target.height + resizeY : this.target.minHeight
-          break
-        case LineType.RIGHT_TOP:
-          newTop = this.target.top + resizeY
-          newWidth = this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
-          newHeight = this.target.height - resizeY >= this.target.minHeight ? this.target.height - resizeY : this.target.minHeight
-          break
-        case LineType.RIGHT_BOTTOM:
-          newWidth = this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
-          newHeight = this.target.height + resizeY >= this.target.minHeight ? this.target.height + resizeY : this.target.minHeight
-          break
+          case LineType.LEFT_TOP:
+            newLeft = this.target.left + resizeX
+            newTop = this.target.top + resizeY
+            newWidth = this.target.width - resizeX >= this.target.minWidth ? this.target.width - resizeX : this.target.minWidth
+            newHeight = this.target.height - resizeY >= this.target.minHeight ? this.target.height - resizeY : this.target.minHeight
+            break
+          case LineType.LEFT_BOTTOM:
+            newLeft = this.target.left + resizeX
+            newWidth = this.target.width - resizeX >= this.target.minWidth ? this.target.width - resizeX : this.target.minWidth
+            newHeight = this.target.height + resizeY >= this.target.minHeight ? this.target.height + resizeY : this.target.minHeight
+            break
+          case LineType.RIGHT_TOP:
+            newTop = this.target.top + resizeY
+            newWidth = this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
+            newHeight = this.target.height - resizeY >= this.target.minHeight ? this.target.height - resizeY : this.target.minHeight
+            break
+          case LineType.RIGHT_BOTTOM:
+            newWidth = this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
+            newHeight = this.target.height + resizeY >= this.target.minHeight ? this.target.height + resizeY : this.target.minHeight
+            break
         }
       } else {
         switch (lineEntity.lineType) {
-        case LineType.LEFT_TOP:
-          newWidth = this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
-          newHeight = this.target.height + resizeY >= this.target.minHeight ? this.target.height + resizeY : this.target.minHeight
-          break
-        case LineType.LEFT_BOTTOM:
-          newTop = this.target.top + resizeY
-          newWidth = this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
-          newHeight = this.target.height - resizeY >= this.target.minHeight ? this.target.height - resizeY : this.target.minHeight
-          break
-        case LineType.RIGHT_TOP:
-          newLeft = this.target.left + resizeX
-          newWidth = this.target.width - resizeX >= this.target.minWidth ? this.target.width - resizeX : this.target.minWidth
-          newHeight = this.target.height + resizeY >= this.target.minHeight ? this.target.height + resizeY : this.target.minHeight
-          break
-        case LineType.RIGHT_BOTTOM:
-          newLeft = this.target.left + resizeX
-          newTop = this.target.top + resizeY
-          newWidth = this.target.width - resizeX >= this.target.minWidth ? this.target.width - resizeX : this.target.minWidth
-          newHeight = this.target.height - resizeY >= this.target.minHeight ? this.target.height - resizeY : this.target.minHeight
-          break
+          case LineType.LEFT_TOP:
+            newWidth = this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
+            newHeight = this.target.height + resizeY >= this.target.minHeight ? this.target.height + resizeY : this.target.minHeight
+            break
+          case LineType.LEFT_BOTTOM:
+            newTop = this.target.top + resizeY
+            newWidth = this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
+            newHeight = this.target.height - resizeY >= this.target.minHeight ? this.target.height - resizeY : this.target.minHeight
+            break
+          case LineType.RIGHT_TOP:
+            newLeft = this.target.left + resizeX
+            newWidth = this.target.width - resizeX >= this.target.minWidth ? this.target.width - resizeX : this.target.minWidth
+            newHeight = this.target.height + resizeY >= this.target.minHeight ? this.target.height + resizeY : this.target.minHeight
+            break
+          case LineType.RIGHT_BOTTOM:
+            newLeft = this.target.left + resizeX
+            newTop = this.target.top + resizeY
+            newWidth = this.target.width - resizeX >= this.target.minWidth ? this.target.width - resizeX : this.target.minWidth
+            newHeight = this.target.height - resizeY >= this.target.minHeight ? this.target.height - resizeY : this.target.minHeight
+            break
         }
       }
       // TODO: 鼠标移动会导致Anchor重定位，结果导致鼠标位置突变而引起图形突变。这里延缓变化频率以修复问题
@@ -174,7 +174,7 @@ export class PointAnchor extends Anchor {
       }
     }
   }
-  protected buildAnchor () {
+  protected buildAnchor() {
     this.path.reset()
     this.path.addOval(Rectangle.makeLTWH(0, 0, this.width, this.height))
   }

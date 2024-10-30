@@ -1,37 +1,37 @@
 import { Graphics, Matrix, Path, Point2, Rotation, Scale, Skew, MouseEvent, MouseMoveEvent, KeyEvent, KeyPressEvent, CharEvent, TouchFingerEvent, PointerEvent, } from './Graphics'
 
 export abstract class Node {
-  private _parent?: Node;
+  private _parent?: Node
 
-  private _nodes: Array<Node>;
+  private _nodes: Array<Node>
 
-  private _alpha: number;
+  private _alpha: number
 
-  private _worldAlpha: number;
+  private _worldAlpha: number
 
-  private _position: Point2;
+  private _position: Point2
 
-  private _rotation: Rotation;
+  private _rotation: Rotation
 
-  private _scale: Scale;
+  private _scale: Scale
 
-  private _skew: Skew;
+  private _skew: Skew
 
-  private _transform: Matrix;
+  private _transform: Matrix
 
-  private _internalTransform: Matrix;
+  private _internalTransform: Matrix
 
-  private _worldTransform: Matrix;
+  private _worldTransform: Matrix
 
   private _worldInverseTransform: Matrix | null
 
-  private _visible: boolean;
+  private _visible: boolean
 
-  private _worldVisible: boolean;
+  private _worldVisible: boolean
 
-  private _dirty: boolean;
+  private _dirty: boolean
 
-  private _suspendUpdate: boolean;
+  private _suspendUpdate: boolean
 
   private _pointerEnterListeners = new Array<(e: PointerEvent) => void>(0)
 

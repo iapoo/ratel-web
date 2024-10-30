@@ -566,14 +566,14 @@ export abstract class AbstractTextShape extends Shape {
                   console.log(`Enter index = ${run.indices[index]}`)
                   this.select(run.indices[index], run.indices[index])
                   selected = true
-                  break;
+                  break
                 }
               }
             }
           }
         }
         if (selected) {
-          break;
+          break
         }
       }
     }
@@ -639,14 +639,14 @@ export abstract class AbstractTextShape extends Shape {
                   console.log(`Enter index = ${run.indices[index]}`)
                   this.selectTo(run.indices[index])
                   selected = true
-                  break;
+                  break
                 }
               }
             }
           }
         }
         if (selected) {
-          break;
+          break
         }
       }
     }
@@ -1488,14 +1488,14 @@ export abstract class AbstractTextShape extends Shape {
     switch (this.textAlignment) {
       case TextAlignment.RIGHT:
         newLeft = this.width - this.getTextPaddingX()
-        break;
+        break
       case TextAlignment.CENTER:
         newLeft = this.width / 2 - this.getTextPaddingX()
-        break;
+        break
       case TextAlignment.LEFT:
       default:
         newLeft = 0
-        break;
+        break
     }
     return newLeft
   }
@@ -1510,15 +1510,15 @@ export abstract class AbstractTextShape extends Shape {
     switch (this._textVerticalAlignment) {
       case TextVerticalAlignment.TOP:
         startY = this._textMargin + this._textTop
-        break;
+        break
       case TextVerticalAlignment.BOTTOM:
         startY = this.textTop + this.textHeight - this._textMargin - paragraphHeight
-        break;
+        break
       case TextVerticalAlignment.MIDDLE:
       default:
         //TODO: FIXME for 2 offset     
         startY = this.textTop + (this.textHeight - paragraphHeight) / 2 + 2
-        break;
+        break
     }
     return startY
   }
@@ -1529,14 +1529,14 @@ export abstract class AbstractTextShape extends Shape {
       case ParagraphDirection.BottomTop:
         matrix.translate(0, this.textWidth)
         matrix.rotate(270 * Math.PI / 180, 0, 0)
-        break;
+        break
       case ParagraphDirection.TopBottom:
         matrix.translate(this.textHeight, 0)
         matrix.rotate(90 * Math.PI / 180, 0, 0)
-        break;
+        break
       default:
       case ParagraphDirection.LeftRight:
-        break;
+        break
     }
     return matrix
   }
@@ -1567,14 +1567,14 @@ export abstract class AbstractTextShape extends Shape {
     switch (this.textAlignment) {
       case TextAlignment.RIGHT:
         newLeft = this.width - this.getTextPaddingX()
-        break;
+        break
       case TextAlignment.CENTER:
         newLeft = this.width / 2
-        break;
+        break
       case TextAlignment.LEFT:
       default:
         newLeft = this.getTextPaddingX()
-        break;
+        break
     }
     this._cursor.place(newLeft, this.getTextPaddingY(), this.getTextPaddingY() + this.fontSize * 1)
   }
@@ -1600,5 +1600,5 @@ export abstract class AbstractTextShape extends Shape {
     return selectionStyles
   }
 
-  protected abstract buildShape(): void;
+  protected abstract buildShape(): void
 }

@@ -1,4 +1,4 @@
-import { ERCustomShape, ERCustomShapeTypes } from "./src/ERCustomShape";
+import { ERCustomShape, ERCustomShapeTypes } from "./src/ERCustomShape"
 
 
 export const ERCustomShapes = [

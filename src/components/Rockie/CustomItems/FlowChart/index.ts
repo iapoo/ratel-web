@@ -1,5 +1,5 @@
-import { CustomEntityTypeInfo } from "../../Items/src/CustomEntity";
-import { FlowChartShape, FlowChartShapeTypes } from "./src/FlowChartShape";
+import { CustomEntityTypeInfo } from "../../Items/src/CustomEntity"
+import { FlowChartShape, FlowChartShapeTypes } from "./src/FlowChartShape"
 
 export const FlowChartShapes: CustomEntityTypeInfo[] = [
     { name: FlowChartShapeTypes[0].name, type: FlowChartShape, typeInfo: FlowChartShapeTypes[0] },

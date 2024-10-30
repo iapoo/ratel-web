@@ -77,11 +77,11 @@ export class Editor extends Painter {
   public static readonly ORIG_HEIGHT_DEAULT = 600
 
   private _backgroundLayer: BackgroundLayer
-  private _contentLayer: EditorLayer;
-  private _controllerLayer: EditorLayer;
-  private _hoverLayer: EditorLayer;
-  private _selectionLayer: EditorLayer;
-  private _maskLayer: EditorLayer;
+  private _contentLayer: EditorLayer
+  private _controllerLayer: EditorLayer
+  private _hoverLayer: EditorLayer
+  private _selectionLayer: EditorLayer
+  private _maskLayer: EditorLayer
   private _rangeLayer: EditorLayer
   private _moveLayer: EditorLayer
   private _containerLayer: EditorLayer
@@ -91,10 +91,10 @@ export class Editor extends Painter {
   private _inMoving = false;
   private _moved = false; //Check if movement already started
   private _gridSize = 10;
-  private _action: Action | undefined;
+  private _action: Action | undefined
   private _startPointX = 0;
   private _startPointY = 0;
-  private _target: EditorItem | undefined;
+  private _target: EditorItem | undefined
   private _targetTime = 0;
   private _inCreatingConnector = false;
   private _textArea: HTMLTextAreaElement
@@ -253,7 +253,7 @@ export class Editor extends Painter {
     this._enableDarkTheme = value
     EditorUtils.enableDarkTheme = value
   }
-  
+
   public get operationService() {
     return this._operationService
   }
@@ -836,49 +836,49 @@ export class Editor extends Painter {
       switch (operation.type) {
         case OperationType.ADD_ITEMS:
           this.handleOperationUndoAddItems(operation.itemInfos)
-          break;
+          break
         case OperationType.REMOVE_ITEMS:
           this.handleOperationUndoRemoveItems(operation.itemInfos)
-          break;
+          break
         case OperationType.UPDATE_ITEMS:
           this.handleOperationUndoUpdateItems(operation.origItemInfos)
-          break;
+          break
         case OperationType.ADD_SELECTION_ITEMS:
           this.handleOperationUndoAddSelectionItems(operation.itemInfos)
-          break;
+          break
         case OperationType.REMOVE_SELECTION_ITEMS:
           this.handleOperationUndoRemoveSelectionItems(operation.itemInfos)
-          break;
+          break
         case OperationType.SELECT_EDITOR:
           this.triggerEditorOperationEvent(operation, true)
-          break;
+          break
         case OperationType.ADD_EDITOR:
           this.triggerEditorOperationEvent(operation, true)
-          break;
+          break
         case OperationType.REMOVE_EDITOR:
           this.triggerEditorOperationEvent(operation, true)
-          break;
+          break
         case OperationType.RENAME_EDITOR:
           this.triggerEditorOperationEvent(operation, true)
-          break;
+          break
         case OperationType.MOVE_EDITOR:
           this.triggerEditorOperationEvent(operation, true)
-          break;
+          break
         case OperationType.SHAPE_TEXT_EDIT:
           this.handleOperationUndoShapTextEdit(operation)
-          break;
+          break
         case OperationType.TABLE_TEXT_EDIT:
           this.handleOperationUndoTableTextEdit(operation)
-          break;
+          break
         case OperationType.ADD_ITEMS_TO_CONTAINER:
-          break;
+          break
         case OperationType.REMOVE_ITEMS_FROM_CONTAINER:
-          break;
+          break
         case OperationType.UPDATE_DOCUMENT_THEME:
           this.triggerEditorOperationEvent(operation, true)
-          break;
+          break
         default:
-          break;
+          break
       }
       this._operationService.undo()
       this.triggerOperationComplete()
@@ -891,49 +891,49 @@ export class Editor extends Painter {
       switch (operation.type) {
         case OperationType.ADD_ITEMS:
           this.handleOperationRedoAddItems(operation.itemInfos)
-          break;
+          break
         case OperationType.REMOVE_ITEMS:
           this.handleOperationRedoRemoveItems(operation.itemInfos)
-          break;
+          break
         case OperationType.UPDATE_ITEMS:
           this.handleOperationRedoUpdateItems(operation.itemInfos)
-          break;
+          break
         case OperationType.ADD_SELECTION_ITEMS:
           this.handleOperationRedoAddSelectionItems(operation.itemInfos)
-          break;
+          break
         case OperationType.REMOVE_SELECTION_ITEMS:
           this.handleOperationRedoRemoveSelectionItems(operation.itemInfos)
-          break;
+          break
         case OperationType.SELECT_EDITOR:
           this.triggerEditorOperationEvent(operation, false)
-          break;
+          break
         case OperationType.ADD_EDITOR:
           this.triggerEditorOperationEvent(operation, false)
-          break;
+          break
         case OperationType.REMOVE_EDITOR:
           this.triggerEditorOperationEvent(operation, false)
-          break;
+          break
         case OperationType.RENAME_EDITOR:
           this.triggerEditorOperationEvent(operation, false)
-          break;
+          break
         case OperationType.MOVE_EDITOR:
           this.triggerEditorOperationEvent(operation, false)
-          break;
+          break
         case OperationType.SHAPE_TEXT_EDIT:
           this.handleOperationRedoShapTextEdit(operation)
-          break;
+          break
         case OperationType.TABLE_TEXT_EDIT:
           this.handleOperationRedoTableTextEdit(operation)
-          break;
+          break
         case OperationType.ADD_ITEMS_TO_CONTAINER:
-          break;
+          break
         case OperationType.REMOVE_ITEMS_FROM_CONTAINER:
-          break;
+          break
         case OperationType.UPDATE_DOCUMENT_THEME:
           this.triggerEditorOperationEvent(operation, false)
-          break;
+          break
         default:
-          break;
+          break
       }
       this._operationService.redo()
       this.triggerOperationComplete()
@@ -1594,7 +1594,7 @@ export class Editor extends Painter {
       const editorItem = this.contentLayer.getEditorItem(i)
       result = this.findEditorItemDetail(editorItem, x, y, excludeConnector)
       if (result) {
-        break;
+        break
       }
     }
     return result
@@ -1627,7 +1627,7 @@ export class Editor extends Painter {
           let childResult = this.findEditorItemDetail(child, x, y, excludeConnector)
           if (childResult) {
             result = childResult
-            break;
+            break
           }
         }
       }
@@ -1645,7 +1645,7 @@ export class Editor extends Painter {
       }
       result = this.findEditorItemDetailById(editorItem, id)
       if (result) {
-        break;
+        break
       }
     }
     return undefined
@@ -1661,7 +1661,7 @@ export class Editor extends Painter {
       }
       result = this.findEditorItemDetailById(childEditorItem, id)
       if (result) {
-        break;
+        break
       }
     }
     return result
@@ -2212,14 +2212,14 @@ export class Editor extends Painter {
   private handleRemoveEditorItem(id: string) {
     let itemCount = this._contentLayer.getEditorItemCount()
     for (let i = itemCount - 1; i >= 0; i--) {
-      let editorItem = this._contentLayer.getEditorItem(i) as Item;
+      let editorItem = this._contentLayer.getEditorItem(i) as Item
       if (editorItem.id == id) {
         this._contentLayer.removeEditorItemAt(i)
-        break;
+        break
       }
       let found = this.removeItemById(editorItem, id)
       if (found) {
-        break;
+        break
       }
     }
   }

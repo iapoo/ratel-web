@@ -1,5 +1,5 @@
 export class EditorLoader {
-  public static load () {
+  public static load() {
 
   }
 }

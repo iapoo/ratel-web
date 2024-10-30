@@ -26,7 +26,7 @@ interface BodyProps {
 }
 
 const Body: FC<BodyProps> = ({
-  previousEditor, currentEditor, onEditorChange, onMyShapesNotified, loginCompleted, logoutCompleted, myShapesUpdateRequired, adRegionWidth, showRuler,onDocumentThemeChanged, documentThemeName
+  previousEditor, currentEditor, onEditorChange, onMyShapesNotified, loginCompleted, logoutCompleted, myShapesUpdateRequired, adRegionWidth, showRuler, onDocumentThemeChanged, documentThemeName
 }) => {
   const [initialized, setInitialized,] = useState<boolean>(false)
   const [navigatorWidth, setNavigatorWidth,] = useState<number>(Utils.DEFAULT_NAVIGATOR_WIDTH)
@@ -92,7 +92,7 @@ const Body: FC<BodyProps> = ({
   }
 
   const handleDocumentThemeChange = (newThemeName: string) => {
-    if(onDocumentThemeChanged) {
+    if (onDocumentThemeChanged) {
       onDocumentThemeChanged(newThemeName)
     }
   }
@@ -114,9 +114,9 @@ const Body: FC<BodyProps> = ({
         onStop={handleDragStop}>
         <div className='handle' style={{ position: 'absolute', top: '0px', bottom: '0px', left: `${navigatorWidth} + px`, width: `${Utils.DEFAULT_DIVIDER_WIDTH}px`, cursor: 'ew-resize', zIndex: 999, }} />
       </Draggable>
-      <Content onEditorChange={handleEditorChange} onMyShapesUpdated={handleMyShapesUpdated} x={`${navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH}px`} y={`${enablePropertyEditor ? '220px' : '0px'} `} showRuler={showRuler} documentThemeName={documentThemeName} onDocumentThemeChanged={handleDocumentThemeChange}/>
+      <Content onEditorChange={handleEditorChange} onMyShapesUpdated={handleMyShapesUpdated} x={`${navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH}px`} y={`${enablePropertyEditor ? '220px' : '0px'} `} showRuler={showRuler} documentThemeName={documentThemeName} onDocumentThemeChanged={handleDocumentThemeChange} />
       <Drawer placement='right' mask={false} closable={false} open={enablePropertyEditor} getContainer={false} bodyStyle={{ padding: 16 }} width={240} >
-        <PropertyEditor previousEditor={previousEditor} currentEditor={currentEditor} onDocumentThemeChanged={handleDocumentThemeChange} documentThemeName={documentThemeName}/>
+        <PropertyEditor previousEditor={previousEditor} currentEditor={currentEditor} onDocumentThemeChanged={handleDocumentThemeChange} documentThemeName={documentThemeName} />
       </Drawer>
 
     </div>

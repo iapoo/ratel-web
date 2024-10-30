@@ -2,7 +2,7 @@ import React, { useEffect, useState, } from 'react'
 import { Modal, } from 'antd'
 import Drag from './drag'
 export default (props: any) => {
-  const [ isModalLoading, setIsModalLoading, ] = useState<boolean>(false)
+  const [isModalLoading, setIsModalLoading,] = useState<boolean>(false)
 
   let timer: any
 
@@ -18,7 +18,7 @@ export default (props: any) => {
         initializeModal(props)
       }, 1200)
     }
-  }, [ isModalLoading, ])
+  }, [isModalLoading,])
 
   if (timer) {
     clearTimeout(timer)

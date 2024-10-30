@@ -1,64 +1,64 @@
 import React, { useEffect, useState, useRef, FC } from 'react'
 import styles from './index.css'
 import { Form, Input, Checkbox, Row, Col, Button, Modal, Menu, Space, Tooltip, Dropdown, Divider, Select, InputNumber, ColorPicker, message, Upload, theme, } from 'antd'
-import type { ConfigProviderProps, GetProp, MappingAlgorithm, MenuProps, UploadProps } from 'antd';
+import type { ConfigProviderProps, GetProp, MappingAlgorithm, MenuProps, UploadProps } from 'antd'
 import { ConnectorLineEndArrows, ConnectorLineModes, ConnectorLineStartArrows, ConnectorLineTypes, Consts, FontSizeOptions, LineWidthOptions, RequestUtils, StrokeDashStyles, SystemUtils, Utils, } from '../Utils'
 import { setInterval } from 'timers'
 import { UserInfo } from '../Utils/RequestUtils'
 import LoginFormWindow from './LoginFormWindow'
-import NewFileWindow from './NewFileWindow';
-import { AlignCenterOutlined, AlignLeftOutlined, AlignRightOutlined, BoldOutlined, CheckOutlined, DownloadOutlined, FileAddOutlined, FileOutlined, FileTextOutlined, FolderOpenOutlined, FormOutlined, GithubOutlined, ItalicOutlined, MoonOutlined, RedoOutlined, SaveOutlined, SearchOutlined, SettingOutlined, SolutionOutlined, SunOutlined, TeamOutlined, UnderlineOutlined, UndoOutlined, UserOutlined, VerticalAlignBottomOutlined, VerticalAlignMiddleOutlined, VerticalAlignTopOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons';
-import OpenFileWindow from './OpenFileWindow';
+import NewFileWindow from './NewFileWindow'
+import { AlignCenterOutlined, AlignLeftOutlined, AlignRightOutlined, BoldOutlined, CheckOutlined, DownloadOutlined, FileAddOutlined, FileOutlined, FileTextOutlined, FolderOpenOutlined, FormOutlined, GithubOutlined, ItalicOutlined, MoonOutlined, RedoOutlined, SaveOutlined, SearchOutlined, SettingOutlined, SolutionOutlined, SunOutlined, TeamOutlined, UnderlineOutlined, UndoOutlined, UserOutlined, VerticalAlignBottomOutlined, VerticalAlignMiddleOutlined, VerticalAlignTopOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons'
+import OpenFileWindow from './OpenFileWindow'
 import FileManagementWindow from './FileManagementWindow'
 import OperatorWindow from './OperatorWindow'
 import CustomerWindow from './CustomerWindow'
-import { StorageService } from '../Storage';
-import { Rectangle } from '@/components/Resource/LargeIcons';
-import { EngineUtils, Font, FontSlant, FontUtils, FontWeight, GraphicsUtils, Matrix, Point2, TextDecoration, TextShape } from '@/components/Engine';
-import { Editor, EditorEvent } from '@/components/Rockie/Editor';
-import { useIntl, setLocale, getLocale, FormattedMessage, useParams, } from 'umi';
+import { StorageService } from '../Storage'
+import { Rectangle } from '@/components/Resource/LargeIcons'
+import { EngineUtils, Font, FontSlant, FontUtils, FontWeight, GraphicsUtils, Matrix, Point2, TextDecoration, TextShape } from '@/components/Engine'
+import { Editor, EditorEvent } from '@/components/Rockie/Editor'
+import { useIntl, setLocale, getLocale, FormattedMessage, useParams, } from 'umi'
 import { useLocation } from 'react-router-dom'
 import { Placeholder, } from '@/components/Resource/Icons'
-import { Operation, OperationHelper, OperationType } from '@/components/Rockie/Operations';
-import { Connector, ContainerEntity, ContainerTypes, CustomEntity, CustomTableEntity, ImageContainer, Item, ShapeEntity, ShapeTypes, SvgContainer, TableEntity } from '@/components/Rockie/Items';
-import { ShapeAction } from '@/components/Rockie/Actions';
-import { ConnectorArrowTypes } from '@/components/Rockie/Items/src/Connector';
-import { ConnectorDirection, ConnectorMode } from '@/components/Rockie/Shapes';
-import { ConnectorLineModesForCurve, DoubleLineGapOptions, FontNameOptions } from '../Utils/Consts';
-import { BasicShapes } from '@/components/Rockie/CustomItems/BasicShapes';
-import { Arrows } from '@/components/Rockie/CustomItems/Arrows';
-import { AliyunShapes } from '@/components/Rockie/CustomItems/Aliyun';
-import { AwsShapes } from '@/components/Rockie/CustomItems/Aws';
-import { FlowChartShapeTypes } from '@/components/Rockie/CustomItems/FlowChart/src/FlowChartShape';
-import { FlowChartShapes } from '@/components/Rockie/CustomItems/FlowChart';
-import { DocumentThemeTypes, EditorUtils, ThemeUtils } from '@/components/Rockie/Theme';
-import { EditorHelper } from '@/components/Rockie/Utils';
-import RegisterFormWindowPage from './RegisterFormWindow';
-import PasswordFormWindowPage from './PasswordFormWindow';
-import ProfileFormWindowPage from './ProfileFormWindow';
+import { Operation, OperationHelper, OperationType } from '@/components/Rockie/Operations'
+import { Connector, ContainerEntity, ContainerTypes, CustomEntity, CustomTableEntity, ImageContainer, Item, ShapeEntity, ShapeTypes, SvgContainer, TableEntity } from '@/components/Rockie/Items'
+import { ShapeAction } from '@/components/Rockie/Actions'
+import { ConnectorArrowTypes } from '@/components/Rockie/Items/src/Connector'
+import { ConnectorDirection, ConnectorMode } from '@/components/Rockie/Shapes'
+import { ConnectorLineModesForCurve, DoubleLineGapOptions, FontNameOptions } from '../Utils/Consts'
+import { BasicShapes } from '@/components/Rockie/CustomItems/BasicShapes'
+import { Arrows } from '@/components/Rockie/CustomItems/Arrows'
+import { AliyunShapes } from '@/components/Rockie/CustomItems/Aliyun'
+import { AwsShapes } from '@/components/Rockie/CustomItems/Aws'
+import { FlowChartShapeTypes } from '@/components/Rockie/CustomItems/FlowChart/src/FlowChartShape'
+import { FlowChartShapes } from '@/components/Rockie/CustomItems/FlowChart'
+import { DocumentThemeTypes, EditorUtils, ThemeUtils } from '@/components/Rockie/Theme'
+import { EditorHelper } from '@/components/Rockie/Utils'
+import RegisterFormWindowPage from './RegisterFormWindow'
+import PasswordFormWindowPage from './PasswordFormWindow'
+import ProfileFormWindowPage from './ProfileFormWindow'
 import TeamWindow from './TeamWindow'
 import ShareWindow from './ShareWindow'
-import DocumentSelector from  './DocumentSelector'
-import { UMLConnectors, UMLContainerShapes, UMLCustomTable, UMLCustomTableTypes, UMLCustomTables } from '@/components/Rockie/CustomItems/UML';
-import { UMLContainerShape, UMLContainerTypes } from '@/components/Rockie/CustomItems/UML/src/UMLContainerShape';
-import { UMLBasicShape, UMLBasicShapeTypes } from '@/components/Rockie/CustomItems/UML/src/UMLBasicShape';
-import { UMLConnector, UMLConnectorTypeInfos } from '@/components/Rockie/CustomItems/UML/src/UMLConnector';
-import { UMLCustomShape, UMLCustomShapeTypes } from '@/components/Rockie/CustomItems/UML/src/UMLCustomShape';
-import { UMLFrameShape, UMLFrameShapeTypes } from '@/components/Rockie/CustomItems/UML/src/UMLFrameShape';
-import { RcFile, UploadChangeParam } from 'antd/es/upload';
-import { parse, stringify } from 'querystringify';
-import { ERCustomShape, ERCustomShapeTypes } from '@/components/Rockie/CustomItems/EntityRelation/src/ERCustomShape';
-import { MockupCustomShape, MockupCustomShapeTypes } from '@/components/Rockie/CustomItems/Mockup/src/MockupCustomShape';
-import { Shapes, ShapeType } from '@/components/Rockie/Items/src/ShapeEntity';
-import { TableTypes } from '@/components/Rockie/Items/src/TableEntity';
-import { CustomEntityTypeInfo } from '@/components/Rockie/Items/src/CustomEntity';
-import { CustomTableType } from '@/components/Rockie/Items/src/CustomTableEntity';
-import { CustomConnector, CustomConnectorTypeInfo } from '@/components/Rockie/Items/src/CustomConnector';
-import { UMLCustomContainer, UMLCustomContainerTypes } from '@/components/Rockie/CustomItems/UML/src/UMLCustomContainer';
+import DocumentSelector from './DocumentSelector'
+import { UMLConnectors, UMLContainerShapes, UMLCustomTable, UMLCustomTableTypes, UMLCustomTables } from '@/components/Rockie/CustomItems/UML'
+import { UMLContainerShape, UMLContainerTypes } from '@/components/Rockie/CustomItems/UML/src/UMLContainerShape'
+import { UMLBasicShape, UMLBasicShapeTypes } from '@/components/Rockie/CustomItems/UML/src/UMLBasicShape'
+import { UMLConnector, UMLConnectorTypeInfos } from '@/components/Rockie/CustomItems/UML/src/UMLConnector'
+import { UMLCustomShape, UMLCustomShapeTypes } from '@/components/Rockie/CustomItems/UML/src/UMLCustomShape'
+import { UMLFrameShape, UMLFrameShapeTypes } from '@/components/Rockie/CustomItems/UML/src/UMLFrameShape'
+import { RcFile, UploadChangeParam } from 'antd/es/upload'
+import { parse, stringify } from 'querystringify'
+import { ERCustomShape, ERCustomShapeTypes } from '@/components/Rockie/CustomItems/EntityRelation/src/ERCustomShape'
+import { MockupCustomShape, MockupCustomShapeTypes } from '@/components/Rockie/CustomItems/Mockup/src/MockupCustomShape'
+import { Shapes, ShapeType } from '@/components/Rockie/Items/src/ShapeEntity'
+import { TableTypes } from '@/components/Rockie/Items/src/TableEntity'
+import { CustomEntityTypeInfo } from '@/components/Rockie/Items/src/CustomEntity'
+import { CustomTableType } from '@/components/Rockie/Items/src/CustomTableEntity'
+import { CustomConnector, CustomConnectorTypeInfo } from '@/components/Rockie/Items/src/CustomConnector'
+import { UMLCustomContainer, UMLCustomContainerTypes } from '@/components/Rockie/CustomItems/UML/src/UMLCustomContainer'
 import { useAntdConfig, useAntdConfigSetter, useNavigate, } from 'umi'
-import AboutWindowPage from './AboutWindow';
-import { DocumentThemeType } from '@/components/Rockie/Theme/DocumentTheme';
-import { OSType } from '../Utils/SystemUtils';
+import AboutWindowPage from './AboutWindow'
+import { DocumentThemeType } from '@/components/Rockie/Theme/DocumentTheme'
+import { OSType } from '../Utils/SystemUtils'
 
 interface HeaderProps {
   previousEditor: Editor | undefined
@@ -79,12 +79,12 @@ const Header: FC<HeaderProps> = ({
   const setAntdConfig = useAntdConfigSetter()
   const antdConfig = useAntdConfig()
   const navigate = useNavigate()
-  const intl = useIntl();
-  const [messageApi, contextHolder] = message.useMessage();
+  const intl = useIntl()
+  const [messageApi, contextHolder] = message.useMessage()
   const { confirm } = Modal
 
-  const DOCUMENT_MODIFIED_TEXT_NO = intl.formatMessage({ id: 'workspace.header.document-modified-text-no', });
-  const DOCUMENT_MODIFIED_TEXT_YES = intl.formatMessage({ id: 'workspace.header.document-modified-text-yes', });
+  const DOCUMENT_MODIFIED_TEXT_NO = intl.formatMessage({ id: 'workspace.header.document-modified-text-no', })
+  const DOCUMENT_MODIFIED_TEXT_YES = intl.formatMessage({ id: 'workspace.header.document-modified-text-yes', })
   const DOCUMENT_NEW_NAME_PREFIX = 'Untitled'
 
   const ON_LOGIN_SAVE_FILE = 'SaveFile'
@@ -114,12 +114,12 @@ const Header: FC<HeaderProps> = ({
   const [newFileWindowVisible, setNewFileWindowVisible,] = useState<boolean>(false)
   const [openFileWindowVisible, setOpenFileWindowVisible,] = useState<boolean>(false)
   const [fileManagementWindowVisible, setFileManagementWindowVisible,] = useState<boolean>(false)
-  const [documentSelectorVisible, setDocumentSelectorVisible, ] = useState<boolean>(false)
+  const [documentSelectorVisible, setDocumentSelectorVisible,] = useState<boolean>(false)
   const [operatorWindowVisible, setOperatorWindowVisible,] = useState<boolean>(false)
   const [customerWindowVisible, setCustomerWindowVisible,] = useState<boolean>(false)
   const [selectedDocumentName, setSelectedDocumentName,] = useState<string>(DOCUMENT_NEW_NAME_PREFIX)
   const [selectedFolderId, setSelectedFolderId,] = useState<number | null>(null)
-  const [selectedDocumentId, setSelectedDocumentId,] = useState<number | null>(null);
+  const [selectedDocumentId, setSelectedDocumentId,] = useState<number | null>(null)
   const [discardModifiedDocumentWindowVisible, setDiscardModifiedDocumentWindowVisible,] = useState<boolean>(false)
   const [newDocumentIndex, setNewDocumentIndex,] = useState<number>(0)
   const [disableFileName, setDisableFileName,] = useState<boolean>(false)
@@ -151,8 +151,8 @@ const Header: FC<HeaderProps> = ({
   const [connectorLineStartArrow, setConnectorLineStartArrow,] = useState<string>(ConnectorArrowTypes[0].name)
   const [connectorLineEndArrow, setConnectorLineEndArrow,] = useState<string>(ConnectorArrowTypes[0].name)
   const [connectorSelected, setConnectorSelected,] = useState<boolean>(false)
-  const [teamWindowVisible, setTeamWindowVisible, ] = useState<boolean>(false)
-  const [shareWindowVisible, setShareWindowVisible, ] = useState<boolean>(false)
+  const [teamWindowVisible, setTeamWindowVisible,] = useState<boolean>(false)
+  const [shareWindowVisible, setShareWindowVisible,] = useState<boolean>(false)
 
   // const [exportForm, ] = Form.useForm()
   // const [downloadDocumentForm, ] = Form.useForm()
@@ -218,9 +218,9 @@ const Header: FC<HeaderProps> = ({
         loadDocument(urlObject.query.id)
       } else if (urlObject.path == '/document' && urlObject.query.link) {
         loadLinkDocument(urlObject.query.link, urlObject.query.code)
-      } 
+      }
     }
-    if(!loaded) {
+    if (!loaded) {
       loadStagingDocument()
     }
   }
@@ -240,7 +240,7 @@ const Header: FC<HeaderProps> = ({
   const doLoadDocument = (id: string, isLink: boolean, shareCode: string | null = null) => {
     let linkCode = ''
     let documentId = 0
-    if(isLink) {
+    if (isLink) {
       linkCode = id
       if (linkCode === null) {
         messageApi.error(intl.formatMessage({ id: 'workspace.header.message-invalid-document-link' }))
@@ -254,8 +254,8 @@ const Header: FC<HeaderProps> = ({
       }
     }
     const fetchDocumentData = async () => {
-      let documentData;
-      if(isLink) {
+      let documentData
+      if (isLink) {
         documentData = await RequestUtils.loadDocumentByLink(linkCode, shareCode)
       } else {
         documentData = await RequestUtils.loadDocument(documentId, true)
@@ -287,7 +287,7 @@ const Header: FC<HeaderProps> = ({
         }
       } else {
         console.log(`Load document failed: source = ${id}`)
-        messageApi.error(intl.formatMessage({ id: 'workspace.header.message-failed-to-load-document-with'})+ `:${documentData.data.message}`)
+        messageApi.error(intl.formatMessage({ id: 'workspace.header.message-failed-to-load-document-with' }) + `:${documentData.data.message}`)
       }
       setOpenFileWindowVisible(false)
     }
@@ -320,7 +320,7 @@ const Header: FC<HeaderProps> = ({
     console.log(`load link document now.`)
     doLoadDocument(id, true, code)
   }
-  
+
   const refresh = () => {
     if (previousEditor) {
       previousEditor.removeSelectionChange(handleSelectionChange)
@@ -703,7 +703,7 @@ const Header: FC<HeaderProps> = ({
         console.log(`Load document failed: documentId = ${documentId}`)
       }
     }
-    fetchDocumentData()    
+    fetchDocumentData()
   }
 
   const handleOperatorWindowOk = () => {
@@ -963,25 +963,25 @@ const Header: FC<HeaderProps> = ({
     switch (onLoginFormWindowOk) {
       case ON_LOGIN_SAVE_FILE:
         doHandleFileSave()
-        break;
+        break
       case ON_LOGIN_OPEN_FILE:
         doHandleFileOpen()
-        break;
+        break
       case ON_LOGIN_OPEN_CUSTOMER_WINDOW:
         doHandleCustomerOpen()
-        break;
+        break
       case ON_LOGIN_OPEN_OPERATOR_WINDOW:
         doHandleOperatorOpen()
-        break;
+        break
       case ON_LOGIN_OPEN_FILE_MANAGEMENT:
         doHandleFileManagementOpen()
-        break;
+        break
       case ON_LOGIN_OPEN_DOCUMENT_SELECTOR:
         doHandleDocumentSelectorOpen()
-        break;
+        break
       case ON_LOGIN_NONE:
       default:
-        break;
+        break
     }
     if (onLogin) {
       onLogin()
@@ -990,21 +990,21 @@ const Header: FC<HeaderProps> = ({
 
   const handleBeforeImportDocument = (file: RcFile, FileList: RcFile[]) => {
     console.log(`${file.name.substring(file.name.length - 6)}`)
-    const isRATEL = file.name.length > 6 && file.name.substring(file.name.length - 6) === '.ratel';
+    const isRATEL = file.name.length > 6 && file.name.substring(file.name.length - 6) === '.ratel'
     if (!isRATEL) {
-      message.error(`${file.name} ${intl.formatMessage({ id: 'workspace.header.message-import-document-format-is-invalid' })}`);
+      message.error(`${file.name} ${intl.formatMessage({ id: 'workspace.header.message-import-document-format-is-invalid' })}`)
     }
     const isLessThan1M = file.size < 1 * 1024 * 1024
     if (!isLessThan1M) {
-      message.error(`${file.name} ${intl.formatMessage({ id: 'workspace.header.message-import-document-size-must-be-less-than' })}`);
+      message.error(`${file.name} ${intl.formatMessage({ id: 'workspace.header.message-import-document-size-must-be-less-than' })}`)
     }
-    return (isRATEL && isLessThan1M) || Upload.LIST_IGNORE;
+    return (isRATEL && isLessThan1M) || Upload.LIST_IGNORE
   }
 
-  type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
+  type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0]
 
   const getRatelgFromFile = (ratel: FileType, callback: (data: string) => void) => {
-    const reader = new FileReader();
+    const reader = new FileReader()
     reader.addEventListener('load', () => callback(reader.result as string))
     reader.readAsText(ratel)
   }
@@ -2000,37 +2000,37 @@ const Header: FC<HeaderProps> = ({
         switch (classType) {
           case MockupCustomShape:
             shapeEntity = new MockupCustomShape(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, shapeType.name)
-            break;
+            break
           case ERCustomShape:
             shapeEntity = new ERCustomShape(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, shapeType.name)
-            break;
+            break
           case UMLFrameShape:
             shapeEntity = new UMLFrameShape(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, { shapeType: shapeType.name }, shapeTypes)
-            break;
+            break
           case UMLCustomContainer:
             shapeEntity = new UMLCustomContainer(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, shapeType.name, shapeTypes)
-            break;
+            break
           case UMLCustomShape:
             shapeEntity = new UMLCustomShape(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, shapeType.name)
-            break;
+            break
           case UMLBasicShape:
             shapeEntity = new UMLBasicShape(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, { shapeType: shapeType.name }, shapeTypes)
-            break;
+            break
           case UMLContainerShape:
             shapeEntity = new UMLContainerShape(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, { shapeType: shapeType.name }, shapeTypes)
-            break;
+            break
           case UMLCustomTable:
             shapeEntity = new UMLCustomTable(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, shapeType.name, shapeTypes as CustomTableType[])
-            break;
+            break
           case TableEntity:
             shapeEntity = new TableEntity(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor)
-            break;
+            break
           case ContainerEntity:
             shapeEntity = new ContainerEntity(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, { shapeType: shapeType.name }, shapeTypes)
-            break;
+            break
           default:
             shapeEntity = new ShapeEntity(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, { shapeType: shapeType.name }, shapeTypes)
-            break;
+            break
         }
         shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
         shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
@@ -3301,7 +3301,7 @@ const Header: FC<HeaderProps> = ({
         { key: 'ExportSelectedToSVG', label: <FormattedMessage id='workspace.header.menu-file-export-selected-svg' />, icon: <DownloadOutlined />, onClick: () => handleExportSelectedSVG() },
       ]
     },
-  ];
+  ]
 
   const editItems: MenuProps['items'] = [
     { label: <FormattedMessage id='workspace.content.popup-editor-undo' />, key: '1', onClick: handleUndo, disabled: !editorUndoable, icon: <CheckOutlined style={{ visibility: 'hidden' }} /> },
@@ -3322,7 +3322,7 @@ const Header: FC<HeaderProps> = ({
     { label: <FormattedMessage id='workspace.content.popup-shape-send-backward' />, key: '12', onClick: handleSendBackward, disabled: !ifEditorSupportSendBackward(), icon: <CheckOutlined style={{ visibility: 'hidden' }} /> },
     { type: 'divider' },
     { label: <FormattedMessage id='workspace.content.popup-shape-add-to-my-shapes' />, key: '13', onClick: handleAddToMyShapes, disabled: !ifEditorSupportAddToMyShapes(), icon: <CheckOutlined style={{ visibility: 'hidden' }} /> },
-  ];
+  ]
 
   const viewItems: MenuProps['items'] = [
     { label: <FormattedMessage id='workspace.header.menu-view.show-property-editor' />, key: '1', onClick: handlePropertyEditorChange, icon: <CheckOutlined style={{ visibility: Utils.enablePropertyEditor ? 'visible' : 'hidden' }} /> },
@@ -3333,7 +3333,7 @@ const Header: FC<HeaderProps> = ({
     { label: <FormattedMessage id='workspace.header.menu-view.zoom-reset' />, key: '3', onClick: handleResetView, icon: <CheckOutlined style={{ visibility: 'hidden' }} /> },
     { label: <FormattedMessage id='workspace.header.menu-view.zoom-in' />, key: '4', onClick: handleZoomIn, icon: <CheckOutlined style={{ visibility: 'hidden' }} /> },
     { label: <FormattedMessage id='workspace.header.menu-view.zoom-out' />, key: '5', onClick: handleZoomOut, icon: <CheckOutlined style={{ visibility: 'hidden' }} /> },
-  ];
+  ]
 
   // const operationItems: MenuProps['items'] = [
   //   // { key: 'New', label: 'New', },
@@ -3394,21 +3394,27 @@ const Header: FC<HeaderProps> = ({
     // { key: 'Test Mockup Shape Small', label: 'Test Mockup Shape Small', onClick: handleTestMockupShapeSmall, },
     // { key: 'Test ER Shape Large', label: 'Test ER Shape Large', onClick: handleTestERShapeLarge, },
     // { key: 'Test ER Shape Small', label: 'Test ER Shape Small', onClick: handleTestERShapeSmall, },
-  ];
+  ]
 
   const managementItems: MenuProps['items'] = [
     // { key: 'Admin Login', label: <FormattedMessage id='workspace.header.menu-management-open-file' />, onClick: handleAdminLogin, },
-    { key: 'Open Customer Window', 
-      label: <FormattedMessage id='workspace.header.menu-management-open-customer' />,       
-      onClick: handleCustomerWindow, },
-    { key: 'Open Operator Window', 
-      label: <FormattedMessage id='workspace.header.menu-management-open-operator' />, 
-      onClick: handleOperatorWindow, },
+    {
+      key: 'Open Customer Window',
+      label: <FormattedMessage id='workspace.header.menu-management-open-customer' />,
+      onClick: handleCustomerWindow,
+    },
+    {
+      key: 'Open Operator Window',
+      label: <FormattedMessage id='workspace.header.menu-management-open-operator' />,
+      onClick: handleOperatorWindow,
+    },
     // { key: 'Open File Mangement Window', label: <FormattedMessage id='workspace.header.menu-management-open-file' />, onClick: handleManagementWindow, },
-    { key: 'Open Document Selector', 
-      label: <FormattedMessage id='workspace.header.menu-management-open-document' />, 
-      onClick: handleDocumentSelector, },
-  ];
+    {
+      key: 'Open Document Selector',
+      label: <FormattedMessage id='workspace.header.menu-management-open-document' />,
+      onClick: handleDocumentSelector,
+    },
+  ]
 
   const helpItems: MenuProps['items'] = [
     { key: 'FeedBack', label: <FormattedMessage id='workspace.header.menu-help-feedback' />, onClick: handleFeedback, },
@@ -3419,7 +3425,7 @@ const Header: FC<HeaderProps> = ({
     // { key: 'Save', label: 'Save', },
     // { key: 'SaveAs', label: 'SaveAs', },
     // { key: 'Export', label: 'Export', },
-  ];
+  ]
 
   const userProfileMenu: MenuProps['items'] = [
     { key: 'UpdatePassword', label: <FormattedMessage id='workspace.header.user-profile-update-password-title' />, onClick: handleUpdatePassword },
@@ -3484,7 +3490,7 @@ const Header: FC<HeaderProps> = ({
           <div style={{ float: 'right', display: 'table', height: '100%', marginRight: '8px' }}>
             <Space direction="horizontal" style={{ display: 'table-cell', verticalAlign: 'middle' }}>
               <Space wrap={false}>
-                <Button type='primary' size='small' style={{ display: online ? 'inline' : 'none', webkitAppRegion: 'no-drag' }} onClick={handleShareWindow} disabled={selectedDocumentId === null} ><FormattedMessage id='workspace.header.button-share-title'/></Button>
+                <Button type='primary' size='small' style={{ display: online ? 'inline' : 'none', webkitAppRegion: 'no-drag' }} onClick={handleShareWindow} disabled={selectedDocumentId === null} ><FormattedMessage id='workspace.header.button-share-title' /></Button>
                 <Tooltip title={<FormattedMessage id='workspace.header.title.team' />}>
                   <Button shape='circle' type='text' size='small' icon={<TeamOutlined />} onClick={handleTeamWindow} style={{ display: online ? 'inline' : 'none', webkitAppRegion: 'no-drag' }} />
                 </Tooltip>

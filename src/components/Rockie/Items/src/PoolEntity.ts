@@ -31,11 +31,11 @@ export class PoolEntity extends ContainerEntity {
     return this._columnCount
   }
 
-  public get boundary (): Rectangle {
+  public get boundary(): Rectangle {
     return super.boundary
   }
 
-  public set boundary (value: Rectangle) {
+  public set boundary(value: Rectangle) {
     const oldWidth = this.width
     const oldHeight = this.height
     super.boundary = value
@@ -51,116 +51,116 @@ export class PoolEntity extends ContainerEntity {
   }
 
   public insertRowBefore(rowIndex: number) {
-    if(rowIndex >= 0 && rowIndex < this._rowCount) {      
-      for(let i = 0; i < this._columnCount; i ++) {
+    if (rowIndex >= 0 && rowIndex < this._rowCount) {
+      for (let i = 0; i < this._columnCount; i++) {
         const beforeCell = this.items[rowIndex * this._columnCount + i * 2]
         const cell = new CellEntity(beforeCell.left, beforeCell.top, beforeCell.width, beforeCell.height)
         this.addItemAt(cell, rowIndex * this._columnCount + i)
       }
-      for(let j = rowIndex + 1; j < this._rowCount + 1; j ++) {
-        for(let i = 0; i < this._columnCount; i ++) {
+      for (let j = rowIndex + 1; j < this._rowCount + 1; j++) {
+        for (let i = 0; i < this._columnCount; i++) {
           const beforeCell = this.items[rowIndex * this._columnCount + i]
           const cell = this.items[j * this._columnCount + i]
           cell.boundary = Rectangle.makeLTWH(cell.left, cell.top + beforeCell.height, cell.width, cell.height)
         }
       }
-      this._rowCount ++
-      this.boundary = Rectangle.makeLTWH(this.left, this.top, this.width, this.height +  this.items[rowIndex * this.columnCount].height)
+      this._rowCount++
+      this.boundary = Rectangle.makeLTWH(this.left, this.top, this.width, this.height + this.items[rowIndex * this.columnCount].height)
     }
   }
 
 
   public insertRowAfter(rowIndex: number) {
-    if(rowIndex >= 0 && rowIndex < this._rowCount) {      
-      for(let i = 0; i < this._columnCount; i ++) {
+    if (rowIndex >= 0 && rowIndex < this._rowCount) {
+      for (let i = 0; i < this._columnCount; i++) {
         const beforeCell = this.items[rowIndex * this._columnCount + i]
         const cell = new CellEntity(beforeCell.left, beforeCell.top, beforeCell.width, beforeCell.height)
         this.addItemAt(cell, (rowIndex + 1) * this._columnCount + i)
       }
-      for(let j = rowIndex + 1; j < this._rowCount + 1; j ++) {
-        for(let i = 0; i < this._columnCount; i ++) {
+      for (let j = rowIndex + 1; j < this._rowCount + 1; j++) {
+        for (let i = 0; i < this._columnCount; i++) {
           const beforeCell = this.items[rowIndex * this._columnCount + i]
           const cell = this.items[j * this._columnCount + i]
           cell.boundary = Rectangle.makeLTWH(cell.left, cell.top + beforeCell.height, cell.width, cell.height)
         }
       }
-      this._rowCount ++
-      this.boundary = Rectangle.makeLTWH(this.left, this.top, this.width, this.height +  this.items[rowIndex * this.columnCount].height)
+      this._rowCount++
+      this.boundary = Rectangle.makeLTWH(this.left, this.top, this.width, this.height + this.items[rowIndex * this.columnCount].height)
     }
   }
 
 
   public insertColumnBefore(columnIndex: number) {
-    if(columnIndex >= 0 && columnIndex < this._columnCount) {      
-      for(let i = 0; i < this._rowCount; i ++) {
-        const beforeCell = this.items[i * this._columnCount + columnIndex +  i]
+    if (columnIndex >= 0 && columnIndex < this._columnCount) {
+      for (let i = 0; i < this._rowCount; i++) {
+        const beforeCell = this.items[i * this._columnCount + columnIndex + i]
         const cell = new CellEntity(beforeCell.left, beforeCell.top, beforeCell.width, beforeCell.height)
         this.addItemAt(cell, i * this.columnCount + columnIndex + i)
       }
-      for(let j = columnIndex + 1; j < this._columnCount + 1; j ++) {
-        for(let i = 0; i < this._rowCount; i ++) {
+      for (let j = columnIndex + 1; j < this._columnCount + 1; j++) {
+        for (let i = 0; i < this._rowCount; i++) {
           const beforeCell = this.items[i * this._columnCount + columnIndex + i]
           const cell = this.items[i * this._columnCount + j + i]
           cell.boundary = Rectangle.makeLTWH(cell.left + beforeCell.width, cell.top, cell.width, cell.height)
         }
       }
-      this._columnCount ++
-      this.boundary = Rectangle.makeLTWH(this.left, this.top, this.width +  this.items[columnIndex].width, this.height)
+      this._columnCount++
+      this.boundary = Rectangle.makeLTWH(this.left, this.top, this.width + this.items[columnIndex].width, this.height)
     }
   }
 
 
   public insertColumnAfter(columnIndex: number) {
-    if(columnIndex >= 0 && columnIndex < this._columnCount) {      
-      for(let i = 0; i < this._rowCount; i ++) {
-        const beforeCell = this.items[i * this._columnCount + columnIndex +  i]
+    if (columnIndex >= 0 && columnIndex < this._columnCount) {
+      for (let i = 0; i < this._rowCount; i++) {
+        const beforeCell = this.items[i * this._columnCount + columnIndex + i]
         const cell = new CellEntity(beforeCell.left, beforeCell.top, beforeCell.width, beforeCell.height)
         this.addItemAt(cell, i * this.columnCount + columnIndex + i + 1)
       }
-      for(let j = columnIndex + 1; j < this._columnCount + 1; j ++) {
-        for(let i = 0; i < this._rowCount; i ++) {
+      for (let j = columnIndex + 1; j < this._columnCount + 1; j++) {
+        for (let i = 0; i < this._rowCount; i++) {
           const beforeCell = this.items[i * this._columnCount + columnIndex + i]
           const cell = this.items[i * this._columnCount + j + i]
           cell.boundary = Rectangle.makeLTWH(cell.left + beforeCell.width, cell.top, cell.width, cell.height)
         }
       }
-      this._columnCount ++
-      this.boundary = Rectangle.makeLTWH(this.left, this.top, this.width +  this.items[columnIndex].width, this.height)
+      this._columnCount++
+      this.boundary = Rectangle.makeLTWH(this.left, this.top, this.width + this.items[columnIndex].width, this.height)
     }
   }
 
 
   public deleteRow(rowIndex: number) {
-    if(rowIndex >= 0 && rowIndex < this._rowCount) { 
-      for(let j = rowIndex + 1; j < this._rowCount; j ++) {
-        for(let i = 0; i < this._columnCount; i ++) {
+    if (rowIndex >= 0 && rowIndex < this._rowCount) {
+      for (let j = rowIndex + 1; j < this._rowCount; j++) {
+        for (let i = 0; i < this._columnCount; i++) {
           const beforeCell = this.items[rowIndex * this._columnCount + i]
           const cell = this.items[j * this._columnCount + i]
           cell.boundary = Rectangle.makeLTWH(cell.left, cell.top - beforeCell.height, cell.width, cell.height)
         }
       }
-      this.boundary = Rectangle.makeLTWH(this.left, this.top, this.width, this.height -  this.items[rowIndex * this._rowCount].height)
-      for(let i =  0;  i < this._columnCount; i ++) {
-        this.removeItemAt(rowIndex * this._columnCount);
+      this.boundary = Rectangle.makeLTWH(this.left, this.top, this.width, this.height - this.items[rowIndex * this._rowCount].height)
+      for (let i = 0; i < this._columnCount; i++) {
+        this.removeItemAt(rowIndex * this._columnCount)
       }
-      this._rowCount --
+      this._rowCount--
     }
   }
 
   public deleteColumn(columnIndex: number) {
-    if(columnIndex >= 0 && columnIndex < this._columnCount) { 
-      for(let j = columnIndex + 1; j < this._columnCount; j ++) {
-        for(let i = 0; i < this._rowCount; i ++) {
+    if (columnIndex >= 0 && columnIndex < this._columnCount) {
+      for (let j = columnIndex + 1; j < this._columnCount; j++) {
+        for (let i = 0; i < this._rowCount; i++) {
           const beforeCell = this.items[i * this._columnCount + columnIndex]
           const cell = this.items[i * this._columnCount + j]
           cell.boundary = Rectangle.makeLTWH(cell.left - beforeCell.width, cell.top, cell.width, cell.height)
         }
       }
       this.boundary = Rectangle.makeLTWH(this.left, this.top, this.width - this.items[columnIndex].width, this.height)
-      for(let i =  this._rowCount - 1;  i >= 0; i --) {
-        this.removeItemAt(i * this._columnCount + columnIndex);
+      for (let i = this._rowCount - 1; i >= 0; i--) {
+        this.removeItemAt(i * this._columnCount + columnIndex)
       }
-      this._columnCount --
+      this._columnCount--
     }
   }
   // public clone(): EditorItem {
@@ -199,12 +199,12 @@ export class PoolEntity extends ContainerEntity {
   }
 
   private updateTableBoundary(oldWidth: number, oldHeight: number) {
-    const widthRatio =  this.width / oldWidth
-    const heightRatio =  this.height / oldHeight
+    const widthRatio = this.width / oldWidth
+    const heightRatio = this.height / oldHeight
     for (let rowIndex = 0; rowIndex < this._rowCount; rowIndex++) {
       for (let columnIndex = 0; columnIndex < this._columnCount; columnIndex++) {
         const cell = this.items[rowIndex * this._columnCount + columnIndex]
-        cell.boundary =  Rectangle.makeLTWH(cell.left * widthRatio, cell.top * heightRatio, cell.width * widthRatio, cell.height * heightRatio)
+        cell.boundary = Rectangle.makeLTWH(cell.left * widthRatio, cell.top * heightRatio, cell.width * widthRatio, cell.height * heightRatio)
       }
     }
   }

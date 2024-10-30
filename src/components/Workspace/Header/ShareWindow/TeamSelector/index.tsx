@@ -3,35 +3,35 @@ import styles from './index.css'
 import { Form, Input, Checkbox, Tree, Row, Col, Button, Modal, Menu, message, Alert, Space, Pagination, Switch, Tooltip, } from 'antd'
 import axios from 'axios'
 import Avatar from 'antd/lib/avatar/avatar'
-import type { DataNode, TreeProps, } from 'antd/es/tree';
+import type { DataNode, TreeProps, } from 'antd/es/tree'
 import { DeleteFilled, EditFilled, FileFilled, FileOutlined, FolderFilled, FolderOutlined, PlusOutlined } from '@ant-design/icons'
-import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi';
+import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi'
 import { ProColumns, ProTable } from '@ant-design/pro-components'
 import { RequestUtils } from '@/components/Workspace/Utils'
 import { TableProps } from 'antd/lib'
 import moment from 'moment'
 
 interface TeamWindowProps {
-  visible: boolean;
-  onWindowCancel: () => void;
+  visible: boolean
+  onWindowCancel: () => void
   onWindowOk: (teamId: number) => void
 }
 
 interface SingleTeamType {
-  teamId: number;
-  teamName: string;
-  createBy: number;
-  createDate: number;
-  updateBy: number;
-  updateDate: number;
+  teamId: number
+  teamName: string
+  createBy: number
+  createDate: number
+  updateBy: number
+  updateDate: number
 }
 
 interface TeamsType {
-  records: SingleTeamType[];
-  total: number;
-  size: number;
-  pages: number;
-  current: number;
+  records: SingleTeamType[]
+  total: number
+  size: number
+  pages: number
+  current: number
 }
 
 const defaultData = { records: [], size: 0, current: 0, total: 0, pages: 0 }
@@ -45,10 +45,10 @@ const TeamWindowPage: FC<TeamWindowProps> = ({
   const [errorMessage, setErrorMessage,] = useState<string>('')
   const [selectedRowKeys, setSelectedRowKeys,] = useState<Key[]>([])
   const [selectedRows, setSelectedRows,] = useState<SingleTeamType[]>([])
-  const [data, setData,] = useState<TeamsType>( defaultData)
-  const [searchText, setSearchText, ] = useState<string>('')
+  const [data, setData,] = useState<TeamsType>(defaultData)
+  const [searchText, setSearchText,] = useState<string>('')
 
-  const intl = useIntl();
+  const intl = useIntl()
 
   const columns: ProColumns<SingleTeamType>[] = [
     {
@@ -66,7 +66,7 @@ const TeamWindowPage: FC<TeamWindowProps> = ({
       key: 'teamName',
       valueType: 'text',
       width: 150,
-      render: (text: any, ) => {
+      render: (text: any,) => {
         return <div style={{ width: '150px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
           {text}
         </div>
@@ -80,7 +80,7 @@ const TeamWindowPage: FC<TeamWindowProps> = ({
     setWindowVisible(visible)
   }
 
-  
+
   useEffect(() => {
     if (!dataLoading) {
       setDataLoading(true)
@@ -112,15 +112,15 @@ const TeamWindowPage: FC<TeamWindowProps> = ({
     if (onWindowCancel) {
       onWindowCancel()
     }
-  }  
-  
-  const handleTeamSelectionChange =  (selectedKeys: Key[], selectedRows: SingleTeamType[]) => {
+  }
+
+  const handleTeamSelectionChange = (selectedKeys: Key[], selectedRows: SingleTeamType[]) => {
     console.log(`selectedKeys=${selectedKeys}, selectedRows=${selectedRows}`)
     setSelectedRowKeys(selectedKeys)
     setSelectedRows(selectedRows)
   }
 
-  const handleSearch = ()=> {
+  const handleSearch = () => {
     fetchData(searchText)
   }
 
@@ -135,56 +135,56 @@ const TeamWindowPage: FC<TeamWindowProps> = ({
     // getCheckboxProps: (record: SingleTeamType) => ({
     //   name: record.teamName
     // })
-  
+
   }
 
 
   return (
     <div>
       <Modal title={<FormattedMessage id='workspace.header.team-selector.window-title' />} width={600} centered open={visible} onOk={onOk} onCancel={onCancel} maskClosable={false}  >
-        <div style={{ width: '100%', height: '420px',}}>
-          <div style={{ width: '100%', height: '380px',  }}>
-          <ProTable
-        columns={columns}
-        dataSource={data.records}
-        rowKey='teamId'
-        //loading={teamListLoading}
-        search={false}
-        pagination={false}
-        rowSelection={rowSelection}                
-        //onChange={handleTeamSelectionChange}
-        tableAlertRender={false}
-        options={{
-          density: false,
-          fullScreen: false,
-          reload: false,
-          setting: false,
-        }}
-        title={() => [
-          <Row key='searchRow'>
-            <Col span={18} >
-              <Input key='searchInput' placeholder={intl.formatMessage({ id: 'workspace.header.team-selector.search-placeholder' })} style={{ width: '240px', marginLeft: '16px', }} onChange={(e) => { setSearchText(e.target.value) }}/>
-              <Button key='searchButton' type='primary' style={{ marginLeft: '24px', }} onClick={handleSearch} ><FormattedMessage id='workspace.header.team-selector.button-search' /></Button>
-            </Col>
-          </Row>,
-        ]}
-        headerTitle={false}
-        toolBarRender={false}
-      />
-      <div style={{ width: '100%', height: '64px', }}>
-        <Pagination
-          className='list-page' style={{ float: 'right', margin: '16px', }}
-          total={data.total}
-          onChange={handlePageChange}
-          //onShowSizeChange={pageSizeHandler}
-          current={data.current}
-          pageSize={data.size}
-          showSizeChanger={false}
-          showQuickJumper
-          //locale='zhCN'
-          //showTotal={total => `${intl.formatMessage({ id: 'workspace.header.team-selector-window.search-placeholder' }} ${total}`}
-        />
-      </div>
+        <div style={{ width: '100%', height: '420px', }}>
+          <div style={{ width: '100%', height: '380px', }}>
+            <ProTable
+              columns={columns}
+              dataSource={data.records}
+              rowKey='teamId'
+              //loading={teamListLoading}
+              search={false}
+              pagination={false}
+              rowSelection={rowSelection}
+              //onChange={handleTeamSelectionChange}
+              tableAlertRender={false}
+              options={{
+                density: false,
+                fullScreen: false,
+                reload: false,
+                setting: false,
+              }}
+              title={() => [
+                <Row key='searchRow'>
+                  <Col span={18} >
+                    <Input key='searchInput' placeholder={intl.formatMessage({ id: 'workspace.header.team-selector.search-placeholder' })} style={{ width: '240px', marginLeft: '16px', }} onChange={(e) => { setSearchText(e.target.value) }} />
+                    <Button key='searchButton' type='primary' style={{ marginLeft: '24px', }} onClick={handleSearch} ><FormattedMessage id='workspace.header.team-selector.button-search' /></Button>
+                  </Col>
+                </Row>,
+              ]}
+              headerTitle={false}
+              toolBarRender={false}
+            />
+            <div style={{ width: '100%', height: '64px', }}>
+              <Pagination
+                className='list-page' style={{ float: 'right', margin: '16px', }}
+                total={data.total}
+                onChange={handlePageChange}
+                //onShowSizeChange={pageSizeHandler}
+                current={data.current}
+                pageSize={data.size}
+                showSizeChanger={false}
+                showQuickJumper
+              //locale='zhCN'
+              //showTotal={total => `${intl.formatMessage({ id: 'workspace.header.team-selector-window.search-placeholder' }} ${total}`}
+              />
+            </div>
           </div>
         </div>
       </Modal>

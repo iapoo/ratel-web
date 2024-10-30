@@ -16,24 +16,24 @@ class DocumentElement {
   private _start: number
   private _end: number
 
-  public DocumentElement (type: DocumentElementType, content: string) {
+  public DocumentElement(type: DocumentElementType, content: string) {
     this._type = type
     this._content = content
   }
 
-  public get content () {
+  public get content() {
     return this._content
   }
 
-  public get type () {
+  public get type() {
     return this._type
   }
 
-  public get start () {
+  public get start() {
     return this._start
   }
 
-  public get end () {
+  public get end() {
     return this._end
   }
 }
@@ -41,47 +41,47 @@ class DocumentElement {
 class DocumentLayoutBuilder {
   private elements: Array<DocumentElement> = new Array<DocumentElement>(0)
 
-  public build (): TextLayout {
+  public build(): TextLayout {
     const textLayout = new TextLayout()
 
     return textLayout
   }
 
-  public addText (text: string) {
+  public addText(text: string) {
 
   }
 
-  public addTextStyle (textStyle: TextStyle) {
+  public addTextStyle(textStyle: TextStyle) {
 
   }
 
-  public addTextStyleExtended (textStyle: TextStyle, foreground: Paint, background: Paint) {
+  public addTextStyleExtended(textStyle: TextStyle, foreground: Paint, background: Paint) {
 
   }
 
-  public reset () {
+  public reset() {
 
   }
 }
 
 class TextLayout {
-  public TextLayout (textLayoutBuilder: TextLayoutBuilder) {
+  public TextLayout(textLayoutBuilder: TextLayoutBuilder) {
 
   }
 
-  public layout (width: number) {
+  public layout(width: number) {
 
   }
 
-  public getShapeLines (): ShapeLine[] {
+  public getShapeLines(): ShapeLine[] {
 
   }
 
-  public getHeight () : number {
+  public getHeight(): number {
     return 0
   }
 
-  public getMaxWidth (): number {
+  public getMaxWidth(): number {
     return 0
   }
 }

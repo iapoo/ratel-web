@@ -42,7 +42,7 @@ export class Rectangle {
     return new Rectangle(left, top, left + width, top + height)
   }
 
-  private _source: number[];
+  private _source: number[]
 
   public constructor(left: number, top: number, right: number, bottom: number) {
     this._source = [left, top, right, bottom,]
@@ -90,7 +90,7 @@ export class Rectangle {
 }
 
 export class RoundRectangle {
-  private _source: number[];
+  private _source: number[]
   public constructor(
     left: number,
     top: number,
@@ -171,7 +171,7 @@ export class Color {
     return color
   }
 
-  private _source: number[];
+  private _source: number[]
 
   constructor(r: number, g: number, b: number, a: number) {
     this._source = [(r & 0xff) / 255, (g & 0xff) / 255, (b & 0xff) / 255, (a & 0xff) / 255,]
@@ -560,8 +560,8 @@ export enum ParagraphDirection {
 }
 
 export class TextFontFeature {
-  public readonly name: string;
-  public readonly value: number;
+  public readonly name: string
+  public readonly value: number
   constructor(name: string, value: number) {
     this.name = name
     this.value = value
@@ -577,29 +577,29 @@ export class TextShadow {
 }
 
 export interface ParagraphStyleOptions {
-  disableHinting?: boolean;
-  ellipsis?: string;
-  heightMultiplier?: number;
-  maxLines?: number;
-  strutStyle?: StrutStyle;
-  textAlignment?: TextAlignment;
-  textDirection?: TextDirection;
-  textHeightBehavior?: TextHeightBehavior;
-  textStyle: TextStyle;
+  disableHinting?: boolean
+  ellipsis?: string
+  heightMultiplier?: number
+  maxLines?: number
+  strutStyle?: StrutStyle
+  textAlignment?: TextAlignment
+  textDirection?: TextDirection
+  textHeightBehavior?: TextHeightBehavior
+  textStyle: TextStyle
   paragraphDirection?: ParagraphDirection
 }
 
 export class ParagraphStyle {
-  private _source;
-  private _disableHinting?: boolean;
-  private _ellipsis?: string;
-  private _heightMultiplier: number;
-  private _maxLines: number;
-  private _strutStyle: StrutStyle;
-  private _textAlignment: TextAlignment;
-  private _textDirection: TextDirection;
-  private _textHeightBehavior: TextHeightBehavior;
-  private _textStyle: TextStyle;
+  private _source
+  private _disableHinting?: boolean
+  private _ellipsis?: string
+  private _heightMultiplier: number
+  private _maxLines: number
+  private _strutStyle: StrutStyle
+  private _textAlignment: TextAlignment
+  private _textDirection: TextDirection
+  private _textHeightBehavior: TextHeightBehavior
+  private _textStyle: TextStyle
   private _paragraphDirection: ParagraphDirection
 
   constructor(
@@ -666,7 +666,7 @@ export class ParagraphStyle {
 }
 
 export class Paragraph {
-  private _source;
+  private _source
 
   constructor(paragraphBuilder: ParagraphBuilder) {
     this._source = paragraphBuilder.source.build()
@@ -694,15 +694,15 @@ export class Paragraph {
 }
 
 export interface FontStyleOptions {
-  weight?: FontWeight;
-  width?: FontWidth;
-  slant?: FontSlant;
+  weight?: FontWeight
+  width?: FontWidth
+  slant?: FontSlant
 }
 
 export class FontStyle {
-  private _weight: FontWeight;
-  private _width: FontWidth;
-  private _slant: FontSlant;
+  private _weight: FontWeight
+  private _width: FontWidth
+  private _slant: FontSlant
 
   constructor(options?: FontStyleOptions) {
     this._weight = options?.weight ? options.weight : FontWeight.NORMAL
@@ -724,46 +724,46 @@ export class FontStyle {
 }
 
 export interface TextStyleOptions {
-  backgroundColor?: Color;
-  color?: Color;
-  decoration?: number;
-  decorationColor?: Color;
-  decorationThickness?: number;
-  decorationStyle?: DecorationStyle;
-  fontFamilies?: string[];
-  fontFeatures?: TextFontFeature[];
-  fontSize?: number;
-  fontStyle?: FontStyle;
-  foregroundColor?: Color;
-  heightMultiplier?: number;
-  halfLeading?: boolean;
-  letterSpacing?: number;
-  locale?: string;
-  shadows?: TextShadow[];
-  textBaseline?: TextBaseline;
-  wordSpacing?: number;
+  backgroundColor?: Color
+  color?: Color
+  decoration?: number
+  decorationColor?: Color
+  decorationThickness?: number
+  decorationStyle?: DecorationStyle
+  fontFamilies?: string[]
+  fontFeatures?: TextFontFeature[]
+  fontSize?: number
+  fontStyle?: FontStyle
+  foregroundColor?: Color
+  heightMultiplier?: number
+  halfLeading?: boolean
+  letterSpacing?: number
+  locale?: string
+  shadows?: TextShadow[]
+  textBaseline?: TextBaseline
+  wordSpacing?: number
 }
 
 export class TextStyle {
-  private _source;
-  private _backgroundColor?: Color;
-  private _color: Color;
-  private _decoration: number;
-  private _decorationColor?: Color;
-  private _decorationThickness: number;
-  private _decorationStyle: DecorationStyle;
-  private _fontFamilies: string[];
-  private _fontFeatures: TextFontFeature[];
-  private _fontSize: number;
-  private _fontStyle: FontStyle;
-  private _foregroundColor?: Color;
-  private _heightMultiplier: number;
-  private _halfLeading: boolean;
-  private _letterSpacing: number;
-  private _locale?: string;
-  private _shadows: TextShadow[];
-  private _textBaseline: TextBaseline;
-  private _wordSpacing: number;
+  private _source
+  private _backgroundColor?: Color
+  private _color: Color
+  private _decoration: number
+  private _decorationColor?: Color
+  private _decorationThickness: number
+  private _decorationStyle: DecorationStyle
+  private _fontFamilies: string[]
+  private _fontFeatures: TextFontFeature[]
+  private _fontSize: number
+  private _fontStyle: FontStyle
+  private _foregroundColor?: Color
+  private _heightMultiplier: number
+  private _halfLeading: boolean
+  private _letterSpacing: number
+  private _locale?: string
+  private _shadows: TextShadow[]
+  private _textBaseline: TextBaseline
+  private _wordSpacing: number
 
   constructor(
     textStyle: TextStyleOptions = {
@@ -893,26 +893,26 @@ export class TextStyle {
 }
 
 export interface StrutStyleOptions {
-  strutEnabled?: boolean;
-  fontFamilies?: string[];
-  fontStyle?: FontStyle;
-  fontSize?: number;
-  heightMultiplier?: number;
-  halfLeading?: boolean;
-  leading?: number;
-  forceStrutHeight?: boolean;
+  strutEnabled?: boolean
+  fontFamilies?: string[]
+  fontStyle?: FontStyle
+  fontSize?: number
+  heightMultiplier?: number
+  halfLeading?: boolean
+  leading?: number
+  forceStrutHeight?: boolean
 }
 
 export class StrutStyle {
-  private _source;
-  private _strutEnabled: boolean;
-  private _fontFamilies: string[];
-  private _fontStyle: FontStyle;
-  private _fontSize: number;
-  private _heightMultiplier: number;
-  private _halfLeading: boolean;
-  private _leading: number;
-  private _forceStrutHeight: boolean;
+  private _source
+  private _strutEnabled: boolean
+  private _fontFamilies: string[]
+  private _fontStyle: FontStyle
+  private _fontSize: number
+  private _heightMultiplier: number
+  private _halfLeading: boolean
+  private _leading: number
+  private _forceStrutHeight: boolean
 
   public constructor(options?: StrutStyleOptions) {
     this._strutEnabled = options?.strutEnabled ? options.strutEnabled : false
@@ -1337,23 +1337,23 @@ export class GraphicsUtils {
 
 
   public static getTriangleAngleEx(target: Point2, start: Point2, end: Point2) {
-    const numerator = start.y * (target.x - end.x) + target.y * (end.x - start.x) + end.y * (start.x - target.x);
-    const denominator = (start.x - target.x) * (target.x - end.x) + (start.y - target.y) * (target.y - end.y);
-    const ratio = numerator / denominator;
+    const numerator = start.y * (target.x - end.x) + target.y * (end.x - start.x) + end.y * (start.x - target.x)
+    const denominator = (start.x - target.x) * (target.x - end.x) + (start.y - target.y) * (target.y - end.y)
+    const ratio = numerator / denominator
 
-    const angleRad = Math.atan(ratio);
-    const angleDeg = (angleRad * 180) / Math.PI;
+    const angleRad = Math.atan(ratio)
+    const angleDeg = (angleRad * 180) / Math.PI
 
     //if(angleDeg<0){
     // angleDeg = 180+angleDeg;
     //}
 
-    return angleDeg;
+    return angleDeg
   }
 }
 
 export class ParagraphBuilder {
-  private _source;
+  private _source
   constructor(paragraphStyle: ParagraphStyle) {
     this._source = Engine.canvasKit.ParagraphBuilder.MakeFromFontProvider(
       paragraphStyle.source,
@@ -1410,7 +1410,7 @@ export class ParagraphBuilder {
 }
 
 export class Paint {
-  private _source;
+  private _source
   private _strokeDashStyle: StrokeDashStyle
   private _colorFilter: ColorFilter | null = null
   private _pathEffect: PathEffect | null = null
@@ -1529,27 +1529,27 @@ export class Paint {
       case StrokeDashStyle.DASH: {
         this._pathEffect = Engine.canvasKit.PathEffect.MakeDash([10, 2, 10, 2])
         this._source.setPathEffect(this._pathEffect)
-        break;
+        break
       }
       case StrokeDashStyle.DOT: {
         this._pathEffect = Engine.canvasKit.PathEffect.MakeDash([2, 2, 2, 2])
         this._source.setPathEffect(this._pathEffect)
-        break;
+        break
       }
       case StrokeDashStyle.DASH_DOT: {
         this._pathEffect = Engine.canvasKit.PathEffect.MakeDash([10, 2, 2, 2])
         this._source.setPathEffect(this._pathEffect)
-        break;
+        break
       }
       case StrokeDashStyle.DASH_DOT_DOT: {
         this._pathEffect = Engine.canvasKit.PathEffect.MakeDash([10, 2, 2, 2, 2, 2])
         this._source.setPathEffect(this._pathEffect)
-        break;
+        break
       }
       case StrokeDashStyle.SOLID:
       default:
         this._source.setPathEffect(null)
-        break;
+        break
     }
   }
 
@@ -1567,9 +1567,9 @@ export class Paint {
 }
 
 export class Font {
-  private _fontName: string;
-  private _fontSize: number;
-  private _source;
+  private _fontName: string
+  private _fontSize: number
+  private _source
 
   constructor(fontName: string = EngineUtils.FONT_NAME_DEFAULT, fontSize = 14) {
     this._fontName = fontName
@@ -1649,11 +1649,11 @@ export class Font {
 }
 
 export class Rotation {
-  private _radius: number;
+  private _radius: number
 
-  private _px: number;
+  private _px: number
 
-  private _py: number;
+  private _py: number
 
   public constructor(radius: number, px = 0, py = 0) {
     this._radius = radius
@@ -1685,13 +1685,13 @@ export class Rotation {
 }
 
 export class Scale {
-  private _sx: number;
+  private _sx: number
 
-  private _sy: number;
+  private _sy: number
 
-  private _px: number;
+  private _px: number
 
-  private _py: number;
+  private _py: number
 
   public constructor(sx: number, sy: number, px = 0, py = 0) {
     this._sx = sx
@@ -1731,13 +1731,13 @@ export class Scale {
 }
 
 export class Skew {
-  private _kx: number;
+  private _kx: number
 
-  private _ky: number;
+  private _ky: number
 
-  private _px: number;
+  private _px: number
 
-  private _py: number;
+  private _py: number
 
   public constructor(kx: number, ky: number, px = 0, py = 0) {
     this._kx = kx
@@ -1776,9 +1776,9 @@ export class Skew {
   }
 }
 export class Vector3 {
-  private _x: number;
-  private _y: number;
-  private _z: number;
+  private _x: number
+  private _y: number
+  private _z: number
 
   public constructor(x: number, y: number, z: number) {
     this._x = x
@@ -1808,7 +1808,7 @@ export class Vector3 {
 }
 
 export class Matrix {
-  private _source: number[];
+  private _source: number[]
 
   public static make(data: number[]) {
     const matrix = new Matrix()
@@ -1889,7 +1889,7 @@ export class Matrix4 {
     return matrix
   }
 
-  private _source: number[];
+  private _source: number[]
 
   public constructor() {
     this._source = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1,]
@@ -1897,7 +1897,7 @@ export class Matrix4 {
 }
 
 export class Path {
-  private _source;
+  private _source
 
   constructor(path: Path | null = null) {
     if (path) {
@@ -2134,7 +2134,7 @@ export class Path {
 }
 
 export class ImageInfo {
-  private _source;
+  private _source
   constructor(
     readonly alphaType: AlphaType,
     readonly colorSpace: ColorSpace,
@@ -2241,7 +2241,7 @@ export class ShapedLine {
 }
 
 export class Graphics {
-  private _engine: Engine;
+  private _engine: Engine
 
   public constructor(engine: Engine) {
     this._engine = engine
@@ -2679,14 +2679,14 @@ export enum FingerType {
 }
 
 export class NodeEvent {
-  readonly source: Node;
+  readonly source: Node
   constructor(source: Node) {
     this.source = source
   }
 }
 
 export class NodeChangeEvent extends NodeEvent {
-  readonly target: Node;
+  readonly target: Node
   constructor(source: Node, target: Node) {
     super(source)
     this.target = target
@@ -2694,14 +2694,14 @@ export class NodeChangeEvent extends NodeEvent {
 }
 
 export class KeyEvent extends NodeEvent {
-  readonly key: string;
-  readonly code: string;
-  readonly shift: boolean;
-  readonly control: boolean;
-  readonly alt: boolean;
-  readonly metaKey: boolean;
-  readonly repeat: boolean;
-  readonly isComposing: boolean;
+  readonly key: string
+  readonly code: string
+  readonly shift: boolean
+  readonly control: boolean
+  readonly alt: boolean
+  readonly metaKey: boolean
+  readonly repeat: boolean
+  readonly isComposing: boolean
 
   constructor(
     source: Node,
@@ -2727,10 +2727,10 @@ export class KeyEvent extends NodeEvent {
 }
 
 export class KeyPressEvent extends NodeEvent {
-  readonly keyCode: KeyCode;
-  readonly shift: boolean;
-  readonly control: boolean;
-  readonly alt: boolean;
+  readonly keyCode: KeyCode
+  readonly shift: boolean
+  readonly control: boolean
+  readonly alt: boolean
 
   constructor(source: Node, keyCode: KeyCode, shift: boolean, control: boolean, alt: boolean) {
     super(source)
@@ -2742,7 +2742,7 @@ export class KeyPressEvent extends NodeEvent {
 }
 
 export class CharEvent extends NodeEvent {
-  readonly charCode: number;
+  readonly charCode: number
 
   constructor(source: Node, charCode: number) {
     super(source)
@@ -2751,12 +2751,12 @@ export class CharEvent extends NodeEvent {
 }
 
 export class MouseEvent extends NodeEvent {
-  readonly x: number;
-  readonly y: number;
-  readonly mouseCode: MouseCode;
-  readonly shift: boolean;
-  readonly control: boolean;
-  readonly alt: boolean;
+  readonly x: number
+  readonly y: number
+  readonly mouseCode: MouseCode
+  readonly shift: boolean
+  readonly control: boolean
+  readonly alt: boolean
 
   constructor(
     source: Node,
@@ -2778,11 +2778,11 @@ export class MouseEvent extends NodeEvent {
 }
 
 export class MouseMoveEvent extends NodeEvent {
-  readonly x: number;
-  readonly y: number;
-  readonly shift: boolean;
-  readonly control: boolean;
-  readonly alt: boolean;
+  readonly x: number
+  readonly y: number
+  readonly shift: boolean
+  readonly control: boolean
+  readonly alt: boolean
 
   constructor(source: Node, x: number, y: number, shift: boolean, control: boolean, alt: boolean) {
     super(source)
@@ -2795,14 +2795,14 @@ export class MouseMoveEvent extends NodeEvent {
 }
 
 export class TouchFingerEvent extends NodeEvent {
-  readonly fingerType: FingerType;
-  readonly fingerId: number;
-  readonly touchId: number;
-  readonly x: number;
-  readonly y: number;
-  readonly dx: number;
-  readonly dy: number;
-  readonly pressure: number;
+  readonly fingerType: FingerType
+  readonly fingerId: number
+  readonly touchId: number
+  readonly x: number
+  readonly y: number
+  readonly dx: number
+  readonly dy: number
+  readonly pressure: number
 
   constructor(
     source: Node,
@@ -2828,16 +2828,16 @@ export class TouchFingerEvent extends NodeEvent {
 }
 
 export class PointerEvent extends MouseEvent {
-  readonly height: number;
-  readonly isPrimary: boolean;
-  readonly pointerId: number;
-  readonly pointerType: string;
-  readonly pressure: number;
-  readonly tangentialPressure: number;
-  readonly tiltX: number;
-  readonly tiltY: number;
-  readonly twist: number;
-  readonly width: number;
+  readonly height: number
+  readonly isPrimary: boolean
+  readonly pointerId: number
+  readonly pointerType: string
+  readonly pressure: number
+  readonly tangentialPressure: number
+  readonly tiltX: number
+  readonly tiltY: number
+  readonly twist: number
+  readonly width: number
 
   constructor(
     source: Node,

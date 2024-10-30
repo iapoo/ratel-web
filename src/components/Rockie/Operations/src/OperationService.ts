@@ -17,7 +17,7 @@ export class OperationService {
     }
 
     public addOperation(operation: Operation) {
-        this._undoOperations.push(operation)    
+        this._undoOperations.push(operation)
         this._redoOperations.length = 0
     }
 
@@ -27,38 +27,38 @@ export class OperationService {
     }
 
     public undo() {
-        if(this._undoOperations.length > 0) {
+        if (this._undoOperations.length > 0) {
             this._redoOperations.push(this._undoOperations[this._undoOperations.length - 1])
-            this._undoOperations.pop()            
+            this._undoOperations.pop()
         }
     }
 
     public redo() {
-        if(this._redoOperations.length > 0) {
+        if (this._redoOperations.length > 0) {
             this._undoOperations.push(this._redoOperations[this._redoOperations.length - 1])
-            this._redoOperations.pop()            
+            this._redoOperations.pop()
         }
     }
 
-    public getUndoOperations() : Operation[] {
+    public getUndoOperations(): Operation[] {
         return this._undoOperations
-        
+
     }
 
     public getUndoOperation(): Operation | undefined {
-        if(this._undoOperations.length > 0) {
+        if (this._undoOperations.length > 0) {
             return this._undoOperations[this._undoOperations.length - 1]
         } else {
             return undefined
         }
     }
 
-    public getRedoOperations() : Operation[]  {
+    public getRedoOperations(): Operation[] {
         return this._redoOperations
     }
 
     public getRedoOperation(): Operation | undefined {
-        if(this._redoOperations.length > 0) {
+        if (this._redoOperations.length > 0) {
             return this._redoOperations[this._redoOperations.length - 1]
         } else {
             return undefined

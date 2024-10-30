@@ -47,14 +47,14 @@ export class UMLCustomContainer extends CustomContainerEntity {
   private initializeShape() {
     switch (this._shape.typeInfo.name) {
       case UMLCustomContainers.TYPE_ACTOR_LIFELINE: {
-        break;
+        break
       }
       case UMLCustomContainers.TYPE_OBJECT_LIFELINE: {
         this.text = this._shape.typeInfo.text
-        break;
+        break
       }
       default:
-        break;
+        break
     }
   }
 
@@ -103,7 +103,7 @@ export class UMLCustomContainer extends CustomContainerEntity {
         theThis.secondStroke.setStrokeDashStyle(StrokeDashStyle.DASH)
         theThis.secondPath.moveTo(theThis.width / 2, modifierHeight)
         theThis.secondPath.lineTo(theThis.width / 2, theThis.height)
-        break;
+        break
       }
       case UMLCustomContainers.TYPE_OBJECT_LIFELINE: {
         theThis.textHeight = modifierHeight
@@ -111,7 +111,7 @@ export class UMLCustomContainer extends CustomContainerEntity {
         theThis.secondStroke.setStrokeDashStyle(StrokeDashStyle.DASH)
         theThis.secondPath.moveTo(theThis.width / 2, modifierHeight)
         theThis.secondPath.lineTo(theThis.width / 2, theThis.height)
-        break;
+        break
       }
     }
   }

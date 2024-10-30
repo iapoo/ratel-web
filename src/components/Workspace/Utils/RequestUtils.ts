@@ -1,5 +1,5 @@
 
-import { DataNode } from 'antd/es/tree';
+import { DataNode } from 'antd/es/tree'
 import axios from 'axios'
 import moment from 'moment'
 
@@ -15,21 +15,21 @@ export interface UserInfo {
 }
 
 export interface Folder {
-    folderId: number;
-    folderName: string;
-    parentId: number | null;
-    data: DataNode;
+    folderId: number
+    folderName: string
+    parentId: number | null
+    data: DataNode
     modifiedDate: string
     modifiedTime: string
 }
 
 export interface Document {
-    documentId: number;
-    documentName: string;
-    content: string;
+    documentId: number
+    documentName: string
+    content: string
     modifiedDate: string
     modifiedTime: string
-    folderId: number | null;
+    folderId: number | null
 }
 
 export interface MyShapes {
@@ -111,7 +111,7 @@ export class RequestUtils {
     }
 
     public static get token(): string {
-        return RequestUtils.token_;
+        return RequestUtils.token_
     }
 
     public static get userInfo() {
@@ -119,7 +119,7 @@ export class RequestUtils {
     }
 
     public static set token(value: string) {
-        RequestUtils.token_ = value;
+        RequestUtils.token_ = value
     }
 
     public static get userName() {
@@ -131,7 +131,7 @@ export class RequestUtils {
     }
 
     public static get password() {
-        return RequestUtils.password_;
+        return RequestUtils.password_
     }
 
     public static set password(value: string) {
@@ -241,10 +241,10 @@ export class RequestUtils {
             if (online) {
                 RequestUtils.checkTime_ = 0
                 // console.log(`isOnlie == checkpoint = 2`)
-                return true;
+                return true
             } else {
                 // console.log(`isOnlie == checkpoint = 3`)
-                return false;
+                return false
             }
         } else {
             if (RequestUtils.online_) {
@@ -257,10 +257,10 @@ export class RequestUtils {
                     RequestUtils.checkTime_ = 0
                     RequestUtils.online_ = true
                     // console.log(`isOnlie == checkpoint = 5`)
-                    return true;
+                    return true
                 } else {
                     // console.log(`isOnlie == checkpoint = 6`)
-                    return false;
+                    return false
                 }
             } else {
                 // console.log(`isOnlie == checkpoint = 7`)
@@ -288,7 +288,7 @@ export class RequestUtils {
         } else {
             RequestUtils.userInfo_ = null
             RequestUtils.online_ = false
-            return false;
+            return false
         }
     }
 
@@ -588,7 +588,7 @@ export class RequestUtils {
     }
 
 
-    public static getOperatorCustomers(like: string | null,excludeCustomerId: number | null, pageNum: number = 1, pageSize: number = 5) {
+    public static getOperatorCustomers(like: string | null, excludeCustomerId: number | null, pageNum: number = 1, pageSize: number = 5) {
         const data = {
             like: like ? like : null,
             excludeCustomerId: excludeCustomerId,
@@ -605,7 +605,7 @@ export class RequestUtils {
     }
 
 
-    public static getOperatorDocuments(like: string | null,pageNum: number = 1, pageSize: number = 10) {
+    public static getOperatorDocuments(like: string | null, pageNum: number = 1, pageSize: number = 10) {
         const data = {
             like: like ? like : null,
             pageSize: pageSize,
@@ -850,7 +850,7 @@ export class RequestUtils {
     public static deleteDocumentAccess(documentId: number, customerId: number) {
         const data = {
             documentId: documentId,
-            customerId: customerId,            
+            customerId: customerId,
         }
         const config = {
             headers: {
@@ -897,7 +897,7 @@ export class RequestUtils {
     public static deleteDocumentTeamAccess(documentId: number, teamId: number) {
         const data = {
             documentId: documentId,
-            teamId: teamId,            
+            teamId: teamId,
         }
         const config = {
             headers: {
@@ -951,7 +951,7 @@ export class RequestUtils {
         return axios.post(this.rockieServerAddress + `/utils/google-fonts`, data, config)
     }
 
-    public static async sendVerificationCode(toMail: string) {        
+    public static async sendVerificationCode(toMail: string) {
         const data = {
             to: toMail
         }

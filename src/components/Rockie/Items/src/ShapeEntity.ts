@@ -337,23 +337,23 @@ export class ShapeEntity extends Entity {
     switch (freezeType) {
       case Shapes.FREEZE_WIDTH:
         entityFreezeType = EntityShapeFreezeType.Width
-        break;
+        break
       case Shapes.FREEZE_HEIGHT:
         entityFreezeType = EntityShapeFreezeType.Height
-        break;
+        break
       case Shapes.FREEZE_WIDTH_HEIGHT:
         entityFreezeType = EntityShapeFreezeType.WidthHeight
-        break;
+        break
       case Shapes.FREEZE_ASPECT_RATIO:
         entityFreezeType = EntityShapeFreezeType.AspectRatio
-        break;
+        break
       case Shapes.FREEZE_NONE:
       default:
         entityFreezeType = EntityShapeFreezeType.None
-        break;
+        break
     }
 
-    return entityFreezeType;
+    return entityFreezeType
   }
 
   private parseAdaptDirection(adapterDirection: string) {
@@ -361,10 +361,10 @@ export class ShapeEntity extends Entity {
     switch (adapterDirection) {
       case Shapes.ADAPTER_DIRECTION_X:
         theAdaptDirection = AdapterDirection.X
-        break;
+        break
       case Shapes.ADAPTER_DIRECTION_Y:
         theAdaptDirection = AdapterDirection.Y
-        break;
+        break
     }
     return theAdaptDirection
   }
@@ -414,73 +414,73 @@ export class ShapeEntity extends Entity {
     switch (type) {
       case Shapes.TYPE_RECTANGLE:
         shapeType = EntityShapeType.Rectangle
-        break;
+        break
       case Shapes.TYPE_ROUND_RECTANGLE:
         shapeType = EntityShapeType.RoundRectangle
-        break;
+        break
       case Shapes.TYPE_TEXT:
         shapeType = EntityShapeType.Text
-        break;
+        break
       case Shapes.TYPE_ELLIPSE:
         shapeType = EntityShapeType.Ellipse
-        break;
+        break
       case Shapes.TYPE_SQUARE:
         shapeType = EntityShapeType.Square
-        break;
+        break
       case Shapes.TYPE_CIRCLE:
         shapeType = EntityShapeType.Circle
-        break;
+        break
       case Shapes.TYPE_PROCESS:
         shapeType = EntityShapeType.Process
-        break;
+        break
       case Shapes.TYPE_DIAMOND:
         shapeType = EntityShapeType.Diamond
-        break;
+        break
       case Shapes.TYPE_PARALLELOGRAM:
         shapeType = EntityShapeType.Parallelogram
-        break;
+        break
       case Shapes.TYPE_HEXAGON:
         shapeType = EntityShapeType.Hexagon
-        break;
+        break
       case Shapes.TYPE_TRIANGLE:
         shapeType = EntityShapeType.Triangle
-        break;
+        break
       case Shapes.TYPE_CYLINDER:
         shapeType = EntityShapeType.Cylinder
-        break;
+        break
       case Shapes.TYPE_CLOUD:
         shapeType = EntityShapeType.Cloud
-        break;
+        break
       case Shapes.TYPE_DOCUMENT:
         shapeType = EntityShapeType.Document
-        break;
+        break
       case Shapes.TYPE_INTERNAL_STORAGE:
         shapeType = EntityShapeType.InternalStorage
-        break;
+        break
       case Shapes.TYPE_CUBE:
         shapeType = EntityShapeType.Cube
-        break;
+        break
       case Shapes.TYPE_STEP:
         shapeType = EntityShapeType.Step
-        break;
+        break
       case Shapes.TYPE_TRAPEZOID:
         shapeType = EntityShapeType.Trapezoid
-        break;
+        break
       case Shapes.TYPE_TAPE:
         shapeType = EntityShapeType.Tape
-        break;
+        break
       case Shapes.TYPE_NOTE:
         shapeType = EntityShapeType.Note
-        break;
+        break
       case Shapes.TYPE_CARD:
         shapeType = EntityShapeType.Card
-        break;
+        break
       case Shapes.TYPE_CALLOUT:
         shapeType = EntityShapeType.Callout
-        break;
+        break
       case Shapes.TYPE_ACTOR:
         shapeType = EntityShapeType.Actor
-        break;
+        break
     }
     return shapeType
   }
