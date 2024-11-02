@@ -1,0 +1,11 @@
+{
+  "editor.formatOnSave": true,
+  "typescript.format.semicolons": "remove",
+  "javascript.format.semicolons": "remove",
+  "eslint.format.enable": false,
+  "editor.defaultFormatter": "vscode.typescript-language-features",
+  "javascript.preferences.quoteStyle": "single",
+  "typescript.preferences.quoteStyle": "single",
+  "javascript.inlayHints.enumMemberValues.enabled": false,
+  "editor.tabSize": 2
+}

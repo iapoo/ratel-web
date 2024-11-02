@@ -13,5 +13,5 @@
 /.umi-test
 /dist
 /.mfsu
-/.vscode
+#/.vscode
 .swc
