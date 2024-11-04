@@ -1,21 +1,20 @@
-import axios, { AxiosResponse, AxiosRequestConfig } from "axios"
-import { CanvasKit, Typeface, TypefaceFontProvider } from "canvaskit-wasm"
-import { FontStyle } from "./Graphics"
+import axios, { AxiosResponse } from 'axios'
+import { CanvasKit, Typeface, TypefaceFontProvider } from 'canvaskit-wasm'
 
 export class EngineUtils {
-  public static FONT_NAME_DEFAULT = "Roboto";
+  public static FONT_NAME_DEFAULT = 'Roboto'
   //public static FONT_NAME_SANS = 'Sans'
   //public static FONT_NAME_SERIF = 'Serif'
-  public static FONT_NAME_LATO = "Lato";
-  public static FONT_NAME_NOTO_SERIF_SC = "Noto Serif SC";
-  public static FONT_NAME_OPEN_SANS = "Open Sans";
-  public static FONT_NAME_ROBOTO_SLAB = "Roboto Slab";
-  public static FONT_NAME_ROBOTO = "Roboto";
-  public static FONT_NAME_SOURCE_CODE_PRO = "Source Code Pro";
-  public static FONT_SIZE_DEFAULT = 14;
+  public static FONT_NAME_LATO = 'Lato'
+  public static FONT_NAME_NOTO_SERIF_SC = 'Noto Serif SC'
+  public static FONT_NAME_OPEN_SANS = 'Open Sans'
+  public static FONT_NAME_ROBOTO_SLAB = 'Roboto Slab'
+  public static FONT_NAME_ROBOTO = 'Roboto'
+  public static FONT_NAME_SOURCE_CODE_PRO = 'Source Code Pro'
+  public static FONT_SIZE_DEFAULT = 14
 
-  public static LANG_EN_US = "en-US";
-  public static LANG_ZH_CN = "zh-CN";
+  public static LANG_EN_US = 'en-US'
+  public static LANG_ZH_CN = 'zh-CN'
 
   //   public static getCanvasKitWasm = () => {
   //     return axios.get(`/resources/canvaskit.wasm`, {
@@ -37,20 +36,20 @@ export enum WebFontStatus {
 }
 
 export class UnicodeRange {
-  public begin: number = 0;
-  public end: number = 0;
+  public begin: number = 0
+  public end: number = 0
 }
 
 export class WebFont {
-  public isSystemFont: boolean = false;
-  public fontFamily: string = "";
-  public url: string = "";
-  public src: string = "";
-  public status: WebFontStatus = WebFontStatus.NOT_LOADED;
-  public fontData: Blob | undefined = undefined;
-  public fontWeight: string = "400";
-  public fontStyle: string = "";
-  public unicodeRanges: UnicodeRange[] = [];
+  public isSystemFont: boolean = false
+  public fontFamily: string = ''
+  public url: string = ''
+  public src: string = ''
+  public status: WebFontStatus = WebFontStatus.NOT_LOADED
+  public fontData: Blob | undefined = undefined
+  public fontWeight: string = '400'
+  public fontStyle: string = ''
+  public unicodeRanges: UnicodeRange[] = []
 }
 
 export interface LanguageFont {
@@ -61,8 +60,18 @@ export interface LanguageFont {
 }
 
 export const LanguageFonts: LanguageFont[] = [
-  { language: EngineUtils.LANG_EN_US, defaultLatinFont: EngineUtils.FONT_NAME_ROBOTO, defaultNonLatinFont: EngineUtils.FONT_NAME_NOTO_SERIF_SC, fonts: ["Lato", "Open Sans", "Source Code Pro", "Roboto Slab"], },
-  { language: EngineUtils.LANG_ZH_CN, defaultLatinFont: EngineUtils.FONT_NAME_ROBOTO, defaultNonLatinFont: EngineUtils.FONT_NAME_NOTO_SERIF_SC, fonts: ["Noto Sans SC"], },
+  {
+    language: EngineUtils.LANG_EN_US,
+    defaultLatinFont: EngineUtils.FONT_NAME_ROBOTO,
+    defaultNonLatinFont: EngineUtils.FONT_NAME_NOTO_SERIF_SC,
+    fonts: ['Lato', 'Open Sans', 'Source Code Pro', 'Roboto Slab'],
+  },
+  {
+    language: EngineUtils.LANG_ZH_CN,
+    defaultLatinFont: EngineUtils.FONT_NAME_ROBOTO,
+    defaultNonLatinFont: EngineUtils.FONT_NAME_NOTO_SERIF_SC,
+    fonts: ['Noto Sans SC'],
+  },
 ]
 
 export enum Languages {
@@ -71,12 +80,18 @@ export enum Languages {
 }
 
 export const SystemFonts = [
-  { fontName: EngineUtils.FONT_NAME_LATO, fontUrl: process.env.BASIC_PATH + "/fonts/Lato-Regular.woff2", },
-  { fontName: EngineUtils.FONT_NAME_OPEN_SANS, fontUrl: process.env.BASIC_PATH + "/fonts/Open-Sans-Regular.woff2", },
-  { fontName: EngineUtils.FONT_NAME_ROBOTO, fontUrl: process.env.BASIC_PATH + "/fonts/Roboto-Regular.woff2", },
-  { fontName: EngineUtils.FONT_NAME_ROBOTO_SLAB, fontUrl: process.env.BASIC_PATH + "/fonts/Roboto-Slab-Regular.woff2", },
-  { fontName: EngineUtils.FONT_NAME_SOURCE_CODE_PRO, fontUrl: process.env.BASIC_PATH + "/fonts/Source-Code-Pro-Regular.woff2", },
-  { fontName: EngineUtils.FONT_NAME_NOTO_SERIF_SC, fontUrl: process.env.BASIC_PATH + "/fonts/Noto-Serif-SC-Regular.woff2", },
+  { fontName: EngineUtils.FONT_NAME_LATO, fontUrl: process.env.BASIC_PATH + '/fonts/Lato-Regular.woff2' },
+  { fontName: EngineUtils.FONT_NAME_OPEN_SANS, fontUrl: process.env.BASIC_PATH + '/fonts/Open-Sans-Regular.woff2' },
+  { fontName: EngineUtils.FONT_NAME_ROBOTO, fontUrl: process.env.BASIC_PATH + '/fonts/Roboto-Regular.woff2' },
+  { fontName: EngineUtils.FONT_NAME_ROBOTO_SLAB, fontUrl: process.env.BASIC_PATH + '/fonts/Roboto-Slab-Regular.woff2' },
+  {
+    fontName: EngineUtils.FONT_NAME_SOURCE_CODE_PRO,
+    fontUrl: process.env.BASIC_PATH + '/fonts/Source-Code-Pro-Regular.woff2',
+  },
+  {
+    fontName: EngineUtils.FONT_NAME_NOTO_SERIF_SC,
+    fontUrl: process.env.BASIC_PATH + '/fonts/Noto-Serif-SC-Regular.woff2',
+  },
 ]
 
 export enum WebFontSource {
@@ -89,31 +104,31 @@ export interface WebFontMeta {
 }
 
 export const WebFonts: WebFontMeta[] = [
-  { fontFamily: "Lato", source: WebFontSource.GOOGLE },
-  { fontFamily: "Lora", source: WebFontSource.GOOGLE },
-  { fontFamily: "Merriweather", source: WebFontSource.GOOGLE },
-  { fontFamily: "Montserrat", source: WebFontSource.GOOGLE },
-  { fontFamily: "Noto Sans", source: WebFontSource.GOOGLE },
-  { fontFamily: "Noto Sans SC", source: WebFontSource.GOOGLE },
-  { fontFamily: "Noto Serif", source: WebFontSource.GOOGLE },
-  { fontFamily: "Noto Serif SC", source: WebFontSource.GOOGLE },
-  { fontFamily: "Open Sans", source: WebFontSource.GOOGLE },
-  { fontFamily: "Oswald", source: WebFontSource.GOOGLE },
-  { fontFamily: "PT Sans", source: WebFontSource.GOOGLE },
-  { fontFamily: "PT Serif", source: WebFontSource.GOOGLE },
-  { fontFamily: "Raleway", source: WebFontSource.GOOGLE },
-  { fontFamily: "Source Sans Pro", source: WebFontSource.GOOGLE },
-  { fontFamily: "Roboto Mono", source: WebFontSource.GOOGLE },
-  { fontFamily: "Roboto Slab", source: WebFontSource.GOOGLE },
+  { fontFamily: 'Lato', source: WebFontSource.GOOGLE },
+  { fontFamily: 'Lora', source: WebFontSource.GOOGLE },
+  { fontFamily: 'Merriweather', source: WebFontSource.GOOGLE },
+  { fontFamily: 'Montserrat', source: WebFontSource.GOOGLE },
+  { fontFamily: 'Noto Sans', source: WebFontSource.GOOGLE },
+  { fontFamily: 'Noto Sans SC', source: WebFontSource.GOOGLE },
+  { fontFamily: 'Noto Serif', source: WebFontSource.GOOGLE },
+  { fontFamily: 'Noto Serif SC', source: WebFontSource.GOOGLE },
+  { fontFamily: 'Open Sans', source: WebFontSource.GOOGLE },
+  { fontFamily: 'Oswald', source: WebFontSource.GOOGLE },
+  { fontFamily: 'PT Sans', source: WebFontSource.GOOGLE },
+  { fontFamily: 'PT Serif', source: WebFontSource.GOOGLE },
+  { fontFamily: 'Raleway', source: WebFontSource.GOOGLE },
+  { fontFamily: 'Source Sans Pro', source: WebFontSource.GOOGLE },
+  { fontFamily: 'Roboto Mono', source: WebFontSource.GOOGLE },
+  { fontFamily: 'Roboto Slab', source: WebFontSource.GOOGLE },
 ]
 
 export class WebFontManager {
-  private _webFonts: Map<string, WebFont[]> = new Map<string, WebFont[]>();
-  private _typeFaceFontProvider: TypefaceFontProvider | null = null;
-  private _fontDataMap: Map<string, ArrayBuffer> = new Map<string, ArrayBuffer>();
-  private _typeFaces: Map<string, Typeface | null> = new Map<string, Typeface | null>();
-  private _canvasKit: CanvasKit | null = null;
-  private _initialized: boolean = false;
+  private _webFonts: Map<string, WebFont[]> = new Map<string, WebFont[]>()
+  private _typeFaceFontProvider: TypefaceFontProvider | null = null
+  private _fontDataMap: Map<string, ArrayBuffer> = new Map<string, ArrayBuffer>()
+  private _typeFaces: Map<string, Typeface | null> = new Map<string, Typeface | null>()
+  private _canvasKit: CanvasKit | null = null
+  private _initialized: boolean = false
 
   /**
    * Always initialized before be used
@@ -159,7 +174,7 @@ export class WebFontManager {
     }
     let exists = false
     fonts.forEach((font) => {
-      if (webFont.url == font.url) {
+      if (webFont.url === font.url) {
         exists = true
       }
     })
@@ -178,14 +193,16 @@ export class WebFontManager {
 }
 
 export class TextFontGlyph {
-  public constructor(public text: string, public fontName: string, public glyph: number[]) {
-
-  }
+  public constructor(
+    public text: string,
+    public fontName: string,
+    public glyph: number[],
+  ) {}
 }
 
 export class FontUtils {
-  public static webFontManager = new WebFontManager();
-  private static _currentLanguage: string = EngineUtils.LANG_EN_US;
+  public static webFontManager = new WebFontManager()
+  private static _currentLanguage: string = EngineUtils.LANG_EN_US
 
   public static async intialize(canvasKit: CanvasKit) {
     FontUtils.webFontManager.initialize(canvasKit)
@@ -203,7 +220,7 @@ export class FontUtils {
   public static set currentLanguage(language: string) {
     let valid = false
     for (const languageFont of LanguageFonts) {
-      if (language == languageFont.language) {
+      if (language === languageFont.language) {
         valid = true
       }
     }
@@ -214,7 +231,7 @@ export class FontUtils {
 
   public static get currentLanguageFont() {
     for (let languageFont of LanguageFonts) {
-      if (FontUtils._currentLanguage == languageFont.language) {
+      if (FontUtils._currentLanguage === languageFont.language) {
         return languageFont
       }
     }
@@ -222,16 +239,12 @@ export class FontUtils {
   }
 
   public static get currentTypeface() {
-    const defaultTypeface = FontUtils.webFontManager.typeFaces.get(
-      FontUtils.currentLanguageFont.defaultLatinFont
-    )
+    const defaultTypeface = FontUtils.webFontManager.typeFaces.get(FontUtils.currentLanguageFont.defaultLatinFont)
     return defaultTypeface!
   }
 
   public static get currentNonLatinTypeface() {
-    const defaultTypeface = FontUtils.webFontManager.typeFaces.get(
-      FontUtils.currentLanguageFont.defaultNonLatinFont
-    )
+    const defaultTypeface = FontUtils.webFontManager.typeFaces.get(FontUtils.currentLanguageFont.defaultNonLatinFont)
     return defaultTypeface!
   }
 
@@ -245,7 +258,7 @@ export class FontUtils {
 
   public static getTypeFace(fontName: string): Typeface | null {
     let typeface = FontUtils.webFontManager.typeFaces.get(fontName)
-    if (typeface == undefined) {
+    if (typeface === undefined) {
       typeface = null
     }
     return typeface
@@ -338,15 +351,8 @@ export class FontUtils {
     return result
   }
 
-  public static isValidGlyphID(
-    glyphIDs: Uint16Array,
-    index: number,
-    sourceText: string
-  ) {
-    const valid =
-      glyphIDs[index] > 0 ||
-      sourceText.at(index) == "\n" ||
-      sourceText.at(index) == "\r"
+  public static isValidGlyphID(glyphIDs: Uint16Array, index: number, sourceText: string) {
+    const valid = glyphIDs[index] > 0 || sourceText.at(index) === '\n' || sourceText.at(index) === '\r'
     return valid
   }
 
@@ -388,7 +394,7 @@ export class FontUtils {
       } else {
         const fixGlyphIds = new Uint16Array(1)
         for (let i = 0; i < glyphIds.length; i++) {
-          if (glyphIds[i] == 0) {
+          if (glyphIds[i] === 0) {
             const fixString = text[i]
             const defaultTypeface = FontUtils.currentTypeface
             defaultTypeface.getGlyphIDs(fixString, 1, fixGlyphIds)
@@ -406,7 +412,7 @@ export class FontUtils {
 
   public static getDefaultNonLatinFontFamily(language: string) {
     for (let languageFont of LanguageFonts) {
-      if (language == languageFont.language) {
+      if (language === languageFont.language) {
         return languageFont.defaultNonLatinFont
       }
     }
@@ -416,13 +422,8 @@ export class FontUtils {
   public static async registerFont(fontName: string, fontUrl: string) {
     const fontData = await FontUtils.loadSystemFontFileByUrl(fontUrl)
     FontUtils.webFontManager.fontDataMap.set(fontName, fontData)
-    FontUtils.webFontManager.typeFaceFontProvider.registerFont(
-      fontData,
-      fontName
-    )
-    const typeface = FontUtils.webFontManager.canvasKit.Typeface.MakeFreeTypeFaceFromData(
-      fontData
-    )
+    FontUtils.webFontManager.typeFaceFontProvider.registerFont(fontData, fontName)
+    const typeface = FontUtils.webFontManager.canvasKit.Typeface.MakeFreeTypeFaceFromData(fontData)
     // if(typeface) {
     //   const test  = typeface.getGlyphIDs('测试')
     //   console.log(`${test}`)
@@ -438,13 +439,8 @@ export class FontUtils {
         for (let webFont of webFonts) {
           const webFontFile = await FontUtils.getWebFontFile(webFont.url)
           if (webFontFile.data) {
-            console.log(
-              `Register Font: family = ${webFont.fontFamily}, data length = ${webFontFile.data.byteLength}`
-            )
-            FontUtils.webFontManager.typeFaceFontProvider.registerFont(
-              webFontFile.data,
-              webFont.fontFamily
-            )
+            console.log(`Register Font: family = ${webFont.fontFamily}, data length = ${webFontFile.data.byteLength}`)
+            FontUtils.webFontManager.typeFaceFontProvider.registerFont(webFontFile.data, webFont.fontFamily)
             //const typeface = FontUtils.webFontManager.canvasKit.Typeface.MakeFreeTypeFaceFromData(webFontFile.data)
             //FontUtils.webFontManager.typeFaces.set(fontName, typeface)
 
@@ -456,15 +452,13 @@ export class FontUtils {
     }
     const count = FontUtils.webFontManager.typeFaceFontProvider.countFamilies()
     console.log(` Total count = ${count}`)
-    const fontStyle = new FontStyle()
-    const typeFace = FontUtils.webFontManager.typeFaceFontProvider.matchFamilyStyle(
-      "Noto Serif SC",
-      {
-        weight: FontUtils.webFontManager.canvasKit.FontWeight.Normal,
-        width: FontUtils.webFontManager.canvasKit.FontWidth.Normal,
-        slant: FontUtils.webFontManager.canvasKit.FontSlant.Upright,
-      }
-    )
+    //const fontStyle = new FontStyle()
+    //const typeFace =
+    FontUtils.webFontManager.typeFaceFontProvider.matchFamilyStyle('Noto Serif SC', {
+      weight: FontUtils.webFontManager.canvasKit.FontWeight.Normal,
+      width: FontUtils.webFontManager.canvasKit.FontWidth.Normal,
+      slant: FontUtils.webFontManager.canvasKit.FontSlant.Upright,
+    })
     //const array = typeFace.getGlyphIDs('测试')
     //console.log(array)
   }
@@ -485,10 +479,9 @@ export class FontUtils {
     }
   }
 
-
   public static async loadSystemFontFile(fontName: string) {
     let fontUrl = SystemFonts[0].fontUrl
-    SystemFonts.forEach(systemFont => {
+    SystemFonts.forEach((systemFont) => {
       if (fontName === systemFont.fontName) {
         fontUrl = systemFont.fontUrl
       }
@@ -503,10 +496,7 @@ export class FontUtils {
   }
 
   public static async getWebFontFile(url: string) {
-    const webFontFile = await axios.get<
-      ArrayBuffer,
-      AxiosResponse<ArrayBuffer>
-    >(url, { responseType: "arraybuffer" })
+    const webFontFile = await axios.get<ArrayBuffer, AxiosResponse<ArrayBuffer>>(url, { responseType: 'arraybuffer' })
     return webFontFile
   }
 
@@ -517,8 +507,8 @@ export class FontUtils {
   public static async getWebFontData(familyName: string) {
     const fontStyleSheet = await FontUtils.getWebFontStyleSheet(familyName)
     //console.log(`${fontStyleSheet}`)
-    if (fontStyleSheet.status == 200) {
-      const style = document.createElement("style")
+    if (fontStyleSheet.status === 200) {
+      const style = document.createElement('style')
       const cssTextNode = document.createTextNode(fontStyleSheet.data)
       style.appendChild(cssTextNode)
       document.head.appendChild(style)
@@ -533,43 +523,39 @@ export class FontUtils {
                 //console.log(cssRule.style)
                 if (cssRule.style) {
                   const webFont = new WebFont()
-                  const fontFamily: string = cssRule.style["font-family"]
-                  const fontStyle = cssRule.style["font-style"]
-                  const fontWeight = cssRule.style["font-weight"]
-                  const src = cssRule.style["src"]
-                  const unicodeRange: string = cssRule.style["unicode-range"]
+                  // @ts-ignore
+                  const fontFamily: string = cssRule.style['font-family']
+                  // @ts-ignore
+                  const fontStyle = cssRule.style['font-style']
+                  // @ts-ignore
+                  const fontWeight = cssRule.style['font-weight']
+                  // @ts-ignore
+                  const src = cssRule.style['src']
+                  // @ts-ignore
+                  const unicodeRange: string = cssRule.style['unicode-range']
 
-                  webFont.fontFamily = fontFamily.substring(
-                    1,
-                    fontFamily.length - 1
-                  )
+                  webFont.fontFamily = fontFamily.substring(1, fontFamily.length - 1)
                   webFont.src = src
                   webFont.fontStyle = fontStyle
                   webFont.fontWeight = fontWeight
-                  FontUtils.webFontManager.registWebFont(
-                    webFont.fontFamily,
-                    webFont
-                  )
+                  FontUtils.webFontManager.registWebFont(webFont.fontFamily, webFont)
 
-                  const urlRegexp = /url\((\"https\:\/\/fonts\.gstatic\.com\/.*)\) format/gm
+                  const urlRegexp = /url\(("https:\/\/fonts\.gstatic\.com\/.*)\) format/gm
                   const urlMatch = urlRegexp.exec(src)
-                  if (urlMatch != null) {
-                    const url = urlMatch[0].substring(
-                      5,
-                      urlMatch[0].length - 9
-                    )
+                  if (urlMatch !== null) {
+                    const url = urlMatch[0].substring(5, urlMatch[0].length - 9)
                     webFont.url = url
                     console.log(`${url}`)
                   } else {
                     console.log(`Exception found, error url: ${src}`)
                   }
-                  const ranges = unicodeRange.split(",")
+                  const ranges = unicodeRange.split(',')
                   const rangeRegexp1 = /U\+([0-9A-F]{1,6})-([0-9A-F]{1,6})/gim
                   const rangeRegexp2 = /U\+([0-9A-F]{1,6})/gim
                   for (let i = 0; i < ranges.length; i++) {
                     const range = ranges[i].trim()
                     const rangeMatch1 = rangeRegexp1.exec(range)
-                    if (rangeMatch1 != null) {
+                    if (rangeMatch1 !== null) {
                       const beginRange = rangeMatch1[1]
                       const endRange = rangeMatch1[2]
                       const fontUnicodeRange = new UnicodeRange()
@@ -579,7 +565,7 @@ export class FontUtils {
                       console.log(` ==== ${rangeMatch1}`)
                     } else {
                       const rangeMatch2 = rangeRegexp2.exec(unicodeRange)
-                      if (rangeMatch2 != null) {
+                      if (rangeMatch2 !== null) {
                         const beginRangee = rangeMatch2[1]
                         const fontUnicodeRange = new UnicodeRange()
                         fontUnicodeRange.begin = parseInt(beginRangee, 16)
@@ -587,9 +573,7 @@ export class FontUtils {
                         webFont.unicodeRanges.push(fontUnicodeRange)
                         console.log(` ==== ${rangeMatch2}`)
                       } else {
-                        console.log(
-                          `Exception found, error unicode range : ${range}`
-                        )
+                        console.log(`Exception found, error unicode range : ${range}`)
                       }
                     }
                   }

@@ -1,7 +1,7 @@
 /* eslint-disable max-params */
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
-import { Colors, Font, FontStyle, Graphics, Paint, PaintStyle, Paragraph, ParagraphBuilder, ParagraphStyle, Rectangle, TextAlignment, } from './Graphics'
-import { Shape, } from './Shape'
+import { Colors, Graphics, Paint, Paragraph, ParagraphBuilder, ParagraphStyle, Rectangle } from './Graphics'
+import { Shape } from './Shape'
 
 export class TextShape extends Shape {
   private _text: string

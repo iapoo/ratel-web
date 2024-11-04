@@ -1,7 +1,7 @@
 /* eslint-disable max-params */
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
-import { Colors, FontStyle, Graphics, Paint, PaintStyle, Rectangle, } from './Graphics'
-import { Shape, } from './Shape'
+import { Rectangle } from './Graphics'
+import { Shape } from './Shape'
 
 export class Ellipse extends Shape {
   public constructor(left: number, top: number, width: number, height: number) {

@@ -1,11 +1,21 @@
 /* eslint-disable complexity */
 /* eslint-disable max-params */
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
-import { Engine, } from './Engine'
-import { EngineUtils, } from './EngineUtils'
-import { Colors, Font, FontStyle, GlyphRun, Graphics, Paint, PaintStyle, Paragraph, ParagraphBuilder, ParagraphStyle, Path, Rectangle, ShapedLine, TextAlignment, TextStyle, } from './Graphics'
-import { Shape, } from './Shape'
-import { CursorMaker, Block, Style, } from './TextUtils'
+import {
+  Colors,
+  Font,
+  GlyphRun,
+  Graphics,
+  Paint,
+  Paragraph,
+  ParagraphBuilder,
+  ParagraphStyle,
+  Path,
+  Rectangle,
+  ShapedLine,
+} from './Graphics'
+import { Shape } from './Shape'
+import { Block, CursorMaker, Style } from './TextUtils'
 
 export class TextPad extends Shape {
   private _text: string
@@ -81,9 +91,7 @@ export class TextPad extends Shape {
     return this._lines
   }
 
-  public handleBackspace() {
-
-  }
+  public handleBackspace() {}
 
   public handleReturn() {
     this.insert('\r\n')
@@ -117,7 +125,7 @@ export class TextPad extends Shape {
   }
 
   public moveColumns(columnCount: number) {
-    if (this._startIndex == this._endIndex) {
+    if (this._startIndex === this._endIndex) {
       const index = Math.max(Math.min(this._startIndex + columnCount, this._text.length), 0)
       this.select(index, index)
     } else {
@@ -127,11 +135,11 @@ export class TextPad extends Shape {
   }
 
   public moveRows(rowCount: number) {
-    let index = (rowCount < 0) ? this._startIndex : this._endIndex
+    let index = rowCount < 0 ? this._startIndex : this._endIndex
     const i = this.getLinesIndexToLineIndex(index)
-    if (rowCount < 0 && i == 0) {
+    if (rowCount < 0 && i === 0) {
       index = 0
-    } else if (rowCount > 0 && i == this._lines.length - 1) {
+    } else if (rowCount > 0 && i === this._lines.length - 1) {
       index = this._text.length
     } else {
       const x = this.getRunsIndexToX(this._lines[i], index)
@@ -142,8 +150,8 @@ export class TextPad extends Shape {
 
   public deleteSelection() {
     let start = this._startIndex
-    if (start == this._endIndex) {
-      if (start == 0) {
+    if (start === this._endIndex) {
+      if (start === 0) {
         return
       }
       this.deleteRange(start - 1, start)
@@ -159,13 +167,14 @@ export class TextPad extends Shape {
     if (!text || text.length <= 0) {
       return
     }
-    if (this._startIndex != this._endIndex) {
+    if (this._startIndex !== this._endIndex) {
       this.deleteSelection()
     }
 
     // do this before edit the text (we use text.length in an assert)
     const index = this._startIndex
-    const [i, preLen,] = this.findStyleIndexAndPrevLength(index)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [i, preLen] = this.findStyleIndexAndPrevLength(index)
     this._styles[i].length += text.length
 
     // now grow the text
@@ -184,10 +193,10 @@ export class TextPad extends Shape {
       len += l
       // < favors the latter style if index is between two styles
       if (index < len) {
-        return [i, len - l,]
+        return [i, len - l]
       }
     }
-    return [this._styles.length - 1, len,]
+    return [this._styles.length - 1, len]
   }
 
   public applyStyleToRange(style: Style, startIndex: number, endIndex: number) {
@@ -228,7 +237,7 @@ export class TextPad extends Shape {
       layoutChanged = layoutChanged || this._styles[i].mergeFrom(style)
       end -= this._styles[i].length
       i += 1
-      if (end == 0) {
+      if (end === 0) {
         break
       }
     }
@@ -287,9 +296,12 @@ export class TextPad extends Shape {
           break
         }
       }
-      if (!r) { break }
+      if (!r) {
+        break
+      }
       while (s_end <= start) {
         s = styles[++sindex]
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         s_start = s_end
         s_end += s.length
       }
@@ -315,7 +327,8 @@ export class TextPad extends Shape {
       let pos = r.positions
       if (start > r.textRange.start || end < r.textRange.end) {
         // search for the subset of glyphs to draw
-        let glyph_start = 0; let glyph_end = 0
+        let glyph_start = 0
+        let glyph_end = 0
         for (let i = 0; i < r.offsets.length; ++i) {
           if (r.offsets[i] >= start) {
             glyph_start = i
@@ -336,12 +349,14 @@ export class TextPad extends Shape {
         // LOG('    use entire glyph run')
       }
       // canvas.drawGlyphs(gly, pos, 0, 0, f, p)
+      // @ts-ignore
       graphics.drawGlyphs(gly, pos, 0, 0, f, p)
 
       if (s.underline) {
         const gap = 2
         const Y = pos[1] // first Y
         const lastX = pos[gly.length * 2]
+        // @ts-ignore
         const sects = f.getGlyphIntercepts(gly, pos, Y + 2, Y + 4)
 
         let x = pos[0]
@@ -376,13 +391,13 @@ export class TextPad extends Shape {
   private rebuildSelection() {
     const startIndex = this._startIndex
     const endIndex = this._endIndex
-    if (startIndex == endIndex) {
+    if (startIndex === endIndex) {
       const line = this.getLinesIndexToLine(startIndex)
       const run = this.getRunsIndexToRun(line, startIndex)
       let x = run.positions[run.positions.length - 2]
       let top = line.top
       for (let i = 0; i < run.indices.length - 1; i++) {
-        if (startIndex == run.indices[i]) {
+        if (startIndex === run.indices[i]) {
           x = run.positions[i * 2]
           top = line.baseline - run.size
         }
@@ -424,7 +439,7 @@ export class TextPad extends Shape {
 
     this._paragraphBuilder.reset()
     let index = 0
-    blocks.forEach(block => {
+    blocks.forEach((block) => {
       this._paragraphBuilder.pushStyle(block.textStyle)
       this._paragraphBuilder.addText(this._text.substring(index, index + block.length))
       index += block.length
@@ -440,13 +455,14 @@ export class TextPad extends Shape {
       for (const r of l.runs) {
         // offset can't support chinese set and so we replace with indices
         r.indices = []
-        r.offsets.forEach(offset => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/no-loop-func
+        r.offsets.forEach((offset) => {
           r.indices.push(startIndex)
           startIndex++
         })
         startIndex--
         // r.textRange = { start: r.offsets[0], end: r.offsets[r.offsets.length - 1], }
-        r.textRange = { start: r.indices[0], end: r.indices[r.indices.length - 1], }
+        r.textRange = { start: r.indices[0], end: r.indices[r.indices.length - 1] }
         this._runs.push(r)
       }
     }
@@ -475,7 +491,7 @@ export class TextPad extends Shape {
     // - trim the last style
 
     let N = end - start
-    let [i, prev_len,] = this.findStyleIndexAndPrevLength(start)
+    let [i, prev_len] = this.findStyleIndexAndPrevLength(start)
     let s = this._styles[i]
     if (start > prev_len) {
       // we overlap the first style (but not entirely
@@ -523,7 +539,7 @@ export class TextPad extends Shape {
   private getRunsIndexToX(line: ShapedLine, index: number) {
     const run = this.getRunsIndexToRun(line, index)
     for (let i = 0; i < run.indices.length - 1; i++) {
-      if (index == run.indices[i]) {
+      if (index === run.indices[i]) {
         return run.positions[i * 2]
       }
     }
@@ -540,7 +556,7 @@ export class TextPad extends Shape {
   }
 
   private getLinesIndicesToPath(startIndex: number, endIndex: number) {
-    if (startIndex == endIndex) {
+    if (startIndex === endIndex) {
       return undefined
     }
     const path = new Path()
@@ -548,7 +564,7 @@ export class TextPad extends Shape {
     const endLine = this.getLinesIndexToLine(endIndex)
     const startX = this.getRunsIndexToX(startLine, startIndex)
     const endX = this.getRunsIndexToX(endLine, endIndex)
-    if (startLine == endLine) {
+    if (startLine === endLine) {
       path.addRectangle(new Rectangle(startX, startLine.top, endX, startLine.bottom))
     } else {
       path.addRectangle(new Rectangle(startX, startLine.top, this.width, startLine.bottom))

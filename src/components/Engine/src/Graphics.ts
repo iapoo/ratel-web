@@ -5,12 +5,15 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable max-params */
 import { ColorFilter, PathEffect } from 'canvaskit-wasm'
-import { MatrixHelper, Engine, } from './Engine'
-import { EngineUtils, FontUtils, } from './EngineUtils'
-import { Node, } from './Node'
+import { Engine, MatrixHelper } from './Engine'
+import { EngineUtils, FontUtils } from './EngineUtils'
+import { Node } from './Node'
 
 export class Point2 {
-  public constructor(public readonly x: number = 0, public readonly y: number = 0) { }
+  public constructor(
+    public readonly x: number = 0,
+    public readonly y: number = 0,
+  ) {}
 
   public clone(): Point2 {
     return new Point2(this.x, this.y)
@@ -25,8 +28,8 @@ export class Point3 {
   public constructor(
     public readonly x: number,
     public readonly y: number,
-    public readonly z: number
-  ) { }
+    public readonly z: number,
+  ) {}
 
   public clone(): Point3 {
     return new Point3(this.x, this.y, this.z)
@@ -45,7 +48,7 @@ export class Rectangle {
   private _source: number[]
 
   public constructor(left: number, top: number, right: number, bottom: number) {
-    this._source = [left, top, right, bottom,]
+    this._source = [left, top, right, bottom]
   }
 
   public get source() {
@@ -91,15 +94,8 @@ export class Rectangle {
 
 export class RoundRectangle {
   private _source: number[]
-  public constructor(
-    left: number,
-    top: number,
-    right: number,
-    bottom: number,
-    rx: number,
-    ry: number
-  ) {
-    this._source = [left, top, right, bottom, rx, ry, rx, ry, rx, ry, rx, ry,]
+  public constructor(left: number, top: number, right: number, bottom: number, rx: number, ry: number) {
+    this._source = [left, top, right, bottom, rx, ry, rx, ry, rx, ry, rx, ry]
   }
 
   public get source() {
@@ -144,7 +140,7 @@ export class RoundRectangle {
       this._source[2],
       this._source[3],
       this._source[4],
-      this._source[5]
+      this._source[5],
     )
   }
 
@@ -174,7 +170,7 @@ export class Color {
   private _source: number[]
 
   constructor(r: number, g: number, b: number, a: number) {
-    this._source = [(r & 0xff) / 255, (g & 0xff) / 255, (b & 0xff) / 255, (a & 0xff) / 255,]
+    this._source = [(r & 0xff) / 255, (g & 0xff) / 255, (b & 0xff) / 255, (a & 0xff) / 255]
   }
 
   public get r(): number {
@@ -198,148 +194,148 @@ export class Color {
   }
 
   public equals(color: Color): boolean {
-    return this.a == color.a && this.r == color.r && this.g == color.g && this.b == color.b
+    return this.a === color.a && this.r === color.r && this.g === color.g && this.b === color.b
   }
 }
 
 export class Colors {
-  public static LightPink = new Color(255, 182, 193, 255);
-  public static Pink = new Color(255, 192, 203, 255);
-  public static Crimson = new Color(220, 20, 60, 255);
-  public static LavenderBlush = new Color(255, 240, 245, 255);
-  public static PaleVioletRed = new Color(219, 112, 147, 255);
-  public static HotPink = new Color(255, 105, 180, 255);
-  public static DeepPink = new Color(255, 20, 147, 255);
-  public static MediumVioletRed = new Color(199, 21, 133, 255);
-  public static Orchid = new Color(218, 112, 214, 255);
-  public static Thistle = new Color(216, 191, 216, 255);
-  public static plum = new Color(221, 160, 221, 255);
-  public static Violet = new Color(238, 130, 238, 255);
-  public static Magenta = new Color(255, 0, 255, 255);
-  public static Fuchsia = new Color(255, 0, 255, 255);
-  public static DarkMagenta = new Color(139, 0, 139, 255);
-  public static Purple = new Color(128, 0, 128, 255);
-  public static MediumOrchid = new Color(186, 85, 211, 255);
-  public static DarkVoilet = new Color(148, 0, 211, 255);
-  public static DarkOrchid = new Color(153, 50, 204, 255);
-  public static Indigo = new Color(75, 0, 130, 255);
-  public static BlueViolet = new Color(138, 43, 226, 255);
-  public static MediumPurple = new Color(147, 112, 219, 255);
-  public static MediumSlateBlue = new Color(123, 104, 238, 255);
-  public static SlateBlue = new Color(106, 90, 205, 255);
-  public static DarkSlateBlue = new Color(72, 61, 139, 255);
-  public static Lavender = new Color(230, 230, 250, 255);
-  public static GhostWhite = new Color(248, 248, 255, 255);
-  public static Blue = new Color(0, 0, 255, 255);
-  public static MediumBlue = new Color(0, 0, 205, 255);
-  public static MidnightBlue = new Color(25, 25, 112, 255);
-  public static DarkBlue = new Color(0, 0, 139, 255);
-  public static Navy = new Color(0, 0, 128, 255);
-  public static RoyalBlue = new Color(65, 105, 225, 255);
-  public static CornflowerBlue = new Color(100, 149, 237, 255);
-  public static LightSteelBlue = new Color(176, 196, 222, 255);
-  public static LightSlateGray = new Color(119, 136, 153, 255);
-  public static SlateGray = new Color(112, 128, 144, 255);
-  public static DoderBlue = new Color(30, 144, 255, 255);
-  public static AliceBlue = new Color(240, 248, 255, 255);
-  public static SteelBlue = new Color(70, 130, 180, 255);
-  public static LightSkyBlue = new Color(135, 206, 250, 255);
-  public static SkyBlue = new Color(135, 206, 235, 255);
-  public static DeepSkyBlue = new Color(0, 191, 255, 255);
-  public static LightBLue = new Color(173, 216, 230, 255);
-  public static PowDerBlue = new Color(176, 224, 230, 255);
-  public static CadetBlue = new Color(95, 158, 160, 255);
-  public static Azure = new Color(240, 255, 255, 255);
-  public static LightCyan = new Color(225, 255, 255, 255);
-  public static PaleTurquoise = new Color(175, 238, 238, 255);
-  public static Cyan = new Color(0, 255, 255, 255);
-  public static Aqua = new Color(0, 255, 255, 255);
-  public static DarkTurquoise = new Color(0, 206, 209, 255);
-  public static DarkSlateGray = new Color(47, 79, 79, 255);
-  public static DarkCyan = new Color(0, 139, 139, 255);
-  public static Teal = new Color(0, 128, 128, 255);
-  public static MediumTurquoise = new Color(72, 209, 204, 255);
-  public static LightSeaGreen = new Color(32, 178, 170, 255);
-  public static Turquoise = new Color(64, 224, 208, 255);
-  public static Auqamarin = new Color(127, 255, 170, 255);
-  public static MediumAquamarine = new Color(0, 250, 154, 255);
-  public static MediumSpringGreen = new Color(245, 255, 250, 255);
-  public static MintCream = new Color(0, 255, 127, 255);
-  public static SpringGreen = new Color(60, 179, 113, 255);
-  public static SeaGreen = new Color(46, 139, 87, 255);
-  public static Honeydew = new Color(240, 255, 240, 255);
-  public static LightGreen = new Color(144, 238, 144, 255);
-  public static PaleGreen = new Color(152, 251, 152, 255);
-  public static DarkSeaGreen = new Color(143, 188, 143, 255);
-  public static LimeGreen = new Color(50, 205, 50, 255);
-  public static Lime = new Color(0, 255, 0, 255);
-  public static ForestGreen = new Color(34, 139, 34, 255);
-  public static Green = new Color(0, 128, 0, 255);
-  public static DarkGreen = new Color(0, 100, 0, 255);
-  public static Chartreuse = new Color(127, 255, 0, 255);
-  public static LawnGreen = new Color(124, 252, 0, 255);
-  public static GreenYellow = new Color(173, 255, 47, 255);
-  public static OliveDrab = new Color(85, 107, 47, 255);
-  public static Beige = new Color(107, 142, 35, 255);
-  public static LightGoldenrodYellow = new Color(250, 250, 210, 255);
-  public static Ivory = new Color(255, 255, 240, 255);
-  public static LightYellow = new Color(255, 255, 224, 255);
-  public static Yellow = new Color(255, 255, 0, 255);
-  public static Olive = new Color(128, 128, 0, 255);
-  public static DarkKhaki = new Color(189, 183, 107, 255);
-  public static LemonChiffon = new Color(255, 250, 205, 255);
-  public static PaleGodenrod = new Color(238, 232, 170, 255);
-  public static Khaki = new Color(240, 230, 140, 255);
-  public static Gold = new Color(255, 215, 0, 255);
-  public static Cornislk = new Color(255, 248, 220, 255);
-  public static GoldEnrod = new Color(218, 165, 32, 255);
-  public static FloralWhite = new Color(255, 250, 240, 255);
-  public static OldLace = new Color(253, 245, 230, 255);
-  public static Wheat = new Color(245, 222, 179, 255);
-  public static Moccasin = new Color(255, 228, 181, 255);
-  public static Orange = new Color(255, 165, 0, 255);
-  public static PapayaWhip = new Color(255, 239, 213, 255);
-  public static BlanchedAlmond = new Color(255, 235, 205, 255);
-  public static NavajoWhite = new Color(255, 222, 173, 255);
-  public static AntiqueWhite = new Color(250, 235, 215, 255);
-  public static Tan = new Color(210, 180, 140, 255);
-  public static BrulyWood = new Color(222, 184, 135, 255);
-  public static Bisque = new Color(255, 228, 196, 255);
-  public static DarkOrange = new Color(255, 140, 0, 255);
-  public static Linen = new Color(250, 240, 230, 255);
-  public static Peru = new Color(205, 133, 63, 255);
-  public static PeachPuff = new Color(255, 218, 185, 255);
-  public static SandyBrown = new Color(244, 164, 96, 255);
-  public static Chocolate = new Color(210, 105, 30, 255);
-  public static SaddleBrown = new Color(139, 69, 19, 255);
-  public static SeaShell = new Color(255, 245, 238, 255);
-  public static Sienna = new Color(160, 82, 45, 255);
-  public static LightSalmon = new Color(255, 160, 122, 255);
-  public static Coral = new Color(255, 127, 80, 255);
-  public static OrangeRed = new Color(255, 69, 0, 255);
-  public static DarkSalmon = new Color(233, 150, 122, 255);
-  public static Tomato = new Color(255, 99, 71, 255);
-  public static MistyRose = new Color(255, 228, 225, 255);
-  public static Salmon = new Color(250, 128, 114, 255);
-  public static Snow = new Color(255, 250, 250, 255);
-  public static LightCoral = new Color(240, 128, 128, 255);
-  public static RosyBrown = new Color(188, 143, 143, 255);
-  public static IndianRed = new Color(205, 92, 92, 255);
-  public static Red = new Color(255, 0, 0, 255);
-  public static Brown = new Color(165, 42, 42, 255);
-  public static FireBrick = new Color(178, 34, 34, 255);
-  public static DarkRed = new Color(139, 0, 0, 255);
-  public static Maroon = new Color(128, 0, 0, 255);
-  public static White = new Color(255, 255, 255, 255);
-  public static WhiteSmoke = new Color(245, 245, 245, 255);
-  public static Gainsboro = new Color(220, 220, 220, 255);
-  public static LightGrey = new Color(211, 211, 211, 255);
-  public static Silver = new Color(192, 192, 192, 255);
-  public static DarkGray = new Color(169, 169, 169, 255);
-  public static Gray = new Color(128, 128, 128, 255);
-  public static DimGray = new Color(105, 105, 105, 255);
-  public static Black = new Color(0, 0, 0, 255);
-  public static Transparent = new Color(0, 0, 0, 0);
+  public static LightPink = new Color(255, 182, 193, 255)
+  public static Pink = new Color(255, 192, 203, 255)
+  public static Crimson = new Color(220, 20, 60, 255)
+  public static LavenderBlush = new Color(255, 240, 245, 255)
+  public static PaleVioletRed = new Color(219, 112, 147, 255)
+  public static HotPink = new Color(255, 105, 180, 255)
+  public static DeepPink = new Color(255, 20, 147, 255)
+  public static MediumVioletRed = new Color(199, 21, 133, 255)
+  public static Orchid = new Color(218, 112, 214, 255)
+  public static Thistle = new Color(216, 191, 216, 255)
+  public static plum = new Color(221, 160, 221, 255)
+  public static Violet = new Color(238, 130, 238, 255)
+  public static Magenta = new Color(255, 0, 255, 255)
+  public static Fuchsia = new Color(255, 0, 255, 255)
+  public static DarkMagenta = new Color(139, 0, 139, 255)
+  public static Purple = new Color(128, 0, 128, 255)
+  public static MediumOrchid = new Color(186, 85, 211, 255)
+  public static DarkVoilet = new Color(148, 0, 211, 255)
+  public static DarkOrchid = new Color(153, 50, 204, 255)
+  public static Indigo = new Color(75, 0, 130, 255)
+  public static BlueViolet = new Color(138, 43, 226, 255)
+  public static MediumPurple = new Color(147, 112, 219, 255)
+  public static MediumSlateBlue = new Color(123, 104, 238, 255)
+  public static SlateBlue = new Color(106, 90, 205, 255)
+  public static DarkSlateBlue = new Color(72, 61, 139, 255)
+  public static Lavender = new Color(230, 230, 250, 255)
+  public static GhostWhite = new Color(248, 248, 255, 255)
+  public static Blue = new Color(0, 0, 255, 255)
+  public static MediumBlue = new Color(0, 0, 205, 255)
+  public static MidnightBlue = new Color(25, 25, 112, 255)
+  public static DarkBlue = new Color(0, 0, 139, 255)
+  public static Navy = new Color(0, 0, 128, 255)
+  public static RoyalBlue = new Color(65, 105, 225, 255)
+  public static CornflowerBlue = new Color(100, 149, 237, 255)
+  public static LightSteelBlue = new Color(176, 196, 222, 255)
+  public static LightSlateGray = new Color(119, 136, 153, 255)
+  public static SlateGray = new Color(112, 128, 144, 255)
+  public static DoderBlue = new Color(30, 144, 255, 255)
+  public static AliceBlue = new Color(240, 248, 255, 255)
+  public static SteelBlue = new Color(70, 130, 180, 255)
+  public static LightSkyBlue = new Color(135, 206, 250, 255)
+  public static SkyBlue = new Color(135, 206, 235, 255)
+  public static DeepSkyBlue = new Color(0, 191, 255, 255)
+  public static LightBLue = new Color(173, 216, 230, 255)
+  public static PowDerBlue = new Color(176, 224, 230, 255)
+  public static CadetBlue = new Color(95, 158, 160, 255)
+  public static Azure = new Color(240, 255, 255, 255)
+  public static LightCyan = new Color(225, 255, 255, 255)
+  public static PaleTurquoise = new Color(175, 238, 238, 255)
+  public static Cyan = new Color(0, 255, 255, 255)
+  public static Aqua = new Color(0, 255, 255, 255)
+  public static DarkTurquoise = new Color(0, 206, 209, 255)
+  public static DarkSlateGray = new Color(47, 79, 79, 255)
+  public static DarkCyan = new Color(0, 139, 139, 255)
+  public static Teal = new Color(0, 128, 128, 255)
+  public static MediumTurquoise = new Color(72, 209, 204, 255)
+  public static LightSeaGreen = new Color(32, 178, 170, 255)
+  public static Turquoise = new Color(64, 224, 208, 255)
+  public static Auqamarin = new Color(127, 255, 170, 255)
+  public static MediumAquamarine = new Color(0, 250, 154, 255)
+  public static MediumSpringGreen = new Color(245, 255, 250, 255)
+  public static MintCream = new Color(0, 255, 127, 255)
+  public static SpringGreen = new Color(60, 179, 113, 255)
+  public static SeaGreen = new Color(46, 139, 87, 255)
+  public static Honeydew = new Color(240, 255, 240, 255)
+  public static LightGreen = new Color(144, 238, 144, 255)
+  public static PaleGreen = new Color(152, 251, 152, 255)
+  public static DarkSeaGreen = new Color(143, 188, 143, 255)
+  public static LimeGreen = new Color(50, 205, 50, 255)
+  public static Lime = new Color(0, 255, 0, 255)
+  public static ForestGreen = new Color(34, 139, 34, 255)
+  public static Green = new Color(0, 128, 0, 255)
+  public static DarkGreen = new Color(0, 100, 0, 255)
+  public static Chartreuse = new Color(127, 255, 0, 255)
+  public static LawnGreen = new Color(124, 252, 0, 255)
+  public static GreenYellow = new Color(173, 255, 47, 255)
+  public static OliveDrab = new Color(85, 107, 47, 255)
+  public static Beige = new Color(107, 142, 35, 255)
+  public static LightGoldenrodYellow = new Color(250, 250, 210, 255)
+  public static Ivory = new Color(255, 255, 240, 255)
+  public static LightYellow = new Color(255, 255, 224, 255)
+  public static Yellow = new Color(255, 255, 0, 255)
+  public static Olive = new Color(128, 128, 0, 255)
+  public static DarkKhaki = new Color(189, 183, 107, 255)
+  public static LemonChiffon = new Color(255, 250, 205, 255)
+  public static PaleGodenrod = new Color(238, 232, 170, 255)
+  public static Khaki = new Color(240, 230, 140, 255)
+  public static Gold = new Color(255, 215, 0, 255)
+  public static Cornislk = new Color(255, 248, 220, 255)
+  public static GoldEnrod = new Color(218, 165, 32, 255)
+  public static FloralWhite = new Color(255, 250, 240, 255)
+  public static OldLace = new Color(253, 245, 230, 255)
+  public static Wheat = new Color(245, 222, 179, 255)
+  public static Moccasin = new Color(255, 228, 181, 255)
+  public static Orange = new Color(255, 165, 0, 255)
+  public static PapayaWhip = new Color(255, 239, 213, 255)
+  public static BlanchedAlmond = new Color(255, 235, 205, 255)
+  public static NavajoWhite = new Color(255, 222, 173, 255)
+  public static AntiqueWhite = new Color(250, 235, 215, 255)
+  public static Tan = new Color(210, 180, 140, 255)
+  public static BrulyWood = new Color(222, 184, 135, 255)
+  public static Bisque = new Color(255, 228, 196, 255)
+  public static DarkOrange = new Color(255, 140, 0, 255)
+  public static Linen = new Color(250, 240, 230, 255)
+  public static Peru = new Color(205, 133, 63, 255)
+  public static PeachPuff = new Color(255, 218, 185, 255)
+  public static SandyBrown = new Color(244, 164, 96, 255)
+  public static Chocolate = new Color(210, 105, 30, 255)
+  public static SaddleBrown = new Color(139, 69, 19, 255)
+  public static SeaShell = new Color(255, 245, 238, 255)
+  public static Sienna = new Color(160, 82, 45, 255)
+  public static LightSalmon = new Color(255, 160, 122, 255)
+  public static Coral = new Color(255, 127, 80, 255)
+  public static OrangeRed = new Color(255, 69, 0, 255)
+  public static DarkSalmon = new Color(233, 150, 122, 255)
+  public static Tomato = new Color(255, 99, 71, 255)
+  public static MistyRose = new Color(255, 228, 225, 255)
+  public static Salmon = new Color(250, 128, 114, 255)
+  public static Snow = new Color(255, 250, 250, 255)
+  public static LightCoral = new Color(240, 128, 128, 255)
+  public static RosyBrown = new Color(188, 143, 143, 255)
+  public static IndianRed = new Color(205, 92, 92, 255)
+  public static Red = new Color(255, 0, 0, 255)
+  public static Brown = new Color(165, 42, 42, 255)
+  public static FireBrick = new Color(178, 34, 34, 255)
+  public static DarkRed = new Color(139, 0, 0, 255)
+  public static Maroon = new Color(128, 0, 0, 255)
+  public static White = new Color(255, 255, 255, 255)
+  public static WhiteSmoke = new Color(245, 245, 245, 255)
+  public static Gainsboro = new Color(220, 220, 220, 255)
+  public static LightGrey = new Color(211, 211, 211, 255)
+  public static Silver = new Color(192, 192, 192, 255)
+  public static DarkGray = new Color(169, 169, 169, 255)
+  public static Gray = new Color(128, 128, 128, 255)
+  public static DimGray = new Color(105, 105, 105, 255)
+  public static Black = new Color(0, 0, 0, 255)
+  public static Transparent = new Color(0, 0, 0, 0)
 }
 
 export enum StrokeCap {
@@ -556,7 +552,7 @@ export enum PathOp {
 export enum ParagraphDirection {
   LeftRight = 0,
   BottomTop = 1,
-  TopBottom = 2
+  TopBottom = 2,
 }
 
 export class TextFontFeature {
@@ -572,8 +568,8 @@ export class TextShadow {
   constructor(
     public readonly color: Color,
     public readonly offset: number[],
-    public readonly blurRadius: number
-  ) { }
+    public readonly blurRadius: number,
+  ) {}
 }
 
 export interface ParagraphStyleOptions {
@@ -587,110 +583,6 @@ export interface ParagraphStyleOptions {
   textHeightBehavior?: TextHeightBehavior
   textStyle: TextStyle
   paragraphDirection?: ParagraphDirection
-}
-
-export class ParagraphStyle {
-  private _source
-  private _disableHinting?: boolean
-  private _ellipsis?: string
-  private _heightMultiplier: number
-  private _maxLines: number
-  private _strutStyle: StrutStyle
-  private _textAlignment: TextAlignment
-  private _textDirection: TextDirection
-  private _textHeightBehavior: TextHeightBehavior
-  private _textStyle: TextStyle
-  private _paragraphDirection: ParagraphDirection
-
-  constructor(
-    options: ParagraphStyleOptions = {
-      maxLines: 0,
-      textAlignment: TextAlignment.LEFT,
-      textDirection: TextDirection.LTR,
-      textStyle: new TextStyle(),
-      paragraphDirection: ParagraphDirection.LeftRight
-    }
-  ) {
-    this._textStyle = options.textStyle
-    this._strutStyle = options.strutStyle ? options.strutStyle : new StrutStyle()
-    this._textAlignment = options.textAlignment ? options.textAlignment : TextAlignment.LEFT
-    this._textDirection = options.textDirection ? options.textDirection : TextDirection.LTR
-    this._textHeightBehavior = options.textHeightBehavior
-      ? options.textHeightBehavior
-      : TextHeightBehavior.ALL
-    this._disableHinting = options.disableHinting ? options.disableHinting : false
-    this._ellipsis = options.ellipsis
-    this._heightMultiplier = options.heightMultiplier ? options.heightMultiplier : 0
-    this._maxLines = options.maxLines ? options.maxLines : 0
-    this._paragraphDirection = options.paragraphDirection ? options.paragraphDirection : ParagraphDirection.LeftRight
-    this._source = new Engine.canvasKit.ParagraphStyle({
-      textStyle: this._textStyle.source,
-      strutStyle: this._strutStyle?.source,
-      textAlign: GraphicsUtils.convertTextAlignment(this._textAlignment),
-      textDirection: GraphicsUtils.convertTextDirection(this._textDirection),
-      textHeightBehavior: GraphicsUtils.convertTextHeightBehavior(this._textHeightBehavior),
-      disableHinting: this._disableHinting,
-      ellipsis: this._ellipsis,
-      heightMultiplier: this._heightMultiplier,
-      maxLines: this._maxLines,
-    })
-  }
-
-  public get source() {
-    return this._source
-  }
-
-  public get textAlignment() {
-    return this._textAlignment
-  }
-
-  public get textDirection() {
-    return this._textDirection
-  }
-
-  public get textAngle() {
-    return this._textAngle
-  }
-
-  public get maxLines() {
-    return this._maxLines
-  }
-
-  public get textStyle() {
-    return this._textStyle
-  }
-
-  public get strutStyle() {
-    return this._strutStyle
-  }
-}
-
-export class Paragraph {
-  private _source
-
-  constructor(paragraphBuilder: ParagraphBuilder) {
-    this._source = paragraphBuilder.source.build()
-  }
-
-  public get source() {
-    return this._source
-  }
-
-  public layout(width: number) {
-    this._source.layout(width)
-  }
-
-  public getShapedLines(): ShapedLine[] {
-    return this._source.getShapedLines()
-  }
-
-  public getHeight(): number {
-    return this._source.getHeight()
-  }
-
-  public getMaxWidth(): number {
-    return this._source.getMaxWidth()
-  }
 }
 
 export interface FontStyleOptions {
@@ -770,17 +662,14 @@ export class TextStyle {
       color: Colors.Black,
       fontSize: 14,
       fontFamilies: [EngineUtils.FONT_NAME_DEFAULT],
-
-    }
+    },
   ) {
     this._backgroundColor = textStyle.backgroundColor ? textStyle.backgroundColor : undefined
     this._color = textStyle.color ? textStyle.color : Colors.Black
     this._decoration = textStyle.decoration ? textStyle.decoration : 0
     this._decorationColor = textStyle.decorationColor ? textStyle.decorationColor : undefined
     this._decorationThickness = textStyle.decorationThickness ? textStyle.decorationThickness : 0
-    this._decorationStyle = textStyle.decorationStyle
-      ? textStyle.decorationStyle
-      : DecorationStyle.SOLID
+    this._decorationStyle = textStyle.decorationStyle ? textStyle.decorationStyle : DecorationStyle.SOLID
     this._fontFamilies = textStyle.fontFamilies ? textStyle.fontFamilies : []
     this._fontFeatures = textStyle.fontFeatures ? textStyle.fontFeatures : []
     this._fontSize = textStyle.fontSize ? textStyle.fontSize : 14
@@ -799,17 +688,21 @@ export class TextStyle {
       decoration: this._decoration,
       decorationColor: this._decorationColor?.source,
       decorationThickness: this._decorationThickness,
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
       decorationStyle: GraphicsUtils.convertDecorationStyle(this._decorationStyle),
       fontFamilies: this._fontFamilies,
       fontFeatures: this._fontFeatures,
       fontSize: this._fontSize,
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
       fontStyle: GraphicsUtils.convertFontStyle(this._fontStyle),
       foregroundColor: this._foregroundColor?.source,
       heightMultiplier: this._heightMultiplier,
       halfLeading: this._halfLeading,
       letterSpacing: this._letterSpacing,
       locale: this._locale,
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
       shadows: GraphicsUtils.convertShadow(this._shadows),
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
       textBaseline: GraphicsUtils.convertTextBaseline(this._textBaseline),
       wordSpacing: this._wordSpacing,
     })
@@ -926,6 +819,7 @@ export class StrutStyle {
     this._source = {
       strutEnabled: this._strutEnabled,
       fontFamilies: this._fontFamilies,
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
       fontStyle: GraphicsUtils.convertFontStyle(this._fontStyle),
       fontSize: this._fontSize,
       heightMultiplier: this._heightMultiplier,
@@ -969,6 +863,107 @@ export class StrutStyle {
 
   public get forceStrutHeight() {
     return this._forceStrutHeight
+  }
+}
+
+export class ParagraphStyle {
+  private _source
+  private _disableHinting?: boolean
+  private _ellipsis?: string
+  private _heightMultiplier: number
+  private _maxLines: number
+  private _strutStyle: StrutStyle
+  private _textAlignment: TextAlignment
+  private _textDirection: TextDirection
+  private _textHeightBehavior: TextHeightBehavior
+  private _textStyle: TextStyle
+  private _paragraphDirection: ParagraphDirection
+
+  constructor(
+    options: ParagraphStyleOptions = {
+      maxLines: 0,
+      textAlignment: TextAlignment.LEFT,
+      textDirection: TextDirection.LTR,
+      textStyle: new TextStyle(),
+      paragraphDirection: ParagraphDirection.LeftRight,
+    },
+  ) {
+    this._textStyle = options.textStyle
+    this._strutStyle = options.strutStyle ? options.strutStyle : new StrutStyle()
+    this._textAlignment = options.textAlignment ? options.textAlignment : TextAlignment.LEFT
+    this._textDirection = options.textDirection ? options.textDirection : TextDirection.LTR
+    this._textHeightBehavior = options.textHeightBehavior ? options.textHeightBehavior : TextHeightBehavior.ALL
+    this._disableHinting = options.disableHinting ? options.disableHinting : false
+    this._ellipsis = options.ellipsis
+    this._heightMultiplier = options.heightMultiplier ? options.heightMultiplier : 0
+    this._maxLines = options.maxLines ? options.maxLines : 0
+    this._paragraphDirection = options.paragraphDirection ? options.paragraphDirection : ParagraphDirection.LeftRight
+    this._source = new Engine.canvasKit.ParagraphStyle({
+      textStyle: this._textStyle.source,
+      strutStyle: this._strutStyle?.source,
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      textAlign: GraphicsUtils.convertTextAlignment(this._textAlignment),
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      textDirection: GraphicsUtils.convertTextDirection(this._textDirection),
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      textHeightBehavior: GraphicsUtils.convertTextHeightBehavior(this._textHeightBehavior),
+      disableHinting: this._disableHinting,
+      ellipsis: this._ellipsis,
+      heightMultiplier: this._heightMultiplier,
+      maxLines: this._maxLines,
+    })
+  }
+
+  public get source() {
+    return this._source
+  }
+
+  public get textAlignment() {
+    return this._textAlignment
+  }
+
+  public get textDirection() {
+    return this._textDirection
+  }
+
+  public get maxLines() {
+    return this._maxLines
+  }
+
+  public get textStyle() {
+    return this._textStyle
+  }
+
+  public get strutStyle() {
+    return this._strutStyle
+  }
+}
+
+export class Paragraph {
+  private _source
+
+  constructor(paragraphBuilder: ParagraphBuilder) {
+    this._source = paragraphBuilder.source.build()
+  }
+
+  public get source() {
+    return this._source
+  }
+
+  public layout(width: number) {
+    this._source.layout(width)
+  }
+
+  public getShapedLines(): ShapedLine[] {
+    return this._source.getShapedLines()
+  }
+
+  public getHeight(): number {
+    return this._source.getHeight()
+  }
+
+  public getMaxWidth(): number {
+    return this._source.getMaxWidth()
   }
 }
 
@@ -1335,7 +1330,6 @@ export class GraphicsUtils {
     return Math.sqrt((start.x - end.x) * (start.x - end.x) + (start.y - end.y) * (start.y - end.y))
   }
 
-
   public static getTriangleAngleEx(target: Point2, start: Point2, end: Point2) {
     const numerator = start.y * (target.x - end.x) + target.y * (end.x - start.x) + end.y * (start.x - target.x)
     const denominator = (start.x - target.x) * (target.x - end.x) + (start.y - target.y) * (target.y - end.y)
@@ -1358,7 +1352,7 @@ export class ParagraphBuilder {
     this._source = Engine.canvasKit.ParagraphBuilder.MakeFromFontProvider(
       paragraphStyle.source,
       //Engine.typeFaceFontProvider
-      FontUtils.typeFaceFontProvider
+      FontUtils.typeFaceFontProvider,
     )
   }
 
@@ -1375,7 +1369,7 @@ export class ParagraphBuilder {
     height: number,
     alignment: PlaceholderAlignment,
     baseline: TextBaseline,
-    offset: number
+    offset: number,
   ): void {
     const alignmentSource = GraphicsUtils.convertPlaceholderAlignment(alignment)
     const baselineSource = GraphicsUtils.convertTextBaseline(baseline)
@@ -1445,7 +1439,7 @@ export class Paint {
         Math.round(color[0] * 255),
         Math.round(color[1] * 255),
         Math.round(color[2] * 255),
-        Math.round(color[3] * 255)
+        Math.round(color[3] * 255),
       )
     }
     return Colors.Black
@@ -1456,6 +1450,7 @@ export class Paint {
     return strokeCap.value
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public setStrokeCap(strokeCap: StrokeCap) {
     // this._source.setStrokeCap(strokeCap)
   }
@@ -1465,12 +1460,13 @@ export class Paint {
     return strokeJoin.value
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public setStrokeJoin(strokeJoin: StrokeJoin) {
     // this._source.setStrokeJoin(strokeJoin)
   }
 
   public setPaintStyle(paintStyle: PaintStyle) {
-    if (paintStyle == PaintStyle.STROKE) {
+    if (paintStyle === PaintStyle.STROKE) {
       this._source.setStyle(Engine.canvasKit.PaintStyle.Stroke)
     } else {
       this._source.setStyle(Engine.canvasKit.PaintStyle.Fill)
@@ -1495,11 +1491,13 @@ export class Paint {
     this._source.setAntiAlias(antiAlias)
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public setBlendMode(blendMode: number) {
     // const newBlendMode = { value: blendMode, }
     // this.source.setBlendMode(newBlendMode)
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public setColorComponents(r: number, g: number, b: number, a: number) {
     // this._paint.setColorComponents(r, g, b, a)
   }
@@ -1512,11 +1510,16 @@ export class Paint {
   // public setColorInt (color: number) {
   //  this._source.setColorInt(color)
   // }
-  public setImageFilter(imageFilter: number) { }
-  public setMaskFilter(maskFilter: number) { }
-  public setPathEffect(pathEffect: number) { }
-  public setShader(shader: number) { }
-  public setStrokeMiter(strokeMiter: number) { }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public setImageFilter(imageFilter: number) {}
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public setMaskFilter(maskFilter: number) {}
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public setPathEffect(pathEffect: number) {}
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public setShader(shader: number) {}
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public setStrokeMiter(strokeMiter: number) {}
   public setStrokeWidth(stokeWidth: number) {
     this._source.setStrokeWidth(stokeWidth)
   }
@@ -1610,33 +1613,37 @@ export class Font {
     this._source.setSkewX(value)
   }
   /**
-  * Computes any intersections of a thick "line" and a run of positionsed glyphs.
-  * The thick line is represented as a top and bottom coordinate (positive for
-  * below the baseline, negative for above). If there are no intersections
-  * (e.g. if this is intended as an underline, and there are no "collisions")
-  * then the returned array will be empty. If there are intersections, the array
-  * will contain pairs of X coordinates [start, end] for each segment that
-  * intersected with a glyph.
-  *
-  * @param glyphs        the glyphs to intersect with
-  * @param positions     x,y coordinates (2 per glyph) for each glyph
-  * @param top           top of the thick "line" to use for intersection testing
-  * @param bottom        bottom of the thick "line" to use for intersection testing
-  * @return              array of [start, end] x-coordinate pairs. Maybe be empty.
-  */
-  public getGlyphIntercepts(glyphs: number[], positions: Float32Array | number[],
-    top: number, bottom: number): Float32Array {
+   * Computes any intersections of a thick "line" and a run of positionsed glyphs.
+   * The thick line is represented as a top and bottom coordinate (positive for
+   * below the baseline, negative for above). If there are no intersections
+   * (e.g. if this is intended as an underline, and there are no "collisions")
+   * then the returned array will be empty. If there are intersections, the array
+   * will contain pairs of X coordinates [start, end] for each segment that
+   * intersected with a glyph.
+   *
+   * @param glyphs        the glyphs to intersect with
+   * @param positions     x,y coordinates (2 per glyph) for each glyph
+   * @param top           top of the thick "line" to use for intersection testing
+   * @param bottom        bottom of the thick "line" to use for intersection testing
+   * @return              array of [start, end] x-coordinate pairs. Maybe be empty.
+   */
+  public getGlyphIntercepts(
+    glyphs: number[],
+    positions: Float32Array | number[],
+    top: number,
+    bottom: number,
+  ): Float32Array {
     return this._source.getGlyphIntercepts(glyphs, positions, top, bottom)
   }
 
   /**
-     * Retrieves the advanceX measurements for each glyph.
-     * If paint is not null, its stroking, PathEffect, and MaskFilter fields are respected.
-     * One width per glyph is returned in the returned array.
-     * @param glyphs
-     * @param paint
-     * @param output - if provided, the results will be copied into this array.
-     */
+   * Retrieves the advanceX measurements for each glyph.
+   * If paint is not null, its stroking, PathEffect, and MaskFilter fields are respected.
+   * One width per glyph is returned in the returned array.
+   * @param glyphs
+   * @param paint
+   * @param output - if provided, the results will be copied into this array.
+   */
   public getGlyphWidths(glyphs: number[], paint?: Paint | null, output?: Float32Array): Float32Array {
     return this._source.getGlyphWidths(glyphs, paint?.source, output)
   }
@@ -1678,9 +1685,7 @@ export class Rotation {
   }
 
   public equals(rotation: Rotation): boolean {
-    return (
-      rotation._radius === this._radius && rotation._px === this._px && rotation._py === this._py
-    )
+    return rotation._radius === this._radius && rotation._px === this._px && rotation._py === this._py
   }
 }
 
@@ -1721,12 +1726,7 @@ export class Scale {
   }
 
   public equals(scale: Scale): boolean {
-    return (
-      scale._sx === this._sx &&
-      scale._sy === this._sy &&
-      scale._px === this._px &&
-      scale._py === this._py
-    )
+    return scale._sx === this._sx && scale._sy === this._sy && scale._px === this._px && scale._py === this._py
   }
 }
 
@@ -1767,12 +1767,7 @@ export class Skew {
   }
 
   public equals(skew: Skew): boolean {
-    return (
-      skew._kx === this._kx &&
-      skew._ky === this._ky &&
-      skew._px === this._px &&
-      skew._py === this._py
-    )
+    return skew._kx === this._kx && skew._ky === this._ky && skew._px === this._px && skew._py === this._py
   }
 }
 export class Vector3 {
@@ -1817,7 +1812,7 @@ export class Matrix {
   }
 
   public constructor() {
-    this._source = [1, 0, 0, 0, 1, 0, 0, 0, 1,]
+    this._source = [1, 0, 0, 0, 1, 0, 0, 0, 1]
   }
 
   public get source(): number[] {
@@ -1864,14 +1859,14 @@ export class Matrix {
   }
 
   public makePoint(point: Point2): Point2 {
-    const points = MatrixHelper.mapPoints(this._source, [point.x, point.y,])
+    const points = MatrixHelper.mapPoints(this._source, [point.x, point.y])
     return new Point2(points[0], points[1])
   }
 
   public equals(matrix: Matrix): boolean {
     if (matrix) {
       for (let i = 0; i < this._source.length; i++) {
-        if (this._source[i] != matrix._source[i]) {
+        if (this._source[i] !== matrix._source[i]) {
           return false
         }
       }
@@ -1892,7 +1887,7 @@ export class Matrix4 {
   private _source: number[]
 
   public constructor() {
-    this._source = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1,]
+    this._source = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]
   }
 }
 
@@ -1918,6 +1913,7 @@ export class Path {
     this._source.addOval(oval.source, isCCW, startIndex)
     return this
   }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public addPath(...args: any[]): Path | null {
     return this
   }
@@ -2038,9 +2034,9 @@ export class Path {
 
   /**
    * TODO: Check if memory leak
-   * @param other 
-   * @param op 
-   * @returns 
+   * @param other
+   * @param op
+   * @returns
    */
   public op(other: Path, op: PathOp): Path | undefined {
     const pathSource = this._source.op(other._source, GraphicsUtils.convertPathOp(op))
@@ -2058,12 +2054,28 @@ export class Path {
     return this
   }
 
-  public arcToRotated(rx: number, ry: number, xAxisRotate: number, useSmallArc: boolean, isCCW: boolean, x: number, y: number): Path {
+  public arcToRotated(
+    rx: number,
+    ry: number,
+    xAxisRotate: number,
+    useSmallArc: boolean,
+    isCCW: boolean,
+    x: number,
+    y: number,
+  ): Path {
     this._source.arcToRotated(rx, ry, xAxisRotate, useSmallArc, isCCW, x, y)
     return this
   }
 
-  public rArcTo(rx: number, ry: number, xAxisRotate: number, useSmallArc: boolean, isCCW: boolean, dx: number, dy: number): Path {
+  public rArcTo(
+    rx: number,
+    ry: number,
+    xAxisRotate: number,
+    useSmallArc: boolean,
+    isCCW: boolean,
+    dx: number,
+    dy: number,
+  ): Path {
     this._source.rArcTo(rx, ry, xAxisRotate, useSmallArc, isCCW, dx, dy)
     return this
   }
@@ -2094,7 +2106,7 @@ export class Path {
     return this
   }
   public setFillType(fill: FillType): void {
-    if (fill == FillType.Winding) {
+    if (fill === FillType.Winding) {
       this._source.setFillType(Engine.canvasKit.FillType.Winding)
     } else {
       this._source.setFillType(Engine.canvasKit.FillType.EvenOdd)
@@ -2140,7 +2152,7 @@ export class ImageInfo {
     readonly colorSpace: ColorSpace,
     readonly colorType: ColorType,
     readonly width: number,
-    readonly height: number
+    readonly height: number,
   ) {
     this._source = {
       alphaType: GraphicsUtils.convertAlphaType(alphaType),
@@ -2182,7 +2194,7 @@ export class Image {
   private _width: number = 0
   private _height: number = 0
 
-  private constructor() { }
+  private constructor() {}
 
   public get source() {
     return this._source
@@ -2204,22 +2216,33 @@ export class Image {
 }
 
 export class Range {
-  public constructor(public first: number, public last: number) {
-
-  }
+  public constructor(
+    public first: number,
+    public last: number,
+  ) {}
 }
 
 export class TextRange {
-  public constructor(public start: number, public end: number) {
-
-  }
+  public constructor(
+    public start: number,
+    public end: number,
+  ) {}
 }
 export class GlyphRun {
-  public constructor(public typefaceName: string, public size: number, public fakeBold: boolean, public fakeItalic: boolean,
-    public glyphs: Uint16Array, public positions: Float32Array, public offsets: Uint32Array, public flags: number, public textRange: TextRange,
-    public indices: number[], public isReturn: boolean = false, public isEnter: boolean = false) {
-
-  }
+  public constructor(
+    public typefaceName: string,
+    public size: number,
+    public fakeBold: boolean,
+    public fakeItalic: boolean,
+    public glyphs: Uint16Array,
+    public positions: Float32Array,
+    public offsets: Uint32Array,
+    public flags: number,
+    public textRange: TextRange,
+    public indices: number[],
+    public isReturn: boolean = false,
+    public isEnter: boolean = false,
+  ) {}
 
   public get typeface() {
     return FontUtils.getTypeFace(this.typefaceName)!
@@ -2227,9 +2250,13 @@ export class GlyphRun {
 }
 
 export class ShapedLine {
-  public constructor(public textRange: Range, public top: number, public bottom: number, public baseline: number, public runs: GlyphRun[]) {
-
-  }
+  public constructor(
+    public textRange: Range,
+    public top: number,
+    public bottom: number,
+    public baseline: number,
+    public runs: GlyphRun[],
+  ) {}
 
   public hasReturn() {
     return this.runs.length > 0 && this.runs[this.runs.length - 1].isReturn
@@ -2267,31 +2294,13 @@ export class Graphics {
     this._engine.concat(matrix.source)
   }
 
-  public drawArc(
-    rectangle: Rectangle,
-    startAngle: number,
-    sweepAngle: number,
-    useCenter: boolean,
-    paint: Paint
-  ) {
-    const rect = [rectangle.left, rectangle.top, rectangle.right, rectangle.bottom,]
+  public drawArc(rectangle: Rectangle, startAngle: number, sweepAngle: number, useCenter: boolean, paint: Paint) {
+    const rect = [rectangle.left, rectangle.top, rectangle.right, rectangle.bottom]
     this._engine.drawArc(rect, startAngle, sweepAngle, useCenter, paint.source)
   }
 
-  public drawAtlas(
-    atlas: Image,
-    srcRects: number[],
-    dstXForms: number[],
-    paint: Paint,
-    blendMode: BlendMode
-  ) {
-    this._engine.drawAtlas(
-      atlas.source,
-      srcRects,
-      dstXForms,
-      paint.source,
-      GraphicsUtils.convertBlendMode(blendMode)
-    )
+  public drawAtlas(atlas: Image, srcRects: number[], dstXForms: number[], paint: Paint, blendMode: BlendMode) {
+    this._engine.drawAtlas(atlas.source, srcRects, dstXForms, paint.source, GraphicsUtils.convertBlendMode(blendMode))
   }
 
   public drawCircle(cx: number, cy: number, radius: number, paint: Paint) {
@@ -2318,14 +2327,7 @@ export class Graphics {
     this._engine.drawImage(image.source, left, top, paint?.source)
   }
 
-  public drawImageCubic(
-    image: Image,
-    left: number,
-    top: number,
-    B: number,
-    C: number,
-    paint?: Paint
-  ) {
+  public drawImageCubic(image: Image, left: number, top: number, B: number, C: number, paint?: Paint) {
     this._engine.drawImageCubic(image.source, left, top, B, C, paint?.source)
   }
 
@@ -2335,7 +2337,7 @@ export class Graphics {
     top: number,
     filterMode: FilterMode,
     mipMapMode: MipmapMode,
-    paint?: Paint
+    paint?: Paint,
   ) {
     this._engine.drawImageOptions(
       image.source,
@@ -2343,44 +2345,25 @@ export class Graphics {
       top,
       GraphicsUtils.convertFilterMode(filterMode),
       GraphicsUtils.convertMipmapMode(mipMapMode),
-      paint?.source
+      paint?.source,
     )
   }
 
-  public drawImageNine(
-    image: Image,
-    center: Rectangle,
-    dest: Rectangle,
-    filter: FilterMode,
-    paint?: Paint
-  ) {
+  public drawImageNine(image: Image, center: Rectangle, dest: Rectangle, filter: FilterMode, paint?: Paint) {
     this._engine.drawImageNine(
       image.source,
       center.source,
       dest.source,
       GraphicsUtils.convertFilterMode(filter),
-      paint?.source
+      paint?.source,
     )
   }
 
-  public drawImageRect(
-    image: Image,
-    src: Rectangle,
-    dest: Rectangle,
-    paint: Paint,
-    fastSample: boolean
-  ) {
+  public drawImageRect(image: Image, src: Rectangle, dest: Rectangle, paint: Paint, fastSample: boolean) {
     this._engine.drawImageRect(image.source, src.source, dest.source, paint.source, fastSample)
   }
 
-  public drawImageRectCubic(
-    image: Image,
-    src: Rectangle,
-    dest: Rectangle,
-    b: number,
-    c: number,
-    paint?: Paint
-  ) {
+  public drawImageRectCubic(image: Image, src: Rectangle, dest: Rectangle, b: number, c: number, paint?: Paint) {
     this._engine.drawImageRectCubic(image.source, src.source, dest.source, b, c, paint?.source)
   }
 
@@ -2390,7 +2373,7 @@ export class Graphics {
     dest: Rectangle,
     filterMode: FilterMode,
     mipmapMode: MipmapMode,
-    paint?: Paint
+    paint?: Paint,
   ) {
     this._engine.drawImageRectOptions(
       image.source,
@@ -2398,7 +2381,7 @@ export class Graphics {
       dest.source,
       GraphicsUtils.convertFilterMode(filterMode),
       GraphicsUtils.convertMipmapMode(mipmapMode),
-      paint?.source
+      paint?.source,
     )
   }
 
@@ -2422,20 +2405,8 @@ export class Graphics {
     this._engine.drawPath(path.source, paint.source)
   }
 
-  public drawPatch(
-    cubics: number[],
-    colors: number[],
-    texs: number[],
-    mode: BlendMode,
-    paint: Paint
-  ) {
-    this._engine.drawPatch(
-      cubics,
-      colors,
-      texs,
-      GraphicsUtils.convertBlendMode(mode),
-      paint.source
-    )
+  public drawPatch(cubics: number[], colors: number[], texs: number[], mode: BlendMode, paint: Paint) {
+    this._engine.drawPatch(cubics, colors, texs, GraphicsUtils.convertBlendMode(mode), paint.source)
   }
 
   // public drawPicture () {
@@ -2465,7 +2436,7 @@ export class Graphics {
     lightRadius: number,
     ambientColor: Color,
     spotColor: Color,
-    flags: number
+    flags: number,
   ) {
     this._engine.drawShadow(
       path.source,
@@ -2474,7 +2445,7 @@ export class Graphics {
       lightRadius,
       ambientColor.source,
       spotColor.source,
-      flags
+      flags,
     )
   }
 
@@ -2712,7 +2683,7 @@ export class KeyEvent extends NodeEvent {
     alt: boolean,
     metaKey: boolean,
     repeat: boolean,
-    isComposing: boolean
+    isComposing: boolean,
   ) {
     super(source)
     this.key = key
@@ -2765,7 +2736,7 @@ export class MouseEvent extends NodeEvent {
     mouseCode: MouseCode,
     shift: boolean,
     control: boolean,
-    alt: boolean
+    alt: boolean,
   ) {
     super(source)
     this.x = x
@@ -2813,7 +2784,7 @@ export class TouchFingerEvent extends NodeEvent {
     y: number,
     dx: number,
     dy: number,
-    pressure: number
+    pressure: number,
   ) {
     super(source)
     this.fingerType = fingerType
@@ -2856,7 +2827,7 @@ export class PointerEvent extends MouseEvent {
     tiltX: number,
     tiltY: number,
     twist: number,
-    width: number
+    width: number,
   ) {
     super(source, x, y, mouseCode, shift, control, alt)
     this.height = height

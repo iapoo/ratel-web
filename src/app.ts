@@ -3,13 +3,13 @@ import { RuntimeAntdConfig } from '@umijs/max'
 import { theme } from 'antd'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function onRouteChange({ location, routes, action }) {
-  //console.log('Route changed - location:', location)
-  // console.log('Route changed - routes:', routes)
-  // console.log('Route changed - action:', action)
-  // const { pathname, } = location
-  // let jumped = false
-}
+// export function onRouteChange({ location, routes, action }) {
+//   //console.log('Route changed - location:', location)
+//   // console.log('Route changed - routes:', routes)
+//   // console.log('Route changed - action:', action)
+//   // const { pathname, } = location
+//   // let jumped = false
+// }
 // 运行时配置
 
 // 全局初始化数据配置，用于 Layout 用户信息和权限初始化

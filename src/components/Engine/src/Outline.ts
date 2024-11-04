@@ -1,8 +1,7 @@
 /* eslint-disable max-params */
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
-import { Colors, FontStyle, Graphics, Paint, PaintStyle, Point2, Rectangle, } from './Graphics'
-import { Shape, } from './Shape'
-import { Line, Arc, } from '@antv/g-math'
+import { Point2, Rectangle } from './Graphics'
+import { Shape } from './Shape'
 
 enum SegmentType {
   ARC,
@@ -14,13 +13,12 @@ enum SegmentType {
   POLYGON,
   POLYLINE,
   QUADRATIC,
-  RECT
+  RECT,
 }
 
 class Segment {
-  constructor(type: SegmentType, data: any[]) {
-
-  }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars,@typescript-eslint/no-useless-constructor
+  constructor(type: SegmentType, data: any[]) {}
 }
 export class Outline extends Shape {
   private _segments = new Array<Segment>(0)
@@ -30,46 +28,38 @@ export class Outline extends Shape {
     this.filled = false
   }
 
-  public addArc(startX: number, startY: number, endX: number, endY: number) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public addArc(startX: number, startY: number, endX: number, endY: number) {}
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public addBezier(startX: number, startY: number, endX: number, endY: number) {}
 
-  }
-  public addBezier(startX: number, startY: number, endX: number, endY: number) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public addCircle(startX: number, startY: number, endX: number, endY: number) {}
 
-  }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public addCubic(startX: number, startY: number, endX: number, endY: number) {}
 
-  public addCircle(startX: number, startY: number, endX: number, endY: number) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public addEllipse(startX: number, startY: number, endX: number, endY: number) {}
 
-  }
-
-  public addCubic(startX: number, startY: number, endX: number, endY: number) {
-
-  }
-
-  public addEllipse(startX: number, startY: number, endX: number, endY: number) {
-
-  }
-
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public addLine(startX: number, startY: number, endX: number, endY: number) {
     const segment = new Segment(SegmentType.LINE, [])
 
     this._segments.push(segment)
   }
 
-  public addPolygon(startX: number, startY: number, endX: number, endY: number) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public addPolygon(startX: number, startY: number, endX: number, endY: number) {}
 
-  }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public addPolyline(startX: number, startY: number, endX: number, endY: number) {}
 
-  public addPolyline(startX: number, startY: number, endX: number, endY: number) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public addQuadratic(startX: number, startY: number, endX: number, endY: number) {}
 
-  }
-
-  public addQuadratic(startX: number, startY: number, endX: number, endY: number) {
-
-  }
-
-  public addRectangle(startX: number, startY: number, endX: number, endY: number) {
-
-  }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public addRectangle(startX: number, startY: number, endX: number, endY: number) {}
 
   public update() {
     super.update()

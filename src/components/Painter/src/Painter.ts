@@ -1,9 +1,15 @@
 /* eslint-disable complexity */
 import {
-  Engine, Point2, Rectangle2D, Rotation, Shape, Line2D, Node,
-  Layer, Rectangle, Graphics, Colors, MouseEvent, MouseCode,
-  PointerEvent as UniPointerEvent, KeyEvent as UniKeyEvent,
-  Control, Button, Path, Paint, PaintStyle, PathOp,
+  Colors,
+  Engine,
+  Graphics,
+  Layer,
+  MouseCode,
+  Node,
+  Rectangle,
+  Shape,
+  KeyEvent as UniKeyEvent,
+  PointerEvent as UniPointerEvent,
 } from '../../Engine'
 
 export class Painter {
@@ -140,7 +146,7 @@ export class Painter {
       container.addEventListener('keypress', this.handleKeyPressEvent.bind(this))
       container.addEventListener('resize', this.handleResize.bind(this))
       container.addEventListener('scroll', this.handleScrollEvent.bind(this))
-      container.addEventListener('wheel', this.handleWhellEvent.bind(this))
+      container.addEventListener('wheel', this.handleWheelEvent.bind(this))
       container.addEventListener('blur', this.handleFocusEvent.bind(this))
       container.addEventListener('focus', this.handleFocusEvent.bind(this))
       container.addEventListener('drag', this.handleDragEvent.bind(this))
@@ -235,11 +241,11 @@ export class Painter {
   private handlePointerEvent(e: PointerEvent) {
     // const target = this.findTarget(this._root, e.offsetX, e.offsetY)
     // console.log('Target is ' + target + ', type=' + e.type)
-    if (e.type == 'pointerdown') {
+    if (e.type === 'pointerdown') {
       this.handlePointerDownType(e)
-    } else if (e.type == 'pointerup') {
+    } else if (e.type === 'pointerup') {
       this.handlePointerUpType(e)
-    } else if (e.type == 'pointermove') {
+    } else if (e.type === 'pointermove') {
       this.handlePointerMoveType(e)
     }
     // Use this to make TextArea in Editor works !!!!!!!
@@ -249,13 +255,31 @@ export class Painter {
   private handlePointerDownType(e: PointerEvent) {
     const target = this.findTarget(this._root, e.offsetX, e.offsetY)
     let mouseCode = MouseCode.LEFT_MOUSE_DOWN
-    if (e.button == 2) {
+    if (e.button === 2) {
       mouseCode = MouseCode.RIGHT_MOUSE_DOWN
     }
     if (target?.worldInverseTransform) {
-      const point = target.worldInverseTransform.makePoints([e.offsetX, e.offsetY,])
-      target.pointerDownListeners.forEach(callback => {
-        const event = new UniPointerEvent(target, point[0], point[1], mouseCode, e.shiftKey, e.ctrlKey, e.altKey, e.height, e.isPrimary, e.pointerId, e.pointerType, e.pressure, e.tangentialPressure, e.tiltX, e.tiltY, e.twist, e.width)
+      const point = target.worldInverseTransform.makePoints([e.offsetX, e.offsetY])
+      target.pointerDownListeners.forEach((callback) => {
+        const event = new UniPointerEvent(
+          target,
+          point[0],
+          point[1],
+          mouseCode,
+          e.shiftKey,
+          e.ctrlKey,
+          e.altKey,
+          e.height,
+          e.isPrimary,
+          e.pointerId,
+          e.pointerType,
+          e.pressure,
+          e.tangentialPressure,
+          e.tiltX,
+          e.tiltY,
+          e.twist,
+          e.width,
+        )
         callback(event)
       })
     }
@@ -273,25 +297,61 @@ export class Painter {
     // this.endEditting()
     //Force to blur, it is for rename sheet title since it looks keep focus even after mouse down in canvas.
     const activeElement = document.activeElement
-    if (activeElement) {
+    if (activeElement instanceof HTMLElement) {
       activeElement.blur()
     }
   }
 
   private handlePointerUpType(e: PointerEvent) {
     let mouseCode = MouseCode.LEFT_MOUSE_UP
-    if (e.button == 2) {
+    if (e.button === 2) {
       mouseCode = MouseCode.RIGHT_MOUSE_UP
     }
     if (this._pointerDownTarget) {
       if (this._pointerDownTarget?.worldInverseTransform) {
-        const point = this._pointerDownTarget.worldInverseTransform.makePoints([e.offsetX, e.offsetY,])
-        this._pointerDownTarget.pointerUpListeners.forEach(callback => {
-          const event = new UniPointerEvent(this._pointerDownTarget!, point[0], point[1], mouseCode, e.shiftKey, e.ctrlKey, e.altKey, e.height, e.isPrimary, e.pointerId, e.pointerType, e.pressure, e.tangentialPressure, e.tiltX, e.tiltY, e.twist, e.width)
+        const point = this._pointerDownTarget.worldInverseTransform.makePoints([e.offsetX, e.offsetY])
+        this._pointerDownTarget.pointerUpListeners.forEach((callback) => {
+          const event = new UniPointerEvent(
+            this._pointerDownTarget!,
+            point[0],
+            point[1],
+            mouseCode,
+            e.shiftKey,
+            e.ctrlKey,
+            e.altKey,
+            e.height,
+            e.isPrimary,
+            e.pointerId,
+            e.pointerType,
+            e.pressure,
+            e.tangentialPressure,
+            e.tiltX,
+            e.tiltY,
+            e.twist,
+            e.width,
+          )
           callback(event)
         })
-        this._pointerDownTarget.pointerClickListeners.forEach(callback => {
-          const event = new UniPointerEvent(this._pointerDownTarget!, point[0], point[1], mouseCode, e.shiftKey, e.ctrlKey, e.altKey, e.height, e.isPrimary, e.pointerId, e.pointerType, e.pressure, e.tangentialPressure, e.tiltX, e.tiltY, e.twist, e.width)
+        this._pointerDownTarget.pointerClickListeners.forEach((callback) => {
+          const event = new UniPointerEvent(
+            this._pointerDownTarget!,
+            point[0],
+            point[1],
+            mouseCode,
+            e.shiftKey,
+            e.ctrlKey,
+            e.altKey,
+            e.height,
+            e.isPrimary,
+            e.pointerId,
+            e.pointerType,
+            e.pressure,
+            e.tangentialPressure,
+            e.tiltX,
+            e.tiltY,
+            e.twist,
+            e.width,
+          )
           callback(event)
         })
       }
@@ -306,37 +366,109 @@ export class Painter {
     // console.log(this._pointerDownTarget)
     if (this._pointerDownTarget !== null && this._pointerDownTarget !== undefined) {
       if (this._pointerDownTarget?.worldInverseTransform) {
-        const point = this._pointerDownTarget.worldInverseTransform.makePoints([e.offsetX, e.offsetY,])
-        this._pointerDownTarget.pointerMoveListeners.forEach(callback => {
-          const event = new UniPointerEvent(this._pointerDownTarget!, point[0], point[1], MouseCode.LEFT_MOUSE_DOWN, e.shiftKey, e.ctrlKey, e.altKey, e.height, e.isPrimary, e.pointerId, e.pointerType, e.pressure, e.tangentialPressure, e.tiltX, e.tiltY, e.twist, e.width)
+        const point = this._pointerDownTarget.worldInverseTransform.makePoints([e.offsetX, e.offsetY])
+        this._pointerDownTarget.pointerMoveListeners.forEach((callback) => {
+          const event = new UniPointerEvent(
+            this._pointerDownTarget!,
+            point[0],
+            point[1],
+            MouseCode.LEFT_MOUSE_DOWN,
+            e.shiftKey,
+            e.ctrlKey,
+            e.altKey,
+            e.height,
+            e.isPrimary,
+            e.pointerId,
+            e.pointerType,
+            e.pressure,
+            e.tangentialPressure,
+            e.tiltX,
+            e.tiltY,
+            e.twist,
+            e.width,
+          )
           callback(event)
         })
       }
     } else if (this._pointerMoveTarget !== null && this._pointerMoveTarget !== undefined) {
       // console.log('x2=' + e.offsetX + ', y=' + e.offsetY + ', left=' + this._edittingShape?.boundary.left + ', top=' + this._edittingShape?.boundary.top)
       if (target) {
-        if (target != this._pointerMoveTarget) {
+        if (target !== this._pointerMoveTarget) {
           // console.log('x3=' + e.offsetX + ', y=' + e.offsetY + ', left=' + this._edittingShape?.boundary.left + ', top=' + this._edittingShape?.boundary.top)
           if (this._pointerMoveTarget.worldInverseTransform) {
-            const point = this._pointerMoveTarget.worldInverseTransform.makePoints([e.offsetX, e.offsetY,])
-            this._pointerMoveTarget.pointerLeaveListeners.forEach(callback => {
-              const event = new UniPointerEvent(this._pointerMoveTarget!, point[0], point[1], MouseCode.LEFT_MOUSE_DOWN, e.shiftKey, e.ctrlKey, e.altKey, e.height, e.isPrimary, e.pointerId, e.pointerType, e.pressure, e.tangentialPressure, e.tiltX, e.tiltY, e.twist, e.width)
+            const point = this._pointerMoveTarget.worldInverseTransform.makePoints([e.offsetX, e.offsetY])
+            this._pointerMoveTarget.pointerLeaveListeners.forEach((callback) => {
+              const event = new UniPointerEvent(
+                this._pointerMoveTarget!,
+                point[0],
+                point[1],
+                MouseCode.LEFT_MOUSE_DOWN,
+                e.shiftKey,
+                e.ctrlKey,
+                e.altKey,
+                e.height,
+                e.isPrimary,
+                e.pointerId,
+                e.pointerType,
+                e.pressure,
+                e.tangentialPressure,
+                e.tiltX,
+                e.tiltY,
+                e.twist,
+                e.width,
+              )
               callback(event)
             })
           }
           if (target.worldInverseTransform) {
-            const point = target.worldInverseTransform.makePoints([e.offsetX, e.offsetY,])
-            target.pointerEnterListeners.forEach(callback => {
-              const event = new UniPointerEvent(target, point[0], point[1], MouseCode.LEFT_MOUSE_DOWN, e.shiftKey, e.ctrlKey, e.altKey, e.height, e.isPrimary, e.pointerId, e.pointerType, e.pressure, e.tangentialPressure, e.tiltX, e.tiltY, e.twist, e.width)
+            const point = target.worldInverseTransform.makePoints([e.offsetX, e.offsetY])
+            target.pointerEnterListeners.forEach((callback) => {
+              const event = new UniPointerEvent(
+                target,
+                point[0],
+                point[1],
+                MouseCode.LEFT_MOUSE_DOWN,
+                e.shiftKey,
+                e.ctrlKey,
+                e.altKey,
+                e.height,
+                e.isPrimary,
+                e.pointerId,
+                e.pointerType,
+                e.pressure,
+                e.tangentialPressure,
+                e.tiltX,
+                e.tiltY,
+                e.twist,
+                e.width,
+              )
               callback(event)
             })
           }
           this._pointerMoveTarget = target
         } else {
           if (target.worldInverseTransform) {
-            const point = target.worldInverseTransform.makePoints([e.offsetX, e.offsetY,])
-            target.pointerMoveListeners.forEach(callback => {
-              const event = new UniPointerEvent(target, point[0], point[1], MouseCode.LEFT_MOUSE_DOWN, e.shiftKey, e.ctrlKey, e.altKey, e.height, e.isPrimary, e.pointerId, e.pointerType, e.pressure, e.tangentialPressure, e.tiltX, e.tiltY, e.twist, e.width)
+            const point = target.worldInverseTransform.makePoints([e.offsetX, e.offsetY])
+            target.pointerMoveListeners.forEach((callback) => {
+              const event = new UniPointerEvent(
+                target,
+                point[0],
+                point[1],
+                MouseCode.LEFT_MOUSE_DOWN,
+                e.shiftKey,
+                e.ctrlKey,
+                e.altKey,
+                e.height,
+                e.isPrimary,
+                e.pointerId,
+                e.pointerType,
+                e.pressure,
+                e.tangentialPressure,
+                e.tiltX,
+                e.tiltY,
+                e.twist,
+                e.width,
+              )
               callback(event)
             })
           }
@@ -344,9 +476,27 @@ export class Painter {
       } else {
         // console.log('x4=' + e.offsetX + ', y=' + e.offsetY + ', left=' + this._edittingShape?.boundary.left + ', top=' + this._edittingShape?.boundary.top)
         if (this._pointerMoveTarget.worldInverseTransform) {
-          const point = this._pointerMoveTarget.worldInverseTransform.makePoints([e.offsetX, e.offsetY,])
-          this._pointerMoveTarget.pointerLeaveListeners.forEach(callback => {
-            const event = new UniPointerEvent(this._pointerMoveTarget!, point[0], point[1], MouseCode.LEFT_MOUSE_DOWN, e.shiftKey, e.ctrlKey, e.altKey, e.height, e.isPrimary, e.pointerId, e.pointerType, e.pressure, e.tangentialPressure, e.tiltX, e.tiltY, e.twist, e.width)
+          const point = this._pointerMoveTarget.worldInverseTransform.makePoints([e.offsetX, e.offsetY])
+          this._pointerMoveTarget.pointerLeaveListeners.forEach((callback) => {
+            const event = new UniPointerEvent(
+              this._pointerMoveTarget!,
+              point[0],
+              point[1],
+              MouseCode.LEFT_MOUSE_DOWN,
+              e.shiftKey,
+              e.ctrlKey,
+              e.altKey,
+              e.height,
+              e.isPrimary,
+              e.pointerId,
+              e.pointerType,
+              e.pressure,
+              e.tangentialPressure,
+              e.tiltX,
+              e.tiltY,
+              e.twist,
+              e.width,
+            )
             callback(event)
           })
         }
@@ -355,17 +505,53 @@ export class Painter {
     } else {
       if (target) {
         if (target.worldInverseTransform) {
-          const point = target.worldInverseTransform.makePoints([e.offsetX, e.offsetY,])
-          target.pointerEnterListeners.forEach(callback => {
-            const event = new UniPointerEvent(target, point[0], point[1], MouseCode.LEFT_MOUSE_DOWN, e.shiftKey, e.ctrlKey, e.altKey, e.height, e.isPrimary, e.pointerId, e.pointerType, e.pressure, e.tangentialPressure, e.tiltX, e.tiltY, e.twist, e.width)
+          const point = target.worldInverseTransform.makePoints([e.offsetX, e.offsetY])
+          target.pointerEnterListeners.forEach((callback) => {
+            const event = new UniPointerEvent(
+              target,
+              point[0],
+              point[1],
+              MouseCode.LEFT_MOUSE_DOWN,
+              e.shiftKey,
+              e.ctrlKey,
+              e.altKey,
+              e.height,
+              e.isPrimary,
+              e.pointerId,
+              e.pointerType,
+              e.pressure,
+              e.tangentialPressure,
+              e.tiltX,
+              e.tiltY,
+              e.twist,
+              e.width,
+            )
             callback(event)
           })
         }
         this._pointerMoveTarget = target
         if (target?.worldInverseTransform) {
-          const point = target.worldInverseTransform.makePoints([e.offsetX, e.offsetY,])
-          target.pointerMoveListeners.forEach(callback => {
-            const event = new UniPointerEvent(target, point[0], point[1], MouseCode.LEFT_MOUSE_DOWN, e.shiftKey, e.ctrlKey, e.altKey, e.height, e.isPrimary, e.pointerId, e.pointerType, e.pressure, e.tangentialPressure, e.tiltX, e.tiltY, e.twist, e.width)
+          const point = target.worldInverseTransform.makePoints([e.offsetX, e.offsetY])
+          target.pointerMoveListeners.forEach((callback) => {
+            const event = new UniPointerEvent(
+              target,
+              point[0],
+              point[1],
+              MouseCode.LEFT_MOUSE_DOWN,
+              e.shiftKey,
+              e.ctrlKey,
+              e.altKey,
+              e.height,
+              e.isPrimary,
+              e.pointerId,
+              e.pointerType,
+              e.pressure,
+              e.tangentialPressure,
+              e.tiltX,
+              e.tiltY,
+              e.twist,
+              e.width,
+            )
             callback(event)
           })
         }
@@ -375,47 +561,77 @@ export class Painter {
 
   private handleKeyDownEvent(e: KeyboardEvent) {
     console.log(333)
-    if (this._focusTarget !== null && this._focusTarget != undefined) {
+    if (this._focusTarget !== null && this._focusTarget !== undefined) {
       const target = this._focusTarget
-      target.keyDownListeners.forEach(callback => {
-        const event = new UniKeyEvent(target, e.key, e.code, e.shiftKey, e.ctrlKey, e.altKey, e.metaKey, e.repeat, e.isComposing)
+      target.keyDownListeners.forEach((callback) => {
+        const event = new UniKeyEvent(
+          target,
+          e.key,
+          e.code,
+          e.shiftKey,
+          e.ctrlKey,
+          e.altKey,
+          e.metaKey,
+          e.repeat,
+          e.isComposing,
+        )
         callback(event)
       })
     }
   }
 
   private handleKeyUpEvent(e: KeyboardEvent) {
-    if (this._focusTarget !== null && this._focusTarget != undefined) {
+    if (this._focusTarget !== null && this._focusTarget !== undefined) {
       const target = this._focusTarget
-      target.keyUpListeners.forEach(callback => {
-        const event = new UniKeyEvent(target, e.key, e.code, e.shiftKey, e.ctrlKey, e.altKey, e.metaKey, e.repeat, e.isComposing)
+      target.keyUpListeners.forEach((callback) => {
+        const event = new UniKeyEvent(
+          target,
+          e.key,
+          e.code,
+          e.shiftKey,
+          e.ctrlKey,
+          e.altKey,
+          e.metaKey,
+          e.repeat,
+          e.isComposing,
+        )
         callback(event)
       })
     }
   }
 
   private handleKeyPressEvent(e: KeyboardEvent) {
-    if (this._focusTarget !== null && this._focusTarget != undefined) {
+    if (this._focusTarget !== null && this._focusTarget !== undefined) {
       const target = this._focusTarget
-      target.keyPressListeners.forEach(callback => {
-        const event = new UniKeyEvent(target, e.key, e.code, e.shiftKey, e.ctrlKey, e.altKey, e.metaKey, e.repeat, e.isComposing)
+      target.keyPressListeners.forEach((callback) => {
+        const event = new UniKeyEvent(
+          target,
+          e.key,
+          e.code,
+          e.shiftKey,
+          e.ctrlKey,
+          e.altKey,
+          e.metaKey,
+          e.repeat,
+          e.isComposing,
+        )
         callback(event)
       })
     }
   }
 
-  private handleResize(e: UIEvent) {
-  }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private handleResize(e: UIEvent) {}
 
-  private handleScrollEvent(e: Event) {
-  }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private handleScrollEvent(e: Event) {}
 
-  private handleWhellEvent(e: WheelEvent) {
-  }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private handleWheelEvent(e: WheelEvent) {}
 
-  private handleFocusEvent(e: FocusEvent) {
-  }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private handleFocusEvent(e: FocusEvent) {}
 
-  private handleDragEvent(e: DragEvent) {
-  }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private handleDragEvent(e: DragEvent) {}
 }

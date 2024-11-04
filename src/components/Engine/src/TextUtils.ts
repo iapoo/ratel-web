@@ -1,9 +1,8 @@
 /* eslint-disable no-useless-constructor */
 /* eslint-disable @typescript-eslint/no-parameter-properties */
 /* eslint-disable max-params */
-import { Engine, } from './Engine'
-import { EngineUtils, FontUtils, } from './EngineUtils'
-import { Color, Colors, Graphics, Paint, Path, TextStyle, } from './Graphics'
+import { EngineUtils, FontUtils } from './EngineUtils'
+import { Color, Colors, Graphics, Paint, Path, TextStyle } from './Graphics'
 
 export class CursorMaker {
   private _linePaint: Paint
@@ -48,7 +47,7 @@ export class CursorMaker {
     this._x = x
     this._top = top
     this._bottom = bottom
-    this._path = null
+    this._path = undefined
   }
 
   public renderBefore(graphics: Graphics) {
@@ -58,7 +57,7 @@ export class CursorMaker {
   }
 
   public renderAfter(graphics: Graphics) {
-    if (!this._path && (Math.floor(Date.now() / this._interval) & 1)) {
+    if (!this._path && Math.floor(Date.now() / this._interval) & 1) {
       graphics.drawLine(this._x, this._top, this._x, this._bottom, this._linePaint)
     }
   }
@@ -81,25 +80,29 @@ export class MouseMaker {
     this._active = true
   }
 
-  public move(x: number, y: number) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public move(x: number, y: number) {}
 
-  }
-
-  public up(x: number, y: number) {
-
-  }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public up(x: number, y: number) {}
 
   public getPosition(dx: number, dy: number) {
-    return [this._startX + dx, this._startY + dy, this._currentX + dx, this._currentY + dy,]
+    return [this._startX + dx, this._startY + dy, this._currentX + dx, this._currentY + dy]
   }
 }
 
 export class Block {
   private _textStyle: TextStyle
 
-  public constructor(public typefaceName: string, public length: number, public size: number, public fakeBold: boolean = false, public fakeItalic: boolean = false) {
+  public constructor(
+    public typefaceName: string,
+    public length: number,
+    public size: number,
+    public fakeBold: boolean = false,
+    public fakeItalic: boolean = false,
+  ) {
     this._textStyle = new TextStyle({
-      fontFamilies: [typefaceName,],
+      fontFamilies: [typefaceName],
       fontSize: size,
     })
   }
@@ -114,9 +117,15 @@ export class Block {
 }
 
 export class Style {
-  public constructor(public length: number = 0, public typeFaceName: string = EngineUtils.FONT_NAME_DEFAULT, public size: number = EngineUtils.FONT_SIZE_DEFAULT, public color: Color = Colors.Black, public bold: boolean = false, public italic: boolean = false, public underline: boolean = false) {
-
-  }
+  public constructor(
+    public length: number = 0,
+    public typeFaceName: string = EngineUtils.FONT_NAME_DEFAULT,
+    public size: number = EngineUtils.FONT_SIZE_DEFAULT,
+    public color: Color = Colors.Black,
+    public bold: boolean = false,
+    public italic: boolean = false,
+    public underline: boolean = false,
+  ) {}
 
   public clone(): Style {
     return new Style(this.length, this.typeFaceName, this.size, this.color, this.bold, this.italic, this.underline)
@@ -142,15 +151,15 @@ export class Style {
       layoutChanged = true
     }
 
-    if (this.bold != src.bold) {
+    if (this.bold !== src.bold) {
       this.bold = src.bold
       layoutChanged = true
     }
-    if (this.italic != src.italic) {
+    if (this.italic !== src.italic) {
       this.italic = src.italic
       layoutChanged = true
     }
-    if (this.underline != src.underline) {
+    if (this.underline !== src.underline) {
       this.underline = src.underline
       layoutChanged = true
     }

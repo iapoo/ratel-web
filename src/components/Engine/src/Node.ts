@@ -1,4 +1,4 @@
-import { Graphics, Matrix, Path, Point2, Rotation, Scale, Skew, MouseEvent, MouseMoveEvent, KeyEvent, KeyPressEvent, CharEvent, TouchFingerEvent, PointerEvent, } from './Graphics'
+import { Graphics, KeyEvent, Matrix, Path, Point2, PointerEvent, Rotation, Scale, Skew } from './Graphics'
 
 export abstract class Node {
   private _parent?: Node
@@ -80,7 +80,7 @@ export abstract class Node {
   }
 
   public set alpha(alpha: number) {
-    if (this._alpha != alpha) {
+    if (this._alpha !== alpha) {
       this._alpha = alpha
       this.updateAlpha()
       this.markDirty()
@@ -125,7 +125,7 @@ export abstract class Node {
 
   public markDirty(): void {
     this._dirty = true
-    this._nodes.forEach(node => {
+    this._nodes.forEach((node) => {
       node.markDirty()
     })
   }
@@ -143,7 +143,7 @@ export abstract class Node {
   }
 
   public set position(point: Point2) {
-    if (this._position.x != point.x || this._position.y != point.y) {
+    if (this._position.x !== point.x || this._position.y !== point.y) {
       this._position = point
       this.updateTransform()
       this.markDirty()
@@ -215,7 +215,7 @@ export abstract class Node {
   }
 
   public set visible(visible: boolean) {
-    if (this._visible != visible) {
+    if (this._visible !== visible) {
       this._visible = visible
       this.updateVisible()
       this.markDirty()
@@ -325,9 +325,8 @@ export abstract class Node {
     }
   }
 
-  public render(graphics: Graphics) {
-
-  }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public render(graphics: Graphics) {}
 
   public onPointerEnter(callback: (e: PointerEvent) => void) {
     this._pointerEnterListeners.push(callback)

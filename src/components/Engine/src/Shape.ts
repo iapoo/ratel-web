@@ -1,7 +1,7 @@
 /* eslint-disable max-params */
-import { Node, } from './Node'
-import { Colors, Graphics, Paint, PaintStyle, Path, PathOp, Rectangle, } from './Graphics'
-import { Point2, } from '..'
+import { Point2 } from '..'
+import { Colors, Graphics, Paint, PaintStyle, Path, PathOp, Rectangle } from './Graphics'
+import { Node } from './Node'
 
 export abstract class Shape extends Node {
   private _stroke: Paint
@@ -64,7 +64,12 @@ export abstract class Shape extends Node {
   }
 
   public set boundary(boundary: Rectangle) {
-    if (this.left != boundary.left || this.top != boundary.top || this.width != boundary.width || this.height != boundary.height) {
+    if (
+      this.left !== boundary.left ||
+      this.top !== boundary.top ||
+      this.width !== boundary.width ||
+      this.height !== boundary.height
+    ) {
       this._boundary = Rectangle.makeLTWH(boundary.left, boundary.top, boundary.width, boundary.height)
       //this.position = new Point2(this._boundary.left, this._boundary.top)
       this.markDirty()
@@ -113,7 +118,12 @@ export abstract class Shape extends Node {
   }
 
   public set right(right: number) {
-    this._boundary = Rectangle.makeLTWH(this._boundary.left, this._boundary.top, right - this._boundary.left, this._boundary.height)
+    this._boundary = Rectangle.makeLTWH(
+      this._boundary.left,
+      this._boundary.top,
+      right - this._boundary.left,
+      this._boundary.height,
+    )
     this.markDirty()
   }
 
@@ -122,7 +132,12 @@ export abstract class Shape extends Node {
   }
 
   public set bottom(bottom: number) {
-    this._boundary = Rectangle.makeLTWH(this._boundary.left, this._boundary.top, this._boundary.width, bottom - this._boundary.top)
+    this._boundary = Rectangle.makeLTWH(
+      this._boundary.left,
+      this._boundary.top,
+      this._boundary.width,
+      bottom - this._boundary.top,
+    )
     this.markDirty()
   }
 
@@ -135,7 +150,7 @@ export abstract class Shape extends Node {
   }
 
   public set filled(filled: boolean) {
-    if (this._filled != filled) {
+    if (this._filled !== filled) {
       this._filled = filled
       this.markDirty()
     }
@@ -146,7 +161,7 @@ export abstract class Shape extends Node {
   }
 
   public set stroked(stroked: boolean) {
-    if (this._stroked != stroked) {
+    if (this._stroked !== stroked) {
       this._stroked = stroked
       this.markDirty()
     }
@@ -157,7 +172,7 @@ export abstract class Shape extends Node {
   }
 
   public set stroke(stroke: Paint) {
-    if (this._stroke != stroke) {
+    if (this._stroke !== stroke) {
       this._stroke = stroke
       this.markDirty()
     }
@@ -168,7 +183,7 @@ export abstract class Shape extends Node {
   }
 
   public set fill(fill: Paint) {
-    if (this._fill != fill) {
+    if (this._fill !== fill) {
       this._fill = fill
       this.markDirty()
     }
@@ -176,7 +191,7 @@ export abstract class Shape extends Node {
 
   public contains(x: number, y: number) {
     if (this.worldInverseTransform) {
-      const point = [x, y,]
+      const point = [x, y]
       const inversePoint = this.worldInverseTransform.makePoints(point)
       return this._path.contains(inversePoint[0], inversePoint[1])
     } else {
@@ -186,10 +201,10 @@ export abstract class Shape extends Node {
 
   public intersects(left: number, top: number, width: number, height: number) {
     if (this.worldInverseTransform) {
-      const p1 = [left, top,]
-      const p2 = [left + width, top,]
-      const p3 = [left + width, top + height,]
-      const p4 = [left, top + height,]
+      const p1 = [left, top]
+      const p2 = [left + width, top]
+      const p3 = [left + width, top + height]
+      const p4 = [left, top + height]
       const inverseP1 = this.worldInverseTransform.makePoints(p1)
       const inverseP2 = this.worldInverseTransform.makePoints(p2)
       const inverseP3 = this.worldInverseTransform.makePoints(p3)
@@ -245,6 +260,5 @@ export abstract class Shape extends Node {
     this._clip.delete()
     this._opPath.delete()
     super.dispose()
-
   }
 }

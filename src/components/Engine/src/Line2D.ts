@@ -1,7 +1,7 @@
 /* eslint-disable max-params */
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
-import { Colors, FontStyle, Graphics, Paint, PaintStyle, Point2, Rectangle, } from './Graphics'
-import { Shape, } from './Shape'
+import { Point2, Rectangle } from './Graphics'
+import { Shape } from './Shape'
 
 export class Line2D extends Shape {
   private _start: Point2
@@ -35,7 +35,12 @@ export class Line2D extends Shape {
   public update() {
     super.update()
     if (this.dirty) {
-      this.boundary = Rectangle.makeLTWH(Math.min(this.start.x, this.end.x), Math.min(this.start.y, this.end.y), Math.abs(this.start.x - this.end.x), Math.abs(this.start.y - this.end.y))
+      this.boundary = Rectangle.makeLTWH(
+        Math.min(this.start.x, this.end.x),
+        Math.min(this.start.y, this.end.y),
+        Math.abs(this.start.x - this.end.x),
+        Math.abs(this.start.y - this.end.y),
+      )
 
       this.position = new Point2(this.left, this.top)
       this.clip.reset()

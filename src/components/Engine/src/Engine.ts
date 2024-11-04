@@ -1,25 +1,61 @@
 /* eslint-disable max-params */
 //import * as CanvasKitInit from "canvaskit-wasm";
 // eslint-disable-next-line no-unused-vars
+// @ts-ignore
 import {
-  CanvasKit, Paint, RRect, FontMgr, Typeface, TypefaceFontProvider, PaintStyle, Canvas, Surface, Path, ClipOp, InputRect, InputRRect, InputMatrix, ColorIntArray, AngleInDegrees,
-  Image, InputFlattenedRectangleArray, InputFlattenedRSXFormArray, BlendMode, CubicResampler, FilterOptions, InputColor, ColorInt, InputGlyphIDArray, InputFlattenedPointArray,
-  Font, FilterMode, MipmapMode, InputIRect, Paragraph, Color, SkPicture, PointMode, InputVector3, TextBlob, Vertices, Matrix4x4, ImageInfo,
-  MallocObj, ImageFilter, SaveLayerFlag, AlphaType, ColorType, ColorSpace,
-} from "canvaskit-wasm/types"
-import { EngineUtils, FontUtils, SystemFonts } from "./EngineUtils"
-import { Graphics } from "./Graphics"
-import { Node } from "./Node"
-import { Shape } from "./Shape"
+  AlphaType,
+  AngleInDegrees,
+  BlendMode,
+  Canvas,
+  CanvasKit,
+  ClipOp,
+  Color,
+  ColorInt,
+  ColorIntArray,
+  ColorSpace,
+  ColorType,
+  CubicResampler,
+  FilterMode,
+  FilterOptions,
+  Font,
+  Image,
+  ImageFilter,
+  ImageInfo,
+  InputColor,
+  InputFlattenedPointArray,
+  InputFlattenedRectangleArray,
+  InputFlattenedRSXFormArray,
+  InputGlyphIDArray,
+  InputIRect,
+  InputRect,
+  InputRRect,
+  InputVector3,
+  MallocObj,
+  Matrix4x4,
+  MipmapMode,
+  Paint,
+  Paragraph,
+  Path,
+  PointMode,
+  RRect,
+  SaveLayerFlag,
+  SkPicture,
+  Surface,
+  TextBlob,
+  Vertices,
+} from 'canvaskit-wasm/types'
+import { FontUtils } from './EngineUtils'
+import { Graphics } from './Graphics'
+import { Node } from './Node'
 
 export class Engine {
   private static _canvasKit: CanvasKit
   // private static _typeFaceFontProvider: TypefaceFontProvider
   // private static _fontDatas: Map<string, ArrayBuffer> = new Map<string, ArrayBuffer>()
   // private static _typeFaces: Map<string, Typeface | null> = new Map<string, Typeface | null>()
-  private static _initialized = false;
+  private static _initialized = false
   // private static _fontInitialized = false
-  private static _canvaskitInitialized = false;
+  private static _canvaskitInitialized = false
 
   public static async initialize() {
     if (!Engine._initialized) {
@@ -109,16 +145,12 @@ export class Engine {
 
   /**
    * Need to delete after used
-   * @param imageInfo 
-   * @param bytes 
-   * @param bytesPerRow 
-   * @returns 
+   * @param imageInfo
+   * @param bytes
+   * @param bytesPerRow
+   * @returns
    */
-  public static makeImage(
-    imageInfo: ImageInfo,
-    bytes: number[],
-    bytesPerRow: number
-  ): Image | null {
+  public static makeImage(imageInfo: ImageInfo, bytes: number[], bytesPerRow: number): Image | null {
     return Engine._canvasKit.MakeImage(imageInfo, bytes, bytesPerRow)
   }
 
@@ -126,11 +158,7 @@ export class Engine {
     return Engine._canvasKit.MakeImageFromEncoded(bytes)
   }
 
-  public static makeRoundRectangle(
-    rect: number[],
-    rx: number,
-    ry: number
-  ): RRect {
+  public static makeRoundRectangle(rect: number[], rx: number, ry: number): RRect {
     return Engine._canvasKit.RRectXY(rect, rx, ry)
   }
 
@@ -156,8 +184,7 @@ export class Engine {
     if (!Engine._canvaskitInitialized) {
       const CanvasKitInit = require('canvaskit-wasm/bin/canvaskit.js')
       const canvasKit: CanvasKit = await CanvasKitInit({
-        locateFile: (file: any) =>
-          process.env.BASIC_PATH + "/resources/" + file,
+        locateFile: (file: any) => process.env.BASIC_PATH + '/resources/' + file,
       })
       //console.log(canvasKit)
 
@@ -222,11 +249,7 @@ export class Engine {
     return this._surface.width()
   }
 
-  private constructor(
-    surface: Surface,
-    canvas: Canvas,
-    container: HTMLCanvasElement | undefined
-  ) {
+  private constructor(surface: Surface, canvas: Canvas, container: HTMLCanvasElement | undefined) {
     this._canvas = canvas
     this._surface = surface
     this._graphics = new Graphics(this)
@@ -257,7 +280,15 @@ export class Engine {
     this._canvas.drawArc(oval, startAngle, sweepAngle, useCenter, paint)
   }
 
-  public drawAtlas(atlas: Image, srcRects: InputFlattenedRectangleArray, dstXforms: InputFlattenedRSXFormArray, paint: Paint, blendMode?: BlendMode | null, colors?: ColorIntArray | null, sampling?: CubicResampler | FilterOptions) {
+  public drawAtlas(
+    atlas: Image,
+    srcRects: InputFlattenedRectangleArray,
+    dstXforms: InputFlattenedRSXFormArray,
+    paint: Paint,
+    blendMode?: BlendMode | null,
+    colors?: ColorIntArray | null,
+    sampling?: CubicResampler | FilterOptions,
+  ) {
     this._canvas.drawAtlas(atlas, srcRects, dstXforms, paint, blendMode, colors, sampling)
   }
 
@@ -281,7 +312,14 @@ export class Engine {
     this._canvas.drawDRRect(outer, inner, paint)
   }
 
-  public drawGlyphs(glyphs: InputGlyphIDArray, positions: InputFlattenedPointArray, x: number, y: number, font: Font, paint: Paint) {
+  public drawGlyphs(
+    glyphs: InputGlyphIDArray,
+    positions: InputFlattenedPointArray,
+    x: number,
+    y: number,
+    font: Font,
+    paint: Paint,
+  ) {
     this._canvas.drawGlyphs(glyphs, positions, x, y, font, paint)
   }
 
@@ -293,8 +331,7 @@ export class Engine {
     this._canvas.drawImageCubic(img, left, top, B, C, paint)
   }
 
-  public drawImageOptions(img: Image, left: number, top: number, fm: FilterMode, mm: MipmapMode, paint?: Paint | null
-  ) {
+  public drawImageOptions(img: Image, left: number, top: number, fm: FilterMode, mm: MipmapMode, paint?: Paint | null) {
     this._canvas.drawImageOptions(img, left, top, fm, mm, paint)
   }
 
@@ -310,7 +347,14 @@ export class Engine {
     this._canvas.drawImageRectCubic(img, src, dest, B, C, paint)
   }
 
-  public drawImageRectOptions(img: Image, src: InputRect, dest: InputRect, fm: FilterMode, mm: MipmapMode, paint?: Paint | null) {
+  public drawImageRectOptions(
+    img: Image,
+    src: InputRect,
+    dest: InputRect,
+    fm: FilterMode,
+    mm: MipmapMode,
+    paint?: Paint | null,
+  ) {
     this._canvas.drawImageRectOptions(img, src, dest, fm, mm, paint)
   }
 
@@ -334,7 +378,13 @@ export class Engine {
     this._canvas.drawPath(path, paint)
   }
 
-  public drawPatch(cubics: InputFlattenedPointArray, colors?: ColorIntArray | Color[] | null, texs?: InputFlattenedPointArray | null, mode?: BlendMode | null, paint?: Paint) {
+  public drawPatch(
+    cubics: InputFlattenedPointArray,
+    colors?: ColorIntArray | Color[] | null,
+    texs?: InputFlattenedPointArray | null,
+    mode?: BlendMode | null,
+    paint?: Paint,
+  ) {
     this._canvas.drawPatch(cubics, colors, texs, mode, paint)
   }
 
@@ -358,16 +408,16 @@ export class Engine {
     this._canvas.drawRRect(rrect, paint)
   }
 
-  public drawShadow(path: Path, zPlaneParams: InputVector3, lightPos: InputVector3, lightRadius: number, ambientColor: InputColor, spotColor: InputColor, flags: number) {
-    this._canvas.drawShadow(
-      path,
-      zPlaneParams,
-      lightPos,
-      lightRadius,
-      ambientColor,
-      spotColor,
-      flags
-    )
+  public drawShadow(
+    path: Path,
+    zPlaneParams: InputVector3,
+    lightPos: InputVector3,
+    lightRadius: number,
+    ambientColor: InputColor,
+    spotColor: InputColor,
+    flags: number,
+  ) {
+    this._canvas.drawShadow(path, zPlaneParams, lightPos, lightRadius, ambientColor, spotColor, flags)
   }
 
   public drawText(str: string, x: number, y: number, paint: Paint, font: Font) {
@@ -433,7 +483,16 @@ export class Engine {
     this._canvas.translate(dx, dy)
   }
 
-  public writePixels(pixels: Uint8Array | number[], srcWidth: number, srcHeight: number, destX: number, destY: number, alphaType?: AlphaType, colorType?: ColorType, colorSpace?: ColorSpace) {
+  public writePixels(
+    pixels: Uint8Array | number[],
+    srcWidth: number,
+    srcHeight: number,
+    destX: number,
+    destY: number,
+    alphaType?: AlphaType,
+    colorType?: ColorType,
+    colorSpace?: ColorSpace,
+  ) {
     this._canvas.writePixels(pixels, srcWidth, srcHeight, destX, destY, alphaType, colorType, colorSpace)
   }
 
