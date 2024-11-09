@@ -1,7 +1,7 @@
 {
-  "name": "@ratel-web/extension-entity-mind",
-  "version": "1.0.0",
-  "description": "Plugin to add mind shapes for ratel web.",
+  "name": "@ratel-web/extension-entity-clipboard",
+  "version": "0.1.0",
+  "description": "Plugin to add some clipboards for ratel web.",
   "keywords": [
     "ratel-web"
   ],
@@ -9,19 +9,15 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/iapoo/ratel-web.git",
-    "directory": "packages/ratel-shape-mind"
+    "directory": "packages/extension-entity-clipboard"
   },
   "license": "MIT",
   "author": "Ivipa Ratel Team (https://ratel.ivipa.com)",
   "type": "module",
   "exports": {
-    ".": "./src/index.ts",
-    "./*": "./src/*"
+    ".": "./src/index.ts"
   },
   "main": "./src/index.ts",
-  "files": [
-    "lib"
-  ],
   "scripts": {
     "typings": "tsc --emitDeclarationOnly -d --outDir typings"
   },
@@ -32,21 +28,5 @@
   },
   "publishConfig": {
     "access": "public"
-  },
-  "conditions": {
-    "USE_ESM": [
-      null,
-      {
-        "type": "commonjs"
-      }
-    ],
-    "BABEL_8_BREAKING": [
-      {
-        "engines": {
-          "node": "^18.20.0 || ^20.17.0 || >=22.8.0"
-        }
-      },
-      {}
-    ]
   }
 }
