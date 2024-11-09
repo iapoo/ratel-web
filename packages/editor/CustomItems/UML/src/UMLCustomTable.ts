@@ -694,14 +694,7 @@ export const UMLCustomTableTypes: CustomTableType[] = [
 ]
 
 export class UMLCustomTable extends CustomTableEntity {
-  public constructor(
-    left: number,
-    top: number,
-    width: number,
-    height: number,
-    customTableType: string,
-    customTableTypeInfos: CustomTableType[],
-  ) {
+  public constructor(left: number, top: number, width: number, height: number, customTableType: string, customTableTypeInfos: CustomTableType[]) {
     super(left, top, width, height, customTableType, customTableTypeInfos, 1, 1)
     this.buildShape()
   }
@@ -850,12 +843,7 @@ export class UMLCustomTable extends CustomTableEntity {
         const cell = this.items[this.columnCount * rowIndex + columnIndex]
         const theCellWidth = columnIndex === 0 ? firstColumnWidth : cellWidth
         const theCellHeight = rowIndex === 0 ? firstRowHeight : cellHeight
-        cell.boundary = Rectangle.makeLTWH(
-          Math.round(cellLeft),
-          Math.round(cellTop),
-          Math.round(theCellWidth),
-          Math.round(theCellHeight),
-        )
+        cell.boundary = Rectangle.makeLTWH(Math.round(cellLeft), Math.round(cellTop), Math.round(theCellWidth), Math.round(theCellHeight))
         cellLeft += theCellWidth
       }
       cellTop += rowIndex === 0 ? firstRowHeight : cellHeight

@@ -1,5 +1,5 @@
 /* eslint-disable max-params */
-import { Colors, Graphics, Paint, PaintStyle, Path, PathOp, Rectangle, Point2 } from './Graphics'
+import { Colors, Graphics, Paint, PaintStyle, Path, PathOp, Point2, Rectangle } from './Graphics'
 import { Node } from './Node'
 
 export abstract class Shape extends Node {
@@ -63,12 +63,7 @@ export abstract class Shape extends Node {
   }
 
   public set boundary(boundary: Rectangle) {
-    if (
-      this.left !== boundary.left ||
-      this.top !== boundary.top ||
-      this.width !== boundary.width ||
-      this.height !== boundary.height
-    ) {
+    if (this.left !== boundary.left || this.top !== boundary.top || this.width !== boundary.width || this.height !== boundary.height) {
       this._boundary = Rectangle.makeLTWH(boundary.left, boundary.top, boundary.width, boundary.height)
       //this.position = new Point2(this._boundary.left, this._boundary.top)
       this.markDirty()
@@ -117,12 +112,7 @@ export abstract class Shape extends Node {
   }
 
   public set right(right: number) {
-    this._boundary = Rectangle.makeLTWH(
-      this._boundary.left,
-      this._boundary.top,
-      right - this._boundary.left,
-      this._boundary.height,
-    )
+    this._boundary = Rectangle.makeLTWH(this._boundary.left, this._boundary.top, right - this._boundary.left, this._boundary.height)
     this.markDirty()
   }
 
@@ -131,12 +121,7 @@ export abstract class Shape extends Node {
   }
 
   public set bottom(bottom: number) {
-    this._boundary = Rectangle.makeLTWH(
-      this._boundary.left,
-      this._boundary.top,
-      this._boundary.width,
-      bottom - this._boundary.top,
-    )
+    this._boundary = Rectangle.makeLTWH(this._boundary.left, this._boundary.top, this._boundary.width, bottom - this._boundary.top)
     this.markDirty()
   }
 

@@ -1,22 +1,5 @@
-import {
-  Circle,
-  Container,
-  Element,
-  Ellipse,
-  Gradient,
-  Line,
-  Marker,
-  Path,
-  Pattern,
-  PointArray,
-  Polyline,
-  Rect,
-  SVG,
-  Stop,
-  Style,
-  Svg,
-} from '@svgdotjs/svg.js'
 import { Colors, Matrix, Rectangle, RoundRectangle, Scale, Shape } from '@ratel-web/engine'
+import { Circle, Container, Element, Ellipse, Gradient, Line, Marker, Path, Pattern, PointArray, Polyline, Rect, SVG, Stop, Style, Svg } from '@svgdotjs/svg.js'
 import { CustomSvgShape } from '../../Shapes'
 import { CommonUtils } from './CommonUtils'
 
@@ -218,17 +201,7 @@ export class SvgUtils {
   private static parseCommon(element: Element, shape: CustomSvgShape, svgRootShape: SvgRootShape, svgShape: SvgShape) {
     const attrs = element.attr()
     const transform = element.transform()
-    const matrix = Matrix.make([
-      transform.a!,
-      transform.c!,
-      transform.e!,
-      transform.b!,
-      transform.d!,
-      transform.f!,
-      0,
-      0,
-      1,
-    ])
+    const matrix = Matrix.make([transform.a!, transform.c!, transform.e!, transform.b!, transform.d!, transform.f!, 0, 0, 1])
     svgShape.transform = matrix
     SvgUtils.parseAttrs(attrs, shape, svgRootShape, svgShape)
   }
@@ -303,14 +276,7 @@ export class SvgUtils {
           controlPointQExists = false
           break
         case 'C':
-          shape.path.cubicTo(
-            pathCommand[1],
-            pathCommand[2],
-            pathCommand[3],
-            pathCommand[4],
-            pathCommand[5],
-            pathCommand[6],
-          )
+          shape.path.cubicTo(pathCommand[1], pathCommand[2], pathCommand[3], pathCommand[4], pathCommand[5], pathCommand[6])
           x = pathCommand[5]
           y = pathCommand[6]
           controlPointCExists = true
@@ -319,14 +285,7 @@ export class SvgUtils {
           controlPointY = pathCommand[6] + (pathCommand[6] - pathCommand[4])
           break
         case 'c':
-          shape.path.cubicTo(
-            x + pathCommand[1],
-            y + pathCommand[2],
-            x + pathCommand[3],
-            y + pathCommand[4],
-            x + pathCommand[5],
-            y + pathCommand[6],
-          )
+          shape.path.cubicTo(x + pathCommand[1], y + pathCommand[2], x + pathCommand[3], y + pathCommand[4], x + pathCommand[5], y + pathCommand[6])
           x = x + pathCommand[5]
           y = y + pathCommand[6]
           controlPointCExists = true
@@ -336,14 +295,7 @@ export class SvgUtils {
           break
         case 'S':
           if (controlPointCExists) {
-            shape.path.cubicTo(
-              controlPointX,
-              controlPointY,
-              pathCommand[1],
-              pathCommand[2],
-              pathCommand[3],
-              pathCommand[4],
-            )
+            shape.path.cubicTo(controlPointX, controlPointY, pathCommand[1], pathCommand[2], pathCommand[3], pathCommand[4])
           } else {
             shape.path.cubicTo(x, y, pathCommand[1], pathCommand[2], pathCommand[3], pathCommand[4])
           }
@@ -356,14 +308,7 @@ export class SvgUtils {
           break
         case 's':
           if (controlPointCExists) {
-            shape.path.cubicTo(
-              controlPointX,
-              controlPointY,
-              x + pathCommand[1],
-              y + pathCommand[2],
-              x + pathCommand[3],
-              y + pathCommand[4],
-            )
+            shape.path.cubicTo(controlPointX, controlPointY, x + pathCommand[1], y + pathCommand[2], x + pathCommand[3], y + pathCommand[4])
           } else {
             shape.path.cubicTo(x, y, x + pathCommand[1], y + pathCommand[2], x + pathCommand[3], y + pathCommand[4])
           }

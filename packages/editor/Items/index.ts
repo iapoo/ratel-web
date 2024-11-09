@@ -7,15 +7,7 @@ import type { Type } from './src/Item'
 import type { ShapeType } from './src/ShapeEntity'
 
 import type { ShapeOptions } from './src/ShapeEntity'
-export {
-  ConnectorArrowType,
-  CustomConnectorTypeInfo,
-  CustomEntityTypeInfo,
-  CustomTableType,
-  ShapeOptions,
-  ShapeType,
-  Type,
-}
+export { ConnectorArrowType, CustomConnectorTypeInfo, CustomEntityTypeInfo, CustomTableType, ShapeOptions, ShapeType, Type }
 
 export enum MyShapeType {
   SELECTION = 0,

@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
+import { Placeholder } from '@/components/Resource/Icons'
+import { EditorUtils } from '@/components/Workspace/Utils/EditorUtils'
 import {
   AlignCenterOutlined,
   AlignLeftOutlined,
@@ -26,22 +28,6 @@ import {
   ZoomInOutlined,
   ZoomOutOutlined,
 } from '@ant-design/icons'
-import type { ConfigProviderProps, GetProp, MappingAlgorithm, MenuProps, UploadProps } from 'antd'
-import { Button, ColorPicker, Divider, Dropdown, Input, InputNumber, message, Modal, Select, Space, theme, Tooltip, Upload } from 'antd'
-import { FC, useEffect, useRef, useState } from 'react'
-import { setInterval } from 'timers'
-import { StorageService } from '../Storage'
-import { ConnectorLineModes, ConnectorLineTypes, Consts, FontSizeOptions, LineWidthOptions, RequestUtils, StrokeDashStyles, SystemUtils, Utils } from '../Utils'
-import { UserInfo } from '../Utils/RequestUtils'
-import CustomerWindow from './CustomerWindow'
-import FileManagementWindow from './FileManagementWindow'
-import LoginFormWindow from './LoginFormWindow'
-import NewFileWindow from './NewFileWindow'
-import OpenFileWindow from './OpenFileWindow'
-import OperatorWindow from './OperatorWindow'
-// @ts-ignore
-import { Placeholder } from '@/components/Resource/Icons'
-import { EditorUtils } from '@/components/Workspace/Utils/EditorUtils'
 import { Arrows } from '@ratel-web/editor/CustomItems/Arrows'
 import { BasicShapes } from '@ratel-web/editor/CustomItems/BasicShapes'
 import { ERCustomShape, ERCustomShapeTypes } from '@ratel-web/editor/CustomItems/EntityRelation'
@@ -64,23 +50,53 @@ import {
   UMLFrameShapeTypes,
 } from '@ratel-web/editor/CustomItems/UML'
 import { Editor, EditorEvent } from '@ratel-web/editor/Editor'
-import { Connector, ConnectorArrowTypes, ContainerEntity, CustomConnector, CustomConnectorTypeInfo, CustomEntity, CustomEntityTypeInfo, CustomTableType, EditorItem, Item, ShapeEntity, ShapeType, ShapeTypes, TableEntity, TableTypes } from '@ratel-web/editor/Items'
+import {
+  Connector,
+  ConnectorArrowTypes,
+  ContainerEntity,
+  CustomConnector,
+  CustomConnectorTypeInfo,
+  CustomEntity,
+  CustomEntityTypeInfo,
+  CustomTableType,
+  EditorItem,
+  Item,
+  ShapeEntity,
+  ShapeType,
+  ShapeTypes,
+  TableEntity,
+  TableTypes,
+} from '@ratel-web/editor/Items'
 import { Operation, OperationType } from '@ratel-web/editor/Operations'
 import { ConnectorDirection } from '@ratel-web/editor/Shapes'
 import { DocumentThemeTypes } from '@ratel-web/editor/Theme'
 import { CommonUtils, Constants, EditorHelper } from '@ratel-web/editor/Utils'
 import { FontSlant, FontUtils, FontWeight, Matrix, Point2, TextDecoration } from '@ratel-web/engine'
+import type { ConfigProviderProps, GetProp, MappingAlgorithm, MenuProps, UploadProps } from 'antd'
+import { Button, ColorPicker, Divider, Dropdown, Input, InputNumber, message, Modal, Select, Space, theme, Tooltip, Upload } from 'antd'
 import { RcFile, UploadChangeParam } from 'antd/es/upload'
+import { FC, useEffect, useRef, useState } from 'react'
+import { setInterval } from 'timers'
 import { FormattedMessage, getLocale, setLocale, useAntdConfig, useAntdConfigSetter, useIntl, useNavigate } from 'umi'
+import { StorageService } from '../Storage'
+import { ConnectorLineModes, ConnectorLineTypes, Consts, FontSizeOptions, LineWidthOptions, RequestUtils, StrokeDashStyles, SystemUtils, Utils } from '../Utils'
 import { ConnectorLineModesForCurve, DoubleLineGapOptions, FontNameOptions } from '../Utils/Consts'
+import { UserInfo } from '../Utils/RequestUtils'
 import { OSType } from '../Utils/SystemUtils'
 import AboutWindowPage from './AboutWindow'
+import CustomerWindow from './CustomerWindow'
 import DocumentSelector from './DocumentSelector'
+import FileManagementWindow from './FileManagementWindow'
+import LoginFormWindow from './LoginFormWindow'
+import NewFileWindow from './NewFileWindow'
+import OpenFileWindow from './OpenFileWindow'
+import OperatorWindow from './OperatorWindow'
 import PasswordFormWindowPage from './PasswordFormWindow'
 import ProfileFormWindowPage from './ProfileFormWindow'
 import RegisterFormWindowPage from './RegisterFormWindow'
 import ShareWindow from './ShareWindow'
 import TeamWindow from './TeamWindow'
+import styles from './index.less'
 
 interface HeaderProps {
   previousEditor: Editor | undefined
@@ -95,7 +111,18 @@ interface HeaderProps {
   documentThemeName: string
 }
 
-const Header: FC<HeaderProps> = ({ previousEditor, currentEditor, onLogin, onLogout, onMyShapesUpdated, adRegionWidth, onShowRulerChanged, showRuler, onDocumentThemeChanged, documentThemeName }) => {
+const Header: FC<HeaderProps> = ({
+  previousEditor,
+  currentEditor,
+  onLogin,
+  onLogout,
+  onMyShapesUpdated,
+  adRegionWidth,
+  onShowRulerChanged,
+  showRuler,
+  onDocumentThemeChanged,
+  documentThemeName,
+}) => {
   const setAntdConfig = useAntdConfigSetter()
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const antdConfig = useAntdConfig()
@@ -1404,7 +1431,18 @@ const Header: FC<HeaderProps> = ({ previousEditor, currentEditor, onLogin, onLog
       })
       Utils.currentEditor.invalideHolder()
       const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      const operation: Operation = new Operation(Utils.currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
+      const operation: Operation = new Operation(
+        Utils.currentEditor,
+        OperationType.UPDATE_ITEMS,
+        afterSelections,
+        true,
+        beforeSelections,
+        '',
+        null,
+        null,
+        null,
+        null,
+      )
       Utils.currentEditor.operationService.addOperation(operation)
       Utils.currentEditor.triggerOperationChange()
     }
@@ -1512,7 +1550,18 @@ const Header: FC<HeaderProps> = ({ previousEditor, currentEditor, onLogin, onLog
       Utils.currentEditor.focus()
       Utils.currentEditor.triggerTextEditStyleChange()
       const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      const operation: Operation = new Operation(Utils.currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
+      const operation: Operation = new Operation(
+        Utils.currentEditor,
+        OperationType.UPDATE_ITEMS,
+        afterSelections,
+        true,
+        beforeSelections,
+        '',
+        null,
+        null,
+        null,
+        null,
+      )
       Utils.currentEditor.operationService.addOperation(operation)
       Utils.currentEditor.triggerOperationChange()
     }
@@ -1536,7 +1585,18 @@ const Header: FC<HeaderProps> = ({ previousEditor, currentEditor, onLogin, onLog
       Utils.currentEditor.focus()
       Utils.currentEditor.triggerTextEditStyleChange()
       const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      const operation: Operation = new Operation(Utils.currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
+      const operation: Operation = new Operation(
+        Utils.currentEditor,
+        OperationType.UPDATE_ITEMS,
+        afterSelections,
+        true,
+        beforeSelections,
+        '',
+        null,
+        null,
+        null,
+        null,
+      )
       Utils.currentEditor.operationService.addOperation(operation)
       Utils.currentEditor.triggerOperationChange()
     }
@@ -1592,7 +1652,18 @@ const Header: FC<HeaderProps> = ({ previousEditor, currentEditor, onLogin, onLog
           }
         })
         const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-        const operation: Operation = new Operation(Utils.currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
+        const operation: Operation = new Operation(
+          Utils.currentEditor,
+          OperationType.UPDATE_ITEMS,
+          afterSelections,
+          true,
+          beforeSelections,
+          '',
+          null,
+          null,
+          null,
+          null,
+        )
         Utils.currentEditor.operationService.addOperation(operation)
         Utils.currentEditor.triggerOperationChange()
       }
@@ -1612,7 +1683,18 @@ const Header: FC<HeaderProps> = ({ previousEditor, currentEditor, onLogin, onLog
         editorItem.useTheme = false
       })
       const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      const operation: Operation = new Operation(Utils.currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
+      const operation: Operation = new Operation(
+        Utils.currentEditor,
+        OperationType.UPDATE_ITEMS,
+        afterSelections,
+        true,
+        beforeSelections,
+        '',
+        null,
+        null,
+        null,
+        null,
+      )
       Utils.currentEditor.operationService.addOperation(operation)
       Utils.currentEditor.triggerOperationChange()
     }
@@ -1634,7 +1716,18 @@ const Header: FC<HeaderProps> = ({ previousEditor, currentEditor, onLogin, onLog
         editorItem.useTheme = false
       })
       const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      const operation: Operation = new Operation(Utils.currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
+      const operation: Operation = new Operation(
+        Utils.currentEditor,
+        OperationType.UPDATE_ITEMS,
+        afterSelections,
+        true,
+        beforeSelections,
+        '',
+        null,
+        null,
+        null,
+        null,
+      )
       Utils.currentEditor.operationService.addOperation(operation)
       Utils.currentEditor.triggerOperationChange()
     }
@@ -1658,7 +1751,18 @@ const Header: FC<HeaderProps> = ({ previousEditor, currentEditor, onLogin, onLog
       Utils.currentEditor.focus()
       Utils.currentEditor.triggerTextEditStyleChange()
       const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      const operation: Operation = new Operation(Utils.currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
+      const operation: Operation = new Operation(
+        Utils.currentEditor,
+        OperationType.UPDATE_ITEMS,
+        afterSelections,
+        true,
+        beforeSelections,
+        '',
+        null,
+        null,
+        null,
+        null,
+      )
       Utils.currentEditor.operationService.addOperation(operation)
       Utils.currentEditor.triggerOperationChange()
     }
@@ -1688,7 +1792,18 @@ const Header: FC<HeaderProps> = ({ previousEditor, currentEditor, onLogin, onLog
       Utils.currentEditor.focus()
       Utils.currentEditor.triggerTextEditStyleChange()
       const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      const operation: Operation = new Operation(Utils.currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
+      const operation: Operation = new Operation(
+        Utils.currentEditor,
+        OperationType.UPDATE_ITEMS,
+        afterSelections,
+        true,
+        beforeSelections,
+        '',
+        null,
+        null,
+        null,
+        null,
+      )
       Utils.currentEditor.operationService.addOperation(operation)
       Utils.currentEditor.triggerOperationChange()
     }
@@ -1711,7 +1826,18 @@ const Header: FC<HeaderProps> = ({ previousEditor, currentEditor, onLogin, onLog
       Utils.currentEditor.focus()
       Utils.currentEditor.triggerTextEditStyleChange()
       const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      const operation: Operation = new Operation(Utils.currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
+      const operation: Operation = new Operation(
+        Utils.currentEditor,
+        OperationType.UPDATE_ITEMS,
+        afterSelections,
+        true,
+        beforeSelections,
+        '',
+        null,
+        null,
+        null,
+        null,
+      )
       Utils.currentEditor.operationService.addOperation(operation)
       Utils.currentEditor.triggerOperationChange()
     }
@@ -1734,7 +1860,18 @@ const Header: FC<HeaderProps> = ({ previousEditor, currentEditor, onLogin, onLog
       Utils.currentEditor.focus()
       Utils.currentEditor.triggerTextEditStyleChange()
       const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      const operation: Operation = new Operation(Utils.currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
+      const operation: Operation = new Operation(
+        Utils.currentEditor,
+        OperationType.UPDATE_ITEMS,
+        afterSelections,
+        true,
+        beforeSelections,
+        '',
+        null,
+        null,
+        null,
+        null,
+      )
       Utils.currentEditor.operationService.addOperation(operation)
       Utils.currentEditor.triggerOperationChange()
     }
@@ -1757,7 +1894,18 @@ const Header: FC<HeaderProps> = ({ previousEditor, currentEditor, onLogin, onLog
       Utils.currentEditor.focus()
       Utils.currentEditor.triggerTextEditStyleChange()
       const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      const operation: Operation = new Operation(Utils.currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
+      const operation: Operation = new Operation(
+        Utils.currentEditor,
+        OperationType.UPDATE_ITEMS,
+        afterSelections,
+        true,
+        beforeSelections,
+        '',
+        null,
+        null,
+        null,
+        null,
+      )
       Utils.currentEditor.operationService.addOperation(operation)
       Utils.currentEditor.triggerOperationChange()
     }
@@ -1780,7 +1928,18 @@ const Header: FC<HeaderProps> = ({ previousEditor, currentEditor, onLogin, onLog
       Utils.currentEditor.focus()
       Utils.currentEditor.triggerTextEditStyleChange()
       const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      const operation: Operation = new Operation(Utils.currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
+      const operation: Operation = new Operation(
+        Utils.currentEditor,
+        OperationType.UPDATE_ITEMS,
+        afterSelections,
+        true,
+        beforeSelections,
+        '',
+        null,
+        null,
+        null,
+        null,
+      )
       Utils.currentEditor.operationService.addOperation(operation)
       Utils.currentEditor.triggerOperationChange()
     }
@@ -1807,7 +1966,18 @@ const Header: FC<HeaderProps> = ({ previousEditor, currentEditor, onLogin, onLog
         }
       })
       const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      const operation: Operation = new Operation(Utils.currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
+      const operation: Operation = new Operation(
+        Utils.currentEditor,
+        OperationType.UPDATE_ITEMS,
+        afterSelections,
+        true,
+        beforeSelections,
+        '',
+        null,
+        null,
+        null,
+        null,
+      )
       Utils.currentEditor.operationService.addOperation(operation)
       Utils.currentEditor.triggerOperationChange()
     }
@@ -1824,7 +1994,11 @@ const Header: FC<HeaderProps> = ({ previousEditor, currentEditor, onLogin, onLog
         }
       })
       //Update it to default if not supported
-      if (value === Constants.CONNECTOR_LINE_TYPE_CURVED && connectorLineMode !== Constants.CONNECTOR_LINE_MODE_SIGNLE && connectorLineMode !== Constants.CONNECTOR_LINE_MODE_DOUBLE) {
+      if (
+        value === Constants.CONNECTOR_LINE_TYPE_CURVED &&
+        connectorLineMode !== Constants.CONNECTOR_LINE_MODE_SIGNLE &&
+        connectorLineMode !== Constants.CONNECTOR_LINE_MODE_DOUBLE
+      ) {
         setConnectorLineMode(Constants.CONNECTOR_LINE_MODE_SIGNLE)
         let editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
         editorItems.forEach((editorItem: EditorItem) => {
@@ -1836,7 +2010,18 @@ const Header: FC<HeaderProps> = ({ previousEditor, currentEditor, onLogin, onLog
       Utils.currentEditor.focus()
       Utils.currentEditor.invalideHolder()
       const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      const operation: Operation = new Operation(Utils.currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
+      const operation: Operation = new Operation(
+        Utils.currentEditor,
+        OperationType.UPDATE_ITEMS,
+        afterSelections,
+        true,
+        beforeSelections,
+        '',
+        null,
+        null,
+        null,
+        null,
+      )
       Utils.currentEditor.operationService.addOperation(operation)
       Utils.currentEditor.triggerOperationChange()
     }
@@ -1855,7 +2040,18 @@ const Header: FC<HeaderProps> = ({ previousEditor, currentEditor, onLogin, onLog
       Utils.currentEditor.focus()
       Utils.currentEditor.triggerTextEditStyleChange()
       const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      const operation: Operation = new Operation(Utils.currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
+      const operation: Operation = new Operation(
+        Utils.currentEditor,
+        OperationType.UPDATE_ITEMS,
+        afterSelections,
+        true,
+        beforeSelections,
+        '',
+        null,
+        null,
+        null,
+        null,
+      )
       Utils.currentEditor.operationService.addOperation(operation)
       Utils.currentEditor.triggerOperationChange()
     }
@@ -1874,7 +2070,18 @@ const Header: FC<HeaderProps> = ({ previousEditor, currentEditor, onLogin, onLog
       Utils.currentEditor.focus()
       Utils.currentEditor.triggerTextEditStyleChange()
       const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      const operation: Operation = new Operation(Utils.currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
+      const operation: Operation = new Operation(
+        Utils.currentEditor,
+        OperationType.UPDATE_ITEMS,
+        afterSelections,
+        true,
+        beforeSelections,
+        '',
+        null,
+        null,
+        null,
+        null,
+      )
       Utils.currentEditor.operationService.addOperation(operation)
       Utils.currentEditor.triggerOperationChange()
     }
@@ -1899,7 +2106,18 @@ const Header: FC<HeaderProps> = ({ previousEditor, currentEditor, onLogin, onLog
       Utils.currentEditor.focus()
       Utils.currentEditor.triggerTextEditStyleChange()
       const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      const operation: Operation = new Operation(Utils.currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
+      const operation: Operation = new Operation(
+        Utils.currentEditor,
+        OperationType.UPDATE_ITEMS,
+        afterSelections,
+        true,
+        beforeSelections,
+        '',
+        null,
+        null,
+        null,
+        null,
+      )
       Utils.currentEditor.operationService.addOperation(operation)
       Utils.currentEditor.triggerOperationChange()
     }
@@ -1923,7 +2141,18 @@ const Header: FC<HeaderProps> = ({ previousEditor, currentEditor, onLogin, onLog
       Utils.currentEditor.focus()
       Utils.currentEditor.triggerTextEditStyleChange()
       const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      const operation: Operation = new Operation(Utils.currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
+      const operation: Operation = new Operation(
+        Utils.currentEditor,
+        OperationType.UPDATE_ITEMS,
+        afterSelections,
+        true,
+        beforeSelections,
+        '',
+        null,
+        null,
+        null,
+        null,
+      )
       Utils.currentEditor.operationService.addOperation(operation)
       Utils.currentEditor.triggerOperationChange()
     }
@@ -1932,28 +2161,60 @@ const Header: FC<HeaderProps> = ({ previousEditor, currentEditor, onLogin, onLog
   const strokeDashStyles = StrokeDashStyles.map((strokeDashStyle) => {
     return {
       value: strokeDashStyle.name,
-      label: <img alt="intl.formatMessage({ id: strokeDashStyle.label})" src={process.env.BASIC_PATH + '/icons/line-' + strokeDashStyle.name.toLowerCase() + '.svg'} width="48" height="16" style={{ filter: Utils.currentEditor?.enableDarkTheme ? 'invert(100%)' : '' }} />,
+      label: (
+        <img
+          alt="intl.formatMessage({ id: strokeDashStyle.label})"
+          src={process.env.BASIC_PATH + '/icons/line-' + strokeDashStyle.name.toLowerCase() + '.svg'}
+          width="48"
+          height="16"
+          style={{ filter: Utils.currentEditor?.enableDarkTheme ? 'invert(100%)' : '' }}
+        />
+      ),
     }
   })
 
   const connectorLineTypes = ConnectorLineTypes.map((connectorLineType) => {
     return {
       value: connectorLineType.name,
-      label: <img alt="intl.formatMessage({ id: connectorLineType.label})" src={process.env.BASIC_PATH + '/icons/connector-line-type-' + connectorLineType.name.toLowerCase() + '.svg'} width="16" height="16" style={{ filter: Utils.currentEditor?.enableDarkTheme ? 'invert(100%)' : '' }} />,
+      label: (
+        <img
+          alt="intl.formatMessage({ id: connectorLineType.label})"
+          src={process.env.BASIC_PATH + '/icons/connector-line-type-' + connectorLineType.name.toLowerCase() + '.svg'}
+          width="16"
+          height="16"
+          style={{ filter: Utils.currentEditor?.enableDarkTheme ? 'invert(100%)' : '' }}
+        />
+      ),
     }
   })
 
   const connectorLineModes = ConnectorLineModes.map((connectorLineMode) => {
     return {
       value: connectorLineMode.name,
-      label: <img alt="intl.formatMessage({ id: connectorLineMode.label})" src={process.env.BASIC_PATH + '/icons/connector-line-mode-' + connectorLineMode.name.toLowerCase() + '.svg'} width="16" height="16" style={{ filter: Utils.currentEditor?.enableDarkTheme ? 'invert(100%)' : '' }} />,
+      label: (
+        <img
+          alt="intl.formatMessage({ id: connectorLineMode.label})"
+          src={process.env.BASIC_PATH + '/icons/connector-line-mode-' + connectorLineMode.name.toLowerCase() + '.svg'}
+          width="16"
+          height="16"
+          style={{ filter: Utils.currentEditor?.enableDarkTheme ? 'invert(100%)' : '' }}
+        />
+      ),
     }
   })
 
   const connectorLineModesForCurve = ConnectorLineModesForCurve.map((connectorLineMode) => {
     return {
       value: connectorLineMode.name,
-      label: <img alt="intl.formatMessage({ id: connectorLineMode.label})" src={process.env.BASIC_PATH + '/icons/connector-line-mode-' + connectorLineMode.name.toLowerCase() + '.svg'} width="16" height="16" style={{ filter: Utils.currentEditor?.enableDarkTheme ? 'invert(100%)' : '' }} />,
+      label: (
+        <img
+          alt="intl.formatMessage({ id: connectorLineMode.label})"
+          src={process.env.BASIC_PATH + '/icons/connector-line-mode-' + connectorLineMode.name.toLowerCase() + '.svg'}
+          width="16"
+          height="16"
+          style={{ filter: Utils.currentEditor?.enableDarkTheme ? 'invert(100%)' : '' }}
+        />
+      ),
     }
   })
 
@@ -1962,7 +2223,16 @@ const Header: FC<HeaderProps> = ({ previousEditor, currentEditor, onLogin, onLog
     const id = 'header-' + path
     return {
       value: connectorArrowType.name,
-      label: <img id={id} alt={connectorArrowType.description} src={path} width="16" height="16" style={{ filter: Utils.currentEditor?.enableDarkTheme ? 'invert(100%)' : '' }} />,
+      label: (
+        <img
+          id={id}
+          alt={connectorArrowType.description}
+          src={path}
+          width="16"
+          height="16"
+          style={{ filter: Utils.currentEditor?.enableDarkTheme ? 'invert(100%)' : '' }}
+        />
+      ),
     }
   })
 
@@ -1971,7 +2241,16 @@ const Header: FC<HeaderProps> = ({ previousEditor, currentEditor, onLogin, onLog
     const id = 'header' + path
     return {
       value: connectorArrowType.name,
-      label: <img id={id} alt={connectorArrowType.description} src={path} width="16" height="16" style={{ filter: Utils.currentEditor?.enableDarkTheme ? 'invert(100%)' : '' }} />,
+      label: (
+        <img
+          id={id}
+          alt={connectorArrowType.description}
+          src={path}
+          width="16"
+          height="16"
+          style={{ filter: Utils.currentEditor?.enableDarkTheme ? 'invert(100%)' : '' }}
+        />
+      ),
     }
   })
 
@@ -2076,37 +2355,89 @@ const Header: FC<HeaderProps> = ({ previousEditor, currentEditor, onLogin, onLog
             shapeEntity = new ERCustomShape(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, shapeType.name)
             break
           case UMLFrameShape:
-            shapeEntity = new UMLFrameShape(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, { shapeType: shapeType.name }, shapeTypes)
+            shapeEntity = new UMLFrameShape(
+              left,
+              shapeType.top + margin,
+              shapeType.width * sizeFactor,
+              shapeType.height * sizeFactor,
+              { shapeType: shapeType.name },
+              shapeTypes,
+            )
             break
           case UMLCustomContainer:
-            shapeEntity = new UMLCustomContainer(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, shapeType.name, shapeTypes)
+            shapeEntity = new UMLCustomContainer(
+              left,
+              shapeType.top + margin,
+              shapeType.width * sizeFactor,
+              shapeType.height * sizeFactor,
+              shapeType.name,
+              shapeTypes,
+            )
             break
           case UMLCustomShape:
             shapeEntity = new UMLCustomShape(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, shapeType.name)
             break
           case UMLBasicShape:
-            shapeEntity = new UMLBasicShape(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, { shapeType: shapeType.name }, shapeTypes)
+            shapeEntity = new UMLBasicShape(
+              left,
+              shapeType.top + margin,
+              shapeType.width * sizeFactor,
+              shapeType.height * sizeFactor,
+              { shapeType: shapeType.name },
+              shapeTypes,
+            )
             break
           case UMLContainerShape:
-            shapeEntity = new UMLContainerShape(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, { shapeType: shapeType.name }, shapeTypes)
+            shapeEntity = new UMLContainerShape(
+              left,
+              shapeType.top + margin,
+              shapeType.width * sizeFactor,
+              shapeType.height * sizeFactor,
+              { shapeType: shapeType.name },
+              shapeTypes,
+            )
             break
           case UMLCustomTable:
-            shapeEntity = new UMLCustomTable(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, shapeType.name, shapeTypes as CustomTableType[])
+            shapeEntity = new UMLCustomTable(
+              left,
+              shapeType.top + margin,
+              shapeType.width * sizeFactor,
+              shapeType.height * sizeFactor,
+              shapeType.name,
+              shapeTypes as CustomTableType[],
+            )
             break
           case TableEntity:
             shapeEntity = new TableEntity(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor)
             break
           case ContainerEntity:
-            shapeEntity = new ContainerEntity(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, { shapeType: shapeType.name }, shapeTypes)
+            shapeEntity = new ContainerEntity(
+              left,
+              shapeType.top + margin,
+              shapeType.width * sizeFactor,
+              shapeType.height * sizeFactor,
+              { shapeType: shapeType.name },
+              shapeTypes,
+            )
             break
           default:
-            shapeEntity = new ShapeEntity(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, { shapeType: shapeType.name }, shapeTypes)
+            shapeEntity = new ShapeEntity(
+              left,
+              shapeType.top + margin,
+              shapeType.width * sizeFactor,
+              shapeType.height * sizeFactor,
+              { shapeType: shapeType.name },
+              shapeTypes,
+            )
             break
         }
         shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
         shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
         if (!shapeType.modifyInPercent) {
-          shapeEntity.shape.modifier = new Point2(Math.round(shapeEntity.shape.modifier.x * modifierFactor), Math.round(shapeEntity.shape.modifier.y * modifierFactor))
+          shapeEntity.shape.modifier = new Point2(
+            Math.round(shapeEntity.shape.modifier.x * modifierFactor),
+            Math.round(shapeEntity.shape.modifier.y * modifierFactor),
+          )
         }
         if (shapeType.width < shapeType.height) {
           currentEditor.setup(1, shapeType.height * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
@@ -2129,7 +2460,13 @@ const Header: FC<HeaderProps> = ({ previousEditor, currentEditor, onLogin, onLog
         currentEditor.contentLayer.removeAllEditorItems()
         const customShapeInfo = shapeTypes[i].typeInfo
         const customShapeTypeName = shapeTypes[i].name
-        const customEntity = new shapeTypes[i].type(customShapeInfo.left + margin, customShapeInfo.top + margin, customShapeInfo.width, customShapeInfo.height, customShapeTypeName)
+        const customEntity = new shapeTypes[i].type(
+          customShapeInfo.left + margin,
+          customShapeInfo.top + margin,
+          customShapeInfo.width,
+          customShapeInfo.height,
+          customShapeTypeName,
+        )
         currentEditor.contentLayer.addEditorItem(customEntity)
         currentEditor.setup(1, customShapeInfo.width + margin * 2, customShapeInfo.height + margin * 2)
         currentEditor.render()
@@ -3194,12 +3531,17 @@ const Header: FC<HeaderProps> = ({ previousEditor, currentEditor, onLogin, onLog
         if (shapeType.width < shapeType.height) {
           left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
         }
-        let shapeEntity = new ShapeEntity(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, { shapeType: shapeType.name })
+        let shapeEntity = new ShapeEntity(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, {
+          shapeType: shapeType.name,
+        })
         shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
         shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
         shapeEntity.text = 'Text'
         if (!shapeType.modifyInPercent) {
-          shapeEntity.shape.modifier = new Point2(Math.round(shapeEntity.shape.modifier.x * modifierFactor), Math.round(shapeEntity.shape.modifier.y * modifierFactor))
+          shapeEntity.shape.modifier = new Point2(
+            Math.round(shapeEntity.shape.modifier.x * modifierFactor),
+            Math.round(shapeEntity.shape.modifier.y * modifierFactor),
+          )
         }
         const start = new Point2(left + shapeType.width * sizeFactor * 0.25, shapeType.top + margin + shapeType.height * sizeFactor)
         const end = new Point2(left + shapeType.width * sizeFactor * 0.75, shapeType.top + margin + shapeType.height * sizeFactor)
@@ -3861,26 +4203,26 @@ const Header: FC<HeaderProps> = ({ previousEditor, currentEditor, onLogin, onLog
     },
     {
       label: <FormattedMessage id="workspace.header.menu-view.show-ruler" />,
-      key: '2',
+      key: '3',
       onClick: handleShowRuler,
       icon: <CheckOutlined style={{ visibility: showRuler ? 'visible' : 'hidden' }} />,
     },
     { type: 'divider' },
     {
       label: <FormattedMessage id="workspace.header.menu-view.zoom-reset" />,
-      key: '3',
+      key: '4',
       onClick: handleResetView,
       icon: <CheckOutlined style={{ visibility: 'hidden' }} />,
     },
     {
       label: <FormattedMessage id="workspace.header.menu-view.zoom-in" />,
-      key: '4',
+      key: '5',
       onClick: handleZoomIn,
       icon: <CheckOutlined style={{ visibility: 'hidden' }} />,
     },
     {
       label: <FormattedMessage id="workspace.header.menu-view.zoom-out" />,
-      key: '5',
+      key: '6',
       onClick: handleZoomOut,
       icon: <CheckOutlined style={{ visibility: 'hidden' }} />,
     },
@@ -4031,8 +4373,7 @@ const Header: FC<HeaderProps> = ({ previousEditor, currentEditor, onLogin, onLog
       }}
     >
       {contextHolder}
-      {/*@ts-ignore*/}
-      <div style={{ width: '100%', height: '49%', userSelect: 'none', webkitAppRegion: 'drag' }}>
+      <div className={styles.withDrag} style={{ width: '100%', height: '49%', userSelect: 'none' }}>
         <div style={{ width: '100%', height: '100%', float: 'left', display: 'table' }}>
           <Space direction="horizontal" style={{ display: 'table-cell', verticalAlign: 'middle' }}>
             <Space wrap={false}>
@@ -4047,20 +4388,17 @@ const Header: FC<HeaderProps> = ({ previousEditor, currentEditor, onLogin, onLog
                 ''
               )}
               <Dropdown menu={{ items: fileItems }}>
-                {/*@ts-ignore*/}
-                <Button type="text" size="small" style={{ webkitAppRegion: 'no-drag' }}>
+                <Button type="text" size="small" className={styles.withoutDrag}>
                   <FormattedMessage id="workspace.header.menu-file" />
                 </Button>
               </Dropdown>
               <Dropdown menu={{ items: editItems }}>
-                {/*@ts-ignore*/}
-                <Button type="text" size="small" style={{ webkitAppRegion: 'no-drag' }}>
+                <Button type="text" size="small" className={styles.withoutDrag}>
                   <FormattedMessage id="workspace.header.menu-edit" />
                 </Button>
               </Dropdown>
               <Dropdown menu={{ items: viewItems }}>
-                {/*@ts-ignore*/}
-                <Button type="text" size="small" style={{ webkitAppRegion: 'no-drag' }}>
+                <Button type="text" size="small" className={styles.withoutDrag}>
                   <FormattedMessage id="workspace.header.menu-view" />
                 </Button>
               </Dropdown>
@@ -4068,15 +4406,13 @@ const Header: FC<HeaderProps> = ({ previousEditor, currentEditor, onLogin, onLog
                 <Button type='text' size='small'><FormattedMessage id='workspace.header.menu-operation' /></Button>
               </Dropdown> */}
               <Dropdown menu={{ items: optionItems }}>
-                {/*@ts-ignore*/}
-                <Button type="text" size="small" style={{ webkitAppRegion: 'no-drag' }}>
+                <Button type="text" size="small" className={styles.withoutDrag}>
                   <FormattedMessage id="workspace.header.menu-option" />
                 </Button>
               </Dropdown>
               {'false' === process.env.PRODUCTION ? (
                 <Dropdown menu={{ items: developmentItems }}>
-                  {/*@ts-ignore*/}
-                  <Button type="text" size="small" style={{ webkitAppRegion: 'no-drag' }}>
+                  <Button type="text" size="small" className={styles.withoutDrag}>
                     <FormattedMessage id="workspace.header.menu-development" />
                   </Button>
                 </Dropdown>
@@ -4085,8 +4421,7 @@ const Header: FC<HeaderProps> = ({ previousEditor, currentEditor, onLogin, onLog
               )}
               {checkAdminLink() ? (
                 <Dropdown menu={{ items: managementItems }}>
-                  {/*@ts-ignore*/}
-                  <Button type="text" size="small" style={{ webkitAppRegion: 'no-drag' }}>
+                  <Button type="text" size="small" className={styles.withoutDrag}>
                     <FormattedMessage id="workspace.header.menu-management" />
                   </Button>
                 </Dropdown>
@@ -4094,18 +4429,29 @@ const Header: FC<HeaderProps> = ({ previousEditor, currentEditor, onLogin, onLog
                 ''
               )}
               <Dropdown menu={{ items: helpItems }}>
-                {/*@ts-ignore*/}
-                <Button type="text" size="small" style={{ webkitAppRegion: 'no-drag' }}>
+                <Button type="text" size="small" className={styles.withoutDrag}>
                   <FormattedMessage id="workspace.header.menu-help" />
                 </Button>
               </Dropdown>
-              {/*@ts-ignore*/}
-              <Button type="text" size="small" icon={<FileOutlined />} style={{ paddingLeft: '0px', fontSize: '11px', color: 'gray', fontStyle: 'italic', marginLeft: '24px', webkitAppRegion: 'no-drag' }}>
+              <Button
+                className={styles.withoutDrag}
+                type="text"
+                size="small"
+                icon={<FileOutlined />}
+                style={{ paddingLeft: '0px', fontSize: '11px', color: 'gray', fontStyle: 'italic', marginLeft: '24px' }}
+              >
                 {documentModifiedText}
               </Button>
               <FileTextOutlined />
-              {/*@ts-ignore*/}
-              <Input placeholder="Document Name" type="text" value={selectedDocumentName} bordered={false} style={{ paddingLeft: '0px', paddingRight: '0px', width: '70px', fontWeight: 'bolder', webkitAppRegion: 'no-drag' }} onChange={handleUpdateDocumentName} />
+              <Input
+                className={styles.withoutDrag}
+                placeholder="Document Name"
+                type="text"
+                value={selectedDocumentName}
+                bordered={false}
+                style={{ paddingLeft: '0px', paddingRight: '0px', width: '70px', fontWeight: 'bolder' }}
+                onChange={handleUpdateDocumentName}
+              />
               {/* <div style={{fontSize: 14, color: 'red', fontWeight: 'bold'}}>
                 Demo purpose only and reset periodically
               </div> */}
@@ -4116,24 +4462,47 @@ const Header: FC<HeaderProps> = ({ previousEditor, currentEditor, onLogin, onLog
           <div style={{ float: 'right', display: 'table', height: '100%', marginRight: '8px' }}>
             <Space direction="horizontal" style={{ display: 'table-cell', verticalAlign: 'middle' }}>
               <Space wrap={false}>
-                {/*@ts-ignore*/}
-                <Button type="primary" size="small" style={{ display: online ? 'inline' : 'none', webkitAppRegion: 'no-drag' }} onClick={handleShareWindow} disabled={selectedDocumentId === null}>
+                <Button
+                  className={styles.withoutDrag}
+                  type="primary"
+                  size="small"
+                  style={{ display: online ? 'inline' : 'none' }}
+                  onClick={handleShareWindow}
+                  disabled={selectedDocumentId === null}
+                >
                   <FormattedMessage id="workspace.header.button-share-title" />
                 </Button>
                 <Tooltip title={<FormattedMessage id="workspace.header.title.team" />}>
-                  {/*@ts-ignore*/}
-                  <Button shape="circle" type="text" size="small" icon={<TeamOutlined />} onClick={handleTeamWindow} style={{ display: online ? 'inline' : 'none', webkitAppRegion: 'no-drag' }} />
+                  <Button
+                    className={styles.withoutDrag}
+                    shape="circle"
+                    type="text"
+                    size="small"
+                    icon={<TeamOutlined />}
+                    onClick={handleTeamWindow}
+                    style={{ display: online ? 'inline' : 'none' }}
+                  />
                 </Tooltip>
                 <Dropdown menu={{ items: userProfileMenu }}>
-                  {/*@ts-ignore*/}
-                  <Button shape="circle" type="text" size="small" icon={<UserOutlined />} style={{ display: online ? 'inline' : 'none', webkitAppRegion: 'no-drag' }} />
+                  <Button
+                    className={styles.withoutDrag}
+                    shape="circle"
+                    type="text"
+                    size="small"
+                    icon={<UserOutlined />}
+                    style={{ display: online ? 'inline' : 'none' }}
+                  />
                 </Dropdown>
-                {/*@ts-ignore*/}
-                <Button type="text" size="small" style={{ display: online ? 'none' : 'inline', webkitAppRegion: 'no-drag' }} onClick={() => login(ON_LOGIN_NONE)}>
+                <Button
+                  className={styles.withoutDrag}
+                  type="text"
+                  size="small"
+                  style={{ display: online ? 'none' : 'inline' }}
+                  onClick={() => login(ON_LOGIN_NONE)}
+                >
                   <FormattedMessage id="workspace.header.button-login-title" />
                 </Button>
-                {/*@ts-ignore*/}
-                <Button type="primary" size="small" style={{ display: online ? 'none' : 'inline', webkitAppRegion: 'no-drag' }} onClick={() => register()}>
+                <Button type="primary" size="small" className={styles.withoutDrag} style={{ display: online ? 'none' : 'inline' }} onClick={() => register()}>
                   <FormattedMessage id="workspace.header.button-register-title" />
                 </Button>
                 {osType === OSType.WINDOWS && process.env.ENV_NAME === 'electron' ? <div style={{ width: 135, height: '100%' }} /> : ''}
@@ -4151,7 +4520,13 @@ const Header: FC<HeaderProps> = ({ previousEditor, currentEditor, onLogin, onLog
                 <Select style={{ width: 100 }} value={zoom} size="small" onChange={handleZoom} bordered={false} options={zoomOptions} />
               </Tooltip>
               <Tooltip title={<FormattedMessage id="workspace.header.title.zoom-in" />}>
-                <Button type="text" size="small" icon={<ZoomInOutlined />} disabled={zoom >= zoomOptions[zoomOptions.length - 1].value} onClick={handleZoomIn} />
+                <Button
+                  type="text"
+                  size="small"
+                  icon={<ZoomInOutlined />}
+                  disabled={zoom >= zoomOptions[zoomOptions.length - 1].value}
+                  onClick={handleZoomIn}
+                />
               </Tooltip>
               <Tooltip title={<FormattedMessage id="workspace.header.title.zoom-out" />}>
                 <Button type="text" size="small" icon={<ZoomOutOutlined />} disabled={zoom <= zoomOptions[0].value} onClick={handleZoomOut} />
@@ -4166,75 +4541,229 @@ const Header: FC<HeaderProps> = ({ previousEditor, currentEditor, onLogin, onLog
               <Divider type="vertical" style={{ margin: 0 }} />
               {/** TODO:  FIXME, HIDE TEMPORARY*/}
               <Tooltip title={<FormattedMessage id="workspace.header.title.font-size" />}>
-                <Select size="small" value={fontName} onChange={handleFontNameChange} style={{ width: 120 }} popupMatchSelectWidth={false} disabled={!selectionValid} options={FontNameOptions} bordered={false} />
+                <Select
+                  size="small"
+                  value={fontName}
+                  onChange={handleFontNameChange}
+                  style={{ width: 120 }}
+                  popupMatchSelectWidth={false}
+                  disabled={!selectionValid}
+                  options={FontNameOptions}
+                  bordered={false}
+                />
               </Tooltip>
               <Tooltip title={<FormattedMessage id="workspace.header.title.font-size" />}>
                 {/* <InputNumber min={Consts.FONT_SIZE_MIN} max={Consts.FONT_SIZE_MAX} value={fontSize}
                   ref={(node) => { setFontSizeNode(node) }}
                   onChange={handleFontSizeChange} onStep={handleFontSizeStepChange} onBlur={handleFontSizeBlur} onPressEnter={handleFontSizePressEnter} size='small' style={{ width: 60, display: 'none' }} disabled={!selectionValid} /> */}
-                <Select size="small" value={fontSize} onChange={handleFontSizeChange} style={{ width: 64 }} disabled={!selectionValid} options={FontSizeOptions} bordered={false} />
+                <Select
+                  size="small"
+                  value={fontSize}
+                  onChange={handleFontSizeChange}
+                  style={{ width: 64 }}
+                  disabled={!selectionValid}
+                  options={FontSizeOptions}
+                  bordered={false}
+                />
               </Tooltip>
               <Tooltip title={<FormattedMessage id="workspace.header.title.font-bold" />}>
                 <Button type={fontBold ? 'primary' : 'text'} size="small" icon={<BoldOutlined />} disabled={!selectionValid} onClick={handleBoldChanged} />
               </Tooltip>
               <Tooltip title={<FormattedMessage id="workspace.header.title.font-italic" />}>
-                <Button type={fontItalic ? 'primary' : 'text'} size="small" icon={<ItalicOutlined />} disabled={!selectionValid} onClick={handleItalicChanged} />
+                <Button
+                  type={fontItalic ? 'primary' : 'text'}
+                  size="small"
+                  icon={<ItalicOutlined />}
+                  disabled={!selectionValid}
+                  onClick={handleItalicChanged}
+                />
               </Tooltip>
               <Tooltip title={<FormattedMessage id="workspace.header.title.font-underline" />}>
-                <Button type={fontUnderline ? 'primary' : 'text'} size="small" icon={<UnderlineOutlined />} disabled={!selectionValid} onClick={handleUnderlineChanged} />
+                <Button
+                  type={fontUnderline ? 'primary' : 'text'}
+                  size="small"
+                  icon={<UnderlineOutlined />}
+                  disabled={!selectionValid}
+                  onClick={handleUnderlineChanged}
+                />
               </Tooltip>
               <Divider type="vertical" style={{ margin: 0 }} />
               <Tooltip title={<FormattedMessage id="workspace.header.title.text-left" />}>
-                <Button type={textAlignment === Constants.TEXT_ALIGNMENT_LEFT ? 'primary' : 'text'} size="small" icon={<AlignLeftOutlined />} disabled={!selectionValid} onClick={() => handleTextAlignmentChanged(Constants.TEXT_ALIGNMENT_LEFT)} />
+                <Button
+                  type={textAlignment === Constants.TEXT_ALIGNMENT_LEFT ? 'primary' : 'text'}
+                  size="small"
+                  icon={<AlignLeftOutlined />}
+                  disabled={!selectionValid}
+                  onClick={() => handleTextAlignmentChanged(Constants.TEXT_ALIGNMENT_LEFT)}
+                />
               </Tooltip>
               <Tooltip title={<FormattedMessage id="workspace.header.title.text-center" />}>
-                <Button type={textAlignment === Constants.TEXT_ALIGNMENT_CENTER ? 'primary' : 'text'} size="small" icon={<AlignCenterOutlined />} disabled={!selectionValid} onClick={() => handleTextAlignmentChanged(Constants.TEXT_ALIGNMENT_CENTER)} />
+                <Button
+                  type={textAlignment === Constants.TEXT_ALIGNMENT_CENTER ? 'primary' : 'text'}
+                  size="small"
+                  icon={<AlignCenterOutlined />}
+                  disabled={!selectionValid}
+                  onClick={() => handleTextAlignmentChanged(Constants.TEXT_ALIGNMENT_CENTER)}
+                />
               </Tooltip>
               <Tooltip title={<FormattedMessage id="workspace.header.title.text-right" />}>
-                <Button type={textAlignment === Constants.TEXT_ALIGNMENT_RIGHT ? 'primary' : 'text'} size="small" icon={<AlignRightOutlined />} disabled={!selectionValid} onClick={() => handleTextAlignmentChanged(Constants.TEXT_ALIGNMENT_RIGHT)} />
+                <Button
+                  type={textAlignment === Constants.TEXT_ALIGNMENT_RIGHT ? 'primary' : 'text'}
+                  size="small"
+                  icon={<AlignRightOutlined />}
+                  disabled={!selectionValid}
+                  onClick={() => handleTextAlignmentChanged(Constants.TEXT_ALIGNMENT_RIGHT)}
+                />
               </Tooltip>
               <Divider type="vertical" style={{ margin: 0 }} />
               <Tooltip title={<FormattedMessage id="workspace.header.title.text-top" />}>
-                <Button type={textVerticalAlignment === Constants.PLACE_HOLDER_ALIGNMENT_TOP ? 'primary' : 'text'} size="small" icon={<VerticalAlignTopOutlined />} disabled={!selectionValid} onClick={() => handleTextVerticalAlignmentChanged(Constants.PLACE_HOLDER_ALIGNMENT_TOP)} />
+                <Button
+                  type={textVerticalAlignment === Constants.PLACE_HOLDER_ALIGNMENT_TOP ? 'primary' : 'text'}
+                  size="small"
+                  icon={<VerticalAlignTopOutlined />}
+                  disabled={!selectionValid}
+                  onClick={() => handleTextVerticalAlignmentChanged(Constants.PLACE_HOLDER_ALIGNMENT_TOP)}
+                />
               </Tooltip>
               <Tooltip title={<FormattedMessage id="workspace.header.title.text-middle" />}>
-                <Button type={textVerticalAlignment === Constants.PLACE_HOLDER_ALIGNMENT_MIDDLE ? 'primary' : 'text'} size="small" icon={<VerticalAlignMiddleOutlined />} disabled={!selectionValid} onClick={() => handleTextVerticalAlignmentChanged(Constants.PLACE_HOLDER_ALIGNMENT_MIDDLE)} />
+                <Button
+                  type={textVerticalAlignment === Constants.PLACE_HOLDER_ALIGNMENT_MIDDLE ? 'primary' : 'text'}
+                  size="small"
+                  icon={<VerticalAlignMiddleOutlined />}
+                  disabled={!selectionValid}
+                  onClick={() => handleTextVerticalAlignmentChanged(Constants.PLACE_HOLDER_ALIGNMENT_MIDDLE)}
+                />
               </Tooltip>
               <Tooltip title={<FormattedMessage id="workspace.header.title.text-bottom" />}>
-                <Button type={textVerticalAlignment === Constants.PLACE_HOLDER_ALIGNMENT_BOTTOM ? 'primary' : 'text'} size="small" icon={<VerticalAlignBottomOutlined />} disabled={!selectionValid} onClick={() => handleTextVerticalAlignmentChanged(Constants.PLACE_HOLDER_ALIGNMENT_BOTTOM)} />
+                <Button
+                  type={textVerticalAlignment === Constants.PLACE_HOLDER_ALIGNMENT_BOTTOM ? 'primary' : 'text'}
+                  size="small"
+                  icon={<VerticalAlignBottomOutlined />}
+                  disabled={!selectionValid}
+                  onClick={() => handleTextVerticalAlignmentChanged(Constants.PLACE_HOLDER_ALIGNMENT_BOTTOM)}
+                />
               </Tooltip>
               <Divider type="vertical" style={{ margin: 0 }} />
               <Tooltip title={<FormattedMessage id="workspace.header.title.fill-color" />}>
-                <ColorPicker size="small" value={fillColor} trigger="hover" onChange={handleFillColorChange} onChangeComplete={handleFillColorChangeComplete} disabled={!selectionValid} destroyTooltipOnHide={true} />
+                <ColorPicker
+                  size="small"
+                  value={fillColor}
+                  trigger="hover"
+                  onChange={handleFillColorChange}
+                  onChangeComplete={handleFillColorChangeComplete}
+                  disabled={!selectionValid}
+                  destroyTooltipOnHide={true}
+                />
               </Tooltip>
               <Tooltip title={<FormattedMessage id="workspace.header.title.stroke-color" />}>
-                <ColorPicker size="small" value={strokeColor} trigger="hover" onChange={handleStrokeColorChange} onChangeComplete={handleStrokeColorChangeComplete} disabled={!selectionValid} destroyTooltipOnHide={true} />
+                <ColorPicker
+                  size="small"
+                  value={strokeColor}
+                  trigger="hover"
+                  onChange={handleStrokeColorChange}
+                  onChangeComplete={handleStrokeColorChangeComplete}
+                  disabled={!selectionValid}
+                  destroyTooltipOnHide={true}
+                />
               </Tooltip>
               <Tooltip title={<FormattedMessage id="workspace.header.title.font-color" />}>
-                <ColorPicker size="small" value={fontColor} trigger="hover" onChange={handleFontColorChange} onChangeComplete={handleFontColorChangeComplete} disabled={!selectionValid} destroyTooltipOnHide={true} />
+                <ColorPicker
+                  size="small"
+                  value={fontColor}
+                  trigger="hover"
+                  onChange={handleFontColorChange}
+                  onChangeComplete={handleFontColorChangeComplete}
+                  disabled={!selectionValid}
+                  destroyTooltipOnHide={true}
+                />
               </Tooltip>
               <Tooltip title={<FormattedMessage id="workspace.header.title.line-width" />}>
                 {/** TODO:  FIXME, HIDE TEMPORARY*/}
-                <InputNumber min={Constants.LINE_WIDTH_MIN} max={Constants.LINE_WIDTH_MAX} value={lineWidth} onChange={handleLineWidthChange} size="small" style={{ width: 50, display: 'none' }} disabled={!selectionValid} />
-                <Select size="small" value={lineWidth} onChange={handleLineWidthChange} style={{ width: 64 }} disabled={!selectionValid} options={LineWidthOptions} bordered={false} />
+                <InputNumber
+                  min={Constants.LINE_WIDTH_MIN}
+                  max={Constants.LINE_WIDTH_MAX}
+                  value={lineWidth}
+                  onChange={handleLineWidthChange}
+                  size="small"
+                  style={{ width: 50, display: 'none' }}
+                  disabled={!selectionValid}
+                />
+                <Select
+                  size="small"
+                  value={lineWidth}
+                  onChange={handleLineWidthChange}
+                  style={{ width: 64 }}
+                  disabled={!selectionValid}
+                  options={LineWidthOptions}
+                  bordered={false}
+                />
               </Tooltip>
               <Tooltip title={<FormattedMessage id="workspace.header.title.stroke-type" />}>
-                <Select size="small" value={strokeDashStyle} onChange={handleStrokeDashStyleChange} style={{ width: 85 }} dropdownStyle={{ width: 85 }} options={strokeDashStyles} bordered={false} disabled={!selectionValid} />
+                <Select
+                  size="small"
+                  value={strokeDashStyle}
+                  onChange={handleStrokeDashStyleChange}
+                  style={{ width: 85 }}
+                  dropdownStyle={{ width: 85 }}
+                  options={strokeDashStyles}
+                  bordered={false}
+                  disabled={!selectionValid}
+                />
               </Tooltip>
               <Tooltip title={<FormattedMessage id="workspace.header.title.connector-line-type" />}>
-                <Select size="small" value={connectorLineType} onChange={handleConnectorLineTypeChange} style={{ width: 56 }} disabled={!connectorSelected} options={connectorLineTypes} bordered={false} />
+                <Select
+                  size="small"
+                  value={connectorLineType}
+                  onChange={handleConnectorLineTypeChange}
+                  style={{ width: 56 }}
+                  disabled={!connectorSelected}
+                  options={connectorLineTypes}
+                  bordered={false}
+                />
               </Tooltip>
               <Tooltip title={<FormattedMessage id="workspace.header.title.connector-arrow-start-type" />}>
-                <Select size="small" value={connectorLineStartArrow} onChange={handleConnectorArrowStartTypeChange} style={{ width: 56 }} disabled={!connectorSelected} options={connectorLineStartArrows} bordered={false} />
+                <Select
+                  size="small"
+                  value={connectorLineStartArrow}
+                  onChange={handleConnectorArrowStartTypeChange}
+                  style={{ width: 56 }}
+                  disabled={!connectorSelected}
+                  options={connectorLineStartArrows}
+                  bordered={false}
+                />
               </Tooltip>
               <Tooltip title={<FormattedMessage id="workspace.header.title.connector-arrow-end-type" />}>
-                <Select size="small" value={connectorLineEndArrow} onChange={handleConnectorArrowEndTypeChange} style={{ width: 56 }} disabled={!connectorSelected} options={connectorLineEndArrows} bordered={false} />
+                <Select
+                  size="small"
+                  value={connectorLineEndArrow}
+                  onChange={handleConnectorArrowEndTypeChange}
+                  style={{ width: 56 }}
+                  disabled={!connectorSelected}
+                  options={connectorLineEndArrows}
+                  bordered={false}
+                />
               </Tooltip>
               <Tooltip title={<FormattedMessage id="workspace.header.title.connector-line-mode" />}>
-                <Select size="small" value={connectorLineMode} onChange={handleConnectorLineModeChange} style={{ width: 56 }} disabled={!connectorSelected} options={connectorLineType === Constants.CONNECTOR_LINE_TYPE_CURVED ? connectorLineModesForCurve : connectorLineModes} bordered={false} />
+                <Select
+                  size="small"
+                  value={connectorLineMode}
+                  onChange={handleConnectorLineModeChange}
+                  style={{ width: 56 }}
+                  disabled={!connectorSelected}
+                  options={connectorLineType === Constants.CONNECTOR_LINE_TYPE_CURVED ? connectorLineModesForCurve : connectorLineModes}
+                  bordered={false}
+                />
               </Tooltip>
               <Tooltip title={<FormattedMessage id="workspace.header.title.connector-line-mode-link-width" />}>
-                <Select size="small" value={doubleLineGap} onChange={handleDoubleLineGapChange} style={{ width: 64 }} disabled={!(connectorSelected && connectorLineMode !== Constants.CONNECTOR_LINE_MODE_SIGNLE)} options={DoubleLineGapOptions} bordered={false} />
+                <Select
+                  size="small"
+                  value={doubleLineGap}
+                  onChange={handleDoubleLineGapChange}
+                  style={{ width: 64 }}
+                  disabled={!(connectorSelected && connectorLineMode !== Constants.CONNECTOR_LINE_MODE_SIGNLE)}
+                  options={DoubleLineGapOptions}
+                  bordered={false}
+                />
               </Tooltip>
             </Space>
           </Space>
@@ -4252,7 +4781,12 @@ const Header: FC<HeaderProps> = ({ previousEditor, currentEditor, onLogin, onLog
           <Space direction="horizontal" style={{ display: 'table-cell', verticalAlign: 'middle' }}>
             <Space wrap={false}>
               <Tooltip title={<FormattedMessage id="workspace.header.title.theme-switch" />}>
-                <Button shape="circle" type="text" icon={Utils.currentEditor?.enableDarkTheme ? <SunOutlined /> : <MoonOutlined />} onClick={handleThemeChange} />
+                <Button
+                  shape="circle"
+                  type="text"
+                  icon={Utils.currentEditor?.enableDarkTheme ? <SunOutlined /> : <MoonOutlined />}
+                  onClick={handleThemeChange}
+                />
               </Tooltip>
               <Tooltip title={<FormattedMessage id="workspace.header.title.property-editor" />}>
                 <Button shape="circle" type="text" icon={<SettingOutlined />} onClick={handlePropertyEditorChange} />
@@ -4262,9 +4796,27 @@ const Header: FC<HeaderProps> = ({ previousEditor, currentEditor, onLogin, onLog
         </div>
       </div>
       <LoginFormWindow visible={loginFormWindowVisible} x={60} y={60} onWindowCancel={handleLoginFormWindowCancel} onWindowOk={handleLoginFormWindowOk} />
-      <RegisterFormWindowPage visible={registerFormWindowVisible} x={60} y={60} onWindowCancel={handleRegisterFormWindowCancel} onWindowOk={handleRegisterFormWindowOk} />
-      <PasswordFormWindowPage visible={passwordFormWindowVisible} x={60} y={60} onWindowCancel={handlePasswordFormWindowCancel} onWindowOk={handlePasswordFormWindowOk} />
-      <ProfileFormWindowPage visible={profileFormWindowVisible} x={60} y={60} onWindowCancel={handleProfileFormWindowCancel} onWindowOk={handleProfileFormWindowOk} />
+      <RegisterFormWindowPage
+        visible={registerFormWindowVisible}
+        x={60}
+        y={60}
+        onWindowCancel={handleRegisterFormWindowCancel}
+        onWindowOk={handleRegisterFormWindowOk}
+      />
+      <PasswordFormWindowPage
+        visible={passwordFormWindowVisible}
+        x={60}
+        y={60}
+        onWindowCancel={handlePasswordFormWindowCancel}
+        onWindowOk={handlePasswordFormWindowOk}
+      />
+      <ProfileFormWindowPage
+        visible={profileFormWindowVisible}
+        x={60}
+        y={60}
+        onWindowCancel={handleProfileFormWindowCancel}
+        onWindowOk={handleProfileFormWindowOk}
+      />
       <NewFileWindow visible={newFileWindowVisible} x={60} y={60} onWindowCancel={handleNewFileWindowCancel} onWindowOk={handleNewFileWindowOk} />
       <OpenFileWindow
         visible={openFileWindowVisible}
@@ -4295,8 +4847,21 @@ const Header: FC<HeaderProps> = ({ previousEditor, currentEditor, onLogin, onLog
       <CustomerWindow visible={customerWindowVisible} x={60} y={60} onWindowCancel={handleCustomerWindowCancel} onWindowOk={handleCustomerWindowOk} />
       <AboutWindowPage visible={aboutWindowVisible} x={60} y={60} onWindowCancel={handleAboutWindowCancel} onWindowOk={handleAboutWindowOk} />
       <TeamWindow visible={teamWindowVisible} x={60} y={60} onWindowCancel={handleTeamWindowCancel} onWindowOk={handleTeamWindowOk} />
-      <ShareWindow documentId={selectedDocumentId!} visible={shareWindowVisible} x={60} y={60} onWindowCancel={handleShareWindowCancel} onWindowOk={handleShareWindowOk} />
-      <Modal title={<FormattedMessage id="workspace.header.message-title-document-modified" />} centered open={discardModifiedDocumentWindowVisible} onOk={confirmDiscardModifiedDocument} onCancel={cancelDiscardModifiedDocument}>
+      <ShareWindow
+        documentId={selectedDocumentId!}
+        visible={shareWindowVisible}
+        x={60}
+        y={60}
+        onWindowCancel={handleShareWindowCancel}
+        onWindowOk={handleShareWindowOk}
+      />
+      <Modal
+        title={<FormattedMessage id="workspace.header.message-title-document-modified" />}
+        centered
+        open={discardModifiedDocumentWindowVisible}
+        onOk={confirmDiscardModifiedDocument}
+        onCancel={cancelDiscardModifiedDocument}
+      >
         <FormattedMessage id="workspace.header.message-document-modified" />
       </Modal>
       {/* <Modal title={<FormattedMessage id='workspace.header.message-title-document-modified'/>} centered open={discardModifiedDocumentWindowVisible} onOk={confirmDiscardModifiedDocument} onCancel={cancelDiscardModifiedDocument} okText="确认" cancelText="取消" >

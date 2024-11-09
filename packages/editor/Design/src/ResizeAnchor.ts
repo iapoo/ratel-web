@@ -103,25 +103,21 @@ export class ResizeAnchor extends Anchor {
               break
             case EntityShapeFreezeType.Height:
               newLeft = this.target.left + resizeX
-              newWidth =
-                this.target.width - resizeX >= this.target.minWidth ? this.target.width - resizeX : this.target.minWidth
+              newWidth = this.target.width - resizeX >= this.target.minWidth ? this.target.width - resizeX : this.target.minWidth
               break
             case EntityShapeFreezeType.WidthHeight:
               newLeft = this.target.left + resizeX
-              newWidth =
-                this.target.width - resizeX >= this.target.minWidth ? this.target.width - resizeX : this.target.minWidth
+              newWidth = this.target.width - resizeX >= this.target.minWidth ? this.target.width - resizeX : this.target.minWidth
               break
             case EntityShapeFreezeType.AspectRatio:
               newLeft = this.target.left + resizeX
-              newWidth =
-                this.target.width - resizeX >= this.target.minWidth ? this.target.width - resizeX : this.target.minWidth
+              newWidth = this.target.width - resizeX >= this.target.minWidth ? this.target.width - resizeX : this.target.minWidth
               newHeight = (this.target.height * newWidth) / this.target.width
               break
             case EntityShapeFreezeType.None:
             default:
               newLeft = this.target.left + resizeX
-              newWidth =
-                this.target.width - resizeX >= this.target.minWidth ? this.target.width - resizeX : this.target.minWidth
+              newWidth = this.target.width - resizeX >= this.target.minWidth ? this.target.width - resizeX : this.target.minWidth
               break
           }
           break
@@ -134,33 +130,24 @@ export class ResizeAnchor extends Anchor {
               newLeft = this.target.left + resizeX
               newTop = this.target.top + resizeY
               //newWidth = this.target.width - resizeX >= this.target.minWidth ? this.target.width - resizeX : this.target.minWidth
-              newHeight =
-                this.target.height - resizeY >= this.target.minHeight
-                  ? this.target.height - resizeY
-                  : this.target.minHeight
+              newHeight = this.target.height - resizeY >= this.target.minHeight ? this.target.height - resizeY : this.target.minHeight
               break
             case EntityShapeFreezeType.Height:
               newLeft = this.target.left + resizeX
               newTop = this.target.top + resizeY
-              newWidth =
-                this.target.width - resizeX >= this.target.minWidth ? this.target.width - resizeX : this.target.minWidth
+              newWidth = this.target.width - resizeX >= this.target.minWidth ? this.target.width - resizeX : this.target.minWidth
               //newHeight = this.target.height - resizeY >= this.target.minHeight ? this.target.height - resizeY : this.target.minHeight
               break
             case EntityShapeFreezeType.WidthHeight:
               newLeft = this.target.left + resizeX
               newTop = this.target.top + resizeY
-              newWidth =
-                this.target.width - resizeX >= this.target.minWidth ? this.target.width - resizeX : this.target.minWidth
-              newHeight =
-                this.target.height - resizeY >= this.target.minHeight
-                  ? this.target.height - resizeY
-                  : this.target.minHeight
+              newWidth = this.target.width - resizeX >= this.target.minWidth ? this.target.width - resizeX : this.target.minWidth
+              newHeight = this.target.height - resizeY >= this.target.minHeight ? this.target.height - resizeY : this.target.minHeight
               break
             case EntityShapeFreezeType.AspectRatio:
               newLeft = this.target.left + resizeX
               newTop = this.target.top + resizeY
-              newWidth =
-                this.target.width - resizeX >= this.target.minWidth ? this.target.width - resizeX : this.target.minWidth
+              newWidth = this.target.width - resizeX >= this.target.minWidth ? this.target.width - resizeX : this.target.minWidth
               //newHeight = this.target.height - resizeY >= this.target.minHeight ? this.target.height - resizeY : this.target.minHeight
               newHeight = (this.target.height * newWidth) / this.target.width
               break
@@ -168,12 +155,8 @@ export class ResizeAnchor extends Anchor {
             default:
               newLeft = this.target.left + resizeX
               newTop = this.target.top + resizeY
-              newWidth =
-                this.target.width - resizeX >= this.target.minWidth ? this.target.width - resizeX : this.target.minWidth
-              newHeight =
-                this.target.height - resizeY >= this.target.minHeight
-                  ? this.target.height - resizeY
-                  : this.target.minHeight
+              newWidth = this.target.width - resizeX >= this.target.minWidth ? this.target.width - resizeX : this.target.minWidth
+              newHeight = this.target.height - resizeY >= this.target.minHeight ? this.target.height - resizeY : this.target.minHeight
               break
           }
           break
@@ -183,40 +166,25 @@ export class ResizeAnchor extends Anchor {
           switch (this.target.shape.typeInfo.freeze) {
             case EntityShapeFreezeType.Width:
               newTop = this.target.top + resizeY
-              newHeight =
-                this.target.height - resizeY >= this.target.minHeight
-                  ? this.target.height - resizeY
-                  : this.target.minHeight
+              newHeight = this.target.height - resizeY >= this.target.minHeight ? this.target.height - resizeY : this.target.minHeight
               break
             case EntityShapeFreezeType.Height:
               newTop = this.target.top + resizeY
-              newHeight =
-                this.target.height - resizeY >= this.target.minHeight
-                  ? this.target.height - resizeY
-                  : this.target.minHeight
+              newHeight = this.target.height - resizeY >= this.target.minHeight ? this.target.height - resizeY : this.target.minHeight
               break
             case EntityShapeFreezeType.WidthHeight:
               newTop = this.target.top + resizeY
-              newHeight =
-                this.target.height - resizeY >= this.target.minHeight
-                  ? this.target.height - resizeY
-                  : this.target.minHeight
+              newHeight = this.target.height - resizeY >= this.target.minHeight ? this.target.height - resizeY : this.target.minHeight
               break
             case EntityShapeFreezeType.AspectRatio:
               newTop = this.target.top + resizeY
-              newHeight =
-                this.target.height - resizeY >= this.target.minHeight
-                  ? this.target.height - resizeY
-                  : this.target.minHeight
+              newHeight = this.target.height - resizeY >= this.target.minHeight ? this.target.height - resizeY : this.target.minHeight
               newWidth = (this.target.width * newHeight) / this.target.height
               break
             case EntityShapeFreezeType.None:
             default:
               newTop = this.target.top + resizeY
-              newHeight =
-                this.target.height - resizeY >= this.target.minHeight
-                  ? this.target.height - resizeY
-                  : this.target.minHeight
+              newHeight = this.target.height - resizeY >= this.target.minHeight ? this.target.height - resizeY : this.target.minHeight
               break
           }
           break
@@ -228,42 +196,29 @@ export class ResizeAnchor extends Anchor {
             case EntityShapeFreezeType.Width:
               newTop = this.target.top + resizeY
               //newWidth = this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
-              newHeight =
-                this.target.height - resizeY >= this.target.minHeight
-                  ? this.target.height - resizeY
-                  : this.target.minHeight
+              newHeight = this.target.height - resizeY >= this.target.minHeight ? this.target.height - resizeY : this.target.minHeight
               break
             case EntityShapeFreezeType.Height:
               newTop = this.target.top + resizeY
-              newWidth =
-                this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
+              newWidth = this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
               //newHeight = this.target.height - resizeY >= this.target.minHeight ? this.target.height - resizeY : this.target.minHeight
               break
             case EntityShapeFreezeType.WidthHeight:
               newTop = this.target.top + resizeY
-              newWidth =
-                this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
-              newHeight =
-                this.target.height - resizeY >= this.target.minHeight
-                  ? this.target.height - resizeY
-                  : this.target.minHeight
+              newWidth = this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
+              newHeight = this.target.height - resizeY >= this.target.minHeight ? this.target.height - resizeY : this.target.minHeight
               break
             case EntityShapeFreezeType.AspectRatio:
               newTop = this.target.top + resizeY
-              newWidth =
-                this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
+              newWidth = this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
               //newHeight = this.target.height - resizeY >= this.target.minHeight ? this.target.height - resizeY : this.target.minHeight
               newHeight = (this.target.height * newWidth) / this.target.width
               break
             case EntityShapeFreezeType.None:
             default:
               newTop = this.target.top + resizeY
-              newWidth =
-                this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
-              newHeight =
-                this.target.height - resizeY >= this.target.minHeight
-                  ? this.target.height - resizeY
-                  : this.target.minHeight
+              newWidth = this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
+              newHeight = this.target.height - resizeY >= this.target.minHeight ? this.target.height - resizeY : this.target.minHeight
               break
           }
           break
@@ -275,22 +230,18 @@ export class ResizeAnchor extends Anchor {
               //newWidth = this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
               break
             case EntityShapeFreezeType.Height:
-              newWidth =
-                this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
+              newWidth = this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
               break
             case EntityShapeFreezeType.WidthHeight:
-              newWidth =
-                this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
+              newWidth = this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
               break
             case EntityShapeFreezeType.AspectRatio:
-              newWidth =
-                this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
+              newWidth = this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
               newHeight = (this.target.height * newWidth) / this.target.width
               break
             case EntityShapeFreezeType.None:
             default:
-              newWidth =
-                this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
+              newWidth = this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
               break
           }
           break
@@ -301,38 +252,25 @@ export class ResizeAnchor extends Anchor {
           switch (this.target.shape.typeInfo.freeze) {
             case EntityShapeFreezeType.Width:
               //newWidth = this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
-              newHeight =
-                this.target.height + resizeY >= this.target.minHeight
-                  ? this.target.height + resizeY
-                  : this.target.minHeight
+              newHeight = this.target.height + resizeY >= this.target.minHeight ? this.target.height + resizeY : this.target.minHeight
               break
             case EntityShapeFreezeType.Height:
-              newWidth =
-                this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
+              newWidth = this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
               //newHeight = this.target.height + resizeY >= this.target.minHeight ? this.target.height + resizeY : this.target.minHeight
               break
             case EntityShapeFreezeType.WidthHeight:
-              newWidth =
-                this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
-              newHeight =
-                this.target.height + resizeY >= this.target.minHeight
-                  ? this.target.height + resizeY
-                  : this.target.minHeight
+              newWidth = this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
+              newHeight = this.target.height + resizeY >= this.target.minHeight ? this.target.height + resizeY : this.target.minHeight
               break
             case EntityShapeFreezeType.AspectRatio:
-              newWidth =
-                this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
+              newWidth = this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
               //newHeight = this.target.height + resizeY >= this.target.minHeight ? this.target.height + resizeY : this.target.minHeight
               newHeight = (this.target.height * newWidth) / this.target.width
               break
             case EntityShapeFreezeType.None:
             default:
-              newWidth =
-                this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
-              newHeight =
-                this.target.height + resizeY >= this.target.minHeight
-                  ? this.target.height + resizeY
-                  : this.target.minHeight
+              newWidth = this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
+              newHeight = this.target.height + resizeY >= this.target.minHeight ? this.target.height + resizeY : this.target.minHeight
               break
           }
           break
@@ -341,36 +279,21 @@ export class ResizeAnchor extends Anchor {
           const resizeY = this.editor.alignToGridSize(y - this._startY)
           switch (this.target.shape.typeInfo.freeze) {
             case EntityShapeFreezeType.Width:
-              newHeight =
-                this.target.height + resizeY >= this.target.minHeight
-                  ? this.target.height + resizeY
-                  : this.target.minHeight
+              newHeight = this.target.height + resizeY >= this.target.minHeight ? this.target.height + resizeY : this.target.minHeight
               break
             case EntityShapeFreezeType.Height:
-              newHeight =
-                this.target.height + resizeY >= this.target.minHeight
-                  ? this.target.height + resizeY
-                  : this.target.minHeight
+              newHeight = this.target.height + resizeY >= this.target.minHeight ? this.target.height + resizeY : this.target.minHeight
               break
             case EntityShapeFreezeType.WidthHeight:
-              newHeight =
-                this.target.height + resizeY >= this.target.minHeight
-                  ? this.target.height + resizeY
-                  : this.target.minHeight
+              newHeight = this.target.height + resizeY >= this.target.minHeight ? this.target.height + resizeY : this.target.minHeight
               break
             case EntityShapeFreezeType.AspectRatio:
-              newHeight =
-                this.target.height + resizeY >= this.target.minHeight
-                  ? this.target.height + resizeY
-                  : this.target.minHeight
+              newHeight = this.target.height + resizeY >= this.target.minHeight ? this.target.height + resizeY : this.target.minHeight
               newWidth = (this.target.width * newHeight) / this.target.height
               break
             case EntityShapeFreezeType.None:
             default:
-              newHeight =
-                this.target.height + resizeY >= this.target.minHeight
-                  ? this.target.height + resizeY
-                  : this.target.minHeight
+              newHeight = this.target.height + resizeY >= this.target.minHeight ? this.target.height + resizeY : this.target.minHeight
               break
           }
           break
@@ -383,42 +306,29 @@ export class ResizeAnchor extends Anchor {
             case EntityShapeFreezeType.Width:
               newLeft = this.target.left + resizeX
               //newWidth = this.target.width - resizeX >= this.target.minWidth ? this.target.width - resizeX : this.target.minWidth
-              newHeight =
-                this.target.height + resizeY >= this.target.minHeight
-                  ? this.target.height + resizeY
-                  : this.target.minHeight
+              newHeight = this.target.height + resizeY >= this.target.minHeight ? this.target.height + resizeY : this.target.minHeight
               break
             case EntityShapeFreezeType.Height:
               newLeft = this.target.left + resizeX
-              newWidth =
-                this.target.width - resizeX >= this.target.minWidth ? this.target.width - resizeX : this.target.minWidth
+              newWidth = this.target.width - resizeX >= this.target.minWidth ? this.target.width - resizeX : this.target.minWidth
               //newHeight = this.target.height + resizeY >= this.target.minHeight ? this.target.height + resizeY : this.target.minHeight
               break
             case EntityShapeFreezeType.WidthHeight:
               newLeft = this.target.left + resizeX
-              newWidth =
-                this.target.width - resizeX >= this.target.minWidth ? this.target.width - resizeX : this.target.minWidth
-              newHeight =
-                this.target.height + resizeY >= this.target.minHeight
-                  ? this.target.height + resizeY
-                  : this.target.minHeight
+              newWidth = this.target.width - resizeX >= this.target.minWidth ? this.target.width - resizeX : this.target.minWidth
+              newHeight = this.target.height + resizeY >= this.target.minHeight ? this.target.height + resizeY : this.target.minHeight
               break
             case EntityShapeFreezeType.AspectRatio:
               newLeft = this.target.left + resizeX
-              newWidth =
-                this.target.width - resizeX >= this.target.minWidth ? this.target.width - resizeX : this.target.minWidth
+              newWidth = this.target.width - resizeX >= this.target.minWidth ? this.target.width - resizeX : this.target.minWidth
               //newHeight = this.target.height + resizeY >= this.target.minHeight ? this.target.height + resizeY : this.target.minHeight
               newHeight = (this.target.height * newWidth) / this.target.width
               break
             case EntityShapeFreezeType.None:
             default:
               newLeft = this.target.left + resizeX
-              newWidth =
-                this.target.width - resizeX >= this.target.minWidth ? this.target.width - resizeX : this.target.minWidth
-              newHeight =
-                this.target.height + resizeY >= this.target.minHeight
-                  ? this.target.height + resizeY
-                  : this.target.minHeight
+              newWidth = this.target.width - resizeX >= this.target.minWidth ? this.target.width - resizeX : this.target.minWidth
+              newHeight = this.target.height + resizeY >= this.target.minHeight ? this.target.height + resizeY : this.target.minHeight
               break
           }
           break
@@ -437,19 +347,13 @@ export class ResizeAnchor extends Anchor {
         // Seems following code have internal dependence
         this.target.getAllSourceConnectors().forEach((connector) => {
           if (connector.source === this.target && connector.sourceJoint && this.target) {
-            const sourceJoint = new Point2(
-              (connector.sourceJoint.x * newWidth) / this.target.width,
-              (connector.sourceJoint.y * newHeight) / this.target.height,
-            )
+            const sourceJoint = new Point2((connector.sourceJoint.x * newWidth) / this.target.width, (connector.sourceJoint.y * newHeight) / this.target.height)
             connector.sourceJoint = sourceJoint
           }
         })
         this.target.getAllTargetConnectors().forEach((connector) => {
           if (connector.target === this.target && connector.targetJoint && this.target) {
-            const targetJoint = new Point2(
-              (connector.targetJoint.x * newWidth) / this.target.width,
-              (connector.targetJoint.y * newHeight) / this.target.height,
-            )
+            const targetJoint = new Point2((connector.targetJoint.x * newWidth) / this.target.width, (connector.targetJoint.y * newHeight) / this.target.height)
             // console.log(`new target point is x = ${targetJoint.x}, y = ${targetJoint.y}, newWidth = ${newWidth}, width = ${this.target.width}, newHeight = ${newHeight}, height = ${this.target.height}`)
             connector.targetJoint = targetJoint
             //console.log(`connectr checking source joint x =  ${connector.sourceJoint?.x} , y =  x =  ${connector.sourceJoint?.y}`)

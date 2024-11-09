@@ -6,12 +6,7 @@ export class CustomContainerAction extends Action {
   private _classType: typeof CustomContainerEntity
   private _shapeType: ShapeType
 
-  public constructor(
-    editor: Editor,
-    type: string | undefined,
-    classType: typeof CustomContainerEntity,
-    shapeType: ShapeType,
-  ) {
+  public constructor(editor: Editor, type: string | undefined, classType: typeof CustomContainerEntity, shapeType: ShapeType) {
     super(editor, type)
     this._classType = classType
     this._shapeType = shapeType

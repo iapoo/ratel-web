@@ -1,13 +1,4 @@
-import {
-  Color,
-  Colors,
-  FontWeight,
-  Rectangle,
-  RoundRectangle,
-  TextAlignment,
-  TextDecoration,
-  TextVerticalAlignment,
-} from '@ratel-web/engine'
+import { Color, Colors, FontWeight, Rectangle, RoundRectangle, TextAlignment, TextDecoration, TextVerticalAlignment } from '@ratel-web/engine'
 import { CustomEntity, ShapeConstants, Type } from '../../../Items'
 import { CustomShape, EntityShapeType } from '../../../Shapes'
 
@@ -1491,22 +1482,17 @@ export class MockupCustomShape extends CustomEntity {
         theThis.width * theThis.controller.x * (theThis.typeInfo.controllerEnd.x - theThis.typeInfo.controllerStart.x) +
         theThis.typeInfo.controllerStart.x * theThis.width
       controllerHeight =
-        theThis.height *
-          theThis.controller.y *
-          (theThis.typeInfo.controllerEnd.y - theThis.typeInfo.controllerStart.y) +
+        theThis.height * theThis.controller.y * (theThis.typeInfo.controllerEnd.y - theThis.typeInfo.controllerStart.y) +
         theThis.typeInfo.controllerStart.y * theThis.height
     }
     if (theThis.typeInfo.adaptInPercent) {
       adapterWidth =
-        theThis.width * theThis.adapter.x * (theThis.typeInfo.adapterEnd.x - theThis.typeInfo.adapterStart.x) +
-        theThis.typeInfo.adapterStart.x * theThis.width
+        theThis.width * theThis.adapter.x * (theThis.typeInfo.adapterEnd.x - theThis.typeInfo.adapterStart.x) + theThis.typeInfo.adapterStart.x * theThis.width
       adapterHeight =
         theThis.height * theThis.adapter.y * (theThis.typeInfo.adapterEnd.y - theThis.typeInfo.adapterStart.y) +
         theThis.typeInfo.adapterStart.y * theThis.height
-      adapterSizeX =
-        theThis.adapterSize * (theThis.typeInfo.adapterEnd.x - theThis.typeInfo.adapterStart.x) * this.width
-      adapterSizeY =
-        theThis.adapterSize * (theThis.typeInfo.adapterEnd.y - theThis.typeInfo.adapterStart.y) * this.height
+      adapterSizeX = theThis.adapterSize * (theThis.typeInfo.adapterEnd.x - theThis.typeInfo.adapterStart.x) * this.width
+      adapterSizeY = theThis.adapterSize * (theThis.typeInfo.adapterEnd.y - theThis.typeInfo.adapterStart.y) * this.height
     }
     theThis.path.reset()
     theThis.secondPath.reset()
@@ -1578,9 +1564,7 @@ export class MockupCustomShape extends CustomEntity {
         theThis.secondPath.lineTo(theThis.width * 0.75, theThis.height * 0.2)
         theThis.secondPath.lineTo(theThis.width * 0.9, theThis.height * 0.85)
         theThis.secondPath.lineTo(theThis.width * 0.1, theThis.height * 0.85)
-        theThis.secondPath.addOval(
-          Rectangle.makeLTWH(theThis.width * 0.3, theThis.height * 0.2, theThis.width * 0.1, theThis.width * 0.1),
-        )
+        theThis.secondPath.addOval(Rectangle.makeLTWH(theThis.width * 0.3, theThis.height * 0.2, theThis.width * 0.1, theThis.width * 0.1))
         theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
         break
       }
@@ -1635,8 +1619,7 @@ export class MockupCustomShape extends CustomEntity {
         const scrollbarButtonIconHeight = 10
         const scrollbarButtonIconLeft = (scrollbarButtonWidth - scrollbarButtonIconWidth) * 0.5
         const scrollbarButtonIconTop = (theThis.height - scrollbarButtonIconHeight) * 0.5
-        const scrollbarButtonIcon2Left =
-          theThis.width - scrollbarButtonWidth + (scrollbarButtonWidth - scrollbarButtonIconWidth) * 0.5
+        const scrollbarButtonIcon2Left = theThis.width - scrollbarButtonWidth + (scrollbarButtonWidth - scrollbarButtonIconWidth) * 0.5
         const scrollbarThumbWidth = adapterSizeX
         const scrollbarThumbPosition = adapterWidth
         const scrollbarThumbBorder = 7
@@ -1652,27 +1635,17 @@ export class MockupCustomShape extends CustomEntity {
         theThis.secondPath.addRectangle(Rectangle.makeLTWH(0, 0, scrollbarButtonWidth, theThis.height))
         // theThis.fill.setColor(Colors.Red)
         theThis.thirdPath.moveTo(scrollbarButtonIconLeft, theThis.height * 0.5)
-        theThis.thirdPath.lineTo(
-          scrollbarButtonIconLeft + scrollbarButtonIconWidth,
-          scrollbarButtonIconTop + scrollbarButtonIconHeight,
-        )
+        theThis.thirdPath.lineTo(scrollbarButtonIconLeft + scrollbarButtonIconWidth, scrollbarButtonIconTop + scrollbarButtonIconHeight)
         theThis.thirdPath.lineTo(scrollbarButtonIconLeft + scrollbarButtonIconWidth, scrollbarButtonIconTop)
         theThis.thirdPath.lineTo(scrollbarButtonIconLeft, theThis.height * 0.5)
-        theThis.secondPath.addRectangle(
-          Rectangle.makeLTWH(theThis.width - scrollbarButtonWidth, 0, scrollbarButtonWidth, theThis.height),
-        )
+        theThis.secondPath.addRectangle(Rectangle.makeLTWH(theThis.width - scrollbarButtonWidth, 0, scrollbarButtonWidth, theThis.height))
         theThis.thirdPath.moveTo(scrollbarButtonIcon2Left + scrollbarButtonIconWidth, theThis.height * 0.5)
         theThis.thirdPath.lineTo(scrollbarButtonIcon2Left, scrollbarButtonIconTop + scrollbarButtonIconHeight)
         theThis.thirdPath.lineTo(scrollbarButtonIcon2Left, scrollbarButtonIconTop)
         theThis.thirdPath.lineTo(scrollbarButtonIcon2Left + scrollbarButtonIconWidth, theThis.height * 0.5)
         //theThis.path.addRectangle(Rectangle.makeLTWH(scrollbarButtonWidth, 0, theThis.width - scrollbarButtonWidth * 2, theThis.height))
         theThis.fourthPath.addRectangle(
-          Rectangle.makeLTWH(
-            scrollbarThumbPosition,
-            scrollbarThumbBorder,
-            scrollbarThumbWidth,
-            theThis.height - scrollbarThumbBorder * 2,
-          ),
+          Rectangle.makeLTWH(scrollbarThumbPosition, scrollbarThumbBorder, scrollbarThumbWidth, theThis.height - scrollbarThumbBorder * 2),
         )
         theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
         break
@@ -1683,8 +1656,7 @@ export class MockupCustomShape extends CustomEntity {
         const scrollbarButtonIconHeight = 12
         const scrollbarButtonIconTop = (scrollbarButtonHeight - scrollbarButtonIconHeight) * 0.5
         const scrollbarButtonIconLeft = (theThis.width - scrollbarButtonIconWidth) * 0.5
-        const scrollbarButtonIcon2Top =
-          theThis.height - scrollbarButtonHeight + (scrollbarButtonHeight - scrollbarButtonIconHeight) * 0.5
+        const scrollbarButtonIcon2Top = theThis.height - scrollbarButtonHeight + (scrollbarButtonHeight - scrollbarButtonIconHeight) * 0.5
         const scrollbarThumbHeight = adapterSizeY
         const scrollbarThumbPosition = adapterHeight
         const scrollbarThumbBorder = 7
@@ -1700,25 +1672,15 @@ export class MockupCustomShape extends CustomEntity {
         theThis.secondPath.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, scrollbarButtonHeight))
         theThis.thirdPath.moveTo(theThis.width * 0.5, scrollbarButtonIconTop)
         theThis.thirdPath.lineTo(scrollbarButtonIconLeft, scrollbarButtonIconTop + scrollbarButtonIconHeight)
-        theThis.thirdPath.lineTo(
-          scrollbarButtonIconLeft + scrollbarButtonIconWidth,
-          scrollbarButtonIconTop + scrollbarButtonIconHeight,
-        )
+        theThis.thirdPath.lineTo(scrollbarButtonIconLeft + scrollbarButtonIconWidth, scrollbarButtonIconTop + scrollbarButtonIconHeight)
         theThis.thirdPath.lineTo(theThis.width * 0.5, scrollbarButtonIconTop)
-        theThis.secondPath.addRectangle(
-          Rectangle.makeLTWH(0, theThis.height - scrollbarButtonHeight, theThis.width, scrollbarButtonHeight),
-        )
+        theThis.secondPath.addRectangle(Rectangle.makeLTWH(0, theThis.height - scrollbarButtonHeight, theThis.width, scrollbarButtonHeight))
         theThis.thirdPath.moveTo(theThis.width * 0.5, scrollbarButtonIcon2Top + scrollbarButtonIconHeight)
         theThis.thirdPath.lineTo(scrollbarButtonIconLeft, scrollbarButtonIcon2Top)
         theThis.thirdPath.lineTo(scrollbarButtonIconLeft + scrollbarButtonIconWidth, scrollbarButtonIcon2Top)
         theThis.thirdPath.lineTo(theThis.width * 0.5, scrollbarButtonIcon2Top + scrollbarButtonIconHeight)
         theThis.fourthPath.addRectangle(
-          Rectangle.makeLTWH(
-            scrollbarThumbBorder,
-            scrollbarThumbPosition,
-            theThis.width - scrollbarThumbBorder * 2,
-            scrollbarThumbHeight,
-          ),
+          Rectangle.makeLTWH(scrollbarThumbBorder, scrollbarThumbPosition, theThis.width - scrollbarThumbBorder * 2, scrollbarThumbHeight),
         )
         theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
         break
@@ -1785,25 +1747,19 @@ export class MockupCustomShape extends CustomEntity {
         const ry = theThis.height * 0.5
         const cx = theThis.width * 0.5
         const cy = theThis.height * 0.5
-        const origP1x =
-          (rx * ry) / Math.sqrt(ry * ry + rx * rx * Math.tan((Math.PI * 60) / 180) * Math.tan((Math.PI * 60) / 180))
+        const origP1x = (rx * ry) / Math.sqrt(ry * ry + rx * rx * Math.tan((Math.PI * 60) / 180) * Math.tan((Math.PI * 60) / 180))
         const origP1y =
-          (rx * ry * Math.tan((Math.PI * 60) / 180)) /
-          Math.sqrt(ry * ry + rx * rx * Math.tan((Math.PI * 60) / 180) * Math.tan((Math.PI * 60) / 180))
+          (rx * ry * Math.tan((Math.PI * 60) / 180)) / Math.sqrt(ry * ry + rx * rx * Math.tan((Math.PI * 60) / 180) * Math.tan((Math.PI * 60) / 180))
         const p1x = origP1x + cx
         const p1y = cy - origP1y
-        const origP2x =
-          (-rx * ry) / Math.sqrt(ry * ry + rx * rx * Math.tan((Math.PI * 160) / 180) * Math.tan((Math.PI * 160) / 180))
+        const origP2x = (-rx * ry) / Math.sqrt(ry * ry + rx * rx * Math.tan((Math.PI * 160) / 180) * Math.tan((Math.PI * 160) / 180))
         const origP2y =
-          (-rx * ry * Math.tan((Math.PI * 160) / 180)) /
-          Math.sqrt(ry * ry + rx * rx * Math.tan((Math.PI * 160) / 180) * Math.tan((Math.PI * 160) / 180))
+          (-rx * ry * Math.tan((Math.PI * 160) / 180)) / Math.sqrt(ry * ry + rx * rx * Math.tan((Math.PI * 160) / 180) * Math.tan((Math.PI * 160) / 180))
         const p2x = origP2x + cx
         const p2y = cy - origP2y
-        const origP3x =
-          (rx * ry) / Math.sqrt(ry * ry + rx * rx * Math.tan((Math.PI * 290) / 180) * Math.tan((Math.PI * 290) / 180))
+        const origP3x = (rx * ry) / Math.sqrt(ry * ry + rx * rx * Math.tan((Math.PI * 290) / 180) * Math.tan((Math.PI * 290) / 180))
         const origP3y =
-          (rx * ry * Math.tan((Math.PI * 290) / 180)) /
-          Math.sqrt(ry * ry + rx * rx * Math.tan((Math.PI * 290) / 180) * Math.tan((Math.PI * 290) / 180))
+          (rx * ry * Math.tan((Math.PI * 290) / 180)) / Math.sqrt(ry * ry + rx * rx * Math.tan((Math.PI * 290) / 180) * Math.tan((Math.PI * 290) / 180))
         const p3x = origP3x + cx
         const p3y = cy - origP3y
         theThis.path.moveTo(cx, cy)
@@ -1832,24 +1788,12 @@ export class MockupCustomShape extends CustomEntity {
         theThis.secondPath.lineTo(theThis.width, theThis.height)
         theThis.secondPath.lineTo(0, theThis.height)
         theThis.secondPath.lineTo(0, 0)
-        theThis.secondPath.addRectangle(
-          Rectangle.makeLTWH(theThis.width * 0.1, theThis.height * 0.4, theThis.width * 0.1, theThis.height * 0.6),
-        )
-        theThis.secondPath.addRectangle(
-          Rectangle.makeLTWH(theThis.width * 0.4, theThis.height * 0.3, theThis.width * 0.1, theThis.height * 0.7),
-        )
-        theThis.secondPath.addRectangle(
-          Rectangle.makeLTWH(theThis.width * 0.7, theThis.height * 0.5, theThis.width * 0.1, theThis.height * 0.5),
-        )
-        theThis.thirdPath.addRectangle(
-          Rectangle.makeLTWH(theThis.width * 0.2, theThis.height * 0.3, theThis.width * 0.1, theThis.height * 0.7),
-        )
-        theThis.thirdPath.addRectangle(
-          Rectangle.makeLTWH(theThis.width * 0.5, theThis.height * 0.4, theThis.width * 0.1, theThis.height * 0.6),
-        )
-        theThis.thirdPath.addRectangle(
-          Rectangle.makeLTWH(theThis.width * 0.8, theThis.height * 0.6, theThis.width * 0.1, theThis.height * 0.4),
-        )
+        theThis.secondPath.addRectangle(Rectangle.makeLTWH(theThis.width * 0.1, theThis.height * 0.4, theThis.width * 0.1, theThis.height * 0.6))
+        theThis.secondPath.addRectangle(Rectangle.makeLTWH(theThis.width * 0.4, theThis.height * 0.3, theThis.width * 0.1, theThis.height * 0.7))
+        theThis.secondPath.addRectangle(Rectangle.makeLTWH(theThis.width * 0.7, theThis.height * 0.5, theThis.width * 0.1, theThis.height * 0.5))
+        theThis.thirdPath.addRectangle(Rectangle.makeLTWH(theThis.width * 0.2, theThis.height * 0.3, theThis.width * 0.1, theThis.height * 0.7))
+        theThis.thirdPath.addRectangle(Rectangle.makeLTWH(theThis.width * 0.5, theThis.height * 0.4, theThis.width * 0.1, theThis.height * 0.6))
+        theThis.thirdPath.addRectangle(Rectangle.makeLTWH(theThis.width * 0.8, theThis.height * 0.6, theThis.width * 0.1, theThis.height * 0.4))
         break
       }
       case MockupCustomShapes.TYPE_COLUMN_CHART: {
@@ -1870,24 +1814,12 @@ export class MockupCustomShape extends CustomEntity {
         theThis.secondPath.lineTo(theThis.width, theThis.height)
         theThis.secondPath.lineTo(0, theThis.height)
         theThis.secondPath.lineTo(0, 0)
-        theThis.secondPath.addRectangle(
-          Rectangle.makeLTWH(0, theThis.height * 0.1, theThis.width * 0.6, theThis.height * 0.1),
-        )
-        theThis.secondPath.addRectangle(
-          Rectangle.makeLTWH(0, theThis.height * 0.4, theThis.width * 0.7, theThis.height * 0.1),
-        )
-        theThis.secondPath.addRectangle(
-          Rectangle.makeLTWH(0, theThis.height * 0.7, theThis.width * 0.5, theThis.height * 0.1),
-        )
-        theThis.thirdPath.addRectangle(
-          Rectangle.makeLTWH(0, theThis.height * 0.2, theThis.width * 0.7, theThis.height * 0.1),
-        )
-        theThis.thirdPath.addRectangle(
-          Rectangle.makeLTWH(0, theThis.height * 0.5, theThis.width * 0.6, theThis.height * 0.1),
-        )
-        theThis.thirdPath.addRectangle(
-          Rectangle.makeLTWH(0, theThis.height * 0.8, theThis.width * 0.4, theThis.height * 0.1),
-        )
+        theThis.secondPath.addRectangle(Rectangle.makeLTWH(0, theThis.height * 0.1, theThis.width * 0.6, theThis.height * 0.1))
+        theThis.secondPath.addRectangle(Rectangle.makeLTWH(0, theThis.height * 0.4, theThis.width * 0.7, theThis.height * 0.1))
+        theThis.secondPath.addRectangle(Rectangle.makeLTWH(0, theThis.height * 0.7, theThis.width * 0.5, theThis.height * 0.1))
+        theThis.thirdPath.addRectangle(Rectangle.makeLTWH(0, theThis.height * 0.2, theThis.width * 0.7, theThis.height * 0.1))
+        theThis.thirdPath.addRectangle(Rectangle.makeLTWH(0, theThis.height * 0.5, theThis.width * 0.6, theThis.height * 0.1))
+        theThis.thirdPath.addRectangle(Rectangle.makeLTWH(0, theThis.height * 0.8, theThis.width * 0.4, theThis.height * 0.1))
         break
       }
       case MockupCustomShapes.TYPE_BUTTON: {
@@ -2066,10 +1998,8 @@ export class MockupCustomShape extends CustomEntity {
         const scrollbarButtonIconHeight = 10
         const scrollbarButtonLeft = theThis.width - scrollbarButtonWidth
         const scrollbarButtonIconTop = (scrollbarButtonHeight - scrollbarButtonIconHeight) * 0.5
-        const scrollbarButtonIconLeft =
-          theThis.width - scrollbarButtonWidth + (scrollbarButtonWidth - scrollbarButtonIconWidth) * 0.5
-        const scrollbarButtonIcon2Top =
-          theThis.height - scrollbarButtonHeight + (scrollbarButtonHeight - scrollbarButtonIconHeight) * 0.5
+        const scrollbarButtonIconLeft = theThis.width - scrollbarButtonWidth + (scrollbarButtonWidth - scrollbarButtonIconWidth) * 0.5
+        const scrollbarButtonIcon2Top = theThis.height - scrollbarButtonHeight + (scrollbarButtonHeight - scrollbarButtonIconHeight) * 0.5
         const scrollbarThumbBorder = 6
         const scrollbarThumbHeight = adapterSizeY
         const scrollbarThumbWidth = scrollbarButtonWidth - scrollbarThumbBorder * 2
@@ -2086,46 +2016,23 @@ export class MockupCustomShape extends CustomEntity {
         theThis.fourthStroke.setColor(MockupCustomShape.DARK_COLOR)
         theThis.fourthFill.setColor(MockupCustomShape.DARK_COLOR)
         theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
+        theThis.secondPath.addRectangle(Rectangle.makeLTWH(scrollbarButtonLeft, 0, scrollbarButtonWidth, scrollbarButtonHeight))
         theThis.secondPath.addRectangle(
-          Rectangle.makeLTWH(scrollbarButtonLeft, 0, scrollbarButtonWidth, scrollbarButtonHeight),
-        )
-        theThis.secondPath.addRectangle(
-          Rectangle.makeLTWH(
-            scrollbarButtonLeft,
-            theThis.height - scrollbarButtonHeight,
-            scrollbarButtonWidth,
-            scrollbarButtonHeight,
-          ),
+          Rectangle.makeLTWH(scrollbarButtonLeft, theThis.height - scrollbarButtonHeight, scrollbarButtonWidth, scrollbarButtonHeight),
         )
         theThis.thirdPath.addRectangle(Rectangle.makeLTWH(0, 0, scrollbarButtonLeft, theThis.height))
         theThis.thirdPath.addRectangle(
-          Rectangle.makeLTWH(
-            scrollbarButtonLeft,
-            scrollbarButtonHeight,
-            scrollbarButtonWidth,
-            theThis.height - scrollbarButtonHeight * 2,
-          ),
+          Rectangle.makeLTWH(scrollbarButtonLeft, scrollbarButtonHeight, scrollbarButtonWidth, theThis.height - scrollbarButtonHeight * 2),
         )
         theThis.fourthPath.moveTo(scrollbarButtonIconLeft + scrollbarButtonIconWidth * 0.5, scrollbarButtonIconTop)
         theThis.fourthPath.lineTo(scrollbarButtonIconLeft, scrollbarButtonIconTop + scrollbarButtonIconHeight)
-        theThis.fourthPath.lineTo(
-          scrollbarButtonIconLeft + scrollbarButtonIconWidth,
-          scrollbarButtonIconTop + scrollbarButtonIconHeight,
-        )
+        theThis.fourthPath.lineTo(scrollbarButtonIconLeft + scrollbarButtonIconWidth, scrollbarButtonIconTop + scrollbarButtonIconHeight)
         theThis.fourthPath.lineTo(scrollbarButtonIconLeft + scrollbarButtonIconWidth * 0.5, scrollbarButtonIconTop)
-        theThis.fourthPath.moveTo(
-          scrollbarButtonIconLeft + scrollbarButtonIconWidth * 0.5,
-          scrollbarButtonIcon2Top + scrollbarButtonIconHeight,
-        )
+        theThis.fourthPath.moveTo(scrollbarButtonIconLeft + scrollbarButtonIconWidth * 0.5, scrollbarButtonIcon2Top + scrollbarButtonIconHeight)
         theThis.fourthPath.lineTo(scrollbarButtonIconLeft, scrollbarButtonIcon2Top)
         theThis.fourthPath.lineTo(scrollbarButtonIconLeft + scrollbarButtonIconWidth, scrollbarButtonIcon2Top)
-        theThis.fourthPath.lineTo(
-          scrollbarButtonIconLeft + scrollbarButtonIconWidth * 0.5,
-          scrollbarButtonIcon2Top + scrollbarButtonIconHeight,
-        )
-        theThis.fourthPath.addRectangle(
-          Rectangle.makeLTWH(scrollbarThumbLeft, scrollbarThumbPosition, scrollbarThumbWidth, scrollbarThumbHeight),
-        )
+        theThis.fourthPath.lineTo(scrollbarButtonIconLeft + scrollbarButtonIconWidth * 0.5, scrollbarButtonIcon2Top + scrollbarButtonIconHeight)
+        theThis.fourthPath.addRectangle(Rectangle.makeLTWH(scrollbarThumbLeft, scrollbarThumbPosition, scrollbarThumbWidth, scrollbarThumbHeight))
         break
       }
       case MockupCustomShapes.TYPE_DATE_PICKER: {
@@ -2146,102 +2053,18 @@ export class MockupCustomShape extends CustomEntity {
         theThis.fourthFill.setColor(MockupCustomShape.DARK_COLOR)
         theThis.secondPath.addRectangle(Rectangle.makeLTWH(buttonLeft, 0, buttonWidth, theThis.height))
         theThis.thirdPath.addRectangle(Rectangle.makeLTWH(iconLeft, iconTop, iconWidth, iconHeight))
-        theThis.fourthPath.addRectangle(
-          Rectangle.makeLTWH(
-            iconLeft + iconWidth * 0.15,
-            iconTop - iconHeight * 0.075,
-            iconWidth * 0.15,
-            iconHeight * 0.15,
-          ),
-        )
-        theThis.fourthPath.addRectangle(
-          Rectangle.makeLTWH(
-            iconLeft + iconWidth * 0.45,
-            iconTop - iconHeight * 0.075,
-            iconWidth * 0.15,
-            iconHeight * 0.15,
-          ),
-        )
-        theThis.fourthPath.addRectangle(
-          Rectangle.makeLTWH(
-            iconLeft + iconWidth * 0.75,
-            iconTop - iconHeight * 0.075,
-            iconWidth * 0.15,
-            iconHeight * 0.15,
-          ),
-        )
-        theThis.fourthPath.addRectangle(
-          Rectangle.makeLTWH(
-            iconLeft + iconWidth * 0.15,
-            iconTop + iconHeight * 0.15,
-            iconWidth * 0.1,
-            iconHeight * 0.1,
-          ),
-        )
-        theThis.fourthPath.addRectangle(
-          Rectangle.makeLTWH(
-            iconLeft + iconWidth * 0.45,
-            iconTop + iconHeight * 0.15,
-            iconWidth * 0.1,
-            iconHeight * 0.1,
-          ),
-        )
-        theThis.fourthPath.addRectangle(
-          Rectangle.makeLTWH(
-            iconLeft + iconWidth * 0.75,
-            iconTop + iconHeight * 0.15,
-            iconWidth * 0.1,
-            iconHeight * 0.1,
-          ),
-        )
-        theThis.fourthPath.addRectangle(
-          Rectangle.makeLTWH(
-            iconLeft + iconWidth * 0.15,
-            iconTop + iconHeight * 0.45,
-            iconWidth * 0.1,
-            iconHeight * 0.1,
-          ),
-        )
-        theThis.fourthPath.addRectangle(
-          Rectangle.makeLTWH(
-            iconLeft + iconWidth * 0.45,
-            iconTop + iconHeight * 0.45,
-            iconWidth * 0.1,
-            iconHeight * 0.1,
-          ),
-        )
-        theThis.fourthPath.addRectangle(
-          Rectangle.makeLTWH(
-            iconLeft + iconWidth * 0.75,
-            iconTop + iconHeight * 0.45,
-            iconWidth * 0.1,
-            iconHeight * 0.1,
-          ),
-        )
-        theThis.fourthPath.addRectangle(
-          Rectangle.makeLTWH(
-            iconLeft + iconWidth * 0.15,
-            iconTop + iconHeight * 0.75,
-            iconWidth * 0.1,
-            iconHeight * 0.1,
-          ),
-        )
-        theThis.fourthPath.addRectangle(
-          Rectangle.makeLTWH(
-            iconLeft + iconWidth * 0.45,
-            iconTop + iconHeight * 0.75,
-            iconWidth * 0.1,
-            iconHeight * 0.1,
-          ),
-        )
-        theThis.fourthPath.addRectangle(
-          Rectangle.makeLTWH(
-            iconLeft + iconWidth * 0.75,
-            iconTop + iconHeight * 0.75,
-            iconWidth * 0.1,
-            iconHeight * 0.1,
-          ),
-        )
+        theThis.fourthPath.addRectangle(Rectangle.makeLTWH(iconLeft + iconWidth * 0.15, iconTop - iconHeight * 0.075, iconWidth * 0.15, iconHeight * 0.15))
+        theThis.fourthPath.addRectangle(Rectangle.makeLTWH(iconLeft + iconWidth * 0.45, iconTop - iconHeight * 0.075, iconWidth * 0.15, iconHeight * 0.15))
+        theThis.fourthPath.addRectangle(Rectangle.makeLTWH(iconLeft + iconWidth * 0.75, iconTop - iconHeight * 0.075, iconWidth * 0.15, iconHeight * 0.15))
+        theThis.fourthPath.addRectangle(Rectangle.makeLTWH(iconLeft + iconWidth * 0.15, iconTop + iconHeight * 0.15, iconWidth * 0.1, iconHeight * 0.1))
+        theThis.fourthPath.addRectangle(Rectangle.makeLTWH(iconLeft + iconWidth * 0.45, iconTop + iconHeight * 0.15, iconWidth * 0.1, iconHeight * 0.1))
+        theThis.fourthPath.addRectangle(Rectangle.makeLTWH(iconLeft + iconWidth * 0.75, iconTop + iconHeight * 0.15, iconWidth * 0.1, iconHeight * 0.1))
+        theThis.fourthPath.addRectangle(Rectangle.makeLTWH(iconLeft + iconWidth * 0.15, iconTop + iconHeight * 0.45, iconWidth * 0.1, iconHeight * 0.1))
+        theThis.fourthPath.addRectangle(Rectangle.makeLTWH(iconLeft + iconWidth * 0.45, iconTop + iconHeight * 0.45, iconWidth * 0.1, iconHeight * 0.1))
+        theThis.fourthPath.addRectangle(Rectangle.makeLTWH(iconLeft + iconWidth * 0.75, iconTop + iconHeight * 0.45, iconWidth * 0.1, iconHeight * 0.1))
+        theThis.fourthPath.addRectangle(Rectangle.makeLTWH(iconLeft + iconWidth * 0.15, iconTop + iconHeight * 0.75, iconWidth * 0.1, iconHeight * 0.1))
+        theThis.fourthPath.addRectangle(Rectangle.makeLTWH(iconLeft + iconWidth * 0.45, iconTop + iconHeight * 0.75, iconWidth * 0.1, iconHeight * 0.1))
+        theThis.fourthPath.addRectangle(Rectangle.makeLTWH(iconLeft + iconWidth * 0.75, iconTop + iconHeight * 0.75, iconWidth * 0.1, iconHeight * 0.1))
         theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
         break
       }

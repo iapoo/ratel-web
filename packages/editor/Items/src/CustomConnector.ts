@@ -47,12 +47,7 @@ export class CustomConnector extends Connector {
   private _connectorTypeInfo: CustomConnectorTypeInfo
   private _connectorTypeInfos: CustomConnectorTypeInfo[]
 
-  public constructor(
-    start: Point2,
-    end: Point2,
-    connectorTypeInfoName: string,
-    connectorTypeInfos: CustomConnectorTypeInfo[] = CustomConnectorTypes,
-  ) {
+  public constructor(start: Point2, end: Point2, connectorTypeInfoName: string, connectorTypeInfos: CustomConnectorTypeInfo[] = CustomConnectorTypes) {
     super(start, end)
     this._connectorTypeInfos = connectorTypeInfos
     this._connectorTypeInfo = this.findConnectorTypeInfo(connectorTypeInfoName)

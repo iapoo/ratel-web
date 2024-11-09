@@ -95,14 +95,7 @@ export const UMLCustomContainerTypes = [
 ]
 
 export class UMLCustomContainer extends CustomContainerEntity {
-  public constructor(
-    left: number,
-    top: number,
-    width: number,
-    height: number,
-    typeName: string,
-    shapeTypes: ShapeType[] = UMLCustomContainerTypes,
-  ) {
+  public constructor(left: number, top: number, width: number, height: number, typeName: string, shapeTypes: ShapeType[] = UMLCustomContainerTypes) {
     super(left, top, width, height, typeName, shapeTypes)
     const customTypeInfo = this.parseTypeInfo({ shapeType: typeName })
     this._shape = new CustomContainerShape(left, top, width, height, this.buildShape, customTypeInfo)
@@ -153,26 +146,21 @@ export class UMLCustomContainer extends CustomContainerEntity {
         theThis.typeInfo.controllerStart.x * theThis.width
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       controllerHeight =
-        theThis.height *
-          theThis.controller.y *
-          (theThis.typeInfo.controllerEnd.y - theThis.typeInfo.controllerStart.y) +
+        theThis.height * theThis.controller.y * (theThis.typeInfo.controllerEnd.y - theThis.typeInfo.controllerStart.y) +
         theThis.typeInfo.controllerStart.y * theThis.height
     }
     if (theThis.typeInfo.adaptInPercent) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       adapterWidth =
-        theThis.width * theThis.adapter.x * (theThis.typeInfo.adapterEnd.x - theThis.typeInfo.adapterStart.x) +
-        theThis.typeInfo.adapterStart.x * theThis.width
+        theThis.width * theThis.adapter.x * (theThis.typeInfo.adapterEnd.x - theThis.typeInfo.adapterStart.x) + theThis.typeInfo.adapterStart.x * theThis.width
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       adapterHeight =
         theThis.height * theThis.adapter.y * (theThis.typeInfo.adapterEnd.y - theThis.typeInfo.adapterStart.y) +
         theThis.typeInfo.adapterStart.y * theThis.height
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      adapterSizeX =
-        theThis.adapterSize * (theThis.typeInfo.adapterEnd.x - theThis.typeInfo.adapterStart.x) * this.width
+      adapterSizeX = theThis.adapterSize * (theThis.typeInfo.adapterEnd.x - theThis.typeInfo.adapterStart.x) * this.width
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      adapterSizeY =
-        theThis.adapterSize * (theThis.typeInfo.adapterEnd.y - theThis.typeInfo.adapterStart.y) * this.height
+      adapterSizeY = theThis.adapterSize * (theThis.typeInfo.adapterEnd.y - theThis.typeInfo.adapterStart.y) * this.height
     }
     theThis.secondStroke.setColor(theThis.stroke.getColor())
     theThis.secondFill.setColor(theThis.fill.getColor())

@@ -21,21 +21,7 @@ export class CustomTableInfo extends EditorItemInfo {
     fillColor: string | null = null,
     lineWidth: number | null = null,
   ) {
-    super(
-      '',
-      Categories.CUSTOM_TABLE,
-      left,
-      top,
-      width,
-      height,
-      '',
-      rotation,
-      styles,
-      useTheme,
-      strokeColor,
-      fillColor,
-      lineWidth,
-    )
+    super('', Categories.CUSTOM_TABLE, left, top, width, height, '', rotation, styles, useTheme, strokeColor, fillColor, lineWidth)
     this.customTableTypeName = customTableTypeName
     this.rowCount = rowCount
     this.columnCount = columnCount

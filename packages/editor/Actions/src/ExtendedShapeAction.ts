@@ -19,9 +19,7 @@ export class ExtendedShapeAction extends Action {
       let top = this._shapeType.top
       let width = this._shapeType.width
       let height = this._shapeType.height
-      const customEntity = new this._classType(left, top, width, height, { shapeType: this._shapeType.name }, [
-        this._shapeType,
-      ])
+      const customEntity = new this._classType(left, top, width, height, { shapeType: this._shapeType.name }, [this._shapeType])
       return [customEntity]
     }
     return [new ShapeEntity(0, 0, 100, 100)]

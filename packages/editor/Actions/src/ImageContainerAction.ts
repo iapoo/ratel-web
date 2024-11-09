@@ -7,13 +7,7 @@ export class ImageContainerAction extends Action {
   private _width: number
   private _height: number
 
-  public constructor(
-    editor: Editor,
-    type: string | undefined = undefined,
-    data: string = '',
-    width: number = 100,
-    height: number = 100,
-  ) {
+  public constructor(editor: Editor, type: string | undefined = undefined, data: string = '', width: number = 100, height: number = 100) {
     super(editor, type)
     this._data = data
     this._width = width

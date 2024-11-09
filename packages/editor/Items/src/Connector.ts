@@ -1,13 +1,6 @@
 import { Point2, Rectangle } from '@ratel-web/engine'
 import { Editor } from '../../Editor'
-import {
-  ConnectorArrowDisplayMode,
-  ConnectorArrowDisplayType,
-  ConnectorDirection,
-  ConnectorMode,
-  ConnectorShape,
-  ConnectorType,
-} from '../../Shapes'
+import { ConnectorArrowDisplayMode, ConnectorArrowDisplayType, ConnectorDirection, ConnectorMode, ConnectorShape, ConnectorType } from '../../Shapes'
 import { Constants } from '../../Utils'
 import { EditorItemInfo } from './EditorItemInfo'
 import { Entity } from './Entity'
@@ -606,15 +599,7 @@ export class Connector extends Item {
     this._start = start
     this._end = end
     this._orthogonalPoints = this.initializeOrthogonalPoints(true, true)
-    this._shape = new ConnectorShape(
-      start.x,
-      start.y,
-      end.x,
-      end.y,
-      startDirection,
-      endDirection,
-      this._orthogonalPoints,
-    )
+    this._shape = new ConnectorShape(start.x, start.y, end.x, end.y, startDirection, endDirection, this._orthogonalPoints)
     this._connectorShape = this._shape as ConnectorShape
     this.type = Connector.CONNECTOR_TYPE_CONNECTOR
     this._connectorType = ConnectorType.Orthogonal
@@ -746,10 +731,7 @@ export class Connector extends Item {
     this._connectorShape.startArrow = value
     this.updateTheme()
     if (this._autoRefreshOrthogonalPoints) {
-      this._orthogonalPoints = this.initializeOrthogonalPoints(
-        true,
-        this.target && !this._orthogonalPointsModified ? true : false,
-      )
+      this._orthogonalPoints = this.initializeOrthogonalPoints(true, this.target && !this._orthogonalPointsModified ? true : false)
       this._connectorShape.orthogonalPoints = this._orthogonalPoints
       this.initializeCurveModifiers()
     }
@@ -764,10 +746,7 @@ export class Connector extends Item {
     this._connectorShape.endArrow = value
     this.updateTheme()
     if (this._autoRefreshOrthogonalPoints) {
-      this._orthogonalPoints = this.initializeOrthogonalPoints(
-        true,
-        this.target && !this._orthogonalPointsModified ? true : false,
-      )
+      this._orthogonalPoints = this.initializeOrthogonalPoints(true, this.target && !this._orthogonalPointsModified ? true : false)
       this._connectorShape.orthogonalPoints = this._orthogonalPoints
       this.initializeCurveModifiers()
     }
@@ -878,10 +857,7 @@ export class Connector extends Item {
       Math.abs(this._start.y - this._end.y),
     )
     if (this._autoRefreshOrthogonalPoints) {
-      this._orthogonalPoints = this.initializeOrthogonalPoints(
-        true,
-        this.target && !this._orthogonalPointsModified ? true : false,
-      )
+      this._orthogonalPoints = this.initializeOrthogonalPoints(true, this.target && !this._orthogonalPointsModified ? true : false)
       this._connectorShape.orthogonalPoints = this._orthogonalPoints
       this.initializeCurveModifiers()
     }
@@ -901,10 +877,7 @@ export class Connector extends Item {
       Math.abs(this._start.y - this._end.y),
     )
     if (this._autoRefreshOrthogonalPoints) {
-      this._orthogonalPoints = this.initializeOrthogonalPoints(
-        this.source && !this._orthogonalPointsModified ? true : false,
-        true,
-      )
+      this._orthogonalPoints = this.initializeOrthogonalPoints(this.source && !this._orthogonalPointsModified ? true : false, true)
       this._connectorShape.orthogonalPoints = this._orthogonalPoints
       this.initializeCurveModifiers()
     }
@@ -933,10 +906,7 @@ export class Connector extends Item {
         Math.abs(this._start.y - this._end.y),
       )
       this._connectorShape.start = this._start
-      this._orthogonalPoints = this.initializeOrthogonalPoints(
-        true,
-        this.target && !this._orthogonalPointsModified ? true : false,
-      )
+      this._orthogonalPoints = this.initializeOrthogonalPoints(true, this.target && !this._orthogonalPointsModified ? true : false)
       this._connectorShape.orthogonalPoints = this._orthogonalPoints
       this.initializeCurveModifiers()
     }
@@ -973,10 +943,7 @@ export class Connector extends Item {
         Math.abs(this._start.y - this._end.y),
       )
       this._connectorShape.end = this._end
-      this._orthogonalPoints = this.initializeOrthogonalPoints(
-        this.source && !this._orthogonalPointsModified ? true : false,
-        true,
-      )
+      this._orthogonalPoints = this.initializeOrthogonalPoints(this.source && !this._orthogonalPointsModified ? true : false, true)
       this._connectorShape.orthogonalPoints = this._orthogonalPoints
       this.initializeCurveModifiers()
     }
@@ -1134,10 +1101,8 @@ export class Connector extends Item {
     //Remove middle one if last 3 points in same axis
     if (
       points.length >= 3 &&
-      ((points[points.length - 1].x === points[points.length - 2].x &&
-        points[points.length - 1].x === points[points.length - 3].x) ||
-        (points[points.length - 1].y === points[points.length - 2].y &&
-          points[points.length - 1].y === points[points.length - 3].y))
+      ((points[points.length - 1].x === points[points.length - 2].x && points[points.length - 1].x === points[points.length - 3].x) ||
+        (points[points.length - 1].y === points[points.length - 2].y && points[points.length - 1].y === points[points.length - 3].y))
     ) {
       points.splice(points.length - 2, 1)
     }
@@ -1207,11 +1172,7 @@ export class Connector extends Item {
     //   console.log(`Exception is here`)
     // }
     // SystemUtils.debugPoints(points)
-    if (
-      points.length >= 3 &&
-      ((points[0].x === points[1].x && points[0].x === points[2].x) ||
-        (points[0].y === points[1].y && points[0].y === points[2].y))
-    ) {
+    if (points.length >= 3 && ((points[0].x === points[1].x && points[0].x === points[2].x) || (points[0].y === points[1].y && points[0].y === points[2].y))) {
       points.splice(1, 1)
     }
     const endPoints = this._orthogonalPoints.slice(0, position)
@@ -1253,24 +1214,14 @@ export class Connector extends Item {
     const end = new Point2(this.end.x - this.left, this.end.y - this.top)
     //console.log(`init start x= ${start.x} y = ${start.y} end x = ${end.x} y = ${end.y}`)
     const minTop =
-      this._sourceJoint && this._targetJoint
-        ? Math.min(start.y - this._sourceJoint.y, end.y - this._targetJoint.y) - Connector.DEFAULT_ARROW_SEGMENT
-        : 0
-    const minLeft =
-      this._source && this._target
-        ? Math.min(this._source.left - this.left, this._target.left - this.left) - Connector.DEFAULT_ARROW_SEGMENT
-        : 0
+      this._sourceJoint && this._targetJoint ? Math.min(start.y - this._sourceJoint.y, end.y - this._targetJoint.y) - Connector.DEFAULT_ARROW_SEGMENT : 0
+    const minLeft = this._source && this._target ? Math.min(this._source.left - this.left, this._target.left - this.left) - Connector.DEFAULT_ARROW_SEGMENT : 0
     const minBottom =
       this._source && this._target && this._sourceJoint && this._targetJoint
-        ? Math.max(
-            start.y + this._source.height - this._sourceJoint.y,
-            end.y + this._target.height - this._targetJoint.y,
-          ) + Connector.DEFAULT_ARROW_SEGMENT
+        ? Math.max(start.y + this._source.height - this._sourceJoint.y, end.y + this._target.height - this._targetJoint.y) + Connector.DEFAULT_ARROW_SEGMENT
         : 0
     const minRight =
-      this._source && this._target
-        ? Math.max(this._source.right - this.left, this._target.right - this.left) + Connector.DEFAULT_ARROW_SEGMENT
-        : 0
+      this._source && this._target ? Math.max(this._source.right - this.left, this._target.right - this.left) + Connector.DEFAULT_ARROW_SEGMENT : 0
     const centerX = (end.x + start.x) * 0.5
     const centerY = (end.y + start.y) * 0.5
     const targetPosition = this.findTargetPosition()
@@ -1300,64 +1251,20 @@ export class Connector extends Item {
     } else if (this.source && this._target) {
       switch (this.startDirection) {
         case ConnectorDirection.Left: {
-          this.initializeOrthogonalPointsLeft(
-            targetPosition,
-            points,
-            start,
-            end,
-            minLeft,
-            minTop,
-            minBottom,
-            minRight,
-            centerX,
-            centerY,
-          )
+          this.initializeOrthogonalPointsLeft(targetPosition, points, start, end, minLeft, minTop, minBottom, minRight, centerX, centerY)
           break
         }
         case ConnectorDirection.Top: {
-          this.initializeOrthogonalPointsTop(
-            targetPosition,
-            points,
-            start,
-            end,
-            minLeft,
-            minTop,
-            minBottom,
-            minRight,
-            centerX,
-            centerY,
-          )
+          this.initializeOrthogonalPointsTop(targetPosition, points, start, end, minLeft, minTop, minBottom, minRight, centerX, centerY)
           break
         }
         case ConnectorDirection.Bottom: {
-          this.initializeOrthogonalPointsBottom(
-            targetPosition,
-            points,
-            start,
-            end,
-            minLeft,
-            minTop,
-            minBottom,
-            minRight,
-            centerX,
-            centerY,
-          )
+          this.initializeOrthogonalPointsBottom(targetPosition, points, start, end, minLeft, minTop, minBottom, minRight, centerX, centerY)
           break
         }
         case ConnectorDirection.Right:
         default: {
-          this.initializeOrthogonalPointsRight(
-            targetPosition,
-            points,
-            start,
-            end,
-            minLeft,
-            minTop,
-            minBottom,
-            minRight,
-            centerX,
-            centerY,
-          )
+          this.initializeOrthogonalPointsRight(targetPosition, points, start, end, minLeft, minTop, minBottom, minRight, centerX, centerY)
           break
         }
       }
@@ -1615,9 +1522,7 @@ export class Connector extends Item {
             const endLeft = end.x - this._targetJoint!.x - Connector.DEFAULT_ARROW_SEGMENT
             if (startLeft < endLeft) {
               points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
-              points.push(
-                new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, end.y - Connector.DEFAULT_ARROW_SEGMENT),
-              )
+              points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, end.y - Connector.DEFAULT_ARROW_SEGMENT))
               points.push(new Point2(end.x, end.y - Connector.DEFAULT_ARROW_SEGMENT))
             } else if (start.x > endRight) {
               const middleX = (start.x + endRight) / 2
@@ -1925,9 +1830,7 @@ export class Connector extends Item {
             const middleY = (endBottom + start.y) / 2
             if (startTop < endTop) {
               points.push(new Point2(start.x, start.y - Connector.DEFAULT_ARROW_SEGMENT))
-              points.push(
-                new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, start.y - Connector.DEFAULT_ARROW_SEGMENT),
-              )
+              points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, start.y - Connector.DEFAULT_ARROW_SEGMENT))
               points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
             } else if (endBottom < start.y) {
               if (middleY - endBottom > Connector.DEFAULT_ARROW_SEGMENT) {
@@ -2188,9 +2091,7 @@ export class Connector extends Item {
               }
             } else if (startTop < endTop) {
               points.push(new Point2(start.x, start.y - Connector.DEFAULT_ARROW_SEGMENT))
-              points.push(
-                new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, start.y - Connector.DEFAULT_ARROW_SEGMENT),
-              )
+              points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, start.y - Connector.DEFAULT_ARROW_SEGMENT))
               points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
             } else {
               points.push(new Point2(start.x, start.y - Connector.DEFAULT_ARROW_SEGMENT))
@@ -2445,8 +2346,7 @@ export class Connector extends Item {
           case ConnectorDirection.Right:
           default: {
             const startTop = start.y - this._sourceJoint!.y - Connector.DEFAULT_ARROW_SEGMENT
-            const startBottom =
-              start.y + (this._source!.height - this._sourceJoint!.y) + Connector.DEFAULT_ARROW_SEGMENT
+            const startBottom = start.y + (this._source!.height - this._sourceJoint!.y) + Connector.DEFAULT_ARROW_SEGMENT
             const startLeft = start.x - this._source!.width
             const middleX = (end.x + startLeft) / 2
             if (end.y < startTop) {
@@ -2701,9 +2601,7 @@ export class Connector extends Item {
             const middleX = (start.x + endLeft) / 2
             if (startRight > endRight) {
               points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, start.y))
-              points.push(
-                new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, end.y + Connector.DEFAULT_ARROW_SEGMENT),
-              )
+              points.push(new Point2(start.x + Connector.DEFAULT_ARROW_SEGMENT, end.y + Connector.DEFAULT_ARROW_SEGMENT))
               points.push(new Point2(end.x, end.y + Connector.DEFAULT_ARROW_SEGMENT))
             } else if (start.x < endLeft) {
               if (middleX - start.x > Connector.DEFAULT_ARROW_SEGMENT) {
@@ -2800,9 +2698,7 @@ export class Connector extends Item {
             const middleY = (start.y + endTop) * 0.5
             if (start.y > endBottom) {
               points.push(new Point2(start.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
-              points.push(
-                new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, start.y + Connector.DEFAULT_ARROW_SEGMENT),
-              )
+              points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, start.y + Connector.DEFAULT_ARROW_SEGMENT))
               points.push(new Point2(end.x - Connector.DEFAULT_ARROW_SEGMENT, end.y))
             } else if (start.y > endTop) {
               points.push(new Point2(start.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
@@ -2982,9 +2878,7 @@ export class Connector extends Item {
             const middleX = (startLeft + end.x) * 0.5
             if (startRight < end.x) {
               points.push(new Point2(start.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
-              points.push(
-                new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, start.y + Connector.DEFAULT_ARROW_SEGMENT),
-              )
+              points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, start.y + Connector.DEFAULT_ARROW_SEGMENT))
               points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
             } else if (startLeft > end.x) {
               if (end.x - middleX > Connector.DEFAULT_ARROW_SEGMENT) {
@@ -3084,9 +2978,7 @@ export class Connector extends Item {
             const middleY = (start.x + endTop) * 0.5
             if (start.y > endBottom) {
               points.push(new Point2(start.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))
-              points.push(
-                new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, start.y + Connector.DEFAULT_ARROW_SEGMENT),
-              )
+              points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, start.y + Connector.DEFAULT_ARROW_SEGMENT))
               points.push(new Point2(end.x + Connector.DEFAULT_ARROW_SEGMENT, end.y))
             } else if (start.y < endTop) {
               if (middleY - start.x > Connector.DEFAULT_ARROW_SEGMENT) {
@@ -3261,12 +3153,7 @@ export class Connector extends Item {
     }
   }
 
-  private initializeOrthogonalPointsLeftWithoutTarget(
-    targetPosition: TargetPosition,
-    points: Point2[],
-    start: Point2,
-    end: Point2,
-  ) {
+  private initializeOrthogonalPointsLeftWithoutTarget(targetPosition: TargetPosition, points: Point2[], start: Point2, end: Point2) {
     switch (targetPosition) {
       case TargetPosition.Left: {
         const middleX = (start.x + end.x) * 0.5
@@ -3398,12 +3285,7 @@ export class Connector extends Item {
     }
   }
 
-  private initializeOrthogonalPointsTopWithoutTarget(
-    targetPosition: TargetPosition,
-    points: Point2[],
-    start: Point2,
-    end: Point2,
-  ) {
+  private initializeOrthogonalPointsTopWithoutTarget(targetPosition: TargetPosition, points: Point2[], start: Point2, end: Point2) {
     switch (targetPosition) {
       case TargetPosition.Left: {
         const startLeft = start.x - this._sourceJoint!.x - Connector.DEFAULT_ARROW_SEGMENT
@@ -3552,12 +3434,7 @@ export class Connector extends Item {
     }
   }
 
-  private initializeOrthogonalPointsRightWithoutTarget(
-    targetPosition: TargetPosition,
-    points: Point2[],
-    start: Point2,
-    end: Point2,
-  ) {
+  private initializeOrthogonalPointsRightWithoutTarget(targetPosition: TargetPosition, points: Point2[], start: Point2, end: Point2) {
     switch (targetPosition) {
       case TargetPosition.Left: {
         const startTop = start.y - this._sourceJoint!.y - Connector.DEFAULT_ARROW_SEGMENT
@@ -3683,12 +3560,7 @@ export class Connector extends Item {
     }
   }
 
-  private initializeOrthogonalPointsBottomWithoutTarget(
-    targetPosition: TargetPosition,
-    points: Point2[],
-    start: Point2,
-    end: Point2,
-  ) {
+  private initializeOrthogonalPointsBottomWithoutTarget(targetPosition: TargetPosition, points: Point2[], start: Point2, end: Point2) {
     switch (targetPosition) {
       case TargetPosition.Left: {
         const startLeft = start.x - this._sourceJoint!.x - Connector.DEFAULT_ARROW_SEGMENT
@@ -3837,12 +3709,7 @@ export class Connector extends Item {
     }
   }
 
-  private initializeOrthogonalPointsLeftWithoutSource(
-    targetPosition: TargetPosition,
-    points: Point2[],
-    start: Point2,
-    end: Point2,
-  ) {
+  private initializeOrthogonalPointsLeftWithoutSource(targetPosition: TargetPosition, points: Point2[], start: Point2, end: Point2) {
     switch (targetPosition) {
       case TargetPosition.Left: {
         const middleX = (start.x + end.x) * 0.5
@@ -3974,12 +3841,7 @@ export class Connector extends Item {
     }
   }
 
-  private initializeOrthogonalPointsTopWithoutSource(
-    targetPosition: TargetPosition,
-    points: Point2[],
-    start: Point2,
-    end: Point2,
-  ) {
+  private initializeOrthogonalPointsTopWithoutSource(targetPosition: TargetPosition, points: Point2[], start: Point2, end: Point2) {
     switch (targetPosition) {
       case TargetPosition.Left: {
         const endLeft = end.x - this._targetJoint!.x - Connector.DEFAULT_ARROW_SEGMENT
@@ -4128,12 +3990,7 @@ export class Connector extends Item {
     }
   }
 
-  private initializeOrthogonalPointsRightWithoutSource(
-    targetPosition: TargetPosition,
-    points: Point2[],
-    start: Point2,
-    end: Point2,
-  ) {
+  private initializeOrthogonalPointsRightWithoutSource(targetPosition: TargetPosition, points: Point2[], start: Point2, end: Point2) {
     switch (targetPosition) {
       case TargetPosition.Left: {
         const endTop = end.y - this._targetJoint!.y - Connector.DEFAULT_ARROW_SEGMENT
@@ -4259,12 +4116,7 @@ export class Connector extends Item {
     }
   }
 
-  private initializeOrthogonalPointsBottomWithoutSource(
-    targetPosition: TargetPosition,
-    points: Point2[],
-    start: Point2,
-    end: Point2,
-  ) {
+  private initializeOrthogonalPointsBottomWithoutSource(targetPosition: TargetPosition, points: Point2[], start: Point2, end: Point2) {
     switch (targetPosition) {
       case TargetPosition.Left: {
         const endLeft = end.x - this._targetJoint!.x - Connector.DEFAULT_ARROW_SEGMENT
@@ -4413,12 +4265,7 @@ export class Connector extends Item {
     }
   }
 
-  private initializeOrthogonalPointsWithoutSourceTarget(
-    targetPosition: TargetPosition,
-    points: Point2[],
-    start: Point2,
-    end: Point2,
-  ) {
+  private initializeOrthogonalPointsWithoutSourceTarget(targetPosition: TargetPosition, points: Point2[], start: Point2, end: Point2) {
     //console.log(`start.x = ${start.x}  end.x = ${end.x}  start.y = ${start.y}  end.y=${end.y}`)
     if (Math.abs(start.x - end.x) > Math.abs(start.y - end.y)) {
       const middleX = (start.x + end.x) * 0.5
@@ -4493,12 +4340,7 @@ export class Connector extends Item {
     }
   }
 
-  private initializeOrthogonalPointsLeftWithSameSourceTarget(
-    targetPosition: TargetPosition,
-    points: Point2[],
-    start: Point2,
-    end: Point2,
-  ) {
+  private initializeOrthogonalPointsLeftWithSameSourceTarget(targetPosition: TargetPosition, points: Point2[], start: Point2, end: Point2) {
     switch (this._endDirection) {
       case ConnectorDirection.Left: {
         points.push(new Point2(start.x - Connector.DEFAULT_ARROW_SEGMENT, start.y))
@@ -4529,12 +4371,7 @@ export class Connector extends Item {
     }
   }
 
-  private initializeOrthogonalPointsTopWithSameSourceTarget(
-    targetPosition: TargetPosition,
-    points: Point2[],
-    start: Point2,
-    end: Point2,
-  ) {
+  private initializeOrthogonalPointsTopWithSameSourceTarget(targetPosition: TargetPosition, points: Point2[], start: Point2, end: Point2) {
     switch (this._endDirection) {
       case ConnectorDirection.Left: {
         points.push(new Point2(start.x, start.y - Connector.DEFAULT_ARROW_SEGMENT))
@@ -4565,12 +4402,7 @@ export class Connector extends Item {
     }
   }
 
-  private initializeOrthogonalPointsRightWithSameSourceTarget(
-    targetPosition: TargetPosition,
-    points: Point2[],
-    start: Point2,
-    end: Point2,
-  ) {
+  private initializeOrthogonalPointsRightWithSameSourceTarget(targetPosition: TargetPosition, points: Point2[], start: Point2, end: Point2) {
     switch (this._endDirection) {
       case ConnectorDirection.Left: {
         const startTop = start.y - this._sourceJoint!.y - Connector.DEFAULT_ARROW_SEGMENT
@@ -4601,12 +4433,7 @@ export class Connector extends Item {
     }
   }
 
-  private initializeOrthogonalPointsBottomWithSameSourceTarget(
-    targetPosition: TargetPosition,
-    points: Point2[],
-    start: Point2,
-    end: Point2,
-  ) {
+  private initializeOrthogonalPointsBottomWithSameSourceTarget(targetPosition: TargetPosition, points: Point2[], start: Point2, end: Point2) {
     switch (this._endDirection) {
       case ConnectorDirection.Left: {
         points.push(new Point2(start.x, start.y + Connector.DEFAULT_ARROW_SEGMENT))

@@ -312,14 +312,7 @@ export class Engine {
     this._canvas.drawDRRect(outer, inner, paint)
   }
 
-  public drawGlyphs(
-    glyphs: InputGlyphIDArray,
-    positions: InputFlattenedPointArray,
-    x: number,
-    y: number,
-    font: Font,
-    paint: Paint,
-  ) {
+  public drawGlyphs(glyphs: InputGlyphIDArray, positions: InputFlattenedPointArray, x: number, y: number, font: Font, paint: Paint) {
     this._canvas.drawGlyphs(glyphs, positions, x, y, font, paint)
   }
 
@@ -347,14 +340,7 @@ export class Engine {
     this._canvas.drawImageRectCubic(img, src, dest, B, C, paint)
   }
 
-  public drawImageRectOptions(
-    img: Image,
-    src: InputRect,
-    dest: InputRect,
-    fm: FilterMode,
-    mm: MipmapMode,
-    paint?: Paint | null,
-  ) {
+  public drawImageRectOptions(img: Image, src: InputRect, dest: InputRect, fm: FilterMode, mm: MipmapMode, paint?: Paint | null) {
     this._canvas.drawImageRectOptions(img, src, dest, fm, mm, paint)
   }
 

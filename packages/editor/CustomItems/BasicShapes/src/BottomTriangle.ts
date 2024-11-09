@@ -79,17 +79,14 @@ export class BottomTriangle extends CustomEntity {
     }
     if (theThis.typeInfo.adaptInPercent) {
       adapterWidth =
-        theThis.width * theThis.adapter.x * (theThis.typeInfo.adapterEnd.x - theThis.typeInfo.adapterStart.x) +
-        theThis.typeInfo.adapterStart.x * theThis.width
+        theThis.width * theThis.adapter.x * (theThis.typeInfo.adapterEnd.x - theThis.typeInfo.adapterStart.x) + theThis.typeInfo.adapterStart.x * theThis.width
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       adapterHeight =
         theThis.height * theThis.adapter.y * (theThis.typeInfo.adapterEnd.y - theThis.typeInfo.adapterStart.y) +
         theThis.typeInfo.adapterStart.y * theThis.height
-      adapterSizeX =
-        theThis.adapterSize * (theThis.typeInfo.adapterEnd.x - theThis.typeInfo.adapterStart.x) * this.width
+      adapterSizeX = theThis.adapterSize * (theThis.typeInfo.adapterEnd.x - theThis.typeInfo.adapterStart.x) * this.width
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      adapterSizeY =
-        theThis.adapterSize * (theThis.typeInfo.adapterEnd.y - theThis.typeInfo.adapterStart.y) * this.height
+      adapterSizeY = theThis.adapterSize * (theThis.typeInfo.adapterEnd.y - theThis.typeInfo.adapterStart.y) * this.height
     }
     theThis.path.moveTo(modifierWidth, theThis.height)
     theThis.path.lineTo(adapterWidth + adapterSizeX, 0)

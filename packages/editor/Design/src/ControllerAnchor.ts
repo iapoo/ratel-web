@@ -26,6 +26,7 @@ export class ControllerAnchor extends Anchor {
   public handlePointerEnter(): void {}
 
   public handlePointerLeave(): void {}
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public handlePointerClick(x: number, y: number) {}
   public handlePointerDown(x: number, y: number) {
     if (!this.target) {
@@ -36,6 +37,7 @@ export class ControllerAnchor extends Anchor {
     this._startY = y
     this.editor.beginOperation(this.target)
   }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public handlePointerUp(x: number, y: number) {
     if (!this.target) {
       return
@@ -67,14 +69,7 @@ export class ControllerAnchor extends Anchor {
       let newControllerY = controllerY + resizeY
       let targetController = this.target.shape.controller
       if (shapeType.controlInLine) {
-        let newControllerPoint = MathUtils.getNearestPointOfPointToLine(
-          newControllerX,
-          newControllerY,
-          startX,
-          startY,
-          endX,
-          endY,
-        )
+        let newControllerPoint = MathUtils.getNearestPointOfPointToLine(newControllerX, newControllerY, startX, startY, endX, endY)
         //let newControllerValue = Math.sqrt((newControllerPoint.x - startX) * (newControllerPoint.x - startX) + (newControllerPoint.y - startY) * (newControllerPoint.y - startY))
         let newControllerXValue = newControllerPoint.x - startX //< startX ? startX : (newControllerPoint.x > endX ? endX : newControllerPoint.x)
         let newControllerYValue = newControllerPoint.y - startY //< startY ? startY : (newControllerPoint.y > endY ? endY : newControllerPoint.y)
@@ -92,18 +87,14 @@ export class ControllerAnchor extends Anchor {
         let newControllerXValue = newControllerX // - startX
         let newControllerYValue = newControllerY // - startY
         if (endX > startX) {
-          newControllerXValue =
-            newControllerXValue < startX ? startX : newControllerXValue > endX ? endX : newControllerXValue
+          newControllerXValue = newControllerXValue < startX ? startX : newControllerXValue > endX ? endX : newControllerXValue
         } else {
-          newControllerXValue =
-            newControllerXValue > startX ? startX : newControllerXValue < endX ? endX : newControllerXValue
+          newControllerXValue = newControllerXValue > startX ? startX : newControllerXValue < endX ? endX : newControllerXValue
         }
         if (endY > startY) {
-          newControllerYValue =
-            newControllerYValue < startY ? startY : newControllerYValue > endY ? endY : newControllerYValue
+          newControllerYValue = newControllerYValue < startY ? startY : newControllerYValue > endY ? endY : newControllerYValue
         } else {
-          newControllerYValue =
-            newControllerYValue > startY ? startY : newControllerYValue < endY ? endY : newControllerYValue
+          newControllerYValue = newControllerYValue > startY ? startY : newControllerYValue < endY ? endY : newControllerYValue
         }
         if (shapeType.controlInPercent) {
           newControllerXValue = (newControllerXValue - startX) / (endX - startX)

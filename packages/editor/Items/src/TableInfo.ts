@@ -21,21 +21,7 @@ export class TableInfo extends EditorItemInfo {
     fillColor: string | null = null,
     lineWidth: number | null = null,
   ) {
-    super(
-      TableEntity.TABLE_TYPE_TABLE,
-      Categories.TABLE,
-      left,
-      top,
-      width,
-      height,
-      '',
-      rotation,
-      styles,
-      useTheme,
-      strokeColor,
-      fillColor,
-      lineWidth,
-    )
+    super(TableEntity.TABLE_TYPE_TABLE, Categories.TABLE, left, top, width, height, '', rotation, styles, useTheme, strokeColor, fillColor, lineWidth)
     this.rowCount = rowCount
     this.columnCount = columnCount
   }

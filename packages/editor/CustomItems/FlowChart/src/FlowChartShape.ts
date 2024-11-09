@@ -1417,24 +1417,19 @@ export class FlowChartShape extends CustomEntity {
         theThis.width * theThis.controller.x * (theThis.typeInfo.controllerEnd.x - theThis.typeInfo.controllerStart.x) +
         theThis.typeInfo.controllerStart.x * theThis.width
       controllerHeight =
-        theThis.height *
-          theThis.controller.y *
-          (theThis.typeInfo.controllerEnd.y - theThis.typeInfo.controllerStart.y) +
+        theThis.height * theThis.controller.y * (theThis.typeInfo.controllerEnd.y - theThis.typeInfo.controllerStart.y) +
         theThis.typeInfo.controllerStart.y * theThis.height
     }
     if (theThis.typeInfo.adaptInPercent) {
       adapterWidth =
-        theThis.width * theThis.adapter.x * (theThis.typeInfo.adapterEnd.x - theThis.typeInfo.adapterStart.x) +
-        theThis.typeInfo.adapterStart.x * theThis.width
+        theThis.width * theThis.adapter.x * (theThis.typeInfo.adapterEnd.x - theThis.typeInfo.adapterStart.x) + theThis.typeInfo.adapterStart.x * theThis.width
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       adapterHeight =
         theThis.height * theThis.adapter.y * (theThis.typeInfo.adapterEnd.y - theThis.typeInfo.adapterStart.y) +
         theThis.typeInfo.adapterStart.y * theThis.height
-      adapterSizeX =
-        theThis.adapterSize * (theThis.typeInfo.adapterEnd.x - theThis.typeInfo.adapterStart.x) * this.width
+      adapterSizeX = theThis.adapterSize * (theThis.typeInfo.adapterEnd.x - theThis.typeInfo.adapterStart.x) * this.width
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      adapterSizeY =
-        theThis.adapterSize * (theThis.typeInfo.adapterEnd.y - theThis.typeInfo.adapterStart.y) * this.height
+      adapterSizeY = theThis.adapterSize * (theThis.typeInfo.adapterEnd.y - theThis.typeInfo.adapterStart.y) * this.height
     }
     switch (theThis.typeInfo.name) {
       case TYPE_FLOWCHART_DECISION:
@@ -1453,7 +1448,7 @@ export class FlowChartShape extends CustomEntity {
       case TYPE_FLOWCHART_START_CIRCLE:
         theThis.path.addOval(Rectangle.makeLTWH(0, 0, this.width, this.height))
         break
-      case TYPE_FLOWCHART_DOCUMENT:
+      case TYPE_FLOWCHART_DOCUMENT: {
         modifierHeight = this.height - modifierHeight
         const k = modifierHeight / 0.35
         theThis.path.moveTo(0, 0)
@@ -1469,6 +1464,7 @@ export class FlowChartShape extends CustomEntity {
         theThis.path.lineTo(this.width, 0)
         theThis.path.lineTo(0, 0)
         break
+      }
       case TYPE_FLOWCHART_DATA:
         theThis.path.moveTo(modifierWidth, 0)
         theThis.path.lineTo(this.width, 0)
@@ -1481,9 +1477,7 @@ export class FlowChartShape extends CustomEntity {
         if (modifierWidth < this.width - controllerWidth) {
           modifierWidth = this.width - controllerWidth
         }
-        theThis.path.addRRect(
-          new RoundRectangle(0, 0, this.width, this.height, this.width - controllerWidth, controllerHeight),
-        )
+        theThis.path.addRRect(new RoundRectangle(0, 0, this.width, this.height, this.width - controllerWidth, controllerHeight))
         theThis.path.moveTo(modifierWidth + 1, 0)
         theThis.path.lineTo(modifierWidth + 1, this.height)
         theThis.path.moveTo(this.width - modifierWidth - 1, 0)
@@ -1505,9 +1499,7 @@ export class FlowChartShape extends CustomEntity {
         if (modifierWidth < this.width - controllerWidth) {
           modifierWidth = this.width - controllerWidth
         }
-        theThis.path.addRRect(
-          new RoundRectangle(0, 0, this.width, this.height, this.width - controllerWidth, controllerHeight),
-        )
+        theThis.path.addRRect(new RoundRectangle(0, 0, this.width, this.height, this.width - controllerWidth, controllerHeight))
         // TODO: FIX 1 Offset
         //theThis.path.addRectangle(Rectangle.makeLTWH(0, 0, this.width, this.height))
         theThis.path.moveTo(modifierWidth + 1, 0)
@@ -1529,14 +1521,7 @@ export class FlowChartShape extends CustomEntity {
         theThis.path.addArc(Rectangle.makeLTWH(0, 0, this.width, modifierHeight * 2), 0, 360)
         theThis.path.moveTo(0, modifierHeight)
         theThis.path.lineTo(0, this.height - modifierHeight)
-        theThis.path.cubicTo(
-          0,
-          this.height - modifierHeight + k,
-          this.width,
-          this.height - modifierHeight + k,
-          this.width,
-          this.height - modifierHeight,
-        )
+        theThis.path.cubicTo(0, this.height - modifierHeight + k, this.width, this.height - modifierHeight + k, this.width, this.height - modifierHeight)
         theThis.path.moveTo(this.width, this.height - modifierHeight)
         theThis.path.lineTo(this.width, modifierHeight)
         theThis.path.cubicTo(this.width, modifierHeight + k, 0, modifierHeight + k, 0, modifierHeight)
@@ -1546,21 +1531,10 @@ export class FlowChartShape extends CustomEntity {
         //Ref to: https://www.ibashu.cn/news/show_261576.html
         //Ref to: https://blog.csdn.net/jeremyjone/article/details/102069294
         let k = modifierWidth / 0.75
-        theThis.path.addArc(
-          Rectangle.makeLTWH(this.width - modifierWidth * 2, 0, modifierWidth * 2, this.height),
-          0,
-          360,
-        )
+        theThis.path.addArc(Rectangle.makeLTWH(this.width - modifierWidth * 2, 0, modifierWidth * 2, this.height), 0, 360)
         theThis.path.moveTo(modifierWidth, 0)
         theThis.path.lineTo(this.width - modifierWidth, 0)
-        theThis.path.cubicTo(
-          this.width - modifierWidth - k,
-          0,
-          this.width - modifierWidth - k,
-          this.height,
-          this.width - modifierWidth,
-          this.height,
-        )
+        theThis.path.cubicTo(this.width - modifierWidth - k, 0, this.width - modifierWidth - k, this.height, this.width - modifierWidth, this.height)
         theThis.path.lineTo(modifierWidth, this.height)
         theThis.path.cubicTo(modifierWidth - k, this.height, modifierWidth - k, 0, modifierWidth, 0)
         break
@@ -1595,14 +1569,7 @@ export class FlowChartShape extends CustomEntity {
           this.height - modifierHeight,
         )
         theThis.path.lineTo(this.width, modifierHeight)
-        theThis.path.cubicTo(
-          this.width * 0.5,
-          modifierHeight - k,
-          this.width * 0.5,
-          modifierHeight + k,
-          0,
-          modifierHeight,
-        )
+        theThis.path.cubicTo(this.width * 0.5, modifierHeight - k, this.width * 0.5, modifierHeight + k, 0, modifierHeight)
         break
       }
       case TYPE_FLOWCHART_DISPLAY: {
@@ -1770,16 +1737,8 @@ export class FlowChartShape extends CustomEntity {
         theThis.path.addArc(Rectangle.makeLTWH(this.width - radius, 0, diameter, diameter), 180, 90)
         theThis.path.moveTo(this.width - radius, radius)
         theThis.path.lineTo(this.width - radius, this.height * 0.5 - radius)
-        theThis.path.addArc(
-          Rectangle.makeLTWH(this.width - diameter - radius, this.height * 0.5 - diameter, diameter, diameter),
-          0,
-          90,
-        )
-        theThis.path.addArc(
-          Rectangle.makeLTWH(this.width - diameter - radius, this.height * 0.5, diameter, diameter),
-          270,
-          90,
-        )
+        theThis.path.addArc(Rectangle.makeLTWH(this.width - diameter - radius, this.height * 0.5 - diameter, diameter, diameter), 0, 90)
+        theThis.path.addArc(Rectangle.makeLTWH(this.width - diameter - radius, this.height * 0.5, diameter, diameter), 270, 90)
         theThis.path.lineTo(this.width - radius, this.height - radius)
         theThis.path.addArc(Rectangle.makeLTWH(this.width - radius, this.height - diameter, diameter, diameter), 90, 90)
         break
@@ -1791,6 +1750,7 @@ export class FlowChartShape extends CustomEntity {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected parseEntityShapeType(type: string): EntityShapeType {
     let shapeType = EntityShapeType.CustomShape
     return shapeType

@@ -1,16 +1,5 @@
 /* eslint-disable complexity */
-import {
-  Colors,
-  Engine,
-  Graphics,
-  Layer,
-  MouseCode,
-  Node,
-  Rectangle,
-  Shape,
-  KeyEvent as UniKeyEvent,
-  PointerEvent as UniPointerEvent,
-} from '@ratel-web/engine'
+import { Colors, Engine, Graphics, Layer, MouseCode, Node, Rectangle, Shape, KeyEvent as UniKeyEvent, PointerEvent as UniPointerEvent } from '@ratel-web/engine'
 
 export class Painter {
   private _canvasId: string | HTMLCanvasElement
@@ -565,17 +554,7 @@ export class Painter {
     if (this._focusTarget !== null && this._focusTarget !== undefined) {
       const target = this._focusTarget
       target.keyDownListeners.forEach((callback) => {
-        const event = new UniKeyEvent(
-          target,
-          e.key,
-          e.code,
-          e.shiftKey,
-          e.ctrlKey,
-          e.altKey,
-          e.metaKey,
-          e.repeat,
-          e.isComposing,
-        )
+        const event = new UniKeyEvent(target, e.key, e.code, e.shiftKey, e.ctrlKey, e.altKey, e.metaKey, e.repeat, e.isComposing)
         callback(event)
       })
     }
@@ -585,17 +564,7 @@ export class Painter {
     if (this._focusTarget !== null && this._focusTarget !== undefined) {
       const target = this._focusTarget
       target.keyUpListeners.forEach((callback) => {
-        const event = new UniKeyEvent(
-          target,
-          e.key,
-          e.code,
-          e.shiftKey,
-          e.ctrlKey,
-          e.altKey,
-          e.metaKey,
-          e.repeat,
-          e.isComposing,
-        )
+        const event = new UniKeyEvent(target, e.key, e.code, e.shiftKey, e.ctrlKey, e.altKey, e.metaKey, e.repeat, e.isComposing)
         callback(event)
       })
     }
@@ -605,17 +574,7 @@ export class Painter {
     if (this._focusTarget !== null && this._focusTarget !== undefined) {
       const target = this._focusTarget
       target.keyPressListeners.forEach((callback) => {
-        const event = new UniKeyEvent(
-          target,
-          e.key,
-          e.code,
-          e.shiftKey,
-          e.ctrlKey,
-          e.altKey,
-          e.metaKey,
-          e.repeat,
-          e.isComposing,
-        )
+        const event = new UniKeyEvent(target, e.key, e.code, e.shiftKey, e.ctrlKey, e.altKey, e.metaKey, e.repeat, e.isComposing)
         callback(event)
       })
     }

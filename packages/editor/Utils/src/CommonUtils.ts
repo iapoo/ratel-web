@@ -4,15 +4,7 @@ import { BasicShapes } from '../../CustomItems/BasicShapes'
 import { ERCustomShapes } from '../../CustomItems/EntityRelation'
 import { FlowChartShapes } from '../../CustomItems/FlowChart'
 import { MockupShapes } from '../../CustomItems/Mockup'
-import {
-  UMLBasicShapes,
-  UMLConnectors,
-  UMLContainerShapes,
-  UMLCustomContainers,
-  UMLCustomShapes,
-  UMLCustomTables,
-  UMLFrameShapes,
-} from '../../CustomItems/UML'
+import { UMLBasicShapes, UMLConnectors, UMLContainerShapes, UMLCustomContainers, UMLCustomShapes, UMLCustomTables, UMLFrameShapes } from '../../CustomItems/UML'
 import {
   ConnectorArrowInfo,
   ConnectorArrowType,
@@ -27,13 +19,7 @@ import {
   ShapeEntity,
   ShapeType,
 } from '../../Items'
-import {
-  ConnectorArrowDisplayMode,
-  ConnectorArrowDisplayType,
-  ConnectorDirection,
-  ConnectorMode,
-  ConnectorType,
-} from '../../Shapes'
+import { ConnectorArrowDisplayMode, ConnectorArrowDisplayType, ConnectorDirection, ConnectorMode, ConnectorType } from '../../Shapes'
 import { Constants } from './Constants'
 
 export interface CustomShapeType {
@@ -72,14 +58,7 @@ export interface CustomContainerType {
 }
 
 //FIXME, Move it to better place
-export const CustomShapes = [
-  ...BasicShapes,
-  ...Arrows,
-  ...FlowChartShapes,
-  ...UMLCustomShapes,
-  ...ERCustomShapes,
-  ...MockupShapes,
-]
+export const CustomShapes = [...BasicShapes, ...Arrows, ...FlowChartShapes, ...UMLCustomShapes, ...ERCustomShapes, ...MockupShapes]
 
 export const CustomTableShapes = [...UMLCustomTables]
 

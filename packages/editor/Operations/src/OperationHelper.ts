@@ -1,5 +1,4 @@
 /* eslint-disable max-params */
-
 import { Rotation } from '@ratel-web/engine'
 import { Editor } from '../../Editor'
 import {
@@ -40,19 +39,19 @@ import { ConnectorMode, ConnectorType, Style, StyleInfo } from '../../Shapes'
 import {
   CommonUtils,
   ContainerShapeType,
-  CustomConnectorType,
   CustomConnectors,
-  CustomContainerType,
+  CustomConnectorType,
   CustomContainers,
-  CustomShapeType,
+  CustomContainerType,
   CustomShapes,
-  CustomTableShapeType,
+  CustomShapeType,
   CustomTableShapes,
+  CustomTableShapeType,
   ExtendedContainerTypes,
-  ExtendedShapeType,
   ExtendedShapes,
-  FrameShapeType,
+  ExtendedShapeType,
   FrameShapes,
+  FrameShapeType,
 } from '../../Utils'
 
 export class OperationHelper {
@@ -227,9 +226,7 @@ export class OperationHelper {
     let start = CommonUtils.parsePointString(connectorInfo.start)
     let end = CommonUtils.parsePointString(connectorInfo.end)
     let connector = new Connector(start, end)
-    connector.connectorType = connectorInfo.connectorType
-      ? CommonUtils.parseConnectorTypeString(connectorInfo.connectorType)
-      : ConnectorType.Orthogonal
+    connector.connectorType = connectorInfo.connectorType ? CommonUtils.parseConnectorType(connectorInfo.connectorType) : ConnectorType.Orthogonal
     if (connectorInfo.source) {
       //connector.source = connectorInfo.source
     }
@@ -250,9 +247,7 @@ export class OperationHelper {
     connector.startDirection = CommonUtils.parseConnectorDirection(connectorInfo.startDirection)
     connector.endDirection = CommonUtils.parseConnectorDirection(connectorInfo.endDirection)
     connector.orthogonalPoints = CommonUtils.parsePointsString(connectorInfo.orthogonalPoints)
-    connector.connectorMode = connectorInfo.connectorMode
-      ? CommonUtils.parseConnectorMode(connectorInfo.connectorMode)
-      : ConnectorMode.Single
+    connector.connectorMode = connectorInfo.connectorMode ? CommonUtils.parseConnectorMode(connectorInfo.connectorMode) : ConnectorMode.Single
     connector.connectorDoubleLineGap = connectorInfo.connectorDoubleLineGap
     connector.connectorDoubleLineArrowLength = connectorInfo.connectorDoubleLineArrowLength
     connector.connectorDoubleLineArrowDistance = connectorInfo.connectorDoubleLineArrowDistance
@@ -272,16 +267,9 @@ export class OperationHelper {
     let connector = new Connector(start, end)
     if (customConnectorTypeInfo) {
       customConnectorTypeInfos.push(customConnectorTypeInfo.shapeType)
-      connector = new customConnectorTypeInfo.type(
-        start,
-        end,
-        customConnectorTypeInfo.shapeType.name,
-        customConnectorTypeInfos,
-      )
+      connector = new customConnectorTypeInfo.type(start, end, customConnectorTypeInfo.shapeType.name, customConnectorTypeInfos)
     }
-    connector.connectorType = customConnectorInfo.connectorType
-      ? CommonUtils.parseConnectorTypeString(customConnectorInfo.connectorType)
-      : ConnectorType.Orthogonal
+    connector.connectorType = customConnectorInfo.connectorType ? CommonUtils.parseConnectorType(customConnectorInfo.connectorType) : ConnectorType.Orthogonal
     if (customConnectorInfo.source) {
       //connector.source = connectorInfo.source
     }
@@ -302,9 +290,7 @@ export class OperationHelper {
     connector.startDirection = CommonUtils.parseConnectorDirection(customConnectorInfo.startDirection)
     connector.endDirection = CommonUtils.parseConnectorDirection(customConnectorInfo.endDirection)
     connector.orthogonalPoints = CommonUtils.parsePointsString(customConnectorInfo.orthogonalPoints)
-    connector.connectorMode = customConnectorInfo.connectorMode
-      ? CommonUtils.parseConnectorMode(customConnectorInfo.connectorMode)
-      : ConnectorMode.Single
+    connector.connectorMode = customConnectorInfo.connectorMode ? CommonUtils.parseConnectorMode(customConnectorInfo.connectorMode) : ConnectorMode.Single
     connector.connectorDoubleLineGap = customConnectorInfo.connectorDoubleLineGap
     connector.connectorDoubleLineArrowLength = customConnectorInfo.connectorDoubleLineArrowLength
     connector.connectorDoubleLineArrowDistance = customConnectorInfo.connectorDoubleLineArrowDistance
@@ -348,13 +334,9 @@ export class OperationHelper {
         extendedShapeTypeInfos,
       )
     } else {
-      shapeEntity = new ShapeEntity(
-        extendedShapeInfo.left,
-        extendedShapeInfo.top,
-        extendedShapeInfo.width,
-        extendedShapeInfo.height,
-        { shapeType: extendedShapeInfo.type },
-      )
+      shapeEntity = new ShapeEntity(extendedShapeInfo.left, extendedShapeInfo.top, extendedShapeInfo.width, extendedShapeInfo.height, {
+        shapeType: extendedShapeInfo.type,
+      })
     }
     shapeEntity.type = extendedShapeInfo.type
     shapeEntity.text = extendedShapeInfo.text
@@ -379,23 +361,9 @@ export class OperationHelper {
     let frameEntity: FrameEntity
     if (frameTypeInfo) {
       shapeTypes.push(frameTypeInfo.shapeType)
-      frameEntity = new frameTypeInfo.type(
-        itemInfo.left,
-        itemInfo.top,
-        itemInfo.width,
-        itemInfo.height,
-        { shapeType: frameInfo.type },
-        shapeTypes,
-      )
+      frameEntity = new frameTypeInfo.type(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, { shapeType: frameInfo.type }, shapeTypes)
     } else {
-      frameEntity = new FrameEntity(
-        itemInfo.left,
-        itemInfo.top,
-        itemInfo.width,
-        itemInfo.height,
-        { shapeType: frameInfo.type },
-        shapeTypes,
-      )
+      frameEntity = new FrameEntity(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, { shapeType: frameInfo.type }, shapeTypes)
     }
     frameEntity.id = frameInfo.id
     if (frameInfo.rotation) {
@@ -492,13 +460,7 @@ export class OperationHelper {
     let customShapeType = OperationHelper.customShapes.get(shapeInfo.type)
     let shapeEntity: ShapeEntity
     if (customShapeType) {
-      shapeEntity = new customShapeType.type(
-        shapeInfo.left,
-        shapeInfo.top,
-        shapeInfo.width,
-        shapeInfo.height,
-        shapeInfo.type,
-      )
+      shapeEntity = new customShapeType.type(shapeInfo.left, shapeInfo.top, shapeInfo.width, shapeInfo.height, shapeInfo.type)
     } else {
       shapeEntity = new ShapeEntity(shapeInfo.left, shapeInfo.top, shapeInfo.width, shapeInfo.height, {
         shapeType: shapeInfo.type,
@@ -519,13 +481,7 @@ export class OperationHelper {
 
   public static loadSvgContainer(itemInfo: EditorItemInfo): ShapeEntity {
     let svgContainerInfo = itemInfo as SvgContainerInfo
-    const svgContainer = new SvgContainer(
-      svgContainerInfo.left,
-      svgContainerInfo.top,
-      svgContainerInfo.width,
-      svgContainerInfo.height,
-      svgContainerInfo.svg,
-    )
+    const svgContainer = new SvgContainer(svgContainerInfo.left, svgContainerInfo.top, svgContainerInfo.width, svgContainerInfo.height, svgContainerInfo.svg)
     svgContainer.svgShape.svgInitialized = false
     svgContainer.type = svgContainerInfo.type
     svgContainer.text = svgContainerInfo.text
@@ -560,11 +516,7 @@ export class OperationHelper {
     imageContainer.text = imageContainerInfo.text
     imageContainer.id = imageContainerInfo.id
     if (imageContainerInfo.rotation) {
-      imageContainer.rotation = new Rotation(
-        imageContainerInfo.rotation,
-        imageContainer.width / 2,
-        imageContainer.height / 2,
-      )
+      imageContainer.rotation = new Rotation(imageContainerInfo.rotation, imageContainer.width / 2, imageContainer.height / 2)
     }
     imageContainer.shape.modifier = CommonUtils.parsePointString(imageContainerInfo.modifier)
     imageContainer.shape.controller = CommonUtils.parsePointString(imageContainerInfo.controller)
@@ -618,11 +570,7 @@ export class OperationHelper {
     }
     containerEntity.id = extendedContainerInfo.id
     if (extendedContainerInfo.rotation) {
-      containerEntity.rotation = new Rotation(
-        extendedContainerInfo.rotation,
-        extendedContainerInfo.width / 2,
-        extendedContainerInfo.height / 2,
-      )
+      containerEntity.rotation = new Rotation(extendedContainerInfo.rotation, extendedContainerInfo.width / 2, extendedContainerInfo.height / 2)
     }
     containerEntity.shape.modifier = CommonUtils.parsePointString(extendedContainerInfo.modifier)
     containerEntity.shape.adapter = CommonUtils.parsePointString(extendedContainerInfo.adapter)
@@ -644,30 +592,15 @@ export class OperationHelper {
     const extendedContainerTypeInfo = OperationHelper.customContainerTypes.get(extendedContainerInfo.type)
     let containerEntity: CustomContainerEntity
     if (extendedContainerTypeInfo) {
-      containerEntity = new extendedContainerTypeInfo.type(
-        itemInfo.left,
-        itemInfo.top,
-        itemInfo.width,
-        itemInfo.height,
-        extendedContainerInfo.type,
-        [extendedContainerTypeInfo.shapeType],
-      )
+      containerEntity = new extendedContainerTypeInfo.type(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, extendedContainerInfo.type, [
+        extendedContainerTypeInfo.shapeType,
+      ])
     } else {
-      containerEntity = new CustomContainerEntity(
-        itemInfo.left,
-        itemInfo.top,
-        itemInfo.width,
-        itemInfo.height,
-        extendedContainerInfo.type,
-      )
+      containerEntity = new CustomContainerEntity(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, extendedContainerInfo.type)
     }
     containerEntity.id = extendedContainerInfo.id
     if (extendedContainerInfo.rotation) {
-      containerEntity.rotation = new Rotation(
-        extendedContainerInfo.rotation,
-        extendedContainerInfo.width / 2,
-        extendedContainerInfo.height / 2,
-      )
+      containerEntity.rotation = new Rotation(extendedContainerInfo.rotation, extendedContainerInfo.width / 2, extendedContainerInfo.height / 2)
     }
     containerEntity.shape.modifier = CommonUtils.parsePointString(extendedContainerInfo.modifier)
     containerEntity.shape.adapter = CommonUtils.parsePointString(extendedContainerInfo.adapter)
@@ -683,14 +616,7 @@ export class OperationHelper {
 
   public static loadTableEntity(itemInfo: EditorItemInfo): TableEntity {
     const tableInfo = itemInfo as TableInfo
-    const tableEntity = new TableEntity(
-      itemInfo.left,
-      itemInfo.top,
-      itemInfo.width,
-      itemInfo.height,
-      tableInfo.rowCount,
-      tableInfo.columnCount,
-    )
+    const tableEntity = new TableEntity(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, tableInfo.rowCount, tableInfo.columnCount)
     tableEntity.id = tableInfo.id
     if (tableInfo.rotation) {
       tableEntity.rotation = new Rotation(tableInfo.rotation, tableInfo.width / 2, tableInfo.height / 2)
@@ -737,11 +663,7 @@ export class OperationHelper {
     }
     customTableEntity.id = customTableInfo.id
     if (customTableInfo.rotation) {
-      customTableEntity.rotation = new Rotation(
-        customTableInfo.rotation,
-        customTableInfo.width / 2,
-        customTableInfo.height / 2,
-      )
+      customTableEntity.rotation = new Rotation(customTableInfo.rotation, customTableInfo.width / 2, customTableInfo.height / 2)
     }
     customTableEntity.removeAllItems()
     itemInfo.items.forEach((childItemInfo) => {
@@ -1153,9 +1075,7 @@ export class OperationHelper {
     }
 
     connectorInfo.text = connector.text
-    connectorInfo.connectorType = connector.connectorType
-      ? CommonUtils.parseConnectorType(connector.connectorType)
-      : null
+    connectorInfo.connectorType = connector.connectorType ? CommonUtils.generateConnectorType(connector.connectorType) : null
     connectorInfo.startArrow = CommonUtils.generateConnectorArrow(connector.startArrow)
     connectorInfo.endArrow = CommonUtils.generateConnectorArrow(connector.endArrow)
     connectorInfo.curveStartModifier = CommonUtils.generatePointString(connector.curveStartModifier)
@@ -1197,9 +1117,7 @@ export class OperationHelper {
     }
 
     connectorInfo.text = customConnector.text
-    connectorInfo.connectorType = customConnector.connectorType
-      ? CommonUtils.parseConnectorType(customConnector.connectorType)
-      : null
+    connectorInfo.connectorType = customConnector.connectorType ? CommonUtils.generateConnectorType(customConnector.connectorType) : null
     connectorInfo.startArrow = CommonUtils.generateConnectorArrow(customConnector.startArrow)
     connectorInfo.endArrow = CommonUtils.generateConnectorArrow(customConnector.endArrow)
     connectorInfo.curveStartModifier = CommonUtils.generatePointString(customConnector.curveStartModifier)
@@ -1219,7 +1137,7 @@ export class OperationHelper {
     let count = editorItemInfo.styles.length
     for (let i = 0; i < count; i++) {
       let oldStyleInfo = editorItemInfo.styles[i]
-      let styleInfo = new StyleInfo(
+      editorItemInfo.styles[i] = new StyleInfo(
         oldStyleInfo.length,
         oldStyleInfo.typeFaceName,
         oldStyleInfo.size,
@@ -1228,7 +1146,6 @@ export class OperationHelper {
         oldStyleInfo.italic,
         oldStyleInfo.underline,
       )
-      editorItemInfo.styles[i] = styleInfo
     }
     editorItemInfo.items.forEach((child) => {
       OperationHelper.fixStyleInfo(child)

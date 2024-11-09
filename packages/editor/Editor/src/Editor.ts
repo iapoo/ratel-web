@@ -4,19 +4,7 @@
 import { Painter } from '@ratel-web/painter'
 import { DocumentThemeTypes, EditorUtils } from '../../Theme'
 
-import {
-  Color,
-  Colors,
-  KeyEvent,
-  Matrix,
-  MouseCode,
-  Point2,
-  PointerEvent,
-  Rectangle,
-  Rectangle2D,
-  Rotation,
-  Scale,
-} from '@ratel-web/engine'
+import { Color, Colors, KeyEvent, Matrix, MouseCode, Point2, PointerEvent, Rectangle, Rectangle2D, Rotation, Scale } from '@ratel-web/engine'
 import { Action, MyShapeAction } from '../../Actions'
 import { Holder } from '../../Design'
 import {
@@ -171,21 +159,9 @@ export class Editor extends Painter {
 
   public constructor(canvasId: string | HTMLCanvasElement) {
     super(canvasId)
-    this._backgroundLayer = new BackgroundLayer(
-      this,
-      this.horizontalSpace,
-      this.verticalSpace,
-      this.workWidth,
-      this.workHeight,
-      this.gridSize,
-    )
+    this._backgroundLayer = new BackgroundLayer(this, this.horizontalSpace, this.verticalSpace, this.workWidth, this.workHeight, this.gridSize)
     this._contentLayer = new ContentLayer(this.horizontalSpace, this.verticalSpace, this.workWidth, this.workHeight)
-    this._controllerLayer = new ControllerLayer(
-      this.horizontalSpace,
-      this.verticalSpace,
-      this.workWidth,
-      this.workHeight,
-    )
+    this._controllerLayer = new ControllerLayer(this.horizontalSpace, this.verticalSpace, this.workWidth, this.workHeight)
     this._hoverLayer = new HoverLayer(0, 0, this.width, this.height)
     this._selectionLayer = new SelectionLayer(0, 0, this.width, this.height)
     this._maskLayer = new MaskLayer(0, 0, this.width, this.height)
@@ -830,12 +806,7 @@ export class Editor extends Painter {
 
   public invalidate() {
     super.invalidate()
-    const newBoundary = new Rectangle(
-      this.horizontalSpace,
-      this.verticalSpace,
-      this.width - this.horizontalSpace,
-      this.height - this.verticalSpace,
-    )
+    const newBoundary = new Rectangle(this.horizontalSpace, this.verticalSpace, this.width - this.horizontalSpace, this.height - this.verticalSpace)
     const newFullBoundary = new Rectangle(0, 0, this.width, this.height)
     this._backgroundLayer.boundary = newBoundary
     this._contentLayer.boundary = newBoundary
@@ -1038,9 +1009,7 @@ export class Editor extends Painter {
     } else {
       const clickedEditorItem = this.findEditorItem(e.x, e.y, false)
       const theSelectionLayer = this.selectionLayer as SelectionLayer
-      const isEdge = clickedEditorItem
-        ? this.hasEditorItemJoint(clickedEditorItem, e.x, e.y) && !this.checkParentType(clickedEditorItem, FrameEntity)
-        : false
+      const isEdge = clickedEditorItem ? this.hasEditorItemJoint(clickedEditorItem, e.x, e.y) && !this.checkParentType(clickedEditorItem, FrameEntity) : false
       const inClickEditorItem = clickedEditorItem ? this.isInEditorItem(clickedEditorItem, e.x, e.y) : false
       if (clickedEditorItem && isEdge && !inClickEditorItem) {
         //Create connector
@@ -1053,11 +1022,7 @@ export class Editor extends Painter {
         this._inCreatingConnector = true
         const worldTargetPoint = clickedEditorItem.worldTransform.makePoint(targetPoint)
         //const startPoint = new Point2(worldTargetPoint.x - this.horizontalSpace, worldTargetPoint.y - this.verticalSpace)
-        const connector = new Connector(
-          worldTargetPoint,
-          new Point2(worldTargetPoint.x + 10, worldTargetPoint.y + 10),
-          startDirection,
-        )
+        const connector = new Connector(worldTargetPoint, new Point2(worldTargetPoint.x + 10, worldTargetPoint.y + 10), startDirection)
         // const sourceJoint = new Point2(targetPoint.x - targetEntity.left, targetPoint.y - targetEntity.top)
         connector.source = targetEntity
         connector.sourceJoint = targetPoint
@@ -1108,16 +1073,8 @@ export class Editor extends Painter {
         } else if (clickedEditorItem instanceof TableEntity) {
           if (!clickedEditorItem.locked) {
             const targetPoint = this.findEditorItemPoint(clickedEditorItem, e.x, e.y)
-            const [targetRow, targetRowIndex] = this.isTableRowtResizable(
-              clickedEditorItem,
-              targetPoint.x,
-              targetPoint.y,
-            )
-            const [targetColumn, targetColumnIndex] = this.isTableColumnResizable(
-              clickedEditorItem,
-              targetPoint.x,
-              targetPoint.y,
-            )
+            const [targetRow, targetRowIndex] = this.isTableRowtResizable(clickedEditorItem, targetPoint.x, targetPoint.y)
+            const [targetColumn, targetColumnIndex] = this.isTableColumnResizable(clickedEditorItem, targetPoint.x, targetPoint.y)
             this._target = clickedEditorItem
             if (targetRow) {
               // console.log('========1')
@@ -1331,9 +1288,7 @@ export class Editor extends Painter {
                     let origItemInfo = OperationHelper.saveEditorItem(this._target)
                     this.createTextBoxInConnector(this._target, targetPoint.x, targetPoint.y)
                     let editorItemInfo = OperationHelper.saveEditorItem(this._target)
-                    let operation = new Operation(this, OperationType.UPDATE_ITEMS, [editorItemInfo], true, [
-                      origItemInfo,
-                    ])
+                    let operation = new Operation(this, OperationType.UPDATE_ITEMS, [editorItemInfo], true, [origItemInfo])
                     this._operationService.addOperation(operation)
                     this.triggerOperationChange()
                   } else {
@@ -1486,10 +1441,8 @@ export class Editor extends Painter {
       //const pos = parent.getBoundingClientRect()
       //this._textArea.style.left = (Editor.SHADOW_SIZE + (editorItem.left + x) * this._zoom + this.horizontalSpace  + pos.left - scrollContainer.scrollLeft) + 'px'
       //this._textArea.style.top = (Editor.SHADOW_SIZE + (editorItem.top + y) * this._zoom + this.verticalSpace  + pos.top - scrollContainer.scrollTop) + 'px'
-      this._textArea.style.left =
-        Editor.SHADOW_SIZE + point.x * this._zoom + this.horizontalSpace - scrollContainer.scrollLeft + 'px'
-      this._textArea.style.top =
-        Editor.SHADOW_SIZE + point.y * this._zoom + this.verticalSpace - scrollContainer.scrollTop + 'px'
+      this._textArea.style.left = Editor.SHADOW_SIZE + point.x * this._zoom + this.horizontalSpace - scrollContainer.scrollLeft + 'px'
+      this._textArea.style.top = Editor.SHADOW_SIZE + point.y * this._zoom + this.verticalSpace - scrollContainer.scrollTop + 'px'
       //console.log(`'Check left = ${editorItem.left}  x=${x} text.left = ${this._textArea.style.left}  scroll=${scrollContainer.scrollLeft}`)
     }
   }
@@ -1642,12 +1595,7 @@ export class Editor extends Painter {
     return result
   }
 
-  private findEditorItemDetail(
-    editorItem: EditorItem,
-    x: number,
-    y: number,
-    excludeConnector: boolean = false,
-  ): EditorItem | undefined {
+  private findEditorItemDetail(editorItem: EditorItem, x: number, y: number, excludeConnector: boolean = false): EditorItem | undefined {
     let result = undefined
     const count = editorItem.items.length
     const shape = editorItem.shape
@@ -1871,9 +1819,7 @@ export class Editor extends Painter {
     targetY = targetY * this.zoom + this.verticalSpace
 
     if (editorItem.shape.worldInverseTransform) {
-      const point = editorItem.shape.worldInverseTransform.makePoint(
-        new Point2(targetX / this._zoom, targetY / this._zoom),
-      )
+      const point = editorItem.shape.worldInverseTransform.makePoint(new Point2(targetX / this._zoom, targetY / this._zoom))
       return point
     }
     return new Point2(x / this._zoom, y / this._zoom)
@@ -2089,9 +2035,7 @@ export class Editor extends Painter {
     const theControllerLayer = this.controllerLayer as ControllerLayer
     const connector = theControllerLayer.getEditorItem(0) as Connector
     const editorItem = this.findEditorItem(e.x, e.y, false)
-    const isEdge = editorItem
-      ? this.hasEditorItemJoint(editorItem, e.x, e.y) && !this.checkParentType(editorItem, FrameEntity)
-      : false
+    const isEdge = editorItem ? this.hasEditorItemJoint(editorItem, e.x, e.y) && !this.checkParentType(editorItem, FrameEntity) : false
     //console.log(`create connector ...1 ${editorItem !== connector.source} ${isEdge}`)
     if (editorItem && isEdge) {
       // && editorItem !== connector.source) {
@@ -2125,23 +2069,15 @@ export class Editor extends Painter {
       maxHeight += tableEntity.items[i * tableEntity.columnCount].height
     }
     maxHeight -= Item.MIN_HEIGHT
-    const newHeight =
-      tableEntity.items[rowIndex * columnCount].height + e.y / this._zoom - this._startPointY / this._zoom
-    const nextNewTop =
-      tableEntity.items[(rowIndex + 1) * columnCount].top + e.y / this._zoom - this._startPointY / this._zoom
-    const nextNewHeight =
-      tableEntity.items[(rowIndex + 1) * columnCount].height - e.y / this._zoom + this._startPointY / this._zoom
+    const newHeight = tableEntity.items[rowIndex * columnCount].height + e.y / this._zoom - this._startPointY / this._zoom
+    const nextNewTop = tableEntity.items[(rowIndex + 1) * columnCount].top + e.y / this._zoom - this._startPointY / this._zoom
+    const nextNewHeight = tableEntity.items[(rowIndex + 1) * columnCount].height - e.y / this._zoom + this._startPointY / this._zoom
     if (newHeight >= minHeight && newHeight <= maxHeight) {
       for (let i = 0; i < columnCount; i++) {
         const shapeEntity = tableEntity.items[rowIndex * columnCount + i] as ShapeEntity
         shapeEntity.boundary = Rectangle.makeLTWH(shapeEntity.left, shapeEntity.top, shapeEntity.width, newHeight)
         const nextShapeEntity = tableEntity.items[(rowIndex + 1) * columnCount + i] as ShapeEntity
-        nextShapeEntity.boundary = Rectangle.makeLTWH(
-          nextShapeEntity.left,
-          nextNewTop,
-          nextShapeEntity.width,
-          nextNewHeight,
-        )
+        nextShapeEntity.boundary = Rectangle.makeLTWH(nextShapeEntity.left, nextNewTop, nextShapeEntity.width, nextNewHeight)
       }
     }
     // console.log(`newHeight = ${newHeight} nextNewHeight = ${nextNewHeight} maxHeight = ${maxHeight} `)
@@ -2167,12 +2103,7 @@ export class Editor extends Painter {
         const shapeEntity = tableEntity.items[columnIndex + rowCount * i] as ShapeEntity
         shapeEntity.boundary = Rectangle.makeLTWH(shapeEntity.left, shapeEntity.top, newWidth, shapeEntity.height)
         const nextShapeEntity = tableEntity.items[columnIndex + 1 + rowCount * i] as ShapeEntity
-        nextShapeEntity.boundary = Rectangle.makeLTWH(
-          nextNewLeft,
-          nextShapeEntity.top,
-          nextNewWidth,
-          nextShapeEntity.height,
-        )
+        nextShapeEntity.boundary = Rectangle.makeLTWH(nextNewLeft, nextShapeEntity.top, nextNewWidth, nextShapeEntity.height)
       }
     }
     // console.log(`newWidth = ${newWidth} nextNewWidth = ${nextNewWidth} maxWidth = ${maxWidth} `)
@@ -2667,12 +2598,7 @@ export class Editor extends Painter {
   private checkIfSelectionInContainer(containerEntity: ContainerEntity): boolean {
     const [left, top, right, bottom] = this.getSelectionBoundary()
     //console.log(`check selection in container 3... ${containerEntity.left} ${containerEntity.top} ${containerEntity.right} ${containerEntity.bottom} ${left} ${top} ${right} ${bottom}`)
-    if (
-      containerEntity.left <= left &&
-      containerEntity.top <= top &&
-      containerEntity.right >= right &&
-      containerEntity.bottom >= bottom
-    ) {
+    if (containerEntity.left <= left && containerEntity.top <= top && containerEntity.right >= right && containerEntity.bottom >= bottom) {
       //console.log(`check selection in container 4... ${containerEntity}`)
       return true
     }
@@ -2685,12 +2611,7 @@ export class Editor extends Painter {
     const right = editorItem.right
     const bottom = editorItem.bottom
     //console.log(`check selection in container 3... ${containerEntity.left} ${containerEntity.top} ${containerEntity.right} ${containerEntity.bottom} ${left} ${top} ${right} ${bottom}`)
-    if (
-      containerEntity.left <= left &&
-      containerEntity.top <= top &&
-      containerEntity.right >= right &&
-      containerEntity.bottom >= bottom
-    ) {
+    if (containerEntity.left <= left && containerEntity.top <= top && containerEntity.right >= right && containerEntity.bottom >= bottom) {
       //console.log(`check selection in container 4... ${containerEntity}`)
       return true
     }
@@ -2702,9 +2623,7 @@ export class Editor extends Painter {
     const theSelectionLayer: SelectionLayer = this.selectionLayer as SelectionLayer
     const editorItem = this.findEditorItem(e.x, e.y, false)
     //console.log(`Finding ...... ${editorItem}`)
-    const isEdge = editorItem
-      ? this.hasEditorItemJoint(editorItem, e.x, e.y) && !this.checkParentType(editorItem, FrameEntity)
-      : false
+    const isEdge = editorItem ? this.hasEditorItemJoint(editorItem, e.x, e.y) && !this.checkParentType(editorItem, FrameEntity) : false
     //console.log(` Find editor item edge = ${isEdge}`)
     if (editorItem && isEdge) {
       //console.log(` Check here1`)
@@ -2846,11 +2765,7 @@ export class Editor extends Painter {
     if (this._action) {
       // console.log(`handlePointerClick... x = ${e.x}  start=${this.action_.item.start.x} end=${this.action_.item.end.x} width=${this.action_.item.width}  height=${this.action_.item.height}`)
       const clickedEditorItem = this.findEditorItem(e.x, e.y, false)
-      if (
-        clickedEditorItem &&
-        clickedEditorItem instanceof ContainerEntity &&
-        !(clickedEditorItem instanceof TableEntity)
-      ) {
+      if (clickedEditorItem && clickedEditorItem instanceof ContainerEntity && !(clickedEditorItem instanceof TableEntity)) {
         let point = this.findEditorItemPoint(clickedEditorItem, e.x, e.y)
         let [left, top, right, bottom] = Editor.getItemsBoundary(this._action.items)
         let width = right - left
@@ -3026,12 +2941,7 @@ export class Editor extends Painter {
       const margin = EditorUtils.tableActiveCellMargin
       const worldTransform = this._targetItem.shape.worldTransform
       this._tableActiveCellShape.transform = worldTransform
-      this._tableActiveCellShape.boundary = Rectangle.makeLTWH(
-        margin,
-        margin,
-        this._targetItem.width - margin * 2,
-        this._targetItem.height - margin * 2,
-      )
+      this._tableActiveCellShape.boundary = Rectangle.makeLTWH(margin, margin, this._targetItem.width - margin * 2, this._targetItem.height - margin * 2)
       this.triggerTableTextEditStart()
     } else {
       this._tableActiveCellShape.transform = new Matrix()
@@ -3048,10 +2958,7 @@ export class Editor extends Painter {
       const firstSelection = this.selectionLayer.getEditorItem(0) as Item
       if (firstSelection.parent) {
         const parent = firstSelection.parent
-        if (
-          (left > parent.left && top > parent.top && right < parent.right && bottom < parent.bottom) ||
-          !(parent instanceof ContainerEntity)
-        ) {
+        if ((left > parent.left && top > parent.top && right < parent.right && bottom < parent.bottom) || !(parent instanceof ContainerEntity)) {
           requireRemove = false
         } else {
           requireRemove = true

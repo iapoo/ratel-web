@@ -1,19 +1,5 @@
 /* eslint-disable max-params */
-import {
-  Color,
-  Colors,
-  EngineUtils,
-  Font,
-  FontSlant,
-  FontStyle,
-  FontUtils,
-  FontWeight,
-  FontWidth,
-  Graphics,
-  Paint,
-  Path,
-  TextStyle,
-} from '@ratel-web/engine'
+import { Color, Colors, EngineUtils, Font, FontSlant, FontStyle, FontUtils, FontWeight, FontWidth, Graphics, Paint, Path, TextStyle } from '@ratel-web/engine'
 import { CommonUtils } from '../../Utils'
 
 export class TextCursor {

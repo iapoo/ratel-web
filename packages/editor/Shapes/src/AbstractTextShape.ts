@@ -42,14 +42,7 @@ export abstract class AbstractTextShape extends Shape {
   private _text: string
   private _fontPaint: Paint
   private _lines = new Array<ShapedLine>(0)
-  private _cursor: TextCursor = new TextCursor(
-    AbstractTextShape.CURSOR_LINE_COLOR,
-    AbstractTextShape.CURSOR_PATH_COLOR,
-    0,
-    0,
-    0,
-    800,
-  )
+  private _cursor: TextCursor = new TextCursor(AbstractTextShape.CURSOR_LINE_COLOR, AbstractTextShape.CURSOR_PATH_COLOR, 0, 0, 0, 800)
   private _startIndex = 0
   private _endIndex = 0
   private _selectStartIndex = 0
@@ -565,10 +558,7 @@ export abstract class AbstractTextShape extends Shape {
       } else {
         for (const run of firstLine.runs) {
           for (let index = 0; index < run.indices.length - 1; index++) {
-            if (
-              newX - this.getTextPaddingX() >= run.positions[index * 2] &&
-              newX - this.getTextPaddingX() <= run.positions[index * 2 + 2]
-            ) {
+            if (newX - this.getTextPaddingX() >= run.positions[index * 2] && newX - this.getTextPaddingX() <= run.positions[index * 2 + 2]) {
               console.log(`Enter index = ${run.indices[index]}`)
               this.select(run.indices[index], run.indices[index])
             }
@@ -584,10 +574,7 @@ export abstract class AbstractTextShape extends Shape {
       } else {
         for (const run of lastLine.runs) {
           for (let index = 0; index < run.indices.length - 1; index++) {
-            if (
-              newX - this.getTextPaddingX() >= run.positions[index * 2] &&
-              newX - this.getTextPaddingX() <= run.positions[index * 2 + 2]
-            ) {
+            if (newX - this.getTextPaddingX() >= run.positions[index * 2] && newX - this.getTextPaddingX() <= run.positions[index * 2 + 2]) {
               console.log(`Enter index = ${run.indices[index]}`)
               this.select(run.indices[index], run.indices[index])
             }
@@ -607,10 +594,7 @@ export abstract class AbstractTextShape extends Shape {
           } else {
             for (const run of line.runs) {
               for (let index = 0; index < run.indices.length - 1; index++) {
-                if (
-                  newX - this.getTextPaddingX() >= run.positions[index * 2] &&
-                  newX - this.getTextPaddingX() <= run.positions[index * 2 + 2]
-                ) {
+                if (newX - this.getTextPaddingX() >= run.positions[index * 2] && newX - this.getTextPaddingX() <= run.positions[index * 2 + 2]) {
                   console.log(`Enter index = ${run.indices[index]}`)
                   this.select(run.indices[index], run.indices[index])
                   selected = true
@@ -647,10 +631,7 @@ export abstract class AbstractTextShape extends Shape {
       } else {
         for (const run of firstLine.runs) {
           for (let index = 0; index < run.indices.length - 1; index++) {
-            if (
-              newX - this.getTextPaddingX() >= run.positions[index * 2] &&
-              newX - this.getTextPaddingX() <= run.positions[index * 2 + 2]
-            ) {
+            if (newX - this.getTextPaddingX() >= run.positions[index * 2] && newX - this.getTextPaddingX() <= run.positions[index * 2 + 2]) {
               console.log(`Enter index = ${run.indices[index]}`)
               this.selectTo(run.indices[index])
             }
@@ -666,10 +647,7 @@ export abstract class AbstractTextShape extends Shape {
       } else {
         for (const run of lastLine.runs) {
           for (let index = 0; index < run.indices.length - 1; index++) {
-            if (
-              newX - this.getTextPaddingX() >= run.positions[index * 2] &&
-              newX - this.getTextPaddingX() <= run.positions[index * 2 + 2]
-            ) {
+            if (newX - this.getTextPaddingX() >= run.positions[index * 2] && newX - this.getTextPaddingX() <= run.positions[index * 2 + 2]) {
               console.log(`Enter index = ${run.indices[index]}`)
               this.selectTo(run.indices[index])
             }
@@ -689,10 +667,7 @@ export abstract class AbstractTextShape extends Shape {
           } else {
             for (const run of line.runs) {
               for (let index = 0; index < run.indices.length - 1; index++) {
-                if (
-                  newX - this.getTextPaddingX() >= run.positions[index * 2] &&
-                  newX - this.getTextPaddingX() <= run.positions[index * 2 + 2]
-                ) {
+                if (newX - this.getTextPaddingX() >= run.positions[index * 2] && newX - this.getTextPaddingX() <= run.positions[index * 2 + 2]) {
                   console.log(`Enter index = ${run.indices[index]}`)
                   this.selectTo(run.indices[index])
                   selected = true
@@ -1348,13 +1323,7 @@ export abstract class AbstractTextShape extends Shape {
     }
   }
 
-  private prepareShapedLine(
-    start: number,
-    fromLine: ShapedLine | null,
-    newLine: boolean,
-    isReturn: boolean,
-    isEnter: boolean,
-  ): ShapedLine {
+  private prepareShapedLine(start: number, fromLine: ShapedLine | null, newLine: boolean, isReturn: boolean, isEnter: boolean): ShapedLine {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [startIndex, _] = this.findStyleIndexAndPrevLength(start, false)
     const style = this._styles[startIndex]
@@ -1364,9 +1333,7 @@ export abstract class AbstractTextShape extends Shape {
         ? this.getTextLeft()
         : isEnter
           ? fromLine.runs[0].positions[0]
-          : fromLine.runs[fromLine.runs.length - 1].positions[
-              fromLine.runs[fromLine.runs.length - 1].positions.length - 2
-            ]
+          : fromLine.runs[fromLine.runs.length - 1].positions[fromLine.runs[fromLine.runs.length - 1].positions.length - 2]
       : this.getTextLeft()
     const width = isReturn ? 8 : 0
     const bottom = style.font.fontSize + top

@@ -1,5 +1,5 @@
-import opentype from 'opentype.js'
 import { Font, Matrix, Paint, Path, Point2, Rectangle, StrokeDashStyle, Woff2Utils } from '@ratel-web/engine'
+import opentype from 'opentype.js'
 import { Editor } from '../../Editor'
 import { Categories, Connector, ConnectorInfo, EditorItem, EditorItemInfo, Entity, Item } from '../../Items'
 import { Operation, OperationHelper, OperationType } from '../../Operations'
@@ -66,12 +66,7 @@ export class EditorHelper {
     return selections
   }
 
-  public static pasteSelections(
-    selections: EditorItemInfo[],
-    editor: Editor,
-    pasteFromSystem: boolean,
-    pasteLocation: Point2,
-  ) {
+  public static pasteSelections(selections: EditorItemInfo[], editor: Editor, pasteFromSystem: boolean, pasteLocation: Point2) {
     if (selections.length > 0) {
       let offsetX = EditorHelper.DEFAULT_OFFSET_X
       let offsetY = EditorHelper.DEFAULT_OFFSET_Y
@@ -89,12 +84,7 @@ export class EditorHelper {
           editorItem.start = new Point2(start.x + offsetX, start.y + offsetY)
           editorItem.end = new Point2(end.x + offsetX, end.y + offsetY)
         } else if (editorItem instanceof Item) {
-          editorItem.boundary = Rectangle.makeLTWH(
-            editorItem.left + offsetX,
-            editorItem.top + offsetY,
-            editorItem.width,
-            editorItem.height,
-          )
+          editorItem.boundary = Rectangle.makeLTWH(editorItem.left + offsetX, editorItem.top + offsetY, editorItem.width, editorItem.height)
         }
         editorItems.push(editorItem)
       })
@@ -369,33 +359,17 @@ export class EditorHelper {
       const disableThird = item.shape.thirdPath.isEmpty()
       const disableFourth = item.shape.fourthPath.isEmpty()
       const secondPathSvg = disableSecond ? '' : EditorHelper.generateSVGPath(item.shape.secondPath)
-      const secondStrokeSVG = disableSecond
-        ? ''
-        : EditorHelper.generateSVGPaint(item.shape.secondStroke, true, item.shape.secondStroked)
-      const secondFillSVG = disableSecond
-        ? ''
-        : EditorHelper.generateSVGPaint(item.shape.secondFill, false, item.shape.secondFilled)
+      const secondStrokeSVG = disableSecond ? '' : EditorHelper.generateSVGPaint(item.shape.secondStroke, true, item.shape.secondStroked)
+      const secondFillSVG = disableSecond ? '' : EditorHelper.generateSVGPaint(item.shape.secondFill, false, item.shape.secondFilled)
       const thirdPathSvg = disableThird ? '' : EditorHelper.generateSVGPath(item.shape.thirdPath)
-      const thirdtrokeSVG = disableThird
-        ? ''
-        : EditorHelper.generateSVGPaint(item.shape.thirdStroke, true, item.shape.thirdStroked)
-      const thirdFillSVG = disableThird
-        ? ''
-        : EditorHelper.generateSVGPaint(item.shape.thirdFill, false, item.shape.thirdFilled)
+      const thirdtrokeSVG = disableThird ? '' : EditorHelper.generateSVGPaint(item.shape.thirdStroke, true, item.shape.thirdStroked)
+      const thirdFillSVG = disableThird ? '' : EditorHelper.generateSVGPaint(item.shape.thirdFill, false, item.shape.thirdFilled)
       const fourthPathSvg = disableFourth ? '' : EditorHelper.generateSVGPath(item.shape.fourthPath)
-      const fourthStrokeSVG = disableFourth
-        ? ''
-        : EditorHelper.generateSVGPaint(item.shape.fourthStroke, true, item.shape.fourthStroked)
-      const fourthFillSVG = disableFourth
-        ? ''
-        : EditorHelper.generateSVGPaint(item.shape.fourthFill, false, item.shape.fourthFilled)
-      const secondSVG = disableSecond
-        ? ''
-        : `\n${indent}    <path ${secondFillSVG} ${secondStrokeSVG} ${secondPathSvg}/>`
+      const fourthStrokeSVG = disableFourth ? '' : EditorHelper.generateSVGPaint(item.shape.fourthStroke, true, item.shape.fourthStroked)
+      const fourthFillSVG = disableFourth ? '' : EditorHelper.generateSVGPaint(item.shape.fourthFill, false, item.shape.fourthFilled)
+      const secondSVG = disableSecond ? '' : `\n${indent}    <path ${secondFillSVG} ${secondStrokeSVG} ${secondPathSvg}/>`
       const thirdSVG = disableThird ? '' : `\n${indent}    <path ${thirdFillSVG} ${thirdtrokeSVG} ${thirdPathSvg}/>`
-      const fourthSVG = disableFourth
-        ? ''
-        : `\n${indent}    <path ${fourthFillSVG} ${fourthStrokeSVG} ${fourthPathSvg}/>`
+      const fourthSVG = disableFourth ? '' : `\n${indent}    <path ${fourthFillSVG} ${fourthStrokeSVG} ${fourthPathSvg}/>`
       const textSVG = await EditorHelper.generateSVGText(item, indent + '    ')
 
       return `\n${indent}<g ${transformSVG}>\n${indent}    <path ${fillSVG} ${strokeSVG} ${pathSvg}/> ${secondSVG} ${thirdSVG} ${fourthSVG} ${textSVG}`
@@ -545,15 +519,7 @@ export class EditorHelper {
     return `transform="matrix(${matrix.source[0].toFixed(2)}, ${matrix.source[3].toFixed(2)}, ${matrix.source[1].toFixed(2)}, ${matrix.source[4].toFixed(2)}, ${matrix.source[2].toFixed(2)}, ${matrix.source[5].toFixed(2)})"`
   }
 
-  private static async generateSVGTextPath(
-    text: string,
-    startX: number,
-    startY: number,
-    font: Font,
-    fontPaint: Paint,
-    isItalic: boolean,
-    isBold: boolean,
-  ) {
+  private static async generateSVGTextPath(text: string, startX: number, startY: number, font: Font, fontPaint: Paint, isItalic: boolean, isBold: boolean) {
     const ttfdata = await Woff2Utils.decompress(font.fontName)
     //const arrayBuffer = ttfdata.buffer.slice(ttfdata.byteOffset, ttfdata.byteLength + ttfdata.byteOffset)
     const ttfFont = opentype.parse(ttfdata)
@@ -585,17 +551,9 @@ export class EditorHelper {
     const arrowStrokeSVG = EditorHelper.generateSVGPaint(connectorShape.arrowStroke, false, true)
     const arrowFillSVG = EditorHelper.generateSVGPaint(connectorShape.arrowFill, false, true)
     const arrowOutlineSVG = EditorHelper.generateSVGPaint(connectorShape.arrowOutline, true, true)
-    const connectorDoubleLineStrokeSVG = EditorHelper.generateSVGPaint(
-      connectorShape.connectorDoubleLineStroke,
-      true,
-      true,
-    )
+    const connectorDoubleLineStrokeSVG = EditorHelper.generateSVGPaint(connectorShape.connectorDoubleLineStroke, true, true)
     const connectorDoubleLineFillSVG = EditorHelper.generateSVGPaint(connectorShape.connectorDoubleLineFill, true, true)
-    const connectorDoubleLinePaintSVG = EditorHelper.generateSVGPaint(
-      connectorShape.connectorDoubleLinePaint,
-      true,
-      true,
-    )
+    const connectorDoubleLinePaintSVG = EditorHelper.generateSVGPaint(connectorShape.connectorDoubleLinePaint, true, true)
     let result = ''
     switch (connector.connectorType) {
       case ConnectorType.Curve:
@@ -662,10 +620,7 @@ export class EditorHelper {
   }
 
   private static generateSVGTransform(item: Item) {
-    const translate =
-      item.shape.position.x === 0 && item.shape.position.y === 0
-        ? ''
-        : `translate(${item.shape.position.x}, ${item.shape.position.y})`
+    const translate = item.shape.position.x === 0 && item.shape.position.y === 0 ? '' : `translate(${item.shape.position.x}, ${item.shape.position.y})`
     const rotate =
       item.shape.rotation.px === 0 && item.shape.rotation.py === 0 && item.shape.rotation.radius === 0
         ? ''

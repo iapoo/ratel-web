@@ -99,77 +99,45 @@ export class PointAnchor extends Anchor {
           case LineType.LEFT_TOP:
             newLeft = this.target.left + resizeX
             newTop = this.target.top + resizeY
-            newWidth =
-              this.target.width - resizeX >= this.target.minWidth ? this.target.width - resizeX : this.target.minWidth
-            newHeight =
-              this.target.height - resizeY >= this.target.minHeight
-                ? this.target.height - resizeY
-                : this.target.minHeight
+            newWidth = this.target.width - resizeX >= this.target.minWidth ? this.target.width - resizeX : this.target.minWidth
+            newHeight = this.target.height - resizeY >= this.target.minHeight ? this.target.height - resizeY : this.target.minHeight
             break
           case LineType.LEFT_BOTTOM:
             newLeft = this.target.left + resizeX
-            newWidth =
-              this.target.width - resizeX >= this.target.minWidth ? this.target.width - resizeX : this.target.minWidth
-            newHeight =
-              this.target.height + resizeY >= this.target.minHeight
-                ? this.target.height + resizeY
-                : this.target.minHeight
+            newWidth = this.target.width - resizeX >= this.target.minWidth ? this.target.width - resizeX : this.target.minWidth
+            newHeight = this.target.height + resizeY >= this.target.minHeight ? this.target.height + resizeY : this.target.minHeight
             break
           case LineType.RIGHT_TOP:
             newTop = this.target.top + resizeY
-            newWidth =
-              this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
-            newHeight =
-              this.target.height - resizeY >= this.target.minHeight
-                ? this.target.height - resizeY
-                : this.target.minHeight
+            newWidth = this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
+            newHeight = this.target.height - resizeY >= this.target.minHeight ? this.target.height - resizeY : this.target.minHeight
             break
           case LineType.RIGHT_BOTTOM:
-            newWidth =
-              this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
-            newHeight =
-              this.target.height + resizeY >= this.target.minHeight
-                ? this.target.height + resizeY
-                : this.target.minHeight
+            newWidth = this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
+            newHeight = this.target.height + resizeY >= this.target.minHeight ? this.target.height + resizeY : this.target.minHeight
             break
         }
       } else {
         switch (lineEntity.lineType) {
           case LineType.LEFT_TOP:
-            newWidth =
-              this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
-            newHeight =
-              this.target.height + resizeY >= this.target.minHeight
-                ? this.target.height + resizeY
-                : this.target.minHeight
+            newWidth = this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
+            newHeight = this.target.height + resizeY >= this.target.minHeight ? this.target.height + resizeY : this.target.minHeight
             break
           case LineType.LEFT_BOTTOM:
             newTop = this.target.top + resizeY
-            newWidth =
-              this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
-            newHeight =
-              this.target.height - resizeY >= this.target.minHeight
-                ? this.target.height - resizeY
-                : this.target.minHeight
+            newWidth = this.target.width + resizeX >= this.target.minWidth ? this.target.width + resizeX : this.target.minWidth
+            newHeight = this.target.height - resizeY >= this.target.minHeight ? this.target.height - resizeY : this.target.minHeight
             break
           case LineType.RIGHT_TOP:
             newLeft = this.target.left + resizeX
-            newWidth =
-              this.target.width - resizeX >= this.target.minWidth ? this.target.width - resizeX : this.target.minWidth
-            newHeight =
-              this.target.height + resizeY >= this.target.minHeight
-                ? this.target.height + resizeY
-                : this.target.minHeight
+            newWidth = this.target.width - resizeX >= this.target.minWidth ? this.target.width - resizeX : this.target.minWidth
+            newHeight = this.target.height + resizeY >= this.target.minHeight ? this.target.height + resizeY : this.target.minHeight
             break
           case LineType.RIGHT_BOTTOM:
             newLeft = this.target.left + resizeX
             newTop = this.target.top + resizeY
-            newWidth =
-              this.target.width - resizeX >= this.target.minWidth ? this.target.width - resizeX : this.target.minWidth
-            newHeight =
-              this.target.height - resizeY >= this.target.minHeight
-                ? this.target.height - resizeY
-                : this.target.minHeight
+            newWidth = this.target.width - resizeX >= this.target.minWidth ? this.target.width - resizeX : this.target.minWidth
+            newHeight = this.target.height - resizeY >= this.target.minHeight ? this.target.height - resizeY : this.target.minHeight
             break
         }
       }
@@ -180,19 +148,13 @@ export class PointAnchor extends Anchor {
         // Seems following code have internal dependence
         this.target.getAllSourceConnectors().forEach((connector) => {
           if (connector.source === this.target && connector.sourceJoint && this.target) {
-            const sourceJoint = new Point2(
-              (connector.sourceJoint.x * newWidth) / this.target.width,
-              (connector.sourceJoint.y * newHeight) / this.target.height,
-            )
+            const sourceJoint = new Point2((connector.sourceJoint.x * newWidth) / this.target.width, (connector.sourceJoint.y * newHeight) / this.target.height)
             connector.sourceJoint = sourceJoint
           }
         })
         this.target.getAllTargetConnectors().forEach((connector) => {
           if (connector.target === this.target && connector.targetJoint && this.target) {
-            const targetJoint = new Point2(
-              (connector.targetJoint.x * newWidth) / this.target.width,
-              (connector.targetJoint.y * newHeight) / this.target.height,
-            )
+            const targetJoint = new Point2((connector.targetJoint.x * newWidth) / this.target.width, (connector.targetJoint.y * newHeight) / this.target.height)
             // console.log(`new target point is x = ${targetJoint.x}, y = ${targetJoint.y}, newWidth = ${newWidth}, width = ${this.target.width}, newHeight = ${newHeight}, height = ${this.target.height}`)
             connector.targetJoint = targetJoint
           }

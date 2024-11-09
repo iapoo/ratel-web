@@ -334,12 +334,7 @@ export const UMLConnectorTypeInfos: CustomConnectorTypeInfo[] = [
 ]
 
 export class UMLConnector extends CustomConnector {
-  public constructor(
-    start: Point2,
-    end: Point2,
-    connectorTypeInfoName: string,
-    connectorTypeInfos: CustomConnectorTypeInfo[] = UMLConnectorTypeInfos,
-  ) {
+  public constructor(start: Point2, end: Point2, connectorTypeInfoName: string, connectorTypeInfos: CustomConnectorTypeInfo[] = UMLConnectorTypeInfos) {
     super(start, end, connectorTypeInfoName, connectorTypeInfos)
     this.buildShape()
   }
@@ -367,14 +362,7 @@ export class UMLConnector extends CustomConnector {
       case UMLConnectors.TYPE_SELF_MESSAGE: {
         this.startDirection = ConnectorDirection.Right
         this.endDirection = ConnectorDirection.Right
-        this.orthogonalPoints = [
-          new Point2(0, 0),
-          new Point2(12, 0),
-          new Point2(40, 0),
-          new Point2(40, 40),
-          new Point2(12, 40),
-          new Point2(0, 40),
-        ]
+        this.orthogonalPoints = [new Point2(0, 0), new Point2(12, 0), new Point2(40, 0), new Point2(40, 40), new Point2(12, 40), new Point2(0, 40)]
         break
       }
     }

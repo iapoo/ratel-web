@@ -7,14 +7,7 @@ import { EntityShape, ShapeTypeInfo } from './EntityShape'
 export class GroupShape extends EntityShape {
   private _buildShape: (theThis: GroupShape) => void
 
-  public constructor(
-    left: number,
-    top: number,
-    width: number,
-    height: number,
-    buildShape: (_this: GroupShape) => void,
-    shapeTypeInfo: ShapeTypeInfo,
-  ) {
+  public constructor(left: number, top: number, width: number, height: number, buildShape: (_this: GroupShape) => void, shapeTypeInfo: ShapeTypeInfo) {
     super('', left, top, width, height, shapeTypeInfo)
     this._buildShape = buildShape
   }

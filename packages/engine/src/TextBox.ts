@@ -1,19 +1,7 @@
 /* eslint-disable complexity */
 /* eslint-disable max-params */
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
-import {
-  Colors,
-  Font,
-  GlyphRun,
-  Graphics,
-  Paint,
-  Paragraph,
-  ParagraphBuilder,
-  ParagraphStyle,
-  Path,
-  Rectangle,
-  ShapedLine,
-} from './Graphics'
+import { Colors, Font, GlyphRun, Graphics, Paint, Paragraph, ParagraphBuilder, ParagraphStyle, Path, Rectangle, ShapedLine } from './Graphics'
 import { Shape } from './Shape'
 import { Block, CursorMaker, Style } from './TextUtils'
 

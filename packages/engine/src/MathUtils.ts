@@ -17,14 +17,7 @@ export class MathUtils {
    * @param x2
    * @param y2
    */
-  public static getNearestDistanceOfPointToLine(
-    x0: number,
-    y0: number,
-    x1: number,
-    y1: number,
-    x2: number,
-    y2: number,
-  ) {
+  public static getNearestDistanceOfPointToLine(x0: number, y0: number, x1: number, y1: number, x2: number, y2: number) {
     // 如果两点相同，则输出一个点的坐标为垂足
     if (x1 === x2 && y1 === y2) {
       return Math.sqrt((x1 - x0) * (x1 - x0) + (y1 - y0) * (y1 - y0))

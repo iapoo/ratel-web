@@ -65,12 +65,7 @@ export class PoolEntity extends ContainerEntity {
         }
       }
       this._rowCount++
-      this.boundary = Rectangle.makeLTWH(
-        this.left,
-        this.top,
-        this.width,
-        this.height + this.items[rowIndex * this.columnCount].height,
-      )
+      this.boundary = Rectangle.makeLTWH(this.left, this.top, this.width, this.height + this.items[rowIndex * this.columnCount].height)
     }
   }
 
@@ -89,12 +84,7 @@ export class PoolEntity extends ContainerEntity {
         }
       }
       this._rowCount++
-      this.boundary = Rectangle.makeLTWH(
-        this.left,
-        this.top,
-        this.width,
-        this.height + this.items[rowIndex * this.columnCount].height,
-      )
+      this.boundary = Rectangle.makeLTWH(this.left, this.top, this.width, this.height + this.items[rowIndex * this.columnCount].height)
     }
   }
 
@@ -145,12 +135,7 @@ export class PoolEntity extends ContainerEntity {
           cell.boundary = Rectangle.makeLTWH(cell.left, cell.top - beforeCell.height, cell.width, cell.height)
         }
       }
-      this.boundary = Rectangle.makeLTWH(
-        this.left,
-        this.top,
-        this.width,
-        this.height - this.items[rowIndex * this._rowCount].height,
-      )
+      this.boundary = Rectangle.makeLTWH(this.left, this.top, this.width, this.height - this.items[rowIndex * this._rowCount].height)
       for (let i = 0; i < this._columnCount; i++) {
         this.removeItemAt(rowIndex * this._columnCount)
       }
@@ -214,12 +199,7 @@ export class PoolEntity extends ContainerEntity {
     for (let rowIndex = 0; rowIndex < this._rowCount; rowIndex++) {
       for (let columnIndex = 0; columnIndex < this._columnCount; columnIndex++) {
         const cell = this.items[rowIndex * this._columnCount + columnIndex]
-        cell.boundary = Rectangle.makeLTWH(
-          cell.left * widthRatio,
-          cell.top * heightRatio,
-          cell.width * widthRatio,
-          cell.height * heightRatio,
-        )
+        cell.boundary = Rectangle.makeLTWH(cell.left * widthRatio, cell.top * heightRatio, cell.width * widthRatio, cell.height * heightRatio)
       }
     }
   }

@@ -69,14 +69,7 @@ export class ModifyAnchor extends Anchor {
       let newModifierY = modifierY + resizeY
       let targetModifier = this.target.shape.modifier
       if (shapeType.modifyInLine) {
-        let newModifierPoint = MathUtils.getNearestPointOfPointToLine(
-          newModifierX,
-          newModifierY,
-          startX,
-          startY,
-          endX,
-          endY,
-        )
+        let newModifierPoint = MathUtils.getNearestPointOfPointToLine(newModifierX, newModifierY, startX, startY, endX, endY)
         //let newModifierValue = Math.sqrt((newModifierPoint.x - startX) * (newModifierPoint.x - startX) + (newModifierPoint.y - startY) * (newModifierPoint.y - startY))
         let newModifierXValue = newModifierPoint.x - startX //< startX ? startX : (newModifierPoint.x > endX ? endX : newModifierPoint.x)
         let newModifierYValue = newModifierPoint.y - startY //< startY ? startY : (newModifierPoint.y > endY ? endY : newModifierPoint.y)

@@ -472,26 +472,21 @@ export class UMLCustomShape extends CustomEntity {
         theThis.typeInfo.controllerStart.x * theThis.width
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       controllerHeight =
-        theThis.height *
-          theThis.controller.y *
-          (theThis.typeInfo.controllerEnd.y - theThis.typeInfo.controllerStart.y) +
+        theThis.height * theThis.controller.y * (theThis.typeInfo.controllerEnd.y - theThis.typeInfo.controllerStart.y) +
         theThis.typeInfo.controllerStart.y * theThis.height
     }
     if (theThis.typeInfo.adaptInPercent) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       adapterWidth =
-        theThis.width * theThis.adapter.x * (theThis.typeInfo.adapterEnd.x - theThis.typeInfo.adapterStart.x) +
-        theThis.typeInfo.adapterStart.x * theThis.width
+        theThis.width * theThis.adapter.x * (theThis.typeInfo.adapterEnd.x - theThis.typeInfo.adapterStart.x) + theThis.typeInfo.adapterStart.x * theThis.width
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       adapterHeight =
         theThis.height * theThis.adapter.y * (theThis.typeInfo.adapterEnd.y - theThis.typeInfo.adapterStart.y) +
         theThis.typeInfo.adapterStart.y * theThis.height
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      adapterSizeX =
-        theThis.adapterSize * (theThis.typeInfo.adapterEnd.x - theThis.typeInfo.adapterStart.x) * this.width
+      adapterSizeX = theThis.adapterSize * (theThis.typeInfo.adapterEnd.x - theThis.typeInfo.adapterStart.x) * this.width
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      adapterSizeY =
-        theThis.adapterSize * (theThis.typeInfo.adapterEnd.y - theThis.typeInfo.adapterStart.y) * this.height
+      adapterSizeY = theThis.adapterSize * (theThis.typeInfo.adapterEnd.y - theThis.typeInfo.adapterStart.y) * this.height
     }
     theThis.secondStroke.setColor(theThis.stroke.getColor())
     theThis.secondFill.setColor(theThis.fill.getColor())
@@ -511,9 +506,7 @@ export class UMLCustomShape extends CustomEntity {
       case UMLCustomShapes.TYPE_FINAL_NODE: {
         theThis.secondFill.setColor(theThis.stroke.getColor())
         theThis.path.addOval(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
-        theThis.secondPath.addOval(
-          Rectangle.makeLTWH(theThis.width * 0.1, theThis.width * 0.1, theThis.width * 0.8, theThis.height * 0.8),
-        )
+        theThis.secondPath.addOval(Rectangle.makeLTWH(theThis.width * 0.1, theThis.width * 0.1, theThis.width * 0.8, theThis.height * 0.8))
         break
       }
       case UMLCustomShapes.TYPE_NODE_2:
@@ -534,10 +527,7 @@ export class UMLCustomShape extends CustomEntity {
       case UMLCustomShapes.TYPE_MODULE: {
         theThis.textLeft = modifierWidth * 2
         theThis.textWidth = this.width - modifierWidth * 2
-        const top =
-          modifierHeight <= this.height / 2
-            ? modifierHeight * 0.4
-            : this.height - (this.height - modifierHeight) * 0.4 * 4
+        const top = modifierHeight <= this.height / 2 ? modifierHeight * 0.4 : this.height - (this.height - modifierHeight) * 0.4 * 4
         const height = modifierHeight <= this.height / 2 ? modifierHeight * 0.4 : (this.height - modifierHeight) * 0.4
         theThis.path.addRectangle(Rectangle.makeLTWH(0, top, modifierWidth * 2, height))
         theThis.path.addRectangle(Rectangle.makeLTWH(0, top + height * 2, modifierWidth * 2, height))
@@ -577,30 +567,16 @@ export class UMLCustomShape extends CustomEntity {
       case UMLCustomShapes.TYPE_LOLLIPOP_NOTATION: {
         if (this.width > this.height) {
           theThis.path.addOval(
-            Rectangle.makeLTWH(
-              theThis.width * 0.5 - theThis.height * 0.25,
-              theThis.height * 0.25,
-              theThis.height * 0.5,
-              theThis.height * 0.5,
-            ),
+            Rectangle.makeLTWH(theThis.width * 0.5 - theThis.height * 0.25, theThis.height * 0.25, theThis.height * 0.5, theThis.height * 0.5),
           )
-          theThis.path.addArc(
-            Rectangle.makeLTWH(this.width * 0.5 - theThis.height * 0.5, 0, theThis.height, theThis.height),
-            270,
-            180,
-          )
+          theThis.path.addArc(Rectangle.makeLTWH(this.width * 0.5 - theThis.height * 0.5, 0, theThis.height, theThis.height), 270, 180)
           theThis.path.moveTo(0, theThis.height * 0.5)
           theThis.path.lineTo(theThis.width * 0.5 - theThis.height * 0.25, theThis.height * 0.5)
           theThis.path.moveTo(theThis.width * 0.5 + theThis.height * 0.5, theThis.height * 0.5)
           theThis.path.lineTo(theThis.width, theThis.height * 0.5)
         } else if (this.width > this.height * 0.5) {
           theThis.path.addOval(
-            Rectangle.makeLTWH(
-              theThis.width * 0.5 - theThis.height * 0.25,
-              theThis.height * 0.25,
-              theThis.height * 0.5,
-              theThis.height * 0.5,
-            ),
+            Rectangle.makeLTWH(theThis.width * 0.5 - theThis.height * 0.25, theThis.height * 0.25, theThis.height * 0.5, theThis.height * 0.5),
           )
           theThis.path.moveTo(0, theThis.height * 0.5)
           theThis.path.lineTo(theThis.width * 0.5 - theThis.height * 0.25, theThis.height * 0.5)
@@ -608,28 +584,14 @@ export class UMLCustomShape extends CustomEntity {
           //Ref to: https://blog.csdn.net/jeremyjone/article/details/102069294
           let k = (this.width * 0.5) / 0.75
           theThis.path.moveTo(this.width * 0.5, 0)
-          theThis.path.cubicTo(
-            this.width * 0.5 + k,
-            0,
-            this.width * 0.5 + k,
-            this.height,
-            this.width * 0.5,
-            this.height,
-          )
+          theThis.path.cubicTo(this.width * 0.5 + k, 0, this.width * 0.5 + k, this.height, this.width * 0.5, this.height)
         } else {
           theThis.path.addOval(Rectangle.makeLTWH(0, theThis.height * 0.25, theThis.width, theThis.height * 0.5))
           //Ref to: https://www.ibashu.cn/news/show_261576.html
           //Ref to: https://blog.csdn.net/jeremyjone/article/details/102069294
           let k = (this.width * 0.5) / 0.75
           theThis.path.moveTo(this.width * 0.5, 0)
-          theThis.path.cubicTo(
-            this.width * 0.5 + k,
-            0,
-            this.width * 0.5 + k,
-            this.height,
-            this.width * 0.5,
-            this.height,
-          )
+          theThis.path.cubicTo(this.width * 0.5 + k, 0, this.width * 0.5 + k, this.height, this.width * 0.5, this.height)
         }
         break
       }
@@ -654,6 +616,7 @@ export class UMLCustomShape extends CustomEntity {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected parseEntityShapeType(type: string): EntityShapeType {
     let shapeType = EntityShapeType.CustomShape
     return shapeType

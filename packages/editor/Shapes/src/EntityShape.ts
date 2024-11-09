@@ -311,12 +311,7 @@ export class EntityShape extends AbstractTextShape {
 
   public intersects(left: number, top: number, width: number, height: number) {
     if (this.typeInfo.enableMask) {
-      return (
-        this.contains(left, top) ||
-        this.contains(left + width, top) ||
-        this.contains(left + width, top + height) ||
-        this.contains(left, top + height)
-      )
+      return this.contains(left, top) || this.contains(left + width, top) || this.contains(left + width, top + height) || this.contains(left, top + height)
     } else {
       return super.intersects(left, top, width, height)
     }
@@ -340,28 +335,19 @@ export class EntityShape extends AbstractTextShape {
     let adapterSizeX = this.adapterSize
     let adapterSizeY = this.adapterSize
     if (this._typeInfo?.modifyInPercent) {
-      modifierWidth =
-        this.width * this.modifier.x * (this.typeInfo.modifierEnd.x - this.typeInfo.modifierStart.x) +
-        this.typeInfo.modifierStart.x * this.width
+      modifierWidth = this.width * this.modifier.x * (this.typeInfo.modifierEnd.x - this.typeInfo.modifierStart.x) + this.typeInfo.modifierStart.x * this.width
       modifierHeight =
-        this.height * this.modifier.y * (this.typeInfo.modifierEnd.y - this.typeInfo.modifierStart.y) +
-        this.typeInfo.modifierStart.y * this.height
+        this.height * this.modifier.y * (this.typeInfo.modifierEnd.y - this.typeInfo.modifierStart.y) + this.typeInfo.modifierStart.y * this.height
     }
     if (this.typeInfo.controlInPercent) {
       controllerWidth =
-        this.width * this.controller.x * (this.typeInfo.controllerEnd.x - this.typeInfo.controllerStart.x) +
-        this.typeInfo.controllerStart.x * this.width
+        this.width * this.controller.x * (this.typeInfo.controllerEnd.x - this.typeInfo.controllerStart.x) + this.typeInfo.controllerStart.x * this.width
       controllerHeight =
-        this.height * this.controller.y * (this.typeInfo.controllerEnd.y - this.typeInfo.controllerStart.y) +
-        this.typeInfo.controllerStart.y * this.height
+        this.height * this.controller.y * (this.typeInfo.controllerEnd.y - this.typeInfo.controllerStart.y) + this.typeInfo.controllerStart.y * this.height
     }
     if (this._typeInfo?.adaptInPercent) {
-      adapterWidth =
-        this.width * this.adapter.x * (this.typeInfo.adapterEnd.x - this.typeInfo.adapterStart.x) +
-        this.typeInfo.adapterStart.x * this.width
-      adapterHeight =
-        this.height * this.adapter.y * (this.typeInfo.adapterEnd.y - this.typeInfo.adapterStart.y) +
-        this.typeInfo.adapterStart.y * this.height
+      adapterWidth = this.width * this.adapter.x * (this.typeInfo.adapterEnd.x - this.typeInfo.adapterStart.x) + this.typeInfo.adapterStart.x * this.width
+      adapterHeight = this.height * this.adapter.y * (this.typeInfo.adapterEnd.y - this.typeInfo.adapterStart.y) + this.typeInfo.adapterStart.y * this.height
       adapterSizeX = this.adapterSize * (this.typeInfo.adapterEnd.x - this.typeInfo.adapterStart.x) * this.width
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       adapterSizeY = this.adapterSize * (this.typeInfo.adapterEnd.y - this.typeInfo.adapterStart.y) * this.height
@@ -430,14 +416,7 @@ export class EntityShape extends AbstractTextShape {
         this.path.addArc(Rectangle.makeLTWH(0, 0, this.width, modifierHeight * 2), 0, 360)
         this.path.moveTo(0, modifierHeight)
         this.path.lineTo(0, this.height - modifierHeight)
-        this.path.cubicTo(
-          0,
-          this.height - modifierHeight + k,
-          this.width,
-          this.height - modifierHeight + k,
-          this.width,
-          this.height - modifierHeight,
-        )
+        this.path.cubicTo(0, this.height - modifierHeight + k, this.width, this.height - modifierHeight + k, this.width, this.height - modifierHeight)
         this.path.moveTo(this.width, this.height - modifierHeight)
         this.path.lineTo(this.width, modifierHeight)
         this.path.cubicTo(this.width, modifierHeight + k, 0, modifierHeight + k, 0, modifierHeight)
@@ -446,59 +425,17 @@ export class EntityShape extends AbstractTextShape {
       case EntityShapeType.Cloud:
         //this.path.addRectangle(Rectangle.makeLTWH(0, 0, this.width, this.height))
         this.path.moveTo(0.25 * this.width, 0.25 * this.height)
-        this.path.cubicTo(
-          0.25 * this.width,
-          0.01 * this.height,
-          0.6 * this.width,
-          0.01 * this.height,
-          0.65 * this.width,
-          0.2 * this.height,
-        )
+        this.path.cubicTo(0.25 * this.width, 0.01 * this.height, 0.6 * this.width, 0.01 * this.height, 0.65 * this.width, 0.2 * this.height)
         //this.path.moveTo(0.6 * this.width, 0.22 * this.height)
-        this.path.cubicTo(
-          0.7 * this.width,
-          0.05 * this.height,
-          0.9 * this.width,
-          0.05 * this.height,
-          0.85 * this.width,
-          0.4 * this.height,
-        )
+        this.path.cubicTo(0.7 * this.width, 0.05 * this.height, 0.9 * this.width, 0.05 * this.height, 0.85 * this.width, 0.4 * this.height)
         //this.path.moveTo(0.85 * this.width, 0.5 * this.height)
-        this.path.cubicTo(
-          0.95 * this.width,
-          0.5 * this.height,
-          0.9 * this.width,
-          0.75 * this.height,
-          0.8 * this.width,
-          0.75 * this.height,
-        )
+        this.path.cubicTo(0.95 * this.width, 0.5 * this.height, 0.9 * this.width, 0.75 * this.height, 0.8 * this.width, 0.75 * this.height)
         //this.path.moveTo(0.8 * this.width, 0.75 * this.height)
-        this.path.cubicTo(
-          0.75 * this.width,
-          0.85 * this.height,
-          0.6 * this.width,
-          0.95 * this.height,
-          0.6 * this.width,
-          0.75 * this.height,
-        )
+        this.path.cubicTo(0.75 * this.width, 0.85 * this.height, 0.6 * this.width, 0.95 * this.height, 0.6 * this.width, 0.75 * this.height)
         //this.path.moveTo(0.6 * this.width, 0.75 * this.height)
-        this.path.cubicTo(
-          0.55 * this.width,
-          0.95 * this.height,
-          0.3 * this.width,
-          0.92 * this.height,
-          0.25 * this.width,
-          0.75 * this.height,
-        )
+        this.path.cubicTo(0.55 * this.width, 0.95 * this.height, 0.3 * this.width, 0.92 * this.height, 0.25 * this.width, 0.75 * this.height)
         //this.path.moveTo(0.25 * this.width, 0.75 * this.height)
-        this.path.cubicTo(
-          0.01 * this.width,
-          0.7 * this.height,
-          0.02 * this.width,
-          0.28 * this.height,
-          0.25 * this.width,
-          0.25 * this.height,
-        )
+        this.path.cubicTo(0.01 * this.width, 0.7 * this.height, 0.02 * this.width, 0.28 * this.height, 0.25 * this.width, 0.25 * this.height)
         break
       case EntityShapeType.Document: {
         modifierHeight = this.height - modifierHeight
@@ -548,9 +485,7 @@ export class EntityShape extends AbstractTextShape {
         this.path.lineTo(this.width, modifierHeight)
         this.path.lineTo(this.width - modifierWidth, 0)
         this.path.lineTo(0, 0)
-        this.path.addRectangle(
-          Rectangle.makeLTWH(modifierWidth, modifierHeight, this.width - modifierWidth, this.height - modifierHeight),
-        )
+        this.path.addRectangle(Rectangle.makeLTWH(modifierWidth, modifierHeight, this.width - modifierWidth, this.height - modifierHeight))
         break
       case EntityShapeType.Step:
         this.textLeft = modifierWidth

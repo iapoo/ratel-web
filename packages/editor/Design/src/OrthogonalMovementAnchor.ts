@@ -38,6 +38,7 @@ export class OrthogonalMovementAnchor extends Anchor {
   public handlePointerEnter(): void {}
 
   public handlePointerLeave(): void {}
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public handlePointerClick(x: number, y: number) {}
   public handlePointerDown(x: number, y: number) {
     if (!this.target) {
@@ -64,7 +65,7 @@ export class OrthogonalMovementAnchor extends Anchor {
     const theSelectionLayer = this.editor.selectionLayer as SelectionLayer
     const moveX = x - this._startX
     const moveY = y - this._startY
-    if (this.target instanceof Connector && (moveX != 0 || moveY != 0)) {
+    if (this.target instanceof Connector && (moveX !== 0 || moveY !== 0)) {
       this.target.markOrthogonalPointsModified()
     }
     if (!theSelectionLayer.hasEditorItem(this.target)) {
@@ -105,17 +106,13 @@ export class OrthogonalMovementAnchor extends Anchor {
         orthogonalPoints = orthogonalPoints.concat(this._orthogonalPoints)
         const orthogonalPoint = orthogonalPoints[this._index]
         const nextOrthogonalPoint = orthogonalPoints[this._index + 1]
-        if (orthogonalPoint.x == nextOrthogonalPoint.x) {
-          if (this._index == 1) {
+        if (orthogonalPoint.x === nextOrthogonalPoint.x) {
+          if (this._index === 1) {
             orthogonalPoints.splice(this._index + 1, 0, new Point2(orthogonalPoint.x + moveX, orthogonalPoint.y))
             orthogonalPoints[this._index + 2] = new Point2(nextOrthogonalPoint.x + moveX, nextOrthogonalPoint.y)
-          } else if (this._index == orthogonalPoints.length - 3) {
+          } else if (this._index === orthogonalPoints.length - 3) {
             orthogonalPoints[this._index] = new Point2(orthogonalPoint.x + moveX, orthogonalPoint.y)
-            orthogonalPoints.splice(
-              this._index + 1,
-              0,
-              new Point2(nextOrthogonalPoint.x + moveX, nextOrthogonalPoint.y),
-            )
+            orthogonalPoints.splice(this._index + 1, 0, new Point2(nextOrthogonalPoint.x + moveX, nextOrthogonalPoint.y))
           } else {
             orthogonalPoints[this._index] = new Point2(orthogonalPoint.x + moveX, orthogonalPoint.y)
             orthogonalPoints[this._index + 1] = new Point2(nextOrthogonalPoint.x + moveX, nextOrthogonalPoint.y)
@@ -127,16 +124,12 @@ export class OrthogonalMovementAnchor extends Anchor {
           // SystemUtils.debugPoints(this._orthogonalPoints)
           //console.log(`count= ${this.holder.count} x = ${x} moveX = ${moveX} startX = ${this._startX} width=${this.target.width} `)
         } else {
-          if (this._index == 1) {
+          if (this._index === 1) {
             orthogonalPoints.splice(this._index + 1, 0, new Point2(orthogonalPoint.x, orthogonalPoint.y + moveY))
             orthogonalPoints[this._index + 2] = new Point2(nextOrthogonalPoint.x, nextOrthogonalPoint.y + moveY)
-          } else if (this._index == orthogonalPoints.length - 3) {
+          } else if (this._index === orthogonalPoints.length - 3) {
             orthogonalPoints[this._index] = new Point2(orthogonalPoint.x, orthogonalPoint.y + moveY)
-            orthogonalPoints.splice(
-              this._index + 1,
-              0,
-              new Point2(nextOrthogonalPoint.x, nextOrthogonalPoint.y + moveY),
-            )
+            orthogonalPoints.splice(this._index + 1, 0, new Point2(nextOrthogonalPoint.x, nextOrthogonalPoint.y + moveY))
           } else {
             orthogonalPoints[this._index] = new Point2(orthogonalPoint.x, orthogonalPoint.y + moveY)
             orthogonalPoints[this._index + 1] = new Point2(nextOrthogonalPoint.x, nextOrthogonalPoint.y + moveY)
@@ -188,18 +181,18 @@ export class OrthogonalMovementAnchor extends Anchor {
       const orthogonalPoints = this.target.orthogonalPoints
       const orthogonalPoint = orthogonalPoints[this._index]
       const nextOrthogonalPoint = orthogonalPoints[this._index + 1]
-      if (orthogonalPoint.x == nextOrthogonalPoint.x) {
-        if (this._index == 1) {
+      if (orthogonalPoint.x === nextOrthogonalPoint.x) {
+        if (this._index === 1) {
           this.editor.updateEditorMode(EditorMode.W_RESIZE)
-        } else if (this._index == orthogonalPoints.length - 3) {
+        } else if (this._index === orthogonalPoints.length - 3) {
           this.editor.updateEditorMode(EditorMode.W_RESIZE)
         } else {
           this.editor.updateEditorMode(EditorMode.W_RESIZE)
         }
       } else {
-        if (this._index == 1) {
+        if (this._index === 1) {
           this.editor.updateEditorMode(EditorMode.N_RESIZE)
-        } else if (this._index == orthogonalPoints.length - 3) {
+        } else if (this._index === orthogonalPoints.length - 3) {
           this.editor.updateEditorMode(EditorMode.N_RESIZE)
         } else {
           this.editor.updateEditorMode(EditorMode.N_RESIZE)

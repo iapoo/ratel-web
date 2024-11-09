@@ -134,14 +134,7 @@ export class RoundRectangle {
   }
 
   public clone(): RoundRectangle {
-    return new RoundRectangle(
-      this._source[0],
-      this._source[1],
-      this._source[2],
-      this._source[3],
-      this._source[4],
-      this._source[5],
-    )
+    return new RoundRectangle(this._source[0], this._source[1], this._source[2], this._source[3], this._source[4], this._source[5])
   }
 
   public equals(rectangle: RoundRectangle): boolean {
@@ -1364,13 +1357,7 @@ export class ParagraphBuilder {
     return new Paragraph(this)
   }
 
-  public addPlaceholder(
-    width: number,
-    height: number,
-    alignment: PlaceholderAlignment,
-    baseline: TextBaseline,
-    offset: number,
-  ): void {
+  public addPlaceholder(width: number, height: number, alignment: PlaceholderAlignment, baseline: TextBaseline, offset: number): void {
     const alignmentSource = GraphicsUtils.convertPlaceholderAlignment(alignment)
     const baselineSource = GraphicsUtils.convertTextBaseline(baseline)
     this._source?.addPlaceholder(width, height, alignmentSource, baselineSource, offset)
@@ -1435,12 +1422,7 @@ export class Paint {
   public getColor(): Color {
     const color = this._source.getColor()
     if (color && color.length >= 4) {
-      return new Color(
-        Math.round(color[0] * 255),
-        Math.round(color[1] * 255),
-        Math.round(color[2] * 255),
-        Math.round(color[3] * 255),
-      )
+      return new Color(Math.round(color[0] * 255), Math.round(color[1] * 255), Math.round(color[2] * 255), Math.round(color[3] * 255))
     }
     return Colors.Black
   }
@@ -1627,12 +1609,7 @@ export class Font {
    * @param bottom        bottom of the thick "line" to use for intersection testing
    * @return              array of [start, end] x-coordinate pairs. Maybe be empty.
    */
-  public getGlyphIntercepts(
-    glyphs: number[],
-    positions: Float32Array | number[],
-    top: number,
-    bottom: number,
-  ): Float32Array {
+  public getGlyphIntercepts(glyphs: number[], positions: Float32Array | number[], top: number, bottom: number): Float32Array {
     return this._source.getGlyphIntercepts(glyphs, positions, top, bottom)
   }
 
@@ -2054,28 +2031,12 @@ export class Path {
     return this
   }
 
-  public arcToRotated(
-    rx: number,
-    ry: number,
-    xAxisRotate: number,
-    useSmallArc: boolean,
-    isCCW: boolean,
-    x: number,
-    y: number,
-  ): Path {
+  public arcToRotated(rx: number, ry: number, xAxisRotate: number, useSmallArc: boolean, isCCW: boolean, x: number, y: number): Path {
     this._source.arcToRotated(rx, ry, xAxisRotate, useSmallArc, isCCW, x, y)
     return this
   }
 
-  public rArcTo(
-    rx: number,
-    ry: number,
-    xAxisRotate: number,
-    useSmallArc: boolean,
-    isCCW: boolean,
-    dx: number,
-    dy: number,
-  ): Path {
+  public rArcTo(rx: number, ry: number, xAxisRotate: number, useSmallArc: boolean, isCCW: boolean, dx: number, dy: number): Path {
     this._source.rArcTo(rx, ry, xAxisRotate, useSmallArc, isCCW, dx, dy)
     return this
   }
@@ -2331,14 +2292,7 @@ export class Graphics {
     this._engine.drawImageCubic(image.source, left, top, B, C, paint?.source)
   }
 
-  public drawImageOptions(
-    image: Image,
-    left: number,
-    top: number,
-    filterMode: FilterMode,
-    mipMapMode: MipmapMode,
-    paint?: Paint,
-  ) {
+  public drawImageOptions(image: Image, left: number, top: number, filterMode: FilterMode, mipMapMode: MipmapMode, paint?: Paint) {
     this._engine.drawImageOptions(
       image.source,
       left,
@@ -2350,13 +2304,7 @@ export class Graphics {
   }
 
   public drawImageNine(image: Image, center: Rectangle, dest: Rectangle, filter: FilterMode, paint?: Paint) {
-    this._engine.drawImageNine(
-      image.source,
-      center.source,
-      dest.source,
-      GraphicsUtils.convertFilterMode(filter),
-      paint?.source,
-    )
+    this._engine.drawImageNine(image.source, center.source, dest.source, GraphicsUtils.convertFilterMode(filter), paint?.source)
   }
 
   public drawImageRect(image: Image, src: Rectangle, dest: Rectangle, paint: Paint, fastSample: boolean) {
@@ -2367,14 +2315,7 @@ export class Graphics {
     this._engine.drawImageRectCubic(image.source, src.source, dest.source, b, c, paint?.source)
   }
 
-  public drawImageRectOptions(
-    image: Image,
-    src: Rectangle,
-    dest: Rectangle,
-    filterMode: FilterMode,
-    mipmapMode: MipmapMode,
-    paint?: Paint,
-  ) {
+  public drawImageRectOptions(image: Image, src: Rectangle, dest: Rectangle, filterMode: FilterMode, mipmapMode: MipmapMode, paint?: Paint) {
     this._engine.drawImageRectOptions(
       image.source,
       src.source,
@@ -2429,24 +2370,8 @@ export class Graphics {
     this._engine.drawRRect(roundRectangle.source, paint.source)
   }
 
-  public drawShadow(
-    path: Path,
-    zPlaneParams: number[],
-    lightPos: number[],
-    lightRadius: number,
-    ambientColor: Color,
-    spotColor: Color,
-    flags: number,
-  ) {
-    this._engine.drawShadow(
-      path.source,
-      zPlaneParams,
-      lightPos,
-      lightRadius,
-      ambientColor.source,
-      spotColor.source,
-      flags,
-    )
+  public drawShadow(path: Path, zPlaneParams: number[], lightPos: number[], lightRadius: number, ambientColor: Color, spotColor: Color, flags: number) {
+    this._engine.drawShadow(path.source, zPlaneParams, lightPos, lightRadius, ambientColor.source, spotColor.source, flags)
   }
 
   public drawText(str: string, x: number, y: number, paint: Paint, font: Font) {
@@ -2729,15 +2654,7 @@ export class MouseEvent extends NodeEvent {
   readonly control: boolean
   readonly alt: boolean
 
-  constructor(
-    source: Node,
-    x: number,
-    y: number,
-    mouseCode: MouseCode,
-    shift: boolean,
-    control: boolean,
-    alt: boolean,
-  ) {
+  constructor(source: Node, x: number, y: number, mouseCode: MouseCode, shift: boolean, control: boolean, alt: boolean) {
     super(source)
     this.x = x
     this.y = y
@@ -2775,17 +2692,7 @@ export class TouchFingerEvent extends NodeEvent {
   readonly dy: number
   readonly pressure: number
 
-  constructor(
-    source: Node,
-    fingerType: FingerType,
-    fingerId: number,
-    touchId: number,
-    x: number,
-    y: number,
-    dx: number,
-    dy: number,
-    pressure: number,
-  ) {
+  constructor(source: Node, fingerType: FingerType, fingerId: number, touchId: number, x: number, y: number, dx: number, dy: number, pressure: number) {
     super(source)
     this.fingerType = fingerType
     this.fingerId = fingerId

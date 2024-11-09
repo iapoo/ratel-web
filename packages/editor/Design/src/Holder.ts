@@ -290,14 +290,8 @@ export class Holder extends Control {
       let endAdapterY = shapeType.adapterEndY * this.target.height
       let adapterX = this.target.shape.adapter.x + startX
       let adapterY = this.target.shape.adapter.y + startY
-      let adapterEndX =
-        this.target.shape.typeInfo.adapterDirection === AdapterDirection.X
-          ? adapterX + this.target.shape.adapterSize
-          : adapterX
-      let adapterEndY =
-        this.target.shape.typeInfo.adapterDirection === AdapterDirection.Y
-          ? adapterY + this.target.shape.adapterSize
-          : adapterY
+      let adapterEndX = this.target.shape.typeInfo.adapterDirection === AdapterDirection.X ? adapterX + this.target.shape.adapterSize : adapterX
+      let adapterEndY = this.target.shape.typeInfo.adapterDirection === AdapterDirection.Y ? adapterY + this.target.shape.adapterSize : adapterY
       if (shapeType.adaptInPercent) {
         adapterX = (endAdapterX - startAdapterX) * this.target.shape.adapter.x + startAdapterX
         adapterY = (endAdapterY - startAdapterY) * this.target.shape.adapter.y + startAdapterY
@@ -327,12 +321,8 @@ export class Holder extends Control {
         this._sourceConnectionAnchor.top + Holder.ANCHOR_RADIUS,
       )
       this._startCubicControllerLine.end = new Point2(
-        this._sourceConnectionAnchor.left +
-          Holder.ANCHOR_RADIUS +
-          this._target.curveStartModifier.x * this._target.width,
-        this._sourceConnectionAnchor.top +
-          Holder.ANCHOR_RADIUS +
-          this._target.curveStartModifier.y * this._target.height,
+        this._sourceConnectionAnchor.left + Holder.ANCHOR_RADIUS + this._target.curveStartModifier.x * this._target.width,
+        this._sourceConnectionAnchor.top + Holder.ANCHOR_RADIUS + this._target.curveStartModifier.y * this._target.height,
       )
       //console.log(`${this._startCubicControllerLine.start.x}  ${this._startCubicControllerLine.start.y}  ${this._startCubicControllerLine.end.x}  ${this._startCubicControllerLine.end.y}`)
       this._endCubicControllerLine.start = new Point2(

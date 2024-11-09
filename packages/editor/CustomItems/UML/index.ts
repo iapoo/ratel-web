@@ -139,13 +139,9 @@ export const UMLGridShapesForClass = [
   { name: UMLCustomTableTypes[13].name, type: UMLCustomTable, typeInfo: UMLCustomTableTypes[13] },
 ]
 
-export const UMLBasicShapesForClass = [
-  { name: UMLBasicShapeTypes[1].name, type: UMLBasicShape, typeInfo: UMLBasicShapeTypes[1] },
-]
+export const UMLBasicShapesForClass = [{ name: UMLBasicShapeTypes[1].name, type: UMLBasicShape, typeInfo: UMLBasicShapeTypes[1] }]
 
-export const UMLContainerShapesForClass = [
-  { name: UMLContainerTypes[0].name, type: UMLContainerShape, typeInfo: UMLContainerTypes[0] },
-]
+export const UMLContainerShapesForClass = [{ name: UMLContainerTypes[0].name, type: UMLContainerShape, typeInfo: UMLContainerTypes[0] }]
 
 export const UMLConnectorsForClass = [
   { name: UMLConnectorTypeInfos[0].name, type: UMLConnector, typeInfo: UMLConnectorTypeInfos[0] },
@@ -165,9 +161,7 @@ export const UMLBasicShapesForUseCase = [
   { name: UMLBasicShapeTypes[2].name, type: UMLBasicShape, typeInfo: UMLBasicShapeTypes[2] },
 ]
 
-export const UMLContainerShapesForUseCase = [
-  { name: UMLContainerTypes[1].name, type: UMLContainerShape, typeInfo: UMLContainerTypes[1] },
-]
+export const UMLContainerShapesForUseCase = [{ name: UMLContainerTypes[1].name, type: UMLContainerShape, typeInfo: UMLContainerTypes[1] }]
 
 export const UMLConnectorsForUseCase = [
   { name: UMLConnectorTypeInfos[7].name, type: UMLConnector, typeInfo: UMLConnectorTypeInfos[7] },
@@ -183,9 +177,7 @@ export const UMLCustomContainersForSequence = [
   { name: UMLCustomContainerTypes[1].name, type: UMLCustomContainer, typeInfo: UMLCustomContainerTypes[1] },
 ]
 
-export const UMLCustomShapesForSequence = [
-  { name: UMLCustomShapeTypes[0].name, type: UMLCustomShape, typeInfo: UMLCustomShapeTypes[0] },
-]
+export const UMLCustomShapesForSequence = [{ name: UMLCustomShapeTypes[0].name, type: UMLCustomShape, typeInfo: UMLCustomShapeTypes[0] }]
 
 export const UMLFrameShapesForSequence = [
   { name: UMLFrameShapeTypes[0].name, type: UMLFrameShape, typeInfo: UMLFrameShapeTypes[0] },

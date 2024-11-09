@@ -367,14 +367,7 @@ export class ConnectorShape extends EntityShape {
     if (this.worldInverseTransform) {
       const point = [x, y]
       const inversePoint = this.worldInverseTransform.makePoints(point)
-      const distance = Line.pointDistance(
-        this._start.x,
-        this._start.y,
-        this._end.x,
-        this._end.y,
-        inversePoint[0],
-        inversePoint[1],
-      )
+      const distance = Line.pointDistance(this._start.x, this._start.y, this._end.x, this._end.y, inversePoint[0], inversePoint[1])
       return distance <= ConnectorShape.DETECTION_DISTANCE
     } else {
       return false
@@ -487,10 +480,7 @@ export class ConnectorShape extends EntityShape {
   public update() {
     super.update()
     if (this.dirty) {
-      const distance = Math.sqrt(
-        (this._start.x - this._end.x) * (this._start.x - this._end.x) +
-          (this._start.y - this._end.y) * (this._start.y - this._end.y),
-      )
+      const distance = Math.sqrt((this._start.x - this._end.x) * (this._start.x - this._end.x) + (this._start.y - this._end.y) * (this._start.y - this._end.y))
       let angle = Math.asinh((this._end.x - this.start.x) / distance)
       if (angle >= 0) {
         if (this._end.y >= this._start.y) {
@@ -533,12 +523,7 @@ export class ConnectorShape extends EntityShape {
       }
       if (this._orthogonalPoints.length > 0) {
         this.updateArrows(this._orthogonalPoints[0], this._startDirection, this._startArrow, this._startArrowPath)
-        this.updateArrows(
-          this._orthogonalPoints[this._orthogonalPoints.length - 1],
-          this._endDirection,
-          this._endArrow,
-          this._endArrowPath,
-        )
+        this.updateArrows(this._orthogonalPoints[this._orthogonalPoints.length - 1], this._endDirection, this._endArrow, this._endArrowPath)
       }
       if (this.connectorType === ConnectorType.Curve) {
         this.updateArrowsInCurve()
@@ -594,14 +579,8 @@ export class ConnectorShape extends EntityShape {
     const end = new Point2(this.end.x - this.left, this.end.y - this.top)
     const startTransform = new Matrix()
     const endTransform = new Matrix()
-    const startModifier = new Point2(
-      start.x + this._curveStartModifier.x * this.width,
-      start.y + this.curveStartModifier.y * this.height,
-    )
-    const endModifier = new Point2(
-      end.x + this.curveEndModifier.x * this.width,
-      end.y + this.curveEndModifier.y * this.height,
-    )
+    const startModifier = new Point2(start.x + this._curveStartModifier.x * this.width, start.y + this.curveStartModifier.y * this.height)
+    const endModifier = new Point2(end.x + this.curveEndModifier.x * this.width, end.y + this.curveEndModifier.y * this.height)
     let startOffsetPoint = new Point2(start.x + hint, start.y)
     let endOffsetPoint = new Point2(end.x - hint, end.y)
     switch (this._startDirection) {
@@ -642,22 +621,8 @@ export class ConnectorShape extends EntityShape {
         break
       }
     }
-    const startAngle = MathUtils.getAngleIn3PointsEx(
-      start.x,
-      start.y,
-      startModifier.x,
-      startModifier.y,
-      startOffsetPoint.x,
-      startOffsetPoint.y,
-    )
-    const endAngle = MathUtils.getAngleIn3PointsEx(
-      end.x,
-      end.y,
-      endModifier.x,
-      endModifier.y,
-      endOffsetPoint.x,
-      endOffsetPoint.y,
-    )
+    const startAngle = MathUtils.getAngleIn3PointsEx(start.x, start.y, startModifier.x, startModifier.y, startOffsetPoint.x, startOffsetPoint.y)
+    const endAngle = MathUtils.getAngleIn3PointsEx(end.x, end.y, endModifier.x, endModifier.y, endOffsetPoint.x, endOffsetPoint.y)
     //console.log(`angle= ${startAngle}`)
     startTransform.rotate(-startAngle, start.x, start.y)
     endTransform.rotate(-endAngle, end.x, end.y)
@@ -727,12 +692,7 @@ export class ConnectorShape extends EntityShape {
     }
   }
 
-  private updateArrayTypeTriangle(
-    start: Point2,
-    direction: ConnectorDirection,
-    arrowTypeInfo: ConnectorArrowTypeInfo,
-    arrowPath: Path,
-  ) {
+  private updateArrayTypeTriangle(start: Point2, direction: ConnectorDirection, arrowTypeInfo: ConnectorArrowTypeInfo, arrowPath: Path) {
     arrowPath.reset()
     switch (direction) {
       case ConnectorDirection.Left:
@@ -759,10 +719,7 @@ export class ConnectorShape extends EntityShape {
             if (arrowTypeInfo.count > 1) {
               arrowPath.moveTo(start.x - arrowTypeInfo.width, start.y)
               arrowPath.lineTo(start.x - arrowTypeInfo.width * 2, start.y - arrowTypeInfo.height / 2)
-              arrowPath.lineTo(
-                start.x - arrowTypeInfo.width * 2 + arrowTypeInfo.modifier * arrowTypeInfo.width,
-                start.y,
-              )
+              arrowPath.lineTo(start.x - arrowTypeInfo.width * 2 + arrowTypeInfo.modifier * arrowTypeInfo.width, start.y)
               arrowPath.lineTo(start.x - arrowTypeInfo.width * 2, start.y + arrowTypeInfo.height / 2)
               arrowPath.lineTo(start.x - arrowTypeInfo.width, start.y)
             }
@@ -793,10 +750,7 @@ export class ConnectorShape extends EntityShape {
             if (arrowTypeInfo.count > 1) {
               arrowPath.moveTo(start.x, start.y - arrowTypeInfo.width)
               arrowPath.lineTo(start.x - arrowTypeInfo.height / 2, start.y - arrowTypeInfo.width * 2)
-              arrowPath.lineTo(
-                start.x,
-                start.y - arrowTypeInfo.width * 2 + arrowTypeInfo.modifier * arrowTypeInfo.width,
-              )
+              arrowPath.lineTo(start.x, start.y - arrowTypeInfo.width * 2 + arrowTypeInfo.modifier * arrowTypeInfo.width)
               arrowPath.lineTo(start.x + arrowTypeInfo.height / 2, start.y - arrowTypeInfo.width * 2)
               arrowPath.lineTo(start.x, start.y - arrowTypeInfo.width)
             }
@@ -827,10 +781,7 @@ export class ConnectorShape extends EntityShape {
             if (arrowTypeInfo.count > 1) {
               arrowPath.moveTo(start.x + arrowTypeInfo.width, start.y)
               arrowPath.lineTo(start.x + arrowTypeInfo.width * 2, start.y - arrowTypeInfo.height / 2)
-              arrowPath.lineTo(
-                start.x + arrowTypeInfo.width * 2 - arrowTypeInfo.modifier * arrowTypeInfo.width,
-                start.y,
-              )
+              arrowPath.lineTo(start.x + arrowTypeInfo.width * 2 - arrowTypeInfo.modifier * arrowTypeInfo.width, start.y)
               arrowPath.lineTo(start.x + arrowTypeInfo.width * 2, start.y + arrowTypeInfo.height / 2)
               arrowPath.lineTo(start.x + arrowTypeInfo.width, start.y)
             }
@@ -862,10 +813,7 @@ export class ConnectorShape extends EntityShape {
             if (arrowTypeInfo.count > 1) {
               arrowPath.moveTo(start.x, start.y + arrowTypeInfo.width)
               arrowPath.lineTo(start.x - arrowTypeInfo.height / 2, start.y + arrowTypeInfo.width * 2)
-              arrowPath.lineTo(
-                start.x,
-                start.y + arrowTypeInfo.width * 2 - arrowTypeInfo.modifier * arrowTypeInfo.width,
-              )
+              arrowPath.lineTo(start.x, start.y + arrowTypeInfo.width * 2 - arrowTypeInfo.modifier * arrowTypeInfo.width)
               arrowPath.lineTo(start.x + arrowTypeInfo.height / 2, start.y + arrowTypeInfo.width * 2)
               arrowPath.lineTo(start.x, start.y + arrowTypeInfo.width)
             }
@@ -875,12 +823,7 @@ export class ConnectorShape extends EntityShape {
     }
   }
 
-  private updateArrayTypeDiamond(
-    start: Point2,
-    direction: ConnectorDirection,
-    arrowTypeInfo: ConnectorArrowTypeInfo,
-    arrowPath: Path,
-  ) {
+  private updateArrayTypeDiamond(start: Point2, direction: ConnectorDirection, arrowTypeInfo: ConnectorArrowTypeInfo, arrowPath: Path) {
     arrowPath.reset()
     switch (direction) {
       case ConnectorDirection.Left:
@@ -943,194 +886,96 @@ export class ConnectorShape extends EntityShape {
     }
   }
 
-  private updateArrayTypeEllipse(
-    start: Point2,
-    direction: ConnectorDirection,
-    arrowTypeInfo: ConnectorArrowTypeInfo,
-    arrowPath: Path,
-  ) {
+  private updateArrayTypeEllipse(start: Point2, direction: ConnectorDirection, arrowTypeInfo: ConnectorArrowTypeInfo, arrowPath: Path) {
     arrowPath.reset()
     switch (direction) {
       case ConnectorDirection.Left:
-        arrowPath.addOval(
-          Rectangle.makeLTWH(
-            start.x - arrowTypeInfo.width,
-            start.y - arrowTypeInfo.height / 2,
-            arrowTypeInfo.width,
-            arrowTypeInfo.height,
-          ),
-        )
+        arrowPath.addOval(Rectangle.makeLTWH(start.x - arrowTypeInfo.width, start.y - arrowTypeInfo.height / 2, arrowTypeInfo.width, arrowTypeInfo.height))
         if (arrowTypeInfo.count > 1) {
           arrowPath.addOval(
-            Rectangle.makeLTWH(
-              start.x - arrowTypeInfo.width * 2,
-              start.y - arrowTypeInfo.height / 2,
-              arrowTypeInfo.width,
-              arrowTypeInfo.height,
-            ),
+            Rectangle.makeLTWH(start.x - arrowTypeInfo.width * 2, start.y - arrowTypeInfo.height / 2, arrowTypeInfo.width, arrowTypeInfo.height),
           )
         }
         break
       case ConnectorDirection.Top:
-        arrowPath.addOval(
-          Rectangle.makeLTWH(
-            start.x - arrowTypeInfo.height / 2,
-            start.y - arrowTypeInfo.width,
-            arrowTypeInfo.height,
-            arrowTypeInfo.width,
-          ),
-        )
+        arrowPath.addOval(Rectangle.makeLTWH(start.x - arrowTypeInfo.height / 2, start.y - arrowTypeInfo.width, arrowTypeInfo.height, arrowTypeInfo.width))
         if (arrowTypeInfo.count > 1) {
           arrowPath.addOval(
-            Rectangle.makeLTWH(
-              start.x - arrowTypeInfo.height / 2,
-              start.y - arrowTypeInfo.width * 2,
-              arrowTypeInfo.height,
-              arrowTypeInfo.width,
-            ),
+            Rectangle.makeLTWH(start.x - arrowTypeInfo.height / 2, start.y - arrowTypeInfo.width * 2, arrowTypeInfo.height, arrowTypeInfo.width),
           )
         }
         break
       case ConnectorDirection.Right:
-        arrowPath.addOval(
-          Rectangle.makeLTWH(start.x, start.y - arrowTypeInfo.height / 2, arrowTypeInfo.width, arrowTypeInfo.height),
-        )
+        arrowPath.addOval(Rectangle.makeLTWH(start.x, start.y - arrowTypeInfo.height / 2, arrowTypeInfo.width, arrowTypeInfo.height))
         if (arrowTypeInfo.count > 1) {
-          arrowPath.addOval(
-            Rectangle.makeLTWH(
-              start.x + arrowTypeInfo.width,
-              start.y - arrowTypeInfo.height / 2,
-              arrowTypeInfo.width,
-              arrowTypeInfo.height,
-            ),
-          )
+          arrowPath.addOval(Rectangle.makeLTWH(start.x + arrowTypeInfo.width, start.y - arrowTypeInfo.height / 2, arrowTypeInfo.width, arrowTypeInfo.height))
         }
         break
       case ConnectorDirection.Bottom:
       default:
-        arrowPath.addOval(
-          Rectangle.makeLTWH(start.x - arrowTypeInfo.height / 2, start.y, arrowTypeInfo.height, arrowTypeInfo.width),
-        )
+        arrowPath.addOval(Rectangle.makeLTWH(start.x - arrowTypeInfo.height / 2, start.y, arrowTypeInfo.height, arrowTypeInfo.width))
         if (arrowTypeInfo.count > 1) {
-          arrowPath.addOval(
-            Rectangle.makeLTWH(
-              start.x - arrowTypeInfo.height / 2,
-              start.y + arrowTypeInfo.width,
-              arrowTypeInfo.height,
-              arrowTypeInfo.width,
-            ),
-          )
+          arrowPath.addOval(Rectangle.makeLTWH(start.x - arrowTypeInfo.height / 2, start.y + arrowTypeInfo.width, arrowTypeInfo.height, arrowTypeInfo.width))
         }
         break
     }
   }
 
-  private updateArrayTypeLeftParenthesis(
-    start: Point2,
-    direction: ConnectorDirection,
-    arrowTypeInfo: ConnectorArrowTypeInfo,
-    arrowPath: Path,
-  ) {
+  private updateArrayTypeLeftParenthesis(start: Point2, direction: ConnectorDirection, arrowTypeInfo: ConnectorArrowTypeInfo, arrowPath: Path) {
     arrowPath.reset()
     switch (direction) {
       case ConnectorDirection.Left:
         arrowPath.addArc(
-          Rectangle.makeLTWH(
-            start.x - arrowTypeInfo.width,
-            start.y - arrowTypeInfo.height / 2,
-            arrowTypeInfo.width,
-            arrowTypeInfo.height,
-          ),
+          Rectangle.makeLTWH(start.x - arrowTypeInfo.width, start.y - arrowTypeInfo.height / 2, arrowTypeInfo.width, arrowTypeInfo.height),
           90,
           180,
         )
         break
       case ConnectorDirection.Top:
         arrowPath.addArc(
-          Rectangle.makeLTWH(
-            start.x - arrowTypeInfo.height / 2,
-            start.y - arrowTypeInfo.width,
-            arrowTypeInfo.height,
-            arrowTypeInfo.width,
-          ),
+          Rectangle.makeLTWH(start.x - arrowTypeInfo.height / 2, start.y - arrowTypeInfo.width, arrowTypeInfo.height, arrowTypeInfo.width),
           180,
           180,
         )
         break
       case ConnectorDirection.Right:
-        arrowPath.addArc(
-          Rectangle.makeLTWH(start.x, start.y - arrowTypeInfo.height / 2, arrowTypeInfo.width, arrowTypeInfo.height),
-          270,
-          180,
-        )
+        arrowPath.addArc(Rectangle.makeLTWH(start.x, start.y - arrowTypeInfo.height / 2, arrowTypeInfo.width, arrowTypeInfo.height), 270, 180)
         break
       case ConnectorDirection.Bottom:
       default:
-        arrowPath.addArc(
-          Rectangle.makeLTWH(start.x - arrowTypeInfo.height / 2, start.y, arrowTypeInfo.height, arrowTypeInfo.width),
-          0,
-          180,
-        )
+        arrowPath.addArc(Rectangle.makeLTWH(start.x - arrowTypeInfo.height / 2, start.y, arrowTypeInfo.height, arrowTypeInfo.width), 0, 180)
         break
     }
   }
 
-  private updateArrayTypeRightParenthesis(
-    start: Point2,
-    direction: ConnectorDirection,
-    arrowTypeInfo: ConnectorArrowTypeInfo,
-    arrowPath: Path,
-  ) {
+  private updateArrayTypeRightParenthesis(start: Point2, direction: ConnectorDirection, arrowTypeInfo: ConnectorArrowTypeInfo, arrowPath: Path) {
     arrowPath.reset()
     switch (direction) {
       case ConnectorDirection.Left:
         arrowPath.addArc(
-          Rectangle.makeLTWH(
-            start.x - arrowTypeInfo.width,
-            start.y - arrowTypeInfo.height / 2,
-            arrowTypeInfo.width,
-            arrowTypeInfo.height,
-          ),
+          Rectangle.makeLTWH(start.x - arrowTypeInfo.width, start.y - arrowTypeInfo.height / 2, arrowTypeInfo.width, arrowTypeInfo.height),
           270,
           180,
         )
         break
       case ConnectorDirection.Top:
         arrowPath.addArc(
-          Rectangle.makeLTWH(
-            start.x - arrowTypeInfo.height / 2,
-            start.y - arrowTypeInfo.width,
-            arrowTypeInfo.height,
-            arrowTypeInfo.width,
-          ),
+          Rectangle.makeLTWH(start.x - arrowTypeInfo.height / 2, start.y - arrowTypeInfo.width, arrowTypeInfo.height, arrowTypeInfo.width),
           0,
           180,
         )
         break
       case ConnectorDirection.Right:
-        arrowPath.addArc(
-          Rectangle.makeLTWH(start.x, start.y - arrowTypeInfo.height / 2, arrowTypeInfo.width, arrowTypeInfo.height),
-          90,
-          180,
-        )
+        arrowPath.addArc(Rectangle.makeLTWH(start.x, start.y - arrowTypeInfo.height / 2, arrowTypeInfo.width, arrowTypeInfo.height), 90, 180)
         break
       case ConnectorDirection.Bottom:
       default:
-        arrowPath.addArc(
-          Rectangle.makeLTWH(start.x - arrowTypeInfo.height / 2, start.y, arrowTypeInfo.height, arrowTypeInfo.width),
-          180,
-          180,
-        )
+        arrowPath.addArc(Rectangle.makeLTWH(start.x - arrowTypeInfo.height / 2, start.y, arrowTypeInfo.height, arrowTypeInfo.width), 180, 180)
         break
     }
   }
 
-  private updateArrayTypeOrthogonal(
-    start: Point2,
-    direction: ConnectorDirection,
-    arrowTypeInfo: ConnectorArrowTypeInfo,
-    arrowPath: Path,
-  ) {
+  private updateArrayTypeOrthogonal(start: Point2, direction: ConnectorDirection, arrowTypeInfo: ConnectorArrowTypeInfo, arrowPath: Path) {
     arrowPath.reset()
     switch (direction) {
       case ConnectorDirection.Left:
@@ -1161,12 +1006,7 @@ export class ConnectorShape extends EntityShape {
     }
   }
 
-  private updateArrayTypeForewardSlash(
-    start: Point2,
-    direction: ConnectorDirection,
-    arrowTypeInfo: ConnectorArrowTypeInfo,
-    arrowPath: Path,
-  ) {
+  private updateArrayTypeForewardSlash(start: Point2, direction: ConnectorDirection, arrowTypeInfo: ConnectorArrowTypeInfo, arrowPath: Path) {
     arrowPath.reset()
     switch (direction) {
       case ConnectorDirection.Left:
@@ -1189,12 +1029,7 @@ export class ConnectorShape extends EntityShape {
     }
   }
 
-  private updateArrayTypeBackslashe(
-    start: Point2,
-    direction: ConnectorDirection,
-    arrowTypeInfo: ConnectorArrowTypeInfo,
-    arrowPath: Path,
-  ) {
+  private updateArrayTypeBackslashe(start: Point2, direction: ConnectorDirection, arrowTypeInfo: ConnectorArrowTypeInfo, arrowPath: Path) {
     arrowPath.reset()
     switch (direction) {
       case ConnectorDirection.Left:
@@ -1217,12 +1052,7 @@ export class ConnectorShape extends EntityShape {
     }
   }
 
-  private updateArrayTypeVerticalLine(
-    start: Point2,
-    direction: ConnectorDirection,
-    arrowTypeInfo: ConnectorArrowTypeInfo,
-    arrowPath: Path,
-  ) {
+  private updateArrayTypeVerticalLine(start: Point2, direction: ConnectorDirection, arrowTypeInfo: ConnectorArrowTypeInfo, arrowPath: Path) {
     arrowPath.reset()
     switch (direction) {
       case ConnectorDirection.Left:
@@ -1245,12 +1075,7 @@ export class ConnectorShape extends EntityShape {
     }
   }
 
-  private updateArrayTypeLeftAngleBracket(
-    start: Point2,
-    direction: ConnectorDirection,
-    arrowTypeInfo: ConnectorArrowTypeInfo,
-    arrowPath: Path,
-  ) {
+  private updateArrayTypeLeftAngleBracket(start: Point2, direction: ConnectorDirection, arrowTypeInfo: ConnectorArrowTypeInfo, arrowPath: Path) {
     arrowPath.reset()
     switch (direction) {
       case ConnectorDirection.Left:
@@ -1277,12 +1102,7 @@ export class ConnectorShape extends EntityShape {
     }
   }
 
-  private updateArrayTypeVerticaleLineAndLeftAngleBacket(
-    start: Point2,
-    direction: ConnectorDirection,
-    arrowTypeInfo: ConnectorArrowTypeInfo,
-    arrowPath: Path,
-  ) {
+  private updateArrayTypeVerticaleLineAndLeftAngleBacket(start: Point2, direction: ConnectorDirection, arrowTypeInfo: ConnectorArrowTypeInfo, arrowPath: Path) {
     arrowPath.reset()
     switch (direction) {
       case ConnectorDirection.Left:
@@ -1317,48 +1137,24 @@ export class ConnectorShape extends EntityShape {
     }
   }
 
-  private updateArrayTypeCircleAndVerticalLine(
-    start: Point2,
-    direction: ConnectorDirection,
-    arrowTypeInfo: ConnectorArrowTypeInfo,
-    arrowPath: Path,
-  ) {
+  private updateArrayTypeCircleAndVerticalLine(start: Point2, direction: ConnectorDirection, arrowTypeInfo: ConnectorArrowTypeInfo, arrowPath: Path) {
     arrowPath.reset()
     switch (direction) {
       case ConnectorDirection.Left:
         arrowPath.moveTo(start.x - arrowTypeInfo.width / 4, start.y - arrowTypeInfo.height / 2)
         arrowPath.lineTo(start.x - arrowTypeInfo.width / 4, start.y + arrowTypeInfo.height / 2)
-        arrowPath.addOval(
-          Rectangle.makeLTWH(
-            start.x - arrowTypeInfo.width,
-            start.y - arrowTypeInfo.height / 2,
-            arrowTypeInfo.width / 2,
-            arrowTypeInfo.height,
-          ),
-        )
+        arrowPath.addOval(Rectangle.makeLTWH(start.x - arrowTypeInfo.width, start.y - arrowTypeInfo.height / 2, arrowTypeInfo.width / 2, arrowTypeInfo.height))
         break
       case ConnectorDirection.Top:
         arrowPath.moveTo(start.x - arrowTypeInfo.height / 2, start.y - arrowTypeInfo.width / 4)
         arrowPath.lineTo(start.x + arrowTypeInfo.height / 2, start.y - arrowTypeInfo.width / 4)
-        arrowPath.addOval(
-          Rectangle.makeLTWH(
-            start.x - arrowTypeInfo.height / 2,
-            start.y - arrowTypeInfo.width,
-            arrowTypeInfo.height,
-            arrowTypeInfo.width / 2,
-          ),
-        )
+        arrowPath.addOval(Rectangle.makeLTWH(start.x - arrowTypeInfo.height / 2, start.y - arrowTypeInfo.width, arrowTypeInfo.height, arrowTypeInfo.width / 2))
         break
       case ConnectorDirection.Right:
         arrowPath.moveTo(start.x + arrowTypeInfo.width / 4, start.y - arrowTypeInfo.height / 2)
         arrowPath.lineTo(start.x + arrowTypeInfo.width / 4, start.y + arrowTypeInfo.height / 2)
         arrowPath.addOval(
-          Rectangle.makeLTWH(
-            start.x + arrowTypeInfo.width / 2,
-            start.y - arrowTypeInfo.height / 2,
-            arrowTypeInfo.width / 2,
-            arrowTypeInfo.height,
-          ),
+          Rectangle.makeLTWH(start.x + arrowTypeInfo.width / 2, start.y - arrowTypeInfo.height / 2, arrowTypeInfo.width / 2, arrowTypeInfo.height),
         )
         break
       case ConnectorDirection.Bottom:
@@ -1366,62 +1162,33 @@ export class ConnectorShape extends EntityShape {
         arrowPath.moveTo(start.x - arrowTypeInfo.height / 2, start.y + arrowTypeInfo.width / 4)
         arrowPath.lineTo(start.x + arrowTypeInfo.height / 2, start.y + arrowTypeInfo.width / 4)
         arrowPath.addOval(
-          Rectangle.makeLTWH(
-            start.x - arrowTypeInfo.height / 2,
-            start.y + arrowTypeInfo.width / 2,
-            arrowTypeInfo.height,
-            arrowTypeInfo.width / 2,
-          ),
+          Rectangle.makeLTWH(start.x - arrowTypeInfo.height / 2, start.y + arrowTypeInfo.width / 2, arrowTypeInfo.height, arrowTypeInfo.width / 2),
         )
         break
     }
   }
 
-  private updateArrayTypeCircleAndLeftBacket(
-    start: Point2,
-    direction: ConnectorDirection,
-    arrowTypeInfo: ConnectorArrowTypeInfo,
-    arrowPath: Path,
-  ) {
+  private updateArrayTypeCircleAndLeftBacket(start: Point2, direction: ConnectorDirection, arrowTypeInfo: ConnectorArrowTypeInfo, arrowPath: Path) {
     arrowPath.reset()
     switch (direction) {
       case ConnectorDirection.Left:
         arrowPath.moveTo(start.x, start.y - arrowTypeInfo.height / 2)
         arrowPath.lineTo(start.x - arrowTypeInfo.width / 2, start.y)
         arrowPath.lineTo(start.x, start.y + arrowTypeInfo.height / 2)
-        arrowPath.addOval(
-          Rectangle.makeLTWH(
-            start.x - arrowTypeInfo.width,
-            start.y - arrowTypeInfo.height / 2,
-            arrowTypeInfo.width / 2,
-            arrowTypeInfo.height,
-          ),
-        )
+        arrowPath.addOval(Rectangle.makeLTWH(start.x - arrowTypeInfo.width, start.y - arrowTypeInfo.height / 2, arrowTypeInfo.width / 2, arrowTypeInfo.height))
         break
       case ConnectorDirection.Top:
         arrowPath.moveTo(start.x - arrowTypeInfo.height / 2, start.y)
         arrowPath.lineTo(start.x, start.y - arrowTypeInfo.width / 2)
         arrowPath.lineTo(start.x + arrowTypeInfo.height / 2, start.y)
-        arrowPath.addOval(
-          Rectangle.makeLTWH(
-            start.x - arrowTypeInfo.height / 2,
-            start.y - arrowTypeInfo.width,
-            arrowTypeInfo.height,
-            arrowTypeInfo.width / 2,
-          ),
-        )
+        arrowPath.addOval(Rectangle.makeLTWH(start.x - arrowTypeInfo.height / 2, start.y - arrowTypeInfo.width, arrowTypeInfo.height, arrowTypeInfo.width / 2))
         break
       case ConnectorDirection.Right:
         arrowPath.moveTo(start.x, start.y - arrowTypeInfo.height / 2)
         arrowPath.lineTo(start.x + arrowTypeInfo.width / 2, start.y)
         arrowPath.lineTo(start.x, start.y + arrowTypeInfo.height / 2)
         arrowPath.addOval(
-          Rectangle.makeLTWH(
-            start.x + arrowTypeInfo.width / 2,
-            start.y - arrowTypeInfo.height / 2,
-            arrowTypeInfo.width / 2,
-            arrowTypeInfo.height,
-          ),
+          Rectangle.makeLTWH(start.x + arrowTypeInfo.width / 2, start.y - arrowTypeInfo.height / 2, arrowTypeInfo.width / 2, arrowTypeInfo.height),
         )
         break
       case ConnectorDirection.Bottom:
@@ -1430,12 +1197,7 @@ export class ConnectorShape extends EntityShape {
         arrowPath.lineTo(start.x, start.y + arrowTypeInfo.width / 2)
         arrowPath.lineTo(start.x + arrowTypeInfo.height / 2, start.y)
         arrowPath.addOval(
-          Rectangle.makeLTWH(
-            start.x - arrowTypeInfo.height / 2,
-            start.y + arrowTypeInfo.width / 2,
-            arrowTypeInfo.height,
-            arrowTypeInfo.width / 2,
-          ),
+          Rectangle.makeLTWH(start.x - arrowTypeInfo.height / 2, start.y + arrowTypeInfo.width / 2, arrowTypeInfo.height, arrowTypeInfo.width / 2),
         )
         break
     }
@@ -1444,14 +1206,8 @@ export class ConnectorShape extends EntityShape {
   private updateCurvePath() {
     const start = new Point2(this.start.x - this.left, this.start.y - this.top)
     const end = new Point2(this.end.x - this.left, this.end.y - this.top)
-    const startModifier = new Point2(
-      start.x + this._curveStartModifier.x * this.width,
-      start.y + this.curveStartModifier.y * this.height,
-    )
-    const endModifier = new Point2(
-      end.x + this.curveEndModifier.x * this.width,
-      end.y + this.curveEndModifier.y * this.height,
-    )
+    const startModifier = new Point2(start.x + this._curveStartModifier.x * this.width, start.y + this.curveStartModifier.y * this.height)
+    const endModifier = new Point2(end.x + this.curveEndModifier.x * this.width, end.y + this.curveEndModifier.y * this.height)
 
     this.path.reset()
     this.path.moveTo(start.x, start.y)
@@ -1467,13 +1223,7 @@ export class ConnectorShape extends EntityShape {
     const x2 = this.end.x - this.left
     const y2 = this.end.y - this.top
     const distance = this._connectorDoubleLineGap * 0.5
-    const [leftX1, leftY1, leftX2, leftY2, rightX1, rightY1, rightX2, rightY2] = MathUtils.getTranslatedLine(
-      x1,
-      y1,
-      x2,
-      y2,
-      distance,
-    )
+    const [leftX1, leftY1, leftX2, leftY2, rightX1, rightY1, rightX2, rightY2] = MathUtils.getTranslatedLine(x1, y1, x2, y2, distance)
     const [leftX3, leftY3, leftX4, leftY4, rightX3, rightY3, rightX4, rightY4] = MathUtils.getTranslatedLine(
       x1,
       y1,
@@ -1603,13 +1353,7 @@ export class ConnectorShape extends EntityShape {
 
   private populateDoubleLineArrowPath(path: Path, x1: number, y1: number, x2: number, y2: number, forStart: boolean) {
     const distance = this._connectorDoubleLineGap * 0.5
-    const [leftX1, leftY1, leftX2, leftY2, rightX1, rightY1, rightX2, rightY2] = MathUtils.getTranslatedLine(
-      x1,
-      y1,
-      x2,
-      y2,
-      distance,
-    )
+    const [leftX1, leftY1, leftX2, leftY2, rightX1, rightY1, rightX2, rightY2] = MathUtils.getTranslatedLine(x1, y1, x2, y2, distance)
     const [leftX3, leftY3, leftX4, leftY4, rightX3, rightY3, rightX4, rightY4] = MathUtils.getTranslatedLine(
       x1,
       y1,
@@ -1663,10 +1407,8 @@ export class ConnectorShape extends EntityShape {
       case ConnectorMode.DoubleAndStartArrow: {
         let startIndex = 1
         if (
-          (this._orthogonalPoints[0].x === this._orthogonalPoints[1].x &&
-            this._orthogonalPoints[0].x === this._orthogonalPoints[2].x) ||
-          (this._orthogonalPoints[0].y === this._orthogonalPoints[1].y &&
-            this._orthogonalPoints[0].y === this._orthogonalPoints[2].y)
+          (this._orthogonalPoints[0].x === this._orthogonalPoints[1].x && this._orthogonalPoints[0].x === this._orthogonalPoints[2].x) ||
+          (this._orthogonalPoints[0].y === this._orthogonalPoints[1].y && this._orthogonalPoints[0].y === this._orthogonalPoints[2].y)
         ) {
           startIndex = 2
         }
@@ -1689,10 +1431,8 @@ export class ConnectorShape extends EntityShape {
       case ConnectorMode.DoubleAndEndArrow: {
         let startIndex = 1
         if (
-          (this._orthogonalPoints[0].x === this._orthogonalPoints[1].x &&
-            this._orthogonalPoints[0].x === this._orthogonalPoints[2].x) ||
-          (this._orthogonalPoints[0].y === this._orthogonalPoints[1].y &&
-            this._orthogonalPoints[0].y === this._orthogonalPoints[2].y)
+          (this._orthogonalPoints[0].x === this._orthogonalPoints[1].x && this._orthogonalPoints[0].x === this._orthogonalPoints[2].x) ||
+          (this._orthogonalPoints[0].y === this._orthogonalPoints[1].y && this._orthogonalPoints[0].y === this._orthogonalPoints[2].y)
         ) {
           startIndex = 2
         }
@@ -1716,10 +1456,8 @@ export class ConnectorShape extends EntityShape {
       case ConnectorMode.DoubleAndBothArrows: {
         let startIndex = 1
         if (
-          (this._orthogonalPoints[0].x === this._orthogonalPoints[1].x &&
-            this._orthogonalPoints[0].x === this._orthogonalPoints[2].x) ||
-          (this._orthogonalPoints[0].y === this._orthogonalPoints[1].y &&
-            this._orthogonalPoints[0].y === this._orthogonalPoints[2].y)
+          (this._orthogonalPoints[0].x === this._orthogonalPoints[1].x && this._orthogonalPoints[0].x === this._orthogonalPoints[2].x) ||
+          (this._orthogonalPoints[0].y === this._orthogonalPoints[1].y && this._orthogonalPoints[0].y === this._orthogonalPoints[2].y)
         ) {
           startIndex = 2
         }
@@ -1801,27 +1539,10 @@ export class ConnectorShape extends EntityShape {
   private getCurveNearstDistance(x: number, y: number) {
     const start = new Point2(this.start.x - this.left, this.start.y - this.top)
     const end = new Point2(this.end.x - this.left, this.end.y - this.top)
-    const startModifier = new Point2(
-      start.x + this._curveStartModifier.x * this.width,
-      start.y + this.curveStartModifier.y * this.height,
-    )
-    const endModifier = new Point2(
-      end.x + this.curveEndModifier.x * this.width,
-      end.y + this.curveEndModifier.y * this.height,
-    )
+    const startModifier = new Point2(start.x + this._curveStartModifier.x * this.width, start.y + this.curveStartModifier.y * this.height)
+    const endModifier = new Point2(end.x + this.curveEndModifier.x * this.width, end.y + this.curveEndModifier.y * this.height)
 
-    const distance = Cubic.pointDistance(
-      start.x,
-      start.y,
-      startModifier.x,
-      startModifier.y,
-      endModifier.x,
-      endModifier.y,
-      end.x,
-      end.y,
-      x,
-      y,
-    )
+    const distance = Cubic.pointDistance(start.x, start.y, startModifier.x, startModifier.y, endModifier.x, endModifier.y, end.x, end.y, x, y)
     return distance
   }
 }

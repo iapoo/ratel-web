@@ -22,35 +22,17 @@ import type { DragEndEvent } from '@dnd-kit/core'
 import { DndContext, PointerSensor, useSensor } from '@dnd-kit/core'
 import { arrayMove, horizontalListSortingStrategy, SortableContext, useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import {
-  Button,
-  ColorPicker,
-  ConfigProvider,
-  Divider,
-  Dropdown,
-  FloatButton,
-  Input,
-  MenuProps,
-  Select,
-  Space,
-  Tabs,
-  theme,
-  Tooltip,
-} from 'antd'
 import { Editor, EditorEvent, EditorOperationEvent } from '@ratel-web/editor/Editor'
-import { CommonUtils, Constants, EditorHelper } from '@ratel-web/editor/Utils'
-import React, { FC, KeyboardEvent, SyntheticEvent, UIEvent, useEffect, useRef, useState } from 'react'
-import { FontSizeOptions, RequestUtils, SystemUtils, Utils } from '../Utils'
-
 import { EditorItem, EditorItemInfo, Item, ShapeEntity, TableEntity } from '@ratel-web/editor/Items'
-
 import { Operation, OperationHelper, OperationType } from '@ratel-web/editor/Operations'
-
 import { ThemeUtils } from '@ratel-web/editor/Theme'
-// @ts-ignore
-import { SVG } from '@svgdotjs/svg.js'
+import { CommonUtils, Constants, EditorHelper } from '@ratel-web/editor/Utils'
 import { Engine, FontSlant, FontWeight, MouseCode, Node, Point2, PointerEvent, TextDecoration } from '@ratel-web/engine'
+import { SVG } from '@svgdotjs/svg.js'
+import { Button, ColorPicker, ConfigProvider, Divider, Dropdown, FloatButton, Input, MenuProps, Select, Space, Tabs, theme, Tooltip } from 'antd'
+import React, { FC, KeyboardEvent, SyntheticEvent, UIEvent, useEffect, useRef, useState } from 'react'
 import { FormattedMessage, useIntl } from 'umi'
+import { FontSizeOptions, RequestUtils, SystemUtils, Utils } from '../Utils'
 
 interface DraggableTabPaneProps extends React.HTMLAttributes<HTMLDivElement> {
   'data-node-key': string
@@ -144,15 +126,7 @@ enum PopupType {
   TEXT,
 }
 
-const Content: FC<ContentProps> = ({
-  onEditorChange,
-  onMyShapesUpdated,
-  x,
-  y,
-  showRuler,
-  documentThemeName,
-  onDocumentThemeChanged,
-}) => {
+const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, showRuler, documentThemeName, onDocumentThemeChanged }) => {
   //const { token, } =  useToken()
   const intl = useIntl()
 
@@ -622,16 +596,7 @@ const Content: FC<ContentProps> = ({
           onEditorChange(oldEditor, Utils.currentEditor)
 
           if (oldEditor && requireOperation && Utils.currentEditor) {
-            let operation = new Operation(
-              Utils.currentEditor,
-              OperationType.SELECT_EDITOR,
-              [],
-              false,
-              [],
-              '',
-              oldEditor,
-              null,
-            )
+            let operation = new Operation(Utils.currentEditor, OperationType.SELECT_EDITOR, [], false, [], '', oldEditor, null)
             Utils.currentEditor.operationService.addOperation(operation)
             Utils.currentEditor.triggerOperationChange()
           }
@@ -884,12 +849,7 @@ const Content: FC<ContentProps> = ({
     }
   }
 
-  const addEditor = (
-    requireOperation: boolean,
-    fromEditor: Editor | null,
-    afterEditor: Editor | null,
-    beforeEditor: Editor | null,
-  ) => {
+  const addEditor = (requireOperation: boolean, fromEditor: Editor | null, afterEditor: Editor | null, beforeEditor: Editor | null) => {
     const newActiveKey = `${newTabIndex.current++}`
     const panes = panesRef.current
     const newPanes = [...panes]
@@ -1106,18 +1066,7 @@ const Content: FC<ContentProps> = ({
 
     if (Utils.currentEditor) {
       if (requireOperation) {
-        let operation = new Operation(
-          oldEditor!,
-          OperationType.REMOVE_EDITOR,
-          [],
-          false,
-          [],
-          undefined,
-          afterEditor,
-          null,
-          beforeEditor,
-          null,
-        )
+        let operation = new Operation(oldEditor!, OperationType.REMOVE_EDITOR, [], false, [], undefined, afterEditor, null, beforeEditor, null)
         Utils.currentEditor.operationService.addOperation(operation)
         Utils.currentEditor.triggerOperationChange()
       }
@@ -1428,9 +1377,7 @@ const Content: FC<ContentProps> = ({
       editorItems.forEach((editorItem: EditorItem) => {
         if (editorItem instanceof TableEntity) {
           if (Utils.currentEditor?.targetItem) {
-            Utils.currentEditor.targetItem.textDecoration = fontUnderline
-              ? TextDecoration.NONE
-              : TextDecoration.UNDERLINE
+            Utils.currentEditor.targetItem.textDecoration = fontUnderline ? TextDecoration.NONE : TextDecoration.UNDERLINE
           }
         } else {
           editorItem.textDecoration = fontUnderline ? TextDecoration.NONE : TextDecoration.UNDERLINE
@@ -1500,8 +1447,7 @@ const Content: FC<ContentProps> = ({
       editorItems.forEach((editorItem: EditorItem) => {
         if (editorItem instanceof TableEntity) {
           if (Utils.currentEditor?.targetItem) {
-            Utils.currentEditor.targetItem.textVerticalAlignment =
-              CommonUtils.parseTextVerticalAligment(textVerticalAlignment)
+            Utils.currentEditor.targetItem.textVerticalAlignment = CommonUtils.parseTextVerticalAligment(textVerticalAlignment)
           }
         } else {
           editorItem.textVerticalAlignment = CommonUtils.parseTextVerticalAligment(textVerticalAlignment)
@@ -2578,28 +2524,13 @@ const Content: FC<ContentProps> = ({
         }}
       >
         <Tooltip title={<FormattedMessage id="workspace.header.title.font-bold" />}>
-          <Button
-            type={fontBold ? 'primary' : 'text'}
-            size="small"
-            icon={<BoldOutlined />}
-            onClick={handleBoldChanged}
-          />
+          <Button type={fontBold ? 'primary' : 'text'} size="small" icon={<BoldOutlined />} onClick={handleBoldChanged} />
         </Tooltip>
         <Tooltip title={<FormattedMessage id="workspace.header.title.font-italic" />}>
-          <Button
-            type={fontItalic ? 'primary' : 'text'}
-            size="small"
-            icon={<ItalicOutlined />}
-            onClick={handleItalicChanged}
-          />
+          <Button type={fontItalic ? 'primary' : 'text'} size="small" icon={<ItalicOutlined />} onClick={handleItalicChanged} />
         </Tooltip>
         <Tooltip title={<FormattedMessage id="workspace.header.title.font-underline" />}>
-          <Button
-            type={fontUnderline ? 'primary' : 'text'}
-            size="small"
-            icon={<UnderlineOutlined />}
-            onClick={handleUnderlineChanged}
-          />
+          <Button type={fontUnderline ? 'primary' : 'text'} size="small" icon={<UnderlineOutlined />} onClick={handleUnderlineChanged} />
         </Tooltip>
         <Divider type="vertical" style={{ margin: 0 }} />
         <Tooltip title={<FormattedMessage id="workspace.header.title.text-left" />}>
@@ -2657,14 +2588,7 @@ const Content: FC<ContentProps> = ({
           {/* <InputNumber min={Consts.FONT_SIZE_MIN} max={Consts.FONT_SIZE_MAX} value={fontSize}
           ref={(node) => { setFontSizeNode(node) }}
           onChange={handleFontSizeChange} onStep={handleFontSizeStepChange} onBlur={handleFontSizeBlur} onPressEnter={handleFontSizePressEnter} size='small' style={{ width: 60, display: 'none' }} /> */}
-          <Select
-            size="small"
-            value={fontSize}
-            onChange={handleFontSizeChange}
-            style={{ width: 64 }}
-            options={FontSizeOptions}
-            bordered={false}
-          />
+          <Select size="small" value={fontSize} onChange={handleFontSizeChange} style={{ width: 64 }} options={FontSizeOptions} bordered={false} />
         </Tooltip>
         <Tooltip title={<FormattedMessage id="workspace.header.title.font-color" />}>
           <ColorPicker
@@ -2700,59 +2624,23 @@ const Content: FC<ContentProps> = ({
         }}
       >
         <Tooltip title={<FormattedMessage id="workspace.header.title.font-bold" />}>
-          <Button
-            type="text"
-            size="small"
-            icon={<InsertRowAboveOutlined />}
-            onClick={handleInsertRowBefore}
-            disabled={!tableEdittable}
-          />
+          <Button type="text" size="small" icon={<InsertRowAboveOutlined />} onClick={handleInsertRowBefore} disabled={!tableEdittable} />
         </Tooltip>
         <Tooltip title={<FormattedMessage id="workspace.header.title.font-italic" />}>
-          <Button
-            type="text"
-            size="small"
-            icon={<InsertRowBelowOutlined />}
-            onClick={handleInsertRowAfter}
-            disabled={!tableEdittable}
-          />
+          <Button type="text" size="small" icon={<InsertRowBelowOutlined />} onClick={handleInsertRowAfter} disabled={!tableEdittable} />
         </Tooltip>
         <Tooltip title={<FormattedMessage id="workspace.header.title.font-underline" />}>
-          <Button
-            type="text"
-            size="small"
-            icon={<InsertRowLeftOutlined />}
-            onClick={handleInsertColumnBefore}
-            disabled={!tableEdittable}
-          />
+          <Button type="text" size="small" icon={<InsertRowLeftOutlined />} onClick={handleInsertColumnBefore} disabled={!tableEdittable} />
         </Tooltip>
         <Tooltip title={<FormattedMessage id="workspace.header.title.font-underline" />}>
-          <Button
-            type="text"
-            size="small"
-            icon={<InsertRowRightOutlined />}
-            onClick={handleInsertColumnAfter}
-            disabled={!tableEdittable}
-          />
+          <Button type="text" size="small" icon={<InsertRowRightOutlined />} onClick={handleInsertColumnAfter} disabled={!tableEdittable} />
         </Tooltip>
         <Divider type="vertical" style={{ margin: 0 }} />
         <Tooltip title={<FormattedMessage id="workspace.header.title.text-left" />}>
-          <Button
-            type="text"
-            size="small"
-            icon={<DeleteRowOutlined />}
-            onClick={() => handleDeleteRow()}
-            disabled={!tableEdittable}
-          />
+          <Button type="text" size="small" icon={<DeleteRowOutlined />} onClick={() => handleDeleteRow()} disabled={!tableEdittable} />
         </Tooltip>
         <Tooltip title={<FormattedMessage id="workspace.header.title.text-center" />}>
-          <Button
-            type="text"
-            size="small"
-            icon={<DeleteColumnOutlined />}
-            onClick={() => handleDeleteColumn()}
-            disabled={!tableEdittable}
-          />
+          <Button type="text" size="small" icon={<DeleteColumnOutlined />} onClick={() => handleDeleteColumn()} disabled={!tableEdittable} />
         </Tooltip>
       </Space>
     </FloatButton.Group>
@@ -2786,9 +2674,7 @@ const Content: FC<ContentProps> = ({
             scrollbarWidth: 'thin',
             display: 'grid',
             placeItems: 'center',
-            scrollbarColor: Utils.currentEditor?.enableDarkTheme
-              ? `${scrollbarThumbColor} ${scrollbarTrackColor}`
-              : undefined,
+            scrollbarColor: Utils.currentEditor?.enableDarkTheme ? `${scrollbarThumbColor} ${scrollbarTrackColor}` : undefined,
           }}
           onScroll={handleScroll}
         >
@@ -2807,12 +2693,7 @@ const Content: FC<ContentProps> = ({
               />
               <Dropdown
                 menu={{
-                  items:
-                    popupType === PopupType.SHAPES
-                      ? popupShapeItems
-                      : popupType === PopupType.EDITOR
-                        ? popupEditorItems
-                        : popupText,
+                  items: popupType === PopupType.SHAPES ? popupShapeItems : popupType === PopupType.EDITOR ? popupEditorItems : popupText,
                 }}
                 trigger={['contextMenu']}
               >
@@ -2874,9 +2755,7 @@ const Content: FC<ContentProps> = ({
           />
         </div>
       </div>
-      <div
-        style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: `${Utils.TITLE_HEIGHT}px`, zIndex: 9999 }}
-      >
+      <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: `${Utils.TITLE_HEIGHT}px`, zIndex: 9999 }}>
         <ConfigProvider
           theme={{
             components: {

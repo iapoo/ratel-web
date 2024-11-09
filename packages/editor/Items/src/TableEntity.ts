@@ -133,12 +133,7 @@ export class TableEntity extends ContainerEntity {
       }
       this._rowCount++
       if (refreshBoundary) {
-        this.boundary = Rectangle.makeLTWH(
-          this.left,
-          this.top,
-          this.width,
-          this.height + this.items[rowIndex * this.columnCount].height,
-        )
+        this.boundary = Rectangle.makeLTWH(this.left, this.top, this.width, this.height + this.items[rowIndex * this.columnCount].height)
       }
     }
   }
@@ -159,12 +154,7 @@ export class TableEntity extends ContainerEntity {
       }
       this._rowCount++
       if (refreshBoundary) {
-        this.boundary = Rectangle.makeLTWH(
-          this.left,
-          this.top,
-          this.width,
-          this.height + this.items[rowIndex * this.columnCount].height,
-        )
+        this.boundary = Rectangle.makeLTWH(this.left, this.top, this.width, this.height + this.items[rowIndex * this.columnCount].height)
       }
     }
   }
@@ -220,12 +210,7 @@ export class TableEntity extends ContainerEntity {
           cell.boundary = Rectangle.makeLTWH(cell.left, cell.top - beforeCell.height, cell.width, cell.height)
         }
       }
-      this.boundary = Rectangle.makeLTWH(
-        this.left,
-        this.top,
-        this.width,
-        this.height - this.items[rowIndex * this._rowCount].height,
-      )
+      this.boundary = Rectangle.makeLTWH(this.left, this.top, this.width, this.height - this.items[rowIndex * this._rowCount].height)
       for (let i = 0; i < this._columnCount; i++) {
         this.removeItemAt(rowIndex * this._columnCount)
       }
@@ -256,12 +241,7 @@ export class TableEntity extends ContainerEntity {
     for (let rowIndex = 0; rowIndex < this._rowCount; rowIndex++) {
       for (let columnIndex = 0; columnIndex < this._columnCount; columnIndex++) {
         const cell = this.items[rowIndex * this._columnCount + columnIndex]
-        cell.boundary = Rectangle.makeLTWH(
-          cell.left * widthRatio,
-          cell.top * heightRatio,
-          cell.width * widthRatio,
-          cell.height * heightRatio,
-        )
+        cell.boundary = Rectangle.makeLTWH(cell.left * widthRatio, cell.top * heightRatio, cell.width * widthRatio, cell.height * heightRatio)
       }
     }
   }
@@ -290,12 +270,7 @@ export class TableEntity extends ContainerEntity {
     const cellHeight = this.height / this.rowCount
     for (let rowIndex = 0; rowIndex < this._rowCount; rowIndex++) {
       for (let columnIndex = 0; columnIndex < this._columnCount; columnIndex++) {
-        const cell = new CellEntity(
-          Math.round(columnIndex * cellWidth),
-          Math.round(rowIndex * cellHeight),
-          Math.round(cellWidth),
-          Math.round(cellHeight),
-        )
+        const cell = new CellEntity(Math.round(columnIndex * cellWidth), Math.round(rowIndex * cellHeight), Math.round(cellWidth), Math.round(cellHeight))
         // console.log(cell)
         // const paint = new Paint()
         // if (rowIndex == 0) {

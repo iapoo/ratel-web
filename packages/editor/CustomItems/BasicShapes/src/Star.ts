@@ -406,29 +406,20 @@ export class Star extends CustomEntity {
     if (theThis.typeInfo.adaptInPercent) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       adapterWidth =
-        theThis.width * theThis.adapter.x * (theThis.typeInfo.adapterEnd.x - theThis.typeInfo.adapterStart.x) +
-        theThis.typeInfo.adapterStart.x * theThis.width
+        theThis.width * theThis.adapter.x * (theThis.typeInfo.adapterEnd.x - theThis.typeInfo.adapterStart.x) + theThis.typeInfo.adapterStart.x * theThis.width
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       adapterHeight =
         theThis.height * theThis.adapter.y * (theThis.typeInfo.adapterEnd.y - theThis.typeInfo.adapterStart.y) +
         theThis.typeInfo.adapterStart.y * theThis.height
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      adapterSizeX =
-        theThis.adapterSize * (theThis.typeInfo.adapterEnd.x - theThis.typeInfo.adapterStart.x) * theThis.width
+      adapterSizeX = theThis.adapterSize * (theThis.typeInfo.adapterEnd.x - theThis.typeInfo.adapterStart.x) * theThis.width
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      adapterSizeY =
-        theThis.adapterSize * (theThis.typeInfo.adapterEnd.y - theThis.typeInfo.adapterStart.y) * theThis.height
+      adapterSizeY = theThis.adapterSize * (theThis.typeInfo.adapterEnd.y - theThis.typeInfo.adapterStart.y) * theThis.height
     }
     //console.log(`=====${(modifierWidth - centerPoint.x) ^ 2}    ${(modifierWidth - centerPoint.x) * (modifierWidth - centerPoint.x)}`)
     const modifier =
-      Math.sqrt(
-        (modifierWidth - centerPoint.x) * (modifierWidth - centerPoint.x) +
-          (modifierHeight - centerPoint.y) * (modifierHeight - centerPoint.y),
-      ) /
-      Math.sqrt(
-        (adapterPoint.x - centerPoint.x) * (adapterPoint.x - centerPoint.x) +
-          (adapterPoint.y - centerPoint.y) * (adapterPoint.y - centerPoint.y),
-      )
+      Math.sqrt((modifierWidth - centerPoint.x) * (modifierWidth - centerPoint.x) + (modifierHeight - centerPoint.y) * (modifierHeight - centerPoint.y)) /
+      Math.sqrt((adapterPoint.x - centerPoint.x) * (adapterPoint.x - centerPoint.x) + (adapterPoint.y - centerPoint.y) * (adapterPoint.y - centerPoint.y))
     theThis.path.reset()
     theThis.path.moveTo(points[0].x, points[0].y)
     for (let i = 0; i < sideCount; i++) {

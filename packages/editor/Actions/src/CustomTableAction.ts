@@ -6,12 +6,7 @@ export class CustomTableAction extends Action {
   private _classType: typeof CustomTableEntity
   private _shapeType: CustomTableType
 
-  public constructor(
-    editor: Editor,
-    type: string | undefined,
-    classType: typeof CustomTableEntity,
-    shapeType: CustomTableType,
-  ) {
+  public constructor(editor: Editor, type: string | undefined, classType: typeof CustomTableEntity, shapeType: CustomTableType) {
     super(editor, type)
     this._classType = classType
     this._shapeType = shapeType

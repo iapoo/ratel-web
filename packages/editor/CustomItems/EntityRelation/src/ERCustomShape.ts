@@ -430,26 +430,21 @@ export class ERCustomShape extends CustomEntity {
         theThis.typeInfo.controllerStart.x * theThis.width
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       controllerHeight =
-        theThis.height *
-          theThis.controller.y *
-          (theThis.typeInfo.controllerEnd.y - theThis.typeInfo.controllerStart.y) +
+        theThis.height * theThis.controller.y * (theThis.typeInfo.controllerEnd.y - theThis.typeInfo.controllerStart.y) +
         theThis.typeInfo.controllerStart.y * theThis.height
     }
     if (theThis.typeInfo.adaptInPercent) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       adapterWidth =
-        theThis.width * theThis.adapter.x * (theThis.typeInfo.adapterEnd.x - theThis.typeInfo.adapterStart.x) +
-        theThis.typeInfo.adapterStart.x * theThis.width
+        theThis.width * theThis.adapter.x * (theThis.typeInfo.adapterEnd.x - theThis.typeInfo.adapterStart.x) + theThis.typeInfo.adapterStart.x * theThis.width
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       adapterHeight =
         theThis.height * theThis.adapter.y * (theThis.typeInfo.adapterEnd.y - theThis.typeInfo.adapterStart.y) +
         theThis.typeInfo.adapterStart.y * theThis.height
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      adapterSizeX =
-        theThis.adapterSize * (theThis.typeInfo.adapterEnd.x - theThis.typeInfo.adapterStart.x) * this.width
+      adapterSizeX = theThis.adapterSize * (theThis.typeInfo.adapterEnd.x - theThis.typeInfo.adapterStart.x) * this.width
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      adapterSizeY =
-        theThis.adapterSize * (theThis.typeInfo.adapterEnd.y - theThis.typeInfo.adapterStart.y) * this.height
+      adapterSizeY = theThis.adapterSize * (theThis.typeInfo.adapterEnd.y - theThis.typeInfo.adapterStart.y) * this.height
     }
     theThis.path.reset()
     theThis.secondPath.reset()
@@ -482,14 +477,7 @@ export class ERCustomShape extends CustomEntity {
         theThis.secondStroke.setStrokeDashStyle(theThis.stroke.getStrokeDashStyle())
         theThis.secondFill.setAlpha(0)
         theThis.path.addOval(Rectangle.makeLTWH(0, 0, theThis.width, theThis.height))
-        theThis.secondPath.addOval(
-          Rectangle.makeLTWH(
-            offsetWidth,
-            offsetHeight,
-            theThis.width - offsetWidth * 2,
-            theThis.height - offsetHeight * 2,
-          ),
-        )
+        theThis.secondPath.addOval(Rectangle.makeLTWH(offsetWidth, offsetHeight, theThis.width - offsetWidth * 2, theThis.height - offsetHeight * 2))
         break
       }
       case ERCustomShapes.TYPE_RELATIONSHIP: {
