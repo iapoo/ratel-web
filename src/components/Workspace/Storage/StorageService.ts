@@ -1,18 +1,8 @@
 /* eslint-disable max-params */
-import { Point2, Rotation } from '@/components/Engine'
-import { Editor, EditorInfo, } from '@/components/Rockie/Editor'
-import { Connector, EditorItem, Entity, LineEntity, ShapeEntity, ShapeTypes, Shapes, TableEntity, } from '@/components/Rockie/Items'
-import { Categories, } from '@/components/Rockie/Items/src/Item'
-import { EditorData, } from './EditorData'
-import { EditorItemData, } from './EditorItemData'
-import { StorageData, } from './StorageData'
-import { ConnectorType, EntityShape } from '@/components/Rockie/Shapes'
-import { ShapeData } from './ShapeData'
-import { LineData } from './LineData'
-import { ConnectorData } from './ConnectorData'
-import { Consts, SystemUtils } from '../Utils'
-import { CommonUtils } from '@/components/Rockie/Utils'
-import { OperationHelper } from '@/components/Rockie/Operations'
+import { Editor, EditorInfo } from '@ratel-web/editor/Editor'
+import { OperationHelper } from '@ratel-web/editor/Operations'
+import { EditorData } from './EditorData'
+import { StorageData } from './StorageData'
 
 export class StorageService {
   // public static loadItemData(itemData: EditorItemData): EditorItem {
@@ -126,27 +116,27 @@ export class StorageService {
   }
 
   public set editors(value: Array<Editor>) {
-    this._editors = [...value,]
+    this._editors = [...value]
   }
 
   public get storageData() {
     return this._storageData
   }
-
-  public saveOld() {
-    this._storageData.sheets.length = 0
-    const count = this._editors.length
-    for (let i = 0; i < count; i++) {
-      const editor = this._editors[i]
-      const editorData = new EditorData()
-      this.saveEditor(editor, editorData)
-      this._storageData.sheets.push(editorData)
-    }
-
-    const data = JSON.stringify(this._storageData)
-    console.log(data)
-    StorageService.testdata = data
-  }
+  //
+  // public saveOld() {
+  //   this._storageData.sheets.length = 0
+  //   const count = this._editors.length
+  //   for (let i = 0; i < count; i++) {
+  //     const editor = this._editors[i]
+  //     const editorData = new EditorData()
+  //     this.saveEditor(editor, editorData)
+  //     this._storageData.sheets.push(editorData)
+  //   }
+  //
+  //   const data = JSON.stringify(this._storageData)
+  //   console.log(data)
+  //   StorageService.testdata = data
+  // }
 
   public save(documentThemeName: string, version: string) {
     this._storageData.theme = documentThemeName
@@ -245,7 +235,7 @@ export class StorageService {
   //       break
   //   }
   //   editorItemData.id = editorItem.id
-  //   editorItemData.items.length = 0    
+  //   editorItemData.items.length = 0
   //   editorItemData.useTheme = editorItem.useTheme
   //   if(editorItem.useTheme) {
   //     editorItemData.strokeColor = null
@@ -282,7 +272,6 @@ export class StorageService {
   //   return lineData
   // }
 
-
   // private saveConnectorData(connector: Connector) : EditorItemData {
   //   let connectorData = new ConnectorData(connector.start.x, connector.start.y, connector.end.x, connector.end.y, connector.text, connector.rotation.radius)
   //   if(connector.source) {
@@ -301,5 +290,4 @@ export class StorageService {
 
   //   return connectorData
   // }
-
 }

@@ -1,0 +1,48 @@
+{
+  "name": "@ratel-web/editor",
+  "version": "0.1.0",
+  "description": "Plugin to add mind shapes for ratel web.",
+  "main": "index.ts",
+  "scripts": {
+    "typings": "tsc --emitDeclarationOnly -d --outDir typings"
+  },
+  "exports": {
+    "./Actions": "./Actions/index.ts",
+    "./CustomItems/Arrows": "./CustomItems/Arrows/index.ts",
+    "./CustomItems/BasicShapes": "./CustomItems/BasicShapes/index.ts",
+    "./CustomItems/EntityRelation": "./CustomItems/EntityRelation/index.ts",
+    "./CustomItems/FlowChart": "./CustomItems/FlowChart/index.ts",
+    "./CustomItems/Mockup": "./CustomItems/Mockup/index.ts",
+    "./CustomItems/UML": "./CustomItems/UML/index.ts",
+    "./Design": "./Design/index.ts",
+    "./Editor": "./Editor/index.ts",
+    "./Items": "./Items/index.ts",
+    "./Operations": "./Operations/index.ts",
+    "./Shapes": "./Shapes/index.ts",
+    "./Theme": "./Theme/index.ts",
+    "./Utils": "./Utils/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iapoo/ratel-web.git",
+    "directory": "packages/editor"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "ratel-web"
+  ],
+  "author": "Ivipa Ratel Team (https://ratel.ivipa.com)",
+  "license": "MIT",
+  "homepage": "https://ratel.ivipa.com",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "@ratel-web/engine": "0.1.0",
+    "@ratel-web/painter": "0.1.0"
+  },
+  "devDependencies": {
+  }
+}

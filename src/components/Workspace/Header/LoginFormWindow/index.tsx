@@ -1,13 +1,13 @@
-import React, { FC, useEffect, useState, useRef } from 'react'
-import styles from './index.css'
-import { Form, Input, Checkbox, Row, Col, Button, Modal, Menu, message, Alert, } from 'antd'
-import { RequestUtils, SystemUtils, Utils, } from '../../Utils'
+import { LockOutlined, UserOutlined } from '@ant-design/icons'
+import { Alert, Form, Input, message, Modal } from 'antd'
+import axios from 'axios'
+// @ts-ignore
+import CryptoJs from 'crypto-js'
+import { FC, useEffect, useRef, useState } from 'react'
 import type { DraggableData, DraggableEvent } from 'react-draggable'
 import Draggable from 'react-draggable'
-import axios from 'axios'
-import CryptoJs from 'crypto-js'
-import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi'
-import { LockOutlined, UserOutlined } from '@ant-design/icons'
+import { FormattedMessage, useIntl } from 'umi'
+import { RequestUtils, SystemUtils } from '../../Utils'
 
 interface LoginFormWindowProps {
   visible: boolean
@@ -17,47 +17,44 @@ interface LoginFormWindowProps {
   onWindowOk: () => void
 }
 
-const LoginFormWindowPage: FC<LoginFormWindowProps> = ({
-  visible, x, y, onWindowCancel, onWindowOk,
-}) => {
+const LoginFormWindowPage: FC<LoginFormWindowProps> = ({ visible, x, y, onWindowCancel, onWindowOk }) => {
   const intl = useIntl()
-  const [messageApi, contextHolder,] = message.useMessage()
-  const [dataLoading, setDataLoading,] = useState<boolean>(false)
-  const [modalX, setModalX,] = useState<number>(0)
-  const [modalY, setModalY,] = useState<number>(0)
-  const [disabled, setDisabled,] = useState<boolean>(true)
-  const [origModalX, setOrigModalX,] = useState<number>(0)
-  const [origModalY, setOrigModalY,] = useState<number>(0)
-  const [windowVisible, setWindowVisible,] = useState<boolean>(false)
+  const [messageApi, contextHolder] = message.useMessage()
+  const [dataLoading, setDataLoading] = useState<boolean>(false)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [modalX, setModalX] = useState<number>(0)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [modalY, setModalY] = useState<number>(0)
+  const [disabled, setDisabled] = useState<boolean>(true)
+  const [origModalX, setOrigModalX] = useState<number>(0)
+  const [origModalY, setOrigModalY] = useState<number>(0)
+  const [windowVisible, setWindowVisible] = useState<boolean>(false)
   const draggleRef = useRef<HTMLDivElement>(null)
-  const [loginForm,] = Form.useForm()
-  const [errorVisible, setErrorVisible,] = useState<boolean>(false)
-  const [errorMessage, setErrorMessage,] = useState<string>('')
-  const [bounds, setBounds,] = useState({ left: 0, top: 0, bottom: 0, right: 0 })
+  const [loginForm] = Form.useForm()
+  const [errorVisible, setErrorVisible] = useState<boolean>(false)
+  const [errorMessage, setErrorMessage] = useState<string>('')
+  const [bounds, setBounds] = useState({ left: 0, top: 0, bottom: 0, right: 0 })
 
-  if (origModalX != x) {
+  if (origModalX !== x) {
     setOrigModalX(x)
     setModalX(x)
   }
 
-  if (origModalY != y) {
+  if (origModalY !== y) {
     setOrigModalY(y)
     setModalY(y)
   }
 
-  if (windowVisible != visible) {
+  if (windowVisible !== visible) {
     setDataLoading(false)
     setWindowVisible(visible)
   }
-
 
   useEffect(() => {
     if (!dataLoading) {
       setDataLoading(true)
       setErrorVisible(false)
-      const fetchData = async () => {
-
-      }
+      const fetchData = async () => {}
       fetchData()
     }
   })
@@ -92,14 +89,13 @@ const LoginFormWindowPage: FC<LoginFormWindowProps> = ({
     const urlObject = SystemUtils.parseUrl(url)
     // console.log(`check admin = ${urlObject}`)
     if (urlObject?.path) {
+      // @ts-ignore
       if (urlObject.path === '/admin') {
         return true
       }
     }
     return false
   }
-
-
 
   const checkAndLoginAsAdmin = async () => {
     const checkIsAdminLink = checkAdminLink()
@@ -108,12 +104,12 @@ const LoginFormWindowPage: FC<LoginFormWindowProps> = ({
       if (loginData.status === 200 && loginData.data.success) {
         messageApi.open({
           type: 'success',
-          content: intl.formatMessage({ id: 'workspace.header.login-form-window.login-as-admin-success' })
+          content: intl.formatMessage({ id: 'workspace.header.login-form-window.login-as-admin-success' }),
         })
       } else {
         messageApi.open({
           type: 'error',
-          content: intl.formatMessage({ id: 'workspace.header.login-form-window.login-as-admin-failure' })
+          content: intl.formatMessage({ id: 'workspace.header.login-form-window.login-as-admin-failure' }),
         })
       }
     }
@@ -123,22 +119,23 @@ const LoginFormWindowPage: FC<LoginFormWindowProps> = ({
     console.log('Receive values:', values)
     const { userName, userPassword } = values
     const data = {
-      'name': userName,
-      'password': CryptoJs.SHA512(userPassword).toString()
+      name: userName,
+      password: CryptoJs.SHA512(userPassword).toString(),
     }
     const config = {
       headers: {
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     }
 
     setErrorVisible(false)
-    axios.post(`${RequestUtils.systemServerAddress}/login`, data, config)
-      .then(response => {
+    axios
+      .post(`${RequestUtils.systemServerAddress}/login`, data, config)
+      .then((response) => {
         if (response.status === 200 && response.data.success) {
           messageApi.open({
             type: 'success',
-            content: intl.formatMessage({ id: 'workspace.header.login-form-window.window-success-message' })
+            content: intl.formatMessage({ id: 'workspace.header.login-form-window.window-success-message' }),
           })
           console.log('Login succeed')
           RequestUtils.token = response.data.data
@@ -158,7 +155,7 @@ const LoginFormWindowPage: FC<LoginFormWindowProps> = ({
         }
         console.log('Login data: ', response.data)
       })
-      .catch(error => {
+      .catch((error) => {
         console.log('Login error: ', error)
         setErrorMessage('System error internally')
       })
@@ -169,8 +166,9 @@ const LoginFormWindowPage: FC<LoginFormWindowProps> = ({
       {contextHolder}
       <Modal
         title={
-          <div style={{ width: '100%', cursor: 'move', }}
-            className='drag-handler'
+          <div
+            style={{ width: '100%', cursor: 'move' }}
+            className="drag-handler"
             onMouseOver={() => {
               if (disabled) {
                 setDisabled(false)
@@ -181,11 +179,11 @@ const LoginFormWindowPage: FC<LoginFormWindowProps> = ({
             }}
             // fix eslintjsx-a11y/mouse-events-have-key-events
             // https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/blob/master/docs/rules/mouse-events-have-key-events.md
-            onFocus={() => { }}
-            onBlur={() => { }}
-          // end
+            onFocus={() => {}}
+            onBlur={() => {}}
+            // end
           >
-            <FormattedMessage id='workspace.header.login-form-window.window-title' />
+            <FormattedMessage id="workspace.header.login-form-window.window-title" />
           </div>
         }
         centered
@@ -196,7 +194,7 @@ const LoginFormWindowPage: FC<LoginFormWindowProps> = ({
         modalRender={(modal) => (
           <Draggable
             // disabled={true}
-            handle='.drag-handler'
+            handle=".drag-handler"
             bounds={bounds}
             onStart={handleDragStart}
           >
@@ -204,41 +202,66 @@ const LoginFormWindowPage: FC<LoginFormWindowProps> = ({
           </Draggable>
         )}
       >
-        <div style={{ paddingTop: '32px', }}>
+        <div style={{ paddingTop: '32px' }}>
           <Form
-            name='LoginFormWindow'
+            name="LoginFormWindow"
             form={loginForm}
-            className='login-form'
+            className="login-form"
             onFinish={onFinish}
-            style={{ maxWidth: '100%', }}
+            style={{ maxWidth: '100%' }}
           >
-            <Form.Item name='userName' rules={[{ required: true, message: <FormattedMessage id='workspace.header.login-form-window.user-name-message' />, },]} style={{ marginBottom: '4px', }} >
+            <Form.Item
+              name="userName"
+              rules={[
+                {
+                  required: true,
+                  message: <FormattedMessage id="workspace.header.login-form-window.user-name-message" />,
+                },
+              ]}
+              style={{ marginBottom: '4px' }}
+            >
               <Input
                 prefix={<UserOutlined />}
                 placeholder={intl.formatMessage({ id: 'workspace.header.login-form-window.user-name-placeholder' })}
-                size='middle'
+                size="middle"
                 bordered={false}
-                style={{ width: '100%', }}
+                style={{ width: '100%' }}
               />
             </Form.Item>
-            <div style={{ marginLeft: '40px', width: '280px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', }} />
-            <Form.Item name='userPassword' rules={[{ required: true, message: <FormattedMessage id='workspace.header.login-form-window.user-password-message' />, },]} style={{ marginBottom: '4px', }}>
+            <div
+              style={{
+                marginLeft: '40px',
+                width: '280px',
+                height: '1px',
+                backgroundColor: 'lightgray',
+                marginBottom: '12px',
+                opacity: '0.5',
+              }}
+            />
+            <Form.Item
+              name="userPassword"
+              rules={[
+                {
+                  required: true,
+                  message: <FormattedMessage id="workspace.header.login-form-window.user-password-message" />,
+                },
+              ]}
+              style={{ marginBottom: '4px' }}
+            >
               <Input.Password
                 prefix={<LockOutlined />}
-                type='password'
+                type="password"
                 placeholder={intl.formatMessage({ id: 'workspace.header.login-form-window.user-password-placeholder' })}
-                size='middle'
+                size="middle"
                 bordered={false}
-                style={{ width: '100%', }}
+                style={{ width: '100%' }}
               />
             </Form.Item>
             {/* <div style={{ marginLeft: '40px', width: '280px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', }} />
             <Form.Item name='remember' valuePropName='checked' style={{ marginBottom: '4px', }}>
               <Checkbox style={{ float: 'right', fontSize: '14px', }}><FormattedMessage id='workspace.header.login-form-window.remember-account-title' /></Checkbox>
             </Form.Item> */}
-            {errorVisible && (
-              <Alert message={errorMessage} type="error" closable />
-            )}
+            {errorVisible && <Alert message={errorMessage} type="error" closable />}
           </Form>
         </div>
       </Modal>

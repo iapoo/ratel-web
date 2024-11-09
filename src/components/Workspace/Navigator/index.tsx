@@ -1,27 +1,66 @@
-import React, { createRef, FC, MouseEventHandler, SyntheticEvent, UIEvent, useEffect, useState, } from 'react'
-import styles from './index.css'
-import { Button, Collapse, CollapseProps, Divider, Image, Popover, Space, Tooltip, message, theme, } from 'antd'
-import { Utils, RequestUtils, } from '../Utils'
-import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi'
-import { ConnectorAction, ContainerAction, CustomShapeAction, ImageContainerAction, SvgContainerAction, LineAction, ShapeAction, TableAction, CustomTableAction, ExtendedShapeAction, ExtendedContainerAction, FrameAction, CustomContainerAction, MyShapeAction, } from '../../Rockie/Actions'
-import { StorageService, } from '../Storage'
-import { ContainerEntity, ContainerTypes, Containers, CustomConnector, CustomEntity, CustomTableEntity, EditorItemInfo, FrameEntity, ShapeTypes, Shapes } from '@/components/Rockie/Items'
-import { BasicShapes } from '@/components/Rockie/CustomItems/BasicShapes'
-import { ShapeEntity, ShapeType } from '@/components/Rockie/Items/src/ShapeEntity'
-import { Arrows } from '@/components/Rockie/CustomItems/Arrows'
-import { AliyunShapes } from '@/components/Rockie/CustomItems/Aliyun'
-import { AwsShapes } from '@/components/Rockie/CustomItems/Aws'
-import { FlowChartShapes } from '@/components/Rockie/CustomItems/FlowChart'
-import { UMLBasicShapesForActivityState, UMLBasicShapesForClass, UMLBasicShapesForUseCase, UMLConnectors, UMLConnectorsForActivityState, UMLConnectorsForClass, UMLConnectorsForSequence, UMLConnectorsForUseCase, UMLContainerShapes, UMLContainerShapesForActivityState, UMLContainerShapesForClass, UMLContainerShapesForUseCase, UMLCustomShapesForActivityState, UMLCustomShapesForSequence, UMLFrameShapesForSequence, UMLCustomTables, UMLGridShapesForClass, UMLBasicShapes, UMLCustomShapesForOther, UMLGridShapesForOther, UMLCustomContainersForSequence } from '@/components/Rockie/CustomItems/UML'
-import { CustomConnectorAction } from '@/components/Rockie/Actions/src/CustomConnectorAction'
-import { CustomContainerEntity } from '@/components/Rockie/Items/src/CustomContainerEntity'
-import { MyShape, MyShapes } from '../Utils/RequestUtils'
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import { EditOutlined } from '@ant-design/icons'
+import { Element, Path, SVG, Svg } from '@svgdotjs/svg.js'
+import { Button, Collapse, CollapseProps, Popover, Space, theme } from 'antd'
+import {
+  ConnectorAction,
+  ContainerAction,
+  CustomConnectorAction,
+  CustomContainerAction,
+  CustomShapeAction,
+  CustomTableAction,
+  ExtendedContainerAction,
+  ExtendedShapeAction,
+  FrameAction,
+  MyShapeAction,
+  ShapeAction,
+  TableAction,
+} from '@ratel-web/editor/Actions'
+import { Arrows } from '@ratel-web/editor/CustomItems/Arrows'
+import { BasicShapes } from '@ratel-web/editor/CustomItems/BasicShapes'
+import { ERCustomShapes } from '@ratel-web/editor/CustomItems/EntityRelation'
+import { FlowChartShapes } from '@ratel-web/editor/CustomItems/FlowChart'
+import { MockupShapes } from '@ratel-web/editor/CustomItems/Mockup'
+import {
+  UMLBasicShapesForActivityState,
+  UMLBasicShapesForClass,
+  UMLBasicShapesForUseCase,
+  UMLConnectorsForActivityState,
+  UMLConnectorsForClass,
+  UMLConnectorsForSequence,
+  UMLConnectorsForUseCase,
+  UMLContainerShapesForActivityState,
+  UMLContainerShapesForClass,
+  UMLContainerShapesForUseCase,
+  UMLCustomContainersForSequence,
+  UMLCustomShapesForActivityState,
+  UMLCustomShapesForOther,
+  UMLCustomShapesForSequence,
+  UMLFrameShapesForSequence,
+  UMLGridShapesForClass,
+  UMLGridShapesForOther,
+} from '@ratel-web/editor/CustomItems/UML'
+import {
+  ContainerEntity,
+  ContainerTypes,
+  CustomConnector,
+  CustomConnectorTypeInfo,
+  CustomContainerEntity,
+  CustomEntity,
+  CustomTableEntity,
+  CustomTableType,
+  FrameEntity,
+  MyShape,
+  ShapeEntity,
+  ShapeType,
+  ShapeTypes,
+  TableTypes,
+} from '@ratel-web/editor/Items'
+import React, { FC, MouseEventHandler, UIEvent, createRef, useEffect, useState } from 'react'
+import { FormattedMessage } from 'umi'
+import { RequestUtils, Utils } from '../Utils'
+import { MyShapes } from '../Utils/RequestUtils'
 import MyShapesWindowPage from './MyShapesWindow'
-import { ERCustomShapes } from '@/components/Rockie/CustomItems/EntityRelation'
-import { MockupShapes } from '@/components/Rockie/CustomItems/Mockup'
-import { Circle, Container, Element, Ellipse, G, Gradient, Line, Marker, Path, Pattern, PointArray, Polyline, Rect, SVG, Stop, Style, Svg, } from "@svgdotjs/svg.js"
-import { TableTypes } from '@/components/Rockie/Items/src/TableEntity'
 
 interface NavigatorProps {
   navigatorWidth: number
@@ -44,18 +83,20 @@ const ACTION_IMAGE_ID = 'navigator-action-image-id'
 const NAVIGATOR_MASK_ID = 'navigator-mask-id'
 
 const Navigator: FC<NavigatorProps> = ({
-  navigatorWidth, myShapesUpdated, onMyShapesLoaded //, loginCompleted, logoutCompleted
+  navigatorWidth,
+  myShapesUpdated,
+  onMyShapesLoaded, //, loginCompleted, logoutCompleted
 }) => {
   const token = theme.useToken()
-  const workspaceBackground = token.token.colorBgElevated
+  //const workspaceBackground = token.token.colorBgElevated
   const scrollbarTrackColor = token.token.colorBgContainer
   const scrollbarThumbColor = token.token.colorTextQuaternary
 
-  const [initialized, setInitialized,] = useState<boolean>(false)
-  const [myShapes, setMyShapes,] = useState<MyShape[]>([])
-  const [myShapesWindowVisiible, setMyShapesWindowVisible,] = useState<boolean>(false)
-  const [myShapesChanged, setMyShapesChanged,] = useState<boolean>(false)
-  const [navigatorScrollTop, setNavigatorScallTop,] = useState<number>(0)
+  const [initialized, setInitialized] = useState<boolean>(false)
+  const [myShapes, setMyShapes] = useState<MyShape[]>([])
+  const [myShapesWindowVisible, setMyShapesWindowVisible] = useState<boolean>(false)
+  const [myShapesChanged, setMyShapesChanged] = useState<boolean>(false)
+  const [navigatorScrollTop, setNavigatorScallTop] = useState<number>(0)
 
   useEffect(() => {
     if (myShapesChanged || myShapesUpdated || !initialized) {
@@ -97,7 +138,7 @@ const Navigator: FC<NavigatorProps> = ({
   const refreshMyShapes = async () => {
     const fetchSettingsData = async () => {
       const settingsData = await RequestUtils.getSettings()
-      if (settingsData.status == 200 && settingsData.data.success) {
+      if (settingsData.status === 200 && settingsData.data.success) {
         const data = settingsData.data.data.settings
         const newMyShapes: MyShapes = data ? JSON.parse(data) : { shapes: [] }
         if (newMyShapes) {
@@ -121,24 +162,23 @@ const Navigator: FC<NavigatorProps> = ({
     console.log(key)
   }
 
-  const addRectangle = () => {
-    if (Utils.currentEditor) {
-      Utils.currentEditor.action = new ShapeAction(Utils.currentEditor)
-    }
-  }
-
-  const addEllipse = () => {
-    if (Utils.currentEditor) {
-      Utils.currentEditor.action = new ShapeAction(Utils.currentEditor, Shapes.TYPE_ELLIPSE)
-    }
-  }
-
-
-  const addSquare = () => {
-    if (Utils.currentEditor) {
-      Utils.currentEditor.action = new ShapeAction(Utils.currentEditor, Shapes.TYPE_SQUARE, Shapes.FREEZE_ASPECT_RATIO)
-    }
-  }
+  // const addRectangle = () => {
+  //   if (Utils.currentEditor) {
+  //     Utils.currentEditor.action = new ShapeAction(Utils.currentEditor)
+  //   }
+  // }
+  //
+  // const addEllipse = () => {
+  //   if (Utils.currentEditor) {
+  //     Utils.currentEditor.action = new ShapeAction(Utils.currentEditor, Shapes.TYPE_ELLIPSE)
+  //   }
+  // }
+  //
+  // const addSquare = () => {
+  //   if (Utils.currentEditor) {
+  //     Utils.currentEditor.action = new ShapeAction(Utils.currentEditor, Shapes.TYPE_SQUARE, Shapes.FREEZE_ASPECT_RATIO)
+  //   }
+  // }
 
   const addShape = (type: string, folder: string) => {
     if (Utils.currentEditor) {
@@ -161,7 +201,12 @@ const Navigator: FC<NavigatorProps> = ({
     }
   }
 
-  const addCustomContainer = (type: string, classType: typeof CustomContainerEntity, shapeType: ShapeType, folder: string) => {
+  const addCustomContainer = (
+    type: string,
+    classType: typeof CustomContainerEntity,
+    shapeType: ShapeType,
+    folder: string,
+  ) => {
     if (Utils.currentEditor) {
       Utils.currentEditor.action = new CustomContainerAction(Utils.currentEditor, type, classType, shapeType)
       Utils.currentEditor.action.imageId = process.env.BASIC_PATH + `/${folder}/${type}.svg`
@@ -175,19 +220,19 @@ const Navigator: FC<NavigatorProps> = ({
     }
   }
 
-  const addSvgShape = (type: string, data: string, width: number, height: number, folder: string) => {
-    if (Utils.currentEditor) {
-      Utils.currentEditor.action = new SvgContainerAction(Utils.currentEditor, type, data, width, height)
-      Utils.currentEditor.action.imageId = process.env.BASIC_PATH + `/${folder}/${type}.png`
-    }
-  }
-
-  const addImageShape = (type: string, data: string, width: number, height: number, folder: string) => {
-    if (Utils.currentEditor) {
-      Utils.currentEditor.action = new ImageContainerAction(Utils.currentEditor, type, data, width, height)
-      Utils.currentEditor.action.imageId = process.env.BASIC_PATH + `/${folder}/${type}.png`
-    }
-  }
+  // const addSvgShape = (type: string, data: string, width: number, height: number, folder: string) => {
+  //   if (Utils.currentEditor) {
+  //     Utils.currentEditor.action = new SvgContainerAction(Utils.currentEditor, type, data, width, height)
+  //     Utils.currentEditor.action.imageId = process.env.BASIC_PATH + `/${folder}/${type}.png`
+  //   }
+  // }
+  //
+  // const addImageShape = (type: string, data: string, width: number, height: number, folder: string) => {
+  //   if (Utils.currentEditor) {
+  //     Utils.currentEditor.action = new ImageContainerAction(Utils.currentEditor, type, data, width, height)
+  //     Utils.currentEditor.action.imageId = process.env.BASIC_PATH + `/${folder}/${type}.png`
+  //   }
+  // }
 
   const addLine = (type: string, folder: string) => {
     if (Utils.currentEditor) {
@@ -196,12 +241,12 @@ const Navigator: FC<NavigatorProps> = ({
     }
   }
 
-  const addConnector = (type: string, folder: string) => {
-    if (Utils.currentEditor) {
-      Utils.currentEditor.action = new ConnectorAction(Utils.currentEditor)
-      Utils.currentEditor.action.imageId = process.env.BASIC_PATH + `/${folder}/${type}.png`
-    }
-  }
+  // const addConnector = (type: string, folder: string) => {
+  //   if (Utils.currentEditor) {
+  //     Utils.currentEditor.action = new ConnectorAction(Utils.currentEditor)
+  //     Utils.currentEditor.action.imageId = process.env.BASIC_PATH + `/${folder}/${type}.png`
+  //   }
+  // }
 
   // const save = () => {
   //   const storage = new StorageService()
@@ -258,14 +303,24 @@ const Navigator: FC<NavigatorProps> = ({
     }
   }
 
-  const addCustomTable = (typeName: string, classType: typeof CustomTableEntity, shapeType: CustomTableType, folder: string) => {
+  const addCustomTable = (
+    typeName: string,
+    classType: typeof CustomTableEntity,
+    shapeType: CustomTableType,
+    folder: string,
+  ) => {
     if (Utils.currentEditor) {
       Utils.currentEditor.action = new CustomTableAction(Utils.currentEditor, typeName, classType, shapeType)
       Utils.currentEditor.action.imageId = process.env.BASIC_PATH + `/${folder}/${typeName}.svg`
     }
   }
 
-  const addExtendedContainer = (typeName: string, classType: typeof ContainerEntity, shapeType: ShapeType, folder: string) => {
+  const addExtendedContainer = (
+    typeName: string,
+    classType: typeof ContainerEntity,
+    shapeType: ShapeType,
+    folder: string,
+  ) => {
     if (Utils.currentEditor) {
       Utils.currentEditor.action = new ExtendedContainerAction(Utils.currentEditor, typeName, classType, shapeType)
       Utils.currentEditor.action.imageId = process.env.BASIC_PATH + `/${folder}/${typeName}.svg`
@@ -279,9 +334,19 @@ const Navigator: FC<NavigatorProps> = ({
     }
   }
 
-  const addCustomConnector = (type: string, classType: typeof CustomConnector, customConnectorTypeInfos: CustomConnectorTypeInfo, folder: string) => {
+  const addCustomConnector = (
+    type: string,
+    classType: typeof CustomConnector,
+    customConnectorTypeInfos: CustomConnectorTypeInfo,
+    folder: string,
+  ) => {
     if (Utils.currentEditor) {
-      Utils.currentEditor.action = new CustomConnectorAction(Utils.currentEditor, type, classType, customConnectorTypeInfos)
+      Utils.currentEditor.action = new CustomConnectorAction(
+        Utils.currentEditor,
+        type,
+        classType,
+        customConnectorTypeInfos,
+      )
       Utils.currentEditor.action.imageId = process.env.BASIC_PATH + `/${folder}/${type}.svg`
     }
   }
@@ -295,94 +360,240 @@ const Navigator: FC<NavigatorProps> = ({
   // <Button type='primary' onClick={load}>Load</Button>
   // <Button type='primary' onClick={login}>Login</Button>
 
-
   //        <Image src='/shapes/Rectangle.png' width={20} height={20} />
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const getPopoverContent = (name: string, width: number, height: number) => {
-    return <div style={{ width: width * 1.25, display: 'table' }}>
-      <div style={{ display: 'table-cell', textAlign: 'center', verticalAlign: 'middle', borderTop: '0px solid gray', padding: '2px' }}>
-        <img id={process.env.BASIC_PATH + `/shapes-large/${name}.png`} src={process.env.BASIC_PATH + `/shapes-large/${name}.png`} />
+    return (
+      <div style={{ width: width * 1.25, display: 'table' }}>
+        <div
+          style={{
+            display: 'table-cell',
+            textAlign: 'center',
+            verticalAlign: 'middle',
+            borderTop: '0px solid gray',
+            padding: '2px',
+          }}
+        >
+          <img
+            id={process.env.BASIC_PATH + `/shapes-large/${name}.png`}
+            src={process.env.BASIC_PATH + `/shapes-large/${name}.png`}
+          />
+        </div>
       </div>
-    </div>
+    )
   }
 
-  const getCustomShapeBasicShapesPopoverContent = (name: string, width: number, height: number) => {
-    return <div style={{ width: width * 1.25, display: 'table' }}>
-      <div style={{ display: 'table-cell', textAlign: 'center', verticalAlign: 'middle', borderTop: '0px solid gray', padding: '2px' }}>
-        <img id={process.env.BASIC_PATH + `/custom-shapes-large/basic-shapes/${name}.png`} src={process.env.BASIC_PATH + `/custom-shapes-large/basic-shapes/${name}.png`} />
-      </div>
-    </div>
-  }
+  // const getCustomShapeBasicShapesPopoverContent = (name: string, width: number, height: number) => {
+  //   return (
+  //     <div style={{ width: width * 1.25, display: 'table' }}>
+  //       <div
+  //         style={{
+  //           display: 'table-cell',
+  //           textAlign: 'center',
+  //           verticalAlign: 'middle',
+  //           borderTop: '0px solid gray',
+  //           padding: '2px',
+  //         }}
+  //       >
+  //         <img
+  //           id={process.env.BASIC_PATH + `/custom-shapes-large/basic-shapes/${name}.png`}
+  //           src={process.env.BASIC_PATH + `/custom-shapes-large/basic-shapes/${name}.png`}
+  //         />
+  //       </div>
+  //     </div>
+  //   )
+  // }
 
-  const getCustomShapeAliyunPopoverContent = (name: string, width: number, height: number) => {
-    return <div style={{ width: width * 1.25, display: 'table' }}>
-      <div style={{ display: 'table-cell', textAlign: 'center', verticalAlign: 'middle', borderTop: '0px solid gray', padding: '2px' }}>
-        <img id={process.env.BASIC_PATH + `/custom-shapes-large/aliyun/${name}.png`} src={process.env.BASIC_PATH + `/custom-shapes-large/aliyun/${name}.png`} />
-      </div>
-    </div>
-  }
+  // const getCustomShapeAliyunPopoverContent = (name: string, width: number, height: number) => {
+  //   return (
+  //     <div style={{ width: width * 1.25, display: 'table' }}>
+  //       <div
+  //         style={{
+  //           display: 'table-cell',
+  //           textAlign: 'center',
+  //           verticalAlign: 'middle',
+  //           borderTop: '0px solid gray',
+  //           padding: '2px',
+  //         }}
+  //       >
+  //         <img
+  //           id={process.env.BASIC_PATH + `/custom-shapes-large/aliyun/${name}.png`}
+  //           src={process.env.BASIC_PATH + `/custom-shapes-large/aliyun/${name}.png`}
+  //         />
+  //       </div>
+  //     </div>
+  //   )
+  // }
+  //
+  // // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // const getCustomShapeAwsPopoverContent = (name: string, width: number, height: number) => {
+  //   return (
+  //     <div style={{ width: width * 1.25, display: 'table' }}>
+  //       <div
+  //         style={{
+  //           display: 'table-cell',
+  //           textAlign: 'center',
+  //           verticalAlign: 'middle',
+  //           borderTop: '0px solid gray',
+  //           padding: '2px',
+  //         }}
+  //       >
+  //         <img
+  //           id={process.env.BASIC_PATH + `/custom-shapes-large/aws/${name}.png`}
+  //           src={process.env.BASIC_PATH + `/custom-shapes-large/aws/${name}.png`}
+  //         />
+  //       </div>
+  //     </div>
+  //   )
+  // }
 
-  const getCustomShapeAwsPopoverContent = (name: string, width: number, height: number) => {
-    return <div style={{ width: width * 1.25, display: 'table' }}>
-      <div style={{ display: 'table-cell', textAlign: 'center', verticalAlign: 'middle', borderTop: '0px solid gray', padding: '2px' }}>
-        <img id={process.env.BASIC_PATH + `/custom-shapes-large/aws/${name}.png`} src={process.env.BASIC_PATH + `/custom-shapes-large/aws/${name}.png`} />
-      </div>
-    </div>
-  }
+  // const getCustomShapeArrowsPopoverContent = (name: string, width: number, height: number) => {
+  //   return (
+  //     <div style={{ width: width * 1.25, display: 'table' }}>
+  //       <div
+  //         style={{
+  //           display: 'table-cell',
+  //           textAlign: 'center',
+  //           verticalAlign: 'middle',
+  //           borderTop: '0px solid gray',
+  //           padding: '2px',
+  //         }}
+  //       >
+  //         <img
+  //           id={process.env.BASIC_PATH + `/custom-shapes-large/arrows/${name}.png`}
+  //           src={process.env.BASIC_PATH + `/custom-shapes-large/arrows/${name}.png`}
+  //         />
+  //       </div>
+  //     </div>
+  //   )
+  // }
+  //
+  // const getCustomShapeFlowChartShapesPopoverContent = (name: string, width: number, height: number) => {
+  //   return (
+  //     <div style={{ width: width * 1.25, display: 'table' }}>
+  //       <div
+  //         style={{
+  //           display: 'table-cell',
+  //           textAlign: 'center',
+  //           verticalAlign: 'middle',
+  //           borderTop: '0px solid gray',
+  //           padding: '2px',
+  //         }}
+  //       >
+  //         <img
+  //           id={process.env.BASIC_PATH + `/custom-shapes-large/flowchart/${name}.png`}
+  //           src={process.env.BASIC_PATH + `/custom-shapes-large/flowchart/${name}.png`}
+  //         />
+  //       </div>
+  //     </div>
+  //   )
+  // }
 
-  const getCustomShapeArrowsPopoverContent = (name: string, width: number, height: number) => {
-    return <div style={{ width: width * 1.25, display: 'table' }}>
-      <div style={{ display: 'table-cell', textAlign: 'center', verticalAlign: 'middle', borderTop: '0px solid gray', padding: '2px' }}>
-        <img id={process.env.BASIC_PATH + `/custom-shapes-large/arrows/${name}.png`} src={process.env.BASIC_PATH + `/custom-shapes-large/arrows/${name}.png`} />
-      </div>
-    </div>
-  }
-
-  const getCustomShapeFlowChartShapesPopoverContent = (name: string, width: number, height: number) => {
-    return <div style={{ width: width * 1.25, display: 'table' }}>
-      <div style={{ display: 'table-cell', textAlign: 'center', verticalAlign: 'middle', borderTop: '0px solid gray', padding: '2px' }}>
-        <img id={process.env.BASIC_PATH + `/custom-shapes-large/flowchart/${name}.png`} src={process.env.BASIC_PATH + `/custom-shapes-large/flowchart/${name}.png`} />
-      </div>
-    </div>
-  }
-
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const getCustomShapeUMLPopoverContent = (name: string, width: number, height: number) => {
-    return <div style={{ width: width * 1.25, display: 'table' }}>
-      <div style={{ display: 'table-cell', textAlign: 'center', verticalAlign: 'middle', borderTop: '0px solid gray', padding: '2px' }}>
-        <img id={process.env.BASIC_PATH + `/custom-shapes-large/uml/${name}.png`} src={process.env.BASIC_PATH + `/custom-shapes-large/uml/${name}.png`} />
+    return (
+      <div style={{ width: width * 1.25, display: 'table' }}>
+        <div
+          style={{
+            display: 'table-cell',
+            textAlign: 'center',
+            verticalAlign: 'middle',
+            borderTop: '0px solid gray',
+            padding: '2px',
+          }}
+        >
+          <img
+            id={process.env.BASIC_PATH + `/custom-shapes-large/uml/${name}.png`}
+            src={process.env.BASIC_PATH + `/custom-shapes-large/uml/${name}.png`}
+          />
+        </div>
       </div>
-    </div>
+    )
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const getMyShapePopoverContent = (id: string, name: string, image: string, width: number, height: number) => {
-    return <div style={{ width: width * 1.25, display: 'table' }}>
-      <div style={{ display: 'table-cell', textAlign: 'center', verticalAlign: 'middle', borderTop: '0px solid gray', padding: '2px' }}>
-        <img id={id} src={image} />
+    return (
+      <div style={{ width: width * 1.25, display: 'table' }}>
+        <div
+          style={{
+            display: 'table-cell',
+            textAlign: 'center',
+            verticalAlign: 'middle',
+            borderTop: '0px solid gray',
+            padding: '2px',
+          }}
+        >
+          <img id={id} src={image} />
+        </div>
       </div>
-    </div>
+    )
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const getCustomShapeERPopoverContent = (name: string, width: number, height: number) => {
-    return <div style={{ width: width * 1.25, display: 'table' }}>
-      <div style={{ display: 'table-cell', textAlign: 'center', verticalAlign: 'middle', borderTop: '0px solid gray', padding: '2px' }}>
-        <img id={process.env.BASIC_PATH + `/custom-shapes-large/entity-relation/${name}.png`} src={process.env.BASIC_PATH + `/custom-shapes-large/entity-relation/${name}.png`} />
+    return (
+      <div style={{ width: width * 1.25, display: 'table' }}>
+        <div
+          style={{
+            display: 'table-cell',
+            textAlign: 'center',
+            verticalAlign: 'middle',
+            borderTop: '0px solid gray',
+            padding: '2px',
+          }}
+        >
+          <img
+            id={process.env.BASIC_PATH + `/custom-shapes-large/entity-relation/${name}.png`}
+            src={process.env.BASIC_PATH + `/custom-shapes-large/entity-relation/${name}.png`}
+          />
+        </div>
       </div>
-    </div>
+    )
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const getCustomShapeMockupPopoverContent = (name: string, width: number, height: number) => {
-    return <div style={{ width: width * 1.25, display: 'table' }}>
-      <div style={{ display: 'table-cell', textAlign: 'center', verticalAlign: 'middle', borderTop: '0px solid gray', padding: '2px' }}>
-        <img id={process.env.BASIC_PATH + `/custom-shapes-large/mockup/${name}.png`} src={process.env.BASIC_PATH + `/custom-shapes-large/mockup/${name}.png`} />
+    return (
+      <div style={{ width: width * 1.25, display: 'table' }}>
+        <div
+          style={{
+            display: 'table-cell',
+            textAlign: 'center',
+            verticalAlign: 'middle',
+            borderTop: '0px solid gray',
+            padding: '2px',
+          }}
+        >
+          <img
+            id={process.env.BASIC_PATH + `/custom-shapes-large/mockup/${name}.png`}
+            src={process.env.BASIC_PATH + `/custom-shapes-large/mockup/${name}.png`}
+          />
+        </div>
       </div>
-    </div>
+    )
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const getUMLContainerPopoverContent = (name: string, width: number, height: number) => {
-    return <div style={{ width: width * 1.25, display: 'table' }}>
-      <div style={{ display: 'table-cell', textAlign: 'center', verticalAlign: 'middle', borderTop: '0px solid gray', padding: '2px' }}>
-        <img id={process.env.BASIC_PATH + `/custom-shapes-large/uml/${name}.png`} src={process.env.BASIC_PATH + `/custom-shapes-large/uml/${name}.png`} />
+    return (
+      <div style={{ width: width * 1.25, display: 'table' }}>
+        <div
+          style={{
+            display: 'table-cell',
+            textAlign: 'center',
+            verticalAlign: 'middle',
+            borderTop: '0px solid gray',
+            padding: '2px',
+          }}
+        >
+          <img
+            id={process.env.BASIC_PATH + `/custom-shapes-large/uml/${name}.png`}
+            src={process.env.BASIC_PATH + `/custom-shapes-large/uml/${name}.png`}
+          />
+        </div>
       </div>
-    </div>
+    )
   }
 
   // const line = <Popover title={'Line'} placement='right' content={getPopoverContent('Line', 128, 128)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 180, width: 180, }}>
@@ -409,29 +620,45 @@ const Navigator: FC<NavigatorProps> = ({
   // </Button>
   // </Popover>
 
-  const connector = <Popover title={'Connector'} placement='right' content={getPopoverContent('Connector', 128, 128)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 180, width: 180, }}>
-    <Button type='text' onMouseDown={() => addConnector('Connector', 'shapes-large')} style={{ padding: 2, display: 'table' }}>
-      <img id={process.env.BASIC_PATH + `/shapes/Connector.png`} src={process.env.BASIC_PATH + `/shapes/Connector.png`} width={28} height={28} style={{ display: 'table-cell' }} />
-    </Button>
-  </Popover>
-
-  const handleDragStart = (name: string, imageWidth: number, imageHeight: number, e: DragEvent) => {
-    addShape(name)
-    const largeImae = document.getElementById(process.env.BASIC_PATH + `/shapes-large/${name}.png`)
-    if (e.dataTransfer && largeImae) {
-      //e.dataTransfer.setData('text/plain',process.env.BASIC_PATH + `/shapes-large/${name}.png`)
-      e.dataTransfer.setDragImage(largeImae, imageWidth / 2, imageHeight / 2)
-
-    }
-    if (Utils.currentEditor?.action) {
-      Utils.currentEditor.action.imageId = process.env.BASIC_PATH + `/shapes-large/${name}.png`
-    }
-  }
+  // const connector = (
+  //   <Popover
+  //     title={'Connector'}
+  //     placement="right"
+  //     content={getPopoverContent('Connector', 128, 128)}
+  //     overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 180, width: 180 }}
+  //   >
+  //     <Button
+  //       type="text"
+  //       onMouseDown={() => addConnector('Connector', 'shapes-large')}
+  //       style={{ padding: 2, display: 'table' }}
+  //     >
+  //       <img
+  //         id={process.env.BASIC_PATH + `/shapes/Connector.png`}
+  //         src={process.env.BASIC_PATH + `/shapes/Connector.png`}
+  //         width={28}
+  //         height={28}
+  //         style={{ display: 'table-cell' }}
+  //       />
+  //     </Button>
+  //   </Popover>
+  // )
+  //
+  // const handleDragStart = (name: string, imageWidth: number, imageHeight: number, e: DragEvent) => {
+  //   addShape(name)
+  //   const largeImae = document.getElementById(process.env.BASIC_PATH + `/shapes-large/${name}.png`)
+  //   if (e.dataTransfer && largeImae) {
+  //     //e.dataTransfer.setData('text/plain',process.env.BASIC_PATH + `/shapes-large/${name}.png`)
+  //     e.dataTransfer.setDragImage(largeImae, imageWidth / 2, imageHeight / 2)
+  //   }
+  //   if (Utils.currentEditor?.action) {
+  //     Utils.currentEditor.action.imageId = process.env.BASIC_PATH + `/shapes-large/${name}.png`
+  //   }
+  // }
 
   const handleNavigatorMouseMove = (e: MouseEvent) => {
     // e.preventDefault()
     if (Utils.currentEditor?.action) {
-      const action = Utils.currentEditor.action
+      //const action = Utils.currentEditor.action
       //console.log(Utils.currentEditor?.action.imageId)
       const image = document.getElementById(Utils.currentEditor.action.imageId)
       const navigator = document.getElementById(NAVIGATOR_ID)
@@ -445,26 +672,27 @@ const Navigator: FC<NavigatorProps> = ({
           //cloneImage.addEventListener('mousemove', handleNavigatorImageMouseMove)
           imageContainer.append(cloneImage)
         }
-        imageContainer.style.left = (e.clientX - image.clientWidth / 2) + 'px'
-        imageContainer.style.top = (e.clientY + navigatorScrollTop - image.clientHeight / 2 - Utils.HEADER_HEIGHT) + 'px'
+        imageContainer.style.left = e.clientX - image.clientWidth / 2 + 'px'
+        imageContainer.style.top = e.clientY + navigatorScrollTop - image.clientHeight / 2 - Utils.HEADER_HEIGHT + 'px'
       }
     }
   }
 
-  const handleNavigatorImageMouseMove = (e: MouseEvent) => {
-    if (Utils.currentEditor?.action) {
-      console.log(Utils.currentEditor?.action.imageId)
-      const image = document.getElementById(Utils.currentEditor.action.imageId)
-      const navigator = document.getElementById(NAVIGATOR_ID)
-      const imageContainer = document.getElementById(ACTION_IMAGE_ID)
-      if (image && navigator && imageContainer) {
-        //console.log(`check x = ${e.clientX} y = ${e.clientY }`)
-        imageContainer.style.left = (e.clientX - image.clientWidth / 2) + 'px'
-        imageContainer.style.top = (e.clientY + navigatorScrollTop - image.clientHeight / 2 - Utils.HEADER_HEIGHT) + 'px'
-      }
-    }
-  }
+  // const handleNavigatorImageMouseMove = (e: MouseEvent) => {
+  //   if (Utils.currentEditor?.action) {
+  //     console.log(Utils.currentEditor?.action.imageId)
+  //     const image = document.getElementById(Utils.currentEditor.action.imageId)
+  //     const navigator = document.getElementById(NAVIGATOR_ID)
+  //     const imageContainer = document.getElementById(ACTION_IMAGE_ID)
+  //     if (image && navigator && imageContainer) {
+  //       //console.log(`check x = ${e.clientX} y = ${e.clientY }`)
+  //       imageContainer.style.left = e.clientX - image.clientWidth / 2 + 'px'
+  //       imageContainer.style.top = e.clientY + navigatorScrollTop - image.clientHeight / 2 - Utils.HEADER_HEIGHT + 'px'
+  //     }
+  //   }
+  // }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleNavigatorMouseLeave = (e: MouseEvent) => {
     if (Utils.currentEditor?.action) {
       const image = document.getElementById(Utils.currentEditor.action.imageId)
@@ -480,6 +708,7 @@ const Navigator: FC<NavigatorProps> = ({
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleNavigatorMouseDown = (e: MouseEvent) => {
     if (Utils.currentEditor?.action) {
       const image = document.getElementById(Utils.currentEditor.action.imageId)
@@ -492,6 +721,7 @@ const Navigator: FC<NavigatorProps> = ({
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleNavigatorMouseUp = (e: MouseEvent) => {
     if (Utils.currentEditor?.action) {
       const image = document.getElementById(Utils.currentEditor.action.imageId)
@@ -508,19 +738,21 @@ const Navigator: FC<NavigatorProps> = ({
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleNavigatorMaskMouseEnter = (e: MouseEvent) => {
     if (Utils.currentEditor?.action) {
-      const image = document.getElementById(Utils.currentEditor.action.imageId)
-      const navigator = document.getElementById(NAVIGATOR_ID)
-      const imageContainer = document.getElementById(ACTION_IMAGE_ID)
+      //const image = document.getElementById(Utils.currentEditor.action.imageId)
+      //const navigator = document.getElementById(NAVIGATOR_ID)
+      //const imageContainer = document.getElementById(ACTION_IMAGE_ID)
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleNavigatorMaskMouseLeave = (e: MouseEvent) => {
     if (Utils.currentEditor?.action) {
-      const image = document.getElementById(Utils.currentEditor.action.imageId)
-      const navigator = document.getElementById(NAVIGATOR_ID)
-      const imageContainer = document.getElementById(ACTION_IMAGE_ID)
+      //const image = document.getElementById(Utils.currentEditor.action.imageId)
+      //const navigator = document.getElementById(NAVIGATOR_ID)
+      //const imageContainer = document.getElementById(ACTION_IMAGE_ID)
     }
   }
 
@@ -538,8 +770,8 @@ const Navigator: FC<NavigatorProps> = ({
           //cloneImage.addEventListener('MouseMove', handleNavigatorImageMouseMove)
           imageContainer.append(cloneImage)
         }
-        imageContainer.style.left = (e.clientX - image.clientWidth / 2) + 'px'
-        imageContainer.style.top = (e.clientY + navigatorScrollTop - image.clientHeight / 2 - Utils.HEADER_HEIGHT) + 'px'
+        imageContainer.style.left = e.clientX - image.clientWidth / 2 + 'px'
+        imageContainer.style.top = e.clientY + navigatorScrollTop - image.clientHeight / 2 - Utils.HEADER_HEIGHT + 'px'
       }
     }
   }
@@ -554,20 +786,34 @@ const Navigator: FC<NavigatorProps> = ({
     }
   }
 
-  const handleMouseOut = (e: MouseEvent) => {
-    //console.log(`mouse is out`)
-  }
-
-  const handleMouseUp = (e: MouseEvent) => {
-    //console.log(`mouse is up`)
-  }
+  // const handleMouseOut = (e: MouseEvent) => {
+  //   //console.log(`mouse is out`)
+  // }
+  //
+  // const handleMouseUp = (e: MouseEvent) => {
+  //   //console.log(`mouse is up`)
+  // }
 
   const getSVGPopoverContent = (folder: string, name: string, width: number, height: number, multicolor: boolean) => {
-    return <div style={{ width: '100%', display: 'table', }}>
-      <div style={{ display: 'table-cell', textAlign: 'center', verticalAlign: 'middle', borderTop: '0px solid gray', padding: '2px' }}>
-        <img id={process.env.BASIC_PATH + `/${folder}/${name}.svg`} src={process.env.BASIC_PATH + `/${folder}/${name}.svg`} style={{ filter: (!multicolor && Utils.currentEditor?.enableDarkTheme) ? 'invert(90%)' : '' }} />
+    return (
+      <div style={{ width: '100%', display: 'table' }}>
+        <div
+          style={{
+            display: 'table-cell',
+            textAlign: 'center',
+            verticalAlign: 'middle',
+            borderTop: '0px solid gray',
+            padding: '2px',
+          }}
+        >
+          <img
+            id={process.env.BASIC_PATH + `/${folder}/${name}.svg`}
+            src={process.env.BASIC_PATH + `/${folder}/${name}.svg`}
+            style={{ filter: !multicolor && Utils.currentEditor?.enableDarkTheme ? 'invert(90%)' : '' }}
+          />
+        </div>
       </div>
-    </div>
+    )
   }
 
   const visitContainer = (container: Element, factor: number) => {
@@ -576,36 +822,45 @@ const Navigator: FC<NavigatorProps> = ({
       //update stroke width , but exclude if it is text
       const oldStrokeWidth = container.attr('stroke-width')
       const strokeLineCap = container.attr('stroke-linecap')
-      if (oldStrokeWidth && strokeLineCap != 'round' && oldStrokeWidth != 0.1) {
+      if (oldStrokeWidth && strokeLineCap !== 'round' && oldStrokeWidth !== 0.1) {
         container.attr('stroke-width', Number((factor * oldStrokeWidth).toFixed(2)))
       }
       //detect & update for text
-      let offsetX = 0
-      let offsetY = 0
-      const textFactor = 0.8
-      if (strokeLineCap == 'round') { //May need more robust way to check if text
+      // let offsetX = 0
+      // let offsetY = 0
+      // const textFactor = 0.8
+      if (strokeLineCap === 'round') {
+        //May need more robust way to check if text
         const data = container.array()
         if (data.length > 0) {
           //First command must be Moveto ,we use it to detect text position
-          const pathCommand = data[0]
-          const x = pathCommand[1] as number
-          const y = pathCommand[2] as number
-          offsetX = - x * textFactor
-          offsetY = - y * textFactor
+          // const pathCommand = data[0]
+          // const x = pathCommand[1] as number
+          // const y = pathCommand[2] as number
+          // offsetX = -x * textFactor
+          // offsetY = -y * textFactor
         }
-        const transform = `scale(${factor * textFactor}, ${factor * textFactor}) translate(${offsetX}, ${offsetY})`
+        //const transform = `scale(${factor * textFactor}, ${factor * textFactor}) translate(${offsetX}, ${offsetY})`
         //container.attr('transform', transform)
       }
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     children.forEach((element, index, array) => {
       if (element instanceof Element) {
         visitContainer(element, factor)
       }
     })
-
   }
 
-  const updateSVG = async (imgRef: React.RefObject<HTMLImageElement>, id: string, src: string, width: number, height: number, iconWidth: number, iconheight: number) => {
+  const updateSVG = async (
+    imgRef: React.RefObject<HTMLImageElement>,
+    id: string,
+    src: string,
+    width: number,
+    height: number,
+    iconWidth: number,
+    iconheight: number,
+  ) => {
     const svgContent = await RequestUtils.fetchSvgFile(src)
     // console.log(`update ${id}`)
     //console.log(`${svgContent}`)
@@ -629,12 +884,20 @@ const Navigator: FC<NavigatorProps> = ({
       // svgSource.addTo(svg)
       // console.log(svgContent)
       //().fin.svg(`#${id}`)
-    } else if (img && !img.src.startsWith('data')) {//Auto expanded icons have null imgRef right now
+    } else if (img && !img.src.startsWith('data')) {
+      //Auto expanded icons have null imgRef right now
       img.src = svgData
     }
   }
 
-  const generateIcons = (shapeTypeName: string, folder: string, shapeWidth: number, shapeHeight: number, multicolor: boolean, eventHandler: MouseEventHandler<HTMLElement>) => {
+  const generateIcons = (
+    shapeTypeName: string,
+    folder: string,
+    shapeWidth: number,
+    shapeHeight: number,
+    multicolor: boolean,
+    eventHandler: MouseEventHandler<HTMLElement>,
+  ) => {
     const margin = POPOVER_ICON_MARGIN
     const imgRef = createRef<HTMLImageElement>()
     const iconId = `svg-icon-${folder}-${shapeTypeName}`
@@ -646,22 +909,48 @@ const Navigator: FC<NavigatorProps> = ({
     let popoverWidth = POPOVER_WIDTH > shapeWidth + POPOVER_MARGIN * 2 ? POPOVER_WIDTH : shapeWidth + POPOVER_MARGIN * 2
     popoverWidth = popoverWidth > shapeHeight + POPOVER_MARGIN * 2 ? popoverWidth : shapeHeight + POPOVER_MARGIN * 2
     if (shapeWidth > shapeHeight) {
-      height = Math.round(ICON_HEIGHT * shapeHeight / shapeWidth)
+      height = Math.round((ICON_HEIGHT * shapeHeight) / shapeWidth)
     } else {
       width = ICON_WIDTH
     }
 
-    return <Popover title={shapeTypeName} placement='right' content={getSVGPopoverContent(folder, shapeTypeName, shapeWidth, shapeHeight, multicolor)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: POPOVER_MIN_WIDTH, width: popoverWidth, }}>
-      <Button type='text' onMouseDown={eventHandler} style={{ padding: 2, display: 'table' }} >
-        <img ref={imgRef} id={iconId} src={src}
-          width={width} height={height} style={{ display: 'table-cell', filter: (!multicolor && Utils.currentEditor?.enableDarkTheme) ? 'invert(90%)' : '' }}
-          draggable={false}
-          onLoad={() => updateSVG(imgRef, iconId, src, shapeWidth + margin * 2, shapeHeight + margin * 2, width, height)} />
-      </Button>
-    </Popover>
+    return (
+      <Popover
+        title={shapeTypeName}
+        placement="right"
+        content={getSVGPopoverContent(folder, shapeTypeName, shapeWidth, shapeHeight, multicolor)}
+        overlayStyle={{
+          left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH,
+          minWidth: POPOVER_MIN_WIDTH,
+          width: popoverWidth,
+        }}
+      >
+        <Button type="text" onMouseDown={eventHandler} style={{ padding: 2, display: 'table' }}>
+          <img
+            ref={imgRef}
+            id={iconId}
+            src={src}
+            width={width}
+            height={height}
+            style={{
+              display: 'table-cell',
+              filter: !multicolor && Utils.currentEditor?.enableDarkTheme ? 'invert(90%)' : '',
+            }}
+            draggable={false}
+            onLoad={() =>
+              updateSVG(imgRef, iconId, src, shapeWidth + margin * 2, shapeHeight + margin * 2, width, height)
+            }
+          />
+        </Button>
+      </Popover>
+    )
   }
 
-  const shapes = ShapeTypes.map(shapeType => generateIcons(shapeType.name, 'basic-icons', shapeType.width, shapeType.height, false, () => addShape(shapeType.name, 'basic-icons')))
+  const shapes = ShapeTypes.map((shapeType) =>
+    generateIcons(shapeType.name, 'basic-icons', shapeType.width, shapeType.height, false, () =>
+      addShape(shapeType.name, 'basic-icons'),
+    ),
+  )
 
   // const shapes = ShapeTypes.map(shapeType => {
   //   const margin = POPOVER_ICON_MARGIN
@@ -687,7 +976,9 @@ const Navigator: FC<NavigatorProps> = ({
   // }
   // )
 
-  const line = generateIcons('Line', 'basic-icons', LINE_WIDTH, LINE_HEIGHT, false, () => addLine('Line', 'basic-icons'))
+  const line = generateIcons('Line', 'basic-icons', LINE_WIDTH, LINE_HEIGHT, false, () =>
+    addLine('Line', 'basic-icons'),
+  )
 
   // const line = [1].map(value => {
   //   const typeName = 'Line'
@@ -709,7 +1000,11 @@ const Navigator: FC<NavigatorProps> = ({
   //   </Popover>
   // })
 
-  const table = TableTypes.map(shapeType => generateIcons(shapeType.name, 'basic-icons', shapeType.width, shapeType.height, false, () => addTable(shapeType.name, 'basic-icons')))
+  const table = TableTypes.map((shapeType) =>
+    generateIcons(shapeType.name, 'basic-icons', shapeType.width, shapeType.height, false, () =>
+      addTable(shapeType.name, 'basic-icons'),
+    ),
+  )
 
   // const table = TableTypes.map(shapeType => {
   //   const typeName = shapeType.name
@@ -758,7 +1053,12 @@ const Navigator: FC<NavigatorProps> = ({
   //   </Button>
   // </Popover>
 
-  const containers = ContainerTypes.map(shapeType => generateIcons(shapeType.name, 'basic-icons', shapeType.width, shapeType.height, false, () => addContainer(shapeType.name, 'basic-icons')))
+  // @ts-ignore
+  const containers = ContainerTypes.map((shapeType) =>
+    generateIcons(shapeType.name, 'basic-icons', shapeType.width, shapeType.height, false, () =>
+      addContainer(shapeType.name, 'basic-icons'),
+    ),
+  )
   // const containers = ContainerTypes.map(shapeType => {
   //   const typeName = shapeType.name
   //   const margin = POPOVER_ICON_MARGIN
@@ -793,7 +1093,16 @@ const Navigator: FC<NavigatorProps> = ({
   // }
   // )
 
-  const customShapeBasicShapes = BasicShapes.map(shapeType => generateIcons(shapeType.name, 'custom-icons/basic-shapes', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/basic-shapes')))
+  const customShapeBasicShapes = BasicShapes.map((shapeType) =>
+    generateIcons(
+      shapeType.name,
+      'custom-icons/basic-shapes',
+      shapeType.typeInfo.width,
+      shapeType.typeInfo.height,
+      false,
+      () => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/basic-shapes'),
+    ),
+  )
 
   // const customShapeBasicShapes = BasicShapes.map(shapeType => {
   //   const typeName = shapeType.name
@@ -830,7 +1139,16 @@ const Navigator: FC<NavigatorProps> = ({
   //   }
   // )
 
-  const customShapeFlowChartShapes = FlowChartShapes.map(shapeType => generateIcons(shapeType.name, 'custom-icons/flowchart', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/flowchart')))
+  const customShapeFlowChartShapes = FlowChartShapes.map((shapeType) =>
+    generateIcons(
+      shapeType.name,
+      'custom-icons/flowchart',
+      shapeType.typeInfo.width,
+      shapeType.typeInfo.height,
+      false,
+      () => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/flowchart'),
+    ),
+  )
 
   // const customShapeFlowChartShapes = FlowChartShapes.map(
   //   basicType => {
@@ -849,7 +1167,16 @@ const Navigator: FC<NavigatorProps> = ({
   //   }
   // )
 
-  const customShapeArrows = Arrows.map(shapeType => generateIcons(shapeType.name, 'custom-icons/arrows', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/arrows')))
+  const customShapeArrows = Arrows.map((shapeType) =>
+    generateIcons(
+      shapeType.name,
+      'custom-icons/arrows',
+      shapeType.typeInfo.width,
+      shapeType.typeInfo.height,
+      false,
+      () => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/arrows'),
+    ),
+  )
 
   // const customShapeArrows = Arrows.map(shapeType => {
   //   const typeName = shapeType.name
@@ -893,70 +1220,182 @@ const Navigator: FC<NavigatorProps> = ({
   //   }
   // )
 
-  const aliyunShapes = AliyunShapes.map(
-    shapeType => {
-      return <Popover title={shapeType.name} placement='right' content={getCustomShapeAliyunPopoverContent(shapeType.name, shapeType.width, shapeType.height)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160, }}>
-        <Button type='text' onMouseDown={() => addSvgShape(shapeType.name, shapeType.data, shapeType.width, shapeType.height, 'custom-shapes-large/aliyun')} style={{ padding: 2, display: 'table' }}>
-          <img src={process.env.BASIC_PATH + `/custom-shapes/aliyun/${shapeType.name}.png`} width={28} height={28} style={{ display: 'table-cell' }} />
-        </Button>
-      </Popover>
-    }
-  )
+  // const aliyunShapes = AliyunShapes.map((shapeType) => {
+  //   return (
+  //     <Popover
+  //       title={shapeType.name}
+  //       placement="right"
+  //       content={getCustomShapeAliyunPopoverContent(shapeType.name, shapeType.width, shapeType.height)}
+  //       overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160 }}
+  //     >
+  //       <Button
+  //         type="text"
+  //         onMouseDown={() =>
+  //           addSvgShape(shapeType.name, shapeType.data, shapeType.width, shapeType.height, 'custom-shapes-large/aliyun')
+  //         }
+  //         style={{ padding: 2, display: 'table' }}
+  //       >
+  //         <img
+  //           src={process.env.BASIC_PATH + `/custom-shapes/aliyun/${shapeType.name}.png`}
+  //           width={28}
+  //           height={28}
+  //           style={{ display: 'table-cell' }}
+  //         />
+  //       </Button>
+  //     </Popover>
+  //   )
+  // })
+  //
+  // const awsShapes = AwsShapes.map((shapeType) => {
+  //   return (
+  //     <Popover
+  //       title={shapeType.name}
+  //       placement="right"
+  //       content={getCustomShapeAwsPopoverContent(shapeType.name, shapeType.width, shapeType.height)}
+  //       overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160 }}
+  //     >
+  //       <Button
+  //         type="text"
+  //         onMouseDown={() =>
+  //           addImageShape(shapeType.name, shapeType.data, shapeType.width, shapeType.height, 'custom-shapes-large/aws')
+  //         }
+  //         style={{ padding: 2, display: 'table' }}
+  //       >
+  //         <img
+  //           src={process.env.BASIC_PATH + `/custom-shapes/aws/${shapeType.name}.png`}
+  //           width={28}
+  //           height={28}
+  //           style={{ display: 'table-cell' }}
+  //         />
+  //       </Button>
+  //     </Popover>
+  //   )
+  // })
+  //
+  // const umlCustomTables = UMLCustomTables.map((shapeType) => {
+  //   return (
+  //     <Popover
+  //       title={shapeType.name}
+  //       placement="right"
+  //       content={getCustomShapeAwsPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)}
+  //       overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160 }}
+  //     >
+  //       <Button
+  //         type="text"
+  //         onMouseDown={() =>
+  //           addCustomTable(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')
+  //         }
+  //         style={{ padding: 2, display: 'table' }}
+  //       >
+  //         <img
+  //           src={process.env.BASIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`}
+  //           width={28}
+  //           height={28}
+  //           style={{ display: 'table-cell' }}
+  //         />
+  //       </Button>
+  //     </Popover>
+  //   )
+  // })
+  //
+  // const umlContainerShapes = UMLContainerShapes.map((shapeType) => {
+  //   return (
+  //     <Popover
+  //       title={shapeType.name}
+  //       placement="right"
+  //       content={getUMLContainerPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)}
+  //       overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160 }}
+  //     >
+  //       <Button
+  //         type="text"
+  //         onMouseDown={() =>
+  //           addExtendedContainer(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')
+  //         }
+  //         style={{ padding: 2, display: 'table' }}
+  //       >
+  //         <img
+  //           src={process.env.BASIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`}
+  //           width={28}
+  //           height={28}
+  //           style={{ display: 'table-cell' }}
+  //         />
+  //       </Button>
+  //     </Popover>
+  //   )
+  // })
+  //
+  // const umlBasicShapes = UMLBasicShapes.map((shapeType) => {
+  //   return (
+  //     <Popover
+  //       title={shapeType.name}
+  //       placement="right"
+  //       content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)}
+  //       overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160 }}
+  //     >
+  //       <Button
+  //         type="text"
+  //         onMouseDown={() =>
+  //           addExtendedShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')
+  //         }
+  //         style={{ padding: 2, display: 'table' }}
+  //       >
+  //         <img
+  //           src={process.env.BASIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`}
+  //           width={28}
+  //           height={28}
+  //           style={{ display: 'table-cell' }}
+  //         />
+  //       </Button>
+  //     </Popover>
+  //   )
+  // })
+  //
+  // const umlConnectors = UMLConnectors.map((shapeType) => {
+  //   return (
+  //     <Popover
+  //       title={shapeType.name}
+  //       placement="right"
+  //       content={getCustomShapeUMLPopoverContent(shapeType.name, 160, 160)}
+  //       overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160 }}
+  //     >
+  //       <Button
+  //         type="text"
+  //         onMouseDown={() =>
+  //           addCustomConnector(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')
+  //         }
+  //         style={{ padding: 2, display: 'table' }}
+  //       >
+  //         <img
+  //           src={process.env.BASIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`}
+  //           width={28}
+  //           height={28}
+  //           style={{ display: 'table-cell' }}
+  //         />
+  //       </Button>
+  //     </Popover>
+  //   )
+  // })
 
-  const awsShapes = AwsShapes.map(
-    shapeType => {
-      return <Popover title={shapeType.name} placement='right' content={getCustomShapeAwsPopoverContent(shapeType.name, shapeType.width, shapeType.height)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160, }}>
-        <Button type='text' onMouseDown={() => addImageShape(shapeType.name, shapeType.data, shapeType.width, shapeType.height, 'custom-shapes-large/aws')} style={{ padding: 2, display: 'table' }}>
-          <img src={process.env.BASIC_PATH + `/custom-shapes/aws/${shapeType.name}.png`} width={28} height={28} style={{ display: 'table-cell' }} />
-        </Button>
-      </Popover>
-    }
+  const umlGridShapesForClass = UMLGridShapesForClass.map((shapeType) =>
+    generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () =>
+      addCustomTable(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml'),
+    ),
   )
-
-  const umlCustomTables = UMLCustomTables.map(
-    shapeType => {
-      return <Popover title={shapeType.name} placement='right' content={getCustomShapeAwsPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160, }}>
-        <Button type='text' onMouseDown={() => addCustomTable(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{ padding: 2, display: 'table' }}>
-          <img src={process.env.BASIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{ display: 'table-cell' }} />
-        </Button>
-      </Popover>
-    }
+  const umlContainerShapesForClass = UMLContainerShapesForClass.map((shapeType) =>
+    generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () =>
+      addExtendedContainer(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml'),
+    ),
   )
-
-  const umlContainerShapes = UMLContainerShapes.map(
-    shapeType => {
-      return <Popover title={shapeType.name} placement='right' content={getUMLContainerPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160, }}>
-        <Button type='text' onMouseDown={() => addExtendedContainer(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{ padding: 2, display: 'table' }}>
-          <img src={process.env.BASIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{ display: 'table-cell' }} />
-        </Button>
-      </Popover>
-    }
+  const umlBasicShapesForClass = UMLBasicShapesForClass.map((shapeType) =>
+    generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () =>
+      addExtendedShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml'),
+    ),
   )
-
-  const umlBasicShapes = UMLBasicShapes.map(
-    shapeType => {
-      return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, shapeType.typeInfo.width, shapeType.typeInfo.height)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160, }}>
-        <Button type='text' onMouseDown={() => addExtendedShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{ padding: 2, display: 'table' }}>
-          <img src={process.env.BASIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{ display: 'table-cell' }} />
-        </Button>
-      </Popover>
-    }
+  const umlConnectorsForClass = UMLConnectorsForClass.map((shapeType) =>
+    generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () =>
+      addCustomConnector(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml'),
+    ),
   )
-
-  const umlConnectors = UMLConnectors.map(
-    shapeType => {
-      return <Popover title={shapeType.name} placement='right' content={getCustomShapeUMLPopoverContent(shapeType.name, 160, 160)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: 160, width: 160, }}>
-        <Button type='text' onMouseDown={() => addCustomConnector(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-shapes-large/uml')} style={{ padding: 2, display: 'table' }}>
-          <img src={process.env.BASIC_PATH + `/custom-shapes/uml/${shapeType.name}.png`} width={28} height={28} style={{ display: 'table-cell' }} />
-        </Button>
-      </Popover>
-    }
-  )
-
-  const umlGridShapesForClass = UMLGridShapesForClass.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () => addCustomTable(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
-  const umlContainerShapesForClass = UMLContainerShapesForClass.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () => addExtendedContainer(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
-  const umlBasicShapesForClass = UMLBasicShapesForClass.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () => addExtendedShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
-  const umlConnectorsForClass = UMLConnectorsForClass.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () => addCustomConnector(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
 
   // const umlGridShapesForClass = UMLGridShapesForClass.map(
   //   shapeType => {
@@ -998,10 +1437,21 @@ const Navigator: FC<NavigatorProps> = ({
   //   }
   // )
 
-  const umlContainerShapesForUseCase = UMLContainerShapesForUseCase.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () => addExtendedContainer(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
-  const umlBasicShapesForUseCase = UMLBasicShapesForUseCase.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () => addExtendedShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
-  const umlConnectorsForUseCase = UMLConnectorsForUseCase.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () => addCustomConnector(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
-
+  const umlContainerShapesForUseCase = UMLContainerShapesForUseCase.map((shapeType) =>
+    generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () =>
+      addExtendedContainer(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml'),
+    ),
+  )
+  const umlBasicShapesForUseCase = UMLBasicShapesForUseCase.map((shapeType) =>
+    generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () =>
+      addExtendedShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml'),
+    ),
+  )
+  const umlConnectorsForUseCase = UMLConnectorsForUseCase.map((shapeType) =>
+    generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () =>
+      addCustomConnector(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml'),
+    ),
+  )
 
   // const umlContainerShapesForUseCase = UMLContainerShapesForUseCase.map(
   //   shapeType => {
@@ -1032,10 +1482,26 @@ const Navigator: FC<NavigatorProps> = ({
   //     </Popover>
   //   }
   // )
-  const umlBasicShapesForActivityState = UMLBasicShapesForActivityState.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () => addExtendedShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
-  const umlCustomShapesForActivityState = UMLCustomShapesForActivityState.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
-  const umlConnectorsForActivityState = UMLConnectorsForActivityState.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () => addCustomConnector(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
-  const umlContainerShapesForActivityState = UMLContainerShapesForActivityState.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () => addExtendedContainer(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
+  const umlBasicShapesForActivityState = UMLBasicShapesForActivityState.map((shapeType) =>
+    generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () =>
+      addExtendedShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml'),
+    ),
+  )
+  const umlCustomShapesForActivityState = UMLCustomShapesForActivityState.map((shapeType) =>
+    generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () =>
+      addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml'),
+    ),
+  )
+  const umlConnectorsForActivityState = UMLConnectorsForActivityState.map((shapeType) =>
+    generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () =>
+      addCustomConnector(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml'),
+    ),
+  )
+  const umlContainerShapesForActivityState = UMLContainerShapesForActivityState.map((shapeType) =>
+    generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () =>
+      addExtendedContainer(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml'),
+    ),
+  )
 
   // const umlBasicShapesForActivityState = UMLBasicShapesForActivityState.map(
   //   shapeType => {
@@ -1080,11 +1546,26 @@ const Navigator: FC<NavigatorProps> = ({
   //   }
   // )
 
-  const umlCustomContainersForSequence = UMLCustomContainersForSequence.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () => addCustomContainer(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
-  const umlCustomShapesForSequence = UMLCustomShapesForSequence.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
-  const umlFrameShapesForSequence = UMLFrameShapesForSequence.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () => addFrame(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
-  const umlConnectorsForSequence = UMLConnectorsForSequence.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () => addCustomConnector(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
-
+  const umlCustomContainersForSequence = UMLCustomContainersForSequence.map((shapeType) =>
+    generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () =>
+      addCustomContainer(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml'),
+    ),
+  )
+  const umlCustomShapesForSequence = UMLCustomShapesForSequence.map((shapeType) =>
+    generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () =>
+      addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml'),
+    ),
+  )
+  const umlFrameShapesForSequence = UMLFrameShapesForSequence.map((shapeType) =>
+    generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () =>
+      addFrame(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml'),
+    ),
+  )
+  const umlConnectorsForSequence = UMLConnectorsForSequence.map((shapeType) =>
+    generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () =>
+      addCustomConnector(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml'),
+    ),
+  )
 
   // const umlCustomContainersForSequence = UMLCustomContainersForSequence.map(
   //   shapeType => {
@@ -1135,10 +1616,16 @@ const Navigator: FC<NavigatorProps> = ({
   //   }
   // )
 
-
-  const umlGridShapesForOther = UMLGridShapesForOther.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () => addCustomTable(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
-  const umlCustomShapesForOther = UMLCustomShapesForOther.map(shapeType => generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml')))
-
+  const umlGridShapesForOther = UMLGridShapesForOther.map((shapeType) =>
+    generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () =>
+      addCustomTable(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml'),
+    ),
+  )
+  const umlCustomShapesForOther = UMLCustomShapesForOther.map((shapeType) =>
+    generateIcons(shapeType.name, 'custom-icons/uml', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () =>
+      addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/uml'),
+    ),
+  )
 
   // const umlGridShapesForOther = UMLGridShapesForOther.map(
   //   shapeType => {
@@ -1166,18 +1653,43 @@ const Navigator: FC<NavigatorProps> = ({
   //   }
   // )
 
-  const myShapeItems = myShapes.map(myShape => {
-    const width = myShape.width > myShape.height ? 28 : Math.round(28 * myShape.width / myShape.height)
-    const height = myShape.height > myShape.width ? 28 : Math.round(28 * myShape.height / myShape.width)
+  const myShapeItems = myShapes.map((myShape) => {
+    const width = myShape.width > myShape.height ? 28 : Math.round((28 * myShape.width) / myShape.height)
+    const height = myShape.height > myShape.width ? 28 : Math.round((28 * myShape.height) / myShape.width)
     const imageId = myShape.id
-    return <Popover title={myShape.name} placement='right' content={getMyShapePopoverContent(myShape.id, myShape.name, myShape.image, myShape.width, myShape.height)} overlayStyle={{ left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH, minWidth: myShape.width + 60, width: myShape.height + 60, }}>
-      <Button type='text' onMouseDown={() => addMyShape(myShape, imageId)} style={{ padding: 2, display: 'flex', justifyContent: 'center', alignItems: 'center', width: 32, height: 32 }}>
-        <img src={`${myShape.icon}`} width={width} height={height} />
-      </Button>
-    </Popover>
+    return (
+      <Popover
+        title={myShape.name}
+        key={myShape.name}
+        placement="right"
+        content={getMyShapePopoverContent(myShape.id, myShape.name, myShape.image, myShape.width, myShape.height)}
+        overlayStyle={{
+          left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH,
+          minWidth: myShape.width + 60,
+          width: myShape.height + 60,
+        }}
+      >
+        <Button
+          type="text"
+          onMouseDown={() => addMyShape(myShape, imageId)}
+          style={{ padding: 2, display: 'flex', justifyContent: 'center', alignItems: 'center', width: 32, height: 32 }}
+        >
+          <img src={`${myShape.icon}`} width={width} height={height} />
+        </Button>
+      </Popover>
+    )
   })
 
-  const erCustomShapes = ERCustomShapes.map(shapeType => generateIcons(shapeType.name, 'custom-icons/entity-relation', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/entity-relation')))
+  const erCustomShapes = ERCustomShapes.map((shapeType) =>
+    generateIcons(
+      shapeType.name,
+      'custom-icons/entity-relation',
+      shapeType.typeInfo.width,
+      shapeType.typeInfo.height,
+      false,
+      () => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/entity-relation'),
+    ),
+  )
 
   // const erCustomShapes = ERCustomShapes.map(
   //   shapeType => {
@@ -1189,7 +1701,16 @@ const Navigator: FC<NavigatorProps> = ({
   //   }
   // )
 
-  const mockupCustomShapes = MockupShapes.map(shapeType => generateIcons(shapeType.name, 'custom-icons/mockup', shapeType.typeInfo.width, shapeType.typeInfo.height, shapeType.multicolor, () => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/mockup')))
+  const mockupCustomShapes = MockupShapes.map((shapeType) =>
+    generateIcons(
+      shapeType.name,
+      'custom-icons/mockup',
+      shapeType.typeInfo.width,
+      shapeType.typeInfo.height,
+      shapeType.multicolor,
+      () => addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/mockup'),
+    ),
+  )
 
   // const mockupCustomShapes = MockupShapes.map(
   //   shapeType => {
@@ -1202,7 +1723,7 @@ const Navigator: FC<NavigatorProps> = ({
   // )
 
   const handleModifyMyShapes = (event: MouseEvent) => {
-    setMyShapesWindowVisible(!myShapesWindowVisiible)
+    setMyShapesWindowVisible(!myShapesWindowVisible)
     event.stopPropagation()
   }
 
@@ -1221,129 +1742,251 @@ const Navigator: FC<NavigatorProps> = ({
   const items: CollapseProps['items'] = [
     {
       key: '1',
-      label: <div style={{ fontWeight: 'bolder' }}><FormattedMessage id='workspace.navigator.panel.my-shapes' /></div>,
-      children: <Space size={2} wrap>
-        {myShapeItems}
-      </Space>,
-      extra: <EditOutlined onClick={handleModifyMyShapes} />
+      label: (
+        <div style={{ fontWeight: 'bolder' }}>
+          <FormattedMessage id="workspace.navigator.panel.my-shapes" />
+        </div>
+      ),
+      children: (
+        <Space size={2} wrap>
+          {myShapeItems}
+        </Space>
+      ),
+      // @ts-ignore
+      extra: <EditOutlined onClick={handleModifyMyShapes} />,
     },
     {
       key: '2',
-      label: <div style={{ fontWeight: 'bolder' }}><FormattedMessage id='workspace.navigator.panel.general' /></div>,
-      children: <Space size={2} wrap >
-        {shapes}
-        {line}
-        {table}
-        {containers}
-      </Space>,
+      label: (
+        <div style={{ fontWeight: 'bolder' }}>
+          <FormattedMessage id="workspace.navigator.panel.general" />
+        </div>
+      ),
+      children: (
+        <Space size={2} wrap>
+          {shapes}
+          {line}
+          {table}
+          {containers}
+        </Space>
+      ),
     },
     {
       key: '3',
-      label: <div style={{ fontWeight: 'bolder' }}><FormattedMessage id='workspace.navigator.panel.advanced' /></div>,
-      children: <Space size={2} wrap>
-        {/* {aliyunShapes}
+      label: (
+        <div style={{ fontWeight: 'bolder' }}>
+          <FormattedMessage id="workspace.navigator.panel.advanced" />
+        </div>
+      ),
+      children: (
+        <Space size={2} wrap>
+          {/* {aliyunShapes}
       {awsShapes} */}
-        {customShapeBasicShapes}
-      </Space>,
+          {customShapeBasicShapes}
+        </Space>
+      ),
     },
     {
       key: '4',
-      label: <div style={{ fontWeight: 'bolder' }}><FormattedMessage id='workspace.navigator.panel.arrows' /></div>,
-      children: <Space size={2} wrap>
-        {customShapeArrows}
-      </Space>,
+      label: (
+        <div style={{ fontWeight: 'bolder' }}>
+          <FormattedMessage id="workspace.navigator.panel.arrows" />
+        </div>
+      ),
+      children: (
+        <Space size={2} wrap>
+          {customShapeArrows}
+        </Space>
+      ),
     },
     {
       key: '5',
-      label: <div style={{ fontWeight: 'bolder' }}><FormattedMessage id='workspace.navigator.panel.flowchart' /></div>,
-      children: <Space size={2} wrap>
-        {customShapeFlowChartShapes}
-      </Space>,
+      label: (
+        <div style={{ fontWeight: 'bolder' }}>
+          <FormattedMessage id="workspace.navigator.panel.flowchart" />
+        </div>
+      ),
+      children: (
+        <Space size={2} wrap>
+          {customShapeFlowChartShapes}
+        </Space>
+      ),
     },
     {
       key: '6',
-      label: <div style={{ fontWeight: 'bolder' }}><FormattedMessage id='workspace.navigator.panel.pool' /></div>,
-      children: <Space size={2} wrap>
-        {containers[1]}
-        {containers[3]}
-      </Space>,
+      label: (
+        <div style={{ fontWeight: 'bolder' }}>
+          <FormattedMessage id="workspace.navigator.panel.pool" />
+        </div>
+      ),
+      children: (
+        <Space size={2} wrap>
+          {containers[1]}
+          {containers[3]}
+        </Space>
+      ),
     },
     {
       key: '7',
-      label: <div style={{ fontWeight: 'bolder' }}><FormattedMessage id='workspace.navigator.panel.uml-class' /></div>,
-      children: <Space size={2} wrap>
-        {umlGridShapesForClass}
-        {umlContainerShapesForClass}
-        {umlBasicShapesForClass}
-        {umlConnectorsForClass}
-      </Space>,
+      label: (
+        <div style={{ fontWeight: 'bolder' }}>
+          <FormattedMessage id="workspace.navigator.panel.uml-class" />
+        </div>
+      ),
+      children: (
+        <Space size={2} wrap>
+          {umlGridShapesForClass}
+          {umlContainerShapesForClass}
+          {umlBasicShapesForClass}
+          {umlConnectorsForClass}
+        </Space>
+      ),
     },
     {
       key: '8',
-      label: <div style={{ fontWeight: 'bolder' }}><FormattedMessage id='workspace.navigator.panel.uml-use-case' /></div>,
-      children: <Space size={2} wrap>
-        {umlContainerShapesForUseCase}
-        {umlBasicShapesForUseCase}
-        {umlConnectorsForUseCase}
-      </Space>,
+      label: (
+        <div style={{ fontWeight: 'bolder' }}>
+          <FormattedMessage id="workspace.navigator.panel.uml-use-case" />
+        </div>
+      ),
+      children: (
+        <Space size={2} wrap>
+          {umlContainerShapesForUseCase}
+          {umlBasicShapesForUseCase}
+          {umlConnectorsForUseCase}
+        </Space>
+      ),
     },
     {
       key: '9',
-      label: <div style={{ fontWeight: 'bolder' }}><FormattedMessage id='workspace.navigator.panel.uml-activity-state' /></div>,
-      children: <Space size={2} wrap>
-        {umlBasicShapesForActivityState}
-        {umlCustomShapesForActivityState}
-        {umlConnectorsForActivityState}
-        {umlContainerShapesForActivityState}
-      </Space>,
+      label: (
+        <div style={{ fontWeight: 'bolder' }}>
+          <FormattedMessage id="workspace.navigator.panel.uml-activity-state" />
+        </div>
+      ),
+      children: (
+        <Space size={2} wrap>
+          {umlBasicShapesForActivityState}
+          {umlCustomShapesForActivityState}
+          {umlConnectorsForActivityState}
+          {umlContainerShapesForActivityState}
+        </Space>
+      ),
     },
     {
       key: '10',
-      label: <div style={{ fontWeight: 'bolder' }}><FormattedMessage id='workspace.navigator.panel.uml-sequence' /></div>,
-      children: <Space size={2} wrap>
-        {umlCustomContainersForSequence}
-        {umlCustomShapesForSequence}
-        {umlFrameShapesForSequence}
-        {umlConnectorsForSequence}
-      </Space>,
+      label: (
+        <div style={{ fontWeight: 'bolder' }}>
+          <FormattedMessage id="workspace.navigator.panel.uml-sequence" />
+        </div>
+      ),
+      children: (
+        <Space size={2} wrap>
+          {umlCustomContainersForSequence}
+          {umlCustomShapesForSequence}
+          {umlFrameShapesForSequence}
+          {umlConnectorsForSequence}
+        </Space>
+      ),
     },
     {
       key: '11',
-      label: <div style={{ fontWeight: 'bolder' }}><FormattedMessage id='workspace.navigator.panel.uml-others' /></div>,
-      children: <Space size={2} wrap>
-        {umlGridShapesForOther}
-        {umlCustomShapesForOther}
-      </Space>,
+      label: (
+        <div style={{ fontWeight: 'bolder' }}>
+          <FormattedMessage id="workspace.navigator.panel.uml-others" />
+        </div>
+      ),
+      children: (
+        <Space size={2} wrap>
+          {umlGridShapesForOther}
+          {umlCustomShapesForOther}
+        </Space>
+      ),
     },
     {
       key: '12',
-      label: <div style={{ fontWeight: 'bolder' }}><FormattedMessage id='workspace.navigator.panel.er' /></div>,
-      children: <Space size={2} wrap>
-        {erCustomShapes}
-      </Space>,
+      label: (
+        <div style={{ fontWeight: 'bolder' }}>
+          <FormattedMessage id="workspace.navigator.panel.er" />
+        </div>
+      ),
+      children: (
+        <Space size={2} wrap>
+          {erCustomShapes}
+        </Space>
+      ),
     },
     {
       key: '13',
-      label: <div style={{ fontWeight: 'bolder' }}><FormattedMessage id='workspace.navigator.panel.mockup' /></div>,
-      children: <Space size={2} wrap>
-        {mockupCustomShapes}
-      </Space>,
+      label: (
+        <div style={{ fontWeight: 'bolder' }}>
+          <FormattedMessage id="workspace.navigator.panel.mockup" />
+        </div>
+      ),
+      children: (
+        <Space size={2} wrap>
+          {mockupCustomShapes}
+        </Space>
+      ),
     },
   ]
 
+  // @ts-ignore
   return (
-    <div id={NAVIGATOR_ID} style={{ position: 'absolute', top: '0px', bottom: '0px', left: '0px', width: navigatorWidth, overflow: 'auto', scrollbarWidth: 'thin', scrollbarColor: Utils.currentEditor?.enableDarkTheme ? `${scrollbarThumbColor} ${scrollbarTrackColor}` : undefined }}
-      onMouseDown={handleNavigatorMouseDown} onMouseMove={handleNavigatorMouseMove} onMouseLeave={handleNavigatorMouseLeave} onMouseUp={handleNavigatorMouseUp}
+    <div
+      id={NAVIGATOR_ID}
+      style={{
+        position: 'absolute',
+        top: '0px',
+        bottom: '0px',
+        left: '0px',
+        width: navigatorWidth,
+        overflow: 'auto',
+        scrollbarWidth: 'thin',
+        scrollbarColor: Utils.currentEditor?.enableDarkTheme
+          ? `${scrollbarThumbColor} ${scrollbarTrackColor}`
+          : undefined,
+      }}
+      // @ts-ignore
+      onMouseDown={handleNavigatorMouseDown}
+      // @ts-ignore
+      onMouseMove={handleNavigatorMouseMove}
+      // @ts-ignore
+      onMouseLeave={handleNavigatorMouseLeave}
+      // @ts-ignore
+      onMouseUp={handleNavigatorMouseUp}
       onScroll={handleNavigatorScroll}
     >
-      <div id={ACTION_IMAGE_ID} style={{ position: 'absolute', opacity: '0.5', zIndex: 9999 }}
-      //onMouseMove={handleNavigatorImageMouseMove} 
+      <div
+        id={ACTION_IMAGE_ID}
+        style={{ position: 'absolute', opacity: '0.5', zIndex: 9999 }}
+        //onMouseMove={handleNavigatorImageMouseMove}
       />
-      <div id={NAVIGATOR_MASK_ID} style={{ position: 'absolute', display: 'none', opacity: '0', backgroundColor: 'red', width: '100%', height: '100%', zIndex: 99999 }}
-        onMouseMove={handleNavigatorMaskMouseMove} onMouseEnter={handleNavigatorMaskMouseEnter} onMouseLeave={handleNavigatorMaskMouseLeave}
+      <div
+        id={NAVIGATOR_MASK_ID}
+        style={{
+          position: 'absolute',
+          display: 'none',
+          opacity: '0',
+          backgroundColor: 'red',
+          width: '100%',
+          height: '100%',
+          zIndex: 99999,
+        }}
+        // @ts-ignore
+        onMouseMove={handleNavigatorMaskMouseMove}
+        // @ts-ignore
+        onMouseEnter={handleNavigatorMaskMouseEnter}
+        // @ts-ignore
+        onMouseLeave={handleNavigatorMaskMouseLeave}
       />
-      <Collapse items={items} defaultActiveKey={['1', '2']} onChange={onChange} size='small' />
-      <MyShapesWindowPage visible={myShapesWindowVisiible} onWindowCancel={handleMyShapesWindowCancel} onWindowOk={handleMyShapesWindowOk} onMyShapesChanged={handleMyShapesChanged} />
+      <Collapse items={items} defaultActiveKey={['1', '2']} onChange={onChange} size="small" />
+      <MyShapesWindowPage
+        visible={myShapesWindowVisible}
+        onWindowCancel={handleMyShapesWindowCancel}
+        onWindowOk={handleMyShapesWindowOk}
+        onMyShapesChanged={handleMyShapesChanged}
+      />
     </div>
   )
 }

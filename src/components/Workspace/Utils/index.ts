@@ -1,8 +1,17 @@
-
-export { SystemUtils } from './SystemUtils'
+export {
+  ConnectorLineModes,
+  ConnectorLineTypes,
+  Consts,
+  DoubleLineArrowDistanceOptions,
+  DoubleLineArrowLengthOptions,
+  FontSizeOptions,
+  LineWidthOptions,
+  PageTypes,
+  StrokeDashStyles,
+} from './Consts'
 export { RequestUtils } from './RequestUtils'
-export { Utils, } from './Utils'
-export { Consts, PageTypes, StrokeDashStyles, ConnectorLineModes, ConnectorLineTypes, FontSizeOptions, LineWidthOptions, DoubleLineArrowLengthOptions, DoubleLineArrowDistanceOptions, } from './Consts'
+export { SystemUtils } from './SystemUtils'
+export { Utils } from './Utils'
 
 //declare const LineTypes: readonly['LeftTop', 'RightTop', 'LeftBottom', 'RightButtom'];
 

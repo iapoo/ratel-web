@@ -1,0 +1,186 @@
+import { MockupCustomShape, MockupCustomShapeTypes } from './src/MockupCustomShape'
+
+export { MockupCustomShape, MockupCustomShapeTypes }
+
+export const MockupShapes = [
+  {
+    name: MockupCustomShapeTypes[0].name,
+    type: MockupCustomShape,
+    typeInfo: MockupCustomShapeTypes[0],
+    multicolor: false,
+  },
+  {
+    name: MockupCustomShapeTypes[1].name,
+    type: MockupCustomShape,
+    typeInfo: MockupCustomShapeTypes[1],
+    multicolor: false,
+  },
+  {
+    name: MockupCustomShapeTypes[2].name,
+    type: MockupCustomShape,
+    typeInfo: MockupCustomShapeTypes[2],
+    multicolor: false,
+  },
+  {
+    name: MockupCustomShapeTypes[3].name,
+    type: MockupCustomShape,
+    typeInfo: MockupCustomShapeTypes[3],
+    multicolor: true,
+  },
+  {
+    name: MockupCustomShapeTypes[4].name,
+    type: MockupCustomShape,
+    typeInfo: MockupCustomShapeTypes[4],
+    multicolor: true,
+  },
+  {
+    name: MockupCustomShapeTypes[5].name,
+    type: MockupCustomShape,
+    typeInfo: MockupCustomShapeTypes[5],
+    multicolor: false,
+  },
+  {
+    name: MockupCustomShapeTypes[6].name,
+    type: MockupCustomShape,
+    typeInfo: MockupCustomShapeTypes[6],
+    multicolor: false,
+  },
+  {
+    name: MockupCustomShapeTypes[7].name,
+    type: MockupCustomShape,
+    typeInfo: MockupCustomShapeTypes[7],
+    multicolor: false,
+  },
+  {
+    name: MockupCustomShapeTypes[8].name,
+    type: MockupCustomShape,
+    typeInfo: MockupCustomShapeTypes[8],
+    multicolor: false,
+  },
+  {
+    name: MockupCustomShapeTypes[9].name,
+    type: MockupCustomShape,
+    typeInfo: MockupCustomShapeTypes[9],
+    multicolor: false,
+  },
+  {
+    name: MockupCustomShapeTypes[10].name,
+    type: MockupCustomShape,
+    typeInfo: MockupCustomShapeTypes[10],
+    multicolor: false,
+  },
+  {
+    name: MockupCustomShapeTypes[11].name,
+    type: MockupCustomShape,
+    typeInfo: MockupCustomShapeTypes[11],
+    multicolor: false,
+  },
+  {
+    name: MockupCustomShapeTypes[12].name,
+    type: MockupCustomShape,
+    typeInfo: MockupCustomShapeTypes[12],
+    multicolor: false,
+  },
+  {
+    name: MockupCustomShapeTypes[13].name,
+    type: MockupCustomShape,
+    typeInfo: MockupCustomShapeTypes[13],
+    multicolor: false,
+  },
+  {
+    name: MockupCustomShapeTypes[14].name,
+    type: MockupCustomShape,
+    typeInfo: MockupCustomShapeTypes[14],
+    multicolor: false,
+  },
+  {
+    name: MockupCustomShapeTypes[15].name,
+    type: MockupCustomShape,
+    typeInfo: MockupCustomShapeTypes[15],
+    multicolor: false,
+  },
+  {
+    name: MockupCustomShapeTypes[16].name,
+    type: MockupCustomShape,
+    typeInfo: MockupCustomShapeTypes[16],
+    multicolor: false,
+  },
+  {
+    name: MockupCustomShapeTypes[17].name,
+    type: MockupCustomShape,
+    typeInfo: MockupCustomShapeTypes[17],
+    multicolor: false,
+  },
+  {
+    name: MockupCustomShapeTypes[18].name,
+    type: MockupCustomShape,
+    typeInfo: MockupCustomShapeTypes[18],
+    multicolor: false,
+  },
+  {
+    name: MockupCustomShapeTypes[19].name,
+    type: MockupCustomShape,
+    typeInfo: MockupCustomShapeTypes[19],
+    multicolor: false,
+  },
+  {
+    name: MockupCustomShapeTypes[20].name,
+    type: MockupCustomShape,
+    typeInfo: MockupCustomShapeTypes[20],
+    multicolor: false,
+  },
+  {
+    name: MockupCustomShapeTypes[21].name,
+    type: MockupCustomShape,
+    typeInfo: MockupCustomShapeTypes[21],
+    multicolor: false,
+  },
+  {
+    name: MockupCustomShapeTypes[22].name,
+    type: MockupCustomShape,
+    typeInfo: MockupCustomShapeTypes[22],
+    multicolor: false,
+  },
+  {
+    name: MockupCustomShapeTypes[23].name,
+    type: MockupCustomShape,
+    typeInfo: MockupCustomShapeTypes[23],
+    multicolor: false,
+  },
+  {
+    name: MockupCustomShapeTypes[24].name,
+    type: MockupCustomShape,
+    typeInfo: MockupCustomShapeTypes[24],
+    multicolor: false,
+  },
+  {
+    name: MockupCustomShapeTypes[25].name,
+    type: MockupCustomShape,
+    typeInfo: MockupCustomShapeTypes[25],
+    multicolor: false,
+  },
+  {
+    name: MockupCustomShapeTypes[26].name,
+    type: MockupCustomShape,
+    typeInfo: MockupCustomShapeTypes[26],
+    multicolor: false,
+  },
+  {
+    name: MockupCustomShapeTypes[27].name,
+    type: MockupCustomShape,
+    typeInfo: MockupCustomShapeTypes[27],
+    multicolor: false,
+  },
+  {
+    name: MockupCustomShapeTypes[28].name,
+    type: MockupCustomShape,
+    typeInfo: MockupCustomShapeTypes[28],
+    multicolor: false,
+  },
+  {
+    name: MockupCustomShapeTypes[29].name,
+    type: MockupCustomShape,
+    typeInfo: MockupCustomShapeTypes[29],
+    multicolor: false,
+  },
+]

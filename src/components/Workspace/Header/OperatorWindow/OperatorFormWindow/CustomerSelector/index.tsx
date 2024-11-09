@@ -1,15 +1,9 @@
-import React, { FC, useEffect, useState, useRef, Key } from 'react'
-import styles from './index.css'
-import { Form, Input, Checkbox, Tree, Row, Col, Button, Modal, Menu, message, Alert, Space, Pagination, Switch, Tooltip, } from 'antd'
-import axios from 'axios'
-import Avatar from 'antd/lib/avatar/avatar'
-import type { DataNode, TreeProps, } from 'antd/es/tree'
-import { DeleteFilled, EditFilled, FileFilled, FileOutlined, FolderFilled, FolderOutlined, PlusOutlined } from '@ant-design/icons'
-import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi'
-import { ProColumns, ProTable } from '@ant-design/pro-components'
 import { RequestUtils } from '@/components/Workspace/Utils'
+import { ProColumns, ProTable } from '@ant-design/pro-components'
+import { Button, Col, Input, Modal, Pagination, Row } from 'antd'
 import { TableProps } from 'antd/lib'
-
+import { FC, Key, useEffect, useState } from 'react'
+import { FormattedMessage, useIntl } from 'umi'
 
 interface CustomerWindowProps {
   visible: boolean
@@ -38,23 +32,23 @@ interface CustomersType {
 
 const defaultData = { records: [], size: 0, current: 0, total: 0, pages: 0 }
 
-const CustomerWindowPage: FC<CustomerWindowProps> = ({
-  visible, onWindowCancel, onWindowOk,
-}) => {
-  const [dataLoading, setDataLoading,] = useState<boolean>(false)
-  const [windowVisible, setWindowVisible,] = useState<boolean>(false)
-  const [errorVisible, setErrorVisible,] = useState<boolean>(false)
-  const [errorMessage, setErrorMessage,] = useState<string>('')
-  const [selectedRowKeys, setSelectedRowKeys,] = useState<Key[]>([])
-  const [selectedRows, setSelectedRows,] = useState<SingleCustomerType[]>([])
-  const [data, setData,] = useState<CustomersType>(defaultData)
-  const [searchText, setSearchText,] = useState<string>('')
+const CustomerWindowPage: FC<CustomerWindowProps> = ({ visible, onWindowCancel, onWindowOk }) => {
+  const [dataLoading, setDataLoading] = useState<boolean>(false)
+  const [windowVisible, setWindowVisible] = useState<boolean>(false)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [errorVisible, setErrorVisible] = useState<boolean>(false)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [errorMessage, setErrorMessage] = useState<string>('')
+  const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([])
+  const [selectedRows, setSelectedRows] = useState<SingleCustomerType[]>([])
+  const [data, setData] = useState<CustomersType>(defaultData)
+  const [searchText, setSearchText] = useState<string>('')
 
   const intl = useIntl()
 
   const columns: ProColumns<SingleCustomerType>[] = [
     {
-      title: <FormattedMessage id='workspace.header.customer-selector-window.column-customer-id' />,
+      title: <FormattedMessage id="workspace.header.customer-selector-window.column-customer-id" />,
       dataIndex: 'customerId',
       valueType: 'digit',
       key: 'customerId',
@@ -63,31 +57,29 @@ const CustomerWindowPage: FC<CustomerWindowProps> = ({
       hideInForm: true,
     },
     {
-      title: <FormattedMessage id='workspace.header.customer-selector-window.column-customer-name' />,
+      title: <FormattedMessage id="workspace.header.customer-selector-window.column-customer-name" />,
       dataIndex: 'customerName',
       key: 'customerName',
       valueType: 'text',
     },
     {
-      title: <FormattedMessage id='workspace.header.customer-selector-window.column-customer-email' />,
+      title: <FormattedMessage id="workspace.header.customer-selector-window.column-customer-email" />,
       dataIndex: 'email',
       valueType: 'text',
       key: 'email',
     },
     {
-      title: <FormattedMessage id='workspace.header.customer-selector-window.column-customer-nickname' />,
+      title: <FormattedMessage id="workspace.header.customer-selector-window.column-customer-nickname" />,
       dataIndex: 'nickName',
       key: 'nickName',
       valueType: 'text',
     },
   ]
 
-
   if (windowVisible !== visible) {
     setDataLoading(false)
     setWindowVisible(visible)
   }
-
 
   useEffect(() => {
     if (!dataLoading) {
@@ -98,8 +90,12 @@ const CustomerWindowPage: FC<CustomerWindowProps> = ({
     }
   })
 
-
-  const fetchData = async (like: string | null, excludeCustomerId: number | null, pageNum: number = 1, pageSize: number = 5) => {
+  const fetchData = async (
+    like: string | null,
+    excludeCustomerId: number | null,
+    pageNum: number = 1,
+    pageSize: number = 5,
+  ) => {
     const customerData = await RequestUtils.getOperatorCustomers(like, excludeCustomerId, pageNum, pageSize)
     if (customerData.status === 200 && customerData.data.success) {
       const customers = customerData.data.data
@@ -132,6 +128,7 @@ const CustomerWindowPage: FC<CustomerWindowProps> = ({
     fetchData(searchText, null)
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handlePageChange = (current: number, size?: number) => {
     fetchData(searchText, null, current)
   }
@@ -142,19 +139,25 @@ const CustomerWindowPage: FC<CustomerWindowProps> = ({
     // getCheckboxProps: (record: SingleCustomerType) => ({
     //   name: record.customerName
     // })
-
   }
-
 
   return (
     <div>
-      <Modal title={<FormattedMessage id='workspace.header.customer-selector-window.title' />} width={800} centered open={visible} onOk={onOk} onCancel={onCancel} maskClosable={false}  >
-        <div style={{ width: '100%', height: '420px', }}>
-          <div style={{ width: '100%', height: '380px', }}>
+      <Modal
+        title={<FormattedMessage id="workspace.header.customer-selector-window.title" />}
+        width={800}
+        centered
+        open={visible}
+        onOk={onOk}
+        onCancel={onCancel}
+        maskClosable={false}
+      >
+        <div style={{ width: '100%', height: '420px' }}>
+          <div style={{ width: '100%', height: '380px' }}>
             <ProTable
               columns={columns}
               dataSource={data.records}
-              rowKey='customerId'
+              rowKey="customerId"
               //loading={customerListLoading}
               search={false}
               pagination={false}
@@ -168,19 +171,31 @@ const CustomerWindowPage: FC<CustomerWindowProps> = ({
                 setting: false,
               }}
               title={() => [
-                <Row key='searchRow'>
-                  <Col span={18} >
-                    <Input key='searchInput' placeholder={intl.formatMessage({ id: 'workspace.header.customer-selector-window.search-placeholder' })} style={{ width: '360px', marginLeft: '16px', }} onChange={(e) => { setSearchText(e.target.value) }} />
-                    <Button key='searchButton' type='primary' style={{ marginLeft: '24px', }} onClick={handleSearch} ><FormattedMessage id='workspace.header.customer-selector-window.button-search' /></Button>
+                <Row key="searchRow">
+                  <Col span={18}>
+                    <Input
+                      key="searchInput"
+                      placeholder={intl.formatMessage({
+                        id: 'workspace.header.customer-selector-window.search-placeholder',
+                      })}
+                      style={{ width: '360px', marginLeft: '16px' }}
+                      onChange={(e) => {
+                        setSearchText(e.target.value)
+                      }}
+                    />
+                    <Button key="searchButton" type="primary" style={{ marginLeft: '24px' }} onClick={handleSearch}>
+                      <FormattedMessage id="workspace.header.customer-selector-window.button-search" />
+                    </Button>
                   </Col>
                 </Row>,
               ]}
               headerTitle={false}
               toolBarRender={false}
             />
-            <div style={{ width: '100%', height: '64px', }}>
+            <div style={{ width: '100%', height: '64px' }}>
               <Pagination
-                className='list-page' style={{ float: 'right', margin: '16px', }}
+                className="list-page"
+                style={{ float: 'right', margin: '16px' }}
                 total={data.total}
                 onChange={handlePageChange}
                 //onShowSizeChange={pageSizeHandler}
@@ -188,14 +203,13 @@ const CustomerWindowPage: FC<CustomerWindowProps> = ({
                 pageSize={data.size}
                 showSizeChanger={false}
                 showQuickJumper
-              //locale='zhCN'
-              //showTotal={total => `${intl.formatMessage({ id: 'workspace.header.customer-selector-window.search-placeholder' }} ${total}`}
+                //locale='zhCN'
+                //showTotal={total => `${intl.formatMessage({ id: 'workspace.header.customer-selector-window.search-placeholder' }} ${total}`}
               />
             </div>
           </div>
         </div>
       </Modal>
-
     </div>
   )
 }

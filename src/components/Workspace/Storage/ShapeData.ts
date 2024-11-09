@@ -1,4 +1,4 @@
-import { EditorItemData } from "./EditorItemData"
+import { EditorItemData } from './EditorItemData'
 
 /* eslint-disable max-params */
 export class ShapeData extends EditorItemData {

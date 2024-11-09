@@ -1,64 +1,86 @@
-import React, { useEffect, useState, useRef, FC } from 'react'
-import styles from './index.css'
-import { Form, Input, Checkbox, Row, Col, Button, Modal, Menu, Space, Tooltip, Dropdown, Divider, Select, InputNumber, ColorPicker, message, Upload, theme, } from 'antd'
+/* eslint-disable @typescript-eslint/no-use-before-define */
+import {
+  AlignCenterOutlined,
+  AlignLeftOutlined,
+  AlignRightOutlined,
+  BoldOutlined,
+  CheckOutlined,
+  DownloadOutlined,
+  FileAddOutlined,
+  FileOutlined,
+  FileTextOutlined,
+  FolderOpenOutlined,
+  ItalicOutlined,
+  MoonOutlined,
+  RedoOutlined,
+  SaveOutlined,
+  SettingOutlined,
+  SunOutlined,
+  TeamOutlined,
+  UnderlineOutlined,
+  UndoOutlined,
+  UserOutlined,
+  VerticalAlignBottomOutlined,
+  VerticalAlignMiddleOutlined,
+  VerticalAlignTopOutlined,
+  ZoomInOutlined,
+  ZoomOutOutlined,
+} from '@ant-design/icons'
 import type { ConfigProviderProps, GetProp, MappingAlgorithm, MenuProps, UploadProps } from 'antd'
-import { ConnectorLineEndArrows, ConnectorLineModes, ConnectorLineStartArrows, ConnectorLineTypes, Consts, FontSizeOptions, LineWidthOptions, RequestUtils, StrokeDashStyles, SystemUtils, Utils, } from '../Utils'
+import { Button, ColorPicker, Divider, Dropdown, Input, InputNumber, message, Modal, Select, Space, theme, Tooltip, Upload } from 'antd'
+import { FC, useEffect, useRef, useState } from 'react'
 import { setInterval } from 'timers'
+import { StorageService } from '../Storage'
+import { ConnectorLineModes, ConnectorLineTypes, Consts, FontSizeOptions, LineWidthOptions, RequestUtils, StrokeDashStyles, SystemUtils, Utils } from '../Utils'
 import { UserInfo } from '../Utils/RequestUtils'
+import CustomerWindow from './CustomerWindow'
+import FileManagementWindow from './FileManagementWindow'
 import LoginFormWindow from './LoginFormWindow'
 import NewFileWindow from './NewFileWindow'
-import { AlignCenterOutlined, AlignLeftOutlined, AlignRightOutlined, BoldOutlined, CheckOutlined, DownloadOutlined, FileAddOutlined, FileOutlined, FileTextOutlined, FolderOpenOutlined, FormOutlined, GithubOutlined, ItalicOutlined, MoonOutlined, RedoOutlined, SaveOutlined, SearchOutlined, SettingOutlined, SolutionOutlined, SunOutlined, TeamOutlined, UnderlineOutlined, UndoOutlined, UserOutlined, VerticalAlignBottomOutlined, VerticalAlignMiddleOutlined, VerticalAlignTopOutlined, ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons'
 import OpenFileWindow from './OpenFileWindow'
-import FileManagementWindow from './FileManagementWindow'
 import OperatorWindow from './OperatorWindow'
-import CustomerWindow from './CustomerWindow'
-import { StorageService } from '../Storage'
-import { Rectangle } from '@/components/Resource/LargeIcons'
-import { EngineUtils, Font, FontSlant, FontUtils, FontWeight, GraphicsUtils, Matrix, Point2, TextDecoration, TextShape } from '@/components/Engine'
-import { Editor, EditorEvent } from '@/components/Rockie/Editor'
-import { useIntl, setLocale, getLocale, FormattedMessage, useParams, } from 'umi'
-import { useLocation } from 'react-router-dom'
-import { Placeholder, } from '@/components/Resource/Icons'
-import { Operation, OperationHelper, OperationType } from '@/components/Rockie/Operations'
-import { Connector, ContainerEntity, ContainerTypes, CustomEntity, CustomTableEntity, ImageContainer, Item, ShapeEntity, ShapeTypes, SvgContainer, TableEntity } from '@/components/Rockie/Items'
-import { ShapeAction } from '@/components/Rockie/Actions'
-import { ConnectorArrowTypes } from '@/components/Rockie/Items/src/Connector'
-import { ConnectorDirection, ConnectorMode } from '@/components/Rockie/Shapes'
+// @ts-ignore
+import { Placeholder } from '@/components/Resource/Icons'
+import { EditorUtils } from '@/components/Workspace/Utils/EditorUtils'
+import { Arrows } from '@ratel-web/editor/CustomItems/Arrows'
+import { BasicShapes } from '@ratel-web/editor/CustomItems/BasicShapes'
+import { ERCustomShape, ERCustomShapeTypes } from '@ratel-web/editor/CustomItems/EntityRelation'
+import { FlowChartShapes } from '@ratel-web/editor/CustomItems/FlowChart'
+import { MockupCustomShape, MockupCustomShapeTypes } from '@ratel-web/editor/CustomItems/Mockup'
+import {
+  UMLBasicShape,
+  UMLBasicShapeTypes,
+  UMLConnector,
+  UMLConnectorTypeInfos,
+  UMLContainerShape,
+  UMLContainerTypes,
+  UMLCustomContainer,
+  UMLCustomContainerTypes,
+  UMLCustomShape,
+  UMLCustomShapeTypes,
+  UMLCustomTable,
+  UMLCustomTableTypes,
+  UMLFrameShape,
+  UMLFrameShapeTypes,
+} from '@ratel-web/editor/CustomItems/UML'
+import { Editor, EditorEvent } from '@ratel-web/editor/Editor'
+import { Connector, ConnectorArrowTypes, ContainerEntity, CustomConnector, CustomConnectorTypeInfo, CustomEntity, CustomEntityTypeInfo, CustomTableType, EditorItem, Item, ShapeEntity, ShapeType, ShapeTypes, TableEntity, TableTypes } from '@ratel-web/editor/Items'
+import { Operation, OperationType } from '@ratel-web/editor/Operations'
+import { ConnectorDirection } from '@ratel-web/editor/Shapes'
+import { DocumentThemeTypes } from '@ratel-web/editor/Theme'
+import { CommonUtils, Constants, EditorHelper } from '@ratel-web/editor/Utils'
+import { FontSlant, FontUtils, FontWeight, Matrix, Point2, TextDecoration } from '@ratel-web/engine'
+import { RcFile, UploadChangeParam } from 'antd/es/upload'
+import { FormattedMessage, getLocale, setLocale, useAntdConfig, useAntdConfigSetter, useIntl, useNavigate } from 'umi'
 import { ConnectorLineModesForCurve, DoubleLineGapOptions, FontNameOptions } from '../Utils/Consts'
-import { BasicShapes } from '@/components/Rockie/CustomItems/BasicShapes'
-import { Arrows } from '@/components/Rockie/CustomItems/Arrows'
-import { AliyunShapes } from '@/components/Rockie/CustomItems/Aliyun'
-import { AwsShapes } from '@/components/Rockie/CustomItems/Aws'
-import { FlowChartShapeTypes } from '@/components/Rockie/CustomItems/FlowChart/src/FlowChartShape'
-import { FlowChartShapes } from '@/components/Rockie/CustomItems/FlowChart'
-import { DocumentThemeTypes, EditorUtils, ThemeUtils } from '@/components/Rockie/Theme'
-import { EditorHelper } from '@/components/Rockie/Utils'
-import RegisterFormWindowPage from './RegisterFormWindow'
+import { OSType } from '../Utils/SystemUtils'
+import AboutWindowPage from './AboutWindow'
+import DocumentSelector from './DocumentSelector'
 import PasswordFormWindowPage from './PasswordFormWindow'
 import ProfileFormWindowPage from './ProfileFormWindow'
-import TeamWindow from './TeamWindow'
+import RegisterFormWindowPage from './RegisterFormWindow'
 import ShareWindow from './ShareWindow'
-import DocumentSelector from './DocumentSelector'
-import { UMLConnectors, UMLContainerShapes, UMLCustomTable, UMLCustomTableTypes, UMLCustomTables } from '@/components/Rockie/CustomItems/UML'
-import { UMLContainerShape, UMLContainerTypes } from '@/components/Rockie/CustomItems/UML/src/UMLContainerShape'
-import { UMLBasicShape, UMLBasicShapeTypes } from '@/components/Rockie/CustomItems/UML/src/UMLBasicShape'
-import { UMLConnector, UMLConnectorTypeInfos } from '@/components/Rockie/CustomItems/UML/src/UMLConnector'
-import { UMLCustomShape, UMLCustomShapeTypes } from '@/components/Rockie/CustomItems/UML/src/UMLCustomShape'
-import { UMLFrameShape, UMLFrameShapeTypes } from '@/components/Rockie/CustomItems/UML/src/UMLFrameShape'
-import { RcFile, UploadChangeParam } from 'antd/es/upload'
-import { parse, stringify } from 'querystringify'
-import { ERCustomShape, ERCustomShapeTypes } from '@/components/Rockie/CustomItems/EntityRelation/src/ERCustomShape'
-import { MockupCustomShape, MockupCustomShapeTypes } from '@/components/Rockie/CustomItems/Mockup/src/MockupCustomShape'
-import { Shapes, ShapeType } from '@/components/Rockie/Items/src/ShapeEntity'
-import { TableTypes } from '@/components/Rockie/Items/src/TableEntity'
-import { CustomEntityTypeInfo } from '@/components/Rockie/Items/src/CustomEntity'
-import { CustomTableType } from '@/components/Rockie/Items/src/CustomTableEntity'
-import { CustomConnector, CustomConnectorTypeInfo } from '@/components/Rockie/Items/src/CustomConnector'
-import { UMLCustomContainer, UMLCustomContainerTypes } from '@/components/Rockie/CustomItems/UML/src/UMLCustomContainer'
-import { useAntdConfig, useAntdConfigSetter, useNavigate, } from 'umi'
-import AboutWindowPage from './AboutWindow'
-import { DocumentThemeType } from '@/components/Rockie/Theme/DocumentTheme'
-import { OSType } from '../Utils/SystemUtils'
+import TeamWindow from './TeamWindow'
 
 interface HeaderProps {
   previousEditor: Editor | undefined
@@ -73,18 +95,18 @@ interface HeaderProps {
   documentThemeName: string
 }
 
-const Header: FC<HeaderProps> = ({
-  previousEditor, currentEditor, onLogin, onLogout, onMyShapesUpdated, adRegionWidth, onShowRulerChanged, showRuler, onDocumentThemeChanged, documentThemeName
-}) => {
+const Header: FC<HeaderProps> = ({ previousEditor, currentEditor, onLogin, onLogout, onMyShapesUpdated, adRegionWidth, onShowRulerChanged, showRuler, onDocumentThemeChanged, documentThemeName }) => {
   const setAntdConfig = useAntdConfigSetter()
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const antdConfig = useAntdConfig()
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const navigate = useNavigate()
   const intl = useIntl()
   const [messageApi, contextHolder] = message.useMessage()
   const { confirm } = Modal
 
-  const DOCUMENT_MODIFIED_TEXT_NO = intl.formatMessage({ id: 'workspace.header.document-modified-text-no', })
-  const DOCUMENT_MODIFIED_TEXT_YES = intl.formatMessage({ id: 'workspace.header.document-modified-text-yes', })
+  const DOCUMENT_MODIFIED_TEXT_NO = intl.formatMessage({ id: 'workspace.header.document-modified-text-no' })
+  const DOCUMENT_MODIFIED_TEXT_YES = intl.formatMessage({ id: 'workspace.header.document-modified-text-yes' })
   const DOCUMENT_NEW_NAME_PREFIX = 'Untitled'
 
   const ON_LOGIN_SAVE_FILE = 'SaveFile'
@@ -101,58 +123,65 @@ const Header: FC<HeaderProps> = ({
 
   const RATEL_FORMAT = 'ratel'
 
-  const [forceUpdate, setForceUpdate,] = useState<boolean>(false)
-  const [initialized, setInitialized,] = useState<boolean>(false)
-  const [online, setOnline,] = useState<boolean>(false)
-  const [userInfo, setUserInfo,] = useState<UserInfo | null>(null)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [forceUpdate, setForceUpdate] = useState<boolean>(false)
+  const [initialized, setInitialized] = useState<boolean>(false)
+  const [online, setOnline] = useState<boolean>(false)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null)
   const [documentModifiedText, setDocumentModifiedText] = useState<string>(DOCUMENT_MODIFIED_TEXT_NO)
-  const [loginFormWindowVisible, setLoginFormWindowVisible,] = useState<boolean>(false)
-  const [registerFormWindowVisible, setRegisterFormWindowVisible,] = useState<boolean>(false)
-  const [passwordFormWindowVisible, setPasswordFormWindowVisible,] = useState<boolean>(false)
-  const [profileFormWindowVisible, setProfileFormWindowVisible,] = useState<boolean>(false)
-  const [aboutWindowVisible, setAboutWindowVisible,] = useState<boolean>(false)
-  const [newFileWindowVisible, setNewFileWindowVisible,] = useState<boolean>(false)
-  const [openFileWindowVisible, setOpenFileWindowVisible,] = useState<boolean>(false)
-  const [fileManagementWindowVisible, setFileManagementWindowVisible,] = useState<boolean>(false)
-  const [documentSelectorVisible, setDocumentSelectorVisible,] = useState<boolean>(false)
-  const [operatorWindowVisible, setOperatorWindowVisible,] = useState<boolean>(false)
-  const [customerWindowVisible, setCustomerWindowVisible,] = useState<boolean>(false)
-  const [selectedDocumentName, setSelectedDocumentName,] = useState<string>(DOCUMENT_NEW_NAME_PREFIX)
-  const [selectedFolderId, setSelectedFolderId,] = useState<number | null>(null)
-  const [selectedDocumentId, setSelectedDocumentId,] = useState<number | null>(null)
-  const [discardModifiedDocumentWindowVisible, setDiscardModifiedDocumentWindowVisible,] = useState<boolean>(false)
-  const [newDocumentIndex, setNewDocumentIndex,] = useState<number>(0)
-  const [disableFileName, setDisableFileName,] = useState<boolean>(false)
-  const [onLoginFormWindowOk, setOnLoginFormWindowOk,] = useState<string>(ON_LOGIN_NONE)
-  const [fillColor, setFillColor,] = useState<string>(Consts.COLOR_FILL_DEFAULT)
-  const [strokeColor, setStrokeColor,] = useState<string>(Consts.COLOR_STROKE_DEFAULT)
-  const [lineWidth, setLineWidth,] = useState<number>(Consts.LINE_WIDTH_DEFAULT)
-  const [doubleLineGap, setDoubleLineGap,] = useState<number>(Consts.DOUBLE_LINE_GAP_DEFAULT)
-  const [zoom, setZoom,] = useState<number>(currentEditor ? currentEditor.zoom : Consts.ZOOM_DEFAULT)
-  const [fontName, setFontName,] = useState<string>(Consts.FONT_NAME_DEFAULT)
-  const [fontSize, setFontSize,] = useState<number>(Consts.FONT_SIZE_DEFAULT)
-  const [fontColor, setFontColor,] = useState<string>(Consts.COLOR_FONT_DEFAULT)
-  const [fontWeight, setFontWeight,] = useState<string>(Consts.FONT_WEIGHT_NORMAL)
-  const [fontSlant, setFontSlant,] = useState<string>(Consts.FONT_SLANT_UP_RIGHT)
-  const [fontWidth, setFontWidth,] = useState<string>(Consts.FONT_WIDTH_NORMAL)
-  const [textAlignment, setTextAlignment,] = useState<string>(Consts.TEXT_ALIGNMENT_LEFT)
-  const [textDecoration, setTextDecoration,] = useState<string>(Consts.TEXT_DECORATION_NONE)
-  const [textVerticalAlignment, setTextVerticalAlignment,] = useState<string>(Consts.PLACE_HOLDER_ALIGNMENT_MIDDLE)
-  const [fontBold, setFontBold,] = useState<boolean>(false)
-  const [fontItalic, setFontItalic,] = useState<boolean>(false)
-  const [fontUnderline, setFontUnderline,] = useState<boolean>(false)
-  const [selectionValid, setSelectionValid,] = useState<boolean>(false)
-  const [editorUndoable, setEditorUndoable,] = useState<boolean>(false)
-  const [editorRedoable, setEditorRedoable,] = useState<boolean>(false)
-  const [fontSizeNode, setFontSizeNode,] = useState<any>(null)
-  const [strokeDashStyle, setStrokeDashStyle,] = useState<string>(Consts.STROKE_DASH_STYLE_SOLID)
-  const [connectorLineType, setConnectorLineType,] = useState<string>(Consts.CONNECTOR_LINE_TYPE_STRAIGHT)
-  const [connectorLineMode, setConnectorLineMode,] = useState<string>(Consts.CONNECTOR_LINE_MODE_SIGNLE)
-  const [connectorLineStartArrow, setConnectorLineStartArrow,] = useState<string>(ConnectorArrowTypes[0].name)
-  const [connectorLineEndArrow, setConnectorLineEndArrow,] = useState<string>(ConnectorArrowTypes[0].name)
-  const [connectorSelected, setConnectorSelected,] = useState<boolean>(false)
-  const [teamWindowVisible, setTeamWindowVisible,] = useState<boolean>(false)
-  const [shareWindowVisible, setShareWindowVisible,] = useState<boolean>(false)
+  const [loginFormWindowVisible, setLoginFormWindowVisible] = useState<boolean>(false)
+  const [registerFormWindowVisible, setRegisterFormWindowVisible] = useState<boolean>(false)
+  const [passwordFormWindowVisible, setPasswordFormWindowVisible] = useState<boolean>(false)
+  const [profileFormWindowVisible, setProfileFormWindowVisible] = useState<boolean>(false)
+  const [aboutWindowVisible, setAboutWindowVisible] = useState<boolean>(false)
+  const [newFileWindowVisible, setNewFileWindowVisible] = useState<boolean>(false)
+  const [openFileWindowVisible, setOpenFileWindowVisible] = useState<boolean>(false)
+  const [fileManagementWindowVisible, setFileManagementWindowVisible] = useState<boolean>(false)
+  const [documentSelectorVisible, setDocumentSelectorVisible] = useState<boolean>(false)
+  const [operatorWindowVisible, setOperatorWindowVisible] = useState<boolean>(false)
+  const [customerWindowVisible, setCustomerWindowVisible] = useState<boolean>(false)
+  const [selectedDocumentName, setSelectedDocumentName] = useState<string>(DOCUMENT_NEW_NAME_PREFIX)
+  const [selectedFolderId, setSelectedFolderId] = useState<number | null>(null)
+  const [selectedDocumentId, setSelectedDocumentId] = useState<number | null>(null)
+  const [discardModifiedDocumentWindowVisible, setDiscardModifiedDocumentWindowVisible] = useState<boolean>(false)
+  const [newDocumentIndex, setNewDocumentIndex] = useState<number>(0)
+  const [disableFileName, setDisableFileName] = useState<boolean>(false)
+  const [onLoginFormWindowOk, setOnLoginFormWindowOk] = useState<string>(ON_LOGIN_NONE)
+  const [fillColor, setFillColor] = useState<string>(Constants.COLOR_FILL_DEFAULT)
+  const [strokeColor, setStrokeColor] = useState<string>(Constants.COLOR_STROKE_DEFAULT)
+  const [lineWidth, setLineWidth] = useState<number>(Constants.LINE_WIDTH_DEFAULT)
+  const [doubleLineGap, setDoubleLineGap] = useState<number>(Constants.DOUBLE_LINE_GAP_DEFAULT)
+  const [zoom, setZoom] = useState<number>(currentEditor ? currentEditor.zoom : Constants.ZOOM_DEFAULT)
+  const [fontName, setFontName] = useState<string>(Constants.FONT_NAME_DEFAULT)
+  const [fontSize, setFontSize] = useState<number>(Constants.FONT_SIZE_DEFAULT)
+  const [fontColor, setFontColor] = useState<string>(Constants.COLOR_FONT_DEFAULT)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [fontWeight, setFontWeight] = useState<string>(Constants.FONT_WEIGHT_NORMAL)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [fontSlant, setFontSlant] = useState<string>(Constants.FONT_SLANT_UP_RIGHT)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [fontWidth, setFontWidth] = useState<string>(Constants.FONT_WIDTH_NORMAL)
+  const [textAlignment, setTextAlignment] = useState<string>(Constants.TEXT_ALIGNMENT_LEFT)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [textDecoration, setTextDecoration] = useState<string>(Constants.TEXT_DECORATION_NONE)
+  const [textVerticalAlignment, setTextVerticalAlignment] = useState<string>(Constants.PLACE_HOLDER_ALIGNMENT_MIDDLE)
+  const [fontBold, setFontBold] = useState<boolean>(false)
+  const [fontItalic, setFontItalic] = useState<boolean>(false)
+  const [fontUnderline, setFontUnderline] = useState<boolean>(false)
+  const [selectionValid, setSelectionValid] = useState<boolean>(false)
+  const [editorUndoable, setEditorUndoable] = useState<boolean>(false)
+  const [editorRedoable, setEditorRedoable] = useState<boolean>(false)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [fontSizeNode, setFontSizeNode] = useState<any>(null)
+  const [strokeDashStyle, setStrokeDashStyle] = useState<string>(Constants.STROKE_DASH_STYLE_SOLID)
+  const [connectorLineType, setConnectorLineType] = useState<string>(Constants.CONNECTOR_LINE_TYPE_STRAIGHT)
+  const [connectorLineMode, setConnectorLineMode] = useState<string>(Constants.CONNECTOR_LINE_MODE_SIGNLE)
+  const [connectorLineStartArrow, setConnectorLineStartArrow] = useState<string>(ConnectorArrowTypes[0].name)
+  const [connectorLineEndArrow, setConnectorLineEndArrow] = useState<string>(ConnectorArrowTypes[0].name)
+  const [connectorSelected, setConnectorSelected] = useState<boolean>(false)
+  const [teamWindowVisible, setTeamWindowVisible] = useState<boolean>(false)
+  const [shareWindowVisible, setShareWindowVisible] = useState<boolean>(false)
 
   // const [exportForm, ] = Form.useForm()
   // const [downloadDocumentForm, ] = Form.useForm()
@@ -190,7 +219,7 @@ const Header: FC<HeaderProps> = ({
       // } else {
       timerCountRef.current = timerCountRef.current + 1
       //      }
-      setForceUpdate(old => {
+      setForceUpdate((old) => {
         return !old
       })
     }, 2000)
@@ -214,9 +243,13 @@ const Header: FC<HeaderProps> = ({
     let loaded = false
     if (urlObject?.query && urlObject?.path) {
       loaded = true
-      if (urlObject.path == '/document' && urlObject.query.id) {
+      // @ts-ignore
+      if (urlObject.path === '/document' && urlObject.query.id) {
+        // @ts-ignore
         loadDocument(urlObject.query.id)
-      } else if (urlObject.path == '/document' && urlObject.query.link) {
+        // @ts-ignore
+      } else if (urlObject.path === '/document' && urlObject.query.link) {
+        // @ts-ignore
         loadLinkDocument(urlObject.query.link, urlObject.query.code)
       }
     }
@@ -230,6 +263,7 @@ const Header: FC<HeaderProps> = ({
     const urlObject = SystemUtils.parseUrl(url)
     // console.log(`check admin = ${urlObject}`)
     if (urlObject?.path) {
+      // @ts-ignore
       if (urlObject.path === '/admin') {
         return true
       }
@@ -256,7 +290,7 @@ const Header: FC<HeaderProps> = ({
     const fetchDocumentData = async () => {
       let documentData
       if (isLink) {
-        documentData = await RequestUtils.loadDocumentByLink(linkCode, shareCode)
+        documentData = await RequestUtils.loadDocumentByLink(linkCode, shareCode!)
       } else {
         documentData = await RequestUtils.loadDocument(documentId, true)
       }
@@ -299,7 +333,7 @@ const Header: FC<HeaderProps> = ({
     const documentId = localStorage.getItem(STAGING_DOCUMENT_ID)
     const documentName = localStorage.getItem(STAGING_DOCUMENT_NAME)
     let folderId: string | number | null = localStorage.getItem(STAGING_FOLDER_ID)
-    if (folderId && folderId != 'null') {
+    if (folderId && folderId !== 'null') {
       folderId = parseInt(folderId)
     }
     if (onlineResult && documentId) {
@@ -308,6 +342,7 @@ const Header: FC<HeaderProps> = ({
   }
 
   const loadDocument = async (id: string) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const onlineResult = await RequestUtils.isOnline()
     // handleOpenFileWindowOk(parseInt(id), '', 0)
     console.log(`load document now.`)
@@ -315,6 +350,7 @@ const Header: FC<HeaderProps> = ({
   }
 
   const loadLinkDocument = async (id: string, code: string | null = null) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const onlineResult = await RequestUtils.isOnline()
     // handleOpenFileWindowOk(parseInt(id), '', 0)
     console.log(`load link document now.`)
@@ -342,7 +378,7 @@ const Header: FC<HeaderProps> = ({
       }
       let connectorSelected = true
       if (currentEditor.selectionLayer.getEditorItemCount() > 0) {
-        currentEditor.selectionLayer.getAllEditorItems().forEach(editorItem => {
+        currentEditor.selectionLayer.getAllEditorItems().forEach((editorItem: EditorItem) => {
           if (!(editorItem instanceof Connector)) {
             connectorSelected = false
           }
@@ -367,33 +403,32 @@ const Header: FC<HeaderProps> = ({
       setFontSize(editorItem.fontSize)
       setFontName(editorItem.fontName)
       setLineWidth(editorItem.lineWidth)
-      let fillColorValue = SystemUtils.generateColorString(editorItem.fillColor)
+      let fillColorValue = CommonUtils.generateColorString(editorItem.fillColor)
       setFillColor(fillColorValue.substring(0, 7))
-      let strokeColorValue = SystemUtils.generateColorString(editorItem.strokeColor)
+      let strokeColorValue = CommonUtils.generateColorString(editorItem.strokeColor)
       setStrokeColor(strokeColorValue.substring(0, 7))
       //console.log(`${fillColorValue.substring(0, 7)}   ${strokeColorValue.substring(0, 7)}`)
-      let fontColorValue = SystemUtils.generateColorString(editorItem.fontColor)
+      let fontColorValue = CommonUtils.generateColorString(editorItem.fontColor)
       setFontColor(fontColorValue.substring(0, 7))
       //setFontColor(shape.fontPaint.getColor)
-      setFontBold(editorItem.fontWeight == FontWeight.BOLD)
-      setFontItalic(editorItem.fontSlant == FontSlant.ITALIC)
-      setFontUnderline(editorItem.textDecoration == TextDecoration.UNDERLINE)
-      let textAlignmentValue = SystemUtils.generateTextAlignment(editorItem.textAlignment)
+      setFontBold(editorItem.fontWeight === FontWeight.BOLD)
+      setFontItalic(editorItem.fontSlant === FontSlant.ITALIC)
+      setFontUnderline(editorItem.textDecoration === TextDecoration.UNDERLINE)
+      let textAlignmentValue = CommonUtils.generateTextAlignment(editorItem.textAlignment)
       setTextAlignment(textAlignmentValue)
-      let textVerticalAlignmentValue = SystemUtils.generateTextVerticalAligment(editorItem.textVerticalAlignment)
+      let textVerticalAlignmentValue = CommonUtils.generateTextVerticalAligment(editorItem.textVerticalAlignment)
       setTextVerticalAlignment(textVerticalAlignmentValue)
-      let strokeDashStyleValue = SystemUtils.generateStrokeDashStyle(editorItem.strokeDashStyle)
+      let strokeDashStyleValue = CommonUtils.generateStrokeDashStyle(editorItem.strokeDashStyle)
       setStrokeDashStyle(strokeDashStyleValue)
       if (editorItem instanceof Connector) {
-        const connectorTypeValue = SystemUtils.generateConnectorType(editorItem.connectorType)
+        const connectorTypeValue = CommonUtils.generateConnectorType(editorItem.connectorType)
         const connectorStartArrowType = SystemUtils.findConnectorArrowType(editorItem.startArrow.name)
         const connectorEndArrowType = SystemUtils.findConnectorArrowType(editorItem.endArrow.name)
         setConnectorLineType(connectorTypeValue)
         setConnectorLineStartArrow(connectorStartArrowType)
         setConnectorLineEndArrow(connectorEndArrowType)
-
       } else {
-        setConnectorLineType(Consts.CONNECTOR_LINE_TYPE_ORTHOGONAL)
+        setConnectorLineType(Constants.CONNECTOR_LINE_TYPE_ORTHOGONAL)
       }
       //let connectorLineTypeValue = SystemUtils.generateStrokeDashStyle(editorItem.strokeDashStyle)
       //setStrokeDashStyle(strokeDashStyleValue)
@@ -407,15 +442,15 @@ const Header: FC<HeaderProps> = ({
     if (Utils.currentEditor) {
       setZoom(Utils.currentEditor.zoom)
     } else {
-      setZoom(Consts.ZOOM_DEFAULT)
+      setZoom(Constants.ZOOM_DEFAULT)
     }
-    setFontName(Consts.FONT_NAME_DEFAULT)
-    setFontSize(Consts.FONT_SIZE_DEFAULT)
-    setLineWidth(Consts.LINE_WIDTH_DEFAULT)
-    setFillColor(Consts.COLOR_FILL_DEFAULT)
-    setStrokeColor(Consts.COLOR_STROKE_DEFAULT)
-    setFontColor(Consts.COLOR_FONT_DEFAULT)
-    setStrokeDashStyle(Consts.STROKE_DASH_STYLE_SOLID)
+    setFontName(Constants.FONT_NAME_DEFAULT)
+    setFontSize(Constants.FONT_SIZE_DEFAULT)
+    setLineWidth(Constants.LINE_WIDTH_DEFAULT)
+    setFillColor(Constants.COLOR_FILL_DEFAULT)
+    setStrokeColor(Constants.COLOR_STROKE_DEFAULT)
+    setFontColor(Constants.COLOR_FONT_DEFAULT)
+    setStrokeDashStyle(Constants.STROKE_DASH_STYLE_SOLID)
     setConnectorLineStartArrow(ConnectorArrowTypes[0].name)
     setConnectorLineEndArrow(ConnectorArrowTypes[0].name)
   }
@@ -429,7 +464,7 @@ const Header: FC<HeaderProps> = ({
     }
     let connectorSelected = true
     if (e.source.selectionLayer.getEditorItemCount() > 0) {
-      e.source.selectionLayer.getAllEditorItems().forEach(editorItem => {
+      e.source.selectionLayer.getAllEditorItems().forEach((editorItem: EditorItem) => {
         if (!(editorItem instanceof Connector)) {
           connectorSelected = false
         }
@@ -440,6 +475,7 @@ const Header: FC<HeaderProps> = ({
     setConnectorSelected(connectorSelected)
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleOperationChange = (e: EditorEvent) => {
     refreshOperationInfos()
   }
@@ -453,7 +489,7 @@ const Header: FC<HeaderProps> = ({
     }
     let connectorSelected = true
     if (e.source.selectionLayer.getEditorItemCount() > 0) {
-      e.source.selectionLayer.getAllEditorItems().forEach(editorItem => {
+      e.source.selectionLayer.getAllEditorItems().forEach((editorItem: EditorItem) => {
         if (!(editorItem instanceof Connector)) {
           connectorSelected = false
         }
@@ -462,7 +498,6 @@ const Header: FC<HeaderProps> = ({
       connectorSelected = false
     }
     setConnectorSelected(connectorSelected)
-
   }
 
   const handleTextEditStyleChange = (e: EditorEvent) => {
@@ -479,7 +514,6 @@ const Header: FC<HeaderProps> = ({
     setNewDocumentIndex(newIndex)
     setSelectedDocumentName(DOCUMENT_NEW_NAME_PREFIX + newIndex)
     setSelectedDocumentId(null)
-
   }
 
   const login = (onLogin: string) => {
@@ -514,7 +548,6 @@ const Header: FC<HeaderProps> = ({
   const handleProfileFormWindowOk = () => {
     setProfileFormWindowVisible(false)
   }
-
 
   const handleAboutWindowCancel = () => {
     setAboutWindowVisible(false)
@@ -565,7 +598,8 @@ const Header: FC<HeaderProps> = ({
   }
 
   const handleOpenFileWindowOk = (documentId: number, documentName: string | null, folderId: number | null) => {
-    if (disableFileName) { // Save File, will do in popup window
+    if (disableFileName) {
+      // Save File, will do in popup window
       if (documentName !== null) {
         setOpenFileWindowVisible(false)
         setSelectedDocumentId(documentId)
@@ -574,7 +608,8 @@ const Header: FC<HeaderProps> = ({
       } else {
         messageApi.error(intl.formatMessage({ id: 'workspace.header.message-invalid-document-name' }))
       }
-    } else { // Open File
+    } else {
+      // Open File
       if (documentId === null) {
         messageApi.error(intl.formatMessage({ id: 'workspace.header.message-invalid-document-id' }))
         return
@@ -616,7 +651,8 @@ const Header: FC<HeaderProps> = ({
   }
 
   const handleFileManagementWindowOk = (documentId: number, documentName: string | null, folderId: number | null) => {
-    if (disableFileName) { // Save File, will do in popup window
+    if (disableFileName) {
+      // Save File, will do in popup window
       if (documentName !== null) {
         setOpenFileWindowVisible(false)
         setSelectedDocumentId(documentId)
@@ -625,7 +661,8 @@ const Header: FC<HeaderProps> = ({
       } else {
         messageApi.error(intl.formatMessage({ id: 'workspace.header.message-invalid-document-name' }))
       }
-    } else { // Open File
+    } else {
+      // Open File
       if (documentId === null) {
         messageApi.error(intl.formatMessage({ id: 'workspace.header.message-invalid-document-id' }))
         return
@@ -666,6 +703,7 @@ const Header: FC<HeaderProps> = ({
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleDocumentSelectorOk = (documentId: number, documentName: string, folderId: number) => {
     setDocumentSelectorVisible(false)
     if (documentId === null) {
@@ -748,9 +786,7 @@ const Header: FC<HeaderProps> = ({
           RequestUtils.logout()
           handleNewFileWindowOk(null)
         },
-        onCancel() {
-
-        }
+        onCancel() {},
       })
     } else {
       RequestUtils.logout()
@@ -766,11 +802,11 @@ const Header: FC<HeaderProps> = ({
   }
 
   const handleFeedback = () => {
-    window.open("https://www.github.com/iapoo/ratel-web/issues", '_blank')
+    window.open('https://www.github.com/iapoo/ratel-web/issues', '_blank')
   }
 
   const handleGithub = () => {
-    window.open("https://www.github.com/iapoo/ratel-web", '_blank')
+    window.open('https://www.github.com/iapoo/ratel-web', '_blank')
   }
 
   const handleUpdatePassword = () => {
@@ -817,7 +853,6 @@ const Header: FC<HeaderProps> = ({
     setDisableFileName(false)
   }
 
-
   const handleFileOpen = () => {
     if (online) {
       doHandleFileOpen()
@@ -836,6 +871,7 @@ const Header: FC<HeaderProps> = ({
     setDisableFileName(false)
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleManagementWindow = () => {
     if (online) {
       doHandleFileManagementOpen()
@@ -875,6 +911,7 @@ const Header: FC<HeaderProps> = ({
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleAdminLogin = async () => {
     const loginData = await RequestUtils.loginAsAdmin()
     if (loginData.status === 200 && loginData.data.success) {
@@ -914,7 +951,7 @@ const Header: FC<HeaderProps> = ({
       documentData = await RequestUtils.updateDocument(selectedDocumentId, selectedDocumentName, documentContent, selectedFolderId)
       if (documentData.data?.success) {
         console.log('Save document with data: ', documentData.data.data)
-        Utils.editors.forEach(editor => {
+        Utils.editors.forEach((editor) => {
           editor.resetModified()
         })
       } else {
@@ -923,7 +960,7 @@ const Header: FC<HeaderProps> = ({
         const errorMessage = `${intl.formatMessage({ id: 'workspace.header.alert-failed-save-document' })} ${documentData.data.message}`
         messageApi.open({
           type: 'error',
-          content: errorMessage
+          content: errorMessage,
         })
       }
     }
@@ -988,6 +1025,7 @@ const Header: FC<HeaderProps> = ({
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleBeforeImportDocument = (file: RcFile, FileList: RcFile[]) => {
     console.log(`${file.name.substring(file.name.length - 6)}`)
     const isRATEL = file.name.length > 6 && file.name.substring(file.name.length - 6) === '.ratel'
@@ -1110,18 +1148,17 @@ const Header: FC<HeaderProps> = ({
     Utils.enablePropertyEditor = !Utils.enablePropertyEditor
   }
 
-
-  const onExportFormFinish = (values: any) => {
-    console.log('Receive values:', values)
-    const { folderName } = values
-    let parentId: number | null = null
-  }
-
-  const onDownloadDocumentFormFinish = (values: any) => {
-    console.log('Receive values:', values)
-    const { folderName } = values
-    let parentId: number | null = null
-  }
+  // const onExportFormFinish = (values: any) => {
+  //   console.log('Receive values:', values)
+  //   const { folderName } = values
+  //   let parentId: number | null = null
+  // }
+  //
+  // const onDownloadDocumentFormFinish = (values: any) => {
+  //   console.log('Receive values:', values)
+  //   const { folderName } = values
+  //   let parentId: number | null = null
+  // }
 
   const zoomOptions = [
     { value: 0.25, label: '25%' },
@@ -1135,13 +1172,11 @@ const Header: FC<HeaderProps> = ({
     { value: 4, label: '400%' },
   ]
 
-
   const handleShowGrid = () => {
     if (Utils.currentEditor) {
       Utils.currentEditor.showGrid = !Utils.currentEditor.showGrid
     }
   }
-
 
   const handleShowRuler = () => {
     if (onShowRulerChanged) {
@@ -1152,7 +1187,7 @@ const Header: FC<HeaderProps> = ({
   const ifEditorSupportCopy = () => {
     if (Utils.currentEditor) {
       if (Utils.currentEditor.isTextEditting) {
-        if (Utils.currentEditor.selectionLayer.getEditorItemCount() == 1) {
+        if (Utils.currentEditor.selectionLayer.getEditorItemCount() === 1) {
           const item = Utils.currentEditor.selectionLayer.getEditorItem(0) as Item
           return item.shape.selection.length > 0
         }
@@ -1167,7 +1202,7 @@ const Header: FC<HeaderProps> = ({
   const ifEditorSupportCut = () => {
     if (Utils.currentEditor) {
       if (Utils.currentEditor.isTextEditting) {
-        if (Utils.currentEditor.selectionLayer.getEditorItemCount() == 1) {
+        if (Utils.currentEditor.selectionLayer.getEditorItemCount() === 1) {
           const item = Utils.currentEditor.selectionLayer.getEditorItem(0) as Item
           return item.shape.selection.length > 0
         }
@@ -1182,7 +1217,7 @@ const Header: FC<HeaderProps> = ({
   const ifEditorSupportPaste = () => {
     if (Utils.currentEditor) {
       if (Utils.currentEditor.isTextEditting) {
-        if (Utils.currentEditor.selectionLayer.getEditorItemCount() == 1) {
+        if (Utils.currentEditor.selectionLayer.getEditorItemCount() === 1) {
           return true
         }
       }
@@ -1244,7 +1279,7 @@ const Header: FC<HeaderProps> = ({
 
   const handleCopy = async () => {
     if (Utils.currentEditor) {
-      if (Utils.currentEditor.isTextEditting && Utils.currentEditor.selectionLayer.getEditorItemCount() == 1) {
+      if (Utils.currentEditor.isTextEditting && Utils.currentEditor.selectionLayer.getEditorItemCount() === 1) {
         console.log(`text copy is triggered`)
         let item = Utils.currentEditor.selectionLayer.getEditorItem(0) as Item
         let data = item.shape.richSelection
@@ -1272,7 +1307,7 @@ const Header: FC<HeaderProps> = ({
   }
   const handleCut = async () => {
     if (Utils.currentEditor) {
-      if (Utils.currentEditor.isTextEditting && Utils.currentEditor.selectionLayer.getEditorItemCount() == 1) {
+      if (Utils.currentEditor.isTextEditting && Utils.currentEditor.selectionLayer.getEditorItemCount() === 1) {
         console.log(`text cute is triggered`)
         let item = Utils.currentEditor.selectionLayer.getEditorItem(0) as Item
         let data = item.shape.selection
@@ -1300,7 +1335,7 @@ const Header: FC<HeaderProps> = ({
   }
   const handlePaste = async () => {
     if (Utils.currentEditor) {
-      if (Utils.currentEditor.isTextEditting && Utils.currentEditor.selectionLayer.getEditorItemCount() == 1) {
+      if (Utils.currentEditor.isTextEditting && Utils.currentEditor.selectionLayer.getEditorItemCount() === 1) {
         console.log(`text paste is triggered`)
         //setPasteFromSystem(false)
         const clipboard = navigator.clipboard
@@ -1311,16 +1346,18 @@ const Header: FC<HeaderProps> = ({
         const text = await clipboard.readText()
         let dataTransfer = new DataTransfer()
         dataTransfer.dropEffect = 'none'
-        dataTransfer.effectAllowed = "uninitialized"
+        dataTransfer.effectAllowed = 'uninitialized'
         //let data = EditorHelper.exportEditorSelections(Utils.currentEditor!)
         dataTransfer.setData('text/plain', text)
         dataTransfer.setData('text/retel', text)
-        window.dispatchEvent(new ClipboardEvent('paste', {
-          bubbles: true,
-          cancelable: true,
-          composed: true,
-          clipboardData: dataTransfer
-        }))
+        window.dispatchEvent(
+          new ClipboardEvent('paste', {
+            bubbles: true,
+            cancelable: true,
+            composed: true,
+            clipboardData: dataTransfer,
+          }),
+        )
       } else {
         console.log(`paste is triggered`)
         //setPasteFromSystem(false)
@@ -1331,18 +1368,19 @@ const Header: FC<HeaderProps> = ({
         }
         const text = await clipboard.readText()
 
-
         let dataTransfer = new DataTransfer()
         dataTransfer.dropEffect = 'none'
-        dataTransfer.effectAllowed = "uninitialized"
+        dataTransfer.effectAllowed = 'uninitialized'
         dataTransfer.setData('text/plain', text)
         dataTransfer.setData('text/retel', text)
-        window.dispatchEvent(new ClipboardEvent('paste', {
-          bubbles: true,
-          cancelable: true,
-          composed: true,
-          clipboardData: dataTransfer
-        }))
+        window.dispatchEvent(
+          new ClipboardEvent('paste', {
+            bubbles: true,
+            cancelable: true,
+            composed: true,
+            clipboardData: dataTransfer,
+          }),
+        )
       }
     }
   }
@@ -1361,7 +1399,7 @@ const Header: FC<HeaderProps> = ({
     if (Utils.currentEditor) {
       const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
       const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      editorItems.forEach(editorItem => {
+      editorItems.forEach((editorItem: EditorItem) => {
         editorItem.locked = !editorItem.locked
       })
       Utils.currentEditor.invalideHolder()
@@ -1386,7 +1424,7 @@ const Header: FC<HeaderProps> = ({
   const handleBringForewared = () => {
     if (Utils.currentEditor) {
       const selections = Utils.currentEditor.selectionLayer.getAllEditorItems()
-      if (selections.length == 1) {
+      if (selections.length === 1) {
         Utils.currentEditor.bringForeward(selections[0])
       }
     }
@@ -1394,7 +1432,7 @@ const Header: FC<HeaderProps> = ({
   const handleSendBackward = () => {
     if (Utils.currentEditor) {
       const selections = Utils.currentEditor.selectionLayer.getAllEditorItems()
-      if (selections.length == 1) {
+      if (selections.length === 1) {
         Utils.currentEditor.sendBackward(selections[0])
       }
     }
@@ -1402,12 +1440,11 @@ const Header: FC<HeaderProps> = ({
   const handleAddToMyShapes = async () => {
     if (Utils.currentEditor) {
       if (RequestUtils.online) {
-        await EditorHelper.addToMyShapes(Utils.currentEditor, onMyShapesUpdated)
+        await EditorUtils.addToMyShapes(Utils.currentEditor, onMyShapesUpdated)
       } else {
         SystemUtils.handleInternalError(intl.formatMessage({ id: 'workspace.content.message-login-is-required' }))
       }
     }
-
   }
 
   const handleZoom = (value: number) => {
@@ -1435,7 +1472,7 @@ const Header: FC<HeaderProps> = ({
       let zoomIndex = 0
       let update = false
       for (let index = 0; index < count; index++) {
-        if (Utils.currentEditor.zoom == zoomOptions[index].value) {
+        if (Utils.currentEditor.zoom === zoomOptions[index].value) {
           zoomIndex = index
         }
       }
@@ -1463,7 +1500,7 @@ const Header: FC<HeaderProps> = ({
     if (Utils.currentEditor) {
       const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
       const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      editorItems.forEach(editorItem => {
+      editorItems.forEach((editorItem: EditorItem) => {
         if (editorItem instanceof TableEntity) {
           if (Utils.currentEditor?.targetItem) {
             Utils.currentEditor.targetItem.fontName = value
@@ -1487,7 +1524,7 @@ const Header: FC<HeaderProps> = ({
     if (Utils.currentEditor) {
       const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
       const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      editorItems.forEach(editorItem => {
+      editorItems.forEach((editorItem: EditorItem) => {
         if (editorItem instanceof TableEntity) {
           if (Utils.currentEditor?.targetItem) {
             Utils.currentEditor.targetItem.fontSize = value
@@ -1509,6 +1546,7 @@ const Header: FC<HeaderProps> = ({
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleFontSizeStepChange = (value: number, info: any) => {
     console.log('font size step changed')
     if (Utils.currentEditor) {
@@ -1520,6 +1558,7 @@ const Header: FC<HeaderProps> = ({
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleFontSizeBlur = () => {
     console.log('font size is blured')
     if (Utils.currentEditor) {
@@ -1527,6 +1566,7 @@ const Header: FC<HeaderProps> = ({
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleFontSizePressEnter = (e: KeyboardEvent) => {
     console.log('font size is pressed Enter Key')
     if (fontSizeNode) {
@@ -1537,12 +1577,12 @@ const Header: FC<HeaderProps> = ({
   }
 
   const handleLineWidthChange = (value: number | null) => {
-    if (value != null) {
+    if (value !== null) {
       setLineWidth(value)
       if (Utils.currentEditor) {
         const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
         const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-        editorItems.forEach(editorItem => {
+        editorItems.forEach((editorItem: EditorItem) => {
           if (editorItem instanceof TableEntity) {
             if (Utils.currentEditor?.targetItem) {
               Utils.currentEditor.targetItem.lineWidth = value
@@ -1564,8 +1604,8 @@ const Header: FC<HeaderProps> = ({
     if (Utils.currentEditor) {
       const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
       const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      editorItems.forEach(editorItem => {
-        let color = SystemUtils.parseColorString(value.toHexString())
+      editorItems.forEach((editorItem: EditorItem) => {
+        let color = CommonUtils.parseColorString(value.toHexString())
         if (color) {
           editorItem.fillColor = color
         }
@@ -1578,16 +1618,16 @@ const Header: FC<HeaderProps> = ({
     }
   }
 
-  const handleFillColorChangeComplete = (value: any) => {
-  }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleFillColorChangeComplete = (value: any) => {}
 
   const handleStrokeColorChange = (value: any) => {
     setStrokeColor(value)
     if (Utils.currentEditor) {
       const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
       const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      editorItems.forEach(editorItem => {
-        let color = SystemUtils.parseColorString(value.toHexString())
+      editorItems.forEach((editorItem: EditorItem) => {
+        let color = CommonUtils.parseColorString(value.toHexString())
         if (color) {
           editorItem.strokeColor = color
         }
@@ -1600,16 +1640,16 @@ const Header: FC<HeaderProps> = ({
     }
   }
 
-  const handleStrokeColorChangeComplete = (value: any) => {
-  }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleStrokeColorChangeComplete = (value: any) => {}
 
   const handleFontColorChange = (value: any) => {
     setFontColor(value)
     if (Utils.currentEditor) {
       const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
       const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      editorItems.forEach(editorItem => {
-        let color = SystemUtils.parseColorString(value.toHexString())
+      editorItems.forEach((editorItem: EditorItem) => {
+        let color = CommonUtils.parseColorString(value.toHexString())
         if (color) {
           editorItem.fontColor = color
         }
@@ -1624,6 +1664,7 @@ const Header: FC<HeaderProps> = ({
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleFontColorChangeComplete = (value: any) => {
     if (Utils.currentEditor) {
       Utils.currentEditor.focus()
@@ -1635,7 +1676,7 @@ const Header: FC<HeaderProps> = ({
     if (Utils.currentEditor) {
       const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
       const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      editorItems.forEach(editorItem => {
+      editorItems.forEach((editorItem: EditorItem) => {
         if (editorItem instanceof TableEntity) {
           if (Utils.currentEditor?.targetItem) {
             Utils.currentEditor.targetItem.fontWeight = fontBold ? FontWeight.NORMAL : FontWeight.BOLD
@@ -1658,7 +1699,7 @@ const Header: FC<HeaderProps> = ({
     if (Utils.currentEditor) {
       const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
       const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      editorItems.forEach(editorItem => {
+      editorItems.forEach((editorItem: EditorItem) => {
         if (editorItem instanceof TableEntity) {
           if (Utils.currentEditor?.targetItem) {
             Utils.currentEditor.targetItem.fontSlant = fontItalic ? FontSlant.UP_RIGHT : FontSlant.ITALIC
@@ -1681,7 +1722,7 @@ const Header: FC<HeaderProps> = ({
     if (Utils.currentEditor) {
       const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
       const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      editorItems.forEach(editorItem => {
+      editorItems.forEach((editorItem: EditorItem) => {
         if (editorItem instanceof TableEntity) {
           if (Utils.currentEditor?.targetItem) {
             Utils.currentEditor.targetItem.textDecoration = fontUnderline ? TextDecoration.NONE : TextDecoration.UNDERLINE
@@ -1704,13 +1745,13 @@ const Header: FC<HeaderProps> = ({
     if (Utils.currentEditor) {
       const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
       const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      editorItems.forEach(editorItem => {
+      editorItems.forEach((editorItem: EditorItem) => {
         if (editorItem instanceof TableEntity) {
           if (Utils.currentEditor?.targetItem) {
-            Utils.currentEditor.targetItem.textAlignment = SystemUtils.parseTextAlignment(textAlignment)
+            Utils.currentEditor.targetItem.textAlignment = CommonUtils.parseTextAlignment(textAlignment)
           }
         } else {
-          editorItem.textAlignment = SystemUtils.parseTextAlignment(textAlignment)
+          editorItem.textAlignment = CommonUtils.parseTextAlignment(textAlignment)
         }
       })
       Utils.currentEditor.focus()
@@ -1727,13 +1768,13 @@ const Header: FC<HeaderProps> = ({
     if (Utils.currentEditor) {
       const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
       const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      editorItems.forEach(editorItem => {
+      editorItems.forEach((editorItem: EditorItem) => {
         if (editorItem instanceof TableEntity) {
           if (Utils.currentEditor?.targetItem) {
-            Utils.currentEditor.targetItem.textVerticalAlignment = SystemUtils.parseTextVerticalAligment(textVerticalAlignment)
+            Utils.currentEditor.targetItem.textVerticalAlignment = CommonUtils.parseTextVerticalAligment(textVerticalAlignment)
           }
         } else {
-          editorItem.textVerticalAlignment = SystemUtils.parseTextVerticalAligment(textVerticalAlignment)
+          editorItem.textVerticalAlignment = CommonUtils.parseTextVerticalAligment(textVerticalAlignment)
         }
       })
       Utils.currentEditor.focus()
@@ -1755,8 +1796,8 @@ const Header: FC<HeaderProps> = ({
     if (Utils.currentEditor) {
       const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
       const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      editorItems.forEach(editorItem => {
-        let strokeDashStyle = SystemUtils.parseStrokeDashStyle(value)
+      editorItems.forEach((editorItem: EditorItem) => {
+        let strokeDashStyle = CommonUtils.parseStrokeDashStyle(value)
         if (editorItem instanceof TableEntity) {
           if (Utils.currentEditor?.targetItem) {
             Utils.currentEditor.targetItem.strokeDashStyle = strokeDashStyle
@@ -1777,18 +1818,18 @@ const Header: FC<HeaderProps> = ({
     if (Utils.currentEditor) {
       const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
       const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      editorItems.forEach(editorItem => {
+      editorItems.forEach((editorItem: EditorItem) => {
         if (editorItem instanceof Connector) {
-          editorItem.connectorType = SystemUtils.parseConnectorType(value)
+          editorItem.connectorType = CommonUtils.parseConnectorType(value)
         }
       })
       //Update it to default if not supported
-      if (value == Consts.CONNECTOR_LINE_TYPE_CURVED && connectorLineMode != Consts.CONNECTOR_LINE_MODE_SIGNLE && connectorLineMode != Consts.CONNECTOR_LINE_MODE_DOUBLE) {
-        setConnectorLineMode(Consts.CONNECTOR_LINE_MODE_SIGNLE)
+      if (value === Constants.CONNECTOR_LINE_TYPE_CURVED && connectorLineMode !== Constants.CONNECTOR_LINE_MODE_SIGNLE && connectorLineMode !== Constants.CONNECTOR_LINE_MODE_DOUBLE) {
+        setConnectorLineMode(Constants.CONNECTOR_LINE_MODE_SIGNLE)
         let editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
-        editorItems.forEach(editorItem => {
+        editorItems.forEach((editorItem: EditorItem) => {
           if (editorItem instanceof Connector) {
-            editorItem.connectorMode = SystemUtils.parseConnectorMode(Consts.CONNECTOR_LINE_MODE_SIGNLE)
+            editorItem.connectorMode = CommonUtils.parseConnectorMode(Constants.CONNECTOR_LINE_MODE_SIGNLE)
           }
         })
       }
@@ -1806,9 +1847,9 @@ const Header: FC<HeaderProps> = ({
     if (Utils.currentEditor) {
       const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
       const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      editorItems.forEach(editorItem => {
+      editorItems.forEach((editorItem: EditorItem) => {
         if (editorItem instanceof Connector) {
-          editorItem.connectorMode = SystemUtils.parseConnectorMode(value)
+          editorItem.connectorMode = CommonUtils.parseConnectorMode(value)
         }
       })
       Utils.currentEditor.focus()
@@ -1825,7 +1866,7 @@ const Header: FC<HeaderProps> = ({
     if (Utils.currentEditor) {
       const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
       const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      editorItems.forEach(editorItem => {
+      editorItems.forEach((editorItem: EditorItem) => {
         if (editorItem instanceof Connector) {
           editorItem.connectorDoubleLineGap = value
         }
@@ -1845,10 +1886,10 @@ const Header: FC<HeaderProps> = ({
     if (Utils.currentEditor) {
       const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
       const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      editorItems.forEach(editorItem => {
+      editorItems.forEach((editorItem: EditorItem) => {
         if (editorItem instanceof Connector) {
-          ConnectorArrowTypes.forEach(connectorArrayType => {
-            if (connectorArrayType.name == value) {
+          ConnectorArrowTypes.forEach((connectorArrayType) => {
+            if (connectorArrayType.name === value) {
               const startArrow = SystemUtils.cloneConnectorLineArrowType(connectorArrayType)
               editorItem.startArrow = startArrow
             }
@@ -1869,10 +1910,10 @@ const Header: FC<HeaderProps> = ({
     if (Utils.currentEditor) {
       const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
       const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      editorItems.forEach(editorItem => {
+      editorItems.forEach((editorItem: EditorItem) => {
         if (editorItem instanceof Connector) {
-          ConnectorArrowTypes.forEach(connectorArrayType => {
-            if (connectorArrayType.name == value) {
+          ConnectorArrowTypes.forEach((connectorArrayType) => {
+            if (connectorArrayType.name === value) {
               const endArrow = SystemUtils.cloneConnectorLineArrowType(connectorArrayType)
               editorItem.endArrow = endArrow
             }
@@ -1888,34 +1929,50 @@ const Header: FC<HeaderProps> = ({
     }
   }
 
-  const strokeDashStyles = StrokeDashStyles.map(strokeDashStyle => {
-    return { value: strokeDashStyle.name, label: <img alt='intl.formatMessage({ id: strokeDashStyle.label})' src={process.env.BASIC_PATH + '/icons/line-' + strokeDashStyle.name.toLowerCase() + '.svg'} width='48' height='16' style={{ filter: Utils.currentEditor?.enableDarkTheme ? 'invert(100%)' : '' }} /> }
-  })
-
-  const connectorLineTypes = ConnectorLineTypes.map(connectorLineType => {
-    return { value: connectorLineType.name, label: <img alt='intl.formatMessage({ id: connectorLineType.label})' src={process.env.BASIC_PATH + '/icons/connector-line-type-' + connectorLineType.name.toLowerCase() + '.svg'} width='16' height='16' style={{ filter: Utils.currentEditor?.enableDarkTheme ? 'invert(100%)' : '' }} /> }
-  })
-
-  const connectorLineModes = ConnectorLineModes.map(connectorLineMode => {
-    return { value: connectorLineMode.name, label: <img alt='intl.formatMessage({ id: connectorLineMode.label})' src={process.env.BASIC_PATH + '/icons/connector-line-mode-' + connectorLineMode.name.toLowerCase() + '.svg'} width='16' height='16' style={{ filter: Utils.currentEditor?.enableDarkTheme ? 'invert(100%)' : '' }} /> }
-  })
-
-  const connectorLineModesForCurve = ConnectorLineModesForCurve.map(connectorLineMode => {
-    return { value: connectorLineMode.name, label: <img alt='intl.formatMessage({ id: connectorLineMode.label})' src={process.env.BASIC_PATH + '/icons/connector-line-mode-' + connectorLineMode.name.toLowerCase() + '.svg'} width='16' height='16' style={{ filter: Utils.currentEditor?.enableDarkTheme ? 'invert(100%)' : '' }} /> }
-  })
-
-  const connectorLineStartArrows = ConnectorArrowTypes.map(connectorArrowType => {
-    const path = process.env.BASIC_PATH + '/icons/connector-line-start-arrow-' + connectorArrowType.name.toLowerCase() + '.svg'
-    const id = 'header-' + path
+  const strokeDashStyles = StrokeDashStyles.map((strokeDashStyle) => {
     return {
-      value: connectorArrowType.name, label: <img id={id} alt={connectorArrowType.description} src={path} width='16' height='16' style={{ filter: Utils.currentEditor?.enableDarkTheme ? 'invert(100%)' : '' }} />
+      value: strokeDashStyle.name,
+      label: <img alt="intl.formatMessage({ id: strokeDashStyle.label})" src={process.env.BASIC_PATH + '/icons/line-' + strokeDashStyle.name.toLowerCase() + '.svg'} width="48" height="16" style={{ filter: Utils.currentEditor?.enableDarkTheme ? 'invert(100%)' : '' }} />,
     }
   })
 
-  const connectorLineEndArrows = ConnectorArrowTypes.map(connectorArrowType => {
+  const connectorLineTypes = ConnectorLineTypes.map((connectorLineType) => {
+    return {
+      value: connectorLineType.name,
+      label: <img alt="intl.formatMessage({ id: connectorLineType.label})" src={process.env.BASIC_PATH + '/icons/connector-line-type-' + connectorLineType.name.toLowerCase() + '.svg'} width="16" height="16" style={{ filter: Utils.currentEditor?.enableDarkTheme ? 'invert(100%)' : '' }} />,
+    }
+  })
+
+  const connectorLineModes = ConnectorLineModes.map((connectorLineMode) => {
+    return {
+      value: connectorLineMode.name,
+      label: <img alt="intl.formatMessage({ id: connectorLineMode.label})" src={process.env.BASIC_PATH + '/icons/connector-line-mode-' + connectorLineMode.name.toLowerCase() + '.svg'} width="16" height="16" style={{ filter: Utils.currentEditor?.enableDarkTheme ? 'invert(100%)' : '' }} />,
+    }
+  })
+
+  const connectorLineModesForCurve = ConnectorLineModesForCurve.map((connectorLineMode) => {
+    return {
+      value: connectorLineMode.name,
+      label: <img alt="intl.formatMessage({ id: connectorLineMode.label})" src={process.env.BASIC_PATH + '/icons/connector-line-mode-' + connectorLineMode.name.toLowerCase() + '.svg'} width="16" height="16" style={{ filter: Utils.currentEditor?.enableDarkTheme ? 'invert(100%)' : '' }} />,
+    }
+  })
+
+  const connectorLineStartArrows = ConnectorArrowTypes.map((connectorArrowType) => {
+    const path = process.env.BASIC_PATH + '/icons/connector-line-start-arrow-' + connectorArrowType.name.toLowerCase() + '.svg'
+    const id = 'header-' + path
+    return {
+      value: connectorArrowType.name,
+      label: <img id={id} alt={connectorArrowType.description} src={path} width="16" height="16" style={{ filter: Utils.currentEditor?.enableDarkTheme ? 'invert(100%)' : '' }} />,
+    }
+  })
+
+  const connectorLineEndArrows = ConnectorArrowTypes.map((connectorArrowType) => {
     const path = process.env.BASIC_PATH + '/icons/connector-line-end-arrow-' + connectorArrowType.name.toLowerCase() + '.svg'
     const id = 'header' + path
-    return { value: connectorArrowType.name, label: <img id={id} alt={connectorArrowType.description} src={path} width='16' height='16' style={{ filter: Utils.currentEditor?.enableDarkTheme ? 'invert(100%)' : '' }} /> }
+    return {
+      value: connectorArrowType.name,
+      label: <img id={id} alt={connectorArrowType.description} src={path} width="16" height="16" style={{ filter: Utils.currentEditor?.enableDarkTheme ? 'invert(100%)' : '' }} />,
+    }
   })
 
   const handleGenerateIconsForConnector = async () => {
@@ -1927,6 +1984,7 @@ const Header: FC<HeaderProps> = ({
       let lineFactor = 1 //1
       let fontFactor = 1 //0.5
       let sizeFactor = 1 //0.25
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       let modifierFactor = 1 //0.25
       currentEditor.contentLayer.removeAllEditorItems()
       let left = margin
@@ -1941,7 +1999,6 @@ const Header: FC<HeaderProps> = ({
       SystemUtils.generateDownloadFile(data, `${connectorTypeName}.svg`)
     }
   }
-
 
   const handleGenerateIconsForCustomConnector = async (connectorTypes: CustomConnectorTypeInfo[], connectorClass: typeof CustomConnector) => {
     if (currentEditor) {
@@ -1978,10 +2035,24 @@ const Header: FC<HeaderProps> = ({
     }
   }
 
-  const handleGenerateIconsForShape = async (shapeTypes: ShapeType[] | CustomTableType[], classType: typeof ShapeEntity |
-    typeof TableEntity | typeof Connector | typeof ContainerEntity | typeof CustomEntity |
-    typeof UMLCustomTable | typeof UMLContainerShape | typeof UMLBasicShape | typeof UMLCustomShape |
-    typeof UMLCustomContainer | typeof UMLFrameShape | typeof ERCustomShape | MockupCustomShape, margin: number) => {
+  const handleGenerateIconsForShape = async (
+    shapeTypes: ShapeType[] | CustomTableType[],
+    classType:
+      | typeof ShapeEntity
+      | typeof TableEntity
+      | typeof Connector
+      | typeof ContainerEntity
+      | typeof CustomEntity
+      | typeof UMLCustomTable
+      | typeof UMLContainerShape
+      | typeof UMLBasicShape
+      | typeof UMLCustomShape
+      | typeof UMLCustomContainer
+      | typeof UMLFrameShape
+      | typeof ERCustomShape
+      | MockupCustomShape,
+    margin: number,
+  ) => {
     if (currentEditor) {
       let count = shapeTypes.length
       for (let i = 0; i < count; i++) {
@@ -2087,11 +2158,13 @@ const Header: FC<HeaderProps> = ({
     const enableERCustomShapes = false
     const enableMockupCustomShapes = false
 
-
     if (enableShapes) handleGenerateIconsForShape(ShapeTypes, ShapeEntity, 5)
     if (enableLine) handleGenerateIconsForConnector()
     if (enableTable) handleGenerateIconsForShape(TableTypes, TableEntity, 5)
-    if (enableContainer) handleGenerateIconsForShape(ContainerTypes, ContainerEntity, 5)
+    if (enableContainer) {
+      // @ts-ignore
+      handleGenerateIconsForShape(ContainerTypes, ContainerEntity, 5)
+    }
     if (enableBasicShapes) handleGenerateIconsForCustomShape(BasicShapes)
     if (enableArrows) handleGenerateIconsForCustomShape(Arrows)
     if (enableFlowchartShapes) handleGenerateIconsForCustomShape(FlowChartShapes)
@@ -2118,116 +2191,147 @@ const Header: FC<HeaderProps> = ({
     matrix2.translate(164, 271)
     matrix2.rotate(127, 164, 271)
     console.log(`aa ${matrix1} ${matrix2}`)
-
   }
-
-  const handleContainerShapesLarge = () => {
-    if (currentEditor) {
-      let count = ContainerTypes.length
-      for (let i = 0; i < count; i++) {
-        let shapeType = ContainerTypes[i]
-        let margin = 5 //2
-        let lineFactor = 1 //1
-        let fontFactor = 1 //0.5
-        let sizeFactor = 1 //0.25
-        let modifierFactor = 1 //0.25
-        let controllerFactor = 1 //0.25
-        currentEditor.contentLayer.removeAllEditorItems()
-        let left = shapeType.left + margin
-        if (shapeType.width < shapeType.height) {
-          left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
-        }
-        let shapeEntity = new ContainerEntity(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, { shapeType: shapeType.name })
-        shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
-        shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
-        if (!shapeType.modifyInPercent) {
-          shapeEntity.shape.modifier = new Point2(Math.round(shapeEntity.shape.modifier.x * modifierFactor), Math.round(shapeEntity.shape.modifier.y * modifierFactor))
-        }
-        if (!shapeType.controlInPercent) {
-          shapeEntity.shape.controller = new Point2(Math.round(shapeEntity.shape.controller.x * controllerFactor), Math.round(shapeEntity.shape.controller.y * controllerFactor))
-        }
-        if (shapeType.width < shapeType.height) {
-          currentEditor.resize(shapeType.height * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
-        } else {
-          currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
-        }
-        currentEditor.contentLayer.addEditorItem(shapeEntity)
-        const data = EditorHelper.export(currentEditor)
-        SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
-      }
-    }
-  }
-
-  const handleContainerShapesSmall = () => {
-    if (currentEditor) {
-      let count = ContainerTypes.length
-      for (let i = 0; i < count; i++) {
-        let shapeType = ContainerTypes[i]
-        let margin = 2
-        let lineFactor = 1
-        let fontFactor = 0.1
-        let sizeFactor = 0.13
-        let modifierFactor = 0.2
-        let controllerFactor = 0.2
-        currentEditor.contentLayer.removeAllEditorItems()
-        let left = shapeType.left + margin
-        if (shapeType.width < shapeType.height) {
-          left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
-        }
-        let shapeEntity = new ContainerEntity(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, { shapeType: shapeType.name })
-        shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
-        shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
-        if (!shapeType.modifyInPercent) {
-          shapeEntity.shape.modifier = new Point2(Math.round(shapeEntity.shape.modifier.x * modifierFactor), Math.round(shapeEntity.shape.modifier.y * modifierFactor))
-        }
-        if (!shapeType.controlInPercent) {
-          shapeEntity.shape.controller = new Point2(Math.round(shapeEntity.shape.controller.x * controllerFactor), Math.round(shapeEntity.shape.controller.y * controllerFactor))
-        }
-        if (shapeType.width < shapeType.height) {
-          currentEditor.resize(shapeType.height * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
-        } else {
-          currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
-        }
-        currentEditor.contentLayer.addEditorItem(shapeEntity)
-        const data = EditorHelper.export(currentEditor)
-        SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
-      }
-    }
-  }
-
-
-  const handleTest2 = () => {
-    if (currentEditor) {
-      let count = ShapeTypes.length
-      for (let i = 0; i < count; i++) {
-        let shapeType = ShapeTypes[i]
-        let margin = 5 //2
-        let lineFactor = 1 //1
-        let fontFactor = 1 //0.5
-        let sizeFactor = 1 //0.25
-        let modifierFactor = 1 //0.25
-        currentEditor.contentLayer.removeAllEditorItems()
-        let left = shapeType.left + margin
-        if (shapeType.width < shapeType.height) {
-          left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
-        }
-        let shapeEntity = new ShapeEntity(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, { shapeType: shapeType.name })
-        shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
-        shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
-        if (!shapeType.modifyInPercent) {
-          shapeEntity.shape.modifier = new Point2(Math.round(shapeEntity.shape.modifier.x * modifierFactor), Math.round(shapeEntity.shape.modifier.y * modifierFactor))
-        }
-        if (shapeType.width < shapeType.height) {
-          currentEditor.resize(shapeType.height * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
-        } else {
-          currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
-        }
-        currentEditor.contentLayer.addEditorItem(shapeEntity)
-        const data = EditorHelper.export(currentEditor)
-        SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
-      }
-    }
-  }
+  //
+  // const handleContainerShapesLarge = () => {
+  //   if (currentEditor) {
+  //     let count = ContainerTypes.length
+  //     for (let i = 0; i < count; i++) {
+  //       let shapeType = ContainerTypes[i]
+  //       let margin = 5 //2
+  //       let lineFactor = 1 //1
+  //       let fontFactor = 1 //0.5
+  //       let sizeFactor = 1 //0.25
+  //       let modifierFactor = 1 //0.25
+  //       let controllerFactor = 1 //0.25
+  //       currentEditor.contentLayer.removeAllEditorItems()
+  //       let left = shapeType.left + margin
+  //       if (shapeType.width < shapeType.height) {
+  //         left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
+  //       }
+  //       let shapeEntity = new ContainerEntity(
+  //         left,
+  //         shapeType.top + margin,
+  //         shapeType.width * sizeFactor,
+  //         shapeType.height * sizeFactor,
+  //         { shapeType: shapeType.name },
+  //       )
+  //       shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
+  //       shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
+  //       if (!shapeType.modifyInPercent) {
+  //         shapeEntity.shape.modifier = new Point2(
+  //           Math.round(shapeEntity.shape.modifier.x * modifierFactor),
+  //           Math.round(shapeEntity.shape.modifier.y * modifierFactor),
+  //         )
+  //       }
+  //       if (!shapeType.controlInPercent) {
+  //         shapeEntity.shape.controller = new Point2(
+  //           Math.round(shapeEntity.shape.controller.x * controllerFactor),
+  //           Math.round(shapeEntity.shape.controller.y * controllerFactor),
+  //         )
+  //       }
+  //       if (shapeType.width < shapeType.height) {
+  //         currentEditor.resize(shapeType.height * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+  //       } else {
+  //         currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+  //       }
+  //       currentEditor.contentLayer.addEditorItem(shapeEntity)
+  //       const data = EditorHelper.export(currentEditor)
+  //       SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
+  //     }
+  //   }
+  // }
+  //
+  // const handleContainerShapesSmall = () => {
+  //   if (currentEditor) {
+  //     let count = ContainerTypes.length
+  //     for (let i = 0; i < count; i++) {
+  //       let shapeType = ContainerTypes[i]
+  //       let margin = 2
+  //       let lineFactor = 1
+  //       let fontFactor = 0.1
+  //       let sizeFactor = 0.13
+  //       let modifierFactor = 0.2
+  //       let controllerFactor = 0.2
+  //       currentEditor.contentLayer.removeAllEditorItems()
+  //       let left = shapeType.left + margin
+  //       if (shapeType.width < shapeType.height) {
+  //         left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
+  //       }
+  //       let shapeEntity = new ContainerEntity(
+  //         left,
+  //         shapeType.top + margin,
+  //         shapeType.width * sizeFactor,
+  //         shapeType.height * sizeFactor,
+  //         { shapeType: shapeType.name },
+  //       )
+  //       shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
+  //       shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
+  //       if (!shapeType.modifyInPercent) {
+  //         shapeEntity.shape.modifier = new Point2(
+  //           Math.round(shapeEntity.shape.modifier.x * modifierFactor),
+  //           Math.round(shapeEntity.shape.modifier.y * modifierFactor),
+  //         )
+  //       }
+  //       if (!shapeType.controlInPercent) {
+  //         shapeEntity.shape.controller = new Point2(
+  //           Math.round(shapeEntity.shape.controller.x * controllerFactor),
+  //           Math.round(shapeEntity.shape.controller.y * controllerFactor),
+  //         )
+  //       }
+  //       if (shapeType.width < shapeType.height) {
+  //         currentEditor.resize(shapeType.height * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+  //       } else {
+  //         currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+  //       }
+  //       currentEditor.contentLayer.addEditorItem(shapeEntity)
+  //       const data = EditorHelper.export(currentEditor)
+  //       SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
+  //     }
+  //   }
+  // }
+  //
+  // const handleTest2 = () => {
+  //   if (currentEditor) {
+  //     let count = ShapeTypes.length
+  //     for (let i = 0; i < count; i++) {
+  //       let shapeType = ShapeTypes[i]
+  //       let margin = 5 //2
+  //       let lineFactor = 1 //1
+  //       let fontFactor = 1 //0.5
+  //       let sizeFactor = 1 //0.25
+  //       let modifierFactor = 1 //0.25
+  //       currentEditor.contentLayer.removeAllEditorItems()
+  //       let left = shapeType.left + margin
+  //       if (shapeType.width < shapeType.height) {
+  //         left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
+  //       }
+  //       let shapeEntity = new ShapeEntity(
+  //         left,
+  //         shapeType.top + margin,
+  //         shapeType.width * sizeFactor,
+  //         shapeType.height * sizeFactor,
+  //         { shapeType: shapeType.name },
+  //       )
+  //       shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
+  //       shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
+  //       if (!shapeType.modifyInPercent) {
+  //         shapeEntity.shape.modifier = new Point2(
+  //           Math.round(shapeEntity.shape.modifier.x * modifierFactor),
+  //           Math.round(shapeEntity.shape.modifier.y * modifierFactor),
+  //         )
+  //       }
+  //       if (shapeType.width < shapeType.height) {
+  //         currentEditor.resize(shapeType.height * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+  //       } else {
+  //         currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+  //       }
+  //       currentEditor.contentLayer.addEditorItem(shapeEntity)
+  //       const data = EditorHelper.export(currentEditor)
+  //       SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
+  //     }
+  //   }
+  // }
 
   const handleGenerateConnectorStartArrows = async () => {
     if (currentEditor) {
@@ -2283,7 +2387,7 @@ const Header: FC<HeaderProps> = ({
         const connectorLineMode = ConnectorLineModes[i]
         let connector = new Connector(new Point2(x + 42, y), new Point2(x, y), ConnectorDirection.Left)
         currentEditor.contentLayer.removeAllEditorItems()
-        connector.connectorMode = SystemUtils.parseConnectorMode(connectorLineMode.name)
+        connector.connectorMode = CommonUtils.parseConnectorMode(connectorLineMode.name)
         connector.connectorDoubleLineGap = 10
         connector.lineWidth = connector.lineWidth * lineFactor
         currentEditor.contentLayer.addEditorItem(connector)
@@ -2306,7 +2410,7 @@ const Header: FC<HeaderProps> = ({
         const connectorLineType = ConnectorLineTypes[i]
         let connector = new Connector(new Point2(x, y), new Point2(x + 42, y + 42), ConnectorDirection.Left)
         currentEditor.contentLayer.removeAllEditorItems()
-        connector.connectorType = SystemUtils.parseConnectorType(connectorLineType.name)
+        connector.connectorType = CommonUtils.parseConnectorType(connectorLineType.name)
         connector.lineWidth = connector.lineWidth * lineFactor
         connector.curveStartModifier = new Point2(1, 0.2)
         connector.curveEndModifier = new Point2(-1, -0.2)
@@ -2325,12 +2429,12 @@ const Header: FC<HeaderProps> = ({
       let count = StrokeDashStyles.length
       let y = 8
       let x = 1
-      let lineFactor = 1
+      //let lineFactor = 1
       for (let i = 0; i < count; i++) {
         const strokeDashStyle = StrokeDashStyles[i]
         let connector = new Connector(new Point2(x, y), new Point2(x + 46, y), ConnectorDirection.Left)
         currentEditor.contentLayer.removeAllEditorItems()
-        connector.strokeDashStyle = SystemUtils.parseStrokeDashStyle(strokeDashStyle.name)
+        connector.strokeDashStyle = CommonUtils.parseStrokeDashStyle(strokeDashStyle.name)
         currentEditor.contentLayer.addEditorItem(connector)
         currentEditor.setup(1, 48, 16)
         currentEditor.render()
@@ -2340,552 +2444,739 @@ const Header: FC<HeaderProps> = ({
       }
     }
   }
+  //
+  // const handleTest5 = () => {
+  //   if (currentEditor) {
+  //     let count = BasicShapes.length
+  //     for (let i = 0; i < count; i++) {
+  //       const margin = 5
+  //       currentEditor.contentLayer.removeAllEditorItems()
+  //       const customShapeInfo = BasicShapes[i].typeInfo
+  //       const customShapeTypeName = BasicShapes[i].name
+  //       const customEntity = new BasicShapes[i].type(
+  //         customShapeInfo.left + margin,
+  //         customShapeInfo.top + margin,
+  //         customShapeInfo.width,
+  //         customShapeInfo.height,
+  //         customShapeTypeName,
+  //       )
+  //       currentEditor.contentLayer.addEditorItem(customEntity)
+  //       currentEditor.resize(customShapeInfo.width + margin * 2, customShapeInfo.height + margin * 2)
+  //       const data = EditorHelper.export(currentEditor)
+  //       console.log(`download file = ${customShapeInfo.name}.png`)
+  //       SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.png`)
+  //     }
+  //   }
+  // }
+  //
+  // const handleTest6 = () => {
+  //   if (currentEditor) {
+  //     let count = BasicShapes.length
+  //     for (let i = 0; i < count; i++) {
+  //       const margin = 2
+  //       let lineFactor = 1
+  //       let fontFactor = 0.5
+  //       let sizeFactor = 0.25
+  //       let modifierFactor = 0.25
+  //       currentEditor.contentLayer.removeAllEditorItems()
+  //       const customShapeInfo = BasicShapes[i].typeInfo
+  //       const customShapeTypeName = BasicShapes[i].name
+  //       const customEntity = new BasicShapes[i].type(
+  //         customShapeInfo.left + margin,
+  //         customShapeInfo.top + margin,
+  //         customShapeInfo.width * sizeFactor,
+  //         customShapeInfo.height * sizeFactor,
+  //         customShapeTypeName,
+  //       )
+  //       customEntity.lineWidth = customEntity.lineWidth * lineFactor
+  //       customEntity.fontSize = customEntity.fontSize * fontFactor
+  //       if (!customShapeInfo.modifyInPercent) {
+  //         customEntity.shape.modifier = new Point2(
+  //           Math.round(customEntity.shape.modifier.x * modifierFactor),
+  //           Math.round(customEntity.shape.modifier.y * modifierFactor),
+  //         )
+  //       }
+  //       currentEditor.contentLayer.addEditorItem(customEntity)
+  //       currentEditor.resize(
+  //         customShapeInfo.width * sizeFactor + margin * 2,
+  //         customShapeInfo.height * sizeFactor + margin * 2,
+  //       )
+  //       const data = EditorHelper.export(currentEditor)
+  //       console.log(`download file = ${customShapeInfo.name}.png`)
+  //       SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.png`)
+  //     }
+  //   }
+  // }
+  //
+  // const handleTestArrows = () => {
+  //   if (currentEditor) {
+  //     let count = Arrows.length
+  //     for (let i = 0; i < count; i++) {
+  //       const margin = 5
+  //       currentEditor.contentLayer.removeAllEditorItems()
+  //       const customShapeInfo = Arrows[i].typeInfo
+  //       let left = customShapeInfo.left + margin
+  //       if (customShapeInfo.width < customShapeInfo.height) {
+  //         left = Math.round(customShapeInfo.left + (customShapeInfo.height - customShapeInfo.width) * 0.5) + margin
+  //       }
+  //       const customShapeTypeName = Arrows[i].name
+  //       const customEntity = new Arrows[i].type(
+  //         left + margin,
+  //         customShapeInfo.top + margin,
+  //         customShapeInfo.width,
+  //         customShapeInfo.height,
+  //         customShapeTypeName,
+  //       )
+  //       currentEditor.contentLayer.addEditorItem(customEntity)
+  //       if (customShapeInfo.width < customShapeInfo.height) {
+  //         currentEditor.resize(customShapeInfo.height + margin * 2, customShapeInfo.height + margin * 2)
+  //       } else {
+  //         currentEditor.resize(customShapeInfo.width + margin * 2, customShapeInfo.height + margin * 2)
+  //       }
+  //       const data = EditorHelper.export(currentEditor)
+  //       console.log(`download file = ${customShapeInfo.name}.png`)
+  //       SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.png`)
+  //     }
+  //   }
+  // }
+  //
+  // const handleTestArrowsSmall = () => {
+  //   if (currentEditor) {
+  //     let count = Arrows.length
+  //     for (let i = 0; i < count; i++) {
+  //       const margin = 2
+  //       let lineFactor = 1
+  //       let fontFactor = 0.5
+  //       let sizeFactor = 0.25
+  //       let modifierFactor = 0.25
+  //       currentEditor.contentLayer.removeAllEditorItems()
+  //       const customShapeInfo = Arrows[i].typeInfo
+  //       let left = customShapeInfo.left + margin
+  //       if (customShapeInfo.width < customShapeInfo.height) {
+  //         left =
+  //           Math.round(customShapeInfo.left + (customShapeInfo.height - customShapeInfo.width) * sizeFactor * 0.5) +
+  //           margin
+  //       }
+  //       const customShapeTypeName = Arrows[i].name
+  //       const customEntity = new Arrows[i].type(
+  //         left + margin,
+  //         customShapeInfo.top + margin,
+  //         customShapeInfo.width * sizeFactor,
+  //         customShapeInfo.height * sizeFactor,
+  //         customShapeTypeName,
+  //       )
+  //       customEntity.lineWidth = customEntity.lineWidth * lineFactor
+  //       customEntity.fontSize = customEntity.fontSize * fontFactor
+  //       if (!customShapeInfo.modifyInPercent) {
+  //         customEntity.shape.modifier = new Point2(
+  //           Math.round(customEntity.shape.modifier.x * modifierFactor),
+  //           Math.round(customEntity.shape.modifier.y * modifierFactor),
+  //         )
+  //       }
+  //       currentEditor.contentLayer.addEditorItem(customEntity)
+  //       if (customShapeInfo.width < customShapeInfo.height) {
+  //         currentEditor.resize(
+  //           customShapeInfo.height * sizeFactor + margin * 2,
+  //           customShapeInfo.height * sizeFactor + margin * 2,
+  //         )
+  //       } else {
+  //         currentEditor.resize(
+  //           customShapeInfo.width * sizeFactor + margin * 2,
+  //           customShapeInfo.height * sizeFactor + margin * 2,
+  //         )
+  //       }
+  //       const data = EditorHelper.export(currentEditor)
+  //       console.log(`download file = ${customShapeInfo.name}.png`)
+  //       SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.png`)
+  //     }
+  //   }
+  // }
+  //
+  // const handleTestSvgShapes = () => {
+  //   if (currentEditor) {
+  //     let count = AliyunShapes.length
+  //     for (let i = 0; i < count; i++) {
+  //       const margin = 5
+  //       currentEditor.contentLayer.removeAllEditorItems()
+  //       const customShapeInfo = AliyunShapes[i]
+  //       const customEntity = new SvgContainer(
+  //         margin,
+  //         margin,
+  //         customShapeInfo.width,
+  //         customShapeInfo.height,
+  //         customShapeInfo.data,
+  //       )
+  //       currentEditor.contentLayer.addEditorItem(customEntity)
+  //       currentEditor.resize(customShapeInfo.width + margin * 2, customShapeInfo.height + margin * 2)
+  //       const data = EditorHelper.export(currentEditor)
+  //       console.log(`download file = ${customShapeInfo.name}.png`)
+  //       SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.png`)
+  //     }
+  //   }
+  // }
+  //
+  // const handleTestSvgShapesSmall = () => {
+  //   if (currentEditor) {
+  //     let count = AliyunShapes.length
+  //     for (let i = 0; i < count; i++) {
+  //       const margin = 2
+  //       let sizeFactor = 0.25
+  //       currentEditor.contentLayer.removeAllEditorItems()
+  //       const customShapeInfo = AliyunShapes[i]
+  //       const customEntity = new SvgContainer(
+  //         margin,
+  //         margin,
+  //         customShapeInfo.width * sizeFactor,
+  //         customShapeInfo.height * sizeFactor,
+  //         customShapeInfo.data,
+  //       )
+  //       currentEditor.contentLayer.addEditorItem(customEntity)
+  //       currentEditor.resize(
+  //         customShapeInfo.width * sizeFactor + margin * 2,
+  //         customShapeInfo.height * sizeFactor + margin * 2,
+  //       )
+  //       const data = EditorHelper.export(currentEditor)
+  //       console.log(`download file = ${customShapeInfo.name}.png`)
+  //       SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.png`)
+  //     }
+  //   }
+  // }
+  //
+  // const handleTestImageShapes = () => {
+  //   if (currentEditor) {
+  //     let count = AwsShapes.length
+  //     for (let i = 0; i < count; i++) {
+  //       const margin = 5
+  //       currentEditor.contentLayer.removeAllEditorItems()
+  //       const customShapeInfo = AwsShapes[i]
+  //       const customEntity = new ImageContainer(
+  //         margin,
+  //         margin,
+  //         customShapeInfo.width,
+  //         customShapeInfo.height,
+  //         customShapeInfo.data,
+  //       )
+  //       currentEditor.contentLayer.addEditorItem(customEntity)
+  //       currentEditor.resize(customShapeInfo.width + margin * 2, customShapeInfo.height + margin * 2)
+  //       const data = EditorHelper.export(currentEditor)
+  //       console.log(`download file = ${customShapeInfo.name}.png`)
+  //       SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.png`)
+  //     }
+  //   }
+  // }
+  //
+  // const handleTestImageShapesSmall = () => {
+  //   if (currentEditor) {
+  //     let count = AliyunShapes.length
+  //     for (let i = 0; i < count; i++) {
+  //       const margin = 2
+  //       let sizeFactor = 0.25
+  //       currentEditor.contentLayer.removeAllEditorItems()
+  //       const customShapeInfo = AwsShapes[i]
+  //       const customEntity = new ImageContainer(
+  //         margin,
+  //         margin,
+  //         customShapeInfo.width * sizeFactor,
+  //         customShapeInfo.height * sizeFactor,
+  //         customShapeInfo.data,
+  //       )
+  //       currentEditor.contentLayer.addEditorItem(customEntity)
+  //       currentEditor.resize(
+  //         customShapeInfo.width * sizeFactor + margin * 2,
+  //         customShapeInfo.height * sizeFactor + margin * 2,
+  //       )
+  //       const data = EditorHelper.export(currentEditor)
+  //       console.log(`download file = ${customShapeInfo.name}.png`)
+  //       SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.png`)
+  //     }
+  //   }
+  // }
+  //
+  // const handleTestFlowChartShapes = () => {
+  //   if (currentEditor) {
+  //     let count = FlowChartShapes.length
+  //     for (let i = 0; i < count; i++) {
+  //       const margin = 5
+  //       currentEditor.contentLayer.removeAllEditorItems()
+  //       const customShapeInfo = FlowChartShapes[i].typeInfo
+  //       let left = customShapeInfo.left + margin
+  //       if (customShapeInfo.width < customShapeInfo.height) {
+  //         left = Math.round(customShapeInfo.left + (customShapeInfo.height - customShapeInfo.width) * 0.5) + margin
+  //       }
+  //       const customShapeTypeName = FlowChartShapes[i].name
+  //       const customEntity = new FlowChartShapes[i].type(
+  //         left,
+  //         customShapeInfo.top + margin,
+  //         customShapeInfo.width,
+  //         customShapeInfo.height,
+  //         customShapeTypeName,
+  //       )
+  //       currentEditor.contentLayer.addEditorItem(customEntity)
+  //       if (customShapeInfo.width < customShapeInfo.height) {
+  //         currentEditor.resize(customShapeInfo.height + margin * 2, customShapeInfo.height + margin * 2)
+  //       } else {
+  //         currentEditor.resize(customShapeInfo.width + margin * 2, customShapeInfo.height + margin * 2)
+  //       }
+  //       const data = EditorHelper.export(currentEditor)
+  //       console.log(`download file = ${customShapeInfo.name}.png`)
+  //       SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.png`)
+  //     }
+  //   }
+  // }
+  //
+  // const handleTestFlowChartShapesSmall = () => {
+  //   if (currentEditor) {
+  //     let count = FlowChartShapes.length
+  //     for (let i = 0; i < count; i++) {
+  //       const margin = 2
+  //       let lineFactor = 1
+  //       let fontFactor = 0.5
+  //       let sizeFactor = 0.25
+  //       let modifierFactor = 0.25
+  //       currentEditor.contentLayer.removeAllEditorItems()
+  //       const customShapeInfo = FlowChartShapes[i].typeInfo
+  //       let left = customShapeInfo.left + margin
+  //       if (customShapeInfo.width < customShapeInfo.height) {
+  //         left =
+  //           Math.round(customShapeInfo.left + (customShapeInfo.height - customShapeInfo.width) * sizeFactor * 0.5) +
+  //           margin
+  //       }
+  //       const customShapeTypeName = FlowChartShapes[i].name
+  //       const customEntity = new FlowChartShapes[i].type(
+  //         left,
+  //         customShapeInfo.top + margin,
+  //         customShapeInfo.width * sizeFactor,
+  //         customShapeInfo.height * sizeFactor,
+  //         customShapeTypeName,
+  //       )
+  //       customEntity.lineWidth = customEntity.lineWidth * lineFactor
+  //       customEntity.fontSize = customEntity.fontSize * fontFactor
+  //       if (!customShapeInfo.modifyInPercent) {
+  //         customEntity.shape.modifier = new Point2(
+  //           Math.round(customEntity.shape.modifier.x * modifierFactor),
+  //           Math.round(customEntity.shape.modifier.y * modifierFactor),
+  //         )
+  //       }
+  //       currentEditor.contentLayer.addEditorItem(customEntity)
+  //       if (customShapeInfo.width < customShapeInfo.height) {
+  //         currentEditor.resize(
+  //           customShapeInfo.height * sizeFactor + margin * 2,
+  //           customShapeInfo.height * sizeFactor + margin * 2,
+  //         )
+  //       } else {
+  //         currentEditor.resize(
+  //           customShapeInfo.width * sizeFactor + margin * 2,
+  //           customShapeInfo.height * sizeFactor + margin * 2,
+  //         )
+  //       }
+  //       const data = EditorHelper.export(currentEditor)
+  //       console.log(`download file = ${customShapeInfo.name}.png`)
+  //       SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.png`)
+  //     }
+  //   }
+  // }
+  //
+  // const handleTestUMLCustomTableLarge = () => {
+  //   if (currentEditor) {
+  //     let count = UMLCustomTableTypes.length
+  //     for (let i = 0; i < count; i++) {
+  //       const margin = 2
+  //       let lineFactor = 1
+  //       let fontFactor = 1
+  //       let sizeFactor = 1
+  //       let modifierFactor = 1
+  //       let controllerFactor = 1
+  //       let firstRowHeightFactor = 1
+  //       currentEditor.contentLayer.removeAllEditorItems()
+  //       const customShapeInfo = UMLCustomTables[i].typeInfo
+  //       customShapeInfo.firstRowHeight = customShapeInfo.firstRowHeight * firstRowHeightFactor
+  //       let left = customShapeInfo.left + margin
+  //       if (customShapeInfo.width < customShapeInfo.height) {
+  //         left =
+  //           Math.round(customShapeInfo.left + (customShapeInfo.height - customShapeInfo.width) * sizeFactor * 0.5) +
+  //           margin
+  //       }
+  //       const customShapeTypeName = UMLCustomTables[i].name
+  //       const customEntity = new UMLCustomTables[i].type(
+  //         left,
+  //         customShapeInfo.top + margin,
+  //         customShapeInfo.width * sizeFactor,
+  //         customShapeInfo.height * sizeFactor,
+  //         customShapeTypeName,
+  //         [customShapeInfo],
+  //       )
+  //       customEntity.lineWidth = customEntity.lineWidth * lineFactor
+  //       customEntity.fontSize = customEntity.fontSize * fontFactor
+  //       customEntity.items.forEach((item) => {
+  //         item.fontSize = customEntity.fontSize * fontFactor
+  //       })
+  //       if (!customShapeInfo.modifyInPercent) {
+  //         customEntity.shape.modifier = new Point2(
+  //           Math.round(customEntity.shape.modifier.x * modifierFactor),
+  //           Math.round(customEntity.shape.modifier.y * modifierFactor),
+  //         )
+  //       }
+  //       if (!customShapeInfo.controlInPercent) {
+  //         customEntity.shape.controller = new Point2(
+  //           Math.round(customEntity.shape.controller.x * controllerFactor),
+  //           Math.round(customEntity.shape.controller.y * controllerFactor),
+  //         )
+  //       }
+  //       currentEditor.contentLayer.addEditorItem(customEntity)
+  //       if (customShapeInfo.width < customShapeInfo.height) {
+  //         currentEditor.resize(
+  //           customShapeInfo.height * sizeFactor + margin * 2,
+  //           customShapeInfo.height * sizeFactor + margin * 2,
+  //         )
+  //       } else {
+  //         currentEditor.resize(
+  //           customShapeInfo.width * sizeFactor + margin * 2,
+  //           customShapeInfo.height * sizeFactor + margin * 2,
+  //         )
+  //       }
+  //       const data = EditorHelper.export(currentEditor)
+  //       console.log(`download file = ${customShapeInfo.name}.png`)
+  //       SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.png`)
+  //     }
+  //   }
+  // }
+  //
+  // const handleTestUMLCustomTableSmall = () => {
+  //   if (currentEditor) {
+  //     let count = UMLCustomTables.length
+  //     for (let i = 0; i < count; i++) {
+  //       const margin = 2
+  //       let lineFactor = 1
+  //       let fontFactor = 0.15
+  //       let sizeFactor = 0.2
+  //       let modifierFactor = 0.2
+  //       let controllerFactor = 0.2
+  //       let firstRowHeightFactor = 0.2
+  //       currentEditor.contentLayer.removeAllEditorItems()
+  //       const customShapeInfo = UMLCustomTables[i].typeInfo
+  //       customShapeInfo.firstRowHeight = customShapeInfo.firstRowHeight * firstRowHeightFactor
+  //       let left = customShapeInfo.left + margin
+  //       if (customShapeInfo.width < customShapeInfo.height) {
+  //         left =
+  //           Math.round(customShapeInfo.left + (customShapeInfo.height - customShapeInfo.width) * sizeFactor * 0.5) +
+  //           margin
+  //       }
+  //       const customShapeTypeName = UMLCustomTables[i].name
+  //       const customEntity = new UMLCustomTables[i].type(
+  //         left,
+  //         customShapeInfo.top + margin,
+  //         customShapeInfo.width * sizeFactor,
+  //         customShapeInfo.height * sizeFactor,
+  //         customShapeTypeName,
+  //         [customShapeInfo],
+  //       )
+  //       customEntity.lineWidth = customEntity.lineWidth * lineFactor
+  //       customEntity.fontSize = customEntity.fontSize * fontFactor
+  //       customEntity.items.forEach((item) => {
+  //         item.fontSize = customEntity.fontSize * fontFactor
+  //       })
+  //       if (!customShapeInfo.modifyInPercent) {
+  //         customEntity.shape.modifier = new Point2(
+  //           Math.round(customEntity.shape.modifier.x * modifierFactor),
+  //           Math.round(customEntity.shape.modifier.y * modifierFactor),
+  //         )
+  //       }
+  //       if (!customShapeInfo.controlInPercent) {
+  //         customEntity.shape.controller = new Point2(
+  //           Math.round(customEntity.shape.controller.x * controllerFactor),
+  //           Math.round(customEntity.shape.controller.y * controllerFactor),
+  //         )
+  //       }
+  //       currentEditor.contentLayer.addEditorItem(customEntity)
+  //       if (customShapeInfo.width < customShapeInfo.height) {
+  //         currentEditor.resize(
+  //           customShapeInfo.height * sizeFactor + margin * 2,
+  //           customShapeInfo.height * sizeFactor + margin * 2,
+  //         )
+  //       } else {
+  //         currentEditor.resize(
+  //           customShapeInfo.width * sizeFactor + margin * 2,
+  //           customShapeInfo.height * sizeFactor + margin * 2,
+  //         )
+  //       }
+  //       const data = EditorHelper.export(currentEditor)
+  //       console.log(`download file = ${customShapeInfo.name}.png`)
+  //       SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.png`)
+  //     }
+  //   }
+  // }
+  //
+  // const handleTestUMLContainerShapeLarge = () => {
+  //   if (currentEditor) {
+  //     let count = UMLContainerTypes.length
+  //     for (let i = 0; i < count; i++) {
+  //       let shapeType = UMLContainerTypes[i]
+  //       let margin = 5
+  //       let lineFactor = 1
+  //       let fontFactor = 1
+  //       let sizeFactor = 1
+  //       let modifierFactor = 1
+  //       let controllerFactor = 1
+  //       currentEditor.contentLayer.removeAllEditorItems()
+  //       let left = shapeType.left + margin
+  //       // if(shapeType.width < shapeType.height) {
+  //       //   left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
+  //       // }
+  //       let shapeEntity = new UMLContainerShape(
+  //         left,
+  //         shapeType.top + margin,
+  //         shapeType.width * sizeFactor,
+  //         shapeType.height * sizeFactor,
+  //         { shapeType: shapeType.name },
+  //       )
+  //       shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
+  //       shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
+  //       if (!shapeType.modifyInPercent) {
+  //         shapeEntity.shape.modifier = new Point2(
+  //           Math.round(shapeEntity.shape.modifier.x * modifierFactor),
+  //           Math.round(shapeEntity.shape.modifier.y * modifierFactor),
+  //         )
+  //       }
+  //       if (!shapeType.controlInPercent) {
+  //         shapeEntity.shape.controller = new Point2(
+  //           Math.round(shapeEntity.shape.controller.x * controllerFactor),
+  //           Math.round(shapeEntity.shape.controller.y * controllerFactor),
+  //         )
+  //       }
+  //       currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+  //       // if(shapeType.width < shapeType.height) {
+  //       //   currentEditor.resize(shapeType.height * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+  //       // } else {
+  //       //   currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+  //       // }
+  //       currentEditor.contentLayer.addEditorItem(shapeEntity)
+  //       const data = EditorHelper.export(currentEditor)
+  //       SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
+  //     }
+  //   }
+  // }
+  //
+  // const handleTestUMLContainerShapeSmall = () => {
+  //   if (currentEditor) {
+  //     let count = UMLContainerTypes.length
+  //     for (let i = 0; i < count; i++) {
+  //       let shapeType = UMLContainerTypes[i]
+  //       let margin = 2
+  //       let lineFactor = 1
+  //       const factor = shapeType.width >= shapeType.height ? shapeType.width : shapeType.height
+  //       let fontFactor = 28 / factor
+  //       let sizeFactor = 28 / factor
+  //       let modifierFactor = 28 / factor
+  //       let controllerFactor = 28 / factor
+  //       currentEditor.contentLayer.removeAllEditorItems()
+  //       let left = shapeType.left + margin
+  //       if (shapeType.width < shapeType.height) {
+  //         left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
+  //       }
+  //       let shapeEntity = new UMLContainerShape(
+  //         left,
+  //         shapeType.top + margin,
+  //         shapeType.width * sizeFactor,
+  //         shapeType.height * sizeFactor,
+  //         { shapeType: shapeType.name },
+  //       )
+  //       shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
+  //       shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
+  //       if (!shapeType.modifyInPercent) {
+  //         shapeEntity.shape.modifier = new Point2(
+  //           Math.round(shapeEntity.shape.modifier.x * modifierFactor),
+  //           Math.round(shapeEntity.shape.modifier.y * modifierFactor),
+  //         )
+  //       }
+  //       if (!shapeType.controlInPercent) {
+  //         shapeEntity.shape.controller = new Point2(
+  //           Math.round(shapeEntity.shape.controller.x * controllerFactor),
+  //           Math.round(shapeEntity.shape.controller.y * controllerFactor),
+  //         )
+  //       }
+  //       if (shapeType.width < shapeType.height) {
+  //         currentEditor.resize(shapeType.height * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+  //       } else {
+  //         currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+  //       }
+  //       currentEditor.contentLayer.addEditorItem(shapeEntity)
+  //       const data = EditorHelper.export(currentEditor)
+  //       SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
+  //     }
+  //   }
+  // }
 
-  const handleTest5 = () => {
-    if (currentEditor) {
-      let count = BasicShapes.length
-      for (let i = 0; i < count; i++) {
-        const margin = 5
-        currentEditor.contentLayer.removeAllEditorItems()
-        const customShapeInfo = BasicShapes[i].typeInfo
-        const customShapeTypeName = BasicShapes[i].name
-        const customEntity = new BasicShapes[i].type(customShapeInfo.left + margin, customShapeInfo.top + margin, customShapeInfo.width, customShapeInfo.height, customShapeTypeName)
-        currentEditor.contentLayer.addEditorItem(customEntity)
-        currentEditor.resize(customShapeInfo.width + margin * 2, customShapeInfo.height + margin * 2)
-        const data = EditorHelper.export(currentEditor)
-        console.log(`download file = ${customShapeInfo.name}.png`)
-        SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.png`)
-      }
-    }
-  }
-
-  const handleTest6 = () => {
-    if (currentEditor) {
-      let count = BasicShapes.length
-      for (let i = 0; i < count; i++) {
-        const margin = 2
-        let lineFactor = 1
-        let fontFactor = 0.5
-        let sizeFactor = 0.25
-        let modifierFactor = 0.25
-        currentEditor.contentLayer.removeAllEditorItems()
-        const customShapeInfo = BasicShapes[i].typeInfo
-        const customShapeTypeName = BasicShapes[i].name
-        const customEntity = new BasicShapes[i].type(customShapeInfo.left + margin, customShapeInfo.top + margin, customShapeInfo.width * sizeFactor, customShapeInfo.height * sizeFactor, customShapeTypeName)
-        customEntity.lineWidth = customEntity.lineWidth * lineFactor
-        customEntity.fontSize = customEntity.fontSize * fontFactor
-        if (!customShapeInfo.modifyInPercent) {
-          customEntity.shape.modifier = new Point2(Math.round(customEntity.shape.modifier.x * modifierFactor), Math.round(customEntity.shape.modifier.y * modifierFactor))
-        }
-        currentEditor.contentLayer.addEditorItem(customEntity)
-        currentEditor.resize(customShapeInfo.width * sizeFactor + margin * 2, customShapeInfo.height * sizeFactor + margin * 2)
-        const data = EditorHelper.export(currentEditor)
-        console.log(`download file = ${customShapeInfo.name}.png`)
-        SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.png`)
-      }
-    }
-  }
-
-  const handleTestArrows = () => {
-    if (currentEditor) {
-      let count = Arrows.length
-      for (let i = 0; i < count; i++) {
-        const margin = 5
-        currentEditor.contentLayer.removeAllEditorItems()
-        const customShapeInfo = Arrows[i].typeInfo
-        let left = customShapeInfo.left + margin
-        if (customShapeInfo.width < customShapeInfo.height) {
-          left = Math.round(customShapeInfo.left + (customShapeInfo.height - customShapeInfo.width) * 0.5) + margin
-        }
-        const customShapeTypeName = Arrows[i].name
-        const customEntity = new Arrows[i].type(left + margin, customShapeInfo.top + margin, customShapeInfo.width, customShapeInfo.height, customShapeTypeName)
-        currentEditor.contentLayer.addEditorItem(customEntity)
-        if (customShapeInfo.width < customShapeInfo.height) {
-          currentEditor.resize(customShapeInfo.height + margin * 2, customShapeInfo.height + margin * 2)
-        } else {
-          currentEditor.resize(customShapeInfo.width + margin * 2, customShapeInfo.height + margin * 2)
-        }
-        const data = EditorHelper.export(currentEditor)
-        console.log(`download file = ${customShapeInfo.name}.png`)
-        SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.png`)
-      }
-    }
-  }
-
-  const handleTestArrowsSmall = () => {
-    if (currentEditor) {
-      let count = Arrows.length
-      for (let i = 0; i < count; i++) {
-        const margin = 2
-        let lineFactor = 1
-        let fontFactor = 0.5
-        let sizeFactor = 0.25
-        let modifierFactor = 0.25
-        currentEditor.contentLayer.removeAllEditorItems()
-        const customShapeInfo = Arrows[i].typeInfo
-        let left = customShapeInfo.left + margin
-        if (customShapeInfo.width < customShapeInfo.height) {
-          left = Math.round(customShapeInfo.left + (customShapeInfo.height - customShapeInfo.width) * sizeFactor * 0.5) + margin
-        }
-        const customShapeTypeName = Arrows[i].name
-        const customEntity = new Arrows[i].type(left + margin, customShapeInfo.top + margin, customShapeInfo.width * sizeFactor, customShapeInfo.height * sizeFactor, customShapeTypeName)
-        customEntity.lineWidth = customEntity.lineWidth * lineFactor
-        customEntity.fontSize = customEntity.fontSize * fontFactor
-        if (!customShapeInfo.modifyInPercent) {
-          customEntity.shape.modifier = new Point2(Math.round(customEntity.shape.modifier.x * modifierFactor), Math.round(customEntity.shape.modifier.y * modifierFactor))
-        }
-        currentEditor.contentLayer.addEditorItem(customEntity)
-        if (customShapeInfo.width < customShapeInfo.height) {
-          currentEditor.resize(customShapeInfo.height * sizeFactor + margin * 2, customShapeInfo.height * sizeFactor + margin * 2)
-        } else {
-          currentEditor.resize(customShapeInfo.width * sizeFactor + margin * 2, customShapeInfo.height * sizeFactor + margin * 2)
-        }
-        const data = EditorHelper.export(currentEditor)
-        console.log(`download file = ${customShapeInfo.name}.png`)
-        SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.png`)
-      }
-    }
-  }
-
-  const handleTestSvgShapes = () => {
-    if (currentEditor) {
-      let count = AliyunShapes.length
-      for (let i = 0; i < count; i++) {
-        const margin = 5
-        currentEditor.contentLayer.removeAllEditorItems()
-        const customShapeInfo = AliyunShapes[i]
-        const customEntity = new SvgContainer(margin, margin, customShapeInfo.width, customShapeInfo.height, customShapeInfo.data)
-        currentEditor.contentLayer.addEditorItem(customEntity)
-        currentEditor.resize(customShapeInfo.width + margin * 2, customShapeInfo.height + margin * 2)
-        const data = EditorHelper.export(currentEditor)
-        console.log(`download file = ${customShapeInfo.name}.png`)
-        SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.png`)
-      }
-    }
-  }
-
-  const handleTestSvgShapesSmall = () => {
-    if (currentEditor) {
-      let count = AliyunShapes.length
-      for (let i = 0; i < count; i++) {
-        const margin = 2
-        let sizeFactor = 0.25
-        currentEditor.contentLayer.removeAllEditorItems()
-        const customShapeInfo = AliyunShapes[i]
-        const customEntity = new SvgContainer(margin, margin, customShapeInfo.width * sizeFactor, customShapeInfo.height * sizeFactor, customShapeInfo.data)
-        currentEditor.contentLayer.addEditorItem(customEntity)
-        currentEditor.resize(customShapeInfo.width * sizeFactor + margin * 2, customShapeInfo.height * sizeFactor + margin * 2)
-        const data = EditorHelper.export(currentEditor)
-        console.log(`download file = ${customShapeInfo.name}.png`)
-        SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.png`)
-      }
-    }
-  }
-
-  const handleTestImageShapes = () => {
-    if (currentEditor) {
-      let count = AwsShapes.length
-      for (let i = 0; i < count; i++) {
-        const margin = 5
-        currentEditor.contentLayer.removeAllEditorItems()
-        const customShapeInfo = AwsShapes[i]
-        const customEntity = new ImageContainer(margin, margin, customShapeInfo.width, customShapeInfo.height, customShapeInfo.data)
-        currentEditor.contentLayer.addEditorItem(customEntity)
-        currentEditor.resize(customShapeInfo.width + margin * 2, customShapeInfo.height + margin * 2)
-        const data = EditorHelper.export(currentEditor)
-        console.log(`download file = ${customShapeInfo.name}.png`)
-        SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.png`)
-      }
-    }
-  }
-
-  const handleTestImageShapesSmall = () => {
-    if (currentEditor) {
-      let count = AliyunShapes.length
-      for (let i = 0; i < count; i++) {
-        const margin = 2
-        let sizeFactor = 0.25
-        currentEditor.contentLayer.removeAllEditorItems()
-        const customShapeInfo = AwsShapes[i]
-        const customEntity = new ImageContainer(margin, margin, customShapeInfo.width * sizeFactor, customShapeInfo.height * sizeFactor, customShapeInfo.data)
-        currentEditor.contentLayer.addEditorItem(customEntity)
-        currentEditor.resize(customShapeInfo.width * sizeFactor + margin * 2, customShapeInfo.height * sizeFactor + margin * 2)
-        const data = EditorHelper.export(currentEditor)
-        console.log(`download file = ${customShapeInfo.name}.png`)
-        SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.png`)
-      }
-    }
-  }
-
-
-  const handleTestFlowChartShapes = () => {
-    if (currentEditor) {
-      let count = FlowChartShapes.length
-      for (let i = 0; i < count; i++) {
-        const margin = 5
-        currentEditor.contentLayer.removeAllEditorItems()
-        const customShapeInfo = FlowChartShapes[i].typeInfo
-        let left = customShapeInfo.left + margin
-        if (customShapeInfo.width < customShapeInfo.height) {
-          left = Math.round(customShapeInfo.left + (customShapeInfo.height - customShapeInfo.width) * 0.5) + margin
-        }
-        const customShapeTypeName = FlowChartShapes[i].name
-        const customEntity = new FlowChartShapes[i].type(left, customShapeInfo.top + margin, customShapeInfo.width, customShapeInfo.height, customShapeTypeName)
-        currentEditor.contentLayer.addEditorItem(customEntity)
-        if (customShapeInfo.width < customShapeInfo.height) {
-          currentEditor.resize(customShapeInfo.height + margin * 2, customShapeInfo.height + margin * 2)
-        } else {
-          currentEditor.resize(customShapeInfo.width + margin * 2, customShapeInfo.height + margin * 2)
-        }
-        const data = EditorHelper.export(currentEditor)
-        console.log(`download file = ${customShapeInfo.name}.png`)
-        SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.png`)
-      }
-    }
-  }
-
-  const handleTestFlowChartShapesSmall = () => {
-    if (currentEditor) {
-      let count = FlowChartShapes.length
-      for (let i = 0; i < count; i++) {
-        const margin = 2
-        let lineFactor = 1
-        let fontFactor = 0.5
-        let sizeFactor = 0.25
-        let modifierFactor = 0.25
-        currentEditor.contentLayer.removeAllEditorItems()
-        const customShapeInfo = FlowChartShapes[i].typeInfo
-        let left = customShapeInfo.left + margin
-        if (customShapeInfo.width < customShapeInfo.height) {
-          left = Math.round(customShapeInfo.left + (customShapeInfo.height - customShapeInfo.width) * sizeFactor * 0.5) + margin
-        }
-        const customShapeTypeName = FlowChartShapes[i].name
-        const customEntity = new FlowChartShapes[i].type(left, customShapeInfo.top + margin, customShapeInfo.width * sizeFactor, customShapeInfo.height * sizeFactor, customShapeTypeName)
-        customEntity.lineWidth = customEntity.lineWidth * lineFactor
-        customEntity.fontSize = customEntity.fontSize * fontFactor
-        if (!customShapeInfo.modifyInPercent) {
-          customEntity.shape.modifier = new Point2(Math.round(customEntity.shape.modifier.x * modifierFactor), Math.round(customEntity.shape.modifier.y * modifierFactor))
-        }
-        currentEditor.contentLayer.addEditorItem(customEntity)
-        if (customShapeInfo.width < customShapeInfo.height) {
-          currentEditor.resize(customShapeInfo.height * sizeFactor + margin * 2, customShapeInfo.height * sizeFactor + margin * 2)
-        } else {
-          currentEditor.resize(customShapeInfo.width * sizeFactor + margin * 2, customShapeInfo.height * sizeFactor + margin * 2)
-        }
-        const data = EditorHelper.export(currentEditor)
-        console.log(`download file = ${customShapeInfo.name}.png`)
-        SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.png`)
-      }
-    }
-  }
-
-  const handleTestUMLCustomTableLarge = () => {
-    if (currentEditor) {
-      let count = UMLCustomTableTypes.length
-      for (let i = 0; i < count; i++) {
-        const margin = 2
-        let lineFactor = 1
-        let fontFactor = 1
-        let sizeFactor = 1
-        let modifierFactor = 1
-        let controllerFactor = 1
-        let firstRowHeightFactor = 1
-        currentEditor.contentLayer.removeAllEditorItems()
-        const customShapeInfo = UMLCustomTables[i].typeInfo
-        customShapeInfo.firstRowHeight = customShapeInfo.firstRowHeight * firstRowHeightFactor
-        let left = customShapeInfo.left + margin
-        if (customShapeInfo.width < customShapeInfo.height) {
-          left = Math.round(customShapeInfo.left + (customShapeInfo.height - customShapeInfo.width) * sizeFactor * 0.5) + margin
-        }
-        const customShapeTypeName = UMLCustomTables[i].name
-        const customEntity = new UMLCustomTables[i].type(left, customShapeInfo.top + margin, customShapeInfo.width * sizeFactor, customShapeInfo.height * sizeFactor, customShapeTypeName, [customShapeInfo])
-        customEntity.lineWidth = customEntity.lineWidth * lineFactor
-        customEntity.fontSize = customEntity.fontSize * fontFactor
-        customEntity.items.forEach(item => {
-          item.fontSize = customEntity.fontSize * fontFactor
-        })
-        if (!customShapeInfo.modifyInPercent) {
-          customEntity.shape.modifier = new Point2(Math.round(customEntity.shape.modifier.x * modifierFactor), Math.round(customEntity.shape.modifier.y * modifierFactor))
-        }
-        if (!customShapeInfo.controlInPercent) {
-          customEntity.shape.controller = new Point2(Math.round(customEntity.shape.controller.x * controllerFactor), Math.round(customEntity.shape.controller.y * controllerFactor))
-        }
-        currentEditor.contentLayer.addEditorItem(customEntity)
-        if (customShapeInfo.width < customShapeInfo.height) {
-          currentEditor.resize(customShapeInfo.height * sizeFactor + margin * 2, customShapeInfo.height * sizeFactor + margin * 2)
-        } else {
-          currentEditor.resize(customShapeInfo.width * sizeFactor + margin * 2, customShapeInfo.height * sizeFactor + margin * 2)
-        }
-        const data = EditorHelper.export(currentEditor)
-        console.log(`download file = ${customShapeInfo.name}.png`)
-        SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.png`)
-      }
-    }
-  }
-
-  const handleTestUMLCustomTableSmall = () => {
-    if (currentEditor) {
-      let count = UMLCustomTables.length
-      for (let i = 0; i < count; i++) {
-        const margin = 2
-        let lineFactor = 1
-        let fontFactor = 0.15
-        let sizeFactor = 0.20
-        let modifierFactor = 0.20
-        let controllerFactor = 0.20
-        let firstRowHeightFactor = 0.20
-        currentEditor.contentLayer.removeAllEditorItems()
-        const customShapeInfo = UMLCustomTables[i].typeInfo
-        customShapeInfo.firstRowHeight = customShapeInfo.firstRowHeight * firstRowHeightFactor
-        let left = customShapeInfo.left + margin
-        if (customShapeInfo.width < customShapeInfo.height) {
-          left = Math.round(customShapeInfo.left + (customShapeInfo.height - customShapeInfo.width) * sizeFactor * 0.5) + margin
-        }
-        const customShapeTypeName = UMLCustomTables[i].name
-        const customEntity = new UMLCustomTables[i].type(left, customShapeInfo.top + margin, customShapeInfo.width * sizeFactor, customShapeInfo.height * sizeFactor, customShapeTypeName, [customShapeInfo])
-        customEntity.lineWidth = customEntity.lineWidth * lineFactor
-        customEntity.fontSize = customEntity.fontSize * fontFactor
-        customEntity.items.forEach(item => {
-          item.fontSize = customEntity.fontSize * fontFactor
-        })
-        if (!customShapeInfo.modifyInPercent) {
-          customEntity.shape.modifier = new Point2(Math.round(customEntity.shape.modifier.x * modifierFactor), Math.round(customEntity.shape.modifier.y * modifierFactor))
-        }
-        if (!customShapeInfo.controlInPercent) {
-          customEntity.shape.controller = new Point2(Math.round(customEntity.shape.controller.x * controllerFactor), Math.round(customEntity.shape.controller.y * controllerFactor))
-        }
-        currentEditor.contentLayer.addEditorItem(customEntity)
-        if (customShapeInfo.width < customShapeInfo.height) {
-          currentEditor.resize(customShapeInfo.height * sizeFactor + margin * 2, customShapeInfo.height * sizeFactor + margin * 2)
-        } else {
-          currentEditor.resize(customShapeInfo.width * sizeFactor + margin * 2, customShapeInfo.height * sizeFactor + margin * 2)
-        }
-        const data = EditorHelper.export(currentEditor)
-        console.log(`download file = ${customShapeInfo.name}.png`)
-        SystemUtils.generateDownloadFile(data, `${customShapeInfo.name}.png`)
-      }
-    }
-  }
-
-
-  const handleTestUMLContainerShapeLarge = () => {
-    if (currentEditor) {
-      let count = UMLContainerTypes.length
-      for (let i = 0; i < count; i++) {
-        let shapeType = UMLContainerTypes[i]
-        let margin = 5
-        let lineFactor = 1
-        let fontFactor = 1
-        let sizeFactor = 1
-        let modifierFactor = 1
-        let controllerFactor = 1
-        currentEditor.contentLayer.removeAllEditorItems()
-        let left = shapeType.left + margin
-        // if(shapeType.width < shapeType.height) {
-        //   left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
-        // }
-        let shapeEntity = new UMLContainerShape(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, { shapeType: shapeType.name })
-        shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
-        shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
-        if (!shapeType.modifyInPercent) {
-          shapeEntity.shape.modifier = new Point2(Math.round(shapeEntity.shape.modifier.x * modifierFactor), Math.round(shapeEntity.shape.modifier.y * modifierFactor))
-        }
-        if (!shapeType.controlInPercent) {
-          shapeEntity.shape.controller = new Point2(Math.round(shapeEntity.shape.controller.x * controllerFactor), Math.round(shapeEntity.shape.controller.y * controllerFactor))
-        }
-        currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
-        // if(shapeType.width < shapeType.height) {
-        //   currentEditor.resize(shapeType.height * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
-        // } else {
-        //   currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
-        // }
-        currentEditor.contentLayer.addEditorItem(shapeEntity)
-        const data = EditorHelper.export(currentEditor)
-        SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
-      }
-    }
-  }
-
-  const handleTestUMLContainerShapeSmall = () => {
-    if (currentEditor) {
-      let count = UMLContainerTypes.length
-      for (let i = 0; i < count; i++) {
-        let shapeType = UMLContainerTypes[i]
-        let margin = 2
-        let lineFactor = 1
-        const factor = shapeType.width >= shapeType.height ? shapeType.width : shapeType.height
-        let fontFactor = 28 / factor
-        let sizeFactor = 28 / factor
-        let modifierFactor = 28 / factor
-        let controllerFactor = 28 / factor
-        currentEditor.contentLayer.removeAllEditorItems()
-        let left = shapeType.left + margin
-        if (shapeType.width < shapeType.height) {
-          left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
-        }
-        let shapeEntity = new UMLContainerShape(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, { shapeType: shapeType.name })
-        shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
-        shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
-        if (!shapeType.modifyInPercent) {
-          shapeEntity.shape.modifier = new Point2(Math.round(shapeEntity.shape.modifier.x * modifierFactor), Math.round(shapeEntity.shape.modifier.y * modifierFactor))
-        }
-        if (!shapeType.controlInPercent) {
-          shapeEntity.shape.controller = new Point2(Math.round(shapeEntity.shape.controller.x * controllerFactor), Math.round(shapeEntity.shape.controller.y * controllerFactor))
-        }
-        if (shapeType.width < shapeType.height) {
-          currentEditor.resize(shapeType.height * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
-        } else {
-          currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
-        }
-        currentEditor.contentLayer.addEditorItem(shapeEntity)
-        const data = EditorHelper.export(currentEditor)
-        SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
-      }
-    }
-  }
-
-  const handleTestUMLBasicShapeLarge = () => {
-    if (currentEditor) {
-      let count = UMLBasicShapeTypes.length
-      for (let i = 0; i < count; i++) {
-        let shapeType = UMLBasicShapeTypes[i]
-        let margin = 5
-        let lineFactor = 1
-        let fontFactor = 1
-        let sizeFactor = 1
-        let modifierFactor = 1
-        let controllerFactor = 1
-        currentEditor.contentLayer.removeAllEditorItems()
-        let left = shapeType.left + margin
-        if (shapeType.width < shapeType.height) {
-          left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
-        }
-        let shapeEntity = new UMLBasicShape(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, { shapeType: shapeType.name })
-        shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
-        shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
-        if (!shapeType.modifyInPercent) {
-          shapeEntity.shape.modifier = new Point2(Math.round(shapeEntity.shape.modifier.x * modifierFactor), Math.round(shapeEntity.shape.modifier.y * modifierFactor))
-        }
-        if (!shapeType.controlInPercent) {
-          shapeEntity.shape.controller = new Point2(Math.round(shapeEntity.shape.controller.x * controllerFactor), Math.round(shapeEntity.shape.controller.y * controllerFactor))
-        }
-        if (shapeType.width < shapeType.height) {
-          currentEditor.resize(shapeType.height * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
-        } else {
-          currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
-        }
-        currentEditor.contentLayer.addEditorItem(shapeEntity)
-        const data = EditorHelper.export(currentEditor)
-        SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
-      }
-    }
-  }
-
-  const handleTestUMLBasicShapeSmall = () => {
-    if (currentEditor) {
-      let count = UMLBasicShapeTypes.length
-      for (let i = 0; i < count; i++) {
-        let shapeType = UMLBasicShapeTypes[i]
-        let margin = 2
-        let lineFactor = 1
-        let fontFactor = 0.25
-        let sizeFactor = 0.4
-        let modifierFactor = 0.4
-        let controllerFactor = 0.4
-        currentEditor.contentLayer.removeAllEditorItems()
-        let left = shapeType.left + margin
-        if (shapeType.width < shapeType.height) {
-          left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
-        }
-        let shapeEntity = new UMLBasicShape(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, { shapeType: shapeType.name })
-        shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
-        shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
-        if (!shapeType.modifyInPercent) {
-          shapeEntity.shape.modifier = new Point2(Math.round(shapeEntity.shape.modifier.x * modifierFactor), Math.round(shapeEntity.shape.modifier.y * modifierFactor))
-        }
-        if (!shapeType.controlInPercent) {
-          shapeEntity.shape.controller = new Point2(Math.round(shapeEntity.shape.controller.x * controllerFactor), Math.round(shapeEntity.shape.controller.y * controllerFactor))
-        }
-        if (shapeType.width < shapeType.height) {
-          currentEditor.resize(shapeType.height * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
-        } else {
-          currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
-        }
-        currentEditor.contentLayer.addEditorItem(shapeEntity)
-        const data = EditorHelper.export(currentEditor)
-        SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
-      }
-    }
-  }
-
-
-  const handleTestUMLConnectorShapeLarge = () => {
-    if (currentEditor) {
-      let count = UMLConnectors.length
-      for (let i = 0; i < count; i++) {
-        let shapeType = UMLConnectors[i]
-        let margin = 5
-        let lineFactor = 1
-        let fontFactor = 1
-        let sizeFactor = 1
-        currentEditor.contentLayer.removeAllEditorItems()
-        shapeType.typeInfo.startX *= sizeFactor
-        shapeType.typeInfo.endX *= sizeFactor
-        shapeType.typeInfo.startY *= sizeFactor
-        shapeType.typeInfo.endY *= sizeFactor
-        let start = new Point2(shapeType.typeInfo.startX, shapeType.typeInfo.startY)
-        let end = new Point2(shapeType.typeInfo.endX, shapeType.typeInfo.endY)
-        let width = Math.max(shapeType.typeInfo.endX - shapeType.typeInfo.startX, shapeType.typeInfo.endY - shapeType.typeInfo.startY)
-        let height = width
-        let shapeEntity = new UMLConnector(start, end, shapeType.name, [shapeType.typeInfo])
-        shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
-        shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
-        if (width < height) {
-          currentEditor.resize(height + margin * 2, height + margin * 2)
-        } else {
-          currentEditor.resize(width + margin * 2, width + margin * 2)
-        }
-        currentEditor.contentLayer.addEditorItem(shapeEntity)
-        const data = EditorHelper.export(currentEditor)
-        SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
-        console.log(`download file: ${shapeType.name}.png`)
-      }
-    }
-  }
-
-  const handleTestUMLConnectorShapeSmall = () => {
-    if (currentEditor) {
-      let count = UMLConnectors.length
-      for (let i = 0; i < count; i++) {
-        let shapeType = UMLConnectors[i]
-        let margin = 5
-        let lineFactor = 1.5
-        let fontFactor = 0.05
-        let sizeFactor = 0.3
-        currentEditor.contentLayer.removeAllEditorItems()
-        shapeType.typeInfo.startX *= sizeFactor
-        shapeType.typeInfo.endX *= sizeFactor
-        shapeType.typeInfo.startY *= sizeFactor
-        shapeType.typeInfo.endY *= sizeFactor
-        let start = new Point2(shapeType.typeInfo.startX, shapeType.typeInfo.startY)
-        let end = new Point2(shapeType.typeInfo.endX, shapeType.typeInfo.endY)
-        let width = Math.max(shapeType.typeInfo.endX - shapeType.typeInfo.startX, shapeType.typeInfo.endY - shapeType.typeInfo.startY)
-        let height = width
-        let shapeEntity = new UMLConnector(start, end, shapeType.name, [shapeType.typeInfo])
-        shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
-        shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
-        if (width < height) {
-          currentEditor.resize(height + margin * 2, height + margin * 2)
-        } else {
-          currentEditor.resize(width + margin * 2, width + margin * 2)
-        }
-        currentEditor.contentLayer.addEditorItem(shapeEntity)
-        const data = EditorHelper.export(currentEditor)
-        SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
-        console.log(`download file: ${shapeType.name}.png`)
-      }
-    }
-  }
+  // const handleTestUMLBasicShapeLarge = () => {
+  //   if (currentEditor) {
+  //     let count = UMLBasicShapeTypes.length
+  //     for (let i = 0; i < count; i++) {
+  //       let shapeType = UMLBasicShapeTypes[i]
+  //       let margin = 5
+  //       let lineFactor = 1
+  //       let fontFactor = 1
+  //       let sizeFactor = 1
+  //       let modifierFactor = 1
+  //       let controllerFactor = 1
+  //       currentEditor.contentLayer.removeAllEditorItems()
+  //       let left = shapeType.left + margin
+  //       if (shapeType.width < shapeType.height) {
+  //         left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
+  //       }
+  //       let shapeEntity = new UMLBasicShape(
+  //         left,
+  //         shapeType.top + margin,
+  //         shapeType.width * sizeFactor,
+  //         shapeType.height * sizeFactor,
+  //         { shapeType: shapeType.name },
+  //       )
+  //       shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
+  //       shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
+  //       if (!shapeType.modifyInPercent) {
+  //         shapeEntity.shape.modifier = new Point2(
+  //           Math.round(shapeEntity.shape.modifier.x * modifierFactor),
+  //           Math.round(shapeEntity.shape.modifier.y * modifierFactor),
+  //         )
+  //       }
+  //       if (!shapeType.controlInPercent) {
+  //         shapeEntity.shape.controller = new Point2(
+  //           Math.round(shapeEntity.shape.controller.x * controllerFactor),
+  //           Math.round(shapeEntity.shape.controller.y * controllerFactor),
+  //         )
+  //       }
+  //       if (shapeType.width < shapeType.height) {
+  //         currentEditor.resize(shapeType.height * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+  //       } else {
+  //         currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+  //       }
+  //       currentEditor.contentLayer.addEditorItem(shapeEntity)
+  //       const data = EditorHelper.export(currentEditor)
+  //       SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
+  //     }
+  //   }
+  // }
+  //
+  // const handleTestUMLBasicShapeSmall = () => {
+  //   if (currentEditor) {
+  //     let count = UMLBasicShapeTypes.length
+  //     for (let i = 0; i < count; i++) {
+  //       let shapeType = UMLBasicShapeTypes[i]
+  //       let margin = 2
+  //       let lineFactor = 1
+  //       let fontFactor = 0.25
+  //       let sizeFactor = 0.4
+  //       let modifierFactor = 0.4
+  //       let controllerFactor = 0.4
+  //       currentEditor.contentLayer.removeAllEditorItems()
+  //       let left = shapeType.left + margin
+  //       if (shapeType.width < shapeType.height) {
+  //         left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
+  //       }
+  //       let shapeEntity = new UMLBasicShape(
+  //         left,
+  //         shapeType.top + margin,
+  //         shapeType.width * sizeFactor,
+  //         shapeType.height * sizeFactor,
+  //         { shapeType: shapeType.name },
+  //       )
+  //       shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
+  //       shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
+  //       if (!shapeType.modifyInPercent) {
+  //         shapeEntity.shape.modifier = new Point2(
+  //           Math.round(shapeEntity.shape.modifier.x * modifierFactor),
+  //           Math.round(shapeEntity.shape.modifier.y * modifierFactor),
+  //         )
+  //       }
+  //       if (!shapeType.controlInPercent) {
+  //         shapeEntity.shape.controller = new Point2(
+  //           Math.round(shapeEntity.shape.controller.x * controllerFactor),
+  //           Math.round(shapeEntity.shape.controller.y * controllerFactor),
+  //         )
+  //       }
+  //       if (shapeType.width < shapeType.height) {
+  //         currentEditor.resize(shapeType.height * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+  //       } else {
+  //         currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+  //       }
+  //       currentEditor.contentLayer.addEditorItem(shapeEntity)
+  //       const data = EditorHelper.export(currentEditor)
+  //       SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
+  //     }
+  //   }
+  // }
+  //
+  // const handleTestUMLConnectorShapeLarge = () => {
+  //   if (currentEditor) {
+  //     let count = UMLConnectors.length
+  //     for (let i = 0; i < count; i++) {
+  //       let shapeType = UMLConnectors[i]
+  //       let margin = 5
+  //       let lineFactor = 1
+  //       let fontFactor = 1
+  //       let sizeFactor = 1
+  //       currentEditor.contentLayer.removeAllEditorItems()
+  //       shapeType.typeInfo.startX *= sizeFactor
+  //       shapeType.typeInfo.endX *= sizeFactor
+  //       shapeType.typeInfo.startY *= sizeFactor
+  //       shapeType.typeInfo.endY *= sizeFactor
+  //       let start = new Point2(shapeType.typeInfo.startX, shapeType.typeInfo.startY)
+  //       let end = new Point2(shapeType.typeInfo.endX, shapeType.typeInfo.endY)
+  //       let width = Math.max(
+  //         shapeType.typeInfo.endX - shapeType.typeInfo.startX,
+  //         shapeType.typeInfo.endY - shapeType.typeInfo.startY,
+  //       )
+  //       let height = width
+  //       let shapeEntity = new UMLConnector(start, end, shapeType.name, [shapeType.typeInfo])
+  //       shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
+  //       shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
+  //       if (width < height) {
+  //         currentEditor.resize(height + margin * 2, height + margin * 2)
+  //       } else {
+  //         currentEditor.resize(width + margin * 2, width + margin * 2)
+  //       }
+  //       currentEditor.contentLayer.addEditorItem(shapeEntity)
+  //       const data = EditorHelper.export(currentEditor)
+  //       SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
+  //       console.log(`download file: ${shapeType.name}.png`)
+  //     }
+  //   }
+  // }
+  //
+  // const handleTestUMLConnectorShapeSmall = () => {
+  //   if (currentEditor) {
+  //     let count = UMLConnectors.length
+  //     for (let i = 0; i < count; i++) {
+  //       let shapeType = UMLConnectors[i]
+  //       let margin = 5
+  //       let lineFactor = 1.5
+  //       let fontFactor = 0.05
+  //       let sizeFactor = 0.3
+  //       currentEditor.contentLayer.removeAllEditorItems()
+  //       shapeType.typeInfo.startX *= sizeFactor
+  //       shapeType.typeInfo.endX *= sizeFactor
+  //       shapeType.typeInfo.startY *= sizeFactor
+  //       shapeType.typeInfo.endY *= sizeFactor
+  //       let start = new Point2(shapeType.typeInfo.startX, shapeType.typeInfo.startY)
+  //       let end = new Point2(shapeType.typeInfo.endX, shapeType.typeInfo.endY)
+  //       let width = Math.max(
+  //         shapeType.typeInfo.endX - shapeType.typeInfo.startX,
+  //         shapeType.typeInfo.endY - shapeType.typeInfo.startY,
+  //       )
+  //       let height = width
+  //       let shapeEntity = new UMLConnector(start, end, shapeType.name, [shapeType.typeInfo])
+  //       shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
+  //       shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
+  //       if (width < height) {
+  //         currentEditor.resize(height + margin * 2, height + margin * 2)
+  //       } else {
+  //         currentEditor.resize(width + margin * 2, width + margin * 2)
+  //       }
+  //       currentEditor.contentLayer.addEditorItem(shapeEntity)
+  //       const data = EditorHelper.export(currentEditor)
+  //       SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
+  //       console.log(`download file: ${shapeType.name}.png`)
+  //     }
+  //   }
+  // }
 
   const handleTestStyle = () => {
     if (currentEditor) {
@@ -2914,7 +3205,7 @@ const Header: FC<HeaderProps> = ({
         const end = new Point2(left + shapeType.width * sizeFactor * 0.75, shapeType.top + margin + shapeType.height * sizeFactor)
         const connector = new Connector(start, end, ConnectorDirection.Bottom, ConnectorDirection.Bottom)
         connector.endArrow = ConnectorArrowTypes[1]
-        connector.orthogonalPoints = [new Point2(0, 0), new Point2(0, 12), new Point2(0, 24), new Point2(30, 24), new Point2(30, 12), new Point2(30, 0),]
+        connector.orthogonalPoints = [new Point2(0, 0), new Point2(0, 12), new Point2(0, 24), new Point2(30, 24), new Point2(30, 12), new Point2(30, 0)]
         shapeEntity.themeName = documentTheme.name
         connector.themeName = documentTheme.name
         if (shapeType.width < shapeType.height) {
@@ -2929,327 +3220,429 @@ const Header: FC<HeaderProps> = ({
       }
     }
   }
+  //
+  // const handleTestUMLCustomShapeLarge = () => {
+  //   if (currentEditor) {
+  //     let count = UMLCustomShapeTypes.length
+  //     for (let i = 0; i < count; i++) {
+  //       let shapeType = UMLCustomShapeTypes[i]
+  //       let margin = 5
+  //       let lineFactor = 1
+  //       let fontFactor = 1
+  //       let sizeFactor = 1
+  //       let modifierFactor = 1
+  //       let controllerFactor = 1
+  //       currentEditor.contentLayer.removeAllEditorItems()
+  //       let left = shapeType.left + margin
+  //       // if(shapeType.width < shapeType.height) {
+  //       //   left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
+  //       // }
+  //       let shapeEntity = new UMLCustomShape(
+  //         left,
+  //         shapeType.top + margin,
+  //         shapeType.width * sizeFactor,
+  //         shapeType.height * sizeFactor,
+  //         shapeType.name,
+  //       )
+  //       shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
+  //       shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
+  //       if (!shapeType.modifyInPercent) {
+  //         shapeEntity.shape.modifier = new Point2(
+  //           Math.round(shapeEntity.shape.modifier.x * modifierFactor),
+  //           Math.round(shapeEntity.shape.modifier.y * modifierFactor),
+  //         )
+  //       }
+  //       if (!shapeType.controlInPercent) {
+  //         shapeEntity.shape.controller = new Point2(
+  //           Math.round(shapeEntity.shape.controller.x * controllerFactor),
+  //           Math.round(shapeEntity.shape.controller.y * controllerFactor),
+  //         )
+  //       }
+  //       currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+  //       // if(shapeType.width < shapeType.height) {
+  //       //   currentEditor.resize(shapeType.height * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+  //       // } else {
+  //       //   currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+  //       // }
+  //       currentEditor.contentLayer.addEditorItem(shapeEntity)
+  //       const data = EditorHelper.export(currentEditor)
+  //       SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
+  //     }
+  //   }
+  // }
+  //
+  // const handleTestUMLCustomShapeSmall = () => {
+  //   if (currentEditor) {
+  //     let count = UMLCustomShapeTypes.length
+  //     for (let i = 0; i < count; i++) {
+  //       let shapeType = UMLCustomShapeTypes[i]
+  //       let margin = 2
+  //       let lineFactor = 1
+  //       const factor = shapeType.width >= shapeType.height ? shapeType.width : shapeType.height
+  //       let fontFactor = 28 / factor
+  //       let sizeFactor = 28 / factor
+  //       let modifierFactor = 28 / factor
+  //       let controllerFactor = 28 / factor
+  //       currentEditor.contentLayer.removeAllEditorItems()
+  //       let left = shapeType.left + margin
+  //       if (shapeType.width < shapeType.height) {
+  //         left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
+  //       }
+  //       let shapeEntity = new UMLCustomShape(
+  //         left,
+  //         shapeType.top + margin,
+  //         shapeType.width * sizeFactor,
+  //         shapeType.height * sizeFactor,
+  //         shapeType.name,
+  //       )
+  //       shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
+  //       shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
+  //       if (!shapeType.modifyInPercent) {
+  //         shapeEntity.shape.modifier = new Point2(
+  //           Math.round(shapeEntity.shape.modifier.x * modifierFactor),
+  //           Math.round(shapeEntity.shape.modifier.y * modifierFactor),
+  //         )
+  //       }
+  //       if (!shapeType.controlInPercent) {
+  //         shapeEntity.shape.controller = new Point2(
+  //           Math.round(shapeEntity.shape.controller.x * controllerFactor),
+  //           Math.round(shapeEntity.shape.controller.y * controllerFactor),
+  //         )
+  //       }
+  //       if (shapeType.width < shapeType.height) {
+  //         currentEditor.resize(shapeType.height * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+  //       } else {
+  //         currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+  //       }
+  //       currentEditor.contentLayer.addEditorItem(shapeEntity)
+  //       const data = EditorHelper.export(currentEditor)
+  //       SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
+  //     }
+  //   }
+  // }
+  //
+  // const handleTestUMLFrameShapeLarge = () => {
+  //   if (currentEditor) {
+  //     let count = UMLFrameShapeTypes.length
+  //     for (let i = 0; i < count; i++) {
+  //       let shapeType = UMLFrameShapeTypes[i]
+  //       let margin = 5
+  //       let lineFactor = 1
+  //       let fontFactor = 1
+  //       let sizeFactor = 1
+  //       let modifierFactor = 1
+  //       let controllerFactor = 1
+  //       currentEditor.contentLayer.removeAllEditorItems()
+  //       let left = shapeType.left + margin
+  //       if (shapeType.width < shapeType.height) {
+  //         left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
+  //       }
+  //       let shapeEntity = new UMLFrameShape(
+  //         left,
+  //         shapeType.top + margin,
+  //         shapeType.width * sizeFactor,
+  //         shapeType.height * sizeFactor,
+  //         { shapeType: shapeType.name },
+  //         [shapeType],
+  //       )
+  //       shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
+  //       shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
+  //       shapeEntity.items.forEach((item) => {
+  //         item.fontSize = shapeEntity.fontSize * fontFactor
+  //       })
+  //       if (!shapeType.modifyInPercent) {
+  //         shapeEntity.shape.modifier = new Point2(
+  //           Math.round(shapeEntity.shape.modifier.x * modifierFactor),
+  //           Math.round(shapeEntity.shape.modifier.y * modifierFactor),
+  //         )
+  //       }
+  //       if (!shapeType.controlInPercent) {
+  //         shapeEntity.shape.controller = new Point2(
+  //           Math.round(shapeEntity.shape.controller.x * controllerFactor),
+  //           Math.round(shapeEntity.shape.controller.y * controllerFactor),
+  //         )
+  //       }
+  //       if (shapeType.width < shapeType.height) {
+  //         currentEditor.resize(shapeType.height * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+  //       } else {
+  //         currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+  //       }
+  //       currentEditor.contentLayer.addEditorItem(shapeEntity)
+  //       const data = EditorHelper.export(currentEditor)
+  //       SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
+  //     }
+  //   }
+  // }
+  //
+  // const handleTestUMLFrameShapeSmall = () => {
+  //   if (currentEditor) {
+  //     let count = UMLFrameShapeTypes.length
+  //     for (let i = 0; i < count; i++) {
+  //       let shapeType = UMLFrameShapeTypes[i]
+  //       let margin = 2
+  //       let lineFactor = 1
+  //       let fontFactor = 0.1
+  //       let sizeFactor = 0.25
+  //       let modifierFactor = 0.25
+  //       let controllerFactor = 0.25
+  //       currentEditor.contentLayer.removeAllEditorItems()
+  //       let left = shapeType.left + margin
+  //       if (shapeType.width < shapeType.height) {
+  //         left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
+  //       }
+  //       let shapeEntity = new UMLFrameShape(
+  //         left,
+  //         shapeType.top + margin,
+  //         shapeType.width * sizeFactor,
+  //         shapeType.height * sizeFactor,
+  //         { shapeType: shapeType.name },
+  //         [shapeType],
+  //       )
+  //       shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
+  //       shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
+  //       shapeEntity.items.forEach((item) => {
+  //         item.fontSize = shapeEntity.fontSize * fontFactor
+  //       })
+  //       if (!shapeType.modifyInPercent) {
+  //         shapeEntity.shape.modifier = new Point2(
+  //           Math.round(shapeEntity.shape.modifier.x * modifierFactor),
+  //           Math.round(shapeEntity.shape.modifier.y * modifierFactor),
+  //         )
+  //       }
+  //       if (!shapeType.controlInPercent) {
+  //         shapeEntity.shape.controller = new Point2(
+  //           Math.round(shapeEntity.shape.controller.x * controllerFactor),
+  //           Math.round(shapeEntity.shape.controller.y * controllerFactor),
+  //         )
+  //       }
+  //       if (shapeType.width < shapeType.height) {
+  //         currentEditor.resize(shapeType.height * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+  //       } else {
+  //         currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+  //       }
+  //       currentEditor.contentLayer.addEditorItem(shapeEntity)
+  //       const data = EditorHelper.export(currentEditor)
+  //       SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
+  //     }
+  //   }
+  // }
+  //
+  // const handleTestERShapeLarge = () => {
+  //   if (currentEditor) {
+  //     let count = ERCustomShapeTypes.length
+  //     for (let i = 0; i < count; i++) {
+  //       let shapeType = ERCustomShapeTypes[i]
+  //       let margin = 5
+  //       let lineFactor = 1
+  //       let fontFactor = 1
+  //       let sizeFactor = 1
+  //       let modifierFactor = 1
+  //       let controllerFactor = 1
+  //       currentEditor.contentLayer.removeAllEditorItems()
+  //       let left = shapeType.left + margin
+  //       if (shapeType.width < shapeType.height) {
+  //         left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
+  //       }
+  //       let shapeEntity = new ERCustomShape(
+  //         left,
+  //         shapeType.top + margin,
+  //         shapeType.width * sizeFactor,
+  //         shapeType.height * sizeFactor,
+  //         shapeType.name,
+  //       )
+  //       shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
+  //       shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
+  //       shapeEntity.items.forEach((item) => {
+  //         item.fontSize = shapeEntity.fontSize * fontFactor
+  //       })
+  //       if (!shapeType.modifyInPercent) {
+  //         shapeEntity.shape.modifier = new Point2(
+  //           Math.round(shapeEntity.shape.modifier.x * modifierFactor),
+  //           Math.round(shapeEntity.shape.modifier.y * modifierFactor),
+  //         )
+  //       }
+  //       if (!shapeType.controlInPercent) {
+  //         shapeEntity.shape.controller = new Point2(
+  //           Math.round(shapeEntity.shape.controller.x * controllerFactor),
+  //           Math.round(shapeEntity.shape.controller.y * controllerFactor),
+  //         )
+  //       }
+  //       if (shapeType.width < shapeType.height) {
+  //         currentEditor.resize(shapeType.height * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+  //       } else {
+  //         currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+  //       }
+  //       currentEditor.contentLayer.addEditorItem(shapeEntity)
+  //       const data = EditorHelper.export(currentEditor)
+  //       SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
+  //     }
+  //   }
+  // }
+  //
+  // const handleTestERShapeSmall = () => {
+  //   if (currentEditor) {
+  //     let count = ERCustomShapeTypes.length
+  //     for (let i = 0; i < count; i++) {
+  //       let shapeType = ERCustomShapeTypes[i]
+  //       let margin = 2
+  //       let lineFactor = 1
+  //       let fontFactor = 0.2
+  //       let sizeFactor = 0.25
+  //       let modifierFactor = 0.25
+  //       let controllerFactor = 0.25
+  //       currentEditor.contentLayer.removeAllEditorItems()
+  //       let left = shapeType.left + margin
+  //       if (shapeType.width < shapeType.height) {
+  //         left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
+  //       }
+  //       let shapeEntity = new ERCustomShape(
+  //         left,
+  //         shapeType.top + margin,
+  //         shapeType.width * sizeFactor,
+  //         shapeType.height * sizeFactor,
+  //         shapeType.name,
+  //       )
+  //       shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
+  //       shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
+  //       shapeEntity.items.forEach((item) => {
+  //         item.fontSize = shapeEntity.fontSize * fontFactor
+  //       })
+  //       if (!shapeType.modifyInPercent) {
+  //         shapeEntity.shape.modifier = new Point2(
+  //           Math.round(shapeEntity.shape.modifier.x * modifierFactor),
+  //           Math.round(shapeEntity.shape.modifier.y * modifierFactor),
+  //         )
+  //       }
+  //       if (!shapeType.controlInPercent) {
+  //         shapeEntity.shape.controller = new Point2(
+  //           Math.round(shapeEntity.shape.controller.x * controllerFactor),
+  //           Math.round(shapeEntity.shape.controller.y * controllerFactor),
+  //         )
+  //       }
+  //       if (shapeType.width < shapeType.height) {
+  //         currentEditor.resize(shapeType.height * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+  //       } else {
+  //         currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.width * sizeFactor + margin * 2)
+  //       }
+  //       currentEditor.contentLayer.addEditorItem(shapeEntity)
+  //       const data = EditorHelper.export(currentEditor)
+  //       SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
+  //     }
+  //   }
+  // }
+  //
+  // const handleTestMockupShapeLarge = () => {
+  //   if (currentEditor) {
+  //     let count = MockupCustomShapeTypes.length
+  //     for (let i = 0; i < count; i++) {
+  //       let shapeType = MockupCustomShapeTypes[i]
+  //       let margin = 5
+  //       let lineFactor = 1
+  //       let fontFactor = 1
+  //       let sizeFactor = 1
+  //       let modifierFactor = 1
+  //       let controllerFactor = 1
+  //       currentEditor.contentLayer.removeAllEditorItems()
+  //       let left = shapeType.left + margin
+  //       if (shapeType.width < shapeType.height) {
+  //         left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
+  //       }
+  //       let shapeEntity = new MockupCustomShape(
+  //         left,
+  //         shapeType.top + margin,
+  //         shapeType.width * sizeFactor,
+  //         shapeType.height * sizeFactor,
+  //         shapeType.name,
+  //       )
+  //       shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
+  //       shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
+  //       shapeEntity.items.forEach((item) => {
+  //         item.fontSize = shapeEntity.fontSize * fontFactor
+  //       })
+  //       if (!shapeType.modifyInPercent) {
+  //         shapeEntity.shape.modifier = new Point2(
+  //           Math.round(shapeEntity.shape.modifier.x * modifierFactor),
+  //           Math.round(shapeEntity.shape.modifier.y * modifierFactor),
+  //         )
+  //       }
+  //       if (!shapeType.controlInPercent) {
+  //         shapeEntity.shape.controller = new Point2(
+  //           Math.round(shapeEntity.shape.controller.x * controllerFactor),
+  //           Math.round(shapeEntity.shape.controller.y * controllerFactor),
+  //         )
+  //       }
+  //       if (shapeType.width < shapeType.height) {
+  //         currentEditor.resize(shapeType.height * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+  //       } else {
+  //         currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+  //       }
+  //       currentEditor.contentLayer.addEditorItem(shapeEntity)
+  //       const data = EditorHelper.export(currentEditor)
+  //       SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
+  //     }
+  //   }
+  // }
+  //
+  // const handleTestMockupShapeSmall = () => {
+  //   if (currentEditor) {
+  //     let count = MockupCustomShapeTypes.length
+  //     for (let i = 0; i < count; i++) {
+  //       let shapeType = MockupCustomShapeTypes[i]
+  //       let margin = 2
+  //       let lineFactor = 2
+  //       const factor = shapeType.width >= shapeType.height ? shapeType.width : shapeType.height
+  //       let fontFactor = 1 //factor / 28
+  //       let sizeFactor = 1 //factor / 28
+  //       let modifierFactor = 1 // factor / 28
+  //       let controllerFactor = 1 //factor / 28
+  //       currentEditor.contentLayer.removeAllEditorItems()
+  //       let left = shapeType.left + margin
+  //       if (shapeType.width < shapeType.height) {
+  //         left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
+  //       }
+  //       let shapeEntity = new MockupCustomShape(
+  //         left,
+  //         shapeType.top + margin,
+  //         shapeType.width * sizeFactor,
+  //         shapeType.height * sizeFactor,
+  //         shapeType.name,
+  //       )
+  //       shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
+  //       shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
+  //       if (!shapeType.modifyInPercent) {
+  //         shapeEntity.shape.modifier = new Point2(
+  //           Math.round(shapeEntity.shape.modifier.x * modifierFactor),
+  //           Math.round(shapeEntity.shape.modifier.y * modifierFactor),
+  //         )
+  //       }
+  //       if (!shapeType.controlInPercent) {
+  //         shapeEntity.shape.controller = new Point2(
+  //           Math.round(shapeEntity.shape.controller.x * controllerFactor),
+  //           Math.round(shapeEntity.shape.controller.y * controllerFactor),
+  //         )
+  //       }
+  //       if (shapeType.width < shapeType.height) {
+  //         currentEditor.resize(shapeType.height * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
+  //       } else {
+  //         currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.width * sizeFactor + margin * 2)
+  //       }
+  //       currentEditor.contentLayer.addEditorItem(shapeEntity)
+  //       const data = EditorHelper.export(currentEditor)
+  //       SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
+  //     }
+  //   }
+  // }
 
-  const handleTestUMLCustomShapeLarge = () => {
-    if (currentEditor) {
-      let count = UMLCustomShapeTypes.length
-      for (let i = 0; i < count; i++) {
-        let shapeType = UMLCustomShapeTypes[i]
-        let margin = 5
-        let lineFactor = 1
-        let fontFactor = 1
-        let sizeFactor = 1
-        let modifierFactor = 1
-        let controllerFactor = 1
-        currentEditor.contentLayer.removeAllEditorItems()
-        let left = shapeType.left + margin
-        // if(shapeType.width < shapeType.height) {
-        //   left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
-        // }
-        let shapeEntity = new UMLCustomShape(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, shapeType.name)
-        shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
-        shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
-        if (!shapeType.modifyInPercent) {
-          shapeEntity.shape.modifier = new Point2(Math.round(shapeEntity.shape.modifier.x * modifierFactor), Math.round(shapeEntity.shape.modifier.y * modifierFactor))
-        }
-        if (!shapeType.controlInPercent) {
-          shapeEntity.shape.controller = new Point2(Math.round(shapeEntity.shape.controller.x * controllerFactor), Math.round(shapeEntity.shape.controller.y * controllerFactor))
-        }
-        currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
-        // if(shapeType.width < shapeType.height) {
-        //   currentEditor.resize(shapeType.height * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
-        // } else {
-        //   currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
-        // }
-        currentEditor.contentLayer.addEditorItem(shapeEntity)
-        const data = EditorHelper.export(currentEditor)
-        SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
-
-      }
-    }
-  }
-
-  const handleTestUMLCustomShapeSmall = () => {
-    if (currentEditor) {
-      let count = UMLCustomShapeTypes.length
-      for (let i = 0; i < count; i++) {
-        let shapeType = UMLCustomShapeTypes[i]
-        let margin = 2
-        let lineFactor = 1
-        const factor = shapeType.width >= shapeType.height ? shapeType.width : shapeType.height
-        let fontFactor = 28 / factor
-        let sizeFactor = 28 / factor
-        let modifierFactor = 28 / factor
-        let controllerFactor = 28 / factor
-        currentEditor.contentLayer.removeAllEditorItems()
-        let left = shapeType.left + margin
-        if (shapeType.width < shapeType.height) {
-          left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
-        }
-        let shapeEntity = new UMLCustomShape(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, shapeType.name)
-        shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
-        shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
-        if (!shapeType.modifyInPercent) {
-          shapeEntity.shape.modifier = new Point2(Math.round(shapeEntity.shape.modifier.x * modifierFactor), Math.round(shapeEntity.shape.modifier.y * modifierFactor))
-        }
-        if (!shapeType.controlInPercent) {
-          shapeEntity.shape.controller = new Point2(Math.round(shapeEntity.shape.controller.x * controllerFactor), Math.round(shapeEntity.shape.controller.y * controllerFactor))
-        }
-        if (shapeType.width < shapeType.height) {
-          currentEditor.resize(shapeType.height * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
-        } else {
-          currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
-        }
-        currentEditor.contentLayer.addEditorItem(shapeEntity)
-        const data = EditorHelper.export(currentEditor)
-        SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
-      }
-    }
-  }
-
-  const handleTestUMLFrameShapeLarge = () => {
-    if (currentEditor) {
-      let count = UMLFrameShapeTypes.length
-      for (let i = 0; i < count; i++) {
-        let shapeType = UMLFrameShapeTypes[i]
-        let margin = 5
-        let lineFactor = 1
-        let fontFactor = 1
-        let sizeFactor = 1
-        let modifierFactor = 1
-        let controllerFactor = 1
-        currentEditor.contentLayer.removeAllEditorItems()
-        let left = shapeType.left + margin
-        if (shapeType.width < shapeType.height) {
-          left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
-        }
-        let shapeEntity = new UMLFrameShape(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, { shapeType: shapeType.name }, [shapeType])
-        shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
-        shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
-        shapeEntity.items.forEach(item => {
-          item.fontSize = shapeEntity.fontSize * fontFactor
-        })
-        if (!shapeType.modifyInPercent) {
-          shapeEntity.shape.modifier = new Point2(Math.round(shapeEntity.shape.modifier.x * modifierFactor), Math.round(shapeEntity.shape.modifier.y * modifierFactor))
-        }
-        if (!shapeType.controlInPercent) {
-          shapeEntity.shape.controller = new Point2(Math.round(shapeEntity.shape.controller.x * controllerFactor), Math.round(shapeEntity.shape.controller.y * controllerFactor))
-        }
-        if (shapeType.width < shapeType.height) {
-          currentEditor.resize(shapeType.height * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
-        } else {
-          currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
-        }
-        currentEditor.contentLayer.addEditorItem(shapeEntity)
-        const data = EditorHelper.export(currentEditor)
-        SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
-      }
-    }
-  }
-
-  const handleTestUMLFrameShapeSmall = () => {
-    if (currentEditor) {
-      let count = UMLFrameShapeTypes.length
-      for (let i = 0; i < count; i++) {
-        let shapeType = UMLFrameShapeTypes[i]
-        let margin = 2
-        let lineFactor = 1
-        let fontFactor = 0.1
-        let sizeFactor = 0.25
-        let modifierFactor = 0.25
-        let controllerFactor = 0.25
-        currentEditor.contentLayer.removeAllEditorItems()
-        let left = shapeType.left + margin
-        if (shapeType.width < shapeType.height) {
-          left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
-        }
-        let shapeEntity = new UMLFrameShape(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, { shapeType: shapeType.name }, [shapeType])
-        shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
-        shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
-        shapeEntity.items.forEach(item => {
-          item.fontSize = shapeEntity.fontSize * fontFactor
-        })
-        if (!shapeType.modifyInPercent) {
-          shapeEntity.shape.modifier = new Point2(Math.round(shapeEntity.shape.modifier.x * modifierFactor), Math.round(shapeEntity.shape.modifier.y * modifierFactor))
-        }
-        if (!shapeType.controlInPercent) {
-          shapeEntity.shape.controller = new Point2(Math.round(shapeEntity.shape.controller.x * controllerFactor), Math.round(shapeEntity.shape.controller.y * controllerFactor))
-        }
-        if (shapeType.width < shapeType.height) {
-          currentEditor.resize(shapeType.height * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
-        } else {
-          currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
-        }
-        currentEditor.contentLayer.addEditorItem(shapeEntity)
-        const data = EditorHelper.export(currentEditor)
-        SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
-      }
-    }
-  }
-
-  const handleTestERShapeLarge = () => {
-    if (currentEditor) {
-      let count = ERCustomShapeTypes.length
-      for (let i = 0; i < count; i++) {
-        let shapeType = ERCustomShapeTypes[i]
-        let margin = 5
-        let lineFactor = 1
-        let fontFactor = 1
-        let sizeFactor = 1
-        let modifierFactor = 1
-        let controllerFactor = 1
-        currentEditor.contentLayer.removeAllEditorItems()
-        let left = shapeType.left + margin
-        if (shapeType.width < shapeType.height) {
-          left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
-        }
-        let shapeEntity = new ERCustomShape(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, shapeType.name)
-        shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
-        shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
-        shapeEntity.items.forEach(item => {
-          item.fontSize = shapeEntity.fontSize * fontFactor
-        })
-        if (!shapeType.modifyInPercent) {
-          shapeEntity.shape.modifier = new Point2(Math.round(shapeEntity.shape.modifier.x * modifierFactor), Math.round(shapeEntity.shape.modifier.y * modifierFactor))
-        }
-        if (!shapeType.controlInPercent) {
-          shapeEntity.shape.controller = new Point2(Math.round(shapeEntity.shape.controller.x * controllerFactor), Math.round(shapeEntity.shape.controller.y * controllerFactor))
-        }
-        if (shapeType.width < shapeType.height) {
-          currentEditor.resize(shapeType.height * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
-        } else {
-          currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
-        }
-        currentEditor.contentLayer.addEditorItem(shapeEntity)
-        const data = EditorHelper.export(currentEditor)
-        SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
-      }
-    }
-  }
-
-  const handleTestERShapeSmall = () => {
-    if (currentEditor) {
-      let count = ERCustomShapeTypes.length
-      for (let i = 0; i < count; i++) {
-        let shapeType = ERCustomShapeTypes[i]
-        let margin = 2
-        let lineFactor = 1
-        let fontFactor = 0.2
-        let sizeFactor = 0.25
-        let modifierFactor = 0.25
-        let controllerFactor = 0.25
-        currentEditor.contentLayer.removeAllEditorItems()
-        let left = shapeType.left + margin
-        if (shapeType.width < shapeType.height) {
-          left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
-        }
-        let shapeEntity = new ERCustomShape(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, shapeType.name)
-        shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
-        shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
-        shapeEntity.items.forEach(item => {
-          item.fontSize = shapeEntity.fontSize * fontFactor
-        })
-        if (!shapeType.modifyInPercent) {
-          shapeEntity.shape.modifier = new Point2(Math.round(shapeEntity.shape.modifier.x * modifierFactor), Math.round(shapeEntity.shape.modifier.y * modifierFactor))
-        }
-        if (!shapeType.controlInPercent) {
-          shapeEntity.shape.controller = new Point2(Math.round(shapeEntity.shape.controller.x * controllerFactor), Math.round(shapeEntity.shape.controller.y * controllerFactor))
-        }
-        if (shapeType.width < shapeType.height) {
-          currentEditor.resize(shapeType.height * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
-        } else {
-          currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.width * sizeFactor + margin * 2)
-        }
-        currentEditor.contentLayer.addEditorItem(shapeEntity)
-        const data = EditorHelper.export(currentEditor)
-        SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
-      }
-    }
-  }
-
-  const handleTestMockupShapeLarge = () => {
-    if (currentEditor) {
-      let count = MockupCustomShapeTypes.length
-      for (let i = 0; i < count; i++) {
-        let shapeType = MockupCustomShapeTypes[i]
-        let margin = 5
-        let lineFactor = 1
-        let fontFactor = 1
-        let sizeFactor = 1
-        let modifierFactor = 1
-        let controllerFactor = 1
-        currentEditor.contentLayer.removeAllEditorItems()
-        let left = shapeType.left + margin
-        if (shapeType.width < shapeType.height) {
-          left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
-        }
-        let shapeEntity = new MockupCustomShape(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, shapeType.name)
-        shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
-        shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
-        shapeEntity.items.forEach(item => {
-          item.fontSize = shapeEntity.fontSize * fontFactor
-        })
-        if (!shapeType.modifyInPercent) {
-          shapeEntity.shape.modifier = new Point2(Math.round(shapeEntity.shape.modifier.x * modifierFactor), Math.round(shapeEntity.shape.modifier.y * modifierFactor))
-        }
-        if (!shapeType.controlInPercent) {
-          shapeEntity.shape.controller = new Point2(Math.round(shapeEntity.shape.controller.x * controllerFactor), Math.round(shapeEntity.shape.controller.y * controllerFactor))
-        }
-        if (shapeType.width < shapeType.height) {
-          currentEditor.resize(shapeType.height * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
-        } else {
-          currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
-        }
-        currentEditor.contentLayer.addEditorItem(shapeEntity)
-        const data = EditorHelper.export(currentEditor)
-        SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
-      }
-    }
-  }
-
-  const handleTestMockupShapeSmall = () => {
-    if (currentEditor) {
-      let count = MockupCustomShapeTypes.length
-      for (let i = 0; i < count; i++) {
-        let shapeType = MockupCustomShapeTypes[i]
-        let margin = 2
-        let lineFactor = 2
-        const factor = shapeType.width >= shapeType.height ? shapeType.width : shapeType.height
-        let fontFactor = 1 //factor / 28
-        let sizeFactor = 1 //factor / 28
-        let modifierFactor = 1 // factor / 28
-        let controllerFactor = 1 //factor / 28
-        currentEditor.contentLayer.removeAllEditorItems()
-        let left = shapeType.left + margin
-        if (shapeType.width < shapeType.height) {
-          left = Math.round(shapeType.left + (shapeType.height - shapeType.width) * sizeFactor * 0.5) + margin
-        }
-        let shapeEntity = new MockupCustomShape(left, shapeType.top + margin, shapeType.width * sizeFactor, shapeType.height * sizeFactor, shapeType.name)
-        shapeEntity.lineWidth = shapeEntity.lineWidth * lineFactor
-        shapeEntity.fontSize = shapeEntity.fontSize * fontFactor
-        if (!shapeType.modifyInPercent) {
-          shapeEntity.shape.modifier = new Point2(Math.round(shapeEntity.shape.modifier.x * modifierFactor), Math.round(shapeEntity.shape.modifier.y * modifierFactor))
-        }
-        if (!shapeType.controlInPercent) {
-          shapeEntity.shape.controller = new Point2(Math.round(shapeEntity.shape.controller.x * controllerFactor), Math.round(shapeEntity.shape.controller.y * controllerFactor))
-        }
-        if (shapeType.width < shapeType.height) {
-          currentEditor.resize(shapeType.height * sizeFactor + margin * 2, shapeType.height * sizeFactor + margin * 2)
-        } else {
-          currentEditor.resize(shapeType.width * sizeFactor + margin * 2, shapeType.width * sizeFactor + margin * 2)
-        }
-        currentEditor.contentLayer.addEditorItem(shapeEntity)
-        const data = EditorHelper.export(currentEditor)
-        SystemUtils.generateDownloadFile(data, `${shapeType.name}.png`)
-      }
-    }
-  }
-
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleFontHelper = async () => {
+    // @ts-ignore
     if (window.queryLocalFonts) {
       console.log(`Good to check local fonts `)
+      // @ts-ignore
       const availableFonts = await window.queryLocalFonts()
+      // eslint-disable-next-line guard-for-in
       for (const fontData in availableFonts) {
+        // @ts-ignore
         console.log(fontData.postcriptName)
       }
     } else {
@@ -3265,74 +3658,232 @@ const Header: FC<HeaderProps> = ({
     //console.log(googleFonts)
   }
   const fileItems: MenuProps['items'] = [
-    { key: 'New', label: <FormattedMessage id='workspace.header.menu-file-new' />, icon: <FileAddOutlined />, onClick: handleFileNew },
-    { key: 'OpenFrom', label: <FormattedMessage id='workspace.header.menu-file-open-from' />, disabled: true, icon: <FolderOpenOutlined />, },
-    { key: 'Open', label: <FormattedMessage id='workspace.header.menu-file-open' />, icon: <FolderOpenOutlined />, onClick: handleFileOpen, },
-    { key: 'Save', label: <FormattedMessage id='workspace.header.menu-file-save' />, icon: <SaveOutlined />, onClick: handleFileSave },
+    {
+      key: 'New',
+      label: <FormattedMessage id="workspace.header.menu-file-new" />,
+      icon: <FileAddOutlined />,
+      onClick: handleFileNew,
+    },
+    {
+      key: 'OpenFrom',
+      label: <FormattedMessage id="workspace.header.menu-file-open-from" />,
+      disabled: true,
+      icon: <FolderOpenOutlined />,
+    },
+    {
+      key: 'Open',
+      label: <FormattedMessage id="workspace.header.menu-file-open" />,
+      icon: <FolderOpenOutlined />,
+      onClick: handleFileOpen,
+    },
+    {
+      key: 'Save',
+      label: <FormattedMessage id="workspace.header.menu-file-save" />,
+      icon: <SaveOutlined />,
+      onClick: handleFileSave,
+    },
     {
       key: 'OpenLocal',
-      label: <Upload showUploadList={false} maxCount={1} accept='.ratel'
-        beforeUpload={handleBeforeImportDocument} onChange={handleAfterImportDocument}>
-        <FolderOpenOutlined style={{ marginRight: 10 }} />
-        <FormattedMessage id='workspace.header.menu-file-open-local-document' />
-      </Upload>,
-      // icon: <FolderOpenOutlined />, 
-      // onClick: handleImportDocument 
+      label: (
+        <Upload showUploadList={false} maxCount={1} accept=".ratel" beforeUpload={handleBeforeImportDocument} onChange={handleAfterImportDocument}>
+          <FolderOpenOutlined style={{ marginRight: 10 }} />
+          <FormattedMessage id="workspace.header.menu-file-open-local-document" />
+        </Upload>
+      ),
+      // icon: <FolderOpenOutlined />,
+      // onClick: handleImportDocument
     },
-    { key: 'SaveToLocal', label: <FormattedMessage id='workspace.header.menu-file-save-local-document' />, icon: <DownloadOutlined />, onClick: handleDownload },
+    {
+      key: 'SaveToLocal',
+      label: <FormattedMessage id="workspace.header.menu-file-save-local-document" />,
+      icon: <DownloadOutlined />,
+      onClick: handleDownload,
+    },
     // {
     //   key: 'Import', label: <FormattedMessage id='workspace.header.menu-file-import' />, icon: <FolderOpenOutlined />,
     //   children: [
     //   ]
     // },
     {
-      key: 'Export', label: <FormattedMessage id='workspace.header.menu-file-export' />, icon: <DownloadOutlined />,
+      key: 'Export',
+      label: <FormattedMessage id="workspace.header.menu-file-export" />,
+      icon: <DownloadOutlined />,
       children: [
-        { key: 'ExportToPNG', label: <FormattedMessage id='workspace.header.menu-file-export-png' />, icon: <DownloadOutlined />, onClick: () => handleExport('png') },
+        {
+          key: 'ExportToPNG',
+          label: <FormattedMessage id="workspace.header.menu-file-export-png" />,
+          icon: <DownloadOutlined />,
+          onClick: () => handleExport('png'),
+        },
         // { key: 'ExportToJPG', label: <FormattedMessage id='workspace.header.menu-file-export-jpg' />, icon: <DownloadOutlined />, onClick: () => handleExport('jpg') },
-        { key: 'ExportToSVG', label: <FormattedMessage id='workspace.header.menu-file-export-svg' />, icon: <DownloadOutlined />, onClick: () => handleExportSVG() },
-      ]
+        {
+          key: 'ExportToSVG',
+          label: <FormattedMessage id="workspace.header.menu-file-export-svg" />,
+          icon: <DownloadOutlined />,
+          onClick: () => handleExportSVG(),
+        },
+      ],
     },
     {
-      key: 'ExportSelected', label: <FormattedMessage id='workspace.header.menu-file-export-selected' />, icon: <DownloadOutlined />,
+      key: 'ExportSelected',
+      label: <FormattedMessage id="workspace.header.menu-file-export-selected" />,
+      icon: <DownloadOutlined />,
       children: [
-        { key: 'ExportSelectedToPNG', label: <FormattedMessage id='workspace.header.menu-file-export-selected-png' />, icon: <DownloadOutlined />, onClick: () => handleExportSelected('png') },
+        {
+          key: 'ExportSelectedToPNG',
+          label: <FormattedMessage id="workspace.header.menu-file-export-selected-png" />,
+          icon: <DownloadOutlined />,
+          onClick: () => handleExportSelected('png'),
+        },
         // { key: 'ExportSelectedToJPG', label: <FormattedMessage id='workspace.header.menu-file-export-selected-jpg' />, icon: <DownloadOutlined />, onClick: () => handleExportSelected('jpg') },
-        { key: 'ExportSelectedToSVG', label: <FormattedMessage id='workspace.header.menu-file-export-selected-svg' />, icon: <DownloadOutlined />, onClick: () => handleExportSelectedSVG() },
-      ]
+        {
+          key: 'ExportSelectedToSVG',
+          label: <FormattedMessage id="workspace.header.menu-file-export-selected-svg" />,
+          icon: <DownloadOutlined />,
+          onClick: () => handleExportSelectedSVG(),
+        },
+      ],
     },
   ]
 
   const editItems: MenuProps['items'] = [
-    { label: <FormattedMessage id='workspace.content.popup-editor-undo' />, key: '1', onClick: handleUndo, disabled: !editorUndoable, icon: <CheckOutlined style={{ visibility: 'hidden' }} /> },
-    { label: <FormattedMessage id='workspace.content.popup-editor-redo' />, key: '2', onClick: handleRedo, disabled: !editorRedoable, icon: <CheckOutlined style={{ visibility: 'hidden' }} /> },
+    {
+      label: <FormattedMessage id="workspace.content.popup-editor-undo" />,
+      key: '1',
+      onClick: handleUndo,
+      disabled: !editorUndoable,
+      icon: <CheckOutlined style={{ visibility: 'hidden' }} />,
+    },
+    {
+      label: <FormattedMessage id="workspace.content.popup-editor-redo" />,
+      key: '2',
+      onClick: handleRedo,
+      disabled: !editorRedoable,
+      icon: <CheckOutlined style={{ visibility: 'hidden' }} />,
+    },
     { type: 'divider' },
-    { label: <FormattedMessage id='workspace.content.popup-shape-copy' />, key: '3', onClick: handleCopy, disabled: !ifEditorSupportCopy(), icon: <CheckOutlined style={{ visibility: 'hidden' }} /> },
-    { label: <FormattedMessage id='workspace.content.popup-shape-cut' />, key: '4', onClick: handleCut, disabled: !ifEditorSupportCut(), icon: <CheckOutlined style={{ visibility: 'hidden' }} /> },
-    { label: <FormattedMessage id='workspace.content.popup-shape-paste' />, key: '5', onClick: handlePaste, disabled: !ifEditorSupportPaste(), icon: <CheckOutlined style={{ visibility: 'hidden' }} /> },
-    { label: <FormattedMessage id='workspace.content.popup-shape-duplicate' />, key: '6', onClick: handleDuplicate, disabled: !ifEditorSupportDuplicate(), icon: <CheckOutlined style={{ visibility: 'hidden' }} /> },
+    {
+      label: <FormattedMessage id="workspace.content.popup-shape-copy" />,
+      key: '3',
+      onClick: handleCopy,
+      disabled: !ifEditorSupportCopy(),
+      icon: <CheckOutlined style={{ visibility: 'hidden' }} />,
+    },
+    {
+      label: <FormattedMessage id="workspace.content.popup-shape-cut" />,
+      key: '4',
+      onClick: handleCut,
+      disabled: !ifEditorSupportCut(),
+      icon: <CheckOutlined style={{ visibility: 'hidden' }} />,
+    },
+    {
+      label: <FormattedMessage id="workspace.content.popup-shape-paste" />,
+      key: '5',
+      onClick: handlePaste,
+      disabled: !ifEditorSupportPaste(),
+      icon: <CheckOutlined style={{ visibility: 'hidden' }} />,
+    },
+    {
+      label: <FormattedMessage id="workspace.content.popup-shape-duplicate" />,
+      key: '6',
+      onClick: handleDuplicate,
+      disabled: !ifEditorSupportDuplicate(),
+      icon: <CheckOutlined style={{ visibility: 'hidden' }} />,
+    },
     { type: 'divider' },
-    { label: <FormattedMessage id='workspace.content.popup-shape-delete' />, key: '7', onClick: handleDelete, disabled: !ifEditorSupportDelete(), icon: <CheckOutlined style={{ visibility: 'hidden' }} /> },
+    {
+      label: <FormattedMessage id="workspace.content.popup-shape-delete" />,
+      key: '7',
+      onClick: handleDelete,
+      disabled: !ifEditorSupportDelete(),
+      icon: <CheckOutlined style={{ visibility: 'hidden' }} />,
+    },
     { type: 'divider' },
-    { label: <FormattedMessage id='workspace.content.popup-shape-lock' />, key: '8', onClick: handleLock, disabled: !ifEditorSupportLock(), icon: <CheckOutlined style={{ visibility: 'hidden' }} /> },
+    {
+      label: <FormattedMessage id="workspace.content.popup-shape-lock" />,
+      key: '8',
+      onClick: handleLock,
+      disabled: !ifEditorSupportLock(),
+      icon: <CheckOutlined style={{ visibility: 'hidden' }} />,
+    },
     { type: 'divider' },
-    { label: <FormattedMessage id='workspace.content.popup-shape-to-front' />, key: '9', onClick: handleToFront, disabled: !ifEditorSupportToFront(), icon: <CheckOutlined style={{ visibility: 'hidden' }} /> },
-    { label: <FormattedMessage id='workspace.content.popup-shape-to-back' />, key: '10', onClick: handleToBack, disabled: !ifEditorSupportToBack(), icon: <CheckOutlined style={{ visibility: 'hidden' }} /> },
-    { label: <FormattedMessage id='workspace.content.popup-shape-bring-foreward' />, key: '11', onClick: handleBringForewared, disabled: !ifEditorSupportBringForeward(), icon: <CheckOutlined style={{ visibility: 'hidden' }} /> },
-    { label: <FormattedMessage id='workspace.content.popup-shape-send-backward' />, key: '12', onClick: handleSendBackward, disabled: !ifEditorSupportSendBackward(), icon: <CheckOutlined style={{ visibility: 'hidden' }} /> },
+    {
+      label: <FormattedMessage id="workspace.content.popup-shape-to-front" />,
+      key: '9',
+      onClick: handleToFront,
+      disabled: !ifEditorSupportToFront(),
+      icon: <CheckOutlined style={{ visibility: 'hidden' }} />,
+    },
+    {
+      label: <FormattedMessage id="workspace.content.popup-shape-to-back" />,
+      key: '10',
+      onClick: handleToBack,
+      disabled: !ifEditorSupportToBack(),
+      icon: <CheckOutlined style={{ visibility: 'hidden' }} />,
+    },
+    {
+      label: <FormattedMessage id="workspace.content.popup-shape-bring-foreward" />,
+      key: '11',
+      onClick: handleBringForewared,
+      disabled: !ifEditorSupportBringForeward(),
+      icon: <CheckOutlined style={{ visibility: 'hidden' }} />,
+    },
+    {
+      label: <FormattedMessage id="workspace.content.popup-shape-send-backward" />,
+      key: '12',
+      onClick: handleSendBackward,
+      disabled: !ifEditorSupportSendBackward(),
+      icon: <CheckOutlined style={{ visibility: 'hidden' }} />,
+    },
     { type: 'divider' },
-    { label: <FormattedMessage id='workspace.content.popup-shape-add-to-my-shapes' />, key: '13', onClick: handleAddToMyShapes, disabled: !ifEditorSupportAddToMyShapes(), icon: <CheckOutlined style={{ visibility: 'hidden' }} /> },
+    {
+      label: <FormattedMessage id="workspace.content.popup-shape-add-to-my-shapes" />,
+      key: '13',
+      onClick: handleAddToMyShapes,
+      disabled: !ifEditorSupportAddToMyShapes(),
+      icon: <CheckOutlined style={{ visibility: 'hidden' }} />,
+    },
   ]
 
   const viewItems: MenuProps['items'] = [
-    { label: <FormattedMessage id='workspace.header.menu-view.show-property-editor' />, key: '1', onClick: handlePropertyEditorChange, icon: <CheckOutlined style={{ visibility: Utils.enablePropertyEditor ? 'visible' : 'hidden' }} /> },
+    {
+      label: <FormattedMessage id="workspace.header.menu-view.show-property-editor" />,
+      key: '1',
+      onClick: handlePropertyEditorChange,
+      icon: <CheckOutlined style={{ visibility: Utils.enablePropertyEditor ? 'visible' : 'hidden' }} />,
+    },
     { type: 'divider' },
-    { label: <FormattedMessage id='workspace.header.menu-view.show-grid' />, key: '2', onClick: handleShowGrid, icon: <CheckOutlined style={{ visibility: Utils.currentEditor?.showGrid ? 'visible' : 'hidden' }} /> },
-    { label: <FormattedMessage id='workspace.header.menu-view.show-ruler' />, key: '2', onClick: handleShowRuler, icon: <CheckOutlined style={{ visibility: showRuler ? 'visible' : 'hidden' }} /> },
+    {
+      label: <FormattedMessage id="workspace.header.menu-view.show-grid" />,
+      key: '2',
+      onClick: handleShowGrid,
+      icon: <CheckOutlined style={{ visibility: Utils.currentEditor?.showGrid ? 'visible' : 'hidden' }} />,
+    },
+    {
+      label: <FormattedMessage id="workspace.header.menu-view.show-ruler" />,
+      key: '2',
+      onClick: handleShowRuler,
+      icon: <CheckOutlined style={{ visibility: showRuler ? 'visible' : 'hidden' }} />,
+    },
     { type: 'divider' },
-    { label: <FormattedMessage id='workspace.header.menu-view.zoom-reset' />, key: '3', onClick: handleResetView, icon: <CheckOutlined style={{ visibility: 'hidden' }} /> },
-    { label: <FormattedMessage id='workspace.header.menu-view.zoom-in' />, key: '4', onClick: handleZoomIn, icon: <CheckOutlined style={{ visibility: 'hidden' }} /> },
-    { label: <FormattedMessage id='workspace.header.menu-view.zoom-out' />, key: '5', onClick: handleZoomOut, icon: <CheckOutlined style={{ visibility: 'hidden' }} /> },
+    {
+      label: <FormattedMessage id="workspace.header.menu-view.zoom-reset" />,
+      key: '3',
+      onClick: handleResetView,
+      icon: <CheckOutlined style={{ visibility: 'hidden' }} />,
+    },
+    {
+      label: <FormattedMessage id="workspace.header.menu-view.zoom-in" />,
+      key: '4',
+      onClick: handleZoomIn,
+      icon: <CheckOutlined style={{ visibility: 'hidden' }} />,
+    },
+    {
+      label: <FormattedMessage id="workspace.header.menu-view.zoom-out" />,
+      key: '5',
+      onClick: handleZoomOut,
+      icon: <CheckOutlined style={{ visibility: 'hidden' }} />,
+    },
   ]
 
   // const operationItems: MenuProps['items'] = [
@@ -3346,10 +3897,23 @@ const Header: FC<HeaderProps> = ({
 
   const optionItems: MenuProps['items'] = [
     {
-      key: 'Language', label: <FormattedMessage id='workspace.header.menu-option-language' />, icon: <CheckOutlined style={{ visibility: 'hidden' }} />, children: [
-        { key: 'zh-CN', label: '中文', onClick: () => handleLocale('zh-CN'), icon: getLocale() == 'zh-CN' ? <CheckOutlined /> : <Placeholder />, },
-        { key: 'en-US', label: 'English(US)', onClick: () => handleLocale('en-US'), icon: getLocale() == 'en-US' ? <CheckOutlined /> : <Placeholder />, },
-      ]
+      key: 'Language',
+      label: <FormattedMessage id="workspace.header.menu-option-language" />,
+      icon: <CheckOutlined style={{ visibility: 'hidden' }} />,
+      children: [
+        {
+          key: 'zh-CN',
+          label: '中文',
+          onClick: () => handleLocale('zh-CN'),
+          icon: getLocale() === 'zh-CN' ? <CheckOutlined /> : <Placeholder />,
+        },
+        {
+          key: 'en-US',
+          label: 'English(US)',
+          onClick: () => handleLocale('en-US'),
+          icon: getLocale() === 'en-US' ? <CheckOutlined /> : <Placeholder />,
+        },
+      ],
     },
     // { key: 'OpenFrom', label: 'OpenFrom', },
     // { key: 'Open', label: 'Open', },
@@ -3358,12 +3922,28 @@ const Header: FC<HeaderProps> = ({
 
   const developmentItems: MenuProps['items'] = [
     { key: 'Generate Icons', label: 'Generate Icons', onClick: () => handleGenerateIcons() },
-    { key: 'Generate Connector Start Arrows', label: 'Generate Connector Start Arrows', onClick: handleGenerateConnectorStartArrows, },
-    { key: 'Generate Connector End Arrows', label: 'Generate Connector End Arrows', onClick: handleGenerateConnectorEndArrows, },
-    { key: 'Generate Connector Line Modes', label: 'Generate Connector Line Modes', onClick: handleGenerateConnectorLineModes, },
-    { key: 'Generate Connector Line Types', label: 'Generate Connector Line Types', onClick: handleGenerateConnectorLineTypes, },
-    { key: 'Generate Dash Styles', label: 'Generate Dash Styles', onClick: handleGenerateDashStyles, },
-    { key: 'Test Style', label: 'Test Style', onClick: handleTestStyle, },
+    {
+      key: 'Generate Connector Start Arrows',
+      label: 'Generate Connector Start Arrows',
+      onClick: handleGenerateConnectorStartArrows,
+    },
+    {
+      key: 'Generate Connector End Arrows',
+      label: 'Generate Connector End Arrows',
+      onClick: handleGenerateConnectorEndArrows,
+    },
+    {
+      key: 'Generate Connector Line Modes',
+      label: 'Generate Connector Line Modes',
+      onClick: handleGenerateConnectorLineModes,
+    },
+    {
+      key: 'Generate Connector Line Types',
+      label: 'Generate Connector Line Types',
+      onClick: handleGenerateConnectorLineTypes,
+    },
+    { key: 'Generate Dash Styles', label: 'Generate Dash Styles', onClick: handleGenerateDashStyles },
+    { key: 'Test Style', label: 'Test Style', onClick: handleTestStyle },
     { key: 'Test Code', label: 'SaveAs', onClick: handleTestCode },
     // { key: 'Test Shapes', label: 'Test Shapes', onClick: handleContainerShapesLarge, },
     // { key: 'Test Container Shapes Large', label: 'Test Container Shapes Large', onClick: handleContainerShapesLarge, },
@@ -3400,26 +3980,26 @@ const Header: FC<HeaderProps> = ({
     // { key: 'Admin Login', label: <FormattedMessage id='workspace.header.menu-management-open-file' />, onClick: handleAdminLogin, },
     {
       key: 'Open Customer Window',
-      label: <FormattedMessage id='workspace.header.menu-management-open-customer' />,
+      label: <FormattedMessage id="workspace.header.menu-management-open-customer" />,
       onClick: handleCustomerWindow,
     },
     {
       key: 'Open Operator Window',
-      label: <FormattedMessage id='workspace.header.menu-management-open-operator' />,
+      label: <FormattedMessage id="workspace.header.menu-management-open-operator" />,
       onClick: handleOperatorWindow,
     },
     // { key: 'Open File Mangement Window', label: <FormattedMessage id='workspace.header.menu-management-open-file' />, onClick: handleManagementWindow, },
     {
       key: 'Open Document Selector',
-      label: <FormattedMessage id='workspace.header.menu-management-open-document' />,
+      label: <FormattedMessage id="workspace.header.menu-management-open-document" />,
       onClick: handleDocumentSelector,
     },
   ]
 
   const helpItems: MenuProps['items'] = [
-    { key: 'FeedBack', label: <FormattedMessage id='workspace.header.menu-help-feedback' />, onClick: handleFeedback, },
-    { key: 'Github', label: <FormattedMessage id='workspace.header.menu-help-github' />, onClick: handleGithub, },
-    { key: 'About', label: <FormattedMessage id='workspace.header.menu-help-about' />, onClick: handleAbout, },
+    { key: 'FeedBack', label: <FormattedMessage id="workspace.header.menu-help-feedback" />, onClick: handleFeedback },
+    { key: 'Github', label: <FormattedMessage id="workspace.header.menu-help-github" />, onClick: handleGithub },
+    { key: 'About', label: <FormattedMessage id="workspace.header.menu-help-about" />, onClick: handleAbout },
     // { key: 'OpenFrom', label: 'OpenFrom', },
     // { key: 'Open', label: 'Open', },
     // { key: 'Save', label: 'Save', },
@@ -3428,77 +4008,134 @@ const Header: FC<HeaderProps> = ({
   ]
 
   const userProfileMenu: MenuProps['items'] = [
-    { key: 'UpdatePassword', label: <FormattedMessage id='workspace.header.user-profile-update-password-title' />, onClick: handleUpdatePassword },
-    { key: 'UpdateProfile', label: <FormattedMessage id='workspace.header.user-profile-update-profile-title' />, onClick: handleUpdateProfile },
-    { key: 'Logout', label: <FormattedMessage id='workspace.header.button-logout-title' />, onClick: logout },
+    {
+      key: 'UpdatePassword',
+      label: <FormattedMessage id="workspace.header.user-profile-update-password-title" />,
+      onClick: handleUpdatePassword,
+    },
+    {
+      key: 'UpdateProfile',
+      label: <FormattedMessage id="workspace.header.user-profile-update-profile-title" />,
+      onClick: handleUpdateProfile,
+    },
+    { key: 'Logout', label: <FormattedMessage id="workspace.header.button-logout-title" />, onClick: logout },
   ]
 
   return (
-    <div style={{ position: 'absolute', top: '0px', height: `${Utils.HEADER_HEIGHT}px`, width: `calc(100% - ${adRegionWidth}px`, }}>
+    <div
+      style={{
+        position: 'absolute',
+        top: '0px',
+        height: `${Utils.HEADER_HEIGHT}px`,
+        width: `calc(100% - ${adRegionWidth}px`,
+      }}
+    >
       {contextHolder}
+      {/*@ts-ignore*/}
       <div style={{ width: '100%', height: '49%', userSelect: 'none', webkitAppRegion: 'drag' }}>
         <div style={{ width: '100%', height: '100%', float: 'left', display: 'table' }}>
-          <Space direction="horizontal" style={{ display: 'table-cell', verticalAlign: 'middle', }}>
+          <Space direction="horizontal" style={{ display: 'table-cell', verticalAlign: 'middle' }}>
             <Space wrap={false}>
               {osType === OSType.MACOS && process.env.ENV_NAME === 'electron' ? <div style={{ width: 65, height: '100%' }} /> : ''}
-              {osType === OSType.WINDOWS && process.env.ENV_NAME === 'electron' ? <div style={{ width: 28, height: '100%', display: 'table' }} >
-                <div style={{ display: 'table-cell', verticalAlign: 'middle', textAlign: 'right' }} >
-                  <img src={process.env.BASIC_PATH + 'favicon.png'} width={18} height={18} />
+              {osType === OSType.WINDOWS && process.env.ENV_NAME === 'electron' ? (
+                <div style={{ width: 28, height: '100%', display: 'table' }}>
+                  <div style={{ display: 'table-cell', verticalAlign: 'middle', textAlign: 'right' }}>
+                    <img src={process.env.BASIC_PATH + 'favicon.png'} width={18} height={18} />
+                  </div>
                 </div>
-              </div> : ''
-              }
+              ) : (
+                ''
+              )}
               <Dropdown menu={{ items: fileItems }}>
-                <Button type='text' size='small' style={{ webkitAppRegion: 'no-drag' }}><FormattedMessage id='workspace.header.menu-file' /></Button>
+                {/*@ts-ignore*/}
+                <Button type="text" size="small" style={{ webkitAppRegion: 'no-drag' }}>
+                  <FormattedMessage id="workspace.header.menu-file" />
+                </Button>
               </Dropdown>
               <Dropdown menu={{ items: editItems }}>
-                <Button type='text' size='small' style={{ webkitAppRegion: 'no-drag' }}><FormattedMessage id='workspace.header.menu-edit' /></Button>
+                {/*@ts-ignore*/}
+                <Button type="text" size="small" style={{ webkitAppRegion: 'no-drag' }}>
+                  <FormattedMessage id="workspace.header.menu-edit" />
+                </Button>
               </Dropdown>
               <Dropdown menu={{ items: viewItems }}>
-                <Button type='text' size='small' style={{ webkitAppRegion: 'no-drag' }}><FormattedMessage id='workspace.header.menu-view' /></Button>
+                {/*@ts-ignore*/}
+                <Button type="text" size="small" style={{ webkitAppRegion: 'no-drag' }}>
+                  <FormattedMessage id="workspace.header.menu-view" />
+                </Button>
               </Dropdown>
               {/* <Dropdown menu={{ items: operationItems }}>
                 <Button type='text' size='small'><FormattedMessage id='workspace.header.menu-operation' /></Button>
               </Dropdown> */}
               <Dropdown menu={{ items: optionItems }}>
-                <Button type='text' size='small' style={{ webkitAppRegion: 'no-drag' }}><FormattedMessage id='workspace.header.menu-option' /></Button>
+                {/*@ts-ignore*/}
+                <Button type="text" size="small" style={{ webkitAppRegion: 'no-drag' }}>
+                  <FormattedMessage id="workspace.header.menu-option" />
+                </Button>
               </Dropdown>
-              {"false" === process.env.PRODUCTION
-                ? <Dropdown menu={{ items: developmentItems }}>
-                  <Button type='text' size='small' style={{ webkitAppRegion: 'no-drag' }}><FormattedMessage id='workspace.header.menu-development' /></Button>
+              {'false' === process.env.PRODUCTION ? (
+                <Dropdown menu={{ items: developmentItems }}>
+                  {/*@ts-ignore*/}
+                  <Button type="text" size="small" style={{ webkitAppRegion: 'no-drag' }}>
+                    <FormattedMessage id="workspace.header.menu-development" />
+                  </Button>
                 </Dropdown>
-                : ''
-              }
-              {checkAdminLink()
-                ? <Dropdown menu={{ items: managementItems }}>
-                  <Button type='text' size='small' style={{ webkitAppRegion: 'no-drag' }}><FormattedMessage id='workspace.header.menu-management' /></Button>
+              ) : (
+                ''
+              )}
+              {checkAdminLink() ? (
+                <Dropdown menu={{ items: managementItems }}>
+                  {/*@ts-ignore*/}
+                  <Button type="text" size="small" style={{ webkitAppRegion: 'no-drag' }}>
+                    <FormattedMessage id="workspace.header.menu-management" />
+                  </Button>
                 </Dropdown>
-                : ''
-              }
+              ) : (
+                ''
+              )}
               <Dropdown menu={{ items: helpItems }}>
-                <Button type='text' size='small' style={{ webkitAppRegion: 'no-drag' }}><FormattedMessage id='workspace.header.menu-help' /></Button>
+                {/*@ts-ignore*/}
+                <Button type="text" size="small" style={{ webkitAppRegion: 'no-drag' }}>
+                  <FormattedMessage id="workspace.header.menu-help" />
+                </Button>
               </Dropdown>
-              <Button type='text' size='small' icon={<FileOutlined />} style={{ paddingLeft: '0px', fontSize: '11px', color: 'gray', fontStyle: 'italic', marginLeft: '24px', webkitAppRegion: 'no-drag' }}>{documentModifiedText}</Button>
+              {/*@ts-ignore*/}
+              <Button type="text" size="small" icon={<FileOutlined />} style={{ paddingLeft: '0px', fontSize: '11px', color: 'gray', fontStyle: 'italic', marginLeft: '24px', webkitAppRegion: 'no-drag' }}>
+                {documentModifiedText}
+              </Button>
               <FileTextOutlined />
-              <Input placeholder='Document Name' type='text' value={selectedDocumentName} bordered={false} style={{ paddingLeft: '0px', paddingRight: '0px', width: '70px', fontWeight: 'bolder', webkitAppRegion: 'no-drag' }} onChange={handleUpdateDocumentName} />
+              {/*@ts-ignore*/}
+              <Input placeholder="Document Name" type="text" value={selectedDocumentName} bordered={false} style={{ paddingLeft: '0px', paddingRight: '0px', width: '70px', fontWeight: 'bolder', webkitAppRegion: 'no-drag' }} onChange={handleUpdateDocumentName} />
               {/* <div style={{fontSize: 14, color: 'red', fontWeight: 'bold'}}>
                 Demo purpose only and reset periodically
               </div> */}
             </Space>
           </Space>
         </div>
-        <div style={{ position: 'absolute', height: '50%', right: `0px`, }}>
+        <div style={{ position: 'absolute', height: '50%', right: `0px` }}>
           <div style={{ float: 'right', display: 'table', height: '100%', marginRight: '8px' }}>
             <Space direction="horizontal" style={{ display: 'table-cell', verticalAlign: 'middle' }}>
               <Space wrap={false}>
-                <Button type='primary' size='small' style={{ display: online ? 'inline' : 'none', webkitAppRegion: 'no-drag' }} onClick={handleShareWindow} disabled={selectedDocumentId === null} ><FormattedMessage id='workspace.header.button-share-title' /></Button>
-                <Tooltip title={<FormattedMessage id='workspace.header.title.team' />}>
-                  <Button shape='circle' type='text' size='small' icon={<TeamOutlined />} onClick={handleTeamWindow} style={{ display: online ? 'inline' : 'none', webkitAppRegion: 'no-drag' }} />
+                {/*@ts-ignore*/}
+                <Button type="primary" size="small" style={{ display: online ? 'inline' : 'none', webkitAppRegion: 'no-drag' }} onClick={handleShareWindow} disabled={selectedDocumentId === null}>
+                  <FormattedMessage id="workspace.header.button-share-title" />
+                </Button>
+                <Tooltip title={<FormattedMessage id="workspace.header.title.team" />}>
+                  {/*@ts-ignore*/}
+                  <Button shape="circle" type="text" size="small" icon={<TeamOutlined />} onClick={handleTeamWindow} style={{ display: online ? 'inline' : 'none', webkitAppRegion: 'no-drag' }} />
                 </Tooltip>
                 <Dropdown menu={{ items: userProfileMenu }}>
-                  <Button shape='circle' type='text' size='small' icon={<UserOutlined />} style={{ display: online ? 'inline' : 'none', webkitAppRegion: 'no-drag' }} />
+                  {/*@ts-ignore*/}
+                  <Button shape="circle" type="text" size="small" icon={<UserOutlined />} style={{ display: online ? 'inline' : 'none', webkitAppRegion: 'no-drag' }} />
                 </Dropdown>
-                <Button type='text' size='small' style={{ display: online ? 'none' : 'inline', webkitAppRegion: 'no-drag' }} onClick={() => login(ON_LOGIN_NONE)}><FormattedMessage id='workspace.header.button-login-title' /></Button>
-                <Button type='primary' size='small' style={{ display: online ? 'none' : 'inline', webkitAppRegion: 'no-drag' }} onClick={() => register()}><FormattedMessage id='workspace.header.button-register-title' /></Button>
+                {/*@ts-ignore*/}
+                <Button type="text" size="small" style={{ display: online ? 'none' : 'inline', webkitAppRegion: 'no-drag' }} onClick={() => login(ON_LOGIN_NONE)}>
+                  <FormattedMessage id="workspace.header.button-login-title" />
+                </Button>
+                {/*@ts-ignore*/}
+                <Button type="primary" size="small" style={{ display: online ? 'none' : 'inline', webkitAppRegion: 'no-drag' }} onClick={() => register()}>
+                  <FormattedMessage id="workspace.header.button-register-title" />
+                </Button>
                 {osType === OSType.WINDOWS && process.env.ENV_NAME === 'electron' ? <div style={{ width: 135, height: '100%' }} /> : ''}
               </Space>
             </Space>
@@ -3506,111 +4143,118 @@ const Header: FC<HeaderProps> = ({
         </div>
       </div>
       <div style={{ width: '100%', height: '1%', backgroundColor: splitColor }}></div>
-      <div style={{ width: '100%', height: '50%', }}>
-        <div style={{ float: 'left', height: '100%', display: 'table', marginLeft: '8px', }}>
+      <div style={{ width: '100%', height: '50%' }}>
+        <div style={{ float: 'left', height: '100%', display: 'table', marginLeft: '8px' }}>
           <Space direction="horizontal" wrap={false} style={{ display: 'table-cell', verticalAlign: 'middle' }}>
             <Space wrap={false}>
-              <Tooltip title={<FormattedMessage id='workspace.header.title.zoom' />}>
-                <Select style={{ width: 100 }} value={zoom} size='small' onChange={handleZoom} bordered={false}
-                  options={zoomOptions}
-                />
+              <Tooltip title={<FormattedMessage id="workspace.header.title.zoom" />}>
+                <Select style={{ width: 100 }} value={zoom} size="small" onChange={handleZoom} bordered={false} options={zoomOptions} />
               </Tooltip>
-              <Tooltip title={<FormattedMessage id='workspace.header.title.zoom-in' />}>
-                <Button type="text" size='small' icon={<ZoomInOutlined />} disabled={zoom >= zoomOptions[zoomOptions.length - 1].value} onClick={handleZoomIn} />
+              <Tooltip title={<FormattedMessage id="workspace.header.title.zoom-in" />}>
+                <Button type="text" size="small" icon={<ZoomInOutlined />} disabled={zoom >= zoomOptions[zoomOptions.length - 1].value} onClick={handleZoomIn} />
               </Tooltip>
-              <Tooltip title={<FormattedMessage id='workspace.header.title.zoom-out' />}>
-                <Button type="text" size='small' icon={<ZoomOutOutlined />} disabled={zoom <= zoomOptions[0].value} onClick={handleZoomOut} />
+              <Tooltip title={<FormattedMessage id="workspace.header.title.zoom-out" />}>
+                <Button type="text" size="small" icon={<ZoomOutOutlined />} disabled={zoom <= zoomOptions[0].value} onClick={handleZoomOut} />
               </Tooltip>
-              <Divider type='vertical' style={{ margin: 0 }} />
-              <Tooltip title={<FormattedMessage id='workspace.header.title.undo' />}>
-                <Button type="text" size='small' icon={<UndoOutlined />} disabled={!editorUndoable} onClick={handleUndo} />
+              <Divider type="vertical" style={{ margin: 0 }} />
+              <Tooltip title={<FormattedMessage id="workspace.header.title.undo" />}>
+                <Button type="text" size="small" icon={<UndoOutlined />} disabled={!editorUndoable} onClick={handleUndo} />
               </Tooltip>
-              <Tooltip title={<FormattedMessage id='workspace.header.title.redo' />}>
-                <Button type="text" size='small' icon={<RedoOutlined />} disabled={!editorRedoable} onClick={handleRedo} />
+              <Tooltip title={<FormattedMessage id="workspace.header.title.redo" />}>
+                <Button type="text" size="small" icon={<RedoOutlined />} disabled={!editorRedoable} onClick={handleRedo} />
               </Tooltip>
-              <Divider type='vertical' style={{ margin: 0 }} />
+              <Divider type="vertical" style={{ margin: 0 }} />
               {/** TODO:  FIXME, HIDE TEMPORARY*/}
-              <Tooltip title={<FormattedMessage id='workspace.header.title.font-size' />}>
-                <Select size='small' value={fontName} onChange={handleFontNameChange} style={{ width: 120, }} popupMatchSelectWidth={false} disabled={!selectionValid} options={FontNameOptions} bordered={false} />
+              <Tooltip title={<FormattedMessage id="workspace.header.title.font-size" />}>
+                <Select size="small" value={fontName} onChange={handleFontNameChange} style={{ width: 120 }} popupMatchSelectWidth={false} disabled={!selectionValid} options={FontNameOptions} bordered={false} />
               </Tooltip>
-              <Tooltip title={<FormattedMessage id='workspace.header.title.font-size' />}>
+              <Tooltip title={<FormattedMessage id="workspace.header.title.font-size" />}>
                 {/* <InputNumber min={Consts.FONT_SIZE_MIN} max={Consts.FONT_SIZE_MAX} value={fontSize}
                   ref={(node) => { setFontSizeNode(node) }}
                   onChange={handleFontSizeChange} onStep={handleFontSizeStepChange} onBlur={handleFontSizeBlur} onPressEnter={handleFontSizePressEnter} size='small' style={{ width: 60, display: 'none' }} disabled={!selectionValid} /> */}
-                <Select size='small' value={fontSize} onChange={handleFontSizeChange} style={{ width: 64, }} disabled={!selectionValid} options={FontSizeOptions} bordered={false} />
+                <Select size="small" value={fontSize} onChange={handleFontSizeChange} style={{ width: 64 }} disabled={!selectionValid} options={FontSizeOptions} bordered={false} />
               </Tooltip>
-              <Tooltip title={<FormattedMessage id='workspace.header.title.font-bold' />}>
-                <Button type={fontBold ? 'primary' : 'text'} size='small' icon={<BoldOutlined />} disabled={!selectionValid} onClick={handleBoldChanged} />
+              <Tooltip title={<FormattedMessage id="workspace.header.title.font-bold" />}>
+                <Button type={fontBold ? 'primary' : 'text'} size="small" icon={<BoldOutlined />} disabled={!selectionValid} onClick={handleBoldChanged} />
               </Tooltip>
-              <Tooltip title={<FormattedMessage id='workspace.header.title.font-italic' />}>
-                <Button type={fontItalic ? 'primary' : 'text'} size='small' icon={<ItalicOutlined />} disabled={!selectionValid} onClick={handleItalicChanged} />
+              <Tooltip title={<FormattedMessage id="workspace.header.title.font-italic" />}>
+                <Button type={fontItalic ? 'primary' : 'text'} size="small" icon={<ItalicOutlined />} disabled={!selectionValid} onClick={handleItalicChanged} />
               </Tooltip>
-              <Tooltip title={<FormattedMessage id='workspace.header.title.font-underline' />}>
-                <Button type={fontUnderline ? 'primary' : 'text'} size='small' icon={<UnderlineOutlined />} disabled={!selectionValid} onClick={handleUnderlineChanged} />
+              <Tooltip title={<FormattedMessage id="workspace.header.title.font-underline" />}>
+                <Button type={fontUnderline ? 'primary' : 'text'} size="small" icon={<UnderlineOutlined />} disabled={!selectionValid} onClick={handleUnderlineChanged} />
               </Tooltip>
-              <Divider type='vertical' style={{ margin: 0 }} />
-              <Tooltip title={<FormattedMessage id='workspace.header.title.text-left' />}>
-                <Button type={textAlignment == Consts.TEXT_ALIGNMENT_LEFT ? 'primary' : 'text'} size='small' icon={<AlignLeftOutlined />} disabled={!selectionValid} onClick={() => handleTextAlignmentChanged(Consts.TEXT_ALIGNMENT_LEFT)} />
+              <Divider type="vertical" style={{ margin: 0 }} />
+              <Tooltip title={<FormattedMessage id="workspace.header.title.text-left" />}>
+                <Button type={textAlignment === Constants.TEXT_ALIGNMENT_LEFT ? 'primary' : 'text'} size="small" icon={<AlignLeftOutlined />} disabled={!selectionValid} onClick={() => handleTextAlignmentChanged(Constants.TEXT_ALIGNMENT_LEFT)} />
               </Tooltip>
-              <Tooltip title={<FormattedMessage id='workspace.header.title.text-center' />}>
-                <Button type={textAlignment == Consts.TEXT_ALIGNMENT_CENTER ? 'primary' : 'text'} size='small' icon={<AlignCenterOutlined />} disabled={!selectionValid} onClick={() => handleTextAlignmentChanged(Consts.TEXT_ALIGNMENT_CENTER)} />
+              <Tooltip title={<FormattedMessage id="workspace.header.title.text-center" />}>
+                <Button type={textAlignment === Constants.TEXT_ALIGNMENT_CENTER ? 'primary' : 'text'} size="small" icon={<AlignCenterOutlined />} disabled={!selectionValid} onClick={() => handleTextAlignmentChanged(Constants.TEXT_ALIGNMENT_CENTER)} />
               </Tooltip>
-              <Tooltip title={<FormattedMessage id='workspace.header.title.text-right' />}>
-                <Button type={textAlignment == Consts.TEXT_ALIGNMENT_RIGHT ? 'primary' : 'text'} size='small' icon={<AlignRightOutlined />} disabled={!selectionValid} onClick={() => handleTextAlignmentChanged(Consts.TEXT_ALIGNMENT_RIGHT)} />
+              <Tooltip title={<FormattedMessage id="workspace.header.title.text-right" />}>
+                <Button type={textAlignment === Constants.TEXT_ALIGNMENT_RIGHT ? 'primary' : 'text'} size="small" icon={<AlignRightOutlined />} disabled={!selectionValid} onClick={() => handleTextAlignmentChanged(Constants.TEXT_ALIGNMENT_RIGHT)} />
               </Tooltip>
-              <Divider type='vertical' style={{ margin: 0 }} />
-              <Tooltip title={<FormattedMessage id='workspace.header.title.text-top' />}>
-                <Button type={textVerticalAlignment == Consts.PLACE_HOLDER_ALIGNMENT_TOP ? 'primary' : 'text'} size='small' icon={<VerticalAlignTopOutlined />} disabled={!selectionValid} onClick={() => handleTextVerticalAlignmentChanged(Consts.PLACE_HOLDER_ALIGNMENT_TOP)} />
+              <Divider type="vertical" style={{ margin: 0 }} />
+              <Tooltip title={<FormattedMessage id="workspace.header.title.text-top" />}>
+                <Button type={textVerticalAlignment === Constants.PLACE_HOLDER_ALIGNMENT_TOP ? 'primary' : 'text'} size="small" icon={<VerticalAlignTopOutlined />} disabled={!selectionValid} onClick={() => handleTextVerticalAlignmentChanged(Constants.PLACE_HOLDER_ALIGNMENT_TOP)} />
               </Tooltip>
-              <Tooltip title={<FormattedMessage id='workspace.header.title.text-middle' />}>
-                <Button type={textVerticalAlignment == Consts.PLACE_HOLDER_ALIGNMENT_MIDDLE ? 'primary' : 'text'} size='small' icon={<VerticalAlignMiddleOutlined />} disabled={!selectionValid} onClick={() => handleTextVerticalAlignmentChanged(Consts.PLACE_HOLDER_ALIGNMENT_MIDDLE)} />
+              <Tooltip title={<FormattedMessage id="workspace.header.title.text-middle" />}>
+                <Button type={textVerticalAlignment === Constants.PLACE_HOLDER_ALIGNMENT_MIDDLE ? 'primary' : 'text'} size="small" icon={<VerticalAlignMiddleOutlined />} disabled={!selectionValid} onClick={() => handleTextVerticalAlignmentChanged(Constants.PLACE_HOLDER_ALIGNMENT_MIDDLE)} />
               </Tooltip>
-              <Tooltip title={<FormattedMessage id='workspace.header.title.text-bottom' />}>
-                <Button type={textVerticalAlignment == Consts.PLACE_HOLDER_ALIGNMENT_BOTTOM ? 'primary' : 'text'} size='small' icon={<VerticalAlignBottomOutlined />} disabled={!selectionValid} onClick={() => handleTextVerticalAlignmentChanged(Consts.PLACE_HOLDER_ALIGNMENT_BOTTOM)} />
+              <Tooltip title={<FormattedMessage id="workspace.header.title.text-bottom" />}>
+                <Button type={textVerticalAlignment === Constants.PLACE_HOLDER_ALIGNMENT_BOTTOM ? 'primary' : 'text'} size="small" icon={<VerticalAlignBottomOutlined />} disabled={!selectionValid} onClick={() => handleTextVerticalAlignmentChanged(Constants.PLACE_HOLDER_ALIGNMENT_BOTTOM)} />
               </Tooltip>
-              <Divider type='vertical' style={{ margin: 0 }} />
-              <Tooltip title={<FormattedMessage id='workspace.header.title.fill-color' />}>
-                <ColorPicker size='small' value={fillColor} trigger='hover' onChange={handleFillColorChange} onChangeComplete={handleFillColorChangeComplete} disabled={!selectionValid} destroyTooltipOnHide={true} />
+              <Divider type="vertical" style={{ margin: 0 }} />
+              <Tooltip title={<FormattedMessage id="workspace.header.title.fill-color" />}>
+                <ColorPicker size="small" value={fillColor} trigger="hover" onChange={handleFillColorChange} onChangeComplete={handleFillColorChangeComplete} disabled={!selectionValid} destroyTooltipOnHide={true} />
               </Tooltip>
-              <Tooltip title={<FormattedMessage id='workspace.header.title.stroke-color' />}>
-                <ColorPicker size='small' value={strokeColor} trigger='hover' onChange={handleStrokeColorChange} onChangeComplete={handleStrokeColorChangeComplete} disabled={!selectionValid} destroyTooltipOnHide={true} />
+              <Tooltip title={<FormattedMessage id="workspace.header.title.stroke-color" />}>
+                <ColorPicker size="small" value={strokeColor} trigger="hover" onChange={handleStrokeColorChange} onChangeComplete={handleStrokeColorChangeComplete} disabled={!selectionValid} destroyTooltipOnHide={true} />
               </Tooltip>
-              <Tooltip title={<FormattedMessage id='workspace.header.title.font-color' />}>
-                <ColorPicker size='small' value={fontColor} trigger='hover' onChange={handleFontColorChange} onChangeComplete={handleFontColorChangeComplete} disabled={!selectionValid} destroyTooltipOnHide={true} />
+              <Tooltip title={<FormattedMessage id="workspace.header.title.font-color" />}>
+                <ColorPicker size="small" value={fontColor} trigger="hover" onChange={handleFontColorChange} onChangeComplete={handleFontColorChangeComplete} disabled={!selectionValid} destroyTooltipOnHide={true} />
               </Tooltip>
-              <Tooltip title={<FormattedMessage id='workspace.header.title.line-width' />}>
+              <Tooltip title={<FormattedMessage id="workspace.header.title.line-width" />}>
                 {/** TODO:  FIXME, HIDE TEMPORARY*/}
-                <InputNumber min={Consts.LINE_WIDTH_MIN} max={Consts.LINE_WIDTH_MAX} value={lineWidth} onChange={handleLineWidthChange} size='small' style={{ width: 50, display: 'none' }} disabled={!selectionValid} />
-                <Select size='small' value={lineWidth} onChange={handleLineWidthChange} style={{ width: 64, }} disabled={!selectionValid} options={LineWidthOptions} bordered={false} />
+                <InputNumber min={Constants.LINE_WIDTH_MIN} max={Constants.LINE_WIDTH_MAX} value={lineWidth} onChange={handleLineWidthChange} size="small" style={{ width: 50, display: 'none' }} disabled={!selectionValid} />
+                <Select size="small" value={lineWidth} onChange={handleLineWidthChange} style={{ width: 64 }} disabled={!selectionValid} options={LineWidthOptions} bordered={false} />
               </Tooltip>
-              <Tooltip title={<FormattedMessage id='workspace.header.title.stroke-type' />}>
-                <Select size='small' value={strokeDashStyle} onChange={handleStrokeDashStyleChange} style={{ width: 85 }} dropdownStyle={{ width: 85 }} options={strokeDashStyles} bordered={false} disabled={!selectionValid} />
+              <Tooltip title={<FormattedMessage id="workspace.header.title.stroke-type" />}>
+                <Select size="small" value={strokeDashStyle} onChange={handleStrokeDashStyleChange} style={{ width: 85 }} dropdownStyle={{ width: 85 }} options={strokeDashStyles} bordered={false} disabled={!selectionValid} />
               </Tooltip>
-              <Tooltip title={<FormattedMessage id='workspace.header.title.connector-line-type' />}>
-                <Select size='small' value={connectorLineType} onChange={handleConnectorLineTypeChange} style={{ width: 56 }} disabled={!connectorSelected} options={connectorLineTypes} bordered={false} />
+              <Tooltip title={<FormattedMessage id="workspace.header.title.connector-line-type" />}>
+                <Select size="small" value={connectorLineType} onChange={handleConnectorLineTypeChange} style={{ width: 56 }} disabled={!connectorSelected} options={connectorLineTypes} bordered={false} />
               </Tooltip>
-              <Tooltip title={<FormattedMessage id='workspace.header.title.connector-arrow-start-type' />}>
-                <Select size='small' value={connectorLineStartArrow} onChange={handleConnectorArrowStartTypeChange} style={{ width: 56 }} disabled={!connectorSelected} options={connectorLineStartArrows} bordered={false} />
+              <Tooltip title={<FormattedMessage id="workspace.header.title.connector-arrow-start-type" />}>
+                <Select size="small" value={connectorLineStartArrow} onChange={handleConnectorArrowStartTypeChange} style={{ width: 56 }} disabled={!connectorSelected} options={connectorLineStartArrows} bordered={false} />
               </Tooltip>
-              <Tooltip title={<FormattedMessage id='workspace.header.title.connector-arrow-end-type' />}>
-                <Select size='small' value={connectorLineEndArrow} onChange={handleConnectorArrowEndTypeChange} style={{ width: 56 }} disabled={!connectorSelected} options={connectorLineEndArrows} bordered={false} />
+              <Tooltip title={<FormattedMessage id="workspace.header.title.connector-arrow-end-type" />}>
+                <Select size="small" value={connectorLineEndArrow} onChange={handleConnectorArrowEndTypeChange} style={{ width: 56 }} disabled={!connectorSelected} options={connectorLineEndArrows} bordered={false} />
               </Tooltip>
-              <Tooltip title={<FormattedMessage id='workspace.header.title.connector-line-mode' />}>
-                <Select size='small' value={connectorLineMode} onChange={handleConnectorLineModeChange} style={{ width: 56, }} disabled={!connectorSelected} options={connectorLineType == Consts.CONNECTOR_LINE_TYPE_CURVED ? connectorLineModesForCurve : connectorLineModes} bordered={false} />
+              <Tooltip title={<FormattedMessage id="workspace.header.title.connector-line-mode" />}>
+                <Select size="small" value={connectorLineMode} onChange={handleConnectorLineModeChange} style={{ width: 56 }} disabled={!connectorSelected} options={connectorLineType === Constants.CONNECTOR_LINE_TYPE_CURVED ? connectorLineModesForCurve : connectorLineModes} bordered={false} />
               </Tooltip>
-              <Tooltip title={<FormattedMessage id='workspace.header.title.connector-line-mode-link-width' />}>
-                <Select size='small' value={doubleLineGap} onChange={handleDoubleLineGapChange} style={{ width: 64, }} disabled={!(connectorSelected && connectorLineMode != Consts.CONNECTOR_LINE_MODE_SIGNLE)} options={DoubleLineGapOptions} bordered={false} />
+              <Tooltip title={<FormattedMessage id="workspace.header.title.connector-line-mode-link-width" />}>
+                <Select size="small" value={doubleLineGap} onChange={handleDoubleLineGapChange} style={{ width: 64 }} disabled={!(connectorSelected && connectorLineMode !== Constants.CONNECTOR_LINE_MODE_SIGNLE)} options={DoubleLineGapOptions} bordered={false} />
               </Tooltip>
             </Space>
           </Space>
         </div>
-        <div style={{ position: 'absolute', top: `${Utils.HEADER_HEIGHT * 0.5}px`, height: '50%', display: 'table', right: `${adRegionWidth}px`, backgroundColor: workspaceBackground }}>
+        <div
+          style={{
+            position: 'absolute',
+            top: `${Utils.HEADER_HEIGHT * 0.5}px`,
+            height: '50%',
+            display: 'table',
+            right: `${adRegionWidth}px`,
+            backgroundColor: workspaceBackground,
+          }}
+        >
           <Space direction="horizontal" style={{ display: 'table-cell', verticalAlign: 'middle' }}>
             <Space wrap={false}>
-              <Tooltip title={<FormattedMessage id='workspace.header.title.theme-switch' />}>
+              <Tooltip title={<FormattedMessage id="workspace.header.title.theme-switch" />}>
                 <Button shape="circle" type="text" icon={Utils.currentEditor?.enableDarkTheme ? <SunOutlined /> : <MoonOutlined />} onClick={handleThemeChange} />
               </Tooltip>
-              <Tooltip title={<FormattedMessage id='workspace.header.title.property-editor' />}>
+              <Tooltip title={<FormattedMessage id="workspace.header.title.property-editor" />}>
                 <Button shape="circle" type="text" icon={<SettingOutlined />} onClick={handlePropertyEditorChange} />
               </Tooltip>
             </Space>
@@ -3622,17 +4266,38 @@ const Header: FC<HeaderProps> = ({
       <PasswordFormWindowPage visible={passwordFormWindowVisible} x={60} y={60} onWindowCancel={handlePasswordFormWindowCancel} onWindowOk={handlePasswordFormWindowOk} />
       <ProfileFormWindowPage visible={profileFormWindowVisible} x={60} y={60} onWindowCancel={handleProfileFormWindowCancel} onWindowOk={handleProfileFormWindowOk} />
       <NewFileWindow visible={newFileWindowVisible} x={60} y={60} onWindowCancel={handleNewFileWindowCancel} onWindowOk={handleNewFileWindowOk} />
-      <OpenFileWindow visible={openFileWindowVisible} x={60} y={60} onWindowCancel={handleOpenFileWindowCancel} onWindowOk={handleOpenFileWindowOk} disableFileName={disableFileName} selectedFolderId={selectedFolderId} selectedDocumentId={selectedDocumentId} selectedDocumentName={selectedDocumentName} documentThemeName={documentThemeName} />
-      <FileManagementWindow visible={fileManagementWindowVisible} x={60} y={60} onWindowCancel={handleFileManagementWindowCancel} onWindowOk={handleFileManagementWindowOk} disableFileName={disableFileName} selectedFolderId={selectedFolderId} selectedDocumentId={selectedDocumentId} selectedDocumentName={selectedDocumentName} documentThemeName={documentThemeName} />
-      <DocumentSelector visible={documentSelectorVisible} x={60} y={60} onWindowCancel={handleDocumentSelectorCancel} onWindowOk={handleDocumentSelectorOk} disableFileName={disableFileName} selectedFolderId={selectedFolderId} selectedDocumentId={selectedDocumentId} selectedDocumentName={selectedDocumentName} documentThemeName={documentThemeName} />
-      <OperatorWindow visible={operatorWindowVisible} x={60} y={60} onWindowCancel={handleOperatorWindowCancel} onWindowOk={handleOperatorWindowOk} disableFileName={disableFileName} selectedFolderId={selectedFolderId} selectedDocumentId={selectedDocumentId} selectedDocumentName={selectedDocumentName} documentThemeName={documentThemeName} />
-      <CustomerWindow visible={customerWindowVisible} x={60} y={60} onWindowCancel={handleCustomerWindowCancel} onWindowOk={handleCustomerWindowOk} disableFileName={disableFileName} selectedFolderId={selectedFolderId} selectedDocumentId={selectedDocumentId} selectedDocumentName={selectedDocumentName} documentThemeName={documentThemeName} />
+      <OpenFileWindow
+        visible={openFileWindowVisible}
+        x={60}
+        y={60}
+        onWindowCancel={handleOpenFileWindowCancel}
+        onWindowOk={handleOpenFileWindowOk}
+        disableFileName={disableFileName}
+        selectedFolderId={selectedFolderId}
+        selectedDocumentId={selectedDocumentId}
+        selectedDocumentName={selectedDocumentName}
+        documentThemeName={documentThemeName}
+      />
+      <FileManagementWindow
+        visible={fileManagementWindowVisible}
+        x={60}
+        y={60}
+        onWindowCancel={handleFileManagementWindowCancel}
+        onWindowOk={handleFileManagementWindowOk}
+        disableFileName={disableFileName}
+        selectedFolderId={selectedFolderId}
+        selectedDocumentId={selectedDocumentId}
+        selectedDocumentName={selectedDocumentName}
+        documentThemeName={documentThemeName}
+      />
+      <DocumentSelector visible={documentSelectorVisible} onWindowCancel={handleDocumentSelectorCancel} onWindowOk={handleDocumentSelectorOk} />
+      <OperatorWindow visible={operatorWindowVisible} x={60} y={60} onWindowCancel={handleOperatorWindowCancel} onWindowOk={handleOperatorWindowOk} />
+      <CustomerWindow visible={customerWindowVisible} x={60} y={60} onWindowCancel={handleCustomerWindowCancel} onWindowOk={handleCustomerWindowOk} />
       <AboutWindowPage visible={aboutWindowVisible} x={60} y={60} onWindowCancel={handleAboutWindowCancel} onWindowOk={handleAboutWindowOk} />
       <TeamWindow visible={teamWindowVisible} x={60} y={60} onWindowCancel={handleTeamWindowCancel} onWindowOk={handleTeamWindowOk} />
       <ShareWindow documentId={selectedDocumentId!} visible={shareWindowVisible} x={60} y={60} onWindowCancel={handleShareWindowCancel} onWindowOk={handleShareWindowOk} />
-      <Modal title={<FormattedMessage id='workspace.header.message-title-document-modified' />} centered open={discardModifiedDocumentWindowVisible}
-        onOk={confirmDiscardModifiedDocument} onCancel={cancelDiscardModifiedDocument} >
-        <FormattedMessage id='workspace.header.message-document-modified' />
+      <Modal title={<FormattedMessage id="workspace.header.message-title-document-modified" />} centered open={discardModifiedDocumentWindowVisible} onOk={confirmDiscardModifiedDocument} onCancel={cancelDiscardModifiedDocument}>
+        <FormattedMessage id="workspace.header.message-document-modified" />
       </Modal>
       {/* <Modal title={<FormattedMessage id='workspace.header.message-title-document-modified'/>} centered open={discardModifiedDocumentWindowVisible} onOk={confirmDiscardModifiedDocument} onCancel={cancelDiscardModifiedDocument} okText="确认" cancelText="取消" >
         <Form name="exportForm" form={exportForm} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }} style={{ maxWidth: 600 }} initialValues={{ remember: true }}
@@ -3653,6 +4318,5 @@ const Header: FC<HeaderProps> = ({
     </div>
   )
 }
-
 
 export default Header

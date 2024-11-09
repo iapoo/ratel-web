@@ -1,14 +1,12 @@
-import React, { useEffect, useState, } from 'react'
-import styles from './index.css'
-import Workspace from '@/components/Workspace'
-import { Button, } from 'antd'
-import { Utils, } from '../Utils'
+import { useEffect, useState } from 'react'
+import { Utils } from '../Utils'
 
 export default (props: any) => {
-  const [initialized, setInitialized,] = useState<boolean>(false)
+  const [initialized, setInitialized] = useState<boolean>(false)
 
   useEffect(() => {
     if (!initialized) {
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
       initialize()
     }
   })
@@ -18,7 +16,7 @@ export default (props: any) => {
   }
 
   return (
-    <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: `${Utils.FOOTER_HEIGHT}px`, }}>
+    <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: `${Utils.FOOTER_HEIGHT}px` }}>
       {props.children}
     </div>
   )

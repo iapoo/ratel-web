@@ -1,13 +1,13 @@
-import React, { FC, useEffect, useState, useRef } from 'react'
-import styles from './index.css'
-import { Form, Input, Checkbox, Row, Col, Button, Modal, Menu, message, Alert, Space, } from 'antd'
-import { RequestUtils, Utils, } from '../../Utils'
+import { LockOutlined } from '@ant-design/icons'
+import { Alert, Form, Input, message, Modal } from 'antd'
+import axios from 'axios'
+// @ts-ignore
+import CryptoJs from 'crypto-js'
+import { FC, useEffect, useRef, useState } from 'react'
 import type { DraggableData, DraggableEvent } from 'react-draggable'
 import Draggable from 'react-draggable'
-import axios from 'axios'
-import CryptoJs from 'crypto-js'
-import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi'
-import { CodeFilled, CodeOutlined, LockOutlined, MailFilled, MailOutlined, SolutionOutlined, UserOutlined } from '@ant-design/icons'
+import { FormattedMessage, useIntl } from 'umi'
+import { RequestUtils } from '../../Utils'
 
 interface PasswordFormWindowProps {
   visible: boolean
@@ -17,47 +17,44 @@ interface PasswordFormWindowProps {
   onWindowOk: () => void
 }
 
-const PasswordFormWindowPage: FC<PasswordFormWindowProps> = ({
-  visible, x, y, onWindowCancel, onWindowOk,
-}) => {
+const PasswordFormWindowPage: FC<PasswordFormWindowProps> = ({ visible, x, y, onWindowCancel, onWindowOk }) => {
   const intl = useIntl()
-  const [messageApi, contextHolder,] = message.useMessage()
-  const [dataLoading, setDataLoading,] = useState<boolean>(false)
-  const [modalX, setModalX,] = useState<number>(0)
-  const [modalY, setModalY,] = useState<number>(0)
-  const [disabled, setDisabled,] = useState<boolean>(true)
-  const [origModalX, setOrigModalX,] = useState<number>(0)
-  const [origModalY, setOrigModalY,] = useState<number>(0)
-  const [windowVisible, setWindowVisible,] = useState<boolean>(false)
+  const [messageApi, contextHolder] = message.useMessage()
+  const [dataLoading, setDataLoading] = useState<boolean>(false)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [modalX, setModalX] = useState<number>(0)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [modalY, setModalY] = useState<number>(0)
+  const [disabled, setDisabled] = useState<boolean>(true)
+  const [origModalX, setOrigModalX] = useState<number>(0)
+  const [origModalY, setOrigModalY] = useState<number>(0)
+  const [windowVisible, setWindowVisible] = useState<boolean>(false)
   const draggleRef = useRef<HTMLDivElement>(null)
-  const [profileForm,] = Form.useForm()
-  const [errorVisible, setErrorVisible,] = useState<boolean>(false)
-  const [errorMessage, setErrorMessage,] = useState<string>('')
-  const [bounds, setBounds,] = useState({ left: 0, top: 0, bottom: 0, right: 0 })
+  const [profileForm] = Form.useForm()
+  const [errorVisible, setErrorVisible] = useState<boolean>(false)
+  const [errorMessage, setErrorMessage] = useState<string>('')
+  const [bounds, setBounds] = useState({ left: 0, top: 0, bottom: 0, right: 0 })
 
-  if (origModalX != x) {
+  if (origModalX !== x) {
     setOrigModalX(x)
     setModalX(x)
   }
 
-  if (origModalY != y) {
+  if (origModalY !== y) {
     setOrigModalY(y)
     setModalY(y)
   }
 
-  if (windowVisible != visible) {
+  if (windowVisible !== visible) {
     setDataLoading(false)
     setWindowVisible(visible)
   }
-
 
   useEffect(() => {
     if (!dataLoading) {
       setDataLoading(true)
       setErrorVisible(false)
-      const fetchData = async () => {
-
-      }
+      const fetchData = async () => {}
       fetchData()
     }
   })
@@ -89,54 +86,56 @@ const PasswordFormWindowPage: FC<PasswordFormWindowProps> = ({
 
   const onFinish = (values: any) => {
     console.log('Receive values:', values)
-    const { oldUserPassword, newUserPassword, } = values
+    const { oldUserPassword, newUserPassword } = values
     const data = {
-      'oldPassword': CryptoJs.SHA512(oldUserPassword).toString(),
-      'newPassword': CryptoJs.SHA512(newUserPassword).toString(),
+      oldPassword: CryptoJs.SHA512(oldUserPassword).toString(),
+      newPassword: CryptoJs.SHA512(newUserPassword).toString(),
     }
     const config = {
       headers: {
         'Content-Type': 'application/json',
-        'Token': RequestUtils.token
-      }
+        Token: RequestUtils.token,
+      },
     }
     setErrorVisible(false)
-    axios.post(`${RequestUtils.systemServerAddress}/updatePassword`, data, config)
-      .then(response => {
-        if (response.status == 200 && response.data.success) {
+    axios
+      .post(`${RequestUtils.systemServerAddress}/updatePassword`, data, config)
+      .then((response) => {
+        if (response.status === 200 && response.data.success) {
           messageApi.open({
             type: 'success',
-            content: intl.formatMessage({ id: 'workspace.header.password-form-window.window-success-message' })
+            content: intl.formatMessage({ id: 'workspace.header.password-form-window.window-success-message' }),
           })
           console.log('Update password succeed')
           if (onWindowOk) {
             onWindowOk()
           }
-        } else if (response.status == 200 && !response.data.success) {
+        } else if (response.status === 200 && !response.data.success) {
           console.log('Update password failed')
           setErrorVisible(true)
           setErrorMessage(response.data.message)
         }
         console.log('Update password data: ', response.data)
       })
-      .catch(error => {
+      .catch((error) => {
         console.log('Update password error: ', error)
         setErrorMessage('System error internally')
       })
   }
-
-  const sendValidationCode = () => {
-    const form = profileForm.getFieldValue('validation')
-    console.log(`${form}`)
-  }
+  //
+  // const sendValidationCode = () => {
+  //   const form = profileForm.getFieldValue('validation')
+  //   console.log(`${form}`)
+  // }
 
   return (
     <div>
       {contextHolder}
       <Modal
         title={
-          <div style={{ width: '100%', cursor: 'move', }}
-            className='drag-handler'
+          <div
+            style={{ width: '100%', cursor: 'move' }}
+            className="drag-handler"
             onMouseOver={() => {
               if (disabled) {
                 setDisabled(false)
@@ -147,11 +146,11 @@ const PasswordFormWindowPage: FC<PasswordFormWindowProps> = ({
             }}
             // fix eslintjsx-a11y/mouse-events-have-key-events
             // https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/blob/master/docs/rules/mouse-events-have-key-events.md
-            onFocus={() => { }}
-            onBlur={() => { }}
-          // end
+            onFocus={() => {}}
+            onBlur={() => {}}
+            // end
           >
-            <FormattedMessage id='workspace.header.password-form-window.window-title' />
+            <FormattedMessage id="workspace.header.password-form-window.window-title" />
           </div>
         }
         centered
@@ -162,7 +161,7 @@ const PasswordFormWindowPage: FC<PasswordFormWindowProps> = ({
         modalRender={(modal) => (
           <Draggable
             //disabled={disable}
-            handle='.drag-handler'
+            handle=".drag-handler"
             bounds={bounds}
             onStart={handleDragStart}
           >
@@ -170,69 +169,131 @@ const PasswordFormWindowPage: FC<PasswordFormWindowProps> = ({
           </Draggable>
         )}
       >
-        <div style={{ paddingTop: '32px', }}>
+        <div style={{ paddingTop: '32px' }}>
           <Form
-            name='PasswordFormWindow'
+            name="PasswordFormWindow"
             form={profileForm}
-            className='profile-form'
+            className="profile-form"
             onFinish={onFinish}
-            style={{ maxWidth: '100%', }}
+            style={{ maxWidth: '100%' }}
           >
-            <Form.Item name='oldUserPassword'
-              rules={[{ required: true, message: <FormattedMessage id='workspace.header.password-form-window.old-password-message' />, },]}
-              style={{ marginBottom: '4px', }}>
+            <Form.Item
+              name="oldUserPassword"
+              rules={[
+                {
+                  required: true,
+                  message: <FormattedMessage id="workspace.header.password-form-window.old-password-message" />,
+                },
+              ]}
+              style={{ marginBottom: '4px' }}
+            >
               <Input.Password
                 prefix={<LockOutlined />}
-                type='password'
-                placeholder={intl.formatMessage({ id: 'workspace.header.password-form-window.old-password-placeholder' })}
-                size='small'
+                type="password"
+                placeholder={intl.formatMessage({
+                  id: 'workspace.header.password-form-window.old-password-placeholder',
+                })}
+                size="small"
                 bordered={false}
-                style={{ width: '100%', }}
+                style={{ width: '100%' }}
               />
             </Form.Item>
-            <div style={{ marginLeft: '40px', width: '280px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', }} />
-            <Form.Item name='newUserPassword'
+            <div
+              style={{
+                marginLeft: '40px',
+                width: '280px',
+                height: '1px',
+                backgroundColor: 'lightgray',
+                marginBottom: '12px',
+                opacity: '0.5',
+              }}
+            />
+            <Form.Item
+              name="newUserPassword"
               hasFeedback
               rules={[
-                { required: true, message: <FormattedMessage id='workspace.header.password-form-window.new-password-message' />, },
-                { pattern: /^(?![A-Za-z]+$)(?![A-Z\d]+$)(?![A-Z\W]+$)(?![a-z\d]+$)(?![a-z\W]+$)(?![\d\W]+$)\S{8,32}$/, message: <FormattedMessage id='workspace.header.password-form-window.new-password-message' />, },
+                {
+                  required: true,
+                  message: <FormattedMessage id="workspace.header.password-form-window.new-password-message" />,
+                },
+                {
+                  pattern: /^(?![A-Za-z]+$)(?![A-Z\d]+$)(?![A-Z\W]+$)(?![a-z\d]+$)(?![a-z\W]+$)(?![\d\W]+$)\S{8,32}$/,
+                  message: <FormattedMessage id="workspace.header.password-form-window.new-password-message" />,
+                },
               ]}
-              style={{ marginBottom: '4px', }}>
+              style={{ marginBottom: '4px' }}
+            >
               <Input.Password
                 prefix={<LockOutlined />}
-                type='password'
-                placeholder={intl.formatMessage({ id: 'workspace.header.password-form-window.new-password-placeholder' })}
-                size='small'
+                type="password"
+                placeholder={intl.formatMessage({
+                  id: 'workspace.header.password-form-window.new-password-placeholder',
+                })}
+                size="small"
                 bordered={false}
-                style={{ width: '100%', }}
+                style={{ width: '100%' }}
               />
             </Form.Item>
-            <div style={{ marginLeft: '40px', width: '280px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', }} />
-            <Form.Item name='newUserPasswordConfirmation'
-              dependencies={['newUserPassword']} hasFeedback
+            <div
+              style={{
+                marginLeft: '40px',
+                width: '280px',
+                height: '1px',
+                backgroundColor: 'lightgray',
+                marginBottom: '12px',
+                opacity: '0.5',
+              }}
+            />
+            <Form.Item
+              name="newUserPasswordConfirmation"
+              dependencies={['newUserPassword']}
+              hasFeedback
               rules={[
-                { required: true, message: <FormattedMessage id='workspace.header.password-form-window.new-password-confirmation-message' />, },
+                {
+                  required: true,
+                  message: (
+                    <FormattedMessage id="workspace.header.password-form-window.new-password-confirmation-message" />
+                  ),
+                },
                 ({ getFieldValue }) => ({
                   validator(_, value) {
                     if (!value || getFieldValue('newUserPassword') === value) {
                       return Promise.resolve()
                     }
-                    return Promise.reject(new Error(intl.formatMessage({ id: 'workspace.header.password-form-window.new-password-confirmation-message' })))
-                  }
-                })
+                    return Promise.reject(
+                      new Error(
+                        intl.formatMessage({
+                          id: 'workspace.header.password-form-window.new-password-confirmation-message',
+                        }),
+                      ),
+                    )
+                  },
+                }),
               ]}
-              style={{ marginBottom: '4px', }}>
+              style={{ marginBottom: '4px' }}
+            >
               <Input.Password
                 prefix={<LockOutlined />}
-                type='password'
-                placeholder={intl.formatMessage({ id: 'workspace.header.password-form-window.new-password-confirmation-placeholder' })}
-                size='small'
+                type="password"
+                placeholder={intl.formatMessage({
+                  id: 'workspace.header.password-form-window.new-password-confirmation-placeholder',
+                })}
+                size="small"
                 bordered={false}
-                style={{ width: '100%', }}
+                style={{ width: '100%' }}
               />
             </Form.Item>
-            <div style={{ marginLeft: '40px', width: '280px', height: '1px', backgroundColor: 'lightgray', marginBottom: '12px', opacity: '0.5', }} />
-            {errorVisible && (<Alert message={errorMessage} type="error" closable />)}
+            <div
+              style={{
+                marginLeft: '40px',
+                width: '280px',
+                height: '1px',
+                backgroundColor: 'lightgray',
+                marginBottom: '12px',
+                opacity: '0.5',
+              }}
+            />
+            {errorVisible && <Alert message={errorMessage} type="error" closable />}
           </Form>
         </div>
       </Modal>

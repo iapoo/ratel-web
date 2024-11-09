@@ -16,10 +16,20 @@ export class EditorItemData {
   public fillColor: string | null
   public lineWidth: number | null
 
-  public constructor(type = 'Shape', category = 'Rectangle', left = 0, top = 0, width = 100, height = 100,
-    text = '', rotation = 0, useTheme: boolean = true,
-    strokeColor: string | null = null, fillColor: string | null = null,
-    lineWidth: number | null = null) {
+  public constructor(
+    type = 'Shape',
+    category = 'Rectangle',
+    left = 0,
+    top = 0,
+    width = 100,
+    height = 100,
+    text = '',
+    rotation = 0,
+    useTheme: boolean = true,
+    strokeColor: string | null = null,
+    fillColor: string | null = null,
+    lineWidth: number | null = null,
+  ) {
     this.type = type
     this.category = category
     this.left = left

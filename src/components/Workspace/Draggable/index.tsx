@@ -1,8 +1,8 @@
-import React, { useEffect, useState, } from 'react'
-import { Modal, } from 'antd'
+import { Modal } from 'antd'
+import { useEffect, useState } from 'react'
 import Drag from './drag'
 export default (props: any) => {
-  const [isModalLoading, setIsModalLoading,] = useState<boolean>(false)
+  const [isModalLoading, setIsModalLoading] = useState<boolean>(false)
 
   let timer: any
 
@@ -18,7 +18,7 @@ export default (props: any) => {
         initializeModal(props)
       }, 1200)
     }
-  }, [isModalLoading,])
+  }, [isModalLoading])
 
   if (timer) {
     clearTimeout(timer)
@@ -26,7 +26,9 @@ export default (props: any) => {
 
   const modalStyle = {}
   if (props.modalX) {
+    // @ts-ignore
     modalStyle.left = props.modalX
+    // @ts-ignore
     modalStyle.top = props.modalY
     // modalStyle.top = 20
     // modalStyle.right = 20
@@ -34,7 +36,7 @@ export default (props: any) => {
   }
 
   return (
-    <div id='MovableModal' >
+    <div id="MovableModal">
       <Modal
         {...props}
         width={520}
@@ -42,8 +44,9 @@ export default (props: any) => {
         footer={null}
         style={modalStyle}
         closable={false}
-        bodyStyle={{ padding: '0px', }}
-        getContainer={false}>
+        bodyStyle={{ padding: '0px' }}
+        getContainer={false}
+      >
         {props.children}
       </Modal>
     </div>

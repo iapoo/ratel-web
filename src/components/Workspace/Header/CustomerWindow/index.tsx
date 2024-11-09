@@ -1,17 +1,10 @@
-import React, { FC, useEffect, useState, useRef } from 'react'
-import styles from './index.css'
-import { Form, Input, Checkbox, Tree, Row, Col, Button, Modal, Menu, message, Alert, Space, Pagination, Switch, Tooltip, } from 'antd'
-import { Consts, RequestUtils, SystemUtils, Utils, } from '../../Utils'
-import axios from 'axios'
-import Avatar from 'antd/lib/avatar/avatar'
-import { Document, Folder, isDocument, isFolder } from '../../Utils/RequestUtils'
-import type { DataNode, TreeProps, } from 'antd/es/tree'
-import { DeleteFilled, EditFilled, FileFilled, FileOutlined, FolderFilled, FolderOutlined, PlusOutlined } from '@ant-design/icons'
-import { StorageService } from '../../Storage'
-import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi'
+import { DeleteFilled, EditFilled, PlusOutlined } from '@ant-design/icons'
 import { ProColumns, ProTable } from '@ant-design/pro-components'
+import { Button, Col, Input, Modal, Pagination, Row, Tooltip } from 'antd'
+import { FC, useEffect, useState } from 'react'
+import { FormattedMessage, useIntl } from 'umi'
+import { RequestUtils } from '../../Utils'
 import CustomerFormWindow from './CustomerFormWindow'
-
 
 interface CustomerWindowProps {
   visible: boolean
@@ -39,10 +32,10 @@ interface CustomersType {
   pages: number
   current: number
 }
-
-interface FormValues {
-  [name: string]: any
-}
+//
+// interface FormValues {
+//   [name: string]: any
+// }
 
 const defaultData = { records: [], size: 0, current: 0, total: 0, pages: 0 }
 const defaultCustomer = {
@@ -55,18 +48,19 @@ const defaultCustomer = {
   updateBy: 0,
   updateTime: 0,
 }
-const CustomerWindowPage: FC<CustomerWindowProps> = ({
-  visible, x, y, onWindowCancel, onWindowOk,
-}) => {
-  const [dataLoading, setDataLoading,] = useState<boolean>(false)
-  const [windowVisible, setWindowVisible,] = useState<boolean>(false)
-  const [errorVisible, setErrorVisible,] = useState<boolean>(false)
-  const [errorMessage, setErrorMessage,] = useState<string>('')
-  const [data, setData,] = useState<CustomersType>(defaultData)
-  const [customer, setCustomer,] = useState<SingleCustomerType>(defaultCustomer)
-  const [searchText, setSearchText,] = useState<string>('')
-  const [customerFormWindowVisible, setCustomerFormWindowVisible,] = useState<boolean>(false)
-  const [isUpdate, setIsUpdate,] = useState<boolean>(false)
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const CustomerWindowPage: FC<CustomerWindowProps> = ({ visible, x, y, onWindowCancel, onWindowOk }) => {
+  const [dataLoading, setDataLoading] = useState<boolean>(false)
+  const [windowVisible, setWindowVisible] = useState<boolean>(false)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [errorVisible, setErrorVisible] = useState<boolean>(false)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [errorMessage, setErrorMessage] = useState<string>('')
+  const [data, setData] = useState<CustomersType>(defaultData)
+  const [customer, setCustomer] = useState<SingleCustomerType>(defaultCustomer)
+  const [searchText, setSearchText] = useState<string>('')
+  const [customerFormWindowVisible, setCustomerFormWindowVisible] = useState<boolean>(false)
+  const [isUpdate, setIsUpdate] = useState<boolean>(false)
 
   const intl = useIntl()
 
@@ -74,7 +68,6 @@ const CustomerWindowPage: FC<CustomerWindowProps> = ({
     setDataLoading(false)
     setWindowVisible(visible)
   }
-
 
   const fetchData = async (customerName: string | null, pageNum: number = 1, pageSize: number = 5) => {
     const customerData = await RequestUtils.getCustomers(customerName, pageNum, pageSize)
@@ -86,7 +79,6 @@ const CustomerWindowPage: FC<CustomerWindowProps> = ({
     }
   }
 
-
   useEffect(() => {
     if (!dataLoading) {
       setDataLoading(true)
@@ -94,7 +86,6 @@ const CustomerWindowPage: FC<CustomerWindowProps> = ({
       fetchData(searchText)
     }
   })
-
 
   const onOk = () => {
     if (onWindowOk) {
@@ -117,6 +108,7 @@ const CustomerWindowPage: FC<CustomerWindowProps> = ({
     setCustomerFormWindowVisible(false)
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handlePageChange = (current: number, size?: number) => {
     fetchData(searchText, current)
   }
@@ -137,7 +129,7 @@ const CustomerWindowPage: FC<CustomerWindowProps> = ({
     setCustomer(defaultCustomer)
   }
 
-  const handleDeleteCustomer = (operator: SingleCustomerType) => {
+  const handleDeleteCustomer = (customer: SingleCustomerType) => {
     setErrorVisible(false)
     setErrorMessage('')
     const confirmModal = Modal.confirm({
@@ -145,7 +137,7 @@ const CustomerWindowPage: FC<CustomerWindowProps> = ({
       title: intl.formatMessage({ id: 'workspace.header.operator-window.confirm-delete-title' }),
       content: intl.formatMessage({ id: 'workspace.header.operator-window.confirm-delete-content' }),
       onOk: async () => {
-        const responseData = await RequestUtils.deleteOperator(operator.operatorId)
+        const responseData = await RequestUtils.deleteOperator(customer.customerId)
         if (responseData.status === 200 && responseData.data.success) {
           fetchData(searchText)
         } else if (responseData.status === 200) {
@@ -159,12 +151,12 @@ const CustomerWindowPage: FC<CustomerWindowProps> = ({
       },
       onCancel: () => {
         confirmModal.destroy()
-      }
+      },
     })
   }
   const columns: ProColumns<SingleCustomerType>[] = [
     {
-      title: <FormattedMessage id='workspace.header.customer-window.column-customer-id' />,
+      title: <FormattedMessage id="workspace.header.customer-window.column-customer-id" />,
       dataIndex: 'customerId',
       valueType: 'digit',
       key: 'customerId',
@@ -173,33 +165,49 @@ const CustomerWindowPage: FC<CustomerWindowProps> = ({
       hideInForm: true,
     },
     {
-      title: <FormattedMessage id='workspace.header.customer-window.column-customer-name' />,
+      title: <FormattedMessage id="workspace.header.customer-window.column-customer-name" />,
       dataIndex: 'customerName',
       key: 'customerName',
       valueType: 'text',
     },
     {
-      title: <FormattedMessage id='workspace.header.customer-window.column-customer-email' />,
+      title: <FormattedMessage id="workspace.header.customer-window.column-customer-email" />,
       dataIndex: 'email',
       valueType: 'text',
       key: 'email',
     },
     {
-      title: <FormattedMessage id='workspace.header.customer-window.column-customer-nickname' />,
+      title: <FormattedMessage id="workspace.header.customer-window.column-customer-nickname" />,
       dataIndex: 'nickName',
       key: 'nickName',
       valueType: 'text',
     },
     {
-      title: <FormattedMessage id='workspace.header.customer-window.operation' />,
+      title: <FormattedMessage id="workspace.header.customer-window.operation" />,
       key: 'action',
       valueType: 'option',
       render: (text: any, record: SingleCustomerType) => [
-        <Tooltip key='editButton' title={intl.formatMessage({ id: 'workspace.header.customer-window.button-tooltip-edit' })}>
-          <Button icon={<EditFilled />} onClick={() => { handleUpdateCustomer(record) }} />
+        <Tooltip
+          key="editButton"
+          title={intl.formatMessage({ id: 'workspace.header.customer-window.button-tooltip-edit' })}
+        >
+          <Button
+            icon={<EditFilled />}
+            onClick={() => {
+              handleUpdateCustomer(record)
+            }}
+          />
         </Tooltip>,
-        <Tooltip key='deleteButton' title={intl.formatMessage({ id: 'workspace.header.customer-window.button-tooltip-delete' })}>
-          <Button icon={<DeleteFilled />} onClick={() => { handleDeleteCustomer(record) }} />
+        <Tooltip
+          key="deleteButton"
+          title={intl.formatMessage({ id: 'workspace.header.customer-window.button-tooltip-delete' })}
+        >
+          <Button
+            icon={<DeleteFilled />}
+            onClick={() => {
+              handleDeleteCustomer(record)
+            }}
+          />
         </Tooltip>,
       ],
     },
@@ -207,13 +215,21 @@ const CustomerWindowPage: FC<CustomerWindowProps> = ({
 
   return (
     <div>
-      <Modal title={<FormattedMessage id='workspace.header.customer-window.title' />} width={800} centered open={visible} onOk={onOk} onCancel={onCancel} maskClosable={false}  >
-        <div style={{ width: '100%', height: '440px', }}>
-          <div style={{ width: '100%', height: '400px', }}>
+      <Modal
+        title={<FormattedMessage id="workspace.header.customer-window.title" />}
+        width={800}
+        centered
+        open={visible}
+        onOk={onOk}
+        onCancel={onCancel}
+        maskClosable={false}
+      >
+        <div style={{ width: '100%', height: '440px' }}>
+          <div style={{ width: '100%', height: '400px' }}>
             <ProTable
               columns={columns}
               dataSource={data.records}
-              rowKey='id'
+              rowKey="id"
               //loading={customerListLoading}
               search={false}
               pagination={false}
@@ -224,22 +240,40 @@ const CustomerWindowPage: FC<CustomerWindowProps> = ({
                 setting: false,
               }}
               title={() => [
-                <Row key='searchRow'>
-                  <Col span={18} >
-                    <Input key='searchInput' placeholder={intl.formatMessage({ id: 'workspace.header.customer-window.search-placeholder' })} style={{ width: '360px', marginLeft: '16px', }} onChange={(e) => { setSearchText(e.target.value) }} />
-                    <Button key='searchButton' type='primary' style={{ marginLeft: '24px', }} onClick={handleSearch}><FormattedMessage id='workspace.header.customer-window.button-search' /></Button>
+                <Row key="searchRow">
+                  <Col span={18}>
+                    <Input
+                      key="searchInput"
+                      placeholder={intl.formatMessage({ id: 'workspace.header.customer-window.search-placeholder' })}
+                      style={{ width: '360px', marginLeft: '16px' }}
+                      onChange={(e) => {
+                        setSearchText(e.target.value)
+                      }}
+                    />
+                    <Button key="searchButton" type="primary" style={{ marginLeft: '24px' }} onClick={handleSearch}>
+                      <FormattedMessage id="workspace.header.customer-window.button-search" />
+                    </Button>
                   </Col>
                   <Col span={6}>
-                    <Button key='addButton' type='primary' icon={<PlusOutlined />} style={{ position: 'absolute', right: '16px', }} onClick={handleAddCustomer}><FormattedMessage id='workspace.header.customer-window.button-add' /></Button>
+                    <Button
+                      key="addButton"
+                      type="primary"
+                      icon={<PlusOutlined />}
+                      style={{ position: 'absolute', right: '16px' }}
+                      onClick={handleAddCustomer}
+                    >
+                      <FormattedMessage id="workspace.header.customer-window.button-add" />
+                    </Button>
                   </Col>
                 </Row>,
               ]}
               headerTitle={false}
               toolBarRender={false}
             />
-            <div style={{ width: '100%', height: '64px', }}>
+            <div style={{ width: '100%', height: '64px' }}>
               <Pagination
-                className='list-page' style={{ float: 'right', margin: '16px', }}
+                className="list-page"
+                style={{ float: 'right', margin: '16px' }}
                 total={data.total}
                 onChange={handlePageChange}
                 //onShowSizeChange={pageSizeHandler}
@@ -247,15 +281,23 @@ const CustomerWindowPage: FC<CustomerWindowProps> = ({
                 pageSize={data.size}
                 showSizeChanger={false}
                 showQuickJumper
-              //locale='zhCN'
-              //showTotal={total => `总计 ${total}`}
+                //locale='zhCN'
+                //showTotal={total => `总计 ${total}`}
               />
             </div>
           </div>
         </div>
-        <CustomerFormWindow onWindowOk={handleCustomerFormWindowOk} onWindowCancel={handleCustomerFormWindowCancel} visible={customerFormWindowVisible} isUpdate={isUpdate} customerId={customer.customerId} customerName={customer.customerName} email={customer.email} nickname={customer.nickName} />
+        <CustomerFormWindow
+          onWindowOk={handleCustomerFormWindowOk}
+          onWindowCancel={handleCustomerFormWindowCancel}
+          visible={customerFormWindowVisible}
+          isUpdate={isUpdate}
+          customerId={customer.customerId}
+          customerName={customer.customerName}
+          email={customer.email}
+          nickname={customer.nickName}
+        />
       </Modal>
-
     </div>
   )
 }

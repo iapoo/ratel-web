@@ -60,5 +60,6 @@ export default defineConfig({
     { name: 'keywords', content: 'ivipa, ratel, diagram, open source, online, offline, flow chart, flowchart, UML, ER' },
     { name: 'description', content: 'Ivipa - Ratel, A open source general online diagram editor for making flowcharts, process diagrams, UML, ER and other diagrams' },
   ],
-  npmClient: 'npm'
+  npmClient: 'npm',
+  //mfsu: {esbuild: true}
 })

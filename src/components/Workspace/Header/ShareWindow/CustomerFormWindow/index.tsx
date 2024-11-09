@@ -1,15 +1,7 @@
-import React, { FC, useEffect, useState, useRef } from 'react'
-import styles from './index.css'
-import { Form, Input, Checkbox, Row, Col, Button, Modal, Menu, message, Alert, Space, Dropdown, Select, } from 'antd'
-import type { DraggableData, DraggableEvent } from 'react-draggable'
-import Draggable from 'react-draggable'
-import axios from 'axios'
-import { useIntl, setLocale, getLocale, FormattedMessage, } from 'umi'
-import { CodeFilled, CodeOutlined, LockOutlined, MailFilled, MailOutlined, SolutionOutlined, UserOutlined } from '@ant-design/icons'
-import { UserInfo } from '../../Utils/RequestUtils'
 import { RequestUtils } from '@/components/Workspace/Utils'
-import TeamSelector from './TeamSelector'
-import CryptoJs from 'crypto-js'
+import { Alert, Form, Input, message, Modal } from 'antd'
+import { FC, useEffect, useState } from 'react'
+import { FormattedMessage, useIntl } from 'umi'
 
 interface CustomerFormWindowProps {
   visible: boolean
@@ -18,16 +10,14 @@ interface CustomerFormWindowProps {
   onWindowOk: (customerId: number, customerName: string) => void
 }
 
-const CustomerFormWindowPage: FC<CustomerFormWindowProps> = ({
-  visible, documentId, onWindowCancel, onWindowOk
-}) => {
+const CustomerFormWindowPage: FC<CustomerFormWindowProps> = ({ visible, documentId, onWindowCancel, onWindowOk }) => {
   const intl = useIntl()
-  const [messageApi, contextHolder,] = message.useMessage()
+  const [messageApi, contextHolder] = message.useMessage()
   //const [forceUpdate, setForceUpdate, ] = useState<boolean>(false)
-  const [dataLoading, setDataLoading,] = useState<boolean>(false)
-  const [teamForm,] = Form.useForm()
-  const [errorVisible, setErrorVisible,] = useState<boolean>(false)
-  const [errorMessage, setErrorMessage,] = useState<string>('')
+  const [dataLoading, setDataLoading] = useState<boolean>(false)
+  const [teamForm] = Form.useForm()
+  const [errorVisible, setErrorVisible] = useState<boolean>(false)
+  const [errorMessage, setErrorMessage] = useState<string>('')
 
   useEffect(() => {
     if (!dataLoading) {
@@ -47,7 +37,7 @@ const CustomerFormWindowPage: FC<CustomerFormWindowProps> = ({
 
   const onFinish = async (values: any) => {
     console.log('Receive values:', values)
-    const { customerId, customerName, } = values
+    const { customerId, customerName } = values
     setErrorVisible(false)
     setErrorMessage('')
     let teamData = await RequestUtils.addDocumentAccess(documentId, customerName)
@@ -56,7 +46,9 @@ const CustomerFormWindowPage: FC<CustomerFormWindowProps> = ({
       console.log(team)
       messageApi.open({
         type: 'success',
-        content: intl.formatMessage({ id: 'workspace.header.share-window.customer-form-window.window-success-message' })
+        content: intl.formatMessage({
+          id: 'workspace.header.share-window.customer-form-window.window-success-message',
+        }),
       })
       if (onWindowOk) {
         onWindowOk(customerId, customerName)
@@ -74,39 +66,51 @@ const CustomerFormWindowPage: FC<CustomerFormWindowProps> = ({
     <div>
       {contextHolder}
       <Modal
-        title={<FormattedMessage id='workspace.header.share-window.customer-form-window.window-title' />}
+        title={<FormattedMessage id="workspace.header.share-window.customer-form-window.window-title" />}
         centered
         open={visible}
         onOk={onOk}
         onCancel={onCancel}
         maskClosable={false}
       >
-        <div style={{ paddingTop: '8px', }}>
+        <div style={{ paddingTop: '8px' }}>
           <Form
-            name='CustomerFormWindow'
+            name="CustomerFormWindow"
             form={teamForm}
-            className='team-member'
+            className="team-member"
             onFinish={onFinish}
-            style={{ maxWidth: '100%', }}
-            layout='vertical'
-          // labelAlign='right'
+            style={{ maxWidth: '100%' }}
+            layout="vertical"
+            // labelAlign='right'
           >
-            <Form.Item label='teamId' name='teamId' hidden>
+            <Form.Item label="teamId" name="teamId" hidden>
               <Input />
             </Form.Item>
-            <Form.Item label='customerId' name='customerId' hidden>
+            <Form.Item label="customerId" name="customerId" hidden>
               <Input />
             </Form.Item>
-            <Form.Item name='customerName' label={intl.formatMessage({ id: 'workspace.header.share-window.customer-form-window.customer-name' })} rules={[{ required: true, message: <FormattedMessage id='workspace.header.team-member-window.team-name-message' />, },]} style={{ marginBottom: '4px', width: '100%', }} >
+            <Form.Item
+              name="customerName"
+              label={intl.formatMessage({ id: 'workspace.header.share-window.customer-form-window.customer-name' })}
+              rules={[
+                {
+                  required: true,
+                  message: <FormattedMessage id="workspace.header.team-member-window.team-name-message" />,
+                },
+              ]}
+              style={{ marginBottom: '4px', width: '100%' }}
+            >
               <Input
                 //prefix={false}
-                placeholder={intl.formatMessage({ id: 'workspace.header.share-window.customer-form-window.customer-name-placeholder' })}
-                size='small'
-                style={{ width: '100%', }}
+                placeholder={intl.formatMessage({
+                  id: 'workspace.header.share-window.customer-form-window.customer-name-placeholder',
+                })}
+                size="small"
+                style={{ width: '100%' }}
               />
             </Form.Item>
 
-            {errorVisible && (<Alert message={errorMessage} type="error" closable />)}
+            {errorVisible && <Alert message={errorMessage} type="error" closable />}
           </Form>
         </div>
       </Modal>

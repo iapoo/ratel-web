@@ -1,0 +1,36 @@
+{
+  "name": "@ratel-web/engine",
+  "version": "0.1.0",
+  "description": "Plugin to add mind shapes for ratel web.",
+  "main": "./index.ts",
+  "scripts": {
+    "typings": "tsc --emitDeclarationOnly -d --outDir typings"
+  },
+  "exports": {
+    ".": "./index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iapoo/ratel-web.git",
+    "directory": "packages/ratel-shape-mind"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "ratel-web"
+  ],
+  "author": "Ivipa Ratel Team (https://ratel.ivipa.com)",
+  "license": "MIT",
+  "homepage": "https://ratel.ivipa.com",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "canvaskit-wasm": "0.39.1",
+    "opentype.js": "^1.3.4",
+    "wawoff2": "^2.0.1"
+  },
+  "devDependencies": {
+  }
+}
