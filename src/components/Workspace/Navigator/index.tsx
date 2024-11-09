@@ -620,6 +620,7 @@ const Navigator: FC<NavigatorProps> = ({
 
     return (
       <Popover
+        key={folder + '/' + shapeTypeName}
         title={shapeTypeName}
         placement="right"
         content={getSVGPopoverContent(folder, shapeTypeName, shapeWidth, shapeHeight, multicolor)}
@@ -778,7 +779,7 @@ const Navigator: FC<NavigatorProps> = ({
     return (
       <Popover
         title={myShape.name}
-        key={myShape.name}
+        key={myShape.id + ':' + myShape.name}
         placement="right"
         content={getMyShapePopoverContent(myShape.id, myShape.name, myShape.image, myShape.width, myShape.height)}
         overlayStyle={{

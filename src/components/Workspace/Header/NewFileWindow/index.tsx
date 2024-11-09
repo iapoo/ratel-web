@@ -171,21 +171,15 @@ const NewFileWindowPage: FC<NewFileWindowProps> = ({ visible, x, y, onWindowCanc
 
     return (
       // eslint-disable-next-line react/jsx-key
-      <Tooltip title={categoryTemplate.name}>
+      <Tooltip key={categoryTemplate.name} title={categoryTemplate.name}>
         <Card
+          key={categoryTemplate.name}
           size="small"
-          title={
-            <div
-              style={{ width: 80, fontSize: 11, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
-            >
-              {categoryTemplate.name}
-            </div>
-          }
+          title={<div style={{ width: 80, fontSize: 11, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{categoryTemplate.name}</div>}
           hoverable
           onClick={() => handleSelectTemplate(categoryTemplate)}
           style={{
-            border:
-              selectedTemplate && selectedTemplate.name === categoryTemplate.name ? '1.5px solid blue' : undefined,
+            border: selectedTemplate && selectedTemplate.name === categoryTemplate.name ? '1.5px solid blue' : undefined,
           }}
         >
           <div style={{ width: size, height: size, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -219,12 +213,7 @@ const NewFileWindowPage: FC<NewFileWindowProps> = ({ visible, x, y, onWindowCanc
         >
           <div style={{ width: '200px', height: '100%', padding: '8px' }}>
             <Search style={{ marginBottom: '8px' }} placeholder="Search" onChange={onSearchChange} />
-            <Tree
-              showLine
-              treeData={searchCategoryData}
-              onSelect={handleCategorySelection}
-              selectedKeys={selectedCategoryKeys}
-            />
+            <Tree showLine treeData={searchCategoryData} onSelect={handleCategorySelection} selectedKeys={selectedCategoryKeys} />
           </div>
           <div
             style={{
