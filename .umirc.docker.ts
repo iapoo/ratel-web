@@ -56,5 +56,7 @@ export default defineConfig({
       path: '/',
     },
   ],
-  npmClient: 'npm'
+  npmClient: 'npm',
+  //Disable msfu since it cause debug doesn't work for packages folder
+  mfsu: false
 })
