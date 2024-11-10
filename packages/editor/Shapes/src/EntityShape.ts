@@ -266,24 +266,48 @@ export class EntityShape extends AbstractTextShape {
     return this._secondFilled
   }
 
+  public set secondFilled(value: boolean) {
+    this._secondFilled = value
+  }
+
   public get secondStroked() {
     return this._secondStroked
+  }
+
+  public set secondStroked(value: boolean) {
+    this._secondStroked = value
   }
 
   public get thirdFilled() {
     return this._thirdFilled
   }
 
+  public set thirdFilled(value: boolean) {
+    this._thirdFilled = value
+  }
+
   public get thirdStroked() {
     return this._thirdStroked
+  }
+
+  public set thirdStroked(value: boolean) {
+    this._thirdStroked = value
   }
 
   public get fourthFilled() {
     return this._fourthFilled
   }
 
+  public set fourthFilled(value: boolean) {
+    this._fourthFilled = value
+  }
+
   public get fourthStroked() {
     return this._fourthStroked
+  }
+
+  public set fourthStroked(value: boolean) {
+    this._fourthStroked = value
   }
 
   public update() {

@@ -1,5 +1,5 @@
 {
-  "name": "@ratel-web/extension-entity-clipboard",
+  "name": "@ratel-web/plugin-entity-clipboard",
   "version": "0.1.0",
   "description": "Plugin to add some clipboards for ratel web.",
   "keywords": [
@@ -9,7 +9,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/iapoo/ratel-web.git",
-    "directory": "packages/extension-entity-clipboard"
+    "directory": "packages/plugin-entity-clipboard"
   },
   "license": "MIT",
   "author": "Ivipa Ratel Team (https://ratel.ivipa.com)",

@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
+import { PluginManager } from '@/components/Workspace/Utils/PluginManager'
 import { EditOutlined } from '@ant-design/icons'
 import {
   ConnectorAction,
@@ -7,6 +8,7 @@ import {
   CustomContainerAction,
   CustomShapeAction,
   CustomTableAction,
+  EntityExtensionAction,
   ExtendedContainerAction,
   ExtendedShapeAction,
   FrameAction,
@@ -47,6 +49,7 @@ import {
   CustomEntity,
   CustomTableEntity,
   CustomTableType,
+  EntityExtension,
   FrameEntity,
   MyShape,
   ShapeEntity,
@@ -224,6 +227,13 @@ const Navigator: FC<NavigatorProps> = ({
     const haha = atob('aa')
     str = decodeURI(haha)
     console.log(str)
+  }
+
+  const addPluginShape = (entityExtension: EntityExtension, imageId: string) => {
+    if (Utils.currentEditor) {
+      Utils.currentEditor.action = new EntityExtensionAction(Utils.currentEditor, entityExtension)
+      Utils.currentEditor.action.imageId = imageId
+    }
   }
 
   const addMyShape = (myShape: MyShape, imageId: string) => {
@@ -828,7 +838,52 @@ const Navigator: FC<NavigatorProps> = ({
     setMyShapesChanged(true)
   }
 
-  const items: CollapseProps['items'] = [
+  const externalItems = () => {
+    const internalPluginItems: CollapseProps['items'] = []
+    let baseKey = 100
+    PluginManager.plugins.forEach((plugin) => {
+      baseKey++
+      const pluginExtensions = plugin.extensions.map((extension) => {
+        const width = extension.config.width > extension.config.height ? 28 : Math.round((28 * extension.config.width) / extension.config.height)
+        const height = extension.config.height > extension.config.width ? 28 : Math.round((28 * extension.config.height) / extension.config.width)
+        const imageId = plugin.name + ':' + extension.name
+        return (
+          <Popover
+            title={extension.name}
+            key={imageId}
+            placement="right"
+            content={getMyShapePopoverContent(imageId, extension.name, extension.icon, extension.config.width, extension.config.height)}
+            overlayStyle={{
+              left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH,
+              minWidth: extension.config.width + 60,
+              width: extension.config.height + 60,
+            }}
+          >
+            <Button
+              type="text"
+              onMouseDown={() => addPluginShape(extension, imageId)}
+              style={{ padding: 2, display: 'flex', justifyContent: 'center', alignItems: 'center', width: 32, height: 32 }}
+            >
+              <img src={`${extension.icon}`} width={width} height={height} />
+            </Button>
+          </Popover>
+        )
+      })
+      const pluginItem = {
+        key: '' + baseKey,
+        label: <div style={{ fontWeight: 'bolder' }}> {plugin.name} </div>,
+        children: (
+          <Space size={2} wrap>
+            {pluginExtensions}
+          </Space>
+        ),
+      }
+      internalPluginItems.push(pluginItem)
+    })
+    return internalPluginItems
+  }
+
+  const internalItems: CollapseProps['items'] = [
     {
       key: '1',
       label: (
@@ -1021,6 +1076,8 @@ const Navigator: FC<NavigatorProps> = ({
     },
   ]
 
+  const mergedItems = [...internalItems, ...externalItems()]
+
   // @ts-ignore
   return (
     <div
@@ -1068,7 +1125,7 @@ const Navigator: FC<NavigatorProps> = ({
         // @ts-ignore
         onMouseLeave={handleNavigatorMaskMouseLeave}
       />
-      <Collapse items={items} defaultActiveKey={['1', '2']} onChange={onChange} size="small" />
+      <Collapse items={mergedItems} defaultActiveKey={['1', '2']} onChange={onChange} size="small" />
       <MyShapesWindowPage
         visible={myShapesWindowVisible}
         onWindowCancel={handleMyShapesWindowCancel}
