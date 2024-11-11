@@ -289,6 +289,46 @@ export class EntityRenderContext implements RenderContext {
     this._adapterHeight = this._extensionShape.adapter.y + this._extensionShape.typeInfo.adapterStart.y * this._extensionShape.height
     this._adapterSizeX = this._extensionShape.adapterSize
     this._adapterSizeY = this._extensionShape.adapterSize
+    if (this._extensionShape.typeInfo.modifyInPercent) {
+      this._modifierWidth =
+        this._extensionShape.width *
+          this._extensionShape.modifier.x *
+          (this._extensionShape.typeInfo.modifierEnd.x - this._extensionShape.typeInfo.modifierStart.x) +
+        this._extensionShape.typeInfo.modifierStart.x * this._extensionShape.width
+      this._modifierHeight =
+        this._extensionShape.height *
+          this._extensionShape.modifier.y *
+          (this._extensionShape.typeInfo.modifierEnd.y - this._extensionShape.typeInfo.modifierStart.y) +
+        this._extensionShape.typeInfo.modifierStart.y * this._extensionShape.height
+    }
+    if (this._extensionShape.typeInfo.controlInPercent) {
+      this._controllerWidth =
+        this._extensionShape.width *
+          this._extensionShape.controller.x *
+          (this._extensionShape.typeInfo.controllerEnd.x - this._extensionShape.typeInfo.controllerStart.x) +
+        this._extensionShape.typeInfo.controllerStart.x * this._extensionShape.width
+      this._controllerHeight =
+        this._extensionShape.height *
+          this._extensionShape.controller.y *
+          (this._extensionShape.typeInfo.controllerEnd.y - this._extensionShape.typeInfo.controllerStart.y) +
+        this._extensionShape.typeInfo.controllerStart.y * this._extensionShape.height
+    }
+    if (this._extensionShape.typeInfo.adaptInPercent) {
+      this._adapterWidth =
+        this._extensionShape.width *
+          this._extensionShape.adapter.x *
+          (this._extensionShape.typeInfo.adapterEnd.x - this._extensionShape.typeInfo.adapterStart.x) +
+        this._extensionShape.typeInfo.adapterStart.x * this._extensionShape.width
+      this._adapterHeight =
+        this._extensionShape.height *
+          this._extensionShape.adapter.y *
+          (this._extensionShape.typeInfo.adapterEnd.y - this._extensionShape.typeInfo.adapterStart.y) +
+        this._extensionShape.typeInfo.adapterStart.y * this._extensionShape.height
+      this._adapterSizeX =
+        this._extensionShape.adapterSize * (this._extensionShape.typeInfo.adapterEnd.x - this._extensionShape.typeInfo.adapterStart.x) * this.width
+      this._adapterSizeY =
+        this._extensionShape.adapterSize * (this._extensionShape.typeInfo.adapterEnd.y - this._extensionShape.typeInfo.adapterStart.y) * this.height
+    }
   }
 }
 

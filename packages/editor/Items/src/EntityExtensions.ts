@@ -40,6 +40,10 @@ export class ExtendedEntity extends ShapeEntity {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public buildShape(renderContext: EntityRenderContext, extensionShape: ExtensionShape, entityExtension: EntityExtension) {
     renderContext.prepareRender()
+    renderContext.path.reset()
+    renderContext.secondPath.reset()
+    renderContext.thirdPath.reset()
+    renderContext.fourthPath.reset()
     entityExtension.buildShape(renderContext)
   }
 

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-use-before-define,@typescript-eslint/no-unused-vars */
-import { Plugin, RenderContext, ShapeConstants } from '@ratel-web/editor/Items'
-import { Rectangle } from '@ratel-web/engine'
+import { Plugin, ShapeConstants } from '@ratel-web/editor/Items'
+import { RenderContext } from '@ratel-web/editor/Shapes'
 
 export function loadPlugin(): Plugin {
   return {
@@ -24,7 +24,7 @@ export function loadPlugin(): Plugin {
           height: 70,
           enableMask: false,
           modifiable: true,
-          modifierX: 0.7,
+          modifierX: 0.3,
           modifierY: 0.6,
           modifierStartX: 0,
           modifierStartY: 0,
@@ -33,11 +33,11 @@ export function loadPlugin(): Plugin {
           modifyInLine: false,
           modifyInPercent: true,
           controllable: true,
-          controllerX: 0,
+          controllerX: 1,
           controllerY: 0,
-          controllerStartX: 0,
+          controllerStartX: 0.2,
           controllerStartY: 0.5,
-          controllerEndX: 0.8,
+          controllerEndX: 1,
           controllerEndY: 0.5,
           controlInLine: true,
           controlInPercent: true,
@@ -68,5 +68,4 @@ const buildShape1 = (renderContext: RenderContext) => {
   renderContext.path.lineTo(renderContext.width, renderContext.height - renderContext.modifierHeight)
   renderContext.path.lineTo(renderContext.controllerWidth, renderContext.controllerHeight)
   renderContext.path.lineTo(renderContext.width, renderContext.modifierHeight)
-  renderContext.path.addRectangle(Rectangle.makeLTWH(50, 50, 50, 50))
 }
