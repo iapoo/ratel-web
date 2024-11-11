@@ -1,6 +1,8 @@
+import { Point2 } from '@ratel-web/engine'
 import { Editor } from '../../Editor'
-import { CustomEntity, ExtendedEntity, Item, ShapeType } from '../../Items'
-import { EntityExtension } from '../../Shapes'
+import { CustomConnectorTypeInfo, CustomEntity, CustomTableType, ExtendedConnector, ExtendedEntity, Item, ShapeType } from '../../Items'
+import { ConnectorConfig, EntityExtension, ShapeConfig, TableConfig } from '../../Shapes'
+import { CommonUtils } from '../../Utils'
 import { Action } from './Action'
 
 export class EntityExtensionAction extends Action {
@@ -14,57 +16,164 @@ export class EntityExtensionAction extends Action {
 
   protected buildItems(): Item[] {
     if (this._entityExtension) {
-      let left = this._entityExtension.config.left
-      let top = this._entityExtension.config.top
-      let width = this._entityExtension.config.width
-      let height = this._entityExtension.config.height
       const typeInfo = this.buildTypeInfo()
-      const extendedEntity = new ExtendedEntity(left, top, width, height, this._entityExtension, { shapeType: this._entityExtension.name }, [typeInfo])
-      return [extendedEntity]
+      if (this._entityExtension.type === 'shape') {
+        const shapeConfig = this._entityExtension.config as ShapeConfig
+        const left = shapeConfig.left
+        const top = shapeConfig.top
+        const width = shapeConfig.width
+        const height = shapeConfig.height
+        const extendedEntity = new ExtendedEntity(left, top, width, height, this._entityExtension, { shapeType: this._entityExtension.name }, [
+          typeInfo as ShapeType,
+        ])
+        return [extendedEntity]
+      } else if (this._entityExtension.type === 'table') {
+        const shapeConfig = this._entityExtension.config as ShapeConfig
+        const left = shapeConfig.left
+        const top = shapeConfig.top
+        const width = shapeConfig.width
+        const height = shapeConfig.height
+        const extendedEntity = new ExtendedEntity(left, top, width, height, this._entityExtension, { shapeType: this._entityExtension.name }, [
+          typeInfo as ShapeType,
+        ])
+        return [extendedEntity]
+      } else if (this._entityExtension.type === 'container') {
+        // const shapeConfig = this._entityExtension.config as ShapeConfig
+        // const left = shapeConfig.left
+        // const top = shapeConfig.top
+        // const width = shapeConfig.width
+        // const height = shapeConfig.height
+      } else if (this._entityExtension.type === 'connector') {
+        const connectorConfig = this._entityExtension.config as ConnectorConfig
+        const startX = connectorConfig.startX
+        const startY = connectorConfig.startY
+        const endX = connectorConfig.endX
+        const endY = connectorConfig.endY
+        const start = new Point2(startX, startY)
+        const end = new Point2(endX, endY)
+
+        const connectorEntity = new ExtendedConnector(start, end, this._entityExtension, [typeInfo as CustomConnectorTypeInfo])
+        return [connectorEntity]
+      } else {
+        //Frame
+        // const shapeConfig = this._entityExtension.config as ShapeConfig
+        // const left = shapeConfig.left
+        // const top = shapeConfig.top
+        // const width = shapeConfig.width
+        // const height = shapeConfig.height
+      }
     }
     return [new CustomEntity(0, 0, 100, 100)]
   }
 
-  private buildTypeInfo(): ShapeType {
-    return {
-      name: this._entityExtension.name,
-      description: this._entityExtension.description,
-      freeze: this._entityExtension.config.freeze,
-      text: this._entityExtension.config.text,
-      left: this._entityExtension.config.left,
-      top: this._entityExtension.config.top,
-      width: this._entityExtension.config.width,
-      height: this._entityExtension.config.height,
-      enableMask: this._entityExtension.config.enableMask,
-      modifiable: this._entityExtension.config.modifiable,
-      modifierX: this._entityExtension.config.modifierX,
-      modifierY: this._entityExtension.config.modifierY,
-      modifierStartX: this._entityExtension.config.modifierStartX,
-      modifierStartY: this._entityExtension.config.modifierStartY,
-      modifierEndX: this._entityExtension.config.modifierEndX,
-      modifierEndY: this._entityExtension.config.modifierEndY,
-      modifyInLine: this._entityExtension.config.modifyInLine,
-      modifyInPercent: this._entityExtension.config.modifyInPercent,
-      controllable: this._entityExtension.config.controllable,
-      controllerX: this._entityExtension.config.controllerX,
-      controllerY: this._entityExtension.config.controllerY,
-      controllerStartX: this._entityExtension.config.controllerStartX,
-      controllerStartY: this._entityExtension.config.controllerStartY,
-      controllerEndX: this._entityExtension.config.controllerEndX,
-      controllerEndY: this._entityExtension.config.controllerEndY,
-      controlInLine: this._entityExtension.config.controlInLine,
-      controlInPercent: this._entityExtension.config.controlInPercent,
-      adaptable: this._entityExtension.config.adaptable,
-      adapterX: this._entityExtension.config.adapterX,
-      adapterY: this._entityExtension.config.adapterY,
-      adapterSize: this._entityExtension.config.adapterSize,
-      adapterDirection: this._entityExtension.config.adapterDirection,
-      adapterStartX: this._entityExtension.config.adapterStartX,
-      adapterStartY: this._entityExtension.config.adapterStartY,
-      adapterEndX: this._entityExtension.config.adapterEndX,
-      adapterEndY: this._entityExtension.config.adapterEndY,
-      adaptInLine: this._entityExtension.config.adaptInLine,
-      adaptInPercent: this._entityExtension.config.adaptInPercent,
+  private buildTypeInfo(): ShapeType | CustomConnectorTypeInfo | CustomTableType {
+    if (this._entityExtension.type === 'shape' || this._entityExtension.type === 'container' || this._entityExtension.type === 'frame') {
+      const shapeConfig = this._entityExtension.config as ShapeConfig
+      return {
+        name: this._entityExtension.name,
+        description: this._entityExtension.description,
+        freeze: shapeConfig.freeze,
+        text: shapeConfig.text,
+        left: shapeConfig.left,
+        top: shapeConfig.top,
+        width: shapeConfig.width,
+        height: shapeConfig.height,
+        enableMask: shapeConfig.enableMask,
+        modifiable: shapeConfig.modifiable,
+        modifierX: shapeConfig.modifierX,
+        modifierY: shapeConfig.modifierY,
+        modifierStartX: shapeConfig.modifierStartX,
+        modifierStartY: shapeConfig.modifierStartY,
+        modifierEndX: shapeConfig.modifierEndX,
+        modifierEndY: shapeConfig.modifierEndY,
+        modifyInLine: shapeConfig.modifyInLine,
+        modifyInPercent: shapeConfig.modifyInPercent,
+        controllable: shapeConfig.controllable,
+        controllerX: shapeConfig.controllerX,
+        controllerY: shapeConfig.controllerY,
+        controllerStartX: shapeConfig.controllerStartX,
+        controllerStartY: shapeConfig.controllerStartY,
+        controllerEndX: shapeConfig.controllerEndX,
+        controllerEndY: shapeConfig.controllerEndY,
+        controlInLine: shapeConfig.controlInLine,
+        controlInPercent: shapeConfig.controlInPercent,
+        adaptable: shapeConfig.adaptable,
+        adapterX: shapeConfig.adapterX,
+        adapterY: shapeConfig.adapterY,
+        adapterSize: shapeConfig.adapterSize,
+        adapterDirection: shapeConfig.adapterDirection,
+        adapterStartX: shapeConfig.adapterStartX,
+        adapterStartY: shapeConfig.adapterStartY,
+        adapterEndX: shapeConfig.adapterEndX,
+        adapterEndY: shapeConfig.adapterEndY,
+        adaptInLine: shapeConfig.adaptInLine,
+        adaptInPercent: shapeConfig.adaptInPercent,
+      }
+    } else if (this._entityExtension.type === 'table') {
+      const tableConfig = this._entityExtension.config as TableConfig
+      return {
+        name: this._entityExtension.name,
+        description: this._entityExtension.description,
+        freeze: tableConfig.freeze,
+        text: tableConfig.text,
+        left: tableConfig.left,
+        top: tableConfig.top,
+        width: tableConfig.width,
+        height: tableConfig.height,
+        rowCount: tableConfig.rowCount,
+        columnCount: tableConfig.columnCount,
+        fixedFirstRow: tableConfig.fixedFirstRow,
+        firstRowHeight: tableConfig.firstRowHeight,
+        fixedFirstColumn: tableConfig.fixedFirstColumn,
+        firstColumnWidth: tableConfig.firstColumnWidth,
+        enableMask: tableConfig.enableMask,
+        modifiable: tableConfig.modifiable,
+        modifierX: tableConfig.modifierX,
+        modifierY: tableConfig.modifierY,
+        modifierStartX: tableConfig.modifierStartX,
+        modifierStartY: tableConfig.modifierStartY,
+        modifierEndX: tableConfig.modifierEndX,
+        modifierEndY: tableConfig.modifierEndY,
+        modifyInLine: tableConfig.modifyInLine,
+        modifyInPercent: tableConfig.modifyInPercent,
+        controllable: tableConfig.controllable,
+        controllerX: tableConfig.controllerX,
+        controllerY: tableConfig.controllerY,
+        controllerStartX: tableConfig.controllerStartX,
+        controllerStartY: tableConfig.controllerStartY,
+        controllerEndX: tableConfig.controllerEndX,
+        controllerEndY: tableConfig.controllerEndY,
+        controlInLine: tableConfig.controlInLine,
+        controlInPercent: tableConfig.controlInPercent,
+        adaptable: tableConfig.adaptable,
+        adapterX: tableConfig.adapterX,
+        adapterY: tableConfig.adapterY,
+        adapterSize: tableConfig.adapterSize,
+        adapterDirection: tableConfig.adapterDirection,
+        adapterStartX: tableConfig.adapterStartX,
+        adapterStartY: tableConfig.adapterStartY,
+        adapterEndX: tableConfig.adapterEndX,
+        adapterEndY: tableConfig.adapterEndY,
+        adaptInLine: tableConfig.adaptInLine,
+        adaptInPercent: tableConfig.adaptInPercent,
+      }
+    } else {
+      const connectorConfig = this._entityExtension.config as ConnectorConfig
+      return {
+        name: this._entityExtension.name,
+        description: this._entityExtension.description,
+        text: connectorConfig.text,
+        startX: connectorConfig.startX,
+        startY: connectorConfig.startY,
+        endX: connectorConfig.endX,
+        endY: connectorConfig.endY,
+        startArrowTypeName: connectorConfig.startArrowTypeName,
+        endArrowTypeName: connectorConfig.endArrowTypeName,
+        strokeDashStyle: CommonUtils.parseStrokeDashStyle(connectorConfig.strokeDashStyle),
+        connectorType: CommonUtils.parseConnectorType(connectorConfig.connectorType),
+        width: connectorConfig.width,
+        height: connectorConfig.height,
+      }
     }
   }
 }

@@ -1,6 +1,6 @@
 import type { ShapeTypeInfo } from './src/EntityShape'
 
-import type { EntityExtension, RenderContext, ShapeConfig } from './src/ExtensionShape'
+import type { ConnectorConfig, EntityExtension, RenderContext, ShapeConfig, TableConfig } from './src/ExtensionShape'
 export { ShapeTypeInfo }
 
 export { ConnectorArrowDisplayMode, ConnectorArrowDisplayType, ConnectorDirection, ConnectorMode, ConnectorShape, ConnectorType } from './src/ConnectorShape'
@@ -13,4 +13,4 @@ export { Style, StyleInfo } from './src/EntityUtils'
 export { EntityRenderContext, ExtensionShape } from './src/ExtensionShape'
 export { FrameShape } from './src/FrameShape'
 export { GroupShape } from './src/GroupShape'
-export { EntityExtension, RenderContext, ShapeConfig }
+export { ConnectorConfig, EntityExtension, RenderContext, ShapeConfig, TableConfig }

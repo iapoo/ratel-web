@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
 
 import { Color, Graphics, Path, StrokeDashStyle } from '@ratel-web/engine'
+import { EditorItem } from '../../Items'
 import { EntityShape, ShapeTypeInfo } from './EntityShape'
 
 export interface RenderContext {
@@ -37,10 +38,11 @@ export interface RenderContext {
   readonly adapterHeight: number
   readonly adapterSizeX: number
   readonly adapterSizeY: number
+  addItem(item: EditorItem): void
 }
 
 export interface ShapeConfig {
-  freeze: string
+  freeze: 'None' | 'Width' | 'WidthHeight' | 'Height' | 'AspectRatio'
   text: string
   left: number
   top: number
@@ -68,7 +70,66 @@ export interface ShapeConfig {
   adaptable: boolean
   adapterX: number
   adapterY: number
-  adapterDirection: string
+  adapterDirection: 'X' | 'Y'
+  adapterSize: number
+  adapterStartX: number
+  adapterStartY: number
+  adapterEndX: number
+  adapterEndY: number
+  adaptInLine: boolean
+  adaptInPercent: boolean
+}
+
+export interface ConnectorConfig {
+  text: string
+  startX: number
+  startY: number
+  endX: number
+  endY: number
+  startArrowTypeName: string
+  endArrowTypeName: string
+  strokeDashStyle: 'solid' | 'dash' | 'dot' | 'dash-dot' | 'dash-dot-dot'
+  connectorType: 'straight' | 'curved' | 'orthogonal'
+  width: number
+  height: number
+}
+
+export interface TableConfig {
+  freeze: 'None' | 'Width' | 'WidthHeight' | 'Height' | 'AspectRatio'
+  text: string
+  left: number
+  top: number
+  width: number
+  height: number
+  rowCount: number
+  columnCount: number
+  fixedFirstRow: boolean
+  firstRowHeight: number
+  fixedFirstColumn: boolean
+  firstColumnWidth: number
+  enableMask: boolean
+  modifiable: boolean
+  modifierX: number
+  modifierY: number
+  modifierStartX: number
+  modifierStartY: number
+  modifierEndX: number
+  modifierEndY: number
+  modifyInLine: boolean
+  modifyInPercent: boolean
+  controllable: boolean
+  controllerX: number
+  controllerY: number
+  controllerStartX: number
+  controllerStartY: number
+  controllerEndX: number
+  controllerEndY: number
+  controlInLine: boolean
+  controlInPercent: boolean
+  adaptable: boolean
+  adapterX: number
+  adapterY: number
+  adapterDirection: 'X' | 'Y'
   adapterSize: number
   adapterStartX: number
   adapterStartY: number
@@ -82,8 +143,10 @@ export interface EntityExtension {
   name: string
   description: string
   icon: string
-  buildShape: (renderContext: RenderContext) => void
-  config: ShapeConfig
+  type: 'shape' | 'container' | 'connector' | 'table' | 'frame'
+  setup: ((config: ShapeConfig | ConnectorConfig | TableConfig) => EditorItem[]) | null
+  render: ((renderContext: RenderContext, config: ShapeConfig | ConnectorConfig | TableConfig) => void) | null
+  config: ShapeConfig | ConnectorConfig | TableConfig
 }
 
 export class EntityRenderContext implements RenderContext {
@@ -97,6 +160,9 @@ export class EntityRenderContext implements RenderContext {
   private _adapterSizeX: number = 0
   private _adapterSizeY: number = 0
 
+  public addItem(item: EditorItem) {
+    console.log(item)
+  }
   public constructor(extensionShape: ExtensionShape) {
     this._extensionShape = extensionShape
   }

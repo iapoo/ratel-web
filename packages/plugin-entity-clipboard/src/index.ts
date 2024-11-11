@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-use-before-define,@typescript-eslint/no-unused-vars */
-import { Plugin, ShapeConstants } from '@ratel-web/editor/Items'
-import { RenderContext } from '@ratel-web/editor/Shapes'
+import { Plugin, ShapeEntity } from '@ratel-web/editor/Items'
+import { ConnectorConfig, RenderContext, ShapeConfig, TableConfig } from '@ratel-web/editor/Shapes'
+import { Colors } from '@ratel-web/engine'
 
 export function loadPlugin(): Plugin {
   return {
@@ -14,9 +15,11 @@ export function loadPlugin(): Plugin {
         name: 'star',
         description: 'star',
         icon: '',
-        buildShape: buildShape1,
+        type: 'shape',
+        setup: null,
+        render: buildShape1,
         config: {
-          freeze: ShapeConstants.FREEZE_NONE,
+          freeze: 'None',
           text: 'Text',
           left: 0,
           top: 0,
@@ -54,11 +57,32 @@ export function loadPlugin(): Plugin {
           adaptInPercent: true,
         },
       },
+      {
+        name: 'connector2',
+        description: 'connector2',
+        icon: '',
+        type: 'connector',
+        setup: buildShape2,
+        render: null,
+        config: {
+          text: 'Text',
+          width: 60,
+          height: 60,
+          startX: 0,
+          startY: 30,
+          endX: 60,
+          endY: 30,
+          startArrowTypeName: 'None',
+          endArrowTypeName: 'Triangle-4',
+          strokeDashStyle: 'solid',
+          connectorType: 'curved',
+        },
+      },
     ],
   }
 }
 
-const buildShape1 = (renderContext: RenderContext) => {
+const buildShape1 = (renderContext: RenderContext, config: ShapeConfig | ConnectorConfig | TableConfig) => {
   renderContext.path.moveTo(renderContext.width, renderContext.modifierHeight)
   renderContext.path.lineTo(renderContext.modifierWidth, renderContext.modifierHeight)
   renderContext.path.lineTo(renderContext.modifierWidth, 0)
@@ -68,4 +92,14 @@ const buildShape1 = (renderContext: RenderContext) => {
   renderContext.path.lineTo(renderContext.width, renderContext.height - renderContext.modifierHeight)
   renderContext.path.lineTo(renderContext.controllerWidth, renderContext.controllerHeight)
   renderContext.path.lineTo(renderContext.width, renderContext.modifierHeight)
+}
+
+const buildShape2 = (config: ShapeConfig | ConnectorConfig | TableConfig) => {
+  const width = 60
+  const height = 30
+  const textBox = new ShapeEntity(width / 2 - 50, height / 2 - 25, 100, 30)
+  textBox.text = '<<include>>'
+  textBox.fillColor = Colors.Transparent
+  textBox.strokeColor = Colors.Transparent
+  return [textBox]
 }
