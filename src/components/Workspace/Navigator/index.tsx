@@ -49,7 +49,6 @@ import {
   CustomEntity,
   CustomTableEntity,
   CustomTableType,
-  EntityExtension,
   FrameEntity,
   MyShape,
   ShapeEntity,
@@ -57,6 +56,8 @@ import {
   ShapeTypes,
   TableTypes,
 } from '@ratel-web/editor/Items'
+import { EntityExtension } from '@ratel-web/editor/Shapes'
+import { ImageUtils } from '@ratel-web/editor/Utils'
 import { Element, Path, SVG, Svg } from '@svgdotjs/svg.js'
 import { Button, Collapse, CollapseProps, Popover, Space, theme } from 'antd'
 import React, { FC, MouseEventHandler, UIEvent, createRef, useEffect, useState } from 'react'
@@ -847,12 +848,13 @@ const Navigator: FC<NavigatorProps> = ({
         const width = extension.config.width > extension.config.height ? 28 : Math.round((28 * extension.config.width) / extension.config.height)
         const height = extension.config.height > extension.config.width ? 28 : Math.round((28 * extension.config.height) / extension.config.width)
         const imageId = plugin.name + ':' + extension.name
+        const imageSource = extension.iconType === 'image' ? extension.icon : ImageUtils.convertSVGStringToDataUrl(extension.icon)
         return (
           <Popover
             title={extension.name}
             key={imageId}
             placement="right"
-            content={getMyShapePopoverContent(imageId, extension.name, extension.icon, extension.config.width, extension.config.height)}
+            content={getMyShapePopoverContent(imageId, extension.name, imageSource, extension.config.width, extension.config.height)}
             overlayStyle={{
               left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH,
               minWidth: extension.config.width + 60,
@@ -864,7 +866,7 @@ const Navigator: FC<NavigatorProps> = ({
               onMouseDown={() => addPluginShape(extension, imageId)}
               style={{ padding: 2, display: 'flex', justifyContent: 'center', alignItems: 'center', width: 32, height: 32 }}
             >
-              <img src={`${extension.icon}`} width={width} height={height} />
+              <img src={`${imageSource}`} width={width} height={height} />
             </Button>
           </Popover>
         )

@@ -120,6 +120,7 @@ export interface EntityExtension {
   name: string
   description: string
   icon: string
+  iconType: 'image' | 'svg'
   type: 'shape' | 'container' | 'connector' | 'table' | 'image' | 'svg'
   setup: ((entity: Item, config: ExtensionConfig) => void) | null
   render: ((renderContext: RenderContext, config: ExtensionConfig) => void) | null

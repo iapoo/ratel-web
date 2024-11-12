@@ -55,7 +55,9 @@ export class ImageUtils {
     let base64 = ''
     for (let i = 0; i < u8Array.length; i += CHUNK_SIZE) {
       const chunk = u8Array.subarray(i, i + CHUNK_SIZE)
+      // @ts-ignore
       const chunkBase64 = btoa(String.fromCharCode.apply(null, chunk))
+      // @ts-ignore
       base64 += chunkBase64.match(/.{2}/g).join('')
     }
     return base64
@@ -78,5 +80,13 @@ export class ImageUtils {
     } else {
       return ''
     }
+  }
+
+  /**
+   * Convert SVG content to Data URL for img to show
+   * @param text
+   */
+  public static convertSVGStringToDataUrl(text: string) {
+    return 'data:image/svg+xml;base64,' + btoa(text)
   }
 }
