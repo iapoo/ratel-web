@@ -1,6 +1,18 @@
 import { Point2 } from '@ratel-web/engine'
 import { Editor } from '../../Editor'
-import { CustomConnectorTypeInfo, CustomEntity, CustomTableType, ExtendedConnector, ExtendedEntity, Item, ShapeType } from '../../Items'
+import {
+  CustomConnectorTypeInfo,
+  CustomEntity,
+  CustomTableType,
+  ExtendedConnector,
+  ExtendedContainer,
+  ExtendedEntity,
+  ExtendedImageContainer,
+  ExtendedSvgContainer,
+  ExtendedTable,
+  Item,
+  ShapeType,
+} from '../../Items'
 import { ConnectorConfig, EntityExtension, ShapeConfig, TableConfig } from '../../Shapes'
 import { CommonUtils } from '../../Utils'
 import { Action } from './Action'
@@ -28,21 +40,23 @@ export class EntityExtensionAction extends Action {
         ])
         return [extendedEntity]
       } else if (this._entityExtension.type === 'table') {
-        const shapeConfig = this._entityExtension.config as ShapeConfig
+        const shapeConfig = this._entityExtension.config as TableConfig
         const left = shapeConfig.left
         const top = shapeConfig.top
         const width = shapeConfig.width
         const height = shapeConfig.height
-        const extendedEntity = new ExtendedEntity(left, top, width, height, this._entityExtension, { shapeType: this._entityExtension.name }, [
-          typeInfo as ShapeType,
-        ])
+        const extendedEntity = new ExtendedTable(left, top, width, height, this._entityExtension, [typeInfo as CustomTableType])
         return [extendedEntity]
       } else if (this._entityExtension.type === 'container') {
-        // const shapeConfig = this._entityExtension.config as ShapeConfig
-        // const left = shapeConfig.left
-        // const top = shapeConfig.top
-        // const width = shapeConfig.width
-        // const height = shapeConfig.height
+        const containerConfig = this._entityExtension.config as ShapeConfig
+        const left = containerConfig.left
+        const top = containerConfig.top
+        const width = containerConfig.width
+        const height = containerConfig.height
+        const extendedContainer = new ExtendedContainer(left, top, width, height, this._entityExtension, { shapeType: this._entityExtension.name }, [
+          typeInfo as ShapeType,
+        ])
+        return [extendedContainer]
       } else if (this._entityExtension.type === 'connector') {
         const connectorConfig = this._entityExtension.config as ConnectorConfig
         const startX = connectorConfig.startX
@@ -54,20 +68,31 @@ export class EntityExtensionAction extends Action {
 
         const connectorEntity = new ExtendedConnector(start, end, this._entityExtension, [typeInfo as CustomConnectorTypeInfo])
         return [connectorEntity]
-      } else {
-        //Frame
-        // const shapeConfig = this._entityExtension.config as ShapeConfig
-        // const left = shapeConfig.left
-        // const top = shapeConfig.top
-        // const width = shapeConfig.width
-        // const height = shapeConfig.height
+      } else if (this._entityExtension.type === 'image') {
+        const extendedImageContainer = new ExtendedImageContainer(
+          0,
+          0,
+          this._entityExtension.config.width,
+          this._entityExtension.config.height,
+          this._entityExtension,
+        )
+        return [extendedImageContainer]
+      } else if (this._entityExtension.type === 'svg') {
+        const extendedSvgContainer = new ExtendedSvgContainer(
+          0,
+          0,
+          this._entityExtension.config.width,
+          this._entityExtension.config.height,
+          this._entityExtension,
+        )
+        return [extendedSvgContainer]
       }
     }
     return [new CustomEntity(0, 0, 100, 100)]
   }
 
-  private buildTypeInfo(): ShapeType | CustomConnectorTypeInfo | CustomTableType {
-    if (this._entityExtension.type === 'shape' || this._entityExtension.type === 'container' || this._entityExtension.type === 'frame') {
+  private buildTypeInfo(): ShapeType | CustomConnectorTypeInfo | CustomTableType | null {
+    if (this._entityExtension.type === 'shape' || this._entityExtension.type === 'container') {
       const shapeConfig = this._entityExtension.config as ShapeConfig
       return {
         name: this._entityExtension.name,
@@ -157,7 +182,7 @@ export class EntityExtensionAction extends Action {
         adaptInLine: tableConfig.adaptInLine,
         adaptInPercent: tableConfig.adaptInPercent,
       }
-    } else {
+    } else if (this._entityExtension.type === 'connector') {
       const connectorConfig = this._entityExtension.config as ConnectorConfig
       return {
         name: this._entityExtension.name,
@@ -174,6 +199,8 @@ export class EntityExtensionAction extends Action {
         width: connectorConfig.width,
         height: connectorConfig.height,
       }
+    } else {
+      return null
     }
   }
 }

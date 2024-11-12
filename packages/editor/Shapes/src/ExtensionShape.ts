@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
 
 import { Color, Graphics, Path, StrokeDashStyle } from '@ratel-web/engine'
-import { EditorItem } from '../../Items'
+import { Item } from '../../Items'
 import { EntityShape, ShapeTypeInfo } from './EntityShape'
 
 export interface RenderContext {
@@ -38,7 +38,6 @@ export interface RenderContext {
   readonly adapterHeight: number
   readonly adapterSizeX: number
   readonly adapterSizeY: number
-  addItem(item: EditorItem): void
 }
 
 export interface ShapeConfig {
@@ -80,6 +79,8 @@ export interface ShapeConfig {
   adaptInPercent: boolean
 }
 
+export type ContainerConfig = ShapeConfig
+
 export interface ConnectorConfig {
   text: string
   startX: number
@@ -94,59 +95,35 @@ export interface ConnectorConfig {
   height: number
 }
 
-export interface TableConfig {
-  freeze: 'None' | 'Width' | 'WidthHeight' | 'Height' | 'AspectRatio'
-  text: string
-  left: number
-  top: number
-  width: number
-  height: number
+export interface TableConfig extends ShapeConfig {
   rowCount: number
   columnCount: number
   fixedFirstRow: boolean
   firstRowHeight: number
   fixedFirstColumn: boolean
   firstColumnWidth: number
-  enableMask: boolean
-  modifiable: boolean
-  modifierX: number
-  modifierY: number
-  modifierStartX: number
-  modifierStartY: number
-  modifierEndX: number
-  modifierEndY: number
-  modifyInLine: boolean
-  modifyInPercent: boolean
-  controllable: boolean
-  controllerX: number
-  controllerY: number
-  controllerStartX: number
-  controllerStartY: number
-  controllerEndX: number
-  controllerEndY: number
-  controlInLine: boolean
-  controlInPercent: boolean
-  adaptable: boolean
-  adapterX: number
-  adapterY: number
-  adapterDirection: 'X' | 'Y'
-  adapterSize: number
-  adapterStartX: number
-  adapterStartY: number
-  adapterEndX: number
-  adapterEndY: number
-  adaptInLine: boolean
-  adaptInPercent: boolean
 }
+
+export interface ImageConfig {
+  width: number
+  height: number
+}
+
+export interface SvgConfig {
+  width: number
+  height: number
+}
+
+export type ExtensionConfig = ShapeConfig | ConnectorConfig | TableConfig | ContainerConfig | ImageConfig | SvgConfig
 
 export interface EntityExtension {
   name: string
   description: string
   icon: string
-  type: 'shape' | 'container' | 'connector' | 'table' | 'frame'
-  setup: ((config: ShapeConfig | ConnectorConfig | TableConfig) => EditorItem[]) | null
-  render: ((renderContext: RenderContext, config: ShapeConfig | ConnectorConfig | TableConfig) => void) | null
-  config: ShapeConfig | ConnectorConfig | TableConfig
+  type: 'shape' | 'container' | 'connector' | 'table' | 'image' | 'svg'
+  setup: ((entity: Item, config: ExtensionConfig) => void) | null
+  render: ((renderContext: RenderContext, config: ExtensionConfig) => void) | null
+  config: ExtensionConfig
 }
 
 export class EntityRenderContext implements RenderContext {
@@ -160,9 +137,6 @@ export class EntityRenderContext implements RenderContext {
   private _adapterSizeX: number = 0
   private _adapterSizeY: number = 0
 
-  public addItem(item: EditorItem) {
-    console.log(item)
-  }
   public constructor(extensionShape: ExtensionShape) {
     this._extensionShape = extensionShape
   }

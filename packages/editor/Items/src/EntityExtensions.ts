@@ -1,12 +1,13 @@
 import { Point2, Rectangle } from '@ratel-web/engine'
-import { CustomContainerShape, EntityExtension, EntityRenderContext, EntityShapeType, ExtensionShape, FrameShape } from '../../Shapes'
+import { EntityExtension, EntityRenderContext, EntityShapeType, ExtensionShape } from '../../Shapes'
 import { CustomConnector, CustomConnectorTypeInfo } from './CustomConnector'
 import { CustomContainerEntity } from './CustomContainerEntity'
 import { CustomEntities, CustomEntityTypes } from './CustomEntity'
 import { CustomTableEntity, CustomTableType } from './CustomTableEntity'
-import { FrameEntity } from './FrameEntity'
+import { ImageContainer } from './ImageContainer'
 import { Categories, Type } from './Item'
 import { ShapeEntity, ShapeOptions, ShapeType } from './ShapeEntity'
+import { SvgContainer } from './SvgContainer'
 
 export interface Plugin {
   name: string
@@ -33,12 +34,7 @@ export class ExtendedEntity extends ShapeEntity {
     const customTypeInfo = this.parseTypeInfo(shapeOptions)
     this._shape = new ExtensionShape(left, top, width, height, this._entityExtension, this.buildShape, customTypeInfo)
     if (entityExtension.setup) {
-      const items = entityExtension.setup(entityExtension.config)
-      if (items && items.length > 0) {
-        items.forEach((item) => {
-          this.addItem(item)
-        })
-      }
+      entityExtension.setup(this, entityExtension.config)
     }
   }
 
@@ -64,8 +60,7 @@ export class ExtendedEntity extends ShapeEntity {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected parseEntityShapeType(type: string): EntityShapeType {
-    let shapeType = EntityShapeType.CustomShape
-    return shapeType
+    return EntityShapeType.CustomShape
   }
 }
 
@@ -75,37 +70,36 @@ export class ExtendedConnector extends CustomConnector {
     super(start, end, entityExtension.name, connectorTypeInfos)
     this._entityExtension = entityExtension
     if (entityExtension.setup) {
-      const items = entityExtension.setup(entityExtension.config)
-      if (items && items.length > 0) {
-        items.forEach((item) => {
-          this.addItem(item)
-        })
-      }
+      entityExtension.setup(this, entityExtension.config)
     }
   }
 }
 
 export class ExtendedTable extends CustomTableEntity {
-  public constructor(left: number, top: number, width: number, height: number, customTableType: string, customTableTypeInfos: CustomTableType[]) {
-    super(left, top, width, height, customTableType, customTableTypeInfos, 1, 1)
-    this.buildShape()
+  private _entityExtension: EntityExtension
+
+  public constructor(left: number, top: number, width: number, height: number, entityExtension: EntityExtension, customTableTypeInfos: CustomTableType[]) {
+    super(left, top, width, height, entityExtension.name, customTableTypeInfos, 1, 1)
+    this._entityExtension = entityExtension
+    this.buildTable()
+    if (entityExtension.setup) {
+      entityExtension.setup(this, entityExtension.config)
+    }
   }
 
-  public buildShape() {
+  public buildTable() {
     for (let i = 0; i < this.customTableeType.rowCount - 1; i++) {
       this.insertRowAfter(this.rowCount - 1, false)
     }
     for (let i = 0; i < this.customTableeType.columnCount - 1; i++) {
       this.insertColumnAfter(this.columnCount - 1, false)
     }
-    //this.boundary =  Rectangle.makeLTWH(0, 0, this.width, this.height)
     this.refreshGrid()
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected parseEntityShapeType(type: string): EntityShapeType {
-    let shapeType = EntityShapeType.Table
-    return shapeType
+    return EntityShapeType.Table
   }
 
   private refreshGrid() {
@@ -135,10 +129,23 @@ export class ExtendedTable extends CustomTableEntity {
 }
 
 export class ExtendedContainer extends CustomContainerEntity {
-  public constructor(left: number, top: number, width: number, height: number, typeName: string, shapeTypes: ShapeType[]) {
-    super(left, top, width, height, typeName, shapeTypes)
-    const customTypeInfo = this.parseTypeInfo({ shapeType: typeName })
-    this._shape = new CustomContainerShape(left, top, width, height, this.buildShape, customTypeInfo)
+  private readonly _entityExtension: EntityExtension
+  public constructor(
+    left: number,
+    top: number,
+    width: number,
+    height: number,
+    entityExtension: EntityExtension,
+    shapeOptions: ShapeOptions,
+    shapeTypes: ShapeType[],
+  ) {
+    super(left, top, width, height, entityExtension.name, shapeTypes)
+    this._entityExtension = entityExtension
+    const customTypeInfo = this.parseTypeInfo({ shapeType: entityExtension.name })
+    this._shape = new ExtensionShape(left, top, width, height, this._entityExtension, this.buildContainer, customTypeInfo)
+    if (entityExtension.setup) {
+      entityExtension.setup(this, entityExtension.config)
+    }
     this.initializeTheme()
     this.initializeShape()
   }
@@ -150,39 +157,43 @@ export class ExtendedContainer extends CustomContainerEntity {
   private initializeShape() {}
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public buildShape(theThis: CustomContainerShape) {}
+  public buildContainer(renderContext: EntityRenderContext, extensionShape: ExtensionShape, entityExtension: EntityExtension) {
+    renderContext.prepareRender()
+    renderContext.path.reset()
+    renderContext.secondPath.reset()
+    renderContext.thirdPath.reset()
+    renderContext.fourthPath.reset()
+    if (entityExtension.render) {
+      entityExtension.render(renderContext, entityExtension.config)
+    }
+  }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected parseEntityShapeType(type: string): EntityShapeType {
-    let shapeType = EntityShapeType.CustomContainer
-    return shapeType
+    return EntityShapeType.CustomContainer
   }
 }
 
-export class ExtendedFrame extends FrameEntity {
-  private _label: ShapeEntity
-
-  public constructor(left: number, top: number, width: number, height: number, shapeOptions: ShapeOptions, frameShapeTypes: ShapeType[]) {
-    super(left, top, width, height, shapeOptions, frameShapeTypes)
-    const frameTypeInfo = this.parseTypeInfo({ shapeType: shapeOptions.shapeType })
-    this._shape = new FrameShape(left, top, width, height, this, this.buildShape, frameTypeInfo)
-    this._label = new ShapeEntity(0, 0, 120, 30)
-    this.initializeTheme()
-    this.initializeShape()
+export class ExtendedImageContainer extends ImageContainer {
+  private readonly _entityExtension: EntityExtension
+  public constructor(left: number, top: number, width: number, height: number, entityExtension: EntityExtension) {
+    super(left, top, width, height, entityExtension.icon)
+    this._entityExtension = entityExtension
   }
 
-  // public get types(): Type[] {
-  //   return this._frameShapeTypes
-  // }
+  public get entityExtension() {
+    return this._entityExtension
+  }
+}
 
-  private initializeShape() {}
+export class ExtendedSvgContainer extends SvgContainer {
+  private readonly _entityExtension: EntityExtension
+  public constructor(left: number, top: number, width: number, height: number, entityExtension: EntityExtension) {
+    super(left, top, width, height, entityExtension.icon)
+    this._entityExtension = entityExtension
+  }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public buildShape(theThis: FrameShape, entity: any) {}
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  protected parseEntityShapeType(type: string): EntityShapeType {
-    let shapeType = EntityShapeType.Frame
-    return shapeType
+  public get entityExtension() {
+    return this._entityExtension
   }
 }
