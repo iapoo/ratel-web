@@ -9,13 +9,19 @@ import { Categories, Type } from './Item'
 import { ShapeEntity, ShapeOptions, ShapeType } from './ShapeEntity'
 import { SvgContainer } from './SvgContainer'
 
+export interface ExtensionCategory {
+  name: string
+  description: string
+  extensions: EntityExtension[]
+}
+
 export interface Plugin {
   name: string
   description: string
   author: string
   homepage: string
   email: string
-  extensions: EntityExtension[]
+  categories: ExtensionCategory[]
 }
 
 export class ExtendedEntity extends ShapeEntity {

@@ -844,44 +844,47 @@ const Navigator: FC<NavigatorProps> = ({
     let baseKey = 100
     PluginManager.plugins.forEach((plugin) => {
       baseKey++
-      const pluginExtensions = plugin.extensions.map((extension) => {
-        const width = extension.config.width > extension.config.height ? 28 : Math.round((28 * extension.config.width) / extension.config.height)
-        const height = extension.config.height > extension.config.width ? 28 : Math.round((28 * extension.config.height) / extension.config.width)
-        const imageId = plugin.name + ':' + extension.name
-        const imageSource = extension.iconType === 'image' ? extension.icon : ImageUtils.convertSVGStringToDataUrl(extension.icon)
-        return (
-          <Popover
-            title={extension.name}
-            key={imageId}
-            placement="right"
-            content={getMyShapePopoverContent(imageId, extension.name, imageSource, extension.config.width, extension.config.height)}
-            overlayStyle={{
-              left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH,
-              minWidth: extension.config.width + 60,
-              width: extension.config.height + 60,
-            }}
-          >
-            <Button
-              type="text"
-              onMouseDown={() => addPluginShape(extension, imageId)}
-              style={{ padding: 2, display: 'flex', justifyContent: 'center', alignItems: 'center', width: 32, height: 32 }}
+      plugin.categories.forEach((extensionCategory) => {
+        const pluginExtensions = extensionCategory.extensions.map((extension) => {
+          const width = extension.config.width > extension.config.height ? 28 : Math.round((28 * extension.config.width) / extension.config.height)
+          const height = extension.config.height > extension.config.width ? 28 : Math.round((28 * extension.config.height) / extension.config.width)
+          const imageId = plugin.name + ':' + extension.name
+          const imageSource = extension.iconType === 'image' ? extension.icon : ImageUtils.convertSVGStringToDataUrl(extension.icon)
+          return (
+            <Popover
+              title={extension.name}
+              key={imageId}
+              placement="right"
+              content={getMyShapePopoverContent(imageId, extension.name, imageSource, extension.config.width, extension.config.height)}
+              overlayStyle={{
+                left: navigatorWidth + Utils.DEFAULT_DIVIDER_WIDTH,
+                minWidth: extension.config.width + 60,
+                width: extension.config.height + 60,
+              }}
             >
-              <img src={`${imageSource}`} width={width} height={height} />
-            </Button>
-          </Popover>
-        )
+              <Button
+                type="text"
+                onMouseDown={() => addPluginShape(extension, imageId)}
+                style={{ padding: 2, display: 'flex', justifyContent: 'center', alignItems: 'center', width: 32, height: 32 }}
+              >
+                <img src={`${imageSource}`} width={width} height={height} />
+              </Button>
+            </Popover>
+          )
+        })
+        const pluginItem = {
+          key: '' + baseKey,
+          label: <div style={{ fontWeight: 'bolder' }}> {plugin.name} </div>,
+          children: (
+            <Space size={2} wrap>
+              {pluginExtensions}
+            </Space>
+          ),
+        }
+        internalPluginItems.push(pluginItem)
       })
-      const pluginItem = {
-        key: '' + baseKey,
-        label: <div style={{ fontWeight: 'bolder' }}> {plugin.name} </div>,
-        children: (
-          <Space size={2} wrap>
-            {pluginExtensions}
-          </Space>
-        ),
-      }
-      internalPluginItems.push(pluginItem)
     })
+
     return internalPluginItems
   }
 

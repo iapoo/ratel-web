@@ -3,11 +3,11 @@ import type { CustomConnectorTypeInfo } from './src/CustomConnector'
 import type { CustomEntityTypeInfo } from './src/CustomEntity'
 import type { CustomTableType } from './src/CustomTableEntity'
 import { EditorItem as IEditorItem } from './src/EditorItem'
-import type { Plugin } from './src/EntityExtensions'
+import type { ExtensionCategory, Plugin } from './src/EntityExtensions'
 import type { Type } from './src/Item'
 import type { ShapeOptions, ShapeType } from './src/ShapeEntity'
 
-export { ConnectorArrowType, CustomConnectorTypeInfo, CustomEntityTypeInfo, CustomTableType, Plugin, ShapeOptions, ShapeType, Type }
+export { ConnectorArrowType, CustomConnectorTypeInfo, CustomEntityTypeInfo, CustomTableType, ExtensionCategory, Plugin, ShapeOptions, ShapeType, Type }
 
 export enum MyShapeType {
   SELECTION = 0,
