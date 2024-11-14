@@ -49,8 +49,10 @@ import {
   CustomEntity,
   CustomTableEntity,
   CustomTableType,
+  ExtensionCategory,
   FrameEntity,
   MyShape,
+  Plugin,
   ShapeEntity,
   ShapeType,
   ShapeTypes,
@@ -230,9 +232,9 @@ const Navigator: FC<NavigatorProps> = ({
     console.log(str)
   }
 
-  const addPluginShape = (entityExtension: EntityExtension, imageId: string) => {
+  const addPluginShape = (plugin: Plugin, extensionCategory: ExtensionCategory, entityExtension: EntityExtension, imageId: string) => {
     if (Utils.currentEditor) {
-      Utils.currentEditor.action = new EntityExtensionAction(Utils.currentEditor, entityExtension)
+      Utils.currentEditor.action = new EntityExtensionAction(Utils.currentEditor, entityExtension, extensionCategory, plugin)
       Utils.currentEditor.action.imageId = imageId
     }
   }
@@ -864,10 +866,10 @@ const Navigator: FC<NavigatorProps> = ({
             >
               <Button
                 type="text"
-                onMouseDown={() => addPluginShape(extension, imageId)}
+                onMouseDown={() => addPluginShape(plugin, extensionCategory, extension, imageId)}
                 style={{ padding: 2, display: 'flex', justifyContent: 'center', alignItems: 'center', width: 32, height: 32 }}
               >
-                <img src={`${imageSource}`} width={width} height={height} />
+                <img src={`${imageSource}`} alt={extension.name} width={width} height={height} />
               </Button>
             </Popover>
           )

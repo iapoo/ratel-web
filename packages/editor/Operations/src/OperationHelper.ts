@@ -1,4 +1,5 @@
 /* eslint-disable max-params */
+import { PluginManager } from '@/components/Workspace/Utils/PluginManager'
 import { Rotation } from '@ratel-web/engine'
 import { Editor } from '../../Editor'
 import {
@@ -16,9 +17,18 @@ import {
   CustomShapeInfo,
   CustomTableEntity,
   CustomTableInfo,
+  CustomTableType,
   EditorItem,
   EditorItemInfo,
   Entity,
+  ExtensionConnector,
+  ExtensionContainer,
+  ExtensionEntity,
+  ExtensionEntityInfo,
+  ExtensionImageContainer,
+  ExtensionSvgContainer,
+  ExtensionTable,
+  ExtensionUtils,
   FrameEntity,
   FrameEntityInfo,
   GroupEntity,
@@ -35,6 +45,11 @@ import {
   TableEntity,
   TableInfo,
 } from '../../Items'
+import { ExtensionConnectorInfo } from '../../Items/src/ExtensionConnectorInfo'
+import { ExtensionContainerInfo } from '../../Items/src/ExtensionContainerInfo'
+import { ExtensionImageContainerInfo } from '../../Items/src/ExtensionImageContainerInfo'
+import { ExtensionSvgContainerInfo } from '../../Items/src/ExtensionSvgContainerInfo'
+import { ExtensionTableInfo } from '../../Items/src/ExtensionTableInfo'
 import { ConnectorMode, ConnectorType, Style, StyleInfo } from '../../Shapes'
 import {
   CommonUtils,
@@ -108,6 +123,24 @@ export class OperationHelper {
         break
       case Categories.CUSTOM_CONTAINER:
         editorItem = this.loadCustomContainerEntity(itemInfo)
+        break
+      case Categories.EXTENSION_ENTITY:
+        editorItem = this.loadExtensionEntity(itemInfo)
+        break
+      case Categories.EXTENSION_CONNECTOR:
+        editorItem = this.loadExtensionConnector(itemInfo, editor)
+        break
+      case Categories.EXTENSION_CONTAINER:
+        editorItem = this.loadExtensionContainer(itemInfo)
+        break
+      case Categories.EXTENSION_TABLE:
+        editorItem = this.loadExtensionTable(itemInfo)
+        break
+      case Categories.EXTENSION_IMAGE:
+        editorItem = this.loadExtensionImageContainer(itemInfo)
+        break
+      case Categories.EXTENSION_SVG:
+        editorItem = this.loadExtensionSvgContainer(itemInfo)
         break
       case Categories.SHAPE:
       default:
@@ -295,6 +328,59 @@ export class OperationHelper {
     connector.connectorDoubleLineArrowLength = customConnectorInfo.connectorDoubleLineArrowLength
     connector.connectorDoubleLineArrowDistance = customConnectorInfo.connectorDoubleLineArrowDistance
     return connector
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public static loadExtensionConnector(itemInfo: EditorItemInfo, editor: Editor): Connector {
+    if (!OperationHelper.initialized) {
+      OperationHelper.initializeCustomEntities()
+    }
+    const extensionEntityInfo = itemInfo as ExtensionConnectorInfo
+    let start = CommonUtils.parsePointString(extensionEntityInfo.start)
+    let end = CommonUtils.parsePointString(extensionEntityInfo.end)
+    const pluginName = extensionEntityInfo.plugin
+    const extensionCategoryName = extensionEntityInfo.extensionCategory
+    const extensionName = extensionEntityInfo.type
+    const plugin = PluginManager.findPlugin(pluginName)
+    const extensionCategory = PluginManager.findExtensionCategory(pluginName, extensionCategoryName)
+    const entityExtension = PluginManager.findExtension(pluginName, extensionCategoryName, extensionName)
+    const typeInfo = ExtensionUtils.buildTypeInfo(entityExtension!)
+    let extensionConnector: ExtensionConnector
+    if (plugin && extensionCategory && entityExtension) {
+      extensionConnector = new ExtensionConnector(start, end, entityExtension, extensionCategory, plugin, [typeInfo as CustomConnectorTypeInfo])
+    } else {
+      extensionConnector = new ExtensionConnector(start, end, entityExtension!, extensionCategory!, plugin!, [typeInfo as CustomConnectorTypeInfo])
+    }
+    extensionConnector.connectorType = extensionEntityInfo.connectorType
+      ? CommonUtils.parseConnectorType(extensionEntityInfo.connectorType)
+      : ConnectorType.Orthogonal
+    if (extensionEntityInfo.source) {
+      //connector.source = connectorInfo.source
+    }
+    if (extensionEntityInfo.target) {
+    }
+    if (extensionEntityInfo.sourceJoint) {
+      extensionConnector.sourceJoint = CommonUtils.parsePointString(extensionEntityInfo.sourceJoint)
+    }
+    if (extensionEntityInfo.targetJoint) {
+      extensionConnector.targetJoint = CommonUtils.parsePointString(extensionEntityInfo.targetJoint)
+    }
+    extensionConnector.id = extensionEntityInfo.id
+    extensionConnector.text = extensionEntityInfo.text
+    extensionConnector.startArrow = CommonUtils.parseConnectorArrow(extensionEntityInfo.startArrow!)
+    extensionConnector.endArrow = CommonUtils.parseConnectorArrow(extensionEntityInfo.endArrow!)
+    extensionConnector.curveStartModifier = CommonUtils.parsePointString(extensionEntityInfo.curveStartModifier)
+    extensionConnector.curveEndModifier = CommonUtils.parsePointString(extensionEntityInfo.curveEndModifier)
+    extensionConnector.startDirection = CommonUtils.parseConnectorDirection(extensionEntityInfo.startDirection)
+    extensionConnector.endDirection = CommonUtils.parseConnectorDirection(extensionEntityInfo.endDirection)
+    extensionConnector.orthogonalPoints = CommonUtils.parsePointsString(extensionEntityInfo.orthogonalPoints)
+    extensionConnector.connectorMode = extensionEntityInfo.connectorMode
+      ? CommonUtils.parseConnectorMode(extensionEntityInfo.connectorMode)
+      : ConnectorMode.Single
+    extensionConnector.connectorDoubleLineGap = extensionEntityInfo.connectorDoubleLineGap
+    extensionConnector.connectorDoubleLineArrowLength = extensionEntityInfo.connectorDoubleLineArrowLength
+    extensionConnector.connectorDoubleLineArrowDistance = extensionEntityInfo.connectorDoubleLineArrowDistance
+    return extensionConnector
   }
 
   public static loadShapeEntity(itemInfo: EditorItemInfo): ShapeEntity {
@@ -503,6 +589,59 @@ export class OperationHelper {
     return svgContainer
   }
 
+  public static loadExtensionSvgContainer(itemInfo: EditorItemInfo): ShapeEntity {
+    let extensionSvgContainerInfo = itemInfo as ExtensionSvgContainerInfo
+    const pluginName = extensionSvgContainerInfo.plugin
+    const extensionCategoryName = extensionSvgContainerInfo.extensionCategory
+    const extensionName = extensionSvgContainerInfo.type
+    const plugin = PluginManager.findPlugin(pluginName)
+    const extensionCategory = PluginManager.findExtensionCategory(pluginName, extensionCategoryName)
+    const entityExtension = PluginManager.findExtension(pluginName, extensionCategoryName, extensionName)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const typeInfo = ExtensionUtils.buildTypeInfo(entityExtension!)
+    let extensionSvgContainer: ExtensionSvgContainer
+    if (plugin && extensionCategory && entityExtension) {
+      extensionSvgContainer = new ExtensionSvgContainer(
+        extensionSvgContainerInfo.left,
+        extensionSvgContainerInfo.top,
+        extensionSvgContainerInfo.width,
+        extensionSvgContainerInfo.height,
+        entityExtension,
+        extensionCategory,
+        plugin,
+      )
+    } else {
+      extensionSvgContainer = new ExtensionSvgContainer(
+        extensionSvgContainerInfo.left,
+        extensionSvgContainerInfo.top,
+        extensionSvgContainerInfo.width,
+        extensionSvgContainerInfo.height,
+        entityExtension!,
+        extensionCategory!,
+        plugin!,
+      )
+    }
+    extensionSvgContainer.svgShape.svgInitialized = false
+    extensionSvgContainer.type = extensionSvgContainerInfo.type
+    extensionSvgContainer.text = extensionSvgContainerInfo.text
+    extensionSvgContainer.id = extensionSvgContainerInfo.id
+    if (extensionSvgContainerInfo.rotation) {
+      extensionSvgContainer.rotation = new Rotation(extensionSvgContainerInfo.rotation, extensionSvgContainer.width / 2, extensionSvgContainer.height / 2)
+    }
+    extensionSvgContainer.shape.modifier = CommonUtils.parsePointString(extensionSvgContainerInfo.modifier)
+    extensionSvgContainer.shape.controller = CommonUtils.parsePointString(extensionSvgContainerInfo.controller)
+    extensionSvgContainer.shape.adapter = CommonUtils.parsePointString(extensionSvgContainerInfo.adapter)
+    extensionSvgContainer.shape.adapterSize = extensionSvgContainerInfo.adapterSize
+    if (extensionSvgContainerInfo.enableFillColor) {
+      extensionSvgContainer.enableFillColor = extensionSvgContainerInfo.enableFillColor
+    }
+    if (extensionSvgContainerInfo.enableStrokeColor) {
+      extensionSvgContainer.enableStrokeColor = extensionSvgContainerInfo.enableStrokeColor
+    }
+
+    return extensionSvgContainer
+  }
+
   public static loadImageContainer(itemInfo: EditorItemInfo): ShapeEntity {
     let imageContainerInfo = itemInfo as ImageContainerInfo
     const imageContainer = new ImageContainer(
@@ -522,6 +661,51 @@ export class OperationHelper {
     imageContainer.shape.controller = CommonUtils.parsePointString(imageContainerInfo.controller)
     imageContainer.shape.adapter = CommonUtils.parsePointString(imageContainerInfo.adapter)
     imageContainer.shape.adapterSize = imageContainerInfo.adapterSize
+    return imageContainer
+  }
+
+  public static loadExtensionImageContainer(itemInfo: EditorItemInfo): ShapeEntity {
+    let extensionImageContainerInfo = itemInfo as ExtensionImageContainerInfo
+    const pluginName = extensionImageContainerInfo.plugin
+    const extensionCategoryName = extensionImageContainerInfo.extensionCategory
+    const extensionName = extensionImageContainerInfo.type
+    const plugin = PluginManager.findPlugin(pluginName)
+    const extensionCategory = PluginManager.findExtensionCategory(pluginName, extensionCategoryName)
+    const entityExtension = PluginManager.findExtension(pluginName, extensionCategoryName, extensionName)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const typeInfo = ExtensionUtils.buildTypeInfo(entityExtension!)
+    let imageContainer: ExtensionImageContainer
+    if (plugin && extensionCategory && entityExtension) {
+      imageContainer = new ExtensionImageContainer(
+        extensionImageContainerInfo.left,
+        extensionImageContainerInfo.top,
+        extensionImageContainerInfo.width,
+        extensionImageContainerInfo.height,
+        entityExtension,
+        extensionCategory,
+        plugin,
+      )
+    } else {
+      imageContainer = new ExtensionImageContainer(
+        extensionImageContainerInfo.left,
+        extensionImageContainerInfo.top,
+        extensionImageContainerInfo.width,
+        extensionImageContainerInfo.height,
+        entityExtension!,
+        extensionCategory!,
+        plugin!,
+      )
+    }
+    imageContainer.type = extensionImageContainerInfo.type
+    imageContainer.text = extensionImageContainerInfo.text
+    imageContainer.id = extensionImageContainerInfo.id
+    if (extensionImageContainerInfo.rotation) {
+      imageContainer.rotation = new Rotation(extensionImageContainerInfo.rotation, imageContainer.width / 2, imageContainer.height / 2)
+    }
+    imageContainer.shape.modifier = CommonUtils.parsePointString(extensionImageContainerInfo.modifier)
+    imageContainer.shape.controller = CommonUtils.parsePointString(extensionImageContainerInfo.controller)
+    imageContainer.shape.adapter = CommonUtils.parsePointString(extensionImageContainerInfo.adapter)
+    imageContainer.shape.adapterSize = extensionImageContainerInfo.adapterSize
     return imageContainer
   }
 
@@ -614,6 +798,60 @@ export class OperationHelper {
     return containerEntity
   }
 
+  public static loadExtensionContainer(itemInfo: EditorItemInfo): CustomContainerEntity {
+    if (!OperationHelper.initialized) {
+      OperationHelper.initializeCustomEntities()
+    }
+    const extensionContainerInfo = itemInfo as ExtensionContainerInfo
+    const pluginName = extensionContainerInfo.plugin
+    const extensionCategoryName = extensionContainerInfo.extensionCategory
+    const extensionName = extensionContainerInfo.type
+    const plugin = PluginManager.findPlugin(pluginName)
+    const extensionCategory = PluginManager.findExtensionCategory(pluginName, extensionCategoryName)
+    const entityExtension = PluginManager.findExtension(pluginName, extensionCategoryName, extensionName)
+    const typeInfo = ExtensionUtils.buildTypeInfo(entityExtension!)
+    let extensionContainer: ExtensionContainer
+    if (plugin && extensionCategory && entityExtension) {
+      extensionContainer = new ExtensionContainer(
+        itemInfo.left,
+        itemInfo.top,
+        itemInfo.width,
+        itemInfo.height,
+        entityExtension,
+        extensionCategory,
+        plugin,
+        { shapeType: extensionName },
+        [typeInfo as ShapeType],
+      )
+    } else {
+      extensionContainer = new ExtensionContainer(
+        itemInfo.left,
+        itemInfo.top,
+        itemInfo.width,
+        itemInfo.height,
+        entityExtension!,
+        extensionCategory!,
+        plugin!,
+        { shapeType: extensionName },
+        [typeInfo as ShapeType],
+      )
+    }
+    extensionContainer.id = extensionContainerInfo.id
+    if (extensionContainerInfo.rotation) {
+      extensionContainer.rotation = new Rotation(extensionContainerInfo.rotation, extensionContainerInfo.width / 2, extensionContainerInfo.height / 2)
+    }
+    extensionContainer.shape.modifier = CommonUtils.parsePointString(extensionContainerInfo.modifier)
+    extensionContainer.shape.adapter = CommonUtils.parsePointString(extensionContainerInfo.adapter)
+    extensionContainer.shape.adapterSize = extensionContainerInfo.adapterSize
+
+    extensionContainer.removeAllItems()
+    itemInfo.items.forEach((childItemInfo) => {
+      let childItem = OperationHelper.loadTableCellEntity(childItemInfo)
+      extensionContainer.addItem(childItem)
+    })
+    return extensionContainer
+  }
+
   public static loadTableEntity(itemInfo: EditorItemInfo): TableEntity {
     const tableInfo = itemInfo as TableInfo
     const tableEntity = new TableEntity(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, tableInfo.rowCount, tableInfo.columnCount)
@@ -673,6 +911,41 @@ export class OperationHelper {
     return customTableEntity
   }
 
+  public static loadExtensionTable(itemInfo: EditorItemInfo): CustomTableEntity {
+    if (!OperationHelper.initialized) {
+      OperationHelper.initializeCustomEntities()
+    }
+    const extensionTableInfo = itemInfo as ExtensionTableInfo
+
+    const pluginName = extensionTableInfo.plugin
+    const extensionCategoryName = extensionTableInfo.extensionCategory
+    const extensionName = extensionTableInfo.customTableTypeName
+    const plugin = PluginManager.findPlugin(pluginName)
+    const extensionCategory = PluginManager.findExtensionCategory(pluginName, extensionCategoryName)
+    const entityExtension = PluginManager.findExtension(pluginName, extensionCategoryName, extensionName)
+    const typeInfo = ExtensionUtils.buildTypeInfo(entityExtension!)
+    let extensionTable: ExtensionTable
+    if (plugin && extensionCategory && entityExtension) {
+      extensionTable = new ExtensionTable(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, entityExtension, extensionCategory, plugin, [
+        typeInfo as CustomTableType,
+      ])
+    } else {
+      extensionTable = new ExtensionTable(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, entityExtension!, extensionCategory!, plugin!, [
+        typeInfo as CustomTableType,
+      ])
+    }
+    extensionTable.id = extensionTableInfo.id
+    if (extensionTableInfo.rotation) {
+      extensionTable.rotation = new Rotation(extensionTableInfo.rotation, extensionTableInfo.width / 2, extensionTableInfo.height / 2)
+    }
+    extensionTable.removeAllItems()
+    itemInfo.items.forEach((childItemInfo) => {
+      let childItem = OperationHelper.loadTableCellEntity(childItemInfo)
+      extensionTable.addItem(childItem)
+    })
+    return extensionTable
+  }
+
   public static loadTableCellEntity(itemInfo: EditorItemInfo): CellEntity {
     let shapeInfo = itemInfo as ShapeInfo
     const shapeEntity = new CellEntity(shapeInfo.left, shapeInfo.top, shapeInfo.width, shapeInfo.height, {
@@ -690,6 +963,57 @@ export class OperationHelper {
     shapeEntity.shape.adapter = CommonUtils.parsePointString(shapeInfo.adapter)
     OperationHelper.fixStyleInfo(shapeInfo)
     shapeEntity.shape.styles = StyleInfo.makeStyles(shapeInfo.styles)
+    return shapeEntity
+  }
+
+  public static loadExtensionEntity(itemInfo: EditorItemInfo): Entity {
+    if (!OperationHelper.initialized) {
+      OperationHelper.initializeCustomEntities()
+    }
+    let extensionEntityInfo = itemInfo as ExtensionEntityInfo
+    const pluginName = extensionEntityInfo.plugin
+    const extensionCategoryName = extensionEntityInfo.extensionCategory
+    const extensionName = extensionEntityInfo.type
+    const plugin = PluginManager.findPlugin(pluginName)
+    const extensionCategory = PluginManager.findExtensionCategory(pluginName, extensionCategoryName)
+    const entityExtension = PluginManager.findExtension(pluginName, extensionCategoryName, extensionName)
+    const typeInfo = ExtensionUtils.buildTypeInfo(entityExtension!)
+    let shapeEntity: ExtensionEntity
+    if (plugin && extensionCategory && entityExtension) {
+      shapeEntity = new ExtensionEntity(
+        extensionEntityInfo.left,
+        extensionEntityInfo.top,
+        extensionEntityInfo.width,
+        extensionEntityInfo.height,
+        entityExtension,
+        extensionCategory,
+        plugin,
+        { shapeType: extensionName },
+        [typeInfo as ShapeType],
+      )
+    } else {
+      shapeEntity = new ExtensionEntity(
+        extensionEntityInfo.left,
+        extensionEntityInfo.top,
+        extensionEntityInfo.width,
+        extensionEntityInfo.height,
+        entityExtension!,
+        extensionCategory!,
+        plugin!,
+        { shapeType: extensionName },
+        [typeInfo as ShapeType],
+      )
+    }
+    shapeEntity.type = extensionEntityInfo.type
+    shapeEntity.text = extensionEntityInfo.text
+    shapeEntity.id = extensionEntityInfo.id
+    if (extensionEntityInfo.rotation) {
+      shapeEntity.rotation = new Rotation(extensionEntityInfo.rotation, shapeEntity.width / 2, shapeEntity.height / 2)
+    }
+    shapeEntity.shape.modifier = CommonUtils.parsePointString(extensionEntityInfo.modifier)
+    shapeEntity.shape.controller = CommonUtils.parsePointString(extensionEntityInfo.controller)
+    shapeEntity.shape.adapter = CommonUtils.parsePointString(extensionEntityInfo.adapter)
+    shapeEntity.shape.adapterSize = extensionEntityInfo.adapterSize
     return shapeEntity
   }
 
@@ -747,6 +1071,24 @@ export class OperationHelper {
       case Categories.CUSTOM_TABLE:
         editorItemInfo = this.saveCustomTable(editorItem as CustomTableEntity)
         break
+      case Categories.EXTENSION_ENTITY:
+        editorItemInfo = this.saveExtensionEntity(editorItem as ExtensionEntity)
+        break
+      case Categories.EXTENSION_CONTAINER:
+        editorItemInfo = this.saveExtensionContainer(editorItem as ExtensionContainer)
+        break
+      case Categories.EXTENSION_TABLE:
+        editorItemInfo = this.saveExtensionTable(editorItem as ExtensionTable)
+        break
+      case Categories.EXTENSION_CONNECTOR:
+        editorItemInfo = this.saveExtensionConnector(editorItem as ExtensionConnector)
+        break
+      case Categories.EXTENSION_IMAGE:
+        editorItemInfo = this.saveExtensionImageShape(editorItem as ExtensionImageContainer)
+        break
+      case Categories.EXTENSION_SVG:
+        editorItemInfo = this.saveExtensionSvgContainer(editorItem as ExtensionSvgContainer)
+        break
       case Categories.SHAPE:
       default:
         editorItemInfo = this.saveShape(editorItem as ShapeEntity)
@@ -781,6 +1123,30 @@ export class OperationHelper {
       editorItemInfo.items.push(childEditorItemData)
     }
     return editorItemInfo
+  }
+
+  public static saveExtensionEntity(extensionEntity: ExtensionEntity): EditorItemInfo {
+    let styleInfos: StyleInfo[] = Style.makeStyleInfos(extensionEntity.shape.styles)
+    let extensionEntityInfo = new ExtensionEntityInfo(
+      extensionEntity.entityExtension.name,
+      extensionEntity.category,
+      extensionEntity.extensionCategory.name,
+      extensionEntity.plugin.name,
+      extensionEntity.left,
+      extensionEntity.top,
+      extensionEntity.width,
+      extensionEntity.height,
+      extensionEntity.text,
+      extensionEntity.rotation.radius,
+      styleInfos,
+    )
+    extensionEntityInfo.rotation = extensionEntity.rotation.radius
+    extensionEntityInfo.modifier = extensionEntity.shape.modifier.x + ',' + extensionEntity.shape.modifier.y
+    extensionEntityInfo.controller = extensionEntity.shape.controller.x + ',' + extensionEntity.shape.controller.y
+    extensionEntityInfo.adapter = extensionEntity.shape.adapter.x + ',' + extensionEntity.shape.adapter.y
+    extensionEntityInfo.adapterSize = extensionEntity.shape.adapterSize
+
+    return extensionEntityInfo
   }
 
   public static saveShape(shapeEntity: ShapeEntity): EditorItemInfo {
@@ -874,6 +1240,33 @@ export class OperationHelper {
     return svgContainerInfo
   }
 
+  public static saveExtensionSvgContainer(extensionSvgContainer: ExtensionSvgContainer): EditorItemInfo {
+    let styleInfos: StyleInfo[] = Style.makeStyleInfos(extensionSvgContainer.shape.styles)
+    let extensionSvgContainerInfo = new ExtensionSvgContainerInfo(
+      extensionSvgContainer.entityExtension.name,
+      extensionSvgContainer.category,
+      extensionSvgContainer.extensionCategory.name,
+      extensionSvgContainer.plugin.name,
+      extensionSvgContainer.left,
+      extensionSvgContainer.top,
+      extensionSvgContainer.width,
+      extensionSvgContainer.height,
+      extensionSvgContainer.text,
+      extensionSvgContainer.rotation.radius,
+      styleInfos,
+    )
+    extensionSvgContainerInfo.rotation = extensionSvgContainer.rotation.radius
+    extensionSvgContainerInfo.modifier = extensionSvgContainer.shape.modifier.x + ',' + extensionSvgContainer.shape.modifier.y
+    extensionSvgContainerInfo.controller = extensionSvgContainer.shape.controller.x + ',' + extensionSvgContainer.shape.controller.y
+    extensionSvgContainerInfo.adapter = extensionSvgContainer.shape.adapter.x + ',' + extensionSvgContainer.shape.adapter.y
+    extensionSvgContainerInfo.adapterSize = extensionSvgContainer.shape.adapterSize
+    extensionSvgContainerInfo.svg = extensionSvgContainer.svg
+    extensionSvgContainerInfo.enableFillColor = extensionSvgContainer.enableFillColor
+    extensionSvgContainerInfo.enableStrokeColor = extensionSvgContainer.enableStrokeColor
+
+    return extensionSvgContainerInfo
+  }
+
   public static saveCustomImageShape(imageContainer: ImageContainer): EditorItemInfo {
     let styleInfos: StyleInfo[] = Style.makeStyleInfos(imageContainer.shape.styles)
     let imageContainerInfo = new ImageContainerInfo(
@@ -897,6 +1290,30 @@ export class OperationHelper {
     return imageContainerInfo
   }
 
+  public static saveExtensionImageShape(extensionImageContainer: ExtensionImageContainer): EditorItemInfo {
+    let styleInfos: StyleInfo[] = Style.makeStyleInfos(extensionImageContainer.shape.styles)
+    let extensionImageContainerInfo = new ExtensionImageContainerInfo(
+      extensionImageContainer.entityExtension.name,
+      extensionImageContainer.category,
+      extensionImageContainer.extensionCategory.name,
+      extensionImageContainer.plugin.name,
+      extensionImageContainer.left,
+      extensionImageContainer.top,
+      extensionImageContainer.width,
+      extensionImageContainer.height,
+      extensionImageContainer.text,
+      extensionImageContainer.rotation.radius,
+      styleInfos,
+    )
+    extensionImageContainerInfo.rotation = extensionImageContainer.rotation.radius
+    extensionImageContainerInfo.modifier = extensionImageContainer.shape.modifier.x + ',' + extensionImageContainer.shape.modifier.y
+    extensionImageContainerInfo.controller = extensionImageContainer.shape.controller.x + ',' + extensionImageContainer.shape.controller.y
+    extensionImageContainerInfo.adapter = extensionImageContainer.shape.adapter.x + ',' + extensionImageContainer.shape.adapter.y
+    extensionImageContainerInfo.adapterSize = extensionImageContainer.shape.adapterSize
+    extensionImageContainerInfo.image = extensionImageContainer.image
+
+    return extensionImageContainerInfo
+  }
   public static saveTable(tableEntity: TableEntity): EditorItemInfo {
     let styleInfos: StyleInfo[] = Style.makeStyleInfos(tableEntity.shape.styles)
     let tableInfo = new TableInfo(
@@ -928,6 +1345,25 @@ export class OperationHelper {
     )
 
     return tableInfo
+  }
+
+  public static saveExtensionTable(extensionTable: ExtensionTable): EditorItemInfo {
+    let styleInfos: StyleInfo[] = Style.makeStyleInfos(extensionTable.shape.styles)
+    let extensionTableInfo = new ExtensionTableInfo(
+      extensionTable.left,
+      extensionTable.top,
+      extensionTable.width,
+      extensionTable.height,
+      extensionTable.entityExtension.name,
+      extensionTable.extensionCategory.name,
+      extensionTable.plugin.name,
+      extensionTable.rowCount,
+      extensionTable.columnCount,
+      extensionTable.rotation.radius,
+      styleInfos,
+    )
+
+    return extensionTableInfo
   }
 
   public static saveContainer(container: ContainerEntity): EditorItemInfo {
@@ -968,6 +1404,29 @@ export class OperationHelper {
     containerInfo.modifier = container.shape.modifier.x + ',' + container.shape.modifier.y
     containerInfo.adapter = container.shape.adapter.x + ',' + container.shape.adapter.y
     containerInfo.adapterSize = container.shape.adapterSize
+
+    return containerInfo
+  }
+
+  public static saveExtensionContainer(extensionContainer: ExtensionContainer): EditorItemInfo {
+    let styleInfos: StyleInfo[] = Style.makeStyleInfos(extensionContainer.shape.styles)
+    let containerInfo = new ExtensionContainerInfo(
+      extensionContainer.entityExtension.name,
+      extensionContainer.category,
+      extensionContainer.extensionCategory.name,
+      extensionContainer.plugin.name,
+      extensionContainer.left,
+      extensionContainer.top,
+      extensionContainer.width,
+      extensionContainer.height,
+      extensionContainer.text,
+      extensionContainer.rotation.radius,
+      styleInfos,
+    )
+    containerInfo.rotation = extensionContainer.rotation.radius
+    containerInfo.modifier = extensionContainer.shape.modifier.x + ',' + extensionContainer.shape.modifier.y
+    containerInfo.adapter = extensionContainer.shape.adapter.x + ',' + extensionContainer.shape.adapter.y
+    containerInfo.adapterSize = extensionContainer.shape.adapterSize
 
     return containerInfo
   }
@@ -1129,6 +1588,51 @@ export class OperationHelper {
     connectorInfo.connectorDoubleLineGap = customConnector.connectorDoubleLineGap
     connectorInfo.connectorDoubleLineArrowLength = customConnector.connectorDoubleLineArrowLength
     connectorInfo.connectorDoubleLineArrowDistance = customConnector.connectorDoubleLineArrowDistance
+
+    return connectorInfo
+  }
+
+  public static saveExtensionConnector(extensionConnector: ExtensionConnector): EditorItemInfo {
+    let styleInfos: StyleInfo[] = Style.makeStyleInfos(extensionConnector.shape.styles)
+    let connectorInfo = new ExtensionConnectorInfo(
+      extensionConnector.connectorTypeInfo.name,
+      extensionConnector.category,
+      extensionConnector.extensionCategory.name,
+      extensionConnector.plugin.name,
+      extensionConnector.start.x,
+      extensionConnector.start.y,
+      extensionConnector.end.x,
+      extensionConnector.end.y,
+      extensionConnector.text,
+      extensionConnector.rotation.radius,
+      styleInfos,
+    )
+    if (extensionConnector.source) {
+      connectorInfo.source = extensionConnector.source.id
+    }
+    if (extensionConnector.target) {
+      connectorInfo.target = extensionConnector.target.id
+    }
+    if (extensionConnector.sourceJoint) {
+      connectorInfo.sourceJoint = CommonUtils.generatePointString(extensionConnector.sourceJoint)
+    }
+    if (extensionConnector.targetJoint) {
+      connectorInfo.targetJoint = CommonUtils.generatePointString(extensionConnector.targetJoint)
+    }
+
+    connectorInfo.text = extensionConnector.text
+    connectorInfo.connectorType = extensionConnector.connectorType ? CommonUtils.generateConnectorType(extensionConnector.connectorType) : null
+    connectorInfo.startArrow = CommonUtils.generateConnectorArrow(extensionConnector.startArrow)
+    connectorInfo.endArrow = CommonUtils.generateConnectorArrow(extensionConnector.endArrow)
+    connectorInfo.curveStartModifier = CommonUtils.generatePointString(extensionConnector.curveStartModifier)
+    connectorInfo.curveEndModifier = CommonUtils.generatePointString(extensionConnector.curveEndModifier)
+    connectorInfo.startDirection = CommonUtils.generateConnectorDirection(extensionConnector.startDirection)
+    connectorInfo.endDirection = CommonUtils.generateConnectorDirection(extensionConnector.endDirection)
+    connectorInfo.orthogonalPoints = CommonUtils.generatePointsString(extensionConnector.orthogonalPoints)
+    connectorInfo.connectorMode = CommonUtils.generateConnectorMode(extensionConnector.connectorMode)
+    connectorInfo.connectorDoubleLineGap = extensionConnector.connectorDoubleLineGap
+    connectorInfo.connectorDoubleLineArrowLength = extensionConnector.connectorDoubleLineArrowLength
+    connectorInfo.connectorDoubleLineArrowDistance = extensionConnector.connectorDoubleLineArrowDistance
 
     return connectorInfo
   }

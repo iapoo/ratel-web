@@ -45,6 +45,12 @@ export class Categories {
   public static EXTENDED_SHAPE = 'ExtendedShape'
   public static CUSTOM_CONNECTOR = 'CustomConnector'
   public static CUSTOM_CONTAINER = 'CustomContainer'
+  public static EXTENSION_ENTITY = 'ExtensionEntity'
+  public static EXTENSION_CONTAINER = 'ExtensionContainer'
+  public static EXTENSION_TABLE = 'ExtensionTable'
+  public static EXTENSION_CONNECTOR = 'ExtensionConnector'
+  public static EXTENSION_IMAGE = 'ExtensionImage'
+  public static EXTENSION_SVG = 'ExtensionSvg'
 }
 
 export abstract class Item implements EditorItem {

@@ -41,7 +41,16 @@ export { CustomTableEntity } from './src/CustomTableEntity'
 export { CustomTableInfo } from './src/CustomTableInfo'
 export { EditorItemInfo } from './src/EditorItemInfo'
 export { Entity } from './src/Entity'
-export { ExtendedConnector, ExtendedContainer, ExtendedEntity, ExtendedImageContainer, ExtendedSvgContainer, ExtendedTable } from './src/EntityExtensions'
+export {
+  ExtensionConnector,
+  ExtensionContainer,
+  ExtensionEntity,
+  ExtensionImageContainer,
+  ExtensionSvgContainer,
+  ExtensionTable,
+  ExtensionUtils,
+} from './src/EntityExtensions'
+export { ExtensionEntityInfo } from './src/ExtensionEntityInfo'
 export { FrameEntity } from './src/FrameEntity'
 export { FrameEntityInfo } from './src/FrameEntityInfo'
 export { GroupEntity } from './src/GroupEntity'
