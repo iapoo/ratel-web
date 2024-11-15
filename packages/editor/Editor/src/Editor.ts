@@ -2825,8 +2825,8 @@ export class Editor extends Painter {
       }
       const left = editorItem.left
       const top = editorItem.top
-      const sourceConnectorCount = editorItem.getSourceConnectorCount()
-      const targetConnectorCount = editorItem.getTargetConnectorCount()
+      // const sourceConnectorCount = editorItem.getSourceConnectorCount()
+      // const targetConnectorCount = editorItem.getTargetConnectorCount()
       //const ex = Number(Math.round((left + e.x / this._zoom - this._startPointX / this._zoom) / 1))
       //const ey = Number(Math.round((top + e.y / this._zoom - this._startPointY / this._zoom) / 1))
       //const ex = left + e.x / this._zoom - this._startPointX / this._zoom
@@ -2851,52 +2851,7 @@ export class Editor extends Painter {
         //console.log(`startx = ${startX} start.y=${startY} end.x = ${endX} end.y = ${endY}`)
       } else if (editorItem instanceof Entity) {
       }
-      for (let j = 0; j < sourceConnectorCount; j++) {
-        const connector = editorItem.getSourceConnector(j)
-        let connectorInSelection = false
-        for (let k = 0; k < count; k++) {
-          const checkItem = theSelectionLayer.getEditorItem(k) as Item
-          if (checkItem === connector) {
-            connectorInSelection = true
-          }
-        }
-        if (connector.source === editorItem) {
-          // connector.updateSourceJoint()
-          // if (connector.sourceJoint) {
-          //  connector.sourceJoint = new Point2(connector.sourceJoint.x + e.x / this._zoom - this._startPointX / this._zoom, connector.sourceJoint.y + e.y / this._zoom - this._startPointY / this._zoom)
-          // }
-          if (connectorInSelection) {
-            connector.autoRefreshOrthogonalPoints = false
-            connector.start = new Point2(connector.start.x + alignMoveX, connector.start.y + alignMoveY)
-            connector.autoRefreshOrthogonalPoints = true
-          } else {
-            connector.start = new Point2(connector.start.x + alignMoveX, connector.start.y + alignMoveY)
-          }
-        }
-      }
-      for (let j = 0; j < targetConnectorCount; j++) {
-        const connector = editorItem.getTargetConnector(j)
-        let connectorInSelection = false
-        for (let k = 0; k < count; k++) {
-          const checkItem = theSelectionLayer.getEditorItem(k) as Item
-          if (checkItem === connector) {
-            connectorInSelection = true
-          }
-        }
-        if (connector.target === editorItem) {
-          // connector.updateTargetJoint()
-          // connector.end = new Point2(connector.end.x + e.x - this._startPointX, connector.end.y + e.y - this._startPointY)
-          if (connectorInSelection) {
-            connector.autoRefreshOrthogonalPoints = false
-            connector.end = new Point2(connector.end.x + alignMoveX, connector.end.y + alignMoveY)
-            connector.autoRefreshOrthogonalPoints = true
-          } else {
-            connector.end = new Point2(connector.end.x + alignMoveX, connector.end.y + alignMoveY)
-          }
-          //connector.end = new Point2(connector.end.x + e.x - this._startPointX, connector.end.y + e.y - this._startPointY)
-          //console.log(`end is connector.end.x = ${connector.end.x} connector.end.y = ${connector.end.y} item.x = ${editorItem.left} item.y = ${editorItem.top}`)
-        }
-      }
+      this.checkConnectorsWhenMoving(editorItem, alignMoveX, alignMoveY)
     }
     if (alignMoveX !== 0) {
       //this._startPointX = e.x
@@ -2915,6 +2870,68 @@ export class Editor extends Painter {
     this.handleTableActiveCellShape()
   }
 
+  private checkConnectorsWhenMoving(editorItem: Item, alignMoveX: number, alignMoveY: number) {
+    this.checkAndUpdateConnectorsWhenMoving(editorItem, alignMoveX, alignMoveY)
+    if (editorItem.isContainer) {
+      for (let i = 0; i < editorItem.items.length; i++) {
+        const child = editorItem.items[i]
+        this.checkConnectorsWhenMoving(child as Item, alignMoveX, alignMoveY)
+      }
+    }
+  }
+
+  private checkAndUpdateConnectorsWhenMoving(editorItem: Item, alignMoveX: number, alignMoveY: number) {
+    const sourceConnectorCount = editorItem.getSourceConnectorCount()
+    const targetConnectorCount = editorItem.getTargetConnectorCount()
+    const theSelectionLayer = this.selectionLayer as SelectionLayer
+    const count = theSelectionLayer.getEditorItemCount()
+    for (let j = 0; j < sourceConnectorCount; j++) {
+      const connector = editorItem.getSourceConnector(j)
+      let connectorInSelection = false
+      for (let k = 0; k < count; k++) {
+        const checkItem = theSelectionLayer.getEditorItem(k) as Item
+        if (checkItem === connector) {
+          connectorInSelection = true
+        }
+      }
+      if (connector.source === editorItem) {
+        // connector.updateSourceJoint()
+        // if (connector.sourceJoint) {
+        //  connector.sourceJoint = new Point2(connector.sourceJoint.x + e.x / this._zoom - this._startPointX / this._zoom, connector.sourceJoint.y + e.y / this._zoom - this._startPointY / this._zoom)
+        // }
+        if (connectorInSelection) {
+          connector.autoRefreshOrthogonalPoints = false
+          connector.start = new Point2(connector.start.x + alignMoveX, connector.start.y + alignMoveY)
+          connector.autoRefreshOrthogonalPoints = true
+        } else {
+          connector.start = new Point2(connector.start.x + alignMoveX, connector.start.y + alignMoveY)
+        }
+      }
+    }
+    for (let j = 0; j < targetConnectorCount; j++) {
+      const connector = editorItem.getTargetConnector(j)
+      let connectorInSelection = false
+      for (let k = 0; k < count; k++) {
+        const checkItem = theSelectionLayer.getEditorItem(k) as Item
+        if (checkItem === connector) {
+          connectorInSelection = true
+        }
+      }
+      if (connector.target === editorItem) {
+        // connector.updateTargetJoint()
+        // connector.end = new Point2(connector.end.x + e.x - this._startPointX, connector.end.y + e.y - this._startPointY)
+        if (connectorInSelection) {
+          connector.autoRefreshOrthogonalPoints = false
+          connector.end = new Point2(connector.end.x + alignMoveX, connector.end.y + alignMoveY)
+          connector.autoRefreshOrthogonalPoints = true
+        } else {
+          connector.end = new Point2(connector.end.x + alignMoveX, connector.end.y + alignMoveY)
+        }
+        //connector.end = new Point2(connector.end.x + e.x - this._startPointX, connector.end.y + e.y - this._startPointY)
+        //console.log(`end is connector.end.x = ${connector.end.x} connector.end.y = ${connector.end.y} item.x = ${editorItem.left} item.y = ${editorItem.top}`)
+      }
+    }
+  }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private startMoveOutline(e: PointerEvent) {
     this._moveLayer.addNode(this._selectionOutlineShape)

@@ -1210,10 +1210,10 @@ export class Connector extends Item {
     // //   console.log(`exception is here`)
     // // }
     // newEnd = new Point2(newEnd.x + offsetX, newEnd.y + offsetY)
-    console.log(`check start x= ${this.start.x} y = ${this.start.y} end x = ${this.end.x} y = ${this.end.y}`)
+    //console.log(`check start x= ${this.start.x} y = ${this.start.y} end x = ${this.end.x} y = ${this.end.y}`)
     const start = new Point2(this.start.x - this.left, this.start.y - this.top)
     const end = new Point2(this.end.x - this.left, this.end.y - this.top)
-    console.log(`init start x= ${start.x} y = ${start.y} end x = ${end.x} y = ${end.y}`)
+    //console.log(`init start x= ${start.x} y = ${start.y} end x = ${end.x} y = ${end.y}`)
     const minTop =
       this._sourceJoint && this._targetJoint ? Math.min(start.y - this._sourceJoint.y, end.y - this._targetJoint.y) - Connector.DEFAULT_ARROW_SEGMENT : 0
     const minLeft =
