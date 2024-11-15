@@ -841,6 +841,7 @@ const Navigator: FC<NavigatorProps> = ({
     setMyShapesChanged(true)
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const externalItems = () => {
     const internalPluginItems: CollapseProps['items'] = []
     let baseKey = 100
@@ -1083,7 +1084,8 @@ const Navigator: FC<NavigatorProps> = ({
     },
   ]
 
-  const mergedItems = [...internalItems, ...externalItems()]
+  //const mergedItems = [...internalItems, ...externalItems()]
+  const mergedItems = [...internalItems]
 
   // @ts-ignore
   return (
