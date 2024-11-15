@@ -1210,12 +1210,14 @@ export class Connector extends Item {
     // //   console.log(`exception is here`)
     // // }
     // newEnd = new Point2(newEnd.x + offsetX, newEnd.y + offsetY)
+    console.log(`check start x= ${this.start.x} y = ${this.start.y} end x = ${this.end.x} y = ${this.end.y}`)
     const start = new Point2(this.start.x - this.left, this.start.y - this.top)
     const end = new Point2(this.end.x - this.left, this.end.y - this.top)
-    //console.log(`init start x= ${start.x} y = ${start.y} end x = ${end.x} y = ${end.y}`)
+    console.log(`init start x= ${start.x} y = ${start.y} end x = ${end.x} y = ${end.y}`)
     const minTop =
       this._sourceJoint && this._targetJoint ? Math.min(start.y - this._sourceJoint.y, end.y - this._targetJoint.y) - Connector.DEFAULT_ARROW_SEGMENT : 0
-    const minLeft = this._source && this._target ? Math.min(this._source.left - this.left, this._target.left - this.left) - Connector.DEFAULT_ARROW_SEGMENT : 0
+    const minLeft =
+      this._source && this._target ? Math.min(this.getSourceLeft() - this.left, this.getTargetLeft() - this.left) - Connector.DEFAULT_ARROW_SEGMENT : 0
     const minBottom =
       this._source && this._target && this._sourceJoint && this._targetJoint
         ? Math.max(start.y + this._source.height - this._sourceJoint.y, end.y + this._target.height - this._targetJoint.y) + Connector.DEFAULT_ARROW_SEGMENT
@@ -1323,33 +1325,33 @@ export class Connector extends Item {
   private findTargetPosition(): TargetPosition {
     let result = TargetPosition.None
     if (this._target && this._source) {
-      if (this._target.left + this._target.width < this._source.left) {
+      if (this.getTargetLeft() + this._target.width < this.getSourceLeft()) {
         result = TargetPosition.Left
-      } else if (this._target.top + this._target.height < this._source.top) {
+      } else if (this.getTargetTop() + this._target.height < this.getSourceTop()) {
         result = TargetPosition.Top
-      } else if (this._source.left + this._source.width < this._target.left) {
+      } else if (this.getSourceLeft() + this._source.width < this.getTargetLeft()) {
         result = TargetPosition.Right
-      } else if (this._source.top + this._source.height < this._target.top) {
+      } else if (this.getSourceTop() + this._source.height < this.getTargetTop()) {
         result = TargetPosition.Bottom
       }
     } else if (this._source) {
-      if (this._end.x < this._source.left) {
+      if (this._end.x < this.getSourceLeft()) {
         result = TargetPosition.Left
-      } else if (this._end.y < this._source.top) {
+      } else if (this._end.y < this.getSourceTop()) {
         result = TargetPosition.Top
-      } else if (this._end.x > this._source.left + this._source.width) {
+      } else if (this._end.x > this.getSourceLeft() + this._source.width) {
         result = TargetPosition.Right
-      } else if (this._end.y > this._source.top + this._source.height) {
+      } else if (this._end.y > this.getSourceTop() + this._source.height) {
         result = TargetPosition.Bottom
       }
     } else if (this._target) {
-      if (this._start.x < this._target.left) {
+      if (this._start.x < this.getTargetLeft()) {
         result = TargetPosition.Left
-      } else if (this._start.y < this._target.top) {
+      } else if (this._start.y < this.getTargetTop()) {
         result = TargetPosition.Top
-      } else if (this._start.x > this._target.left + this._target.width) {
+      } else if (this._start.x > this.getTargetLeft() + this._target.width) {
         result = TargetPosition.Right
-      } else if (this._start.y > this._target.top + this._target.height) {
+      } else if (this._start.y > this.getTargetTop() + this._target.height) {
         result = TargetPosition.Bottom
       }
     } else {
@@ -1361,13 +1363,13 @@ export class Connector extends Item {
   private findTargetPositionWithStart(): TargetPosition {
     let result = TargetPosition.None
     if (this._source) {
-      if (this._end.x < this._source.left) {
+      if (this._end.x < this.getSourceLeft()) {
         result = TargetPosition.Left
-      } else if (this._end.y < this._source.top) {
+      } else if (this._end.y < this.getSourceTop()) {
         result = TargetPosition.Top
-      } else if (this._end.x > this._source.left + this._source.width) {
+      } else if (this._end.x > this.getSourceLeft() + this._source.width) {
         result = TargetPosition.Right
-      } else if (this._end.y > this._source.top + this._source.height) {
+      } else if (this._end.y > this.getSourceTop() + this._source.height) {
         result = TargetPosition.Bottom
       }
     } else {
@@ -1379,13 +1381,13 @@ export class Connector extends Item {
   private findTargetPositionWithEnd(): TargetPosition {
     let result = TargetPosition.None
     if (this._target) {
-      if (this._start.x < this._target.left) {
+      if (this._start.x < this.getTargetLeft()) {
         result = TargetPosition.Left
-      } else if (this._start.y < this._target.top) {
+      } else if (this._start.y < this.getTargetTop()) {
         result = TargetPosition.Top
-      } else if (this._start.x > this._target.left + this._target.width) {
+      } else if (this._start.x > this.getTargetLeft() + this._target.width) {
         result = TargetPosition.Right
-      } else if (this._start.y > this._target.top + this._target.height) {
+      } else if (this._start.y > this.getTargetTop() + this._target.height) {
         result = TargetPosition.Bottom
       }
     } else {
@@ -4474,6 +4476,56 @@ export class Connector extends Item {
         points.splice(index - 1, 1)
       }
       index--
+    }
+  }
+
+  /**
+   * Source must exists
+   * @private
+   */
+  private getSourceLeft() {
+    if (this.source) {
+      const transform = this.source.worldTransform
+      return transform.makePoint(new Point2(this.source.left, this.source.top)).x
+    } else {
+      return this.source!.left
+    }
+  }
+  /**
+   * Source must exists
+   * @private
+   */
+  private getSourceTop() {
+    if (this.source) {
+      const transform = this.source.worldTransform
+      return transform.makePoint(new Point2(this.source.left, this.source.top)).y
+    } else {
+      return this.source!.top
+    }
+  }
+
+  /**
+   * Target must exists
+   * @private
+   */
+  private getTargetLeft() {
+    if (this.target) {
+      const transform = this.target.worldTransform
+      return transform.makePoint(new Point2(this.target.left, this.target.top)).x
+    } else {
+      return this.target!.left
+    }
+  }
+  /**
+   * Target must exists
+   * @private
+   */
+  private getTargetTop() {
+    if (this.target) {
+      const transform = this.target.worldTransform
+      return transform.makePoint(new Point2(this.target.left, this.target.top)).y
+    } else {
+      return this.target!.top
     }
   }
 }
