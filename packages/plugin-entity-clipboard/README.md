@@ -1,4 +1,4 @@
-# Plugin for mind shapes
+# Plugin for clipboard shapes
 
 It is plugin for ratel-web
 

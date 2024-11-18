@@ -1662,11 +1662,44 @@ export class Editor extends Painter {
     return result
   }
 
+  /**
+   * Check if container exists on x,y
+   * @param x
+   * @param y
+   * @private
+   */
   private findContainerEntity(x: number, y: number): ContainerEntity | undefined {
     let result
     const count = this.contentLayer.getEditorItemCount()
     for (let i = 0; i < count; i++) {
       const editorItem = this.contentLayer.getEditorItem(i)
+      const shape = editorItem.shape
+      if (
+        editorItem instanceof ContainerEntity &&
+        !(editorItem instanceof TableEntity) &&
+        shape.intersects(x - Editor.TEST_RADIUS, y - Editor.TEST_RADIUS, Editor.TEST_SIZE, Editor.TEST_SIZE)
+      ) {
+        const containerEntity = this.findContainerEntityInContainer(x, y, editorItem)
+        if (containerEntity) {
+          result = containerEntity
+        }
+      }
+    }
+    return result
+  }
+
+  /**
+   * Check if container exists on x,y
+   * @param x
+   * @param y
+   * @param container
+   * @private
+   */
+  private findContainerEntityInContainer(x: number, y: number, container: ContainerEntity): ContainerEntity | undefined {
+    let result
+    const count = container.items.length
+    for (let i = 0; i < count; i++) {
+      const editorItem = container.items[i]
       const shape = editorItem.shape
       //console.log(`Finding items ${x}    ${y}    ==== ${shape.position.x}    ${shape.position.y}`)
       //console.log(`check container: ${editorItem instanceof ContainerEntity}`)
@@ -1675,33 +1708,42 @@ export class Editor extends Painter {
         !(editorItem instanceof TableEntity) &&
         shape.intersects(x - Editor.TEST_RADIUS, y - Editor.TEST_RADIUS, Editor.TEST_SIZE, Editor.TEST_SIZE)
       ) {
-        //console.log(`check container now....`)
-        let inSelection = false
-        // TODO:  Comment since it cause issue when create new shape into container. Need to check why original code here
-        // const selectionCount = this.selectionLayer.getEditorItemCount()
-        // for (let j = 0; j < selectionCount; j++) {
-        //   const selection = this.selectionLayer.getEditorItem(j)
-        //   if (editorItem === selection) {
-        //     //console.log(`check container now for selection ....`)
-        //     inSelection = true
-        //   }
-        // }
-        const controlCount = this.controllerLayer.getEditorItemCount()
-        for (let j = 0; j < controlCount; j++) {
-          const selection = this.controllerLayer.getEditorItem(j)
-          if (editorItem === selection) {
-            //console.log(`check container now for controller ....`)
+        const containerEntity = this.findContainerEntityInContainer(x, y, editorItem)
+        if (containerEntity) {
+          result = containerEntity
+        }
+      }
+    }
+    if (!result) {
+      //console.log(`check container now....`)
+      let inSelection = false
+      //Check and Skip if current container is in selection (moving container). However, skip check if in creating shapes.
+      if (!this._action || this._action.items.length === 0) {
+        const selectionCount = this.selectionLayer.getEditorItemCount()
+        for (let j = 0; j < selectionCount; j++) {
+          const selection = this.selectionLayer.getEditorItem(j)
+          if (container === selection) {
             inSelection = true
           }
         }
-        if (!inSelection) {
-          result = editorItem
-        }
-        //console.log(
-        //  `check container now.... result= ${result}  selectionCount = ${selectionCount}  controlCount = ${controlCount} inSelection = ${inSelection}`,
-        //)
       }
+      //TODO: Need to check & explain why following code here
+      // const controlCount = this.controllerLayer.getEditorItemCount()
+      // for (let j = 0; j < controlCount; j++) {
+      //   const selection = this.controllerLayer.getEditorItem(j)
+      //   if (editorItem === selection) {
+      //     console.log(`check container now for controller ....`)
+      //     inSelection = true
+      //   }
+      // }
+      if (!inSelection) {
+        result = container
+      }
+      //console.log(
+      //  `check container now.... result= ${result}  selectionCount = ${selectionCount}  controlCount = ${controlCount} inSelection = ${inSelection}`,
+      //)
     }
+
     return result
   }
 
@@ -1982,6 +2024,7 @@ export class Editor extends Painter {
     let height = bottom - top
     let ex = this.alignToGridSize((e.x - this.horizontalSpace) / this._zoom - width / 2)
     let ey = this.alignToGridSize((e.y - this.verticalSpace) / this._zoom - height / 2)
+    //Action can be multiple items for MyShapes
     action.items.forEach((item) => {
       let itemWidth = item.width //this.alignToGridSize(item.width)
       let itemHeight = item.height //this.alignToGridSize(item.height)
@@ -2536,7 +2579,13 @@ export class Editor extends Painter {
     //console.log(`Container 1... `)
     if (this._inContainerSelection) {
       //console.log(`Container 2 ... `)
-      this._containerSelectionShape.boundary = container.boundary
+      const containerBoundary = Editor.getItemsBoundary([container])
+      this._containerSelectionShape.boundary = Rectangle.makeLTWH(
+        containerBoundary[0],
+        containerBoundary[1],
+        containerBoundary[2] - containerBoundary[0],
+        containerBoundary[3] - containerBoundary[1],
+      )
     } else {
       //console.log(`Container 3 ... `)
       this._containerSelectionShape.boundary = Rectangle.makeLTWH(0, 0, 0, 0)
@@ -2555,8 +2604,10 @@ export class Editor extends Painter {
           // It occurs when container selected and then create new shape into the container
           //Do nothing here
         } else {
-          const left = selection.left - containerEntity.left
-          const top = selection.top - containerEntity.top
+          const [sLeft, sTop] = Editor.getItemsBoundary([selection])
+          const [cLeft, cTop] = Editor.getItemsBoundary([containerEntity])
+          const left = sLeft - cLeft
+          const top = sTop - cTop
           const rotation = selection.rotation.radius - containerEntity.rotation.radius
 
           selection.boundary = Rectangle.makeLTWH(left, top, selection.width, selection.height)
@@ -2615,11 +2666,15 @@ export class Editor extends Painter {
 
   private checkIfSelectionInContainer(containerEntity: ContainerEntity): boolean {
     const [left, top, right, bottom] = this.getSelectionBoundary()
-    //console.log(`check selection in container 3... ${containerEntity.left} ${containerEntity.top} ${containerEntity.right} ${containerEntity.bottom} ${left} ${top} ${right} ${bottom}`)
-    if (containerEntity.left <= left && containerEntity.top <= top && containerEntity.right >= right && containerEntity.bottom >= bottom) {
-      //console.log(`check selection in container 4... ${containerEntity}`)
+    const [cLeft, cTop, cRight, cBottom] = Editor.getItemsBoundary([containerEntity])
+    if (cLeft <= left && cTop <= top && cRight >= right && cBottom >= bottom) {
       return true
     }
+    // //console.log(`check selection in container 3... ${containerEntity.left} ${containerEntity.top} ${containerEntity.right} ${containerEntity.bottom} ${left} ${top} ${right} ${bottom}`)
+    // if (containerEntity.left <= left && containerEntity.top <= top && containerEntity.right >= right && containerEntity.bottom >= bottom) {
+    //   //console.log(`check selection in container 4... ${containerEntity}`)
+    //   return true
+    // }
     return false
   }
 
@@ -2628,11 +2683,15 @@ export class Editor extends Painter {
     const top = editorItem.top
     const right = editorItem.right
     const bottom = editorItem.bottom
-    //console.log(`check selection in container 3... ${containerEntity.left} ${containerEntity.top} ${containerEntity.right} ${containerEntity.bottom} ${left} ${top} ${right} ${bottom}`)
-    if (containerEntity.left <= left && containerEntity.top <= top && containerEntity.right >= right && containerEntity.bottom >= bottom) {
-      //console.log(`check selection in container 4... ${containerEntity}`)
+    const [cLeft, cTop, cRight, cBottom] = Editor.getItemsBoundary([containerEntity])
+    if (cLeft <= left && cTop <= top && cRight >= right && cBottom >= bottom) {
       return true
     }
+    //console.log(`check selection in container 3... ${containerEntity.left} ${containerEntity.top} ${containerEntity.right} ${containerEntity.bottom} ${left} ${top} ${right} ${bottom}`)
+    // if (containerEntity.left <= left && containerEntity.top <= top && containerEntity.right >= right && containerEntity.bottom >= bottom) {
+    //   //console.log(`check selection in container 4... ${containerEntity}`)
+    //   return true
+    // }
     return false
   }
 
@@ -2995,7 +3054,8 @@ export class Editor extends Painter {
       const firstSelection = this.selectionLayer.getEditorItem(0) as Item
       if (firstSelection.parent) {
         const parent = firstSelection.parent
-        if ((left > parent.left && top > parent.top && right < parent.right && bottom < parent.bottom) || !(parent instanceof ContainerEntity)) {
+        const [pLeft, pTop, pRight, pBottom] = Editor.getItemsBoundary([firstSelection.parent])
+        if ((left >= pLeft && top >= pTop && right <= pRight && bottom <= pBottom) || !(parent instanceof ContainerEntity)) {
           requireRemove = false
         } else {
           requireRemove = true
@@ -3010,8 +3070,9 @@ export class Editor extends Painter {
       for (let i = 0; i < count; i++) {
         const selection = this.selectionLayer.getEditorItem(i) as Item
         if (selection.parent) {
-          const left = selection.left + selection.parent.left
-          const top = selection.top + selection.parent.top
+          const [pLeft, pTop] = Editor.getItemsBoundary([selection.parent])
+          const left = selection.left + pLeft
+          const top = selection.top + pTop
           const rotation = selection.rotation.radius + selection.parent.rotation.radius
           selection.boundary = Rectangle.makeLTWH(left, top, selection.width, selection.height)
           selection.rotation = new Rotation(rotation)
