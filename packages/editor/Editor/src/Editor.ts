@@ -966,7 +966,7 @@ export class Editor extends Painter {
     //console.log(`Moving... x = ${e.x} action=${this._action}`)
     if (this._action) {
       //  in creating action
-      this.handlePointMoveinAction(e, this._action)
+      this.handlePointMoveInAction(e, this._action)
     } else if (this._targetRowResizing) {
       this.handleTargetRowResizing(e)
     } else if (this._targetColumnResizing) {
@@ -1668,31 +1668,38 @@ export class Editor extends Painter {
     for (let i = 0; i < count; i++) {
       const editorItem = this.contentLayer.getEditorItem(i)
       const shape = editorItem.shape
-      // console.log(`Finding items ${x}    ${y}    ==== ${shape.position.x}    ${shape.position.y}`)
+      //console.log(`Finding items ${x}    ${y}    ==== ${shape.position.x}    ${shape.position.y}`)
       //console.log(`check container: ${editorItem instanceof ContainerEntity}`)
       if (
         editorItem instanceof ContainerEntity &&
         !(editorItem instanceof TableEntity) &&
         shape.intersects(x - Editor.TEST_RADIUS, y - Editor.TEST_RADIUS, Editor.TEST_SIZE, Editor.TEST_SIZE)
       ) {
+        //console.log(`check container now....`)
         let inSelection = false
-        const selectionCount = this.selectionLayer.getEditorItemCount()
-        for (let j = 0; j < selectionCount; j++) {
-          const selection = this.selectionLayer.getEditorItem(j)
-          if (editorItem === selection) {
-            inSelection = true
-          }
-        }
+        // TODO:  Comment since it cause issue when create new shape into container. Need to check why original code here
+        // const selectionCount = this.selectionLayer.getEditorItemCount()
+        // for (let j = 0; j < selectionCount; j++) {
+        //   const selection = this.selectionLayer.getEditorItem(j)
+        //   if (editorItem === selection) {
+        //     //console.log(`check container now for selection ....`)
+        //     inSelection = true
+        //   }
+        // }
         const controlCount = this.controllerLayer.getEditorItemCount()
         for (let j = 0; j < controlCount; j++) {
           const selection = this.controllerLayer.getEditorItem(j)
           if (editorItem === selection) {
+            //console.log(`check container now for controller ....`)
             inSelection = true
           }
         }
         if (!inSelection) {
           result = editorItem
         }
+        //console.log(
+        //  `check container now.... result= ${result}  selectionCount = ${selectionCount}  controlCount = ${controlCount} inSelection = ${inSelection}`,
+        //)
       }
     }
     return result
@@ -1964,7 +1971,7 @@ export class Editor extends Painter {
     }
   }
 
-  private handlePointMoveinAction(e: PointerEvent, action: Action) {
+  private handlePointMoveInAction(e: PointerEvent, action: Action) {
     if (this.controllerLayer.count === 0) {
       this.controllerLayer.addEditorItems(action.items)
     }
@@ -1999,16 +2006,19 @@ export class Editor extends Painter {
     })
 
     const containerEntity = this.findContainerEntity(e.x, e.y)
-    let checkifInContainer = true
+    let checkIfInContainer = true
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const this_ = this
+    // console.log(`checkResult2 = ${containerEntity}`)
     action.items.forEach((item) => {
       const checkResult = containerEntity && this_.checkIfCreationInContainer(item, containerEntity)
+      // console.log(`checkResult =  ${checkResult} ${containerEntity}  --- ${containerEntity ? this_.checkIfCreationInContainer(item, containerEntity) : false}`)
       if (!checkResult) {
-        checkifInContainer = false
+        checkIfInContainer = false
       }
     })
-    if (containerEntity && checkifInContainer) {
+    // console.log(`in Container check: container = ${checkIfInContainer} , checkIfIn =  ${checkIfInContainer}`)
+    if (containerEntity && checkIfInContainer) {
       this.startContainerSelection()
       this.handleContainerSelection(containerEntity)
     } else {
@@ -2541,6 +2551,9 @@ export class Editor extends Painter {
         const selection = this.selectionLayer.getEditorItem(i) as Item
         if (selection.parent === containerEntity) {
           //Do nothing here
+        } else if (selection === containerEntity) {
+          // It occurs when container selected and then create new shape into the container
+          //Do nothing here
         } else {
           const left = selection.left - containerEntity.left
           const top = selection.top - containerEntity.top
@@ -2557,9 +2570,14 @@ export class Editor extends Painter {
           }
         }
       }
+      // if (this.target) {
+      //   this.target.items.forEach((item) => {
+      //     this.selectionLayer.addEditorItem(item)
+      //   })
+      // }
       this._inContainerSelection = false
       this._containerLayer.removeNode(this._containerSelectionShape)
-      this.selectionLayer.removeAllEditorItems()
+      //this.selectionLayer.removeAllEditorItems()
     }
   }
 
@@ -2776,6 +2794,8 @@ export class Editor extends Painter {
           item.boundary = Rectangle.makeLTWH(x + item.left - left, y + item.top - top, item.width, item.height)
           clickedEditorItem.addItem(item)
         })
+        this.selectionLayer.removeAllEditorItems()
+        this.selectionLayer.addEditorItems(this._action.items)
       } else {
         this.contentLayer.addEditorItems(this._action.items)
         this.selectionLayer.removeAllEditorItems()
