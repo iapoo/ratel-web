@@ -1,5 +1,23 @@
 import { Colors, Matrix, Rectangle, RoundRectangle, Scale, Shape } from '@ratel-web/engine'
-import { Circle, Container, Element, Ellipse, Gradient, Line, Marker, Path, Pattern, PointArray, Polyline, Rect, SVG, Stop, Style, Svg } from '@svgdotjs/svg.js'
+import {
+  Circle,
+  Container,
+  Element,
+  Ellipse,
+  G,
+  Gradient,
+  Line,
+  Marker,
+  Path,
+  Pattern,
+  PointArray,
+  Polyline,
+  Rect,
+  SVG,
+  Stop,
+  Style,
+  Svg,
+} from '@svgdotjs/svg.js'
 import { CustomSvgShape } from '../../Shapes'
 import { CommonUtils } from './CommonUtils'
 
@@ -64,6 +82,8 @@ export class SvgUtils {
         SvgUtils.parseLine(element, shape, svgRootShape)
       } else if (element instanceof Polyline) {
         SvgUtils.parsePolyline(element, shape, svgRootShape)
+      } else if (element instanceof G) {
+        SvgUtils.parseG(element, shape, svgRootShape)
       } else if (element instanceof Gradient) {
       } else if (element instanceof Stop) {
       } else if (element instanceof Pattern) {
@@ -78,8 +98,20 @@ export class SvgUtils {
     const viewbox = svg.viewbox()
     const width = viewbox.width
     const height = viewbox.height
+    SvgUtils.parseCommon(svg, shape, svgRootShape, svgRootShape)
     svgRootShape.scale = new Scale(shape.width / width, shape.height / height)
     SvgUtils.parseContainer(svg, shape, svgRootShape)
+  }
+
+  private static parseG(svg: G, shape: CustomSvgShape, svgRootShape: SvgRootShape) {
+    const x = svg.x()
+    const y = svg.y()
+    const width = svg.width()
+    const height = svg.height()
+    const gShape = new SvgShape(x, y, width, height)
+    svgRootShape.addNode(gShape)
+    SvgUtils.parseCommon(svg, shape, svgRootShape, gShape)
+    SvgUtils.parseContainer(svg, shape, gShape)
   }
 
   private static parseAttrs(attrs: any, shape: CustomSvgShape, svgRootShape: SvgRootShape, svgShape: SvgShape) {

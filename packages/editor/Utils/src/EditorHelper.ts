@@ -296,34 +296,35 @@ export class EditorHelper {
   }
 
   public static async exportToSVG(editor: Editor) {
-    const result = await EditorHelper.generatEditorSVG(editor, false)
+    const result = await EditorHelper.generateEditorSVG(editor, false)
     return result
   }
 
   public static async exportSelectedToSVG(editor: Editor) {
-    const result = await EditorHelper.generatEditorSVG(editor, true)
+    const result = await EditorHelper.generateEditorSVG(editor, true)
     return result
   }
 
-  private static async generatEditorSVG(editor: Editor, onlySelected: boolean) {
+  private static async generateEditorSVG(editor: Editor, onlySelected: boolean) {
     let content = ''
     const layer = onlySelected ? editor.selectionLayer : editor.contentLayer
+    const [left, top, right, bottom] = editor.getSelectionBoundary()
     for (let i = 0; i < layer.getEditorItemCount(); i++) {
       const editorItem = layer.getEditorItem(i)
-      content += await EditorHelper.generatEditorItemSVG(editorItem as Item, 0)
+      content += await EditorHelper.generateEditorItemSVG(editorItem as Item, 0, left, top)
     }
     const backgroundColorSVG = CommonUtils.generateColorString(editor.backgroundColor)
     const backgroundSVG = editor.showBackground ? `style="background-color:${backgroundColorSVG}"` : ''
     const result =
-      `<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.dev/svgjs" width="${editor.origWidth}" ` +
-      `height="${editor.origHeight}" viewbox="0 0 ${editor.origWidth} ${editor.origHeight}"  ${backgroundSVG} shape-rendering="geometricPrecision">` +
+      `<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.dev/svgjs" ` +
+      ` width="${right - left}" height="${bottom - top}" viewbox="0 0 ${right - left} ${bottom - top}"  ${backgroundSVG} shape-rendering="geometricPrecision">` +
       `${content}` +
       `\n</svg>`
     return result
   }
 
-  private static async generatEditorItemSVG(item: Item, depth: number) {
-    const itemSVG = await EditorHelper.generateSVGItem(item, depth)
+  private static async generateEditorItemSVG(item: Item, depth: number, left: number, top: number) {
+    const itemSVG = await EditorHelper.generateSVGItem(item, depth, left, top)
     let itemsSVG = ''
     let indent = ''
     for (let i = 0; i < depth; i++) {
@@ -333,7 +334,7 @@ export class EditorHelper {
       itemsSVG += `\n${indent}    <g>`
       for (let i = 0; i < item.items.length; i++) {
         const child = item.items[i]
-        itemsSVG += await EditorHelper.generatEditorItemSVG(child as Item, depth + 2)
+        itemsSVG += await EditorHelper.generateEditorItemSVG(child as Item, depth + 2, left, top)
       }
       itemsSVG += `\n${indent}    </g>`
     }
@@ -341,8 +342,8 @@ export class EditorHelper {
     return result
   }
 
-  private static async generateSVGItem(item: Item, depth: number) {
-    const transformSVG = EditorHelper.generateSVGTransform(item)
+  private static async generateSVGItem(item: Item, depth: number, lef: number, top: number) {
+    const transformSVG = EditorHelper.generateSVGTransform(item, lef, top)
     let indent = ''
     for (let i = 0; i < depth; i++) {
       indent += '    '
@@ -362,13 +363,13 @@ export class EditorHelper {
       const secondStrokeSVG = disableSecond ? '' : EditorHelper.generateSVGPaint(item.shape.secondStroke, true, item.shape.secondStroked)
       const secondFillSVG = disableSecond ? '' : EditorHelper.generateSVGPaint(item.shape.secondFill, false, item.shape.secondFilled)
       const thirdPathSvg = disableThird ? '' : EditorHelper.generateSVGPath(item.shape.thirdPath)
-      const thirdtrokeSVG = disableThird ? '' : EditorHelper.generateSVGPaint(item.shape.thirdStroke, true, item.shape.thirdStroked)
+      const thirdStrokeSVG = disableThird ? '' : EditorHelper.generateSVGPaint(item.shape.thirdStroke, true, item.shape.thirdStroked)
       const thirdFillSVG = disableThird ? '' : EditorHelper.generateSVGPaint(item.shape.thirdFill, false, item.shape.thirdFilled)
       const fourthPathSvg = disableFourth ? '' : EditorHelper.generateSVGPath(item.shape.fourthPath)
       const fourthStrokeSVG = disableFourth ? '' : EditorHelper.generateSVGPaint(item.shape.fourthStroke, true, item.shape.fourthStroked)
       const fourthFillSVG = disableFourth ? '' : EditorHelper.generateSVGPaint(item.shape.fourthFill, false, item.shape.fourthFilled)
       const secondSVG = disableSecond ? '' : `\n${indent}    <path ${secondFillSVG} ${secondStrokeSVG} ${secondPathSvg}/>`
-      const thirdSVG = disableThird ? '' : `\n${indent}    <path ${thirdFillSVG} ${thirdtrokeSVG} ${thirdPathSvg}/>`
+      const thirdSVG = disableThird ? '' : `\n${indent}    <path ${thirdFillSVG} ${thirdStrokeSVG} ${thirdPathSvg}/>`
       const fourthSVG = disableFourth ? '' : `\n${indent}    <path ${fourthFillSVG} ${fourthStrokeSVG} ${fourthPathSvg}/>`
       const textSVG = await EditorHelper.generateSVGText(item, indent + '    ')
 
@@ -619,8 +620,8 @@ export class EditorHelper {
     return result
   }
 
-  private static generateSVGTransform(item: Item) {
-    const translate = item.shape.position.x === 0 && item.shape.position.y === 0 ? '' : `translate(${item.shape.position.x}, ${item.shape.position.y})`
+  private static generateSVGTransform(item: Item, left: number, top: number) {
+    const translate = `translate(${item.shape.position.x - left}, ${item.shape.position.y - top})`
     const rotate =
       item.shape.rotation.px === 0 && item.shape.rotation.py === 0 && item.shape.rotation.radius === 0
         ? ''
