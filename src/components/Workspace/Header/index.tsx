@@ -1665,10 +1665,10 @@ const Header: FC<HeaderProps> = ({
       const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
       editorItems.forEach((editorItem: EditorItem) => {
         let color = CommonUtils.parseColorString(value.toHexString())
+        editorItem.useTheme = false
         if (color) {
           editorItem.fillColor = color
         }
-        editorItem.useTheme = false
       })
       const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
       const operation: Operation = new Operation(
@@ -1698,10 +1698,10 @@ const Header: FC<HeaderProps> = ({
       const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
       editorItems.forEach((editorItem: EditorItem) => {
         let color = CommonUtils.parseColorString(value.toHexString())
+        editorItem.useTheme = false
         if (color) {
           editorItem.strokeColor = color
         }
-        editorItem.useTheme = false
       })
       const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
       const operation: Operation = new Operation(
@@ -1731,10 +1731,10 @@ const Header: FC<HeaderProps> = ({
       const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
       editorItems.forEach((editorItem: EditorItem) => {
         let color = CommonUtils.parseColorString(value.toHexString())
+        editorItem.useTheme = false
         if (color) {
           editorItem.fontColor = color
         }
-        editorItem.useTheme = false
       })
       Utils.currentEditor.focus()
       Utils.currentEditor.triggerTextEditStyleChange()

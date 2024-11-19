@@ -25,7 +25,8 @@ export class SvgShape extends Shape {
   public constructor(left: number, top: number, width: number, height: number) {
     super(left, top, width, height)
     this.clipped = false
-    this.fill.setColor(Colors.Black)
+    this.stroke.setColor(Colors.Black)
+    this.fill.setColor(Colors.White)
   }
 }
 
@@ -33,7 +34,8 @@ export class SvgRootShape extends Shape {
   public constructor(left: number, top: number, width: number, height: number) {
     super(left, top, width, height)
     this.clipped = false
-    this.fill.setColor(Colors.Black)
+    this.stroke.setColor(Colors.Black)
+    this.fill.setColor(Colors.White)
   }
 }
 
@@ -60,15 +62,22 @@ export class SvgUtils {
     const svgRootShape = new SvgRootShape(0, 0, shape.width, shape.height)
     shape.addNode(svgRootShape)
     SvgUtils.parseContainer(svg, shape, svgRootShape)
-    //Make shape can be clicked
+    //Make shape can't be clicked
     shape.path.addRectangle(Rectangle.makeLTWH(0, 0, shape.width, shape.height))
     shape.filled = false
     shape.stroked = false
   }
 
+  /**
+   *
+   * @param container
+   * @param shape it is use to force update stroke or fill for all children in editor
+   * @param svgRootShape
+   * @private
+   */
   private static parseContainer(container: Container, shape: CustomSvgShape, svgRootShape: SvgRootShape) {
     const children = container.children()
-    shape.path.reset()
+    svgRootShape.path.reset()
     children.forEach((element) => {
       if (element instanceof Path) {
         SvgUtils.parsePath(element, shape, svgRootShape)
@@ -104,10 +113,11 @@ export class SvgUtils {
   }
 
   private static parseG(svg: G, shape: CustomSvgShape, svgRootShape: SvgRootShape) {
-    const x = svg.x()
-    const y = svg.y()
+    const x = 0 //svg.x()
+    const y = 0 //svg.y()
     const width = svg.width()
     const height = svg.height()
+    // @ts-ignore
     const gShape = new SvgShape(x, y, width, height)
     svgRootShape.addNode(gShape)
     SvgUtils.parseCommon(svg, shape, svgRootShape, gShape)

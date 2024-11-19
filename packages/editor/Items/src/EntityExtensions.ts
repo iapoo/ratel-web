@@ -325,6 +325,8 @@ export class ExtensionSvgContainer extends SvgContainer {
     this._entityExtension = entityExtension
     this._extensionCategory = extensionCategory
     this._plugin = plugin
+    this.enableFillColor = false
+    this.enableStrokeColor = false
   }
 
   public get extensionCategory(): ExtensionCategory {
