@@ -343,7 +343,7 @@ export class EditorHelper {
   }
 
   private static async generateSVGItem(item: Item, depth: number, lef: number, top: number) {
-    const transformSVG = EditorHelper.generateSVGTransform(item, lef, top)
+    const transformSVG = EditorHelper.generateSVGTransform(item, depth <= 0, lef, top)
     let indent = ''
     for (let i = 0; i < depth; i++) {
       indent += '    '
@@ -620,8 +620,8 @@ export class EditorHelper {
     return result
   }
 
-  private static generateSVGTransform(item: Item, left: number, top: number) {
-    const translate = `translate(${item.shape.position.x - left}, ${item.shape.position.y - top})`
+  private static generateSVGTransform(item: Item, useOffset: boolean, left: number, top: number) {
+    const translate = `translate(${item.shape.position.x - (useOffset ? left : 0)}, ${item.shape.position.y - (useOffset ? top : 0)})`
     const rotate =
       item.shape.rotation.px === 0 && item.shape.rotation.py === 0 && item.shape.rotation.radius === 0
         ? ''
