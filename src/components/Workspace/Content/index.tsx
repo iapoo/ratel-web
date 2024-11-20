@@ -628,6 +628,7 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
     panesRef.current = panes
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const doHandleShapeStyleChange = (item: EditorItem, styleName: string) => {
     item.themeName = styleName
     item.items.forEach((child) => {
@@ -642,10 +643,10 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
     }
     Utils.editors.forEach((editor) => {
       editor.theme = ThemeUtils.getDocumentTheme(documentThemeName)
-      let editorItems = editor.contentLayer.getAllEditorItems()
-      editorItems.forEach((editorItem: EditorItem) => {
-        doHandleShapeStyleChange(editorItem, documentThemeName)
-      })
+      // let editorItems = editor.contentLayer.getAllEditorItems()
+      // editorItems.forEach((editorItem: EditorItem) => {
+      //   doHandleShapeStyleChange(editorItem, documentThemeName)
+      // })
     })
   }
 
