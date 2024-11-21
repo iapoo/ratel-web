@@ -22,12 +22,13 @@ import {
 } from '../../Items'
 import { Operation, OperationHelper, OperationService, OperationType } from '../../Operations'
 import { ConnectorDirection } from '../../Shapes'
-import { DocumentThemeType } from '../../Theme/DocumentTheme'
+import { DocumentThemeType } from '../../Theme'
 import { CommonUtils } from '../../Utils'
 import { BackgroundLayer } from './BackgroundLayer'
 import { ContainerLayer } from './ContainerLayer'
 import { ContentLayer } from './ContentLayer'
 import { ControllerLayer } from './ControllerLayer'
+import { EditorContext } from './EditorContext'
 import { EditorEvent } from './EditorEvent'
 import { EditorLayer } from './EditorLayer'
 import { EditorOperationEvent } from './EditorOperationEvent'
@@ -87,28 +88,24 @@ export class Editor extends Painter {
   public static readonly ORIG_WIDTH_DEFAULT = 800
   public static readonly ORIG_HEIGHT_DEAULT = 600
 
-  private _backgroundLayer: BackgroundLayer
-  private _contentLayer: EditorLayer
-  private _controllerLayer: EditorLayer
-  private _hoverLayer: EditorLayer
-  private _selectionLayer: EditorLayer
-  private _maskLayer: EditorLayer
-  private _rangeLayer: EditorLayer
-  private _moveLayer: EditorLayer
-  private _containerLayer: EditorLayer
-  private _tableLayer: EditorLayer
-  private _exportLayer: EditorLayer
+  private readonly _backgroundLayer: BackgroundLayer
+  private readonly _contentLayer: EditorLayer
+  private readonly _controllerLayer: EditorLayer
+  private readonly _hoverLayer: EditorLayer
+  private readonly _selectionLayer: EditorLayer
+  private readonly _maskLayer: EditorLayer
+  private readonly _rangeLayer: EditorLayer
+  private readonly _moveLayer: EditorLayer
+  private readonly _containerLayer: EditorLayer
+  private readonly _tableLayer: EditorLayer
+  private readonly _exportLayer: EditorLayer
   private _zoom = 1.0
-  private _inMoving = false
-  private _moved = false //Check if movement already started
   private _gridSize = 10
   private _action: Action | undefined
-  private _startPointX = 0
-  private _startPointY = 0
   private _target: EditorItem | undefined
   private _targetTime = 0
   private _inCreatingConnector = false
-  private _textArea: HTMLTextAreaElement
+  private readonly _textArea: HTMLTextAreaElement
   private _textInputStatus = 'CHAR_TYPING'
   private _textCommandKey = false
   private _textFocused = false
@@ -156,9 +153,11 @@ export class Editor extends Painter {
   private _verticalSpace: number = Editor.VERTICAL_SPACE_DEFAULT
   private _theme: DocumentThemeType = DocumentThemeTypes[0]
   private _enableDarkTheme: boolean = true
+  private _editorContext: EditorContext
 
   public constructor(canvasId: string | HTMLCanvasElement) {
     super(canvasId)
+    this._editorContext = new EditorContext(this)
     this._backgroundLayer = new BackgroundLayer(this, this.horizontalSpace, this.verticalSpace, this.workWidth, this.workHeight, this.gridSize)
     this._contentLayer = new ContentLayer(this.horizontalSpace, this.verticalSpace, this.workWidth, this.workHeight)
     this._controllerLayer = new ControllerLayer(this.horizontalSpace, this.verticalSpace, this.workWidth, this.workHeight)
@@ -668,10 +667,6 @@ export class Editor extends Painter {
     this._backgroundLayer.backgroundColor = value
   }
 
-  public get inMoving(): boolean {
-    return this._inMoving
-  }
-
   public get isTextEditting(): boolean {
     return this._textFocused
   }
@@ -971,7 +966,7 @@ export class Editor extends Painter {
       this.handleTargetRowResizing(e)
     } else if (this._targetColumnResizing) {
       this.handleTargetColumnResizing(e)
-    } else if (this.inMoving) {
+    } else if (this._editorContext.inMoving) {
       // EditorItem is in moving
       this.handlePointMoveInMoving(e)
     } else if (this._inCreatingConnector) {
@@ -1001,8 +996,8 @@ export class Editor extends Painter {
       this.handleMouseRightButtonDown(e)
       return
     }
-    this._startPointX = e.x
-    this._startPointY = e.y
+    this._editorContext.startPointX = e.x
+    this._editorContext.startPointY = e.y
     this._modified = true
     if (this._action) {
       this.handleCreationAction(e)
@@ -1068,7 +1063,7 @@ export class Editor extends Painter {
           this._targetItem = undefined
           this._targetItemIndex = -1
           if (!((clickedEditorItem as Item).parent instanceof FrameEntity)) {
-            this._inMoving = true
+            this._editorContext.inMoving = true
           }
         } else if (clickedEditorItem instanceof TableEntity) {
           if (!clickedEditorItem.locked) {
@@ -1088,7 +1083,7 @@ export class Editor extends Painter {
               this._targetItem = undefined
               this._targetItemIndex = -1
               this.handleTableActiveCellShape()
-              this._inMoving = true
+              this._editorContext.inMoving = true
               this.startMoveOutline(e)
             } else if (targetColumn) {
               // console.log('========0')
@@ -1102,7 +1097,7 @@ export class Editor extends Painter {
               this._targetItem = undefined
               this.handleTableActiveCellShape()
               this._targetItemIndex = -1
-              this._inMoving = true
+              this._editorContext.inMoving = true
               this.startMoveOutline(e)
             } else {
               const itemIndex = this.findTableItemIndex(clickedEditorItem, targetPoint.x, targetPoint.y)
@@ -1114,7 +1109,7 @@ export class Editor extends Painter {
                 this._targetItem = clickedEditorItem.items[itemIndex]
                 this._targetItem.shape.focused = true
                 this.handleTableActiveCellShape()
-                this._inMoving = true
+                this._editorContext.inMoving = true
                 this.checkAndStartTextEdit()
                 this.beginTextEditOperation(clickedEditorItem)
                 this.startMoveOutline(e)
@@ -1125,13 +1120,13 @@ export class Editor extends Painter {
               } else {
                 //In text Editting
                 if (this.isTextEditting && this._targetItem) {
-                  this._inMoving = false
+                  this._editorContext.inMoving = false
                   const cellPoint = this.findEditorItemPoint(this._targetItem, e.x, e.y)
                   this.updateTextCursorLocation(this._targetItem, cellPoint.x, cellPoint.y)
                   this._targetItem.shape.enter(cellPoint.x, cellPoint.y)
                   this._textSelecting = true
                 } else {
-                  this._inMoving = true
+                  this._editorContext.inMoving = true
                   this.checkAndEndTextEdit()
                   this.finishTextEditOperation()
                   this.startMoveOutline(e)
@@ -1149,7 +1144,7 @@ export class Editor extends Painter {
           if (!clickedEditorItem.locked) {
             if (!((clickedEditorItem as Item).parent instanceof FrameEntity)) {
               this.beginOperation(clickedEditorItem)
-              this._inMoving = true
+              this._editorContext.inMoving = true
               this.startMoveOutline(e)
             }
           }
@@ -1311,18 +1306,18 @@ export class Editor extends Painter {
         }
       }
     }
-    if (this.inMoving && this._moved && this._target && this._startEditorItemInfos.length > 0) {
+    if (this._editorContext.inMoving && this._editorContext.moveStarted && this._target && this._startEditorItemInfos.length > 0) {
       this.finishOperation(this._target)
     }
     if (this._inRangeSelecting) {
       this.endRangeSelecting(e)
     }
-    if (this._inMoving) {
+    if (this._editorContext.inMoving) {
       // Shape is moved out of container here
       this.removeItemsFromContainer(e)
       this.endMoveOutline(e)
-      this._inMoving = false
-      this._moved = false
+      this._editorContext.inMoving = false
+      this._editorContext.moveStarted = false
     }
     this._inCreatingConnector = false
     this._targetRowResizing = false
@@ -1959,8 +1954,8 @@ export class Editor extends Painter {
   }
 
   private handleMouseRightButtonDown(e: PointerEvent) {
-    this._startPointX = e.x
-    this._startPointY = e.y
+    this._editorContext.startPointX = e.x
+    this._editorContext.startPointY = e.y
     this._modified = true
     const clickedEditorItem = this.findEditorItem(e.x, e.y, false)
     const theSelectionLayer = this.selectionLayer as SelectionLayer
@@ -2122,9 +2117,9 @@ export class Editor extends Painter {
       maxHeight += tableEntity.items[i * tableEntity.columnCount].height
     }
     maxHeight -= Item.MIN_HEIGHT
-    const newHeight = tableEntity.items[rowIndex * columnCount].height + e.y / this._zoom - this._startPointY / this._zoom
-    const nextNewTop = tableEntity.items[(rowIndex + 1) * columnCount].top + e.y / this._zoom - this._startPointY / this._zoom
-    const nextNewHeight = tableEntity.items[(rowIndex + 1) * columnCount].height - e.y / this._zoom + this._startPointY / this._zoom
+    const newHeight = tableEntity.items[rowIndex * columnCount].height + e.y / this._zoom - this._editorContext.startPointY / this._zoom
+    const nextNewTop = tableEntity.items[(rowIndex + 1) * columnCount].top + e.y / this._zoom - this._editorContext.startPointY / this._zoom
+    const nextNewHeight = tableEntity.items[(rowIndex + 1) * columnCount].height - e.y / this._zoom + this._editorContext.startPointY / this._zoom
     if (newHeight >= minHeight && newHeight <= maxHeight) {
       for (let i = 0; i < columnCount; i++) {
         const shapeEntity = tableEntity.items[rowIndex * columnCount + i] as ShapeEntity
@@ -2134,8 +2129,8 @@ export class Editor extends Painter {
       }
     }
     // console.log(`newHeight = ${newHeight} nextNewHeight = ${nextNewHeight} maxHeight = ${maxHeight} `)
-    this._startPointX = e.x
-    this._startPointY = e.y
+    this._editorContext.startPointX = e.x
+    this._editorContext.startPointY = e.y
   }
 
   private handleTargetColumnResizing(e: PointerEvent) {
@@ -2148,9 +2143,9 @@ export class Editor extends Painter {
       maxWidth += tableEntity.items[i].width
     }
     maxWidth -= Item.MIN_WIDTH
-    const newWidth = tableEntity.items[columnIndex].width + e.x / this._zoom - this._startPointX / this._zoom
-    const nextNewLeft = tableEntity.items[columnIndex + 1].left + e.x / this._zoom - this._startPointX / this._zoom
-    const nextNewWidth = tableEntity.items[columnIndex + 1].width - e.x / this._zoom + this._startPointX / this._zoom
+    const newWidth = tableEntity.items[columnIndex].width + e.x / this._zoom - this._editorContext.startPointX / this._zoom
+    const nextNewLeft = tableEntity.items[columnIndex + 1].left + e.x / this._zoom - this._editorContext.startPointX / this._zoom
+    const nextNewWidth = tableEntity.items[columnIndex + 1].width - e.x / this._zoom + this._editorContext.startPointX / this._zoom
     if (newWidth >= minWidth && newWidth <= maxWidth) {
       for (let i = 0; i < rowCount; i++) {
         const shapeEntity = tableEntity.items[columnIndex + rowCount * i] as ShapeEntity
@@ -2160,8 +2155,8 @@ export class Editor extends Painter {
       }
     }
     // console.log(`newWidth = ${newWidth} nextNewWidth = ${nextNewWidth} maxWidth = ${maxWidth} `)
-    this._startPointX = e.x
-    this._startPointY = e.y
+    this._editorContext.startPointX = e.x
+    this._editorContext.startPointY = e.y
   }
 
   public triggerSelectionChange() {
@@ -2539,10 +2534,10 @@ export class Editor extends Painter {
   private endRangeSelecting(e: PointerEvent) {
     this._inRangeSelecting = false
     this._rangeLayer.removeNode(this._rangeSelectionShape)
-    let left = Math.min(this._startPointX, e.x) - this.horizontalSpace
-    let top = Math.min(this._startPointY, e.y) - this.verticalSpace
-    let right = Math.max(this._startPointX, e.x) - this.horizontalSpace
-    let bottom = Math.max(this._startPointY, e.y) - this.verticalSpace
+    let left = Math.min(this._editorContext.startPointX, e.x) - this.horizontalSpace
+    let top = Math.min(this._editorContext.startPointY, e.y) - this.verticalSpace
+    let right = Math.max(this._editorContext.startPointX, e.x) - this.horizontalSpace
+    let bottom = Math.max(this._editorContext.startPointY, e.y) - this.verticalSpace
     let itemCount = this.contentLayer.getEditorItemCount()
     for (let i = 0; i < itemCount; i++) {
       let item = this.contentLayer.getEditorItem(i)
@@ -2555,10 +2550,10 @@ export class Editor extends Painter {
 
   private handleRangeSelecting(e: PointerEvent) {
     //console.log(`range selecting ${this._startPointX} ${this._startPointY} ${e.x} ${e.y}`)
-    let left = Math.min(this._startPointX, e.x)
-    let top = Math.min(this._startPointY, e.y)
-    let width = Math.abs(this._startPointX - e.x)
-    let height = Math.abs(this._startPointY - e.y)
+    let left = Math.min(this._editorContext.startPointX, e.x)
+    let top = Math.min(this._editorContext.startPointY, e.y)
+    let width = Math.abs(this._editorContext.startPointX - e.x)
+    let height = Math.abs(this._editorContext.startPointY - e.y)
     this._rangeSelectionShape.boundary = Rectangle.makeLTWH(left, top, width, height)
     if (!this._rangeLayer.hasNode(this._rangeSelectionShape)) {
       this._rangeLayer.addNode(this._rangeSelectionShape)
@@ -2893,8 +2888,8 @@ export class Editor extends Painter {
     const theSelectionLayer = this.selectionLayer as SelectionLayer
     const theHoverLayer = this.hoverLayer as HoverLayer
     const count = theSelectionLayer.getEditorItemCount()
-    const moveX = e.x / this._zoom - this._startPointX / this._zoom
-    const moveY = e.y / this._zoom - this._startPointY / this._zoom
+    const moveX = e.x / this._zoom - this._editorContext.startPointX / this._zoom
+    const moveY = e.y / this._zoom - this._editorContext.startPointY / this._zoom
     const alignMoveX = this.alignToGridSize(moveX)
     const alignMoveY = this.alignToGridSize(moveY)
     for (let i = 0; i < count; i++) {
@@ -2934,13 +2929,13 @@ export class Editor extends Painter {
     }
     if (alignMoveX !== 0) {
       //this._startPointX = e.x
-      this._startPointX = this._startPointX + alignMoveX * this._zoom
+      this._editorContext.startPointX = this._editorContext.startPointX + alignMoveX * this._zoom
     }
     if (alignMoveY !== 0) {
       //this._startPointY = e.y
-      this._startPointY = this._startPointY + alignMoveY * this._zoom
+      this._editorContext.startPointY = this._editorContext.startPointY + alignMoveY * this._zoom
     }
-    this._moved = true
+    this._editorContext.moveStarted = true
     theSelectionLayer.invalidateLayer()
     theHoverLayer.removeAllEditorItems()
     //Need this to update toolbar in time, Just hide here because of performance issue
