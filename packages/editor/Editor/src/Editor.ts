@@ -2,7 +2,7 @@
 /* eslint-disable max-params */
 /* eslint-disable complexity */
 import { Painter } from '@ratel-web/painter'
-import { DocumentThemeTypes, EditorUtils } from '../../Theme'
+import { DocumentThemeType, DocumentThemeTypes, EditorUtils } from '../../Theme'
 
 import { Color, Colors, KeyEvent, Matrix, MouseCode, Point2, PointerEvent, Rectangle, Rotation, Scale } from '@ratel-web/engine'
 import { Action, MyShapeAction } from '../../Actions'
@@ -22,7 +22,6 @@ import {
 } from '../../Items'
 import { Operation, OperationHelper, OperationService, OperationType } from '../../Operations'
 import { ConnectorDirection } from '../../Shapes'
-import { DocumentThemeType } from '../../Theme'
 import { CommonUtils } from '../../Utils'
 import { BackgroundLayer } from './BackgroundLayer'
 import { ContainerLayer } from './ContainerLayer'
@@ -109,20 +108,7 @@ export class Editor extends Painter {
   private _key: string
   private _id: string
   private _modified: boolean
-  private _selectionChangeListeners = new Array<(e: EditorEvent) => void>(0)
   private _operationService: OperationService = OperationService.instance
-  private _operationChangeListeners = new Array<(e: EditorEvent) => void>(0)
-  private _sizeChangeListeners = new Array<(e: EditorEvent) => void>(0)
-  private _textEditStartListeners = new Array<(e: EditorEvent) => void>(0)
-  private _textEditEndListeners = new Array<(e: EditorEvent) => void>(0)
-  private _selectionResizedListeners = new Array<(e: EditorEvent) => void>(0)
-  private _selectionResizingListeners = new Array<(e: EditorEvent) => void>(0)
-  private _textEditStyleChangeListeners = new Array<(e: EditorEvent) => void>(0)
-  private _tableTextEditStartListeners = new Array<(e: EditorEvent) => void>(0)
-  private _tableTextEditEndListeners = new Array<(e: EditorEvent) => void>(0)
-  private _editorModeChangeListeners = new Array<(e: EditorEvent) => void>(0)
-  private _editorOperationEventListeners = new Array<(e: EditorOperationEvent) => void>(0)
-  private _operationCompleteListeners = new Array<(e: EditorEvent) => void>(0)
   private _origWidth: number
   private _origHeight: number
   private _showGrid: boolean = true
@@ -230,10 +216,6 @@ export class Editor extends Painter {
     return this._operationService
   }
 
-  public get operationChangeListeners() {
-    return this._operationChangeListeners
-  }
-
   public get mode() {
     return this._mode
   }
@@ -277,298 +259,250 @@ export class Editor extends Painter {
   }
 
   public onOperationChange(callback: (e: EditorEvent) => void) {
-    const index = this._operationChangeListeners.indexOf(callback)
+    const index = this._editorContext.operationChangeListeners.indexOf(callback)
     if (index < 0) {
-      this._operationChangeListeners.push(callback)
+      this._editorContext.operationChangeListeners.push(callback)
     }
   }
 
   public removeOperationChange(callback: (e: EditorEvent) => void) {
-    const index = this._operationChangeListeners.indexOf(callback)
+    const index = this._editorContext.operationChangeListeners.indexOf(callback)
     if (index >= 0) {
-      this._operationChangeListeners.splice(index, 1)
+      this._editorContext.operationChangeListeners.splice(index, 1)
     }
   }
 
   public hasOperationChange(callback: (e: EditorEvent) => void) {
-    const index = this._operationChangeListeners.indexOf(callback)
+    const index = this._editorContext.operationChangeListeners.indexOf(callback)
     return index >= 0
   }
 
   public onOperationComplete(callback: (e: EditorEvent) => void) {
-    const index = this._operationCompleteListeners.indexOf(callback)
+    const index = this._editorContext.operationCompleteListeners.indexOf(callback)
     if (index < 0) {
-      this._operationCompleteListeners.push(callback)
+      this._editorContext.operationCompleteListeners.push(callback)
     }
   }
 
   public removeOperationComplete(callback: (e: EditorEvent) => void) {
-    const index = this._operationCompleteListeners.indexOf(callback)
+    const index = this._editorContext.operationCompleteListeners.indexOf(callback)
     if (index >= 0) {
-      this._operationCompleteListeners.splice(index, 1)
+      this._editorContext.operationCompleteListeners.splice(index, 1)
     }
   }
 
   public hasOperationComplete(callback: (e: EditorEvent) => void) {
-    const index = this._operationCompleteListeners.indexOf(callback)
+    const index = this._editorContext.operationCompleteListeners.indexOf(callback)
     return index >= 0
   }
 
-  public get selectionCompleteListeners() {
-    return this._selectionChangeListeners
-  }
-
   public onSelectionChange(callback: (e: EditorEvent) => void) {
-    const index = this._selectionChangeListeners.indexOf(callback)
+    const index = this._editorContext.selectionChangeListeners.indexOf(callback)
     if (index < 0) {
-      this._selectionChangeListeners.push(callback)
+      this._editorContext.selectionChangeListeners.push(callback)
     }
   }
 
   public removeSelectionChange(callback: (e: EditorEvent) => void) {
-    const index = this._selectionChangeListeners.indexOf(callback)
+    const index = this._editorContext.selectionChangeListeners.indexOf(callback)
     if (index >= 0) {
-      this._selectionChangeListeners.splice(index, 1)
+      this._editorContext.selectionChangeListeners.splice(index, 1)
     }
   }
 
   public hasSelectionChange(callback: (e: EditorEvent) => void) {
-    const index = this._selectionChangeListeners.indexOf(callback)
+    const index = this._editorContext.selectionChangeListeners.indexOf(callback)
     return index >= 0
   }
 
-  public get textEditStartListeners() {
-    return this._textEditStartListeners
-  }
-
   public onTextEditStart(callback: (e: EditorEvent) => void) {
-    const index = this._textEditStartListeners.indexOf(callback)
+    const index = this._editorContext.textEditStartListeners.indexOf(callback)
     if (index < 0) {
-      this._textEditStartListeners.push(callback)
+      this._editorContext.textEditStartListeners.push(callback)
     }
   }
 
   public removeTextEditStart(callback: (e: EditorEvent) => void) {
-    const index = this._textEditStartListeners.indexOf(callback)
+    const index = this._editorContext.textEditStartListeners.indexOf(callback)
     if (index >= 0) {
-      this._textEditStartListeners.splice(index, 1)
+      this._editorContext.textEditStartListeners.splice(index, 1)
     }
   }
 
   public hasTextEditStart(callback: (e: EditorEvent) => void) {
-    const index = this._textEditStartListeners.indexOf(callback)
+    const index = this._editorContext.textEditStartListeners.indexOf(callback)
     return index >= 0
   }
 
-  public get textEditEndListeners() {
-    return this._textEditEndListeners
-  }
-
   public onTextEditEnd(callback: (e: EditorEvent) => void) {
-    const index = this._textEditEndListeners.indexOf(callback)
+    const index = this._editorContext.textEditEndListeners.indexOf(callback)
     if (index < 0) {
-      this._textEditEndListeners.push(callback)
+      this._editorContext.textEditEndListeners.push(callback)
     }
   }
 
   public removeTextEditEnd(callback: (e: EditorEvent) => void) {
-    const index = this._textEditEndListeners.indexOf(callback)
+    const index = this._editorContext.textEditEndListeners.indexOf(callback)
     if (index >= 0) {
-      this._textEditEndListeners.splice(index, 1)
+      this._editorContext.textEditEndListeners.splice(index, 1)
     }
   }
 
   public hasTextEditEnd(callback: (e: EditorEvent) => void) {
-    const index = this._textEditEndListeners.indexOf(callback)
+    const index = this._editorContext.textEditEndListeners.indexOf(callback)
     return index >= 0
   }
 
-  public get tableTextEditStartListeners() {
-    return this._tableTextEditStartListeners
-  }
-
   public onTableTextEditStart(callback: (e: EditorEvent) => void) {
-    const index = this._tableTextEditStartListeners.indexOf(callback)
+    const index = this._editorContext.tableTextEditStartListeners.indexOf(callback)
     if (index < 0) {
-      this._tableTextEditStartListeners.push(callback)
+      this._editorContext.tableTextEditStartListeners.push(callback)
     }
   }
 
   public removeTableTextEditStart(callback: (e: EditorEvent) => void) {
-    const index = this._tableTextEditStartListeners.indexOf(callback)
+    const index = this._editorContext.tableTextEditStartListeners.indexOf(callback)
     if (index >= 0) {
-      this._tableTextEditStartListeners.splice(index, 1)
+      this._editorContext.tableTextEditStartListeners.splice(index, 1)
     }
   }
 
   public hasTableTextEditStart(callback: (e: EditorEvent) => void) {
-    const index = this._tableTextEditStartListeners.indexOf(callback)
+    const index = this._editorContext.tableTextEditStartListeners.indexOf(callback)
     return index >= 0
   }
 
-  public get tableTextEditEndListeners() {
-    return this._tableTextEditEndListeners
-  }
-
   public onTableTextEditEnd(callback: (e: EditorEvent) => void) {
-    const index = this._tableTextEditEndListeners.indexOf(callback)
+    const index = this._editorContext.tableTextEditEndListeners.indexOf(callback)
     if (index < 0) {
-      this._tableTextEditEndListeners.push(callback)
+      this._editorContext.tableTextEditEndListeners.push(callback)
     }
   }
 
   public removeTableTextEditEnd(callback: (e: EditorEvent) => void) {
-    const index = this._tableTextEditEndListeners.indexOf(callback)
+    const index = this._editorContext.tableTextEditEndListeners.indexOf(callback)
     if (index >= 0) {
-      this._tableTextEditEndListeners.splice(index, 1)
+      this._editorContext.tableTextEditEndListeners.splice(index, 1)
     }
   }
 
   public hasTableTextEditEnd(callback: (e: EditorEvent) => void) {
-    const index = this._tableTextEditEndListeners.indexOf(callback)
+    const index = this._editorContext.tableTextEditEndListeners.indexOf(callback)
     return index >= 0
   }
 
-  public get selectionResizedListeners() {
-    return this._selectionResizedListeners
-  }
-
   public onSelectionResized(callback: (e: EditorEvent) => void) {
-    const index = this._selectionResizedListeners.indexOf(callback)
+    const index = this._editorContext.selectionResizedListeners.indexOf(callback)
     if (index < 0) {
-      this._selectionResizedListeners.push(callback)
+      this._editorContext.selectionResizedListeners.push(callback)
     }
   }
 
   public removeSelectionResized(callback: (e: EditorEvent) => void) {
-    const index = this._selectionResizedListeners.indexOf(callback)
+    const index = this._editorContext.selectionResizedListeners.indexOf(callback)
     if (index >= 0) {
-      this._selectionResizedListeners.splice(index, 1)
+      this._editorContext.selectionResizedListeners.splice(index, 1)
     }
   }
 
   public hasSelectionResized(callback: (e: EditorEvent) => void) {
-    const index = this._selectionResizedListeners.indexOf(callback)
+    const index = this._editorContext.selectionResizedListeners.indexOf(callback)
     return index >= 0
   }
 
-  public get selectionResizingListeners() {
-    return this._selectionResizingListeners
-  }
-
   public onSelectionResizing(callback: (e: EditorEvent) => void) {
-    const index = this._selectionResizingListeners.indexOf(callback)
+    const index = this._editorContext.selectionResizingListeners.indexOf(callback)
     if (index < 0) {
-      this._selectionResizingListeners.push(callback)
+      this._editorContext.selectionResizingListeners.push(callback)
     }
   }
 
   public removeSelectionResizing(callback: (e: EditorEvent) => void) {
-    const index = this._selectionResizingListeners.indexOf(callback)
+    const index = this._editorContext.selectionResizingListeners.indexOf(callback)
     if (index >= 0) {
-      this._selectionResizingListeners.splice(index, 1)
+      this._editorContext.selectionResizingListeners.splice(index, 1)
     }
   }
 
   public hasSelectionResizing(callback: (e: EditorEvent) => void) {
-    const index = this._selectionResizingListeners.indexOf(callback)
+    const index = this._editorContext.selectionResizingListeners.indexOf(callback)
     return index >= 0
   }
 
-  public get textEditStyleChangeListeners() {
-    return this._textEditStyleChangeListeners
-  }
-
   public onTextEditStyleChange(callback: (e: EditorEvent) => void) {
-    const index = this._textEditStyleChangeListeners.indexOf(callback)
+    const index = this._editorContext.textEditStyleChangeListeners.indexOf(callback)
     if (index < 0) {
-      this._textEditStyleChangeListeners.push(callback)
+      this._editorContext.textEditStyleChangeListeners.push(callback)
     }
   }
 
   public removeTextEditStyleChange(callback: (e: EditorEvent) => void) {
-    const index = this._textEditStyleChangeListeners.indexOf(callback)
+    const index = this._editorContext.textEditStyleChangeListeners.indexOf(callback)
     if (index >= 0) {
-      this._textEditStyleChangeListeners.splice(index, 1)
+      this._editorContext.textEditStyleChangeListeners.splice(index, 1)
     }
   }
 
   public hasTextEditStyleChange(callback: (e: EditorEvent) => void) {
-    const index = this._textEditStyleChangeListeners.indexOf(callback)
+    const index = this._editorContext.textEditStyleChangeListeners.indexOf(callback)
     return index >= 0
   }
 
-  public get sizeChangeListeners() {
-    return this._sizeChangeListeners
-  }
-
   public onSizeChange(callback: (e: EditorEvent) => void) {
-    const index = this._sizeChangeListeners.indexOf(callback)
+    const index = this._editorContext.sizeChangeListeners.indexOf(callback)
     if (index < 0) {
-      this._sizeChangeListeners.push(callback)
+      this._editorContext.sizeChangeListeners.push(callback)
     }
   }
 
   public removeSizeChange(callback: (e: EditorEvent) => void) {
-    const index = this._sizeChangeListeners.indexOf(callback)
+    const index = this._editorContext.sizeChangeListeners.indexOf(callback)
     if (index >= 0) {
-      this._sizeChangeListeners.splice(index, 1)
+      this._editorContext.sizeChangeListeners.splice(index, 1)
     }
   }
 
   public hasSizeChange(callback: (e: EditorEvent) => void) {
-    const index = this._sizeChangeListeners.indexOf(callback)
+    const index = this._editorContext.sizeChangeListeners.indexOf(callback)
     return index >= 0
   }
 
-  public get editorModeChangeListeners() {
-    return this._editorModeChangeListeners
-  }
-
   public onEditorModeChange(callback: (e: EditorEvent) => void) {
-    const index = this._editorModeChangeListeners.indexOf(callback)
+    const index = this._editorContext.editorModeChangeListeners.indexOf(callback)
     if (index < 0) {
-      this._editorModeChangeListeners.push(callback)
+      this._editorContext.editorModeChangeListeners.push(callback)
     }
   }
 
   public removeEditorModeChange(callback: (e: EditorEvent) => void) {
-    const index = this._editorModeChangeListeners.indexOf(callback)
+    const index = this._editorContext.editorModeChangeListeners.indexOf(callback)
     if (index >= 0) {
-      this._editorModeChangeListeners.splice(index, 1)
+      this._editorContext.editorModeChangeListeners.splice(index, 1)
     }
   }
 
   public hasEditorModeChange(callback: (e: EditorEvent) => void) {
-    const index = this._editorModeChangeListeners.indexOf(callback)
+    const index = this._editorContext.editorModeChangeListeners.indexOf(callback)
     return index >= 0
   }
 
-  public get editorOperationEventListeners() {
-    return this._editorOperationEventListeners
-  }
-
   public onEditorOperationEvent(callback: (e: EditorOperationEvent) => void) {
-    const index = this._editorOperationEventListeners.indexOf(callback)
+    const index = this._editorContext.editorOperationEventListeners.indexOf(callback)
     if (index < 0) {
-      this._editorOperationEventListeners.push(callback)
+      this._editorContext.editorOperationEventListeners.push(callback)
     }
   }
 
   public removeEditorOperationEvent(callback: (e: EditorOperationEvent) => void) {
-    const index = this._editorOperationEventListeners.indexOf(callback)
+    const index = this._editorContext.editorOperationEventListeners.indexOf(callback)
     if (index >= 0) {
-      this._editorOperationEventListeners.splice(index, 1)
+      this._editorContext.editorOperationEventListeners.splice(index, 1)
     }
   }
 
   public hasEditorOperationEvent(callback: (e: EditorOperationEvent) => void) {
-    const index = this._editorOperationEventListeners.indexOf(callback)
+    const index = this._editorContext.editorOperationEventListeners.indexOf(callback)
     return index >= 0
-  }
-
-  public get textArea() {
-    return this._textArea
   }
 
   public get gridSize(): number {
@@ -1026,7 +960,7 @@ export class Editor extends Painter {
         } else if (clickedEditorItem instanceof TableEntity) {
           if (!clickedEditorItem.locked) {
             const targetPoint = this.findEditorItemPoint(clickedEditorItem, e.x, e.y)
-            const [targetRow, targetRowIndex] = this.isTableRowtResizable(clickedEditorItem, targetPoint.x, targetPoint.y)
+            const [targetRow, targetRowIndex] = this.isTableRowResizable(clickedEditorItem, targetPoint.x, targetPoint.y)
             const [targetColumn, targetColumnIndex] = this.isTableColumnResizable(clickedEditorItem, targetPoint.x, targetPoint.y)
             this._target = clickedEditorItem
             if (targetRow) {
@@ -1843,13 +1777,13 @@ export class Editor extends Painter {
   }
 
   /**
-   * Check if can modify row height or column width
+   * Check if we can modify row height or column width
    * @param tableEntity
    * @param x
    * @param y
    * @returns
    */
-  private isTableRowtResizable(tableEntity: TableEntity, x: number, y: number): [boolean, number] {
+  private isTableRowResizable(tableEntity: TableEntity, x: number, y: number): [boolean, number] {
     const rowCount = tableEntity.rowCount
     const columnCount = tableEntity.columnCount
     const items = tableEntity.items
@@ -1866,7 +1800,7 @@ export class Editor extends Painter {
   }
 
   /**
-   * Check if can modify row height or column width
+   * Check if we can modify row height or column width
    * @param tableEntity
    * @param x
    * @param y
@@ -2117,14 +2051,14 @@ export class Editor extends Painter {
   }
 
   public triggerSelectionChange() {
-    this._selectionChangeListeners.forEach((callback) => {
+    this._editorContext.selectionChangeListeners.forEach((callback) => {
       const event = new EditorEvent(this)
       callback(event)
     })
   }
 
   public triggerSizeChange() {
-    this._sizeChangeListeners.forEach((callback) => {
+    this._editorContext.sizeChangeListeners.forEach((callback) => {
       const event = new EditorEvent(this)
       callback(event)
     })
@@ -2133,7 +2067,7 @@ export class Editor extends Painter {
   public triggerOperationChange() {
     //It can only run once and so need to break immediately
     let runOnce = false
-    this._operationChangeListeners.forEach((callback) => {
+    this._editorContext.operationChangeListeners.forEach((callback) => {
       if (!runOnce) {
         runOnce = true
         const event = new EditorEvent(this)
@@ -2143,63 +2077,63 @@ export class Editor extends Painter {
   }
 
   public triggerOperationComplete() {
-    this._operationCompleteListeners.forEach((callback) => {
+    this._editorContext.operationCompleteListeners.forEach((callback) => {
       const event = new EditorEvent(this)
       callback(event)
     })
   }
 
   public triggerTextEditStart() {
-    this._textEditStartListeners.forEach((callback) => {
+    this._editorContext.textEditStartListeners.forEach((callback) => {
       const event = new EditorEvent(this)
       callback(event)
     })
   }
 
   public triggerTextEditEnd() {
-    this._textEditEndListeners.forEach((callback) => {
+    this._editorContext.textEditEndListeners.forEach((callback) => {
       const event = new EditorEvent(this)
       callback(event)
     })
   }
 
   public triggerTableTextEditStart() {
-    this._tableTextEditStartListeners.forEach((callback) => {
+    this._editorContext.tableTextEditStartListeners.forEach((callback) => {
       const event = new EditorEvent(this)
       callback(event)
     })
   }
 
   public triggerTableTextEditEnd() {
-    this._tableTextEditEndListeners.forEach((callback) => {
+    this._editorContext.tableTextEditEndListeners.forEach((callback) => {
       const event = new EditorEvent(this)
       callback(event)
     })
   }
 
   public triggerSelectionResized() {
-    this._selectionResizedListeners.forEach((callback) => {
+    this._editorContext.selectionResizedListeners.forEach((callback) => {
       const event = new EditorEvent(this)
       callback(event)
     })
   }
 
   public triggerSelectionResizing() {
-    this._selectionResizingListeners.forEach((callback) => {
+    this._editorContext.selectionResizingListeners.forEach((callback) => {
       const event = new EditorEvent(this)
       callback(event)
     })
   }
 
   public triggerTextEditStyleChange() {
-    this._textEditStyleChangeListeners.forEach((callback) => {
+    this._editorContext.textEditStyleChangeListeners.forEach((callback) => {
       const event = new EditorEvent(this)
       callback(event)
     })
   }
 
   public triggerEditorModeChange() {
-    this._editorModeChangeListeners.forEach((callback) => {
+    this._editorContext.editorModeChangeListeners.forEach((callback) => {
       const event = new EditorEvent(this)
       callback(event)
     })
@@ -2208,7 +2142,7 @@ export class Editor extends Painter {
   public triggerEditorOperationEvent(operation: Operation, isUndo: boolean) {
     //It can only run once and so need to break immediately
     let runOnce = false
-    this._editorOperationEventListeners.forEach((callback) => {
+    this._editorContext.editorOperationEventListeners.forEach((callback) => {
       if (!runOnce) {
         runOnce = true
         const event = new EditorOperationEvent(this, operation, isUndo)
@@ -2286,8 +2220,7 @@ export class Editor extends Painter {
     //item.rotation = new Rotation(item.width / 2, item.height / 2, editorItemInfo.rotation)
     //item.text = editorItemInfo.text
     this.handleRemoveEditorItem(item.id)
-    const newEditorItem = this.handleAddEditorItem(editorItemInfo)
-    return newEditorItem
+    return this.handleAddEditorItem(editorItemInfo)
   }
 
   private handleShapeTextEdit(operation: Operation, isUndo: boolean) {
@@ -2694,7 +2627,7 @@ export class Editor extends Painter {
         if (editorItem instanceof TableEntity) {
           if (!editorItem.locked) {
             const targetPoint = this.findEditorItemPoint(editorItem, e.x, e.y)
-            const [targetRow] = this.isTableRowtResizable(editorItem, targetPoint.x, targetPoint.y)
+            const [targetRow] = this.isTableRowResizable(editorItem, targetPoint.x, targetPoint.y)
             const [targetColumn] = this.isTableColumnResizable(editorItem, targetPoint.x, targetPoint.y)
             if (targetRow) {
               this.updateEditorMode(EditorMode.ROW_RESIZE)
@@ -2717,7 +2650,7 @@ export class Editor extends Painter {
         if (editorItem instanceof TableEntity) {
           if (!editorItem.locked) {
             const targetPoint = this.findEditorItemPoint(editorItem, e.x, e.y)
-            const [targetRow] = this.isTableRowtResizable(editorItem, targetPoint.x, targetPoint.y)
+            const [targetRow] = this.isTableRowResizable(editorItem, targetPoint.x, targetPoint.y)
             const [targetColumn] = this.isTableColumnResizable(editorItem, targetPoint.x, targetPoint.y)
             if (targetRow) {
               // console.log('========2')
@@ -2975,7 +2908,7 @@ export class Editor extends Painter {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private handleMoveOutline(e: PointerEvent) {
-    //Dont show outline if only connector selected
+    //Don't show outline if only connector selected
     if (this.selectionLayer.getEditorItemCount() === 1 && this.selectionLayer.getEditorItem(0) instanceof Connector) {
       return
     }
@@ -2987,8 +2920,7 @@ export class Editor extends Painter {
   private handleTableActiveCellShape() {
     if (this._targetItem) {
       const margin = EditorUtils.tableActiveCellMargin
-      const worldTransform = this._targetItem.shape.worldTransform
-      this._editorContext.tableActiveCellShape.transform = worldTransform
+      this._editorContext.tableActiveCellShape.transform = this._targetItem.shape.worldTransform
       this._editorContext.tableActiveCellShape.boundary = Rectangle.makeLTWH(
         margin,
         margin,
@@ -3235,9 +3167,8 @@ export class Editor extends Painter {
 
   private checkParentType(editorItem: EditorItem, parentType: typeof Item): boolean {
     let result = false
-    const item = editorItem as Item
     //console.log(`check parent = ${item.parent instanceof parentType}   == ${item.parent}`)
-    let checkItem: Item = item
+    let checkItem: Item = editorItem as Item
     while (checkItem.parent) {
       if (checkItem.parent instanceof parentType) {
         return true

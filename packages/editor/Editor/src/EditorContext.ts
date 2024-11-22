@@ -2,6 +2,8 @@ import { Rectangle2D } from '@ratel-web/engine'
 import { EditorItemInfo } from '../../Items'
 import { EditorUtils } from '../../Theme'
 import { Editor } from './Editor'
+import { EditorEvent } from './EditorEvent'
+import { EditorOperationEvent } from './EditorOperationEvent'
 
 export class EditorContext {
   private _editor: Editor
@@ -27,6 +29,19 @@ export class EditorContext {
   private _containerSelectionShape: Rectangle2D = new Rectangle2D(0, 0, 0, 0)
   private _selectionOutlineShape: Rectangle2D = new Rectangle2D(0, 0, 0, 0)
   private _tableActiveCellShape: Rectangle2D = new Rectangle2D(0, 0, 0, 0)
+  private _selectionChangeListeners = new Array<(e: EditorEvent) => void>(0)
+  private _operationChangeListeners = new Array<(e: EditorEvent) => void>(0)
+  private _sizeChangeListeners = new Array<(e: EditorEvent) => void>(0)
+  private _textEditStartListeners = new Array<(e: EditorEvent) => void>(0)
+  private _textEditEndListeners = new Array<(e: EditorEvent) => void>(0)
+  private _selectionResizedListeners = new Array<(e: EditorEvent) => void>(0)
+  private _selectionResizingListeners = new Array<(e: EditorEvent) => void>(0)
+  private _textEditStyleChangeListeners = new Array<(e: EditorEvent) => void>(0)
+  private _tableTextEditStartListeners = new Array<(e: EditorEvent) => void>(0)
+  private _tableTextEditEndListeners = new Array<(e: EditorEvent) => void>(0)
+  private _editorModeChangeListeners = new Array<(e: EditorEvent) => void>(0)
+  private _editorOperationEventListeners = new Array<(e: EditorOperationEvent) => void>(0)
+  private _operationCompleteListeners = new Array<(e: EditorEvent) => void>(0)
 
   public constructor(editor: Editor) {
     this._editor = editor
@@ -206,5 +221,57 @@ export class EditorContext {
 
   public get tableActiveCellShape() {
     return this._tableActiveCellShape
+  }
+
+  public get selectionChangeListeners() {
+    return this._selectionChangeListeners
+  }
+
+  public get operationChangeListeners() {
+    return this._operationChangeListeners
+  }
+
+  public get sizeChangeListeners() {
+    return this._sizeChangeListeners
+  }
+
+  public get textEditStartListeners() {
+    return this._textEditStartListeners
+  }
+
+  public get textEditEndListeners() {
+    return this._textEditEndListeners
+  }
+
+  public get selectionResizedListeners() {
+    return this._selectionResizedListeners
+  }
+
+  public get selectionResizingListeners() {
+    return this._selectionResizingListeners
+  }
+
+  public get textEditStyleChangeListeners() {
+    return this._textEditStyleChangeListeners
+  }
+
+  public get tableTextEditStartListeners() {
+    return this._tableTextEditStartListeners
+  }
+
+  public get tableTextEditEndListeners() {
+    return this._tableTextEditEndListeners
+  }
+
+  public get editorModeChangeListeners() {
+    return this._editorModeChangeListeners
+  }
+
+  public get editorOperationEventListeners() {
+    return this._editorOperationEventListeners
+  }
+
+  public get operationCompleteListeners() {
+    return this._operationCompleteListeners
   }
 }
