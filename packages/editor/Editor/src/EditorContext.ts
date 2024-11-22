@@ -1,9 +1,18 @@
 import { Rectangle2D } from '@ratel-web/engine'
 import { EditorItemInfo } from '../../Items'
 import { EditorUtils } from '../../Theme'
+import { BackgroundLayer } from './BackgroundLayer'
+import { ContainerLayer } from './ContainerLayer'
+import { ContentLayer } from './ContentLayer'
+import { ControllerLayer } from './ControllerLayer'
 import { Editor } from './Editor'
 import { EditorEvent } from './EditorEvent'
+import { EditorLayer } from './EditorLayer'
 import { EditorOperationEvent } from './EditorOperationEvent'
+import { HoverLayer } from './HoverLayer'
+import { MaskLayer } from './MaskLayer'
+import { SelectionLayer } from './SelectionLayer'
+import { TableLayer } from './TableLayer'
 
 export class EditorContext {
   private _editor: Editor
@@ -42,9 +51,42 @@ export class EditorContext {
   private _editorModeChangeListeners = new Array<(e: EditorEvent) => void>(0)
   private _editorOperationEventListeners = new Array<(e: EditorOperationEvent) => void>(0)
   private _operationCompleteListeners = new Array<(e: EditorEvent) => void>(0)
+  private readonly _controllerLayer: EditorLayer
+  private readonly _maskLayer: EditorLayer
+  private readonly _rangeLayer: EditorLayer
+  private readonly _moveLayer: EditorLayer
+  private readonly _containerLayer: EditorLayer
+  private readonly _tableLayer: EditorLayer
+  private readonly _backgroundLayer: BackgroundLayer
+  private readonly _contentLayer: EditorLayer
+  private readonly _hoverLayer: EditorLayer
+  private readonly _selectionLayer: EditorLayer
+  private readonly _exportLayer: EditorLayer
 
   public constructor(editor: Editor) {
     this._editor = editor
+    this._backgroundLayer = new BackgroundLayer(editor, editor.horizontalSpace, editor.verticalSpace, editor.workWidth, editor.workHeight, editor.gridSize)
+    this._controllerLayer = new ControllerLayer(editor.horizontalSpace, editor.verticalSpace, editor.workWidth, editor.workHeight)
+    this._maskLayer = new MaskLayer(0, 0, editor.width, editor.height)
+    this._rangeLayer = new MaskLayer(0, 0, editor.width, editor.height)
+    this._moveLayer = new MaskLayer(editor.horizontalSpace, editor.verticalSpace, editor.workWidth, editor.workHeight)
+    this._containerLayer = new ContainerLayer(editor.horizontalSpace, editor.verticalSpace, editor.workWidth, editor.workHeight)
+    this._tableLayer = new TableLayer(0, 0, editor.width, editor.height)
+    this._contentLayer = new ContentLayer(editor.horizontalSpace, editor.verticalSpace, editor.workWidth, editor.workHeight)
+    this._hoverLayer = new HoverLayer(0, 0, editor.width, editor.height)
+    this._selectionLayer = new SelectionLayer(0, 0, editor.width, editor.height)
+    this._exportLayer = new ContentLayer(editor.horizontalSpace, editor.verticalSpace, editor.workWidth, editor.workHeight)
+    this._contentLayer.editor = editor
+    this._hoverLayer.editor = editor
+    this._selectionLayer.editor = editor
+    this._exportLayer.editor = editor
+    this._controllerLayer.editor = editor
+    this._maskLayer.editor = editor
+    this._moveLayer.editor = editor
+    this._rangeLayer.editor = editor
+    this._containerLayer.editor = editor
+    this._tableLayer.editor = editor
+
     this._rangeSelectionShape.fill.setColor(EditorUtils.rangeSelectionFillColor)
     this._rangeSelectionShape.fill.setAlpha(EditorUtils.rangeSelectionFillAlpha)
     this._rangeSelectionShape.stroke.setColor(EditorUtils.rangeSelectionStrokeColor)
@@ -65,6 +107,8 @@ export class EditorContext {
     this._tableActiveCellShape.stroke.setStrokeWidth(EditorUtils.tableActiveCellStrokeLineWidth)
     this._tableActiveCellShape.stroke.setStrokeDashStyle(EditorUtils.tableActiveCellStrokeDashStyle)
     this._tableActiveCellShape.stroke.setAntiAlias(EditorUtils.tableActiveCellStrokeAntiAlias)
+
+    this._tableLayer.addNode(this._tableActiveCellShape)
   }
 
   public get inMoving() {
@@ -273,5 +317,49 @@ export class EditorContext {
 
   public get operationCompleteListeners() {
     return this._operationCompleteListeners
+  }
+
+  public get controllerLayer() {
+    return this._controllerLayer
+  }
+
+  public get maskLayer(): EditorLayer {
+    return this._maskLayer
+  }
+
+  public get rangeLayer(): EditorLayer {
+    return this._rangeLayer
+  }
+
+  public get moveLayer(): EditorLayer {
+    return this._moveLayer
+  }
+
+  public get containerLayer(): EditorLayer {
+    return this._containerLayer
+  }
+
+  public get tableLayer(): EditorLayer {
+    return this._tableLayer
+  }
+
+  public get backgroundLayer(): BackgroundLayer {
+    return this._backgroundLayer
+  }
+
+  public get contentLayer(): EditorLayer {
+    return this._contentLayer
+  }
+
+  public get exportLayer(): EditorLayer {
+    return this._exportLayer
+  }
+
+  public get selectionLayer(): EditorLayer {
+    return this._selectionLayer
+  }
+
+  public get hoverLayer(): EditorLayer {
+    return this._hoverLayer
   }
 }

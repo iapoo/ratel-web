@@ -242,9 +242,9 @@ export class EditorHelper {
       editorItems.forEach((editorItem) => {
         editor.exportLayer.addEditorItem(editorItem)
       })
-      editor.backgroundLayer.visible = false
-      editor.selectionLayer.visible = false
-      editor.contentLayer.visible = false
+      editor.setBackgroundVisible(false)
+      editor.setSelectionVisible(false)
+      editor.setContentVisible(false)
       editor.render()
       const image = editor.engine.surface.makeImageSnapshot([
         left + selectionLeft - 10,
@@ -262,9 +262,9 @@ export class EditorHelper {
         return data
       }
     } finally {
-      editor.backgroundLayer.visible = true
-      editor.selectionLayer.visible = true
-      editor.contentLayer.visible = true
+      editor.setBackgroundVisible(true)
+      editor.setSelectionVisible(true)
+      editor.setContentVisible(true)
       editor.exportLayer.removeAllEditorItems()
     }
   }
@@ -272,8 +272,8 @@ export class EditorHelper {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public static export(editor: Editor, format: 'png' | 'jpg' = 'png'): any {
     try {
-      editor.backgroundLayer.visible = false
-      editor.selectionLayer.visible = false
+      editor.setBackgroundVisible(false)
+      editor.setSelectionVisible(false)
       editor.render()
       const image = editor.engine.surface.makeImageSnapshot([
         editor.horizontalSpace,
@@ -290,8 +290,8 @@ export class EditorHelper {
       }
       return data
     } finally {
-      editor.backgroundLayer.visible = true
-      editor.selectionLayer.visible = true
+      editor.setBackgroundVisible(true)
+      editor.setSelectionVisible(true)
     }
   }
 

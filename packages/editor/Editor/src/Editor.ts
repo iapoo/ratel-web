@@ -23,18 +23,13 @@ import {
 import { Operation, OperationHelper, OperationService, OperationType } from '../../Operations'
 import { ConnectorDirection } from '../../Shapes'
 import { CommonUtils } from '../../Utils'
-import { BackgroundLayer } from './BackgroundLayer'
-import { ContainerLayer } from './ContainerLayer'
-import { ContentLayer } from './ContentLayer'
 import { ControllerLayer } from './ControllerLayer'
 import { EditorContext } from './EditorContext'
 import { EditorEvent } from './EditorEvent'
 import { EditorLayer } from './EditorLayer'
 import { EditorOperationEvent } from './EditorOperationEvent'
 import { HoverLayer } from './HoverLayer'
-import { MaskLayer } from './MaskLayer'
 import { SelectionLayer } from './SelectionLayer'
-import { TableLayer } from './TableLayer'
 
 export enum EditorMode {
   AUTO,
@@ -85,19 +80,8 @@ export class Editor extends Painter {
   public static readonly VERTICAL_SPACE_DEFAULT = 1256
 
   public static readonly ORIG_WIDTH_DEFAULT = 800
-  public static readonly ORIG_HEIGHT_DEAULT = 600
+  public static readonly ORIG_HEIGHT_DEFAULT = 600
 
-  private readonly _backgroundLayer: BackgroundLayer
-  private readonly _contentLayer: EditorLayer
-  private readonly _controllerLayer: EditorLayer
-  private readonly _hoverLayer: EditorLayer
-  private readonly _selectionLayer: EditorLayer
-  private readonly _maskLayer: EditorLayer
-  private readonly _rangeLayer: EditorLayer
-  private readonly _moveLayer: EditorLayer
-  private readonly _containerLayer: EditorLayer
-  private readonly _tableLayer: EditorLayer
-  private readonly _exportLayer: EditorLayer
   private _zoom = 1.0
   private _gridSize = 10
   private _action: Action | undefined
@@ -106,7 +90,7 @@ export class Editor extends Painter {
   private _targetItem: EditorItem | undefined
   private _title: string
   private _key: string
-  private _id: string
+  private readonly _id: string
   private _modified: boolean
   private _operationService: OperationService = OperationService.instance
   private _origWidth: number
@@ -126,75 +110,53 @@ export class Editor extends Painter {
   public constructor(canvasId: string | HTMLCanvasElement) {
     super(canvasId)
     this._editorContext = new EditorContext(this)
-    this._backgroundLayer = new BackgroundLayer(this, this.horizontalSpace, this.verticalSpace, this.workWidth, this.workHeight, this.gridSize)
-    this._contentLayer = new ContentLayer(this.horizontalSpace, this.verticalSpace, this.workWidth, this.workHeight)
-    this._controllerLayer = new ControllerLayer(this.horizontalSpace, this.verticalSpace, this.workWidth, this.workHeight)
-    this._hoverLayer = new HoverLayer(0, 0, this.width, this.height)
-    this._selectionLayer = new SelectionLayer(0, 0, this.width, this.height)
-    this._maskLayer = new MaskLayer(0, 0, this.width, this.height)
-    this._rangeLayer = new MaskLayer(0, 0, this.width, this.height)
-    this._moveLayer = new MaskLayer(this.horizontalSpace, this.verticalSpace, this.workWidth, this.workHeight)
-    this._containerLayer = new ContainerLayer(this.horizontalSpace, this.verticalSpace, this.workWidth, this.workHeight)
-    this._tableLayer = new TableLayer(0, 0, this.width, this.height)
-    this._exportLayer = new ContentLayer(this.horizontalSpace, this.verticalSpace, this.workWidth, this.workHeight)
-    this._contentLayer.editor = this
-    this._controllerLayer.editor = this
-    this._hoverLayer.editor = this
-    this._selectionLayer.editor = this
-    this._maskLayer.editor = this
-    this._moveLayer.editor = this
-    this._rangeLayer.editor = this
-    this._containerLayer.editor = this
-    this._tableLayer.editor = this
-    this._exportLayer.editor = this
     this._title = ''
     this._key = ''
     this._id = CommonUtils.generateID()
     this._modified = false
     this._origWidth = Editor.ORIG_WIDTH_DEFAULT * this._zoom
-    this._origHeight = Editor.ORIG_HEIGHT_DEAULT * this.zoom
+    this._origHeight = Editor.ORIG_HEIGHT_DEFAULT * this.zoom
     this._showGrid = true
-    this._tableLayer.addNode(this._editorContext.tableActiveCellShape)
-    this.root.addNode(this._backgroundLayer)
-    this.root.addNode(this._contentLayer)
-    this.root.addNode(this._exportLayer)
-    this.root.addNode(this._controllerLayer)
-    this.root.addNode(this._rangeLayer)
-    this.root.addNode(this._containerLayer)
-    this.root.addNode(this._tableLayer)
-    this.root.addNode(this._moveLayer)
-    this.root.addNode(this._maskLayer)
-    this.root.addNode(this._hoverLayer)
-    this.root.addNode(this._selectionLayer)
+    this.root.addNode(this._editorContext.backgroundLayer)
+    this.root.addNode(this._editorContext.contentLayer)
+    this.root.addNode(this._editorContext.exportLayer)
+    this.root.addNode(this._editorContext.controllerLayer)
+    this.root.addNode(this._editorContext.rangeLayer)
+    this.root.addNode(this._editorContext.containerLayer)
+    this.root.addNode(this._editorContext.tableLayer)
+    this.root.addNode(this._editorContext.moveLayer)
+    this.root.addNode(this._editorContext.maskLayer)
+    this.root.addNode(this._editorContext.hoverLayer)
+    this.root.addNode(this._editorContext.selectionLayer)
 
     this._textArea = document.createElement('textarea')
     this.initializeTextArea()
     EditorUtils.enableDarkTheme = this._enableDarkTheme
 
-    this.maskLayer.onPointerDown((e) => {
+    this._editorContext.maskLayer.onPointerDown((e) => {
       this.handlePointerDown(e)
     })
 
-    this.maskLayer.onPointerUp((e) => {
+    this._editorContext.maskLayer.onPointerUp((e) => {
       this.handlePointerUp(e)
     })
 
-    this.maskLayer.onPointerMove((e) => {
+    this._editorContext.maskLayer.onPointerMove((e) => {
       this.handlePointerMove(e)
     })
-    this.maskLayer.onPointerClick((e) => {
+    this._editorContext.maskLayer.onPointerClick((e) => {
       this.handlePointerClick(e)
     })
 
-    this.maskLayer.onKeyDown((e) => {
+    this._editorContext.maskLayer.onKeyDown((e) => {
       this.handleKeyDown(e)
     })
 
-    this.maskLayer.onKeyUp((e) => {
+    this._editorContext.maskLayer.onKeyUp((e) => {
       this.handleKeyUp(e)
     })
 
-    this.maskLayer.onKeyPress((e) => {
+    this._editorContext.maskLayer.onKeyPress((e) => {
       this.handleKeyPress(e)
     })
   }
@@ -511,7 +473,7 @@ export class Editor extends Painter {
 
   public set gridSize(value: number) {
     this._gridSize = value
-    this._backgroundLayer.gridSize = value
+    this._editorContext.backgroundLayer.gridSize = value
   }
 
   public get showGrid(): boolean {
@@ -520,7 +482,7 @@ export class Editor extends Painter {
 
   public set showGrid(value: boolean) {
     this._showGrid = value
-    this._backgroundLayer.invalidateLayer()
+    this._editorContext.backgroundLayer.invalidateLayer()
   }
 
   public get snapToGrid(): boolean {
@@ -529,7 +491,7 @@ export class Editor extends Painter {
 
   public set snapToGrid(value: boolean) {
     this._snapToGrid = value
-    this._backgroundLayer.invalidateLayer()
+    this._editorContext.backgroundLayer.invalidateLayer()
   }
 
   public get gridColor() {
@@ -538,7 +500,7 @@ export class Editor extends Painter {
 
   public set gridColor(value: Color) {
     this._gridColor = value
-    this._backgroundLayer.gridColor = value
+    this._editorContext.backgroundLayer.gridColor = value
   }
 
   public get showBackground() {
@@ -547,7 +509,7 @@ export class Editor extends Painter {
 
   public set showBackground(value: boolean) {
     this._showBackground = value
-    this._backgroundLayer.invalidateLayer()
+    this._editorContext.backgroundLayer.invalidateLayer()
   }
 
   public get backgroundColor() {
@@ -556,7 +518,7 @@ export class Editor extends Painter {
 
   public set backgroundColor(value: Color) {
     this._backgroundColor = value
-    this._backgroundLayer.backgroundColor = value
+    this._editorContext.backgroundLayer.backgroundColor = value
   }
 
   public get isTextEditting(): boolean {
@@ -564,31 +526,19 @@ export class Editor extends Painter {
   }
 
   public get contentLayer(): EditorLayer {
-    return this._contentLayer
+    return this._editorContext.contentLayer
   }
 
   public get exportLayer(): EditorLayer {
-    return this._exportLayer
-  }
-
-  public get backgroundLayer(): EditorLayer {
-    return this._backgroundLayer
-  }
-
-  public get controllerLayer(): EditorLayer {
-    return this._controllerLayer
-  }
-
-  public get maskLayer(): EditorLayer {
-    return this._maskLayer
+    return this._editorContext.exportLayer
   }
 
   public get selectionLayer(): EditorLayer {
-    return this._selectionLayer
+    return this._editorContext.selectionLayer
   }
 
   public get hoverLayer(): EditorLayer {
-    return this._hoverLayer
+    return this._editorContext.hoverLayer
   }
 
   public get target(): EditorItem | undefined {
@@ -695,18 +645,18 @@ export class Editor extends Painter {
     super.invalidate()
     const newBoundary = new Rectangle(this.horizontalSpace, this.verticalSpace, this.width - this.horizontalSpace, this.height - this.verticalSpace)
     const newFullBoundary = new Rectangle(0, 0, this.width, this.height)
-    this._backgroundLayer.boundary = newBoundary
-    this._contentLayer.boundary = newBoundary
-    this._exportLayer.boundary = newBoundary
-    this._controllerLayer.boundary = newBoundary
-    this._hoverLayer.boundary = newFullBoundary
-    this._selectionLayer.boundary = newFullBoundary
-    this._maskLayer.boundary = newFullBoundary
-    this._rangeLayer.boundary = newFullBoundary
-    this._moveLayer.boundary = newBoundary
-    this._containerLayer.boundary = newBoundary
-    this._tableLayer.boundary = newFullBoundary
-    this._backgroundLayer.invalidateLayer()
+    this._editorContext.backgroundLayer.boundary = newBoundary
+    this._editorContext.contentLayer.boundary = newBoundary
+    this._editorContext.exportLayer.boundary = newBoundary
+    this._editorContext.controllerLayer.boundary = newBoundary
+    this._editorContext.hoverLayer.boundary = newFullBoundary
+    this._editorContext.selectionLayer.boundary = newFullBoundary
+    this._editorContext.maskLayer.boundary = newFullBoundary
+    this._editorContext.rangeLayer.boundary = newFullBoundary
+    this._editorContext.moveLayer.boundary = newBoundary
+    this._editorContext.containerLayer.boundary = newBoundary
+    this._editorContext.tableLayer.boundary = newFullBoundary
+    this._editorContext.backgroundLayer.invalidateLayer()
   }
 
   /**
@@ -720,10 +670,10 @@ export class Editor extends Painter {
 
   // render
   public render() {
-    this._contentLayer.scale = new Scale(this._zoom, this._zoom)
-    this._exportLayer.scale = new Scale(this._zoom, this._zoom)
+    this._editorContext.contentLayer.scale = new Scale(this._zoom, this._zoom)
+    this._editorContext.exportLayer.scale = new Scale(this._zoom, this._zoom)
     //this._selectionLayer.scale = new Scale(this._zoom, this._zoom)
-    this._controllerLayer.scale = new Scale(this._zoom, this._zoom)
+    this._editorContext.controllerLayer.scale = new Scale(this._zoom, this._zoom)
     //this._hoverLayer.scale = new Scale(this._zoom, this._zoom)
     //this._rangeLayer.scale = new Scale(this._zoom, this._zoom)
     //this._moveLayer.scale = new Scale(this._zoom, this._zoom)
@@ -905,7 +855,7 @@ export class Editor extends Painter {
         const startDirection = this.findConnectorDirection(clickedEditorItem, e.x, e.y)
         //console.log(`Check horizontal : ${horizontal}`)
         const targetEntity = clickedEditorItem as Entity
-        const theControllerLayer = this.controllerLayer as ControllerLayer
+        const theControllerLayer = this._editorContext.controllerLayer as ControllerLayer
         this._editorContext.inCreatingConnector = true
         const worldTargetPoint = clickedEditorItem.worldTransform.makePoint(targetPoint)
         //const startPoint = new Point2(worldTargetPoint.x - this.horizontalSpace, worldTargetPoint.y - this.verticalSpace)
@@ -1085,10 +1035,10 @@ export class Editor extends Painter {
       this._action = undefined
     } else if (this._editorContext.inCreatingConnector) {
       //console.log(`It is a exception here, shouldn't be reached`)
-      const theControllerLayer = this.controllerLayer as ControllerLayer
+      const theControllerLayer = this._editorContext.controllerLayer as ControllerLayer
       const theSelectionLayer = this.selectionLayer as SelectionLayer
       const connector = theControllerLayer.getEditorItem(0)
-      this.controllerLayer.removeAllEditorItems()
+      this._editorContext.controllerLayer.removeAllEditorItems()
       this.contentLayer.addEditorItem(connector)
       theSelectionLayer.inHolder = true
       theSelectionLayer.removeAllEditorItems()
@@ -1242,8 +1192,8 @@ export class Editor extends Painter {
   }
 
   public invalideHolder() {
-    this._selectionLayer.invalidateLayer()
-    this._hoverLayer.invalidateLayer()
+    this._editorContext.selectionLayer.invalidateLayer()
+    this._editorContext.hoverLayer.invalidateLayer()
   }
 
   private initializeTextArea() {
@@ -1900,8 +1850,8 @@ export class Editor extends Painter {
   }
 
   private handlePointMoveInAction(e: PointerEvent, action: Action) {
-    if (this.controllerLayer.count === 0) {
-      this.controllerLayer.addEditorItems(action.items)
+    if (this._editorContext.controllerLayer.count === 0) {
+      this._editorContext.controllerLayer.addEditorItems(action.items)
     }
     // const controllerItem = this.controllerLayer.getEditorItem(0)
     // console.log(`Moving... x = ${e.x} width=${controllerItem.width} `)
@@ -1971,7 +1921,7 @@ export class Editor extends Painter {
 
   private handlePointMoveInCreatingConnector(e: PointerEvent) {
     // console.log('4========== x= ' + e.x + ',  y = ' + e.y)
-    const theControllerLayer = this.controllerLayer as ControllerLayer
+    const theControllerLayer = this._editorContext.controllerLayer as ControllerLayer
     const connector = theControllerLayer.getEditorItem(0) as Connector
     const editorItem = this.findEditorItem(e.x, e.y, false)
     const isEdge = editorItem ? this.hasEditorItemJoint(editorItem, e.x, e.y) && !this.checkParentType(editorItem, FrameEntity) : false
@@ -2152,11 +2102,11 @@ export class Editor extends Painter {
   }
 
   private handleRemoveEditorItem(id: string) {
-    let itemCount = this._contentLayer.getEditorItemCount()
+    let itemCount = this._editorContext.contentLayer.getEditorItemCount()
     for (let i = itemCount - 1; i >= 0; i--) {
-      let editorItem = this._contentLayer.getEditorItem(i) as Item
+      let editorItem = this._editorContext.contentLayer.getEditorItem(i) as Item
       if (editorItem.id === id) {
-        this._contentLayer.removeEditorItemAt(i)
+        this._editorContext.contentLayer.removeEditorItemAt(i)
         break
       }
       let found = this.removeItemById(editorItem, id)
@@ -2168,7 +2118,7 @@ export class Editor extends Painter {
 
   private handleAddEditorItem(editorItemInfo: EditorItemInfo) {
     let editorItem = OperationHelper.loadItem(editorItemInfo, this)
-    this._contentLayer.addEditorItem(editorItem)
+    this._editorContext.contentLayer.addEditorItem(editorItem)
     return editorItem
   }
 
@@ -2182,7 +2132,7 @@ export class Editor extends Painter {
   }
 
   private handleUpdateEditorItem(editorItemInfo: EditorItemInfo): boolean {
-    let items = this._contentLayer.getAllEditorItems()
+    let items = this._editorContext.contentLayer.getAllEditorItems()
     let count = items.length
     for (let i = count - 1; i >= 0; i--) {
       let item = items[i] as Item
@@ -2423,7 +2373,7 @@ export class Editor extends Painter {
 
   private endRangeSelecting(e: PointerEvent) {
     this._editorContext.inRangeSelecting = false
-    this._rangeLayer.removeNode(this._editorContext.rangeSelectionShape)
+    this._editorContext.rangeLayer.removeNode(this._editorContext.rangeSelectionShape)
     let left = Math.min(this._editorContext.startPointX, e.x) - this.horizontalSpace
     let top = Math.min(this._editorContext.startPointY, e.y) - this.verticalSpace
     let right = Math.max(this._editorContext.startPointX, e.x) - this.horizontalSpace
@@ -2445,19 +2395,19 @@ export class Editor extends Painter {
     let width = Math.abs(this._editorContext.startPointX - e.x)
     let height = Math.abs(this._editorContext.startPointY - e.y)
     this._editorContext.rangeSelectionShape.boundary = Rectangle.makeLTWH(left, top, width, height)
-    if (!this._rangeLayer.hasNode(this._editorContext.rangeSelectionShape)) {
-      this._rangeLayer.addNode(this._editorContext.rangeSelectionShape)
+    if (!this._editorContext.rangeLayer.hasNode(this._editorContext.rangeSelectionShape)) {
+      this._editorContext.rangeLayer.addNode(this._editorContext.rangeSelectionShape)
     }
   }
 
   private startContainerSelection() {
     this._editorContext.inContainerSelection = true
-    this._containerLayer.addNode(this._editorContext.containerSelectionShape)
+    this._editorContext.containerLayer.addNode(this._editorContext.containerSelectionShape)
   }
 
   private endContainerSelection() {
     this._editorContext.inContainerSelection = false
-    this._containerLayer.removeNode(this._editorContext.containerSelectionShape)
+    this._editorContext.containerLayer.removeNode(this._editorContext.containerSelectionShape)
   }
 
   private handleContainerSelection(container: ContainerEntity) {
@@ -2512,7 +2462,7 @@ export class Editor extends Painter {
       //   })
       // }
       this._editorContext.inContainerSelection = false
-      this._containerLayer.removeNode(this._editorContext.containerSelectionShape)
+      this._editorContext.containerLayer.removeNode(this._editorContext.containerSelectionShape)
       //this.selectionLayer.removeAllEditorItems()
     }
   }
@@ -2750,8 +2700,8 @@ export class Editor extends Painter {
         this.triggerOperationChange()
         this.triggerSelectionChange()
       }
-      this.controllerLayer.removeAllEditorItems()
-      this.controllerLayer.clear()
+      this._editorContext.controllerLayer.removeAllEditorItems()
+      this._editorContext.controllerLayer.clear()
       if (this._target) {
         this._target.shape.focused = false
       }
@@ -2898,12 +2848,12 @@ export class Editor extends Painter {
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private startMoveOutline(e: PointerEvent) {
-    this._moveLayer.addNode(this._editorContext.selectionOutlineShape)
+    this._editorContext.moveLayer.addNode(this._editorContext.selectionOutlineShape)
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private endMoveOutline(e: PointerEvent) {
-    this._moveLayer.removeNode(this._editorContext.selectionOutlineShape)
+    this._editorContext.moveLayer.removeNode(this._editorContext.selectionOutlineShape)
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -3070,17 +3020,17 @@ export class Editor extends Painter {
 
   public dispose() {
     super.dispose()
-    this._backgroundLayer.dispose()
-    this._contentLayer.dispose()
-    this._controllerLayer.dispose()
-    this._hoverLayer.dispose()
-    this._selectionLayer.dispose()
-    this._maskLayer.dispose()
-    this._rangeLayer.dispose()
-    this._moveLayer.dispose()
-    this._containerLayer.dispose()
-    this._tableLayer.dispose()
-    this._exportLayer.dispose()
+    this._editorContext.backgroundLayer.dispose()
+    this._editorContext.contentLayer.dispose()
+    this._editorContext.controllerLayer.dispose()
+    this._editorContext.hoverLayer.dispose()
+    this._editorContext.selectionLayer.dispose()
+    this._editorContext.maskLayer.dispose()
+    this._editorContext.rangeLayer.dispose()
+    this._editorContext.moveLayer.dispose()
+    this._editorContext.containerLayer.dispose()
+    this._editorContext.tableLayer.dispose()
+    this._editorContext.exportLayer.dispose()
   }
 
   private finishTextEditOperation() {
@@ -3208,5 +3158,17 @@ export class Editor extends Painter {
       }
     }
     return [left, top, right, bottom]
+  }
+
+  public setBackgroundVisible(visible: boolean) {
+    this._editorContext.backgroundLayer.visible = visible
+  }
+
+  public setSelectionVisible(visible: boolean) {
+    this._editorContext.selectionLayer.visible = visible
+  }
+
+  public setContentVisible(visible: boolean) {
+    this._editorContext.contentLayer.visible = visible
   }
 }
