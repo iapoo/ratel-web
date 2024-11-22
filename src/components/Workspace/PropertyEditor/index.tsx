@@ -1,40 +1,15 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import {
-  Button,
-  Checkbox,
-  ColorPicker,
-  Divider,
-  InputNumber,
-  Radio,
-  RadioChangeEvent,
-  Select,
-  Tabs,
-  TabsProps,
-  Tooltip,
-} from 'antd'
-import { CheckboxChangeEvent } from 'antd/es/checkbox'
 import { Editor, EditorEvent } from '@ratel-web/editor/Editor'
 import { Connector, ConnectorArrowTypes, EditorItem } from '@ratel-web/editor/Items'
 import { Operation, OperationType } from '@ratel-web/editor/Operations'
 import { DocumentThemeType, DocumentThemeTypes, DocumentThemes } from '@ratel-web/editor/Theme'
 import { CommonUtils, Constants, EditorHelper } from '@ratel-web/editor/Utils'
+import { Button, Checkbox, ColorPicker, Divider, InputNumber, Radio, RadioChangeEvent, Select, Tabs, TabsProps, Tooltip } from 'antd'
+import { CheckboxChangeEvent } from 'antd/es/checkbox'
 import { FC, useEffect, useState } from 'react'
 import { FormattedMessage, useIntl } from 'umi'
-import {
-  ConnectorLineModes,
-  ConnectorLineTypes,
-  LineWidthOptions,
-  PageTypes,
-  StrokeDashStyles,
-  SystemUtils,
-  Utils,
-} from '../Utils'
-import {
-  ConnectorLineModesForCurve,
-  DoubleLineArrowDistanceOptions,
-  DoubleLineArrowLengthOptions,
-  DoubleLineGapOptions,
-} from '../Utils/Consts'
+import { ConnectorLineModes, ConnectorLineTypes, LineWidthOptions, PageTypes, StrokeDashStyles, SystemUtils, Utils } from '../Utils'
+import { ConnectorLineModesForCurve, DoubleLineArrowDistanceOptions, DoubleLineArrowLengthOptions, DoubleLineGapOptions } from '../Utils/Consts'
 
 interface PropertyEditorProps {
   previousEditor: Editor | undefined
@@ -43,12 +18,7 @@ interface PropertyEditorProps {
   documentThemeName: string
 }
 
-const PropertyEditor: FC<PropertyEditorProps> = ({
-  previousEditor,
-  currentEditor,
-  onDocumentThemeChanged,
-  documentThemeName,
-}) => {
+const PropertyEditor: FC<PropertyEditorProps> = ({ previousEditor, currentEditor, onDocumentThemeChanged, documentThemeName }) => {
   const intl = useIntl()
   const [initialized, setInitialized] = useState<boolean>(false)
   const [gridSize, setGridSize] = useState<number>(Constants.GRID_SIZE_DEFAULT)
@@ -84,13 +54,9 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
   const [doubleLineGap, setDoubleLineGap] = useState<number>(Constants.DOUBLE_LINE_GAP_DEFAULT)
   const [connectorSelected, setConnectorSelected] = useState<boolean>(false)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [connectorDoubleLineArrowLength, setConnectorDoubleLineArrowLength] = useState<number>(
-    Constants.DOUBLE_LINE_ARROW_LENGTH_DEFAULT,
-  )
+  const [connectorDoubleLineArrowLength, setConnectorDoubleLineArrowLength] = useState<number>(Constants.DOUBLE_LINE_ARROW_LENGTH_DEFAULT)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [connectorDoubleLineArrowDistance, setConnectorDoubleLineArrowDistance] = useState<number>(
-    Constants.DOUBLE_LINE_ARROW_DISTANCE_DEFAULT,
-  )
+  const [connectorDoubleLineArrowDistance, setConnectorDoubleLineArrowDistance] = useState<number>(Constants.DOUBLE_LINE_ARROW_DISTANCE_DEFAULT)
 
   useEffect(() => {
     if (!initialized) {
@@ -571,7 +537,7 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
         })
       }
       Utils.currentEditor.focus()
-      Utils.currentEditor.invalideHolder()
+      Utils.currentEditor.invalidateHolder()
       const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
       const operation: Operation = new Operation(
         Utils.currentEditor,
@@ -661,7 +627,7 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
         }
       })
       Utils.currentEditor.focus()
-      Utils.currentEditor.invalideHolder()
+      Utils.currentEditor.invalidateHolder()
       const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
       const operation: Operation = new Operation(
         Utils.currentEditor,
@@ -691,7 +657,7 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
         }
       })
       Utils.currentEditor.focus()
-      Utils.currentEditor.invalideHolder()
+      Utils.currentEditor.invalidateHolder()
       const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
       const operation: Operation = new Operation(
         Utils.currentEditor,
@@ -727,7 +693,7 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
         }
       })
       Utils.currentEditor.focus()
-      Utils.currentEditor.invalideHolder()
+      Utils.currentEditor.invalidateHolder()
       const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
       const operation: Operation = new Operation(
         Utils.currentEditor,
@@ -762,7 +728,7 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
         }
       })
       Utils.currentEditor.focus()
-      Utils.currentEditor.invalideHolder()
+      Utils.currentEditor.invalidateHolder()
       const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
       const operation: Operation = new Operation(
         Utils.currentEditor,
@@ -842,18 +808,7 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
       })
 
       const afterSelections = EditorHelper.generateEditorSelections(currentEditor)
-      const operation: Operation = new Operation(
-        currentEditor,
-        OperationType.UPDATE_ITEMS,
-        afterSelections,
-        true,
-        beforeSelections,
-        '',
-        null,
-        null,
-        null,
-        null,
-      )
+      const operation: Operation = new Operation(currentEditor, OperationType.UPDATE_ITEMS, afterSelections, true, beforeSelections, '', null, null, null, null)
       currentEditor.operationService.addOperation(operation)
       currentEditor.triggerOperationChange()
     }
@@ -922,12 +877,7 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
       label: (
         <img
           alt={connectorArrowType.description}
-          src={
-            process.env.BASIC_PATH +
-            '/images/connector-line-start-arrow-' +
-            connectorArrowType.name.toLowerCase() +
-            '.png'
-          }
+          src={process.env.BASIC_PATH + '/images/connector-line-start-arrow-' + connectorArrowType.name.toLowerCase() + '.png'}
           width="16"
           height="16"
         />
@@ -941,12 +891,7 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
       label: (
         <img
           alt={connectorArrowType.description}
-          src={
-            process.env.BASIC_PATH +
-            '/images/connector-line-end-arrow-' +
-            connectorArrowType.name.toLowerCase() +
-            '.png'
-          }
+          src={process.env.BASIC_PATH + '/images/connector-line-end-arrow-' + connectorArrowType.name.toLowerCase() + '.png'}
           width="16"
           height="16"
         />
@@ -978,13 +923,7 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
         }}
       >
         <Tooltip title={<FormattedMessage id="workspace.header.title.connector-line-type" />}>
-          <Select
-            size="small"
-            value={connectorLineType}
-            onChange={handleConnectorLineTypeChange}
-            style={{ width: 64 }}
-            options={connectorLineTypes}
-          />
+          <Select size="small" value={connectorLineType} onChange={handleConnectorLineTypeChange} style={{ width: 64 }} options={connectorLineTypes} />
         </Tooltip>
         <Tooltip title={<FormattedMessage id="workspace.header.title.connector-line-mode" />}>
           <Select
@@ -992,11 +931,7 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
             value={connectorLineMode}
             onChange={handleConnectorLineModeChange}
             style={{ width: 64 }}
-            options={
-              connectorLineType === Constants.CONNECTOR_LINE_TYPE_CURVED
-                ? connectorLineModesForCurve
-                : connectorLineModes
-            }
+            options={connectorLineType === Constants.CONNECTOR_LINE_TYPE_CURVED ? connectorLineModesForCurve : connectorLineModes}
           />
         </Tooltip>
       </div>
@@ -1085,13 +1020,7 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
         <Checkbox onChange={handleEnableFillChange} checked={enableFill}>
           <FormattedMessage id="workspace.property-editor.item-setting.fill" />
         </Checkbox>
-        <ColorPicker
-          size="small"
-          value={fillColor}
-          trigger="hover"
-          onChange={handleFillColorChange}
-          destroyTooltipOnHide={true}
-        />
+        <ColorPicker size="small" value={fillColor} trigger="hover" onChange={handleFillColorChange} destroyTooltipOnHide={true} />
       </div>
       <Divider style={{ margin: 4 }} />
       <div
@@ -1106,13 +1035,7 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
         <Checkbox onChange={handleEnableStrokeChange} checked={enableStroke}>
           <FormattedMessage id="workspace.property-editor.item-setting.stroke" />
         </Checkbox>
-        <ColorPicker
-          size="small"
-          value={strokeColor}
-          trigger="hover"
-          onChange={handleStrokeColorChange}
-          destroyTooltipOnHide={true}
-        />
+        <ColorPicker size="small" value={strokeColor} trigger="hover" onChange={handleStrokeColorChange} destroyTooltipOnHide={true} />
       </div>
       <div
         style={{
@@ -1123,13 +1046,7 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
           padding: 4,
         }}
       >
-        <Select
-          size="small"
-          value={strokeDashStyle}
-          onChange={handleStrokeDashStyleChange}
-          style={{ width: '60%' }}
-          options={strokeDashStyles}
-        />
+        <Select size="small" value={strokeDashStyle} onChange={handleStrokeDashStyleChange} style={{ width: '60%' }} options={strokeDashStyles} />
         {/** TODO:  FIXME, HIDE TEMPORARY*/}
         <InputNumber
           min={Constants.LINE_WIDTH_MIN}
@@ -1139,13 +1056,7 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
           size="small"
           style={{ width: 50, display: 'none' }}
         />
-        <Select
-          size="small"
-          value={lineWidth}
-          onChange={handleLineWidthChange}
-          style={{ width: 64 }}
-          options={LineWidthOptions}
-        />
+        <Select size="small" value={lineWidth} onChange={handleLineWidthChange} style={{ width: 64 }} options={LineWidthOptions} />
       </div>
       {connectorSelected ? connectorSettings : ''}
     </div>
@@ -1212,12 +1123,7 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
         <div>
           <FormattedMessage id="workspace.property-editor.page-setting.background-color" />
         </div>
-        <ColorPicker
-          size="small"
-          value={backgroundColor}
-          onChange={handleBackgroundColorChange}
-          destroyTooltipOnHide={true}
-        />
+        <ColorPicker size="small" value={backgroundColor} onChange={handleBackgroundColorChange} destroyTooltipOnHide={true} />
       </div>
       <Divider style={{ margin: 4 }} />
       <div
@@ -1232,13 +1138,7 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
         <FormattedMessage id="workspace.property-editor.page-setting.page-size" />
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 4 }}>
-        <Select
-          size="small"
-          value={pageSize}
-          onChange={handlePageSizeChange}
-          style={{ width: '100%' }}
-          options={pageSizeOptions}
-        />
+        <Select size="small" value={pageSize} onChange={handlePageSizeChange} style={{ width: '100%' }} options={pageSizeOptions} />
       </div>
       <div
         style={{
@@ -1313,21 +1213,13 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
 
   const pageStyles = (
     <div>
-      <div
-        style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', padding: 4 }}
-      >
-        {documentThemeTypes}
-      </div>
+      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', padding: 4 }}>{documentThemeTypes}</div>
     </div>
   )
 
   const shapeStyles = (
     <div>
-      <div
-        style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', padding: 4 }}
-      >
-        {shapeThemeTypes}
-      </div>
+      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', padding: 4 }}>{shapeThemeTypes}</div>
     </div>
   )
 
@@ -1359,18 +1251,8 @@ const PropertyEditor: FC<PropertyEditorProps> = ({
 
   return (
     <div>
-      <Tabs
-        defaultActiveKey="1"
-        items={pageItems}
-        hidden={!showPageItems}
-        style={{ display: showPageItems ? 'block' : 'none' }}
-      />
-      <Tabs
-        defaultActiveKey="1"
-        items={shapeItems}
-        hidden={showPageItems}
-        style={{ display: showPageItems ? 'none' : 'block' }}
-      />
+      <Tabs defaultActiveKey="1" items={pageItems} hidden={!showPageItems} style={{ display: showPageItems ? 'block' : 'none' }} />
+      <Tabs defaultActiveKey="1" items={shapeItems} hidden={showPageItems} style={{ display: showPageItems ? 'none' : 'block' }} />
     </div>
   )
 }

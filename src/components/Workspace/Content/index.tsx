@@ -1802,7 +1802,7 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
       editorItems.forEach((editorItem: EditorItem) => {
         editorItem.locked = !editorItem.locked
       })
-      Utils.currentEditor.invalideHolder()
+      Utils.currentEditor.invalidateHolder()
       const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
       const operation: Operation = new Operation(
         Utils.currentEditor,
@@ -1839,7 +1839,7 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
     if (Utils.currentEditor) {
       const selections = Utils.currentEditor.selectionLayer.getAllEditorItems()
       if (selections.length === 1) {
-        Utils.currentEditor.bringForeward(selections[0])
+        Utils.currentEditor.bringForward(selections[0])
       }
     }
   }
@@ -1943,7 +1943,7 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
       const targetItemIndex = currentEditor.targetItemIndex
       const rowIndex = Math.floor(targetItemIndex / tableEntity.columnCount)
       tableEntity.insertRowBefore(rowIndex, true)
-      currentEditor.invalideHolder()
+      currentEditor.invalidateHolder()
       currentEditor.triggerSelectionResized()
     }
   }
@@ -1954,7 +1954,7 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
       const targetItemIndex = currentEditor.targetItemIndex
       const rowIndex = Math.floor(targetItemIndex / tableEntity.columnCount)
       tableEntity.insertRowAfter(rowIndex, true)
-      currentEditor.invalideHolder()
+      currentEditor.invalidateHolder()
       currentEditor.triggerSelectionResized()
     }
   }
@@ -1965,7 +1965,7 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
       const targetItemIndex = currentEditor.targetItemIndex
       const columnIndex = targetItemIndex % tableEntity.columnCount
       tableEntity.insertColumnBefore(columnIndex, true)
-      currentEditor.invalideHolder()
+      currentEditor.invalidateHolder()
       currentEditor.triggerSelectionResized()
     }
   }
@@ -1976,7 +1976,7 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
       const targetItemIndex = currentEditor.targetItemIndex
       const columnIndex = targetItemIndex % tableEntity.columnCount
       tableEntity.insertColumnAfter(columnIndex, true)
-      currentEditor.invalideHolder()
+      currentEditor.invalidateHolder()
       currentEditor.triggerSelectionResized()
     }
   }
@@ -1987,7 +1987,7 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
       const targetItemIndex = currentEditor.targetItemIndex
       const rowIndex = Math.floor(targetItemIndex / tableEntity.columnCount)
       tableEntity.deleteRow(rowIndex)
-      currentEditor.invalideHolder()
+      currentEditor.invalidateHolder()
       currentEditor.triggerSelectionResized()
     }
   }
@@ -1998,7 +1998,7 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
       const targetItemIndex = currentEditor.targetItemIndex
       const columnIndex = targetItemIndex % tableEntity.columnCount
       tableEntity.deleteColumn(columnIndex)
-      currentEditor.invalideHolder()
+      currentEditor.invalidateHolder()
       currentEditor.triggerSelectionResized()
     }
   }

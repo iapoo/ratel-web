@@ -65,6 +65,7 @@ export class EditorContext {
   private _target: EditorItem | undefined
   private _targetItem: EditorItem | undefined
   private _modified: boolean
+  private readonly _textArea: HTMLTextAreaElement
 
   public constructor(editor: Editor) {
     this._editor = editor
@@ -113,6 +114,8 @@ export class EditorContext {
     this._tableActiveCellShape.stroke.setAntiAlias(EditorUtils.tableActiveCellStrokeAntiAlias)
 
     this._tableLayer.addNode(this._tableActiveCellShape)
+    this._textArea = document.createElement('textarea')
+    this.initializeTextArea()
   }
 
   public get inMoving() {
@@ -389,5 +392,169 @@ export class EditorContext {
 
   public set modified(value: boolean) {
     this._modified = value
+  }
+
+  public get textArea() {
+    return this._textArea
+  }
+  private initializeTextArea() {
+    if (this._editor.engine.container?.parentElement) {
+      this._editor.engine.container.parentElement.append(this._textArea)
+    }
+    // document.getElementsByTagName('body')[0].append(this._textArea)
+    this._textArea.tabIndex = 0
+    this._textArea.style.zIndex = '-9999'
+    this._textArea.style.position = 'absolute'
+    this._textArea.style.left = '0'
+    this._textArea.style.top = '0'
+    this._textArea.style.opacity = '0'
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    this._textArea.addEventListener(
+      'compositionstart',
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      (e: CompositionEvent) => {
+        this._textInputStatus = 'CHINESE_TYPING'
+      },
+      false,
+    )
+    this._textArea.addEventListener('input', (e: any): void => {
+      if (this._textInputStatus === 'CHINESE_TYPING') {
+        return
+      }
+      if (this._target && this._targetItem && e.data) {
+        const [origEditorItemInfo, startIndex, endIndex] = this._editor.beginShapeTextEditOperation(this._target)
+        this._targetItem.shape.insert(e.data)
+        this._editor.finishShapeTextEditOperation(origEditorItemInfo, startIndex, endIndex)
+        this._editor.triggerTextEditStyleChange()
+      } else if (this._target && e.data) {
+        const [origEditorItemInfo, startIndex, endIndex] = this._editor.beginShapeTextEditOperation(this._target)
+        this._target.shape.insert(e.data)
+        this._editor.finishShapeTextEditOperation(origEditorItemInfo, startIndex, endIndex)
+        this._editor.triggerTextEditStyleChange()
+      }
+      this._textInputStatus = 'CHAR_TYPING'
+    })
+    this._textArea.addEventListener('compositionend', (e: CompositionEvent) => {
+      if (this._textInputStatus === 'CHINESE_TYPING') {
+        if (this._target && this._targetItem) {
+          const [origEditorItemInfo, startIndex, endIndex] = this._editor.beginShapeTextEditOperation(this._target)
+          this._targetItem.shape.insert(e.data)
+          this._editor.finishShapeTextEditOperation(origEditorItemInfo, startIndex, endIndex)
+          this._editor.triggerTextEditStyleChange()
+        } else if (this._target) {
+          const [origEditorItemInfo, startIndex, endIndex] = this._editor.beginShapeTextEditOperation(this._target)
+          this._target.shape.insert(e.data)
+          this._editor.finishShapeTextEditOperation(origEditorItemInfo, startIndex, endIndex)
+          this._editor.triggerTextEditStyleChange()
+        }
+        this._textInputStatus = 'CHAR_TYPING'
+      }
+    })
+
+    this._textArea.addEventListener('keydown', (event) => {
+      this.handleTextAreaKeyDown(event)
+    })
+    this._textArea.addEventListener('keyup', (event) => {
+      this.handleTextAreaKeyUp(event)
+    })
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private handleTextAreaKeyDown(e: KeyboardEvent) {
+    // console.log(`Key Down ${e.code}`)
+    this._textCommandKey = false
+  }
+
+  private handleTextAreaKeyUp(e: KeyboardEvent) {
+    //console.log(`Key Up ${e.code}  ${e.altKey}  ${e.ctrlKey} ${e.key}`)
+    if (e.key === 'Meta' || e.key === 'Control') {
+      this._textCommandKey = true
+    }
+    if (e.ctrlKey && e.key === 'a') {
+      if (this._targetItem) {
+        this._targetItem.shape.selectAll()
+      } else if (this._target) {
+        this._target.shape.selectAll()
+      }
+      return
+    }
+
+    if (this._textFocused && e.key === 'Backspace') {
+      if (this._target && this._targetItem) {
+        const [origEditorItemInfo, startIndex, endIndex] = this._editor.beginShapeTextEditOperation(this._target)
+        this._targetItem.shape.handleBackspace()
+        this._editor.finishShapeTextEditOperation(origEditorItemInfo, startIndex, endIndex)
+      } else if (this._target) {
+        const [origEditorItemInfo, startIndex, endIndex] = this._editor.beginShapeTextEditOperation(this._target)
+        this._target.shape.handleBackspace()
+        this._editor.finishShapeTextEditOperation(origEditorItemInfo, startIndex, endIndex)
+      }
+    }
+
+    if (this._textFocused && e.key === 'Delete') {
+      if (this._target && this._targetItem) {
+        const [origEditorItemInfo, startIndex, endIndex] = this._editor.beginShapeTextEditOperation(this._target)
+        this._targetItem.shape.handleDelete()
+        this._editor.finishShapeTextEditOperation(origEditorItemInfo, startIndex, endIndex)
+      } else if (this._target) {
+        const [origEditorItemInfo, startIndex, endIndex] = this._editor.beginShapeTextEditOperation(this._target)
+        this._target.shape.handleDelete()
+        this._editor.finishShapeTextEditOperation(origEditorItemInfo, startIndex, endIndex)
+      }
+    }
+
+    if (this._textFocused && e.key === 'ArrowLeft') {
+      if (this._targetItem) {
+        this._targetItem.shape.moveColumns(-1)
+      } else if (this._target) {
+        this._target.shape.moveColumns(-1)
+      }
+    }
+    if (this._textFocused && e.key === 'ArrowRight') {
+      if (this._targetItem) {
+        this._targetItem.shape.moveColumns(1)
+      } else if (this._target) {
+        this._target.shape.moveColumns(1)
+      }
+    }
+    if (this._textFocused && e.key === 'ArrowUp') {
+      if (this._targetItem) {
+        this._targetItem.shape.moveRows(-1)
+      } else if (this._target) {
+        this._target.shape.moveRows(-1)
+      }
+    }
+    if (this._textFocused && e.key === 'ArrowDown') {
+      if (this._targetItem) {
+        this._targetItem.shape.moveRows(1)
+      } else if (this._target) {
+        this._target.shape.moveRows(1)
+      }
+    }
+    if (this._textFocused && e.key === 'Home') {
+      if (this._targetItem) {
+        this._targetItem.shape.moveColumnsToHome()
+      } else if (this._target) {
+        this._target.shape.moveColumnsToHome()
+      }
+    }
+    if (this._textFocused && e.key === 'End') {
+      if (this._targetItem) {
+        this._targetItem.shape.moveColumnsToEnd()
+      } else if (this._target) {
+        this._target.shape.moveColumnsToEnd()
+      }
+    }
+    if (this._textFocused && e.key === 'Enter') {
+      if (this._target && this._targetItem) {
+        const [origEditorItemInfo, startIndex, endIndex] = this._editor.beginShapeTextEditOperation(this._target)
+        this._targetItem.shape.handleReturn()
+        this._editor.finishShapeTextEditOperation(origEditorItemInfo, startIndex, endIndex)
+      } else if (this._target) {
+        const [origEditorItemInfo, startIndex, endIndex] = this._editor.beginShapeTextEditOperation(this._target)
+        this._target.shape.handleReturn()
+        this._editor.finishShapeTextEditOperation(origEditorItemInfo, startIndex, endIndex)
+      }
+    }
   }
 }

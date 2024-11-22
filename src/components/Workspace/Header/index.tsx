@@ -1417,7 +1417,7 @@ const Header: FC<HeaderProps> = ({
       editorItems.forEach((editorItem: EditorItem) => {
         editorItem.locked = !editorItem.locked
       })
-      Utils.currentEditor.invalideHolder()
+      Utils.currentEditor.invalidateHolder()
       const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
       const operation: Operation = new Operation(
         Utils.currentEditor,
@@ -1451,7 +1451,7 @@ const Header: FC<HeaderProps> = ({
     if (Utils.currentEditor) {
       const selections = Utils.currentEditor.selectionLayer.getAllEditorItems()
       if (selections.length === 1) {
-        Utils.currentEditor.bringForeward(selections[0])
+        Utils.currentEditor.bringForward(selections[0])
       }
     }
   }
@@ -1996,7 +1996,7 @@ const Header: FC<HeaderProps> = ({
         })
       }
       Utils.currentEditor.focus()
-      Utils.currentEditor.invalideHolder()
+      Utils.currentEditor.invalidateHolder()
       const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
       const operation: Operation = new Operation(
         Utils.currentEditor,
