@@ -71,8 +71,8 @@ export class PointAnchor extends Anchor {
         this._startY = y
         this.holder.layoutAnchors()
         this.lastMovingTime = nowTime
-        this.editor.hoverLayer.invalidateLayer()
-        this.editor.selectionLayer.invalidateLayer()
+        //this.editor.hoverLayer.invalidateLayer()
+        //this.editor.selectionLayer.invalidateLayer()
       }
     } else {
       this.editor.updateEditorMode(EditorMode.AUTO)

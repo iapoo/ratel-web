@@ -1,5 +1,5 @@
 import { Rectangle2D } from '@ratel-web/engine'
-import { EditorItemInfo } from '../../Items'
+import { EditorItem, EditorItemInfo } from '../../Items'
 import { EditorUtils } from '../../Theme'
 import { BackgroundLayer } from './BackgroundLayer'
 import { ContainerLayer } from './ContainerLayer'
@@ -62,6 +62,9 @@ export class EditorContext {
   private readonly _hoverLayer: EditorLayer
   private readonly _selectionLayer: EditorLayer
   private readonly _exportLayer: EditorLayer
+  private _target: EditorItem | undefined
+  private _targetItem: EditorItem | undefined
+  private _modified: boolean
 
   public constructor(editor: Editor) {
     this._editor = editor
@@ -87,6 +90,7 @@ export class EditorContext {
     this._containerLayer.editor = editor
     this._tableLayer.editor = editor
 
+    this._modified = false
     this._rangeSelectionShape.fill.setColor(EditorUtils.rangeSelectionFillColor)
     this._rangeSelectionShape.fill.setAlpha(EditorUtils.rangeSelectionFillAlpha)
     this._rangeSelectionShape.stroke.setColor(EditorUtils.rangeSelectionStrokeColor)
@@ -361,5 +365,29 @@ export class EditorContext {
 
   public get hoverLayer(): EditorLayer {
     return this._hoverLayer
+  }
+
+  public get target(): EditorItem | undefined {
+    return this._target
+  }
+
+  public set target(value: EditorItem | undefined) {
+    this._target = value
+  }
+
+  public get targetItem(): EditorItem | undefined {
+    return this._targetItem
+  }
+
+  public set targetItem(value: EditorItem | undefined) {
+    this._targetItem = value
+  }
+
+  public get modified() {
+    return this._modified
+  }
+
+  public set modified(value: boolean) {
+    this._modified = value
   }
 }

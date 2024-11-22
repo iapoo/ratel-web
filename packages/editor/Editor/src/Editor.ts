@@ -85,13 +85,10 @@ export class Editor extends Painter {
   private _zoom = 1.0
   private _gridSize = 10
   private _action: Action | undefined
-  private _target: EditorItem | undefined
   private readonly _textArea: HTMLTextAreaElement
-  private _targetItem: EditorItem | undefined
   private _title: string
   private _key: string
   private readonly _id: string
-  private _modified: boolean
   private _operationService: OperationService = OperationService.instance
   private _origWidth: number
   private _origHeight: number
@@ -113,7 +110,6 @@ export class Editor extends Painter {
     this._title = ''
     this._key = ''
     this._id = CommonUtils.generateID()
-    this._modified = false
     this._origWidth = Editor.ORIG_WIDTH_DEFAULT * this._zoom
     this._origHeight = Editor.ORIG_HEIGHT_DEFAULT * this.zoom
     this._showGrid = true
@@ -537,16 +533,12 @@ export class Editor extends Painter {
     return this._editorContext.selectionLayer
   }
 
-  public get hoverLayer(): EditorLayer {
-    return this._editorContext.hoverLayer
-  }
-
   public get target(): EditorItem | undefined {
-    return this._target
+    return this._editorContext.target
   }
 
   public get targetItem(): EditorItem | undefined {
-    return this._targetItem
+    return this._editorContext.targetItem
   }
 
   public get targetItemIndex(): number {
@@ -630,11 +622,11 @@ export class Editor extends Painter {
   }
 
   public isModified(): boolean {
-    return this._modified
+    return this._editorContext.modified
   }
 
   public resetModified() {
-    this._modified = false
+    this._editorContext.modified = false
   }
 
   public resize(origWidth: number, origHeight: number) {
@@ -840,7 +832,7 @@ export class Editor extends Painter {
     }
     this._editorContext.startPointX = e.x
     this._editorContext.startPointY = e.y
-    this._modified = true
+    this._editorContext.modified = true
     if (this._action) {
       this.handleCreationAction(e)
     } else {
@@ -866,22 +858,22 @@ export class Editor extends Painter {
         theControllerLayer.removeAllEditorItems()
         theControllerLayer.addEditorItem(connector)
         targetEntity.addSourceConnector(connector)
-        if (this._target) {
-          this._target.shape.focused = false
+        if (this._editorContext.target) {
+          this._editorContext.target.shape.focused = false
         }
         this.checkAndEndTextEdit()
         this.finishTextEditOperation()
-        if (this._target) {
-          this._target.shape.focused = false
+        if (this._editorContext.target) {
+          this._editorContext.target.shape.focused = false
         }
-        if (this._targetItem) {
-          this._targetItem.shape.focused = false
+        if (this._editorContext.targetItem) {
+          this._editorContext.targetItem.shape.focused = false
         }
-        this._target = undefined
+        this._editorContext.target = undefined
         this._editorContext.targetTime = 0
         this._editorContext.targetColumnResizing = false
         this._editorContext.targetRowResizing = false
-        this._targetItem = undefined
+        this._editorContext.targetItem = undefined
         this._editorContext.targetItemIndex = -1
         this.handleTableActiveCellShape()
       } else if (clickedEditorItem) {
@@ -896,13 +888,13 @@ export class Editor extends Painter {
           this.checkAndEndTextEdit()
           this.finishTextEditOperation()
           this.startMoveOutline(e)
-          if (this._target) {
-            this._target.shape.focused = false
+          if (this._editorContext.target) {
+            this._editorContext.target.shape.focused = false
           }
-          if (this._targetItem) {
-            this._targetItem.shape.focused = false
+          if (this._editorContext.targetItem) {
+            this._editorContext.targetItem.shape.focused = false
           }
-          this._targetItem = undefined
+          this._editorContext.targetItem = undefined
           this._editorContext.targetItemIndex = -1
           if (!((clickedEditorItem as Item).parent instanceof FrameEntity)) {
             this._editorContext.inMoving = true
@@ -912,17 +904,17 @@ export class Editor extends Painter {
             const targetPoint = this.findEditorItemPoint(clickedEditorItem, e.x, e.y)
             const [targetRow, targetRowIndex] = this.isTableRowResizable(clickedEditorItem, targetPoint.x, targetPoint.y)
             const [targetColumn, targetColumnIndex] = this.isTableColumnResizable(clickedEditorItem, targetPoint.x, targetPoint.y)
-            this._target = clickedEditorItem
+            this._editorContext.target = clickedEditorItem
             if (targetRow) {
               // console.log('========1')
               this.checkAndEndTextEdit()
               this.finishTextEditOperation()
               this._editorContext.targetRowResizing = true
               this._editorContext.targetRowIndex = targetRowIndex
-              if (this._targetItem) {
-                this._targetItem.shape.focused = false
+              if (this._editorContext.targetItem) {
+                this._editorContext.targetItem.shape.focused = false
               }
-              this._targetItem = undefined
+              this._editorContext.targetItem = undefined
               this._editorContext.targetItemIndex = -1
               this.handleTableActiveCellShape()
               this._editorContext.inMoving = true
@@ -933,10 +925,10 @@ export class Editor extends Painter {
               this.finishTextEditOperation()
               this._editorContext.targetColumnResizing = targetColumn
               this._editorContext.targetColumnIndex = targetColumnIndex
-              if (this._targetItem) {
-                this._targetItem.shape.focused = false
+              if (this._editorContext.targetItem) {
+                this._editorContext.targetItem.shape.focused = false
               }
-              this._targetItem = undefined
+              this._editorContext.targetItem = undefined
               this.handleTableActiveCellShape()
               this._editorContext.targetItemIndex = -1
               this._editorContext.inMoving = true
@@ -945,27 +937,27 @@ export class Editor extends Painter {
               const itemIndex = this.findTableItemIndex(clickedEditorItem, targetPoint.x, targetPoint.y)
               if (this._editorContext.targetItemIndex !== itemIndex) {
                 this._editorContext.targetItemIndex = itemIndex
-                if (this._targetItem) {
-                  this._targetItem.shape.focused = false
+                if (this._editorContext.targetItem) {
+                  this._editorContext.targetItem.shape.focused = false
                 }
-                this._targetItem = clickedEditorItem.items[itemIndex]
-                this._targetItem.shape.focused = true
+                this._editorContext.targetItem = clickedEditorItem.items[itemIndex]
+                this._editorContext.targetItem.shape.focused = true
                 this.handleTableActiveCellShape()
                 this._editorContext.inMoving = true
                 this.checkAndStartTextEdit()
                 this.beginTextEditOperation(clickedEditorItem)
                 this.startMoveOutline(e)
-                const cellPoint = this.findEditorItemPoint(this._targetItem, e.x, e.y)
-                this.updateTextCursorLocation(this._targetItem, cellPoint.x, cellPoint.y)
-                this._targetItem.shape.enter(cellPoint.x, cellPoint.y)
+                const cellPoint = this.findEditorItemPoint(this._editorContext.targetItem, e.x, e.y)
+                this.updateTextCursorLocation(this._editorContext.targetItem, cellPoint.x, cellPoint.y)
+                this._editorContext.targetItem.shape.enter(cellPoint.x, cellPoint.y)
                 this._editorContext.textSelecting = true
               } else {
                 //In text Editting
-                if (this.isTextEditting && this._targetItem) {
+                if (this.isTextEditting && this._editorContext.targetItem) {
                   this._editorContext.inMoving = false
-                  const cellPoint = this.findEditorItemPoint(this._targetItem, e.x, e.y)
-                  this.updateTextCursorLocation(this._targetItem, cellPoint.x, cellPoint.y)
-                  this._targetItem.shape.enter(cellPoint.x, cellPoint.y)
+                  const cellPoint = this.findEditorItemPoint(this._editorContext.targetItem, e.x, e.y)
+                  this.updateTextCursorLocation(this._editorContext.targetItem, cellPoint.x, cellPoint.y)
+                  this._editorContext.targetItem.shape.enter(cellPoint.x, cellPoint.y)
                   this._editorContext.textSelecting = true
                 } else {
                   this._editorContext.inMoving = true
@@ -996,18 +988,18 @@ export class Editor extends Painter {
         this.triggerSelectionChange()
         this.checkAndEndTextEdit()
         this.finishTextEditOperation()
-        if (this._target) {
-          this._target.shape.focused = false
+        if (this._editorContext.target) {
+          this._editorContext.target.shape.focused = false
         }
 
-        if (this._targetItem) {
-          this._targetItem.shape.focused = false
+        if (this._editorContext.targetItem) {
+          this._editorContext.targetItem.shape.focused = false
         }
-        this._target = undefined
+        this._editorContext.target = undefined
         this._editorContext.targetTime = 0
         this._editorContext.targetColumnResizing = false
         this._editorContext.targetRowResizing = false
-        this._targetItem = undefined
+        this._editorContext.targetItem = undefined
         this._editorContext.targetItemIndex = -1
         this.handleTableActiveCellShape()
         this.startRangeSelecting(e)
@@ -1066,25 +1058,25 @@ export class Editor extends Painter {
           //Need this to update toolbar in time
           this.triggerSelectionResized()
         }
-        if (this._target !== clickedEditorItem) {
-          if (this._target) {
-            this._target.shape.focused = false
+        if (this._editorContext.target !== clickedEditorItem) {
+          if (this._editorContext.target) {
+            this._editorContext.target.shape.focused = false
             this.checkAndEndTextEdit()
             this.finishTextEditOperation()
           }
-          this._target = clickedEditorItem
+          this._editorContext.target = clickedEditorItem
           this._editorContext.targetTime = Date.now()
         } else {
           if (clickedEditorItem instanceof TableEntity) {
             if (!clickedEditorItem.locked) {
               const itemIndex = this.findTableItemIndex(clickedEditorItem, targetPoint.x, targetPoint.y)
-              if (itemIndex === this._editorContext.targetItemIndex && this._targetItem) {
-                const cellPoint = this.findEditorItemPoint(this._targetItem, e.x, e.y)
+              if (itemIndex === this._editorContext.targetItemIndex && this._editorContext.targetItem) {
+                const cellPoint = this.findEditorItemPoint(this._editorContext.targetItem, e.x, e.y)
                 const nowTime = Date.now()
-                if (this._targetItem.shape.focused) {
+                if (this._editorContext.targetItem.shape.focused) {
                   this._textArea.focus()
-                  this.updateTextCursorLocation(this._targetItem, cellPoint.x, cellPoint.y)
-                  this._targetItem.shape.enterTo(cellPoint.x, cellPoint.y)
+                  this.updateTextCursorLocation(this._editorContext.targetItem, cellPoint.x, cellPoint.y)
+                  this._editorContext.targetItem.shape.enterTo(cellPoint.x, cellPoint.y)
                   this._editorContext.textSelecting = false
                   this.triggerTextEditStyleChange()
                 } else {
@@ -1093,13 +1085,13 @@ export class Editor extends Painter {
                     // console.log('Double click is detected')
                     // this.handleDoubleClick(e)
                     this._textArea.focus()
-                    this._targetItem.shape.enter(cellPoint.x, cellPoint.y)
+                    this._editorContext.targetItem.shape.enter(cellPoint.x, cellPoint.y)
                     this.checkAndStartTextEdit()
-                    if (this._targetItem) {
-                      this._targetItem.shape.focused = true
+                    if (this._editorContext.targetItem) {
+                      this._editorContext.targetItem.shape.focused = true
                     }
                     this._textArea.textContent = ''
-                    this.updateTextCursorLocation(this._targetItem, cellPoint.x, cellPoint.y)
+                    this.updateTextCursorLocation(this._editorContext.targetItem, cellPoint.x, cellPoint.y)
                     this.triggerTextEditStyleChange()
                     this.beginTextEditOperation(clickedEditorItem)
                   }
@@ -1110,10 +1102,10 @@ export class Editor extends Painter {
           } else {
             if (!clickedEditorItem.locked) {
               const nowTime = Date.now()
-              if (this._target.shape.focused) {
+              if (this._editorContext.target.shape.focused) {
                 this._textArea.focus()
                 this.updateTextCursorLocation(clickedEditorItem, targetPoint.x, targetPoint.y)
-                this._target.shape.enterTo(targetPoint.x, targetPoint.y)
+                this._editorContext.target.shape.enterTo(targetPoint.x, targetPoint.y)
                 this._editorContext.textSelecting = false
                 this.triggerTextEditStyleChange()
               } else {
@@ -1121,24 +1113,24 @@ export class Editor extends Painter {
                 if (nowTime - this._editorContext.targetTime < Editor.DOUBLE_CLICK_TIME) {
                   //console.log('Double click is detected')
                   // this.handleDoubleClick(e)
-                  if (this._target instanceof Connector) {
-                    let origItemInfo = OperationHelper.saveEditorItem(this._target)
-                    this.createTextBoxInConnector(this._target, targetPoint.x, targetPoint.y)
-                    let editorItemInfo = OperationHelper.saveEditorItem(this._target)
+                  if (this._editorContext.target instanceof Connector) {
+                    let origItemInfo = OperationHelper.saveEditorItem(this._editorContext.target)
+                    this.createTextBoxInConnector(this._editorContext.target, targetPoint.x, targetPoint.y)
+                    let editorItemInfo = OperationHelper.saveEditorItem(this._editorContext.target)
                     let operation = new Operation(this, OperationType.UPDATE_ITEMS, [editorItemInfo], true, [origItemInfo])
                     this._operationService.addOperation(operation)
                     this.triggerOperationChange()
                   } else {
                     this._textArea.focus()
-                    this._target.shape.enter(targetPoint.x, targetPoint.y)
+                    this._editorContext.target.shape.enter(targetPoint.x, targetPoint.y)
                     this.checkAndStartTextEdit()
-                    if (this._target) {
-                      this._target.shape.focused = true
+                    if (this._editorContext.target) {
+                      this._editorContext.target.shape.focused = true
                     }
                     this._textArea.textContent = ''
                     this.updateTextCursorLocation(clickedEditorItem, targetPoint.x, targetPoint.y)
                     this.triggerTextEditStyleChange()
-                    this.beginTextEditOperation(this._target)
+                    this.beginTextEditOperation(this._editorContext.target)
                   }
                 }
               }
@@ -1148,8 +1140,8 @@ export class Editor extends Painter {
         }
       }
     }
-    if (this._editorContext.inMoving && this._editorContext.moveStarted && this._target && this._editorContext.startEditorItemInfos.length > 0) {
-      this.finishOperation(this._target)
+    if (this._editorContext.inMoving && this._editorContext.moveStarted && this._editorContext.target && this._editorContext.startEditorItemInfos.length > 0) {
+      this.finishOperation(this._editorContext.target)
     }
     if (this._editorContext.inRangeSelecting) {
       this.endRangeSelecting(e)
@@ -1220,14 +1212,14 @@ export class Editor extends Painter {
       if (this._editorContext.textInputStatus === 'CHINESE_TYPING') {
         return
       }
-      if (this._target && this._targetItem && e.data) {
-        const [origEditorItemInfo, startIndex, endIndex] = this.beginShapeTextEditOperation(this._target)
-        this._targetItem.shape.insert(e.data)
+      if (this._editorContext.target && this._editorContext.targetItem && e.data) {
+        const [origEditorItemInfo, startIndex, endIndex] = this.beginShapeTextEditOperation(this._editorContext.target)
+        this._editorContext.targetItem.shape.insert(e.data)
         this.finishShapeTextEditOperation(origEditorItemInfo, startIndex, endIndex)
         this.triggerTextEditStyleChange()
-      } else if (this._target && e.data) {
-        const [origEditorItemInfo, startIndex, endIndex] = this.beginShapeTextEditOperation(this._target)
-        this._target.shape.insert(e.data)
+      } else if (this._editorContext.target && e.data) {
+        const [origEditorItemInfo, startIndex, endIndex] = this.beginShapeTextEditOperation(this._editorContext.target)
+        this._editorContext.target.shape.insert(e.data)
         this.finishShapeTextEditOperation(origEditorItemInfo, startIndex, endIndex)
         this.triggerTextEditStyleChange()
       }
@@ -1235,14 +1227,14 @@ export class Editor extends Painter {
     })
     this._textArea.addEventListener('compositionend', (e: CompositionEvent) => {
       if (this._editorContext.textInputStatus === 'CHINESE_TYPING') {
-        if (this._target && this._targetItem) {
-          const [origEditorItemInfo, startIndex, endIndex] = this.beginShapeTextEditOperation(this._target)
-          this._targetItem.shape.insert(e.data)
+        if (this._editorContext.target && this._editorContext.targetItem) {
+          const [origEditorItemInfo, startIndex, endIndex] = this.beginShapeTextEditOperation(this._editorContext.target)
+          this._editorContext.targetItem.shape.insert(e.data)
           this.finishShapeTextEditOperation(origEditorItemInfo, startIndex, endIndex)
           this.triggerTextEditStyleChange()
-        } else if (this._target) {
-          const [origEditorItemInfo, startIndex, endIndex] = this.beginShapeTextEditOperation(this._target)
-          this._target.shape.insert(e.data)
+        } else if (this._editorContext.target) {
+          const [origEditorItemInfo, startIndex, endIndex] = this.beginShapeTextEditOperation(this._editorContext.target)
+          this._editorContext.target.shape.insert(e.data)
           this.finishShapeTextEditOperation(origEditorItemInfo, startIndex, endIndex)
           this.triggerTextEditStyleChange()
         }
@@ -1296,88 +1288,88 @@ export class Editor extends Painter {
       this._editorContext.textCommandKey = true
     }
     if (e.ctrlKey && e.key === 'a') {
-      if (this._targetItem) {
-        this._targetItem.shape.selectAll()
-      } else if (this._target) {
-        this._target.shape.selectAll()
+      if (this._editorContext.targetItem) {
+        this._editorContext.targetItem.shape.selectAll()
+      } else if (this._editorContext.target) {
+        this._editorContext.target.shape.selectAll()
       }
       return
     }
 
     if (this._editorContext.textFocused && e.key === 'Backspace') {
-      if (this._target && this._targetItem) {
-        const [origEditorItemInfo, startIndex, endIndex] = this.beginShapeTextEditOperation(this._target)
-        this._targetItem.shape.handleBackspace()
+      if (this._editorContext.target && this._editorContext.targetItem) {
+        const [origEditorItemInfo, startIndex, endIndex] = this.beginShapeTextEditOperation(this._editorContext.target)
+        this._editorContext.targetItem.shape.handleBackspace()
         this.finishShapeTextEditOperation(origEditorItemInfo, startIndex, endIndex)
-      } else if (this._target) {
-        const [origEditorItemInfo, startIndex, endIndex] = this.beginShapeTextEditOperation(this._target)
-        this._target.shape.handleBackspace()
+      } else if (this._editorContext.target) {
+        const [origEditorItemInfo, startIndex, endIndex] = this.beginShapeTextEditOperation(this._editorContext.target)
+        this._editorContext.target.shape.handleBackspace()
         this.finishShapeTextEditOperation(origEditorItemInfo, startIndex, endIndex)
       }
     }
 
     if (this._editorContext.textFocused && e.key === 'Delete') {
-      if (this._target && this._targetItem) {
-        const [origEditorItemInfo, startIndex, endIndex] = this.beginShapeTextEditOperation(this._target)
-        this._targetItem.shape.handleDelete()
+      if (this._editorContext.target && this._editorContext.targetItem) {
+        const [origEditorItemInfo, startIndex, endIndex] = this.beginShapeTextEditOperation(this._editorContext.target)
+        this._editorContext.targetItem.shape.handleDelete()
         this.finishShapeTextEditOperation(origEditorItemInfo, startIndex, endIndex)
-      } else if (this._target) {
-        const [origEditorItemInfo, startIndex, endIndex] = this.beginShapeTextEditOperation(this._target)
-        this._target.shape.handleDelete()
+      } else if (this._editorContext.target) {
+        const [origEditorItemInfo, startIndex, endIndex] = this.beginShapeTextEditOperation(this._editorContext.target)
+        this._editorContext.target.shape.handleDelete()
         this.finishShapeTextEditOperation(origEditorItemInfo, startIndex, endIndex)
       }
     }
 
     if (this._editorContext.textFocused && e.key === 'ArrowLeft') {
-      if (this._targetItem) {
-        this._targetItem.shape.moveColumns(-1)
-      } else if (this._target) {
-        this._target.shape.moveColumns(-1)
+      if (this._editorContext.targetItem) {
+        this._editorContext.targetItem.shape.moveColumns(-1)
+      } else if (this._editorContext.target) {
+        this._editorContext.target.shape.moveColumns(-1)
       }
     }
     if (this._editorContext.textFocused && e.key === 'ArrowRight') {
-      if (this._targetItem) {
-        this._targetItem.shape.moveColumns(1)
-      } else if (this._target) {
-        this._target.shape.moveColumns(1)
+      if (this._editorContext.targetItem) {
+        this._editorContext.targetItem.shape.moveColumns(1)
+      } else if (this._editorContext.target) {
+        this._editorContext.target.shape.moveColumns(1)
       }
     }
     if (this._editorContext.textFocused && e.key === 'ArrowUp') {
-      if (this._targetItem) {
-        this._targetItem.shape.moveRows(-1)
-      } else if (this._target) {
-        this._target.shape.moveRows(-1)
+      if (this._editorContext.targetItem) {
+        this._editorContext.targetItem.shape.moveRows(-1)
+      } else if (this._editorContext.target) {
+        this._editorContext.target.shape.moveRows(-1)
       }
     }
     if (this._editorContext.textFocused && e.key === 'ArrowDown') {
-      if (this._targetItem) {
-        this._targetItem.shape.moveRows(1)
-      } else if (this._target) {
-        this._target.shape.moveRows(1)
+      if (this._editorContext.targetItem) {
+        this._editorContext.targetItem.shape.moveRows(1)
+      } else if (this._editorContext.target) {
+        this._editorContext.target.shape.moveRows(1)
       }
     }
     if (this._editorContext.textFocused && e.key === 'Home') {
-      if (this._targetItem) {
-        this._targetItem.shape.moveColumnsToHome()
-      } else if (this._target) {
-        this._target.shape.moveColumnsToHome()
+      if (this._editorContext.targetItem) {
+        this._editorContext.targetItem.shape.moveColumnsToHome()
+      } else if (this._editorContext.target) {
+        this._editorContext.target.shape.moveColumnsToHome()
       }
     }
     if (this._editorContext.textFocused && e.key === 'End') {
-      if (this._targetItem) {
-        this._targetItem.shape.moveColumnsToEnd()
-      } else if (this._target) {
-        this._target.shape.moveColumnsToEnd()
+      if (this._editorContext.targetItem) {
+        this._editorContext.targetItem.shape.moveColumnsToEnd()
+      } else if (this._editorContext.target) {
+        this._editorContext.target.shape.moveColumnsToEnd()
       }
     }
     if (this._editorContext.textFocused && e.key === 'Enter') {
-      if (this._target && this._targetItem) {
-        const [origEditorItemInfo, startIndex, endIndex] = this.beginShapeTextEditOperation(this._target)
-        this._targetItem.shape.handleReturn()
+      if (this._editorContext.target && this._editorContext.targetItem) {
+        const [origEditorItemInfo, startIndex, endIndex] = this.beginShapeTextEditOperation(this._editorContext.target)
+        this._editorContext.targetItem.shape.handleReturn()
         this.finishShapeTextEditOperation(origEditorItemInfo, startIndex, endIndex)
-      } else if (this._target) {
-        const [origEditorItemInfo, startIndex, endIndex] = this.beginShapeTextEditOperation(this._target)
-        this._target.shape.handleReturn()
+      } else if (this._editorContext.target) {
+        const [origEditorItemInfo, startIndex, endIndex] = this.beginShapeTextEditOperation(this._editorContext.target)
+        this._editorContext.target.shape.handleReturn()
         this.finishShapeTextEditOperation(origEditorItemInfo, startIndex, endIndex)
       }
     }
@@ -1797,7 +1789,7 @@ export class Editor extends Painter {
   private handleMouseRightButtonDown(e: PointerEvent) {
     this._editorContext.startPointX = e.x
     this._editorContext.startPointY = e.y
-    this._modified = true
+    this._editorContext.modified = true
     const clickedEditorItem = this.findEditorItem(e.x, e.y, false)
     const theSelectionLayer = this.selectionLayer as SelectionLayer
     if (clickedEditorItem) {
@@ -1812,13 +1804,13 @@ export class Editor extends Painter {
         this.checkAndEndTextEdit()
         this.finishTextEditOperation()
         this.startMoveOutline(e)
-        if (this._target) {
-          this._target.shape.focused = false
+        if (this._editorContext.target) {
+          this._editorContext.target.shape.focused = false
         }
-        if (this._targetItem) {
-          this._targetItem.shape.focused = false
+        if (this._editorContext.targetItem) {
+          this._editorContext.targetItem.shape.focused = false
         }
-        this._targetItem = undefined
+        this._editorContext.targetItem = undefined
         this._editorContext.targetItemIndex = -1
       } else if (this._editorContext.textFocused) {
         if (clickedEditorItem.shape.selection.length === 0) {
@@ -1832,18 +1824,18 @@ export class Editor extends Painter {
       this.triggerSelectionChange()
       this.checkAndEndTextEdit()
       this.finishTextEditOperation()
-      if (this._target) {
-        this._target.shape.focused = false
+      if (this._editorContext.target) {
+        this._editorContext.target.shape.focused = false
       }
 
-      if (this._targetItem) {
-        this._targetItem.shape.focused = false
+      if (this._editorContext.targetItem) {
+        this._editorContext.targetItem.shape.focused = false
       }
-      this._target = undefined
+      this._editorContext.target = undefined
       this._editorContext.targetTime = 0
       this._editorContext.targetColumnResizing = false
       this._editorContext.targetRowResizing = false
-      this._targetItem = undefined
+      this._editorContext.targetItem = undefined
       this._editorContext.targetItemIndex = -1
       this.handleTableActiveCellShape()
     }
@@ -1949,7 +1941,7 @@ export class Editor extends Painter {
   }
 
   private handleTargetRowResizing(e: PointerEvent) {
-    const tableEntity = this._target as TableEntity
+    const tableEntity = this._editorContext.target as TableEntity
     const rowIndex = this._editorContext.targetRowIndex
     const minHeight = Item.MIN_HEIGHT
     const columnCount = tableEntity.columnCount
@@ -1975,7 +1967,7 @@ export class Editor extends Painter {
   }
 
   private handleTargetColumnResizing(e: PointerEvent) {
-    const tableEntity = this._target as TableEntity
+    const tableEntity = this._editorContext.target as TableEntity
     const columnIndex = this._editorContext.targetColumnIndex
     const minWidth = Item.MIN_WIDTH
     const rowCount = tableEntity.rowCount
@@ -2187,7 +2179,7 @@ export class Editor extends Painter {
       const newEditorItem = this.updateEditorItemDetail(editorItem as Item, editorItemInfo)
       this.selectionLayer.removeAllEditorItems()
       this.selectionLayer.addEditorItem(newEditorItem)
-      this._target = newEditorItem
+      this._editorContext.target = newEditorItem
       this._textArea.focus()
       this.checkAndStartTextEdit()
       newEditorItem.shape.focused = true
@@ -2215,8 +2207,8 @@ export class Editor extends Painter {
       const tableCell = newTableEntity.items[tableCellIndex]
       this.selectionLayer.removeAllEditorItems()
       this.selectionLayer.addEditorItem(newEditorItem)
-      this._target = newEditorItem
-      this._targetItem = tableCell
+      this._editorContext.target = newEditorItem
+      this._editorContext.targetItem = tableCell
       this._editorContext.targetItemIndex = tableCellIndex
       this._textArea.focus()
       this.checkAndStartTextEdit()
@@ -2261,8 +2253,8 @@ export class Editor extends Painter {
     this.selectionLayer.removeAllEditorItems()
     this.triggerSelectionChange()
     this.checkAndEndTextEdit()
-    this._target = undefined
-    this._targetItem = undefined
+    this._editorContext.target = undefined
+    this._editorContext.targetItem = undefined
     this.handleTableActiveCellShape()
   }
 
@@ -2317,8 +2309,8 @@ export class Editor extends Painter {
     this.selectionLayer.removeAllEditorItems()
     this.triggerSelectionChange()
     this.checkAndEndTextEdit()
-    this._target = undefined
-    this._targetItem = undefined
+    this._editorContext.target = undefined
+    this._editorContext.targetItem = undefined
     this.handleTableActiveCellShape()
   }
 
@@ -2357,8 +2349,8 @@ export class Editor extends Painter {
   }
 
   public checkAndEndTextEdit() {
-    if (this._target) {
-      this._target.shape.focused = false
+    if (this._editorContext.target) {
+      this._editorContext.target.shape.focused = false
     }
     if (this._editorContext.textFocused) {
       this._editorContext.textFocused = false
@@ -2531,7 +2523,7 @@ export class Editor extends Painter {
   }
 
   private handleDefaultPointMove(e: PointerEvent) {
-    const theHoverLayer: HoverLayer = this.hoverLayer as HoverLayer
+    const theHoverLayer: HoverLayer = this._editorContext.hoverLayer as HoverLayer
     const theSelectionLayer: SelectionLayer = this.selectionLayer as SelectionLayer
     const editorItem = this.findEditorItem(e.x, e.y, false)
     //console.log(`Finding ...... ${editorItem}`)
@@ -2583,7 +2575,7 @@ export class Editor extends Painter {
               this.updateEditorMode(EditorMode.ROW_RESIZE)
             } else if (targetColumn) {
               this.updateEditorMode(EditorMode.COL_RESIZE)
-            } else if (this._targetItem && this._editorContext.textFocused && this._editorContext.textSelecting) {
+            } else if (this._editorContext.targetItem && this._editorContext.textFocused && this._editorContext.textSelecting) {
               this.updateEditorMode(EditorMode.TEXT)
             } else {
               this.updateEditorMode(EditorMode.MOVE)
@@ -2612,11 +2604,11 @@ export class Editor extends Painter {
               // this._targetColumn = targetColumn
               // this._targetColumnIndex = targetColumnIndex
               this.updateEditorMode(EditorMode.COL_RESIZE)
-            } else if (this._targetItem && this._editorContext.textFocused && this._editorContext.textSelecting) {
-              const cellPoint = this.findEditorItemPoint(this._targetItem, e.x, e.y)
-              this._targetItem.shape.enterTo(cellPoint.x, cellPoint.y)
+            } else if (this._editorContext.targetItem && this._editorContext.textFocused && this._editorContext.textSelecting) {
+              const cellPoint = this.findEditorItemPoint(this._editorContext.targetItem, e.x, e.y)
+              this._editorContext.targetItem.shape.enterTo(cellPoint.x, cellPoint.y)
               this.updateEditorMode(EditorMode.TEXT)
-            } else if (this._targetItem && this._editorContext.textFocused) {
+            } else if (this._editorContext.targetItem && this._editorContext.textFocused) {
               this.updateEditorMode(EditorMode.TEXT)
             } else {
               this.updateEditorMode(EditorMode.MOVE)
@@ -2702,23 +2694,23 @@ export class Editor extends Painter {
       }
       this._editorContext.controllerLayer.removeAllEditorItems()
       this._editorContext.controllerLayer.clear()
-      if (this._target) {
-        this._target.shape.focused = false
+      if (this._editorContext.target) {
+        this._editorContext.target.shape.focused = false
       }
       this.checkAndEndTextEdit()
       this.finishTextEditOperation()
-      if (this._target) {
-        this._target.shape.focused = false
+      if (this._editorContext.target) {
+        this._editorContext.target.shape.focused = false
       }
-      if (this._targetItem) {
-        this._targetItem.shape.focused = false
+      if (this._editorContext.targetItem) {
+        this._editorContext.targetItem.shape.focused = false
       }
       this._action = undefined
-      this._target = undefined
+      this._editorContext.target = undefined
       this._editorContext.targetTime = 0
       this._editorContext.targetColumnResizing = false
       this._editorContext.targetRowResizing = false
-      this._targetItem = undefined
+      this._editorContext.targetItem = undefined
       this._editorContext.targetItemIndex = -1
       this.handleTableActiveCellShape()
     }
@@ -2726,7 +2718,7 @@ export class Editor extends Painter {
 
   private handleDefaultMoveInMoving(e: PointerEvent) {
     const theSelectionLayer = this.selectionLayer as SelectionLayer
-    const theHoverLayer = this.hoverLayer as HoverLayer
+    const theHoverLayer = this._editorContext.hoverLayer as HoverLayer
     const count = theSelectionLayer.getEditorItemCount()
     const moveX = e.x / this._zoom - this._editorContext.startPointX / this._zoom
     const moveY = e.y / this._zoom - this._editorContext.startPointY / this._zoom
@@ -2868,14 +2860,14 @@ export class Editor extends Painter {
   }
 
   private handleTableActiveCellShape() {
-    if (this._targetItem) {
+    if (this._editorContext.targetItem) {
       const margin = EditorUtils.tableActiveCellMargin
-      this._editorContext.tableActiveCellShape.transform = this._targetItem.shape.worldTransform
+      this._editorContext.tableActiveCellShape.transform = this._editorContext.targetItem.shape.worldTransform
       this._editorContext.tableActiveCellShape.boundary = Rectangle.makeLTWH(
         margin,
         margin,
-        this._targetItem.width - margin * 2,
-        this._targetItem.height - margin * 2,
+        this._editorContext.targetItem.width - margin * 2,
+        this._editorContext.targetItem.height - margin * 2,
       )
       this.triggerTableTextEditStart()
     } else {
@@ -2990,9 +2982,9 @@ export class Editor extends Painter {
   }
 
   private beginShapeTextEditOperation(editorItem: EditorItem): [EditorItemInfo, number, number] {
-    if (this._target && this._targetItem) {
+    if (this._editorContext.target && this._editorContext.targetItem) {
       const editorItemInfo = OperationHelper.saveEditorItem(editorItem)
-      return [editorItemInfo, this._targetItem.shape.startIndex, this._targetItem.shape.endIndex]
+      return [editorItemInfo, this._editorContext.targetItem.shape.startIndex, this._editorContext.targetItem.shape.endIndex]
     } else {
       const editorItemInfo = OperationHelper.saveEditorItem(editorItem)
       return [editorItemInfo, editorItem.shape.startIndex, editorItem.shape.endIndex]
@@ -3034,18 +3026,18 @@ export class Editor extends Painter {
   }
 
   private finishTextEditOperation() {
-    if (this._target && this._targetItem && this._editorContext.startEditorItemInfos.length > 0) {
+    if (this._editorContext.target && this._editorContext.targetItem && this._editorContext.startEditorItemInfos.length > 0) {
       let origItemInfo = this._editorContext.startEditorItemInfos[0]
-      let editorItemInfo = OperationHelper.saveEditorItem(this._target)
+      let editorItemInfo = OperationHelper.saveEditorItem(this._editorContext.target)
       let operation = new Operation(this, OperationType.UPDATE_ITEMS, [editorItemInfo], true, [origItemInfo])
       this._operationService.addOperation(operation)
       //console.log(`finish: ${editorItemInfo}`)
       //console.log(`finish2: ${origItemInfo}`)
       this.triggerOperationChange()
       this._editorContext.startEditorItemInfos.length = 0
-    } else if (this._target && this._editorContext.startEditorItemInfos.length > 0) {
+    } else if (this._editorContext.target && this._editorContext.startEditorItemInfos.length > 0) {
       let origItemInfo = this._editorContext.startEditorItemInfos[0]
-      let editorItemInfo = OperationHelper.saveEditorItem(this._target)
+      let editorItemInfo = OperationHelper.saveEditorItem(this._editorContext.target)
       let operation = new Operation(this, OperationType.UPDATE_ITEMS, [editorItemInfo], true, [origItemInfo])
       this._operationService.addOperation(operation)
       //console.log(`finish3: ${editorItemInfo}`)
@@ -3056,8 +3048,8 @@ export class Editor extends Painter {
   }
 
   private finishShapeTextEditOperation(origEditorItemInfo: EditorItemInfo, startIndex: number, endIndex: number) {
-    if (this._target && this._targetItem) {
-      let editorItemInfo = OperationHelper.saveEditorItem(this._target)
+    if (this._editorContext.target && this._editorContext.targetItem) {
+      let editorItemInfo = OperationHelper.saveEditorItem(this._editorContext.target)
       let operation = new Operation(
         this,
         OperationType.TABLE_TEXT_EDIT,
@@ -3070,8 +3062,8 @@ export class Editor extends Painter {
         null,
         null,
         true,
-        this._targetItem.shape.startIndex,
-        this._targetItem.shape.endIndex,
+        this._editorContext.targetItem.shape.startIndex,
+        this._editorContext.targetItem.shape.endIndex,
         startIndex,
         endIndex,
         '',
@@ -3082,8 +3074,8 @@ export class Editor extends Painter {
       this._operationService.addOperation(operation)
       this.triggerOperationChange()
       this._editorContext.startEditorItemInfos.length = 0
-    } else if (this._target) {
-      let editorItemInfo = OperationHelper.saveEditorItem(this._target)
+    } else if (this._editorContext.target) {
+      let editorItemInfo = OperationHelper.saveEditorItem(this._editorContext.target)
       let operation = new Operation(
         this,
         OperationType.SHAPE_TEXT_EDIT,
@@ -3096,8 +3088,8 @@ export class Editor extends Painter {
         null,
         null,
         true,
-        this._target.shape.startIndex,
-        this._target.shape.endIndex,
+        this._editorContext.target.shape.startIndex,
+        this._editorContext.target.shape.endIndex,
         startIndex,
         endIndex,
       )
