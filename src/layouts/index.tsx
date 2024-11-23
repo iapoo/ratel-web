@@ -1,4 +1,7 @@
 import Workspace from '@/components/Workspace'
+import { ShapeEntity } from '@ratel-web/editor/Items'
+import { Colors } from '@ratel-web/engine'
+import { Writer } from '@ratel-web/writer'
 import React, { useEffect, useState } from 'react'
 
 const BasicLayout: React.FC = () => {
@@ -26,26 +29,32 @@ const BasicLayout: React.FC = () => {
 
   const initialize = async () => {
     setInitialized(true)
-    // await Engine.initialize()
-    //
-    // const canvasId = 'editor-1'
-    // const canvas = document.createElement('canvas')
-    // canvas.width = 400
-    // canvas.height = 400
-    // canvas.id = canvasId
-    //
-    // const editor = new Editor(canvas)
-    // editor.horizontalSpace = 0
-    // editor.verticalSpace = 0
-    // editor.start()
-    // const item = new ShapeEntity(20, 20, 100, 200, { shapeType: 'Rectangle' })
-    // item.fillColor = Colors.Red
-    // editor.contentLayer.addEditorItem(item)
-    // const container = document.getElementById('editor-container')
-    // container!.append(canvas)
-    // editor.activate()
+    //await Engine.initialize()
+    // const timeout = setTimeout(() => {
+    //   setupWriter()
+    //   clearTimeout(timeout)
+    // }, 10000)
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const setupWriter = () => {
+    const canvasId = 'editor-5'
+    const canvas = document.createElement('canvas')
+    canvas.width = 400
+    canvas.height = 40000
+    canvas.id = canvasId
+
+    const editor = new Writer(canvas)
+    editor.horizontalSpace = 0
+    editor.verticalSpace = 0
+    editor.start()
+    const item = new ShapeEntity(20, 20, 100, 200, { shapeType: 'Rectangle' })
+    item.fillColor = Colors.Red
+    editor.contentLayer.addEditorItem(item)
+    const container = document.getElementById('writer-container')
+    container!.append(canvas)
+    editor.activate()
+  }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleResize = (e: UIEvent) => {
     // console.log(e)
@@ -59,8 +68,12 @@ const BasicLayout: React.FC = () => {
   console.log(`window Width =  ${windowWidth}, height = ${windowHeight}`)
   return (
     <div style={{ width: '100%', height: '100%' }}>
-      <Workspace />
-      {/*<div id="editor-container" style={{ width: 500, height: 500 }}></div>*/}
+      <div style={{ width: '100%', height: '100%' }}>
+        <Workspace />
+      </div>
+      {/*<div style={{ position: 'absolute', left: '50px', top: '50px', width: '500px', height: '500px', backgroundColor: 'white', zIndex: 999999 }}>*/}
+      {/*  <div id="writer-container" style={{ width: 500, height: 500 }}></div>*/}
+      {/*</div>*/}
     </div>
   )
 }

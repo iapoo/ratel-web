@@ -82,7 +82,7 @@ export class Editor extends Painter {
   private _verticalSpace: number = Editor.VERTICAL_SPACE_DEFAULT
   private _theme: DocumentThemeType = DocumentThemeTypes[0]
   private _enableDarkTheme: boolean = true
-  private _editorContext: EditorContext
+  private readonly _editorContext: EditorContext
   private _editorEventHandler: EditorEventHandler
 
   public constructor(canvasId: string | HTMLCanvasElement) {

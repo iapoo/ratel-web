@@ -31,6 +31,7 @@
     "@ratel-web/editor": "0.1.0",
     "@ratel-web/engine": "^0.1.0",
     "@ratel-web/painter": "0.1.0",
+    "@ratel-web/writer": "0.1.0",
     "@svgdotjs/svg.js": "^3.2.0",
     "@umijs/max": "^4.3.31",
     "antd": "^5.4.0",

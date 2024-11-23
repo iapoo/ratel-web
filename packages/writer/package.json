@@ -1,0 +1,35 @@
+{
+  "name": "@ratel-web/writer",
+  "version": "0.1.0",
+  "description": "Plugin to add writer for ratel web.",
+  "keywords": [
+    "ratel-web"
+  ],
+  "homepage": "https://ratel.ivipa.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iapoo/ratel-web.git",
+    "directory": "packages/writer"
+  },
+  "license": "LGPL-3.0-or-later",
+  "author": "Ivipa Ratel Team (https://ratel.ivipa.com)",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "main": "./index.ts",
+  "scripts": {
+    "typings": "tsc --emitDeclarationOnly -d --outDir typings"
+  },
+  "dependencies": {
+    "@ratel-web/editor": "0.1.0",
+    "@ratel-web/engine": "0.1.0",
+    "@ratel-web/painter": "0.1.0"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
