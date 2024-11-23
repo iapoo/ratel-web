@@ -4,7 +4,7 @@ import { Item } from '../../Items'
 import { Holder } from './Holder'
 
 export abstract class Anchor extends Shape {
-  protected static readonly MIN_MOVING_INTERVAL = 100
+  protected static readonly MIN_MOVING_INTERVAL = 20
   private _target: Item | undefined
   private _editor: Editor
   private _holder: Holder
