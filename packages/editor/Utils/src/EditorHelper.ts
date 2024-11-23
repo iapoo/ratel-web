@@ -68,11 +68,11 @@ export class EditorHelper {
 
   public static pasteSelections(selections: EditorItemInfo[], editor: Editor, pasteFromSystem: boolean, pasteLocation: Point2) {
     if (selections.length > 0) {
-      let offsetX = EditorHelper.DEFAULT_OFFSET_X
-      let offsetY = EditorHelper.DEFAULT_OFFSET_Y
+      let offsetX = editor.alignToGridSize(EditorHelper.DEFAULT_OFFSET_X)
+      let offsetY = editor.alignToGridSize(EditorHelper.DEFAULT_OFFSET_Y)
       if (!pasteFromSystem) {
-        offsetX = pasteLocation.x - selections[0].left - editor.horizontalSpace
-        offsetY = pasteLocation.y - selections[0].top - editor.verticalSpace
+        offsetX = editor.alignToGridSize(pasteLocation.x - selections[0].left - editor.horizontalSpace)
+        offsetY = editor.alignToGridSize(pasteLocation.y - selections[0].top - editor.verticalSpace)
       }
       //refresh connections of shapes & Setup new location
       let editorItems: Array<EditorItem> = []
