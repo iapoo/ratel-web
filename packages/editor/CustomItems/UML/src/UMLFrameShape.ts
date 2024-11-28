@@ -1,5 +1,5 @@
 import { FontWeight, Rectangle, TextAlignment, TextVerticalAlignment } from '@ratel-web/engine'
-import { FrameEntity, ShapeConstants, ShapeEntity, ShapeOptions, ShapeType } from '../../../Items'
+import { FrameEntity, FrameLabelEntity, ShapeConstants, ShapeOptions, ShapeType } from '../../../Items'
 import { EntityShapeType, FrameShape } from '../../../Shapes'
 
 export class UMLFrameShapes {
@@ -224,13 +224,13 @@ export const UMLFrameShapeTypes: ShapeType[] = [
 ]
 
 export class UMLFrameShape extends FrameEntity {
-  private _label: ShapeEntity
+  private _label: FrameLabelEntity
 
   public constructor(left: number, top: number, width: number, height: number, shapeOptions: ShapeOptions, frameShapeTypes: ShapeType[]) {
     super(left, top, width, height, shapeOptions, frameShapeTypes)
     const frameTypeInfo = this.parseTypeInfo({ shapeType: shapeOptions.shapeType })
     this._shape = new FrameShape(left, top, width, height, this, this.buildShape, frameTypeInfo)
-    this._label = new ShapeEntity(0, 0, 120, 30)
+    this._label = new FrameLabelEntity(0, 0, 120, 30)
     this.initializeTheme()
     this.initializeShape()
   }

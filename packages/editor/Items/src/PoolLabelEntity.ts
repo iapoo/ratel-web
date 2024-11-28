@@ -1,7 +1,7 @@
 /* eslint-disable max-params */
 import { ShapeConstants, ShapeEntity, ShapeOptions, ShapeType, ShapeTypes } from './ShapeEntity'
 
-export class CellEntity extends ShapeEntity {
+export class PoolLabelEntity extends ShapeEntity {
   public constructor(
     left: number,
     top: number,

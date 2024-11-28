@@ -496,7 +496,7 @@ export class Holder extends Control {
       this.addNode(this._sourceConnectionAnchor)
       this.addNode(this._targetConnectionAnchor)
     } else {
-      if (!(this._target.parent instanceof FrameEntity)) {
+      if (!this._target.fixed && !(this._target.parent instanceof FrameEntity)) {
         this.addNode(this._leftResizeAnchor)
         this.addNode(this._leftTopResizeAnchor)
         this.addNode(this._topResizeAnchor)

@@ -13,4 +13,5 @@ export { Style, StyleInfo } from './src/EntityUtils'
 export { EntityRenderContext, ExtensionShape } from './src/ExtensionShape'
 export { FrameShape } from './src/FrameShape'
 export { GroupShape } from './src/GroupShape'
+export { PoolContainerShape } from './src/PoolContainerShape'
 export { ConnectorConfig, EntityExtension, ExtensionConfig, ImageConfig, RenderContext, ShapeConfig, SvgConfig, TableConfig }

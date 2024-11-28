@@ -35,6 +35,7 @@ export interface EditorItem {
   readonly worldTransform: Matrix
   readonly worldInverseTransform: Matrix | null
   readonly internalTransform: Matrix
+  readonly fixed: boolean
   locked: boolean
   useTheme: boolean
   themeName: string

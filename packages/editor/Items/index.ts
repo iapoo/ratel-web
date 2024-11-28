@@ -5,9 +5,21 @@ import type { CustomTableType } from './src/CustomTableEntity'
 import { EditorItem as IEditorItem } from './src/EditorItem'
 import type { ExtensionCategory, Plugin } from './src/EntityExtensions'
 import type { Type } from './src/Item'
+import type { PoolType } from './src/PoolCustomContainer'
 import type { ShapeOptions, ShapeType } from './src/ShapeEntity'
 
-export { ConnectorArrowType, CustomConnectorTypeInfo, CustomEntityTypeInfo, CustomTableType, ExtensionCategory, Plugin, ShapeOptions, ShapeType, Type }
+export {
+  ConnectorArrowType,
+  CustomConnectorTypeInfo,
+  CustomEntityTypeInfo,
+  CustomTableType,
+  ExtensionCategory,
+  Plugin,
+  PoolType,
+  ShapeOptions,
+  ShapeType,
+  Type,
+}
 
 export enum MyShapeType {
   SELECTION = 0,
@@ -53,12 +65,14 @@ export {
 export { ExtensionEntityInfo } from './src/ExtensionEntityInfo'
 export { FrameEntity } from './src/FrameEntity'
 export { FrameEntityInfo } from './src/FrameEntityInfo'
+export { FrameLabelEntity } from './src/FrameLabelEntity'
 export { GroupEntity } from './src/GroupEntity'
 export { ImageContainer } from './src/ImageContainer'
 export { ImageContainerInfo } from './src/ImageContainerInfo'
 export { Categories, Item } from './src/Item'
 export { LineEntity, LineType } from './src/LineEntity'
 export { LineInfo } from './src/LineInfo'
+export { PoolCustomContainer, PoolCustomContainers, PoolCustomContainerTypes } from './src/PoolCustomContainer'
 export { PoolEntity } from './src/PoolEntity'
 export { ShapeConstants, ShapeEntity, ShapeTypes } from './src/ShapeEntity'
 export { ShapeInfo } from './src/ShapeInfo'

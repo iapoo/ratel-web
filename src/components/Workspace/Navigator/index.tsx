@@ -13,6 +13,7 @@ import {
   ExtendedShapeAction,
   FrameAction,
   MyShapeAction,
+  PoolContainerAction,
   ShapeAction,
   TableAction,
 } from '@ratel-web/editor/Actions'
@@ -53,6 +54,7 @@ import {
   FrameEntity,
   MyShape,
   Plugin,
+  PoolCustomContainerTypes,
   ShapeEntity,
   ShapeType,
   ShapeTypes,
@@ -188,6 +190,13 @@ const Navigator: FC<NavigatorProps> = ({
     if (Utils.currentEditor) {
       Utils.currentEditor.action = new CustomContainerAction(Utils.currentEditor, type, classType, shapeType)
       Utils.currentEditor.action.imageId = process.env.BASIC_PATH + `/${folder}/${type}.svg`
+    }
+  }
+
+  const addPoolContainer = (type: string, shapeType: ShapeType, folder: string) => {
+    if (Utils.currentEditor) {
+      Utils.currentEditor.action = new PoolContainerAction(Utils.currentEditor, type, shapeType)
+      Utils.currentEditor.action!.imageId = process.env.BASIC_PATH + `/${folder}/${type}.svg`
     }
   }
 
@@ -677,6 +686,11 @@ const Navigator: FC<NavigatorProps> = ({
     generateIcons(shapeType.name, 'basic-icons', shapeType.width, shapeType.height, false, () => addContainer(shapeType.name, 'basic-icons')),
   )
 
+  // @ts-ignore
+  const poolContainers = PoolCustomContainerTypes.map((shapeType) =>
+    generateIcons(shapeType.name, 'basic-icons', shapeType.width, shapeType.height, false, () => addPoolContainer(shapeType.name, shapeType, 'basic-icons')),
+  )
+
   const customShapeBasicShapes = BasicShapes.map((shapeType) =>
     generateIcons(shapeType.name, 'custom-icons/basic-shapes', shapeType.typeInfo.width, shapeType.typeInfo.height, false, () =>
       addCustomShape(shapeType.name, shapeType.type, shapeType.typeInfo, 'custom-icons/basic-shapes'),
@@ -976,6 +990,7 @@ const Navigator: FC<NavigatorProps> = ({
         <Space size={2} wrap>
           {containers[1]}
           {containers[3]}
+          {poolContainers}
         </Space>
       ),
     },

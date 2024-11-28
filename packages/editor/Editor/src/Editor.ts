@@ -6,7 +6,7 @@ import { DocumentThemeType, DocumentThemeTypes, EditorUtils } from '../../Theme'
 
 import { Color, Colors, KeyEvent, Point2, PointerEvent, Rectangle, Scale } from '@ratel-web/engine'
 import { Action, MyShapeAction } from '../../Actions'
-import { Connector, ContainerEntity, EditorItem, EditorItemInfo, ImageContainer, Item, SvgContainer, TableEntity } from '../../Items'
+import { Connector, ContainerEntity, EditorItem, EditorItemInfo, ImageContainer, Item, SvgContainer } from '../../Items'
 import { Operation, OperationHelper, OperationService, OperationType } from '../../Operations'
 import { ConnectorDirection } from '../../Shapes'
 import { CommonUtils } from '../../Utils'
@@ -768,32 +768,25 @@ export class Editor extends Painter {
     let result = undefined
     const count = editorItem.items.length
     const shape = editorItem.shape
-    //const worldTransform = shape.worldInverseTransform
-    //let newX = x
-    //let newY = y
-    //if(worldTransform) {
-    //  const newPoint = worldTransform.makePoint(new Point2(x, y))
-    //  newX = newPoint.x
-    //  newY = newPoint.y
-    //}
     if (editorItem instanceof Connector && excludeConnector) {
       result = undefined
-      // } else if((editorItem as Item).parent instanceof FrameEntity) {
-      //   result = undefined
     } else {
       if (shape.intersects(x - Editor.TEST_RADIUS, y - Editor.TEST_RADIUS, Editor.TEST_SIZE, Editor.TEST_SIZE)) {
         result = editorItem
-      }
-      // if(!(editorItem instanceof TableEntity) && !(editorItem instanceof FrameEntity)) {
-      if (!(editorItem instanceof TableEntity)) {
-        for (let i = count - 1; i >= 0; i--) {
-          const child = editorItem.items[i]
-          let childResult = this.findEditorItemDetail(child, x, y, excludeConnector)
-          if (childResult) {
-            result = childResult
-            break
+        if (editorItem.fixed) {
+          result = (editorItem as Item).parent
+        } else {
+          for (let i = count - 1; i >= 0; i--) {
+            const child = editorItem.items[i]
+            let childResult = this.findEditorItemDetail(child, x, y, excludeConnector)
+            if (childResult) {
+              result = childResult
+              break
+            }
           }
         }
+        // if(!(editorItem instanceof TableEntity) && !(editorItem instanceof FrameEntity)) {
+        //if (!(editorItem instanceof TableEntity)) {
       }
     }
     return result

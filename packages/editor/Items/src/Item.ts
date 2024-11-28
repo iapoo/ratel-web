@@ -51,6 +51,7 @@ export class Categories {
   public static EXTENSION_CONNECTOR = 'ExtensionConnector'
   public static EXTENSION_IMAGE = 'ExtensionImage'
   public static EXTENSION_SVG = 'ExtensionSvg'
+  public static POOL = 'Pool'
 }
 
 export abstract class Item implements EditorItem {
@@ -596,6 +597,10 @@ export abstract class Item implements EditorItem {
 
   public get internalTransform() {
     return this._shape.internalTransform
+  }
+
+  public get fixed() {
+    return false
   }
 
   public addItem(item: EditorItem) {
