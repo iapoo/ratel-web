@@ -5,9 +5,12 @@ import {
   AlignCenterOutlined,
   AlignLeftOutlined,
   AlignRightOutlined,
+  ArrowDownOutlined,
+  ArrowRightOutlined,
   BoldOutlined,
   DeleteColumnOutlined,
   DeleteRowOutlined,
+  FontColorsOutlined,
   InsertRowAboveOutlined,
   InsertRowBelowOutlined,
   InsertRowLeftOutlined,
@@ -23,7 +26,7 @@ import { DndContext, PointerSensor, useSensor } from '@dnd-kit/core'
 import { arrayMove, horizontalListSortingStrategy, SortableContext, useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { Editor, EditorEvent, EditorOperationEvent } from '@ratel-web/editor/Editor'
-import { EditorItem, EditorItemInfo, Item, ShapeEntity, TableEntity } from '@ratel-web/editor/Items'
+import { EditorItem, EditorItemInfo, Item, PoolCustomContainer, ShapeEntity, TableEntity } from '@ratel-web/editor/Items'
 import { Operation, OperationHelper, OperationType } from '@ratel-web/editor/Operations'
 import { ThemeUtils } from '@ratel-web/editor/Theme'
 import { CommonUtils, Constants, EditorHelper } from '@ratel-web/editor/Utils'
@@ -82,7 +85,7 @@ interface ContentProps {
 const { TabPane } = Tabs
 const DOCUMENT_PREFIX = 'File '
 const DOCUMENT_CONTENT = 'Dummy'
-//TODO FIXME, if setup with same width and height, some strange behavor may happen while zooming. and so make default value some strange
+//TODO FIXME, if setup with same width and height, some strange behave may happen while zooming. and so make default value some strange
 const DEFAULT_PAINTER_WIDTH = 801
 const DEFAULT_PAINTER_HEIGHT = 599
 const MIN_VISUAL_SIZE = 32
@@ -182,6 +185,9 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
   const [tableToolbarLeft, setTableToolbarLeft] = useState<number>(0)
   const [tableToolbarTop, setTableToolbarTop] = useState<number>(0)
   const [tableToolbarVisible, setTableToolbarVisible] = useState<boolean>(false)
+  const [poolToolbarLeft, setPoolToolbarLeft] = useState<number>(0)
+  const [poolToolbarTop, setPoolToolbarTop] = useState<number>(0)
+  const [poolToolbarVisible, setPoolToolbarVisible] = useState<boolean>(false)
   const [fontSize, setFontSize] = useState<number>(Constants.FONT_SIZE_DEFAULT)
   const [fontColor, setFontColor] = useState<string>(Constants.COLOR_FONT_DEFAULT)
   //const [fontWeight, setFontWeight] = useState<string>(Constants.FONT_WEIGHT_NORMAL)
@@ -202,6 +208,10 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
   const [pasteLocation, setPasteLocation] = useState<Point2>(new Point2())
   const [pasteFromSystem, setPasteFromSystem] = useState<boolean>(true)
   const [tableEdittable, setTableEdittable] = useState<boolean>(false)
+  const [poolEdittable, setPoolEdittable] = useState<boolean>(true)
+  const [poolHorizontal, setPoolHorizontal] = useState(true)
+  const [poolTextHorizontal, setPoolTextHorizontal] = useState(false)
+  const [poolStageTextHorizontal, setPoolStageTextHorizontal] = useState(true)
   const [editorCursor, setEditorCursor] = useState<string>(Constants.EDITOR_CURSOR_AUTO)
   const newTabIndex = useRef(4)
   const [panes, setPanes] = useState(initialPanes)
@@ -457,6 +467,7 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
     //Need to hide toolbar & terminate editting operations here
     setTextToolbarVisible(false)
     setTableToolbarVisible(false)
+    setPoolToolbarVisible(false)
   }
   //
   // const saveData = () => {}
@@ -694,28 +705,60 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
     //    console.log(`table edit end check: ${tableEdittable}`)
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handlePoolTextEditStart = (e: EditorEvent) => {
+    setPoolEdittable(true)
+    //    console.log(`table edit  start check: ${tableEdittable}`)
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handlePoolTextEditEnd = (e: EditorEvent) => {
+    setPoolEdittable(false)
+    //    console.log(`table edit end check: ${tableEdittable}`)
+  }
+
   const handleSelectionChange = (e: EditorEvent) => {
     let tableSelected = false
+    let poolSelected = false
     if (Utils.currentEditor && e.source.selectionLayer.getEditorItemCount() === 1) {
       let item = e.source.selectionLayer.getEditorItem(0) as Item
       if (item instanceof TableEntity && item.customizable) {
         let container = document.getElementById('editor-container')
-        let postion = getElementAbsolutePosition(container)
+        let position = getElementAbsolutePosition(container)
         const [scrollLeft, scrollTop] = findEditorScrollPosition()
         // @ts-ignore
         let worldTransform = item.shape.worldTransform
         let point = worldTransform.makePoint(new Point2(0, 0))
         let left = point.x * Utils.currentEditor.zoom - scrollLeft
         let top = point.y * Utils.currentEditor.zoom - scrollTop
-        setTableToolbarLeft(left + postion.left)
-        setTableToolbarTop(top + postion.top)
+        setTableToolbarLeft(left + position.left)
+        setTableToolbarTop(top + position.top)
         setTableToolbarVisible(true)
         tableSelected = true
+      } else if (item instanceof PoolCustomContainer) {
+        let container = document.getElementById('editor-container')
+        let position = getElementAbsolutePosition(container)
+        const [scrollLeft, scrollTop] = findEditorScrollPosition()
+        // @ts-ignore
+        let worldTransform = item.shape.worldTransform
+        let point = worldTransform.makePoint(new Point2(0, 0))
+        let left = point.x * Utils.currentEditor.zoom - scrollLeft
+        let top = point.y * Utils.currentEditor.zoom - scrollTop
+        setPoolToolbarLeft(left + position.left)
+        setPoolToolbarTop(top + position.top)
+        setPoolToolbarVisible(true)
+        poolSelected = true
+        setPoolHorizontal(item.horizontal)
+        setPoolTextHorizontal(item.poolTextHorizontal)
+        setPoolStageTextHorizontal(item.stageTextHorizontal)
       }
       refreshSelectionInfo(Utils.currentEditor)
     }
     if (!tableSelected) {
       setTableToolbarVisible(false)
+    }
+    if (!poolSelected) {
+      setPoolToolbarVisible(false)
     }
     if (Utils.currentEditor && e.source.selectionLayer.getEditorItemCount() > 0) {
       setPopupType(PopupType.SHAPES)
@@ -729,7 +772,7 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
     if (Utils.currentEditor && e.source.selectionLayer.getEditorItemCount() === 1) {
       let item = e.source.selectionLayer.getEditorItem(0) as Item
       let container = document.getElementById('editor-container')
-      let postion = getElementAbsolutePosition(container)
+      let position = getElementAbsolutePosition(container)
       // @ts-ignore
       let worldTransform = item.shape.worldTransform
       let point = worldTransform.makePoint(new Point2(0, 0))
@@ -739,24 +782,31 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
       //let left = item.left * Utils.currentEditor.zoom
       //let top = item.top * Utils.currentEditor.zoom
       if (item instanceof TableEntity && item.customizable) {
-        setTableToolbarLeft(left + postion.left)
-        setTableToolbarTop(top + postion.top)
+        setTableToolbarLeft(left + position.left)
+        setTableToolbarTop(top + position.top)
         setTableToolbarVisible(true)
         if (Utils.currentEditor.targetItem) {
-          setTextToolbarLeft(left + postion.left)
-          setTextToolbarTop(top + postion.top)
+          setTextToolbarLeft(left + position.left)
+          setTextToolbarTop(top + position.top)
           setTextToolbarVisible(true)
         }
       } else if (item instanceof TableEntity) {
         if (Utils.currentEditor.targetItem) {
-          setTextToolbarLeft(left + postion.left)
-          setTextToolbarTop(top + postion.top)
+          setTextToolbarLeft(left + position.left)
+          setTextToolbarTop(top + position.top)
           setTextToolbarVisible(true)
         }
       } else if (item instanceof ShapeEntity && e.source.isTextEditting) {
-        setTextToolbarLeft(left + postion.left)
-        setTextToolbarTop(top + postion.top)
+        setTextToolbarLeft(left + position.left)
+        setTextToolbarTop(top + position.top)
         setTextToolbarVisible(true)
+      } else if (item instanceof PoolCustomContainer) {
+        setPoolToolbarLeft(left + position.left)
+        setPoolToolbarTop(top + position.top)
+        setPoolToolbarVisible(true)
+        setPoolHorizontal(item.horizontal)
+        setPoolTextHorizontal(item.poolTextHorizontal)
+        setPoolStageTextHorizontal(item.stageTextHorizontal)
       }
     }
   }
@@ -772,6 +822,8 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
         }
       } else if (item instanceof ShapeEntity && e.source.isTextEditting) {
         setTextToolbarVisible(false)
+      } else if (item instanceof PoolCustomContainer) {
+        setPoolToolbarVisible(false)
       }
     }
   }
@@ -2003,6 +2055,198 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
     }
   }
 
+  const handleAddPool = () => {
+    if (Utils.currentEditor) {
+      const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
+      const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
+      editorItems.forEach((editorItem: EditorItem) => {
+        if (editorItem instanceof PoolCustomContainer) {
+          editorItem.appendPool()
+        }
+      })
+      const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
+      const operation: Operation = new Operation(
+        Utils.currentEditor,
+        OperationType.UPDATE_ITEMS,
+        afterSelections,
+        true,
+        beforeSelections,
+        '',
+        null,
+        null,
+        null,
+        null,
+      )
+      Utils.currentEditor.operationService.addOperation(operation)
+      Utils.currentEditor.triggerOperationChange()
+    }
+  }
+
+  const handleRemovePool = () => {
+    if (Utils.currentEditor) {
+      const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
+      const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
+      editorItems.forEach((editorItem: EditorItem) => {
+        if (editorItem instanceof PoolCustomContainer) {
+          editorItem.removePool()
+        }
+      })
+      const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
+      const operation: Operation = new Operation(
+        Utils.currentEditor,
+        OperationType.UPDATE_ITEMS,
+        afterSelections,
+        true,
+        beforeSelections,
+        '',
+        null,
+        null,
+        null,
+        null,
+      )
+      Utils.currentEditor.operationService.addOperation(operation)
+      Utils.currentEditor.triggerOperationChange()
+    }
+  }
+
+  const handleAddStage = () => {
+    if (Utils.currentEditor) {
+      const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
+      const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
+      editorItems.forEach((editorItem: EditorItem) => {
+        if (editorItem instanceof PoolCustomContainer) {
+          editorItem.addStage()
+        }
+      })
+      const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
+      const operation: Operation = new Operation(
+        Utils.currentEditor,
+        OperationType.UPDATE_ITEMS,
+        afterSelections,
+        true,
+        beforeSelections,
+        '',
+        null,
+        null,
+        null,
+        null,
+      )
+      Utils.currentEditor.operationService.addOperation(operation)
+      Utils.currentEditor.triggerOperationChange()
+    }
+  }
+
+  const handleRemoveStage = () => {
+    if (Utils.currentEditor) {
+      const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
+      const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
+      editorItems.forEach((editorItem: EditorItem) => {
+        if (editorItem instanceof PoolCustomContainer) {
+          editorItem.removeStage()
+        }
+      })
+      const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
+      const operation: Operation = new Operation(
+        Utils.currentEditor,
+        OperationType.UPDATE_ITEMS,
+        afterSelections,
+        true,
+        beforeSelections,
+        '',
+        null,
+        null,
+        null,
+        null,
+      )
+      Utils.currentEditor.operationService.addOperation(operation)
+      Utils.currentEditor.triggerOperationChange()
+    }
+  }
+
+  const handlePoolDirectionChange = () => {
+    if (Utils.currentEditor) {
+      const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
+      const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
+      editorItems.forEach((editorItem: EditorItem) => {
+        if (editorItem instanceof PoolCustomContainer) {
+          editorItem.horizontal = !editorItem.horizontal
+          setPoolHorizontal(editorItem.horizontal)
+        }
+      })
+      const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
+      const operation: Operation = new Operation(
+        Utils.currentEditor,
+        OperationType.UPDATE_ITEMS,
+        afterSelections,
+        true,
+        beforeSelections,
+        '',
+        null,
+        null,
+        null,
+        null,
+      )
+      Utils.currentEditor.operationService.addOperation(operation)
+      Utils.currentEditor.triggerOperationChange()
+    }
+  }
+
+  const handlePoolHeaderTextDirectionChange = () => {
+    if (Utils.currentEditor) {
+      const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
+      const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
+      editorItems.forEach((editorItem: EditorItem) => {
+        if (editorItem instanceof PoolCustomContainer) {
+          editorItem.poolTextHorizontal = !editorItem.poolTextHorizontal
+          setPoolTextHorizontal(editorItem.poolTextHorizontal)
+        }
+      })
+      const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
+      const operation: Operation = new Operation(
+        Utils.currentEditor,
+        OperationType.UPDATE_ITEMS,
+        afterSelections,
+        true,
+        beforeSelections,
+        '',
+        null,
+        null,
+        null,
+        null,
+      )
+      Utils.currentEditor.operationService.addOperation(operation)
+      Utils.currentEditor.triggerOperationChange()
+    }
+  }
+
+  const handlePoolStageTextDirectionChange = () => {
+    if (Utils.currentEditor) {
+      const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
+      const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
+      editorItems.forEach((editorItem: EditorItem) => {
+        if (editorItem instanceof PoolCustomContainer) {
+          editorItem.stageTextHorizontal = !editorItem.stageTextHorizontal
+          setPoolStageTextHorizontal(editorItem.stageTextHorizontal)
+        }
+      })
+      const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
+      const operation: Operation = new Operation(
+        Utils.currentEditor,
+        OperationType.UPDATE_ITEMS,
+        afterSelections,
+        true,
+        beforeSelections,
+        '',
+        null,
+        null,
+        null,
+        null,
+      )
+      Utils.currentEditor.operationService.addOperation(operation)
+      Utils.currentEditor.triggerOperationChange()
+    }
+  }
+
   const handleScroll = (event: UIEvent) => {
     const scrollLeft = event.currentTarget.scrollLeft
     const scrollTop = event.currentTarget.scrollTop
@@ -2506,14 +2750,7 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
   }
 
   const textToolbars = (
-    <FloatButton.Group
-      style={{
-        left: textToolbarLeft,
-        top: textToolbarTop - 40,
-        height: 32,
-        display: textToolbarVisible ? 'block' : 'none',
-      }}
-    >
+    <FloatButton.Group style={{ left: textToolbarLeft, top: textToolbarTop - 40, height: 32, display: textToolbarVisible ? 'block' : 'none' }}>
       <Space
         direction="horizontal"
         style={{
@@ -2624,48 +2861,97 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
           padding: 2,
         }}
       >
-        <Tooltip title={<FormattedMessage id="workspace.header.title.font-bold" />}>
+        <Tooltip title={<FormattedMessage id="workspace.header.title.table-tool-bar.insert-row-above" />}>
           <Button type="text" size="small" icon={<InsertRowAboveOutlined />} onClick={handleInsertRowBefore} disabled={!tableEdittable} />
         </Tooltip>
-        <Tooltip title={<FormattedMessage id="workspace.header.title.font-italic" />}>
+        <Tooltip title={<FormattedMessage id="workspace.header.title.table-tool-bar.insert-row-below" />}>
           <Button type="text" size="small" icon={<InsertRowBelowOutlined />} onClick={handleInsertRowAfter} disabled={!tableEdittable} />
         </Tooltip>
-        <Tooltip title={<FormattedMessage id="workspace.header.title.font-underline" />}>
+        <Tooltip title={<FormattedMessage id="workspace.header.title.table-tool-bar.insert-column-before" />}>
           <Button type="text" size="small" icon={<InsertRowLeftOutlined />} onClick={handleInsertColumnBefore} disabled={!tableEdittable} />
         </Tooltip>
-        <Tooltip title={<FormattedMessage id="workspace.header.title.font-underline" />}>
+        <Tooltip title={<FormattedMessage id="workspace.header.title.table-tool-bar.insert-column-after" />}>
           <Button type="text" size="small" icon={<InsertRowRightOutlined />} onClick={handleInsertColumnAfter} disabled={!tableEdittable} />
         </Tooltip>
         <Divider type="vertical" style={{ margin: 0 }} />
-        <Tooltip title={<FormattedMessage id="workspace.header.title.text-left" />}>
+        <Tooltip title={<FormattedMessage id="workspace.header.title.table-tool-bar.delete-row" />}>
           <Button type="text" size="small" icon={<DeleteRowOutlined />} onClick={() => handleDeleteRow()} disabled={!tableEdittable} />
         </Tooltip>
-        <Tooltip title={<FormattedMessage id="workspace.header.title.text-center" />}>
+        <Tooltip title={<FormattedMessage id="workspace.header.title.table-tool-bar.delete-column" />}>
           <Button type="text" size="small" icon={<DeleteColumnOutlined />} onClick={() => handleDeleteColumn()} disabled={!tableEdittable} />
         </Tooltip>
       </Space>
     </FloatButton.Group>
   )
 
-  return (
-    <div
+  const poolToolbars = (
+    <FloatButton.Group
       style={{
-        position: 'absolute',
-        top: '0px',
-        bottom: '0px',
-        left: x,
-        right: y,
-        backgroundColor: workspaceBackground,
+        left: poolToolbarLeft,
+        top: poolToolbarTop - 40 - (textToolbarVisible ? 40 : 0),
+        height: 32,
+        display: poolToolbarVisible ? 'block' : 'none',
       }}
     >
-      <div
+      <Space
+        direction="horizontal"
         style={{
-          position: 'absolute',
-          width: '100%',
-          height: `calc(100% - ${Utils.TITLE_HEIGHT}px + 0px) `,
-          zIndex: 2,
+          backgroundColor: Utils.currentEditor?.enableDarkTheme ? workspaceBackground : 'white',
+          borderColor: 'silver',
+          borderWidth: 1,
+          borderStyle: 'solid',
+          padding: 2,
         }}
       >
+        <Tooltip title={<FormattedMessage id="workspace.header.title.pool-toolbar.add-pool" />}>
+          <Button type="text" size="small" icon={<InsertRowBelowOutlined />} onClick={handleAddPool} disabled={!poolEdittable} />
+        </Tooltip>
+        <Tooltip title={<FormattedMessage id="workspace.header.title.pool-toolbar.delete-pool" />}>
+          <Button type="text" size="small" icon={<DeleteColumnOutlined />} onClick={handleRemovePool} disabled={!poolEdittable} />
+        </Tooltip>
+        <Tooltip title={<FormattedMessage id="workspace.header.title.pool-toolbar.add-stage" />}>
+          <Button type="text" size="small" icon={<InsertRowRightOutlined />} onClick={handleAddStage} disabled={!poolEdittable} />
+        </Tooltip>
+        <Tooltip title={<FormattedMessage id="workspace.header.title.pool-toolbar.delete-stage" />}>
+          <Button type="text" size="small" icon={<DeleteRowOutlined />} onClick={handleRemoveStage} disabled={!poolEdittable} />
+        </Tooltip>
+        <Divider type="vertical" style={{ margin: 0 }} />
+        <Tooltip title={<FormattedMessage id="workspace.header.title.pool-toolbar.switch-pool-direction" />}>
+          <Button
+            type="text"
+            size="small"
+            icon={poolHorizontal ? <ArrowRightOutlined /> : <ArrowDownOutlined />}
+            onClick={handlePoolDirectionChange}
+            disabled={!poolEdittable}
+          />
+        </Tooltip>
+        <Divider type="vertical" style={{ margin: 0 }} />
+        <Tooltip title={<FormattedMessage id="workspace.header.title.pool-toolbar.switch-header-pool-text-direction" />}>
+          <Button
+            type="text"
+            size="small"
+            icon={<FontColorsOutlined rotate={poolTextHorizontal ? 90 : 0} />}
+            onClick={handlePoolHeaderTextDirectionChange}
+            disabled={!poolEdittable}
+          />
+        </Tooltip>
+        <Divider type="vertical" style={{ margin: 0 }} />
+        <Tooltip title={<FormattedMessage id="workspace.header.title.pool-toolbar.switch-stage-text-direction" />}>
+          <Button
+            type="text"
+            size="small"
+            icon={<FontColorsOutlined rotate={poolStageTextHorizontal ? 90 : 0} />}
+            onClick={handlePoolStageTextDirectionChange}
+            disabled={!poolEdittable}
+          />
+        </Tooltip>
+      </Space>
+    </FloatButton.Group>
+  )
+
+  return (
+    <div style={{ position: 'absolute', top: '0px', bottom: '0px', left: x, right: y, backgroundColor: workspaceBackground }}>
+      <div style={{ position: 'absolute', width: '100%', height: `calc(100% - ${Utils.TITLE_HEIGHT}px + 0px) `, zIndex: 2 }}>
         <div
           id="content-container"
           style={{
@@ -2681,21 +2967,13 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
         >
           {textToolbars}
           {tableToolbars}
+          {poolToolbars}
           <div style={{ width: contentWidth, height: contentHeight }}>
             <div style={{ width: '100%', height: Editor.SHADOW_SIZE, backgroundColor: workspaceBackground }} />
             <div style={{ width: '100%', height: editorHeight, boxSizing: 'border-box' }}>
-              <div
-                style={{
-                  width: Editor.SHADOW_SIZE,
-                  height: '100%',
-                  float: 'left',
-                  backgroundColor: workspaceBackground,
-                }}
-              />
+              <div style={{ width: Editor.SHADOW_SIZE, height: '100%', float: 'left', backgroundColor: workspaceBackground }} />
               <Dropdown
-                menu={{
-                  items: popupType === PopupType.SHAPES ? popupShapeItems : popupType === PopupType.EDITOR ? popupEditorItems : popupText,
-                }}
+                menu={{ items: popupType === PopupType.SHAPES ? popupShapeItems : popupType === PopupType.EDITOR ? popupEditorItems : popupText }}
                 trigger={['contextMenu']}
               >
                 <div
@@ -2713,14 +2991,7 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
                   // onDragEnter={handleEditorDragEnter} onDragLeave={handleEditorDragLeave}
                 ></div>
               </Dropdown>
-              <div
-                style={{
-                  width: Editor.SHADOW_SIZE,
-                  height: '100%',
-                  float: 'left',
-                  backgroundColor: workspaceBackground,
-                }}
-              />
+              <div style={{ width: Editor.SHADOW_SIZE, height: '100%', float: 'left', backgroundColor: workspaceBackground }} />
             </div>
             <div style={{ width: '100%', height: Editor.SHADOW_SIZE, backgroundColor: workspaceBackground }} />
           </div>

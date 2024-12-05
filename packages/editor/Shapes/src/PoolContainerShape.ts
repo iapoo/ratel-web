@@ -6,6 +6,8 @@ export class PoolContainerShape extends EntityShape {
   private _horizontal: boolean
   private _poolCount: number
   private _stageCount: number
+  private _poolTextHorizontal: boolean
+  private _stageTextHorizontal: boolean
 
   public constructor(
     left: number,
@@ -15,6 +17,8 @@ export class PoolContainerShape extends EntityShape {
     poolCount = 2,
     stageCount = 2,
     horizontal = true,
+    poolTextHorizontal = true,
+    stageTextHorizontal = true,
     buildShape: (_this: PoolContainerShape) => void,
     shapeTypeInfo: ShapeTypeInfo,
   ) {
@@ -22,6 +26,8 @@ export class PoolContainerShape extends EntityShape {
     this._horizontal = horizontal
     this._poolCount = poolCount
     this._stageCount = stageCount
+    this._poolTextHorizontal = poolTextHorizontal
+    this._stageTextHorizontal = stageTextHorizontal
     this._buildShape = buildShape
   }
 
@@ -31,6 +37,7 @@ export class PoolContainerShape extends EntityShape {
 
   public set poolCount(value: number) {
     this._poolCount = value
+    this.markDirty()
   }
 
   public get stageCount() {
@@ -39,6 +46,7 @@ export class PoolContainerShape extends EntityShape {
 
   public set stageCount(value: number) {
     this._stageCount = value
+    this.markDirty()
   }
 
   public get horizontal() {
@@ -47,6 +55,25 @@ export class PoolContainerShape extends EntityShape {
 
   public set horizontal(value: boolean) {
     this._horizontal = value
+    this.markDirty()
+  }
+
+  public get poolTextHorizontal() {
+    return this._poolTextHorizontal
+  }
+
+  public set poolTextHorizontal(value: boolean) {
+    this._poolTextHorizontal = value
+    this.markDirty()
+  }
+
+  public get stageTextHorizontal() {
+    return this._stageTextHorizontal
+  }
+
+  public set stageTextHorizontal(value: boolean) {
+    this._stageTextHorizontal = value
+    this.markDirty()
   }
 
   public render(graphics: Graphics): void {

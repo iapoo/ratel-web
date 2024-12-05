@@ -21,7 +21,18 @@ export class PoolContainerAction extends Action {
       let stageCount = this._poolType.stageCount
       let horizontal = this._poolType.horizontal
       let poolTypeName = this._poolType.name
-      const poolCustomContainer = new PoolCustomContainer(left, top, width, height, poolCount, stageCount, horizontal, poolTypeName)
+      const poolCustomContainer = new PoolCustomContainer(
+        left,
+        top,
+        width,
+        height,
+        poolCount,
+        stageCount,
+        horizontal,
+        this._poolType.poolTextHorizontal,
+        this._poolType.stageTextHorizontal,
+        poolTypeName,
+      )
       return [poolCustomContainer]
     }
     return [new PoolCustomContainer(0, 0, 200, 100)]

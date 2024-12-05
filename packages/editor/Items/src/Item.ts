@@ -623,7 +623,7 @@ export abstract class Item implements EditorItem {
       }
       editorItem._parent = this
       this._items.splice(index, 0, item)
-      this.shape.addNode(editorItem.shape)
+      this.shape.addNodeAt(editorItem.shape, index)
     }
   }
 

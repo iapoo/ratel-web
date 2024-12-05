@@ -1,7 +1,7 @@
 import { Colors, Matrix, MouseCode, Point2, PointerEvent, Rectangle, Rotation } from '@ratel-web/engine'
 import { Action, MyShapeAction } from '../../Actions'
 import { Holder } from '../../Design'
-import { Connector, ContainerEntity, EditorItem, EditorItemInfo, Entity, Item, ShapeEntity, TableEntity } from '../../Items'
+import { Connector, ContainerEntity, EditorItem, EditorItemInfo, Entity, Item, PoolCustomContainer, ShapeEntity, TableEntity } from '../../Items'
 import { Operation, OperationHelper, OperationType } from '../../Operations'
 import { EditorUtils } from '../../Theme'
 import { ControllerLayer } from './ControllerLayer'
@@ -88,10 +88,13 @@ export class EditorEventHandler {
         } else if (this._editorContext.textFocused) {
           const targetPoint = this.findEditorItemPoint(clickedEditorItem, e.x, e.y)
           const hasFixedItems = clickedEditorItem ? this.hasFixedItems(clickedEditorItem, e.x, e.y) : false
+          const ifFixedItemIsTarget = clickedEditorItem ? this.ifFixedItemIsTarget(clickedEditorItem, e.x, e.y) : false
           //Fixed item is clicked and parent is in text edit mode
           const isFixedItemSelected = hasFixedItems && !clickedEditorItem.fixed && clickedEditorItem === this._editorContext.target
-          //Fixed item is in text edit mode and parent is in clicked
-          const isParentItemSelected = !hasFixedItems && !clickedEditorItem.fixed && clickedEditorItem !== this._editorContext.target
+          //Fixed item is in text edit mode and parent or other fixed item is in clicked
+          const isParentItemSelected =
+            (!hasFixedItems && !clickedEditorItem.fixed && clickedEditorItem !== this._editorContext.target) ||
+            (hasFixedItems && !clickedEditorItem.fixed && !ifFixedItemIsTarget && clickedEditorItem !== this._editorContext.target)
           if (isFixedItemSelected || isParentItemSelected) {
             this.updateSelection(clickedEditorItem, e)
             this._editor.beginOperation(clickedEditorItem)
@@ -163,8 +166,9 @@ export class EditorEventHandler {
     //console.log(`Finding ...... ${editorItem}`)
     const isEdge = editorItem ? this._editor.hasEditorItemJoint(editorItem, e.x, e.y) && !editorItem.fixed : false
     const hasFixedItems = editorItem ? this.hasFixedItems(editorItem, e.x, e.y) : false
+    const ifFixedItemIsTarget = editorItem ? this.ifFixedItemIsTarget(editorItem, e.x, e.y) : false
     //fixed item is in text edit mode and mouse over on it now
-    const isFixedItemSelected = hasFixedItems && !editorItem!.fixed && editorItem !== this._editorContext.target
+    const isFixedItemSelected = hasFixedItems && !editorItem!.fixed && ifFixedItemIsTarget && editorItem !== this._editorContext.target
     //parent is in text edit mode and mouse over on it now
     const isParentItemSelected = editorItem ? !hasFixedItems && !editorItem!.fixed && editorItem === this._editorContext.target : false
     // console.log(
@@ -1581,7 +1585,7 @@ export class EditorEventHandler {
 
   private handleMouseUpDefault(clickedEditorItem: EditorItem, e: PointerEvent) {
     const targetPoint = this.findEditorItemPoint(clickedEditorItem, e.x, e.y)
-    if (clickedEditorItem instanceof TableEntity) {
+    if (clickedEditorItem instanceof TableEntity || clickedEditorItem instanceof PoolCustomContainer) {
       //Need this to update toolbar in time
       this._editor.triggerSelectionResized()
     }
@@ -1624,6 +1628,18 @@ export class EditorEventHandler {
     for (let i = 0; i < editorItem.items.length; i++) {
       let child = editorItem.items[i]
       if (child.fixed && this._editor.isInEditorItem(child, x, y)) {
+        result = true
+        break
+      }
+    }
+    return result
+  }
+
+  private ifFixedItemIsTarget(editorItem: EditorItem, x: number, y: number) {
+    let result = false
+    for (let i = 0; i < editorItem.items.length; i++) {
+      let child = editorItem.items[i]
+      if (child.fixed && this._editor.isInEditorItem(child, x, y) && child === this._editor.target) {
         result = true
         break
       }
