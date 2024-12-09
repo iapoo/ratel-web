@@ -82,15 +82,15 @@ export const PoolCustomContainerTypes: PoolType[] = [
     width: 550,
     height: 500,
     enableMask: true,
-    modifiable: true,
+    modifiable: false,
     modifierX: 0,
-    modifierY: 40,
-    modifierStartX: 0.5,
+    modifierY: 0,
+    modifierStartX: 0,
     modifierStartY: 0,
-    modifierEndX: 0.5,
-    modifierEndY: 1,
+    modifierEndX: 0,
+    modifierEndY: 0,
     modifyInLine: true,
-    modifyInPercent: false,
+    modifyInPercent: true,
     controllable: false,
     controllerX: 0,
     controllerY: 0,
@@ -127,15 +127,15 @@ export const PoolCustomContainerTypes: PoolType[] = [
     width: 550,
     height: 250,
     enableMask: true,
-    modifiable: true,
+    modifiable: false,
     modifierX: 0,
-    modifierY: 40,
-    modifierStartX: 0.5,
+    modifierY: 0,
+    modifierStartX: 0,
     modifierStartY: 0,
-    modifierEndX: 0.5,
-    modifierEndY: 1,
+    modifierEndX: 0,
+    modifierEndY: 0,
     modifyInLine: true,
-    modifyInPercent: false,
+    modifyInPercent: true,
     controllable: false,
     controllerX: 0,
     controllerY: 0,
@@ -172,15 +172,15 @@ export const PoolCustomContainerTypes: PoolType[] = [
     width: 500,
     height: 550,
     enableMask: true,
-    modifiable: true,
+    modifiable: false,
     modifierX: 0,
-    modifierY: 40,
-    modifierStartX: 0.5,
+    modifierY: 0,
+    modifierStartX: 0,
     modifierStartY: 0,
-    modifierEndX: 0.5,
-    modifierEndY: 1,
+    modifierEndX: 0,
+    modifierEndY: 0,
     modifyInLine: true,
-    modifyInPercent: false,
+    modifyInPercent: true,
     controllable: false,
     controllerX: 0,
     controllerY: 0,
@@ -217,15 +217,15 @@ export const PoolCustomContainerTypes: PoolType[] = [
     width: 250,
     height: 550,
     enableMask: true,
-    modifiable: true,
+    modifiable: false,
     modifierX: 0,
-    modifierY: 40,
-    modifierStartX: 0.5,
+    modifierY: 0,
+    modifierStartX: 0,
     modifierStartY: 0,
-    modifierEndX: 0.5,
-    modifierEndY: 1,
+    modifierEndX: 0,
+    modifierEndY: 0,
     modifyInLine: true,
-    modifyInPercent: false,
+    modifyInPercent: true,
     controllable: false,
     controllerX: 0,
     controllerY: 0,
@@ -722,35 +722,60 @@ export class PoolCustomContainer extends ContainerEntity {
     const widthRatio = this.width / oldWidth
     const heightRatio = this.height / oldHeight
     const header = this.items[0]
-    header.boundary = Rectangle.makeLTWH(0, 0, header.width * widthRatio, header.height * heightRatio)
+    if (this._horizontal) {
+      header.boundary = Rectangle.makeLTWH(0, 0, header.width, header.height * heightRatio)
+    } else {
+      header.boundary = Rectangle.makeLTWH(0, 0, header.width * widthRatio, header.height)
+    }
     if (this._stageCount > 1) {
       for (let i = 0; i < this._stageCount; i++) {
         const stageLabel = this.items[1 + i]
-        stageLabel.boundary = Rectangle.makeLTWH(
-          stageLabel.left * widthRatio,
-          stageLabel.top * heightRatio,
-          stageLabel.width * widthRatio,
-          stageLabel.height * heightRatio,
-        )
+        if (this._horizontal) {
+          const stageWidthRatio = (this.width - header.width) / (oldWidth - header.width)
+          stageLabel.boundary = Rectangle.makeLTWH(
+            header.width + (stageLabel.left - header.width) * stageWidthRatio,
+            stageLabel.top,
+            stageLabel.width * stageWidthRatio,
+            stageLabel.height,
+          )
+        } else {
+          const stageHeightRatio = (this.height - header.height) / (oldHeight - header.height)
+          stageLabel.boundary = Rectangle.makeLTWH(
+            stageLabel.left,
+            header.height + (stageLabel.top - header.height) * stageHeightRatio,
+            stageLabel.width,
+            stageLabel.height * stageHeightRatio,
+          )
+        }
       }
       for (let i = 0; i < this._poolCount; i++) {
         const poolLabel = this.items[1 + this._stageCount + i]
-        poolLabel.boundary = Rectangle.makeLTWH(
-          poolLabel.left * widthRatio,
-          poolLabel.top * heightRatio,
-          poolLabel.width * widthRatio,
-          poolLabel.height * heightRatio,
-        )
+        if (this._horizontal) {
+          const stageHeightRatio = (this.height - this.items[1].height) / (oldHeight - this.items[1].height)
+          poolLabel.boundary = Rectangle.makeLTWH(
+            poolLabel.left,
+            this.items[1].height + (poolLabel.top - this.items[1].height) * stageHeightRatio,
+            poolLabel.width,
+            poolLabel.height * stageHeightRatio,
+          )
+        } else {
+          const stageWidthRatio = (this.width - this.items[1].width) / (oldWidth - this.items[1].width)
+          poolLabel.boundary = Rectangle.makeLTWH(
+            this.items[1].width + (poolLabel.left - this.items[1].width) * stageWidthRatio,
+            poolLabel.top,
+            poolLabel.width * stageWidthRatio,
+            poolLabel.height,
+          )
+        }
       }
     } else {
       for (let i = 0; i < this._poolCount; i++) {
         const poolLabel = this.items[1 + i]
-        poolLabel.boundary = Rectangle.makeLTWH(
-          poolLabel.left * widthRatio,
-          poolLabel.top * heightRatio,
-          poolLabel.width * widthRatio,
-          poolLabel.height * heightRatio,
-        )
+        if (this._horizontal) {
+          poolLabel.boundary = Rectangle.makeLTWH(poolLabel.left, poolLabel.top * heightRatio, poolLabel.width, poolLabel.height * heightRatio)
+        } else {
+          poolLabel.boundary = Rectangle.makeLTWH(poolLabel.left * widthRatio, poolLabel.top, poolLabel.width * widthRatio, poolLabel.height)
+        }
       }
     }
   }

@@ -60,8 +60,8 @@ export class Editor extends Painter {
   public static readonly HORIZONTAL_SPACE_DEFAULT = 1256
   public static readonly VERTICAL_SPACE_DEFAULT = 1256
 
-  public static readonly ORIG_WIDTH_DEFAULT = 800
-  public static readonly ORIG_HEIGHT_DEFAULT = 600
+  public static readonly ORIG_WIDTH_DEFAULT = 1600
+  public static readonly ORIG_HEIGHT_DEFAULT = 1200
 
   private _zoom = 1.0
   private _gridSize = 10

@@ -2,6 +2,7 @@ import { Colors, Matrix, MouseCode, Point2, PointerEvent, Rectangle, Rotation } 
 import { Action, MyShapeAction } from '../../Actions'
 import { Holder } from '../../Design'
 import { Connector, ContainerEntity, EditorItem, EditorItemInfo, Entity, Item, PoolCustomContainer, ShapeEntity, TableEntity } from '../../Items'
+import { PoolLabelEntity } from '../../Items/src/PoolLabelEntity'
 import { Operation, OperationHelper, OperationType } from '../../Operations'
 import { EditorUtils } from '../../Theme'
 import { ControllerLayer } from './ControllerLayer'
@@ -41,6 +42,10 @@ export class EditorEventHandler {
       this.handleTargetRowResizing(e)
     } else if (this._editorContext.targetColumnResizing) {
       this.handleTargetColumnResizing(e)
+    } else if (this._editorContext.targetPoolXResizing) {
+      this.handleTargetPoolXResizing(e)
+    } else if (this._editorContext.targetPoolYResizing) {
+      this.handleTargetPoolYResizing(e)
     } else if (this._editorContext.inMoving) {
       // EditorItem is in moving
       this.handlePointMoveInMoving(e)
@@ -79,11 +84,28 @@ export class EditorEventHandler {
         if (!theSelectionLayer.hasEditorItem(clickedEditorItem)) {
           this.updateSelection(clickedEditorItem, e)
           //if (!((clickedEditorItem as Item).parent instanceof FrameEntity || clickedEditorItem.fixed)) {
-          this._editorContext.inMoving = true
+          // this._editorContext.inMoving = true
           //}
+          if (!clickedEditorItem.locked) {
+            this._editorContext.inMoving = true
+          }
+          if (clickedEditorItem instanceof TableEntity) {
+            if (!clickedEditorItem.locked) {
+              this.selectTable(clickedEditorItem, e, true)
+            }
+          } else if (clickedEditorItem instanceof PoolCustomContainer) {
+            if (!clickedEditorItem.locked) {
+              this.selectPoolCustomContainer(clickedEditorItem, e, true)
+            }
+          } else {
+          }
         } else if (clickedEditorItem instanceof TableEntity) {
           if (!clickedEditorItem.locked) {
-            this.selectTable(clickedEditorItem, e)
+            this.selectTable(clickedEditorItem, e, false)
+          }
+        } else if (clickedEditorItem instanceof PoolCustomContainer) {
+          if (!clickedEditorItem.locked) {
+            this.selectPoolCustomContainer(clickedEditorItem, e, false)
           }
         } else if (this._editorContext.textFocused) {
           const targetPoint = this.findEditorItemPoint(clickedEditorItem, e.x, e.y)
@@ -157,6 +179,8 @@ export class EditorEventHandler {
     this._editorContext.inCreatingConnector = false
     this._editorContext.targetRowResizing = false
     this._editorContext.targetColumnResizing = false
+    this._editorContext.targetPoolXResizing = false
+    this._editorContext.targetPoolYResizing = false
   }
 
   private handleDefaultPointMove(e: PointerEvent) {
@@ -228,6 +252,10 @@ export class EditorEventHandler {
           }
         } else if (this._editorContext.textFocused && this._editorContext.textSelecting && !hasFixedItems) {
           this._editor.updateEditorMode(EditorMode.TEXT)
+        } else if (editorItem instanceof PoolCustomContainer) {
+          if (!editorItem.locked) {
+            this.handleMouseOverOnPool(editorItem, e, false)
+          }
         } else {
           if (!editorItem.locked) {
             this._editor.updateEditorMode(EditorMode.MOVE)
@@ -265,6 +293,10 @@ export class EditorEventHandler {
           this._editor.updateEditorMode(EditorMode.TEXT)
         } else if (this._editorContext.textFocused && (isParentItemSelected || isFixedItemSelected)) {
           this._editor.updateEditorMode(EditorMode.TEXT)
+        } else if (editorItem instanceof PoolCustomContainer) {
+          if (!editorItem.locked) {
+            this.handleMouseOverOnPool(editorItem, e, false)
+          }
         } else {
           if (!editorItem.locked) {
             this._editor.updateEditorMode(EditorMode.MOVE)
@@ -1115,7 +1147,7 @@ export class EditorEventHandler {
           this._editor.triggerEditorOperationEvent(operation, false)
           break
         case OperationType.SHAPE_TEXT_EDIT:
-          this.handleOperationRedoShapTextEdit(operation)
+          this.handleOperationRedoShapeTextEdit(operation)
           break
         case OperationType.TABLE_TEXT_EDIT:
           this.handleOperationRedoTableTextEdit(operation)
@@ -1223,7 +1255,7 @@ export class EditorEventHandler {
     })
   }
 
-  private handleOperationRedoShapTextEdit(operation: Operation) {
+  private handleOperationRedoShapeTextEdit(operation: Operation) {
     this.handleShapeTextEdit(operation, false)
   }
 
@@ -1456,7 +1488,7 @@ export class EditorEventHandler {
       this._editor.triggerSelectionChange()
     }
   }
-  private selectTable(clickedEditorItem: TableEntity, e: PointerEvent) {
+  private selectTable(clickedEditorItem: TableEntity, e: PointerEvent, onlyResizing: boolean) {
     const targetPoint = this.findEditorItemPoint(clickedEditorItem, e.x, e.y)
     const [targetRow, targetRowIndex] = this.isTableRowResizable(clickedEditorItem, targetPoint.x, targetPoint.y)
     const [targetColumn, targetColumnIndex] = this.isTableColumnResizable(clickedEditorItem, targetPoint.x, targetPoint.y)
@@ -1489,7 +1521,7 @@ export class EditorEventHandler {
       this._editorContext.targetItemIndex = -1
       this._editorContext.inMoving = true
       this.startMoveOutline(e)
-    } else {
+    } else if (!onlyResizing) {
       const itemIndex = this.findTableItemIndex(clickedEditorItem, targetPoint.x, targetPoint.y)
       if (this._editorContext.targetItemIndex !== itemIndex) {
         this._editorContext.targetItemIndex = itemIndex
@@ -1682,5 +1714,460 @@ export class EditorEventHandler {
         this._editor.beginTextEditOperation(theTarget)
       }
     }
+  }
+
+  /**
+   *  -2: header, -1 stage region or pool region, 0+ stage index or pool index
+   * @param editorItem
+   * @param e
+   * @private
+   */
+  private handleMouseOverOnPool(editorItem: PoolCustomContainer, e: PointerEvent, updateResizing: boolean) {
+    const targetPoint = this.findEditorItemPoint(editorItem, e.x, e.y)
+    let xResizing = false
+    let yResizing = false
+    if (updateResizing) {
+      this._editorContext.targetPoolXResizing = false
+      this._editorContext.targetPoolYResizing = false
+    }
+    if (editorItem.horizontal) {
+      const header = editorItem.items[0]
+      if (editorItem.stageCount > 1) {
+        if (editorItem.poolCount > 0) {
+          const firstPoolLabel = editorItem.items[1 + editorItem.stageCount]
+          if (Math.abs(header.width - targetPoint.x) <= Editor.TEST_RADIUS) {
+            xResizing = true
+            this._editorContext.targetPoolIndex = -2
+          } else if (Math.abs(firstPoolLabel.right - targetPoint.x) <= Editor.TEST_RADIUS && firstPoolLabel.top <= targetPoint.y) {
+            xResizing = true
+            this._editorContext.targetPoolIndex = -1
+          } else {
+            for (let i = 0; i < editorItem.stageCount - 1; i++) {
+              const stageLabel = editorItem.items[1 + i]
+              if (Math.abs(stageLabel.right - targetPoint.x) <= Editor.TEST_RADIUS) {
+                xResizing = true
+                this._editorContext.targetPoolIndex = i
+              }
+            }
+          }
+        } else {
+          if (Math.abs(header.width - targetPoint.x) <= Editor.TEST_RADIUS) {
+            xResizing = true
+            this._editorContext.targetPoolIndex = -2
+          } else {
+            for (let i = 0; i < editorItem.stageCount - 1; i++) {
+              const stageLabel = editorItem.items[1 + i]
+              if (Math.abs(stageLabel.right - targetPoint.x) <= Editor.TEST_RADIUS) {
+                xResizing = true
+                this._editorContext.targetPoolIndex = i
+              }
+            }
+          }
+        }
+        const firstStageLabel = editorItem.items[1]
+        if (Math.abs(firstStageLabel.bottom - targetPoint.y) <= Editor.TEST_RADIUS && firstStageLabel.left <= targetPoint.x) {
+          yResizing = true
+          this._editorContext.targetPoolIndex = -1
+        }
+        for (let i = 0; i < editorItem.poolCount - 1; i++) {
+          const poolLabel = editorItem.items[1 + editorItem.stageCount + i]
+          if (Math.abs(poolLabel.bottom - targetPoint.y) <= Editor.TEST_RADIUS && poolLabel.left <= targetPoint.x) {
+            yResizing = true
+            this._editorContext.targetPoolIndex = i
+          }
+        }
+      } else {
+        // stage count = 1
+        if (editorItem.poolCount > 0) {
+          const firstPoolLabel = editorItem.items[1]
+          if (Math.abs(header.width - targetPoint.x) <= Editor.TEST_RADIUS) {
+            xResizing = true
+            this._editorContext.targetPoolIndex = -2
+          } else if (Math.abs(header.width + firstPoolLabel.width - targetPoint.x) <= Editor.TEST_RADIUS) {
+            xResizing = true
+            this._editorContext.targetPoolIndex = -1
+          }
+        } else {
+          if (Math.abs(header.width - targetPoint.x) <= Editor.TEST_RADIUS) {
+            xResizing = true
+            this._editorContext.targetPoolIndex = -2
+          }
+        }
+        for (let i = 0; i < editorItem.poolCount - 1; i++) {
+          const poolLabel = editorItem.items[1 + i]
+          if (Math.abs(poolLabel.bottom - targetPoint.y) <= Editor.TEST_RADIUS) {
+            yResizing = true
+            this._editorContext.targetPoolIndex = i
+          }
+        }
+      }
+    } else {
+      // horizontal = false
+      const header = editorItem.items[0]
+      if (editorItem.stageCount > 1) {
+        if (editorItem.poolCount > 0) {
+          const firstPoolLabel = editorItem.items[1 + editorItem.stageCount]
+          if (Math.abs(header.height - targetPoint.y) <= Editor.TEST_RADIUS) {
+            yResizing = true
+            this._editorContext.targetPoolIndex = -2
+          } else if (Math.abs(firstPoolLabel.bottom - targetPoint.y) <= Editor.TEST_RADIUS && firstPoolLabel.left <= targetPoint.x) {
+            yResizing = true
+            this._editorContext.targetPoolIndex = -1
+          } else {
+            for (let i = 0; i < editorItem.stageCount - 1; i++) {
+              const stageLabel = editorItem.items[1 + i]
+              if (Math.abs(stageLabel.bottom - targetPoint.y) <= Editor.TEST_RADIUS && stageLabel.left <= targetPoint.x) {
+                yResizing = true
+                this._editorContext.targetPoolIndex = i
+              }
+            }
+          }
+        } else {
+          if (Math.abs(header.height - targetPoint.y) <= Editor.TEST_RADIUS) {
+            yResizing = true
+            this._editorContext.targetPoolIndex = -2
+          } else {
+            for (let i = 0; i < editorItem.stageCount - 1; i++) {
+              const stageLabel = editorItem.items[1 + i]
+              if (Math.abs(stageLabel.bottom - targetPoint.y) <= Editor.TEST_RADIUS) {
+                yResizing = true
+                this._editorContext.targetPoolIndex = i
+              }
+            }
+          }
+        }
+        const firstStageLabel = editorItem.items[1]
+        if (Math.abs(firstStageLabel.right - targetPoint.x) <= Editor.TEST_RADIUS && firstStageLabel.top <= targetPoint.y) {
+          xResizing = true
+          this._editorContext.targetPoolIndex = -1
+        }
+        for (let i = 0; i < editorItem.poolCount - 1; i++) {
+          const poolLabel = editorItem.items[1 + editorItem.stageCount + i]
+          if (Math.abs(poolLabel.right - targetPoint.x) <= Editor.TEST_RADIUS && poolLabel.top <= targetPoint.y) {
+            xResizing = true
+            this._editorContext.targetPoolIndex = i
+          }
+        }
+      } else {
+        // stage count = 1
+        if (editorItem.poolCount > 0) {
+          const firstPoolLabel = editorItem.items[1 + (editorItem.stageCount > 1 ? editorItem.stageCount : 0)]
+          if (Math.abs(header.height - targetPoint.y) <= Editor.TEST_RADIUS) {
+            yResizing = true
+            this._editorContext.targetPoolIndex = -2
+          } else if (Math.abs(firstPoolLabel.bottom - targetPoint.y) <= Editor.TEST_RADIUS) {
+            yResizing = true
+            this._editorContext.targetPoolIndex = -1
+          }
+        } else {
+          if (Math.abs(header.height - targetPoint.y) <= Editor.TEST_RADIUS) {
+            yResizing = true
+            this._editorContext.targetPoolIndex = -2
+          }
+        }
+        for (let i = 0; i < editorItem.poolCount - 1; i++) {
+          const poolLabel = editorItem.items[1 + i]
+          if (Math.abs(poolLabel.right - targetPoint.x) <= Editor.TEST_RADIUS && poolLabel.top <= targetPoint.y) {
+            xResizing = true
+            this._editorContext.targetPoolIndex = i
+          }
+        }
+      }
+    }
+    if (xResizing) {
+      this._editor.updateEditorMode(EditorMode.COL_RESIZE)
+      if (updateResizing) {
+        this._editorContext.targetPoolXResizing = xResizing
+      }
+    } else if (yResizing) {
+      this._editor.updateEditorMode(EditorMode.ROW_RESIZE)
+      if (updateResizing) {
+        this._editorContext.targetPoolYResizing = yResizing
+      }
+    } else {
+      this._editor.updateEditorMode(EditorMode.MOVE)
+    }
+  }
+
+  private selectPoolCustomContainer(editorItem: PoolCustomContainer, e: PointerEvent, onlyResizing: boolean) {
+    //const targetPoint = this.findEditorItemPoint(editorItem, e.x, e.y)
+    this.handleMouseOverOnPool(editorItem, e, true)
+    if (!this._editorContext.targetPoolXResizing && !this._editorContext.targetPoolYResizing) {
+      if (onlyResizing) {
+        // this._editorContext.inMoving = true
+      } else {
+      }
+    }
+  }
+
+  private handleTargetPoolXResizing(e: PointerEvent) {
+    const target = this._editorContext.target as PoolCustomContainer
+    const targetPoolIndex = this._editorContext.targetPoolIndex
+    let maxSize = 0
+    let minSize = Item.MIN_WIDTH
+    if (!target) {
+      return
+    }
+    const header = target.items[0] as PoolLabelEntity
+    const offset = e.x / this._editor.zoom - this._editorContext.startPointX / this._editor.zoom
+    if (target.horizontal) {
+      if (targetPoolIndex === -2) {
+        // Header width
+        const minPoolWidth = target.poolCount > 0 ? (target.stageCount > 1 ? target.items[1 + target.stageCount].width : target.items[1].width) : 0
+        const firstPoolLabelWidth = target.poolCount === 0 ? 0 : target.items[1 + (target.stageCount > 1 ? target.stageCount : 0)].width
+        const minStageWidth = target.poolCount === 0 ? target.stageCount * Item.MIN_WIDTH : target.stageCount * (Item.MIN_WIDTH + firstPoolLabelWidth)
+        maxSize = target.width - minPoolWidth - minStageWidth
+        const newWidth = header.width + offset
+        if (newWidth >= minSize && newWidth <= maxSize) {
+          header.boundary = Rectangle.makeLTWH(header.left, header.top, newWidth, header.height)
+          if (target.stageCount > 1) {
+            for (let i = 0; i < target.poolCount; i++) {
+              const poolLabel = target.items[1 + target.stageCount + i]
+              poolLabel.boundary = Rectangle.makeLTWH(poolLabel.left + offset, poolLabel.top, poolLabel.width, poolLabel.height)
+            }
+            for (let i = 0; i < target.stageCount; i++) {
+              const stageLabel = target.items[1 + i]
+              stageLabel.boundary = Rectangle.makeLTWH(
+                stageLabel.left + offset - (offset / target.stageCount) * i,
+                stageLabel.top,
+                stageLabel.width - offset / target.stageCount,
+                stageLabel.height,
+              )
+            }
+          } else {
+            for (let i = 0; i < target.poolCount; i++) {
+              const poolLabel = target.items[1 + i]
+              poolLabel.boundary = Rectangle.makeLTWH(poolLabel.left + offset, poolLabel.top, poolLabel.width, poolLabel.height)
+            }
+          }
+        }
+      } else if (targetPoolIndex === -1) {
+        //Pool width and so pool count > 0
+        const firstPoolLabel = target.items[1 + (target.stageCount > 1 ? target.stageCount : 0)]
+        const maxSize = (target.width - header.width) / target.stageCount - minSize
+        const newWidth = firstPoolLabel.width + offset
+        if (newWidth >= minSize && newWidth <= maxSize) {
+          if (target.stageCount > 1) {
+            for (let i = 0; i < target.poolCount; i++) {
+              const poolLabel = target.items[1 + target.stageCount + i]
+              poolLabel.boundary = Rectangle.makeLTWH(poolLabel.left, poolLabel.top, poolLabel.width + offset, poolLabel.height)
+            }
+          } else {
+            for (let i = 0; i < target.poolCount; i++) {
+              const poolLabel = target.items[1 + i]
+              poolLabel.boundary = Rectangle.makeLTWH(poolLabel.left, poolLabel.top, poolLabel.width + offset, poolLabel.height)
+            }
+          }
+        }
+      } else {
+        //Update stage with index = i, and stage count > 1
+        const firstPoolLabelWidth = target.poolCount === 0 ? 0 : target.items[1 + (target.stageCount > 1 ? target.stageCount : 0)].width
+        if (this._editorContext.targetPoolIndex === 0) {
+          const firstStage = target.items[1]
+          const secondStage = target.items[2]
+          const minStageWidth = Item.MIN_WIDTH + firstPoolLabelWidth
+          const maxStageWidth = firstStage.width + secondStage.width - Item.MIN_WIDTH
+          const newStageWidth = firstStage.width + offset
+          if (newStageWidth >= minStageWidth && newStageWidth <= maxStageWidth) {
+            const secondStageLeft = secondStage.left + offset
+            const secondStageWidth = secondStage.width - offset
+            firstStage.boundary = Rectangle.makeLTWH(firstStage.left, firstStage.top, newStageWidth, firstStage.height)
+            secondStage.boundary = Rectangle.makeLTWH(secondStageLeft, secondStage.top, secondStageWidth, firstStage.height)
+          }
+        } else {
+          const currentStage = target.items[this._editorContext.targetPoolIndex + 1]
+          const nextStage = target.items[this._editorContext.targetPoolIndex + 2]
+          const minStageWidth = Item.MIN_WIDTH
+          const maxStageWidth = currentStage.width + nextStage.width - minStageWidth
+          const newStageWidth = currentStage.width + offset
+          if (newStageWidth >= minStageWidth && newStageWidth <= maxStageWidth) {
+            const nextStageLeft = nextStage.left + offset
+            const nextStageWidth = nextStage.width - offset
+            currentStage.boundary = Rectangle.makeLTWH(currentStage.left, currentStage.top, newStageWidth, currentStage.height)
+            nextStage.boundary = Rectangle.makeLTWH(nextStageLeft, nextStage.top, nextStageWidth, nextStage.height)
+          }
+        }
+      }
+    } else {
+      // target.horizontal = false
+      // targetPoolIndex === -2 will never happen here and skip it
+      if (targetPoolIndex === -1) {
+        //Stage width and so stage count > 1
+        const firstStageLabel = target.items[1]
+        const newWidth = firstStageLabel.width + offset
+        if (target.poolCount >= 1) {
+          const firstPoolLabel = target.items[1 + target.stageCount]
+          const maxStageWidth = firstStageLabel.width + firstPoolLabel.width - Item.MIN_WIDTH
+          if (newWidth >= minSize && newWidth <= maxStageWidth) {
+            for (let i = 0; i < target.stageCount; i++) {
+              const stageLabel = target.items[1 + i]
+              stageLabel.boundary = Rectangle.makeLTWH(stageLabel.left, stageLabel.top, newWidth, stageLabel.height)
+            }
+            const firstPoolLabelWidth = firstPoolLabel.width - offset
+            const firstPoolLabelLeft = firstPoolLabel.left + offset
+            firstPoolLabel.boundary = Rectangle.makeLTWH(firstPoolLabelLeft, firstPoolLabel.top, firstPoolLabelWidth, firstPoolLabel.height)
+          }
+        } else {
+          const maxStageWidth = target.width - Item.MIN_WIDTH
+          if (newWidth >= minSize && newWidth <= maxStageWidth) {
+            for (let i = 0; i < target.stageCount; i++) {
+              const stageLabel = target.items[1 + i]
+              stageLabel.boundary = Rectangle.makeLTWH(stageLabel.left, stageLabel.top, newWidth, stageLabel.height)
+            }
+          }
+        }
+      } else if (targetPoolIndex >= 0) {
+        const currentPoolLabel = target.items[1 + (target.stageCount > 1 ? target.stageCount : 0) + targetPoolIndex]
+        const nextPoolLabel = target.items[1 + (target.stageCount > 1 ? target.stageCount : 0) + targetPoolIndex + 1]
+        const maxPoolLabelWidth = currentPoolLabel.width + nextPoolLabel.width - Item.MIN_WIDTH
+        const newPoolLabelWidth = currentPoolLabel.width + offset
+        if (newPoolLabelWidth >= minSize && newPoolLabelWidth <= maxPoolLabelWidth) {
+          const nextPoolLabelLeft = nextPoolLabel.left + offset
+          const nextPoolLabelWidth = nextPoolLabel.width - offset
+          currentPoolLabel.boundary = Rectangle.makeLTWH(currentPoolLabel.left, currentPoolLabel.top, newPoolLabelWidth, currentPoolLabel.height)
+          nextPoolLabel.boundary = Rectangle.makeLTWH(nextPoolLabelLeft, nextPoolLabel.top, nextPoolLabelWidth, nextPoolLabel.height)
+        }
+      }
+    }
+    if (target) {
+      target.shape.markDirty()
+    }
+    this._editorContext.startPointX = e.x
+    this._editorContext.startPointY = e.y
+  }
+
+  private handleTargetPoolYResizing(e: PointerEvent) {
+    const target = this._editorContext.target as PoolCustomContainer
+    const targetPoolIndex = this._editorContext.targetPoolIndex
+    let maxSize = 0
+    let minSize = Item.MIN_HEIGHT
+    if (!target) {
+      return
+    }
+    const header = target.items[0] as PoolLabelEntity
+    const offset = e.y / this._editor.zoom - this._editorContext.startPointY / this._editor.zoom
+    if (target.horizontal) {
+      // targetPoolIndex === -2 will never happen here and skip it
+      if (targetPoolIndex === -1) {
+        //Stage width and so stage count > 1
+        const firstStageLabel = target.items[1]
+        const newHeight = firstStageLabel.height + offset
+        if (target.poolCount >= 1) {
+          const firstPoolLabel = target.items[1 + target.stageCount]
+          const maxStageHeight = firstStageLabel.height + firstPoolLabel.height - Item.MIN_HEIGHT
+          if (newHeight >= minSize && newHeight <= maxStageHeight) {
+            for (let i = 0; i < target.stageCount; i++) {
+              const stageLabel = target.items[1 + i]
+              stageLabel.boundary = Rectangle.makeLTWH(stageLabel.left, stageLabel.top, stageLabel.width, newHeight)
+            }
+            const firstPoolLabelHeight = firstPoolLabel.height - offset
+            const firstPoolLabelTop = firstPoolLabel.top + offset
+            firstPoolLabel.boundary = Rectangle.makeLTWH(firstPoolLabel.left, firstPoolLabelTop, firstPoolLabel.width, firstPoolLabelHeight)
+          }
+        } else {
+          const maxStageHeight = target.height - Item.MIN_HEIGHT
+          if (newHeight >= minSize && newHeight <= maxStageHeight) {
+            for (let i = 0; i < target.stageCount; i++) {
+              const stageLabel = target.items[1 + i]
+              stageLabel.boundary = Rectangle.makeLTWH(stageLabel.left, stageLabel.top, stageLabel.width, newHeight)
+            }
+          }
+        }
+      } else if (targetPoolIndex >= 0) {
+        const currentPoolLabel = target.items[1 + (target.stageCount > 1 ? target.stageCount : 0) + targetPoolIndex]
+        const nextPoolLabel = target.items[1 + (target.stageCount > 1 ? target.stageCount : 0) + targetPoolIndex + 1]
+        const maxPoolLabelHeight = currentPoolLabel.height + nextPoolLabel.height - Item.MIN_HEIGHT
+        const newPoolLabelHeight = currentPoolLabel.height + offset
+        if (newPoolLabelHeight >= minSize && newPoolLabelHeight <= maxPoolLabelHeight) {
+          const nextPoolLabelTop = nextPoolLabel.top + offset
+          const nextPoolLabelHeight = nextPoolLabel.height - offset
+          currentPoolLabel.boundary = Rectangle.makeLTWH(currentPoolLabel.left, currentPoolLabel.top, currentPoolLabel.width, newPoolLabelHeight)
+          nextPoolLabel.boundary = Rectangle.makeLTWH(nextPoolLabel.left, nextPoolLabelTop, nextPoolLabel.width, nextPoolLabelHeight)
+        }
+      }
+    } else {
+      if (targetPoolIndex === -2) {
+        // Header height
+        const minPoolHeight = target.poolCount > 0 ? (target.stageCount > 1 ? target.items[1 + target.stageCount].height : target.items[1].height) : 0
+        const firstPoolLabelHeight = target.poolCount === 0 ? 0 : target.items[1 + (target.stageCount > 1 ? target.stageCount : 0)].height
+        const minStageHeight = target.poolCount === 0 ? target.stageCount * Item.MIN_HEIGHT : target.stageCount * (Item.MIN_HEIGHT + firstPoolLabelHeight)
+        maxSize = target.height - minPoolHeight - minStageHeight
+        const newHeight = header.height + offset
+        if (newHeight >= minSize && newHeight <= maxSize) {
+          header.boundary = Rectangle.makeLTWH(header.left, header.top, header.width, newHeight)
+          if (target.stageCount > 1) {
+            for (let i = 0; i < target.poolCount; i++) {
+              const poolLabel = target.items[1 + target.stageCount + i]
+              poolLabel.boundary = Rectangle.makeLTWH(poolLabel.left, poolLabel.top + offset, poolLabel.width, poolLabel.height)
+            }
+            for (let i = 0; i < target.stageCount; i++) {
+              const stageLabel = target.items[1 + i]
+              stageLabel.boundary = Rectangle.makeLTWH(
+                stageLabel.left,
+                stageLabel.top + offset - (offset / target.stageCount) * i,
+                stageLabel.width,
+                stageLabel.height - offset / target.stageCount,
+              )
+            }
+          } else {
+            for (let i = 0; i < target.poolCount; i++) {
+              const poolLabel = target.items[1 + i]
+              poolLabel.boundary = Rectangle.makeLTWH(poolLabel.left, poolLabel.top + offset, poolLabel.width, poolLabel.height)
+            }
+          }
+        }
+      } else if (targetPoolIndex === -1) {
+        //Pool height and so pool count > 0
+        const firstPoolLabel = target.items[1 + (target.stageCount > 1 ? target.stageCount : 0)]
+        const maxSize = (target.height - header.height) / target.stageCount - minSize
+        const newHeight = firstPoolLabel.height + offset
+        if (newHeight >= minSize && newHeight <= maxSize) {
+          if (target.stageCount > 1) {
+            for (let i = 0; i < target.poolCount; i++) {
+              const poolLabel = target.items[1 + target.stageCount + i]
+              poolLabel.boundary = Rectangle.makeLTWH(poolLabel.left, poolLabel.top, poolLabel.width, poolLabel.height + offset)
+            }
+          } else {
+            for (let i = 0; i < target.poolCount; i++) {
+              const poolLabel = target.items[1 + i]
+              poolLabel.boundary = Rectangle.makeLTWH(poolLabel.left, poolLabel.top, poolLabel.width, poolLabel.height + offset)
+            }
+          }
+        }
+      } else {
+        //Update stage with index = i, and stage count > 1
+        const firstPoolLabelHeight = target.poolCount === 0 ? 0 : target.items[1 + (target.stageCount > 1 ? target.stageCount : 0)].height
+        if (this._editorContext.targetPoolIndex === 0) {
+          const firstStage = target.items[1]
+          const secondStage = target.items[2]
+          const minStageHeight = Item.MIN_HEIGHT + firstPoolLabelHeight
+          const maxStageHeight = firstStage.height + secondStage.height - Item.MIN_HEIGHT
+          const newStageHeight = firstStage.height + offset
+          if (newStageHeight >= minStageHeight && newStageHeight <= maxStageHeight) {
+            const secondStageTop = secondStage.top + offset
+            const secondStageHeight = secondStage.height - offset
+            firstStage.boundary = Rectangle.makeLTWH(firstStage.left, firstStage.top, firstStage.width, newStageHeight)
+            secondStage.boundary = Rectangle.makeLTWH(secondStage.left, secondStageTop, secondStage.width, secondStageHeight)
+          }
+        } else {
+          const currentStage = target.items[this._editorContext.targetPoolIndex + 1]
+          const nextStage = target.items[this._editorContext.targetPoolIndex + 2]
+          const minStageHeight = Item.MIN_HEIGHT
+          const maxStageHeight = currentStage.height + nextStage.height - minStageHeight
+          const newStageHeight = currentStage.height + offset
+          if (newStageHeight >= minStageHeight && newStageHeight <= maxStageHeight) {
+            const nextStageTop = nextStage.top + offset
+            const nextStageHeight = nextStage.height - offset
+            currentStage.boundary = Rectangle.makeLTWH(currentStage.left, currentStage.top, currentStage.width, newStageHeight)
+            nextStage.boundary = Rectangle.makeLTWH(nextStage.left, nextStageTop, nextStage.width, nextStageHeight)
+          }
+        }
+      }
+    }
+    if (target) {
+      target.shape.markDirty()
+    }
+    this._editorContext.startPointX = e.x
+    this._editorContext.startPointY = e.y
   }
 }

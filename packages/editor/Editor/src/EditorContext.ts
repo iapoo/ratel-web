@@ -66,6 +66,9 @@ export class EditorContext {
   private _targetItem: EditorItem | undefined
   private _modified: boolean
   private readonly _textArea: HTMLTextAreaElement
+  private _targetPoolXResizing: boolean = false
+  private _targetPoolYResizing: boolean = false
+  private _targetPoolIndex: number = 0 // -2: header, -1 stage region or pool region, 0+ stage index or pool index
 
   public constructor(editor: Editor) {
     this._editor = editor
@@ -397,6 +400,33 @@ export class EditorContext {
   public get textArea() {
     return this._textArea
   }
+
+  public get targetPoolXResizing() {
+    return this._targetPoolXResizing
+  }
+
+  public set targetPoolXResizing(value: boolean) {
+    this._targetPoolXResizing = value
+  }
+
+  public get targetPoolYResizing() {
+    return this._targetPoolYResizing
+  }
+
+  public set targetPoolYResizing(value: boolean) {
+    this._targetPoolYResizing = value
+  }
+  /**
+   *   -2: header, -1 stage region or pool region, 0+ stage index or pool index
+   */
+  public get targetPoolIndex() {
+    return this._targetPoolIndex
+  }
+
+  public set targetPoolIndex(value: number) {
+    this._targetPoolIndex = value
+  }
+
   private initializeTextArea() {
     if (this._editor.engine.container?.parentElement) {
       this._editor.engine.container.parentElement.append(this._textArea)
