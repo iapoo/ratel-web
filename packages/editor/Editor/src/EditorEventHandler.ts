@@ -94,39 +94,17 @@ export class EditorEventHandler {
               this.selectTable(clickedEditorItem, e, true)
             }
           } else if (clickedEditorItem instanceof PoolCustomContainer) {
-            if (!clickedEditorItem.locked) {
-              this.selectPoolCustomContainer(clickedEditorItem, e, true)
-            }
-          } else {
+            this.selectPoolCustomContainer(clickedEditorItem, e, true)
           }
         } else if (clickedEditorItem instanceof TableEntity) {
-          if (!clickedEditorItem.locked) {
-            this.selectTable(clickedEditorItem, e, false)
-          }
+          this.selectTable(clickedEditorItem, e, false)
         } else if (clickedEditorItem instanceof PoolCustomContainer) {
-          if (!clickedEditorItem.locked) {
-            this.selectPoolCustomContainer(clickedEditorItem, e, false)
-          }
+          this.selectPoolCustomContainer(clickedEditorItem, e, false)
         } else if (this._editorContext.textFocused) {
           const targetPoint = this.findEditorItemPoint(clickedEditorItem, e.x, e.y)
-          const hasFixedItems = clickedEditorItem ? this.hasFixedItems(clickedEditorItem, e.x, e.y) : false
-          const ifFixedItemIsTarget = clickedEditorItem ? this.ifFixedItemIsTarget(clickedEditorItem, e.x, e.y) : false
-          //Fixed item is clicked and parent is in text edit mode
-          const isFixedItemSelected = hasFixedItems && !clickedEditorItem.fixed && clickedEditorItem === this._editorContext.target
-          //Fixed item is in text edit mode and parent or other fixed item is in clicked
-          const isParentItemSelected =
-            (!hasFixedItems && !clickedEditorItem.fixed && clickedEditorItem !== this._editorContext.target) ||
-            (hasFixedItems && !clickedEditorItem.fixed && !ifFixedItemIsTarget && clickedEditorItem !== this._editorContext.target)
-          if (isFixedItemSelected || isParentItemSelected) {
-            this.updateSelection(clickedEditorItem, e)
-            this._editor.beginOperation(clickedEditorItem)
-            this._editorContext.inMoving = true
-            this.startMoveOutline(e)
-          } else {
-            this.updateTextCursorLocation(clickedEditorItem, targetPoint.x, targetPoint.y)
-            clickedEditorItem.shape.enter(targetPoint.x, targetPoint.y)
-            this._editorContext.textSelecting = true
-          }
+          this.updateTextCursorLocation(clickedEditorItem, targetPoint.x, targetPoint.y)
+          clickedEditorItem.shape.enter(targetPoint.x, targetPoint.y)
+          this._editorContext.textSelecting = true
         } else {
           if (!clickedEditorItem.locked) {
             //if (!((clickedEditorItem as Item).parent instanceof FrameEntity) || clickedEditorItem.fixed) {
@@ -1892,11 +1870,42 @@ export class EditorEventHandler {
   private selectPoolCustomContainer(editorItem: PoolCustomContainer, e: PointerEvent, onlyResizing: boolean) {
     //const targetPoint = this.findEditorItemPoint(editorItem, e.x, e.y)
     this.handleMouseOverOnPool(editorItem, e, true)
-    if (!this._editorContext.targetPoolXResizing && !this._editorContext.targetPoolYResizing) {
-      if (onlyResizing) {
-        // this._editorContext.inMoving = true
+    if (!onlyResizing) {
+      if (this._editorContext.targetPoolXResizing || this._editorContext.targetPoolYResizing) {
+        this.updateSelection(editorItem, e)
+        this._editorContext.target = editorItem
       } else {
+        if (this._editorContext.textFocused) {
+          const targetPoint = this.findEditorItemPoint(editorItem, e.x, e.y)
+          const hasFixedItems = editorItem ? this.hasFixedItems(editorItem, e.x, e.y) : false
+          const ifFixedItemIsTarget = editorItem ? this.ifFixedItemIsTarget(editorItem, e.x, e.y) : false
+          //Fixed item is clicked and parent is in text edit mode
+          const isFixedItemSelected = hasFixedItems && !editorItem.fixed && editorItem === this._editorContext.target
+          //Fixed item is in text edit mode and parent or other fixed item is in clicked
+          const isParentItemSelected =
+            (!hasFixedItems && !editorItem.fixed && editorItem !== this._editorContext.target) ||
+            (hasFixedItems && !editorItem.fixed && !ifFixedItemIsTarget && editorItem !== this._editorContext.target)
+          if (isFixedItemSelected || isParentItemSelected) {
+            this.updateSelection(editorItem, e)
+            this._editor.beginOperation(editorItem)
+            this._editorContext.inMoving = true
+            this.startMoveOutline(e)
+          } else {
+            this.updateTextCursorLocation(editorItem, targetPoint.x, targetPoint.y)
+            editorItem.shape.enter(targetPoint.x, targetPoint.y)
+            this._editorContext.textSelecting = true
+          }
+        } else {
+          if (!editorItem.locked) {
+            this._editor.beginOperation(editorItem)
+            this._editorContext.inMoving = true
+            this.startMoveOutline(e)
+          }
+        }
       }
+    } else {
+      this.updateSelection(editorItem, e)
+      this._editorContext.target = editorItem
     }
   }
 
