@@ -1069,13 +1069,18 @@ export class Editor extends Painter {
   }
 
   public getSelectionBoundary(): [number, number, number, number] {
+    return this.getContentBoundary(true)
+  }
+
+  public getContentBoundary(onlySelected: boolean): [number, number, number, number] {
     let left = 0
     let top = 0
     let right = 0
     let bottom = 0
-    let selectionCount = this.selectionLayer.getEditorItemCount()
+    const layer = onlySelected ? this.selectionLayer : this.contentLayer
+    let selectionCount = layer.getEditorItemCount()
     for (let i = 0; i < selectionCount; i++) {
-      const selection = this.selectionLayer.getEditorItem(i)
+      const selection = layer.getEditorItem(i)
       const worldTransform = selection.worldTransform
       const leftTopPoint = worldTransform.makePoint(new Point2(0, 0))
       const rightTopPoint = worldTransform.makePoint(new Point2(selection.width, 0))

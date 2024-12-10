@@ -308,7 +308,7 @@ export class EditorHelper {
   private static async generateEditorSVG(editor: Editor, onlySelected: boolean) {
     let content = ''
     const layer = onlySelected ? editor.selectionLayer : editor.contentLayer
-    const [left, top, right, bottom] = editor.getSelectionBoundary()
+    const [left, top, right, bottom] = editor.getContentBoundary(onlySelected)
     for (let i = 0; i < layer.getEditorItemCount(); i++) {
       const editorItem = layer.getEditorItem(i)
       content += await EditorHelper.generateEditorItemSVG(editorItem as Item, 0, left, top)

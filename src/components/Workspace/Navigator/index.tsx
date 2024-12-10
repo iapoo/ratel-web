@@ -55,6 +55,7 @@ import {
   MyShape,
   Plugin,
   PoolCustomContainerTypes,
+  PoolType,
   ShapeEntity,
   ShapeType,
   ShapeTypes,
@@ -193,7 +194,7 @@ const Navigator: FC<NavigatorProps> = ({
     }
   }
 
-  const addPoolContainer = (type: string, shapeType: ShapeType, folder: string) => {
+  const addPoolContainer = (type: string, shapeType: PoolType, folder: string) => {
     if (Utils.currentEditor) {
       Utils.currentEditor.action = new PoolContainerAction(Utils.currentEditor, type, shapeType)
       Utils.currentEditor.action!.imageId = process.env.BASIC_PATH + `/${folder}/${type}.svg`
@@ -988,8 +989,6 @@ const Navigator: FC<NavigatorProps> = ({
       ),
       children: (
         <Space size={2} wrap>
-          {containers[1]}
-          {containers[3]}
           {poolContainers}
         </Space>
       ),

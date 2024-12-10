@@ -61,6 +61,9 @@ import {
   CustomTableType,
   EditorItem,
   Item,
+  PoolCustomContainer,
+  PoolCustomContainerTypes,
+  PoolType,
   ShapeEntity,
   ShapeType,
   ShapeTypes,
@@ -2303,7 +2306,7 @@ const Header: FC<HeaderProps> = ({
   }
 
   const handleGenerateIconsForShape = async (
-    shapeTypes: ShapeType[] | CustomTableType[],
+    shapeTypes: ShapeType[] | CustomTableType[] | PoolType[],
     classType:
       | typeof ShapeEntity
       | typeof TableEntity
@@ -2317,7 +2320,8 @@ const Header: FC<HeaderProps> = ({
       | typeof UMLCustomContainer
       | typeof UMLFrameShape
       | typeof ERCustomShape
-      | MockupCustomShape,
+      | typeof MockupCustomShape
+      | typeof PoolCustomContainer,
     margin: number,
   ) => {
     if (currentEditor) {
@@ -2408,6 +2412,23 @@ const Header: FC<HeaderProps> = ({
               shapeTypes,
             )
             break
+          case PoolCustomContainer: {
+            const poolType = shapeType as PoolType
+            shapeEntity = new PoolCustomContainer(
+              left,
+              poolType.top + margin,
+              poolType.width * sizeFactor,
+              poolType.height * sizeFactor,
+              poolType.poolCount,
+              poolType.stageCount,
+              poolType.horizontal,
+              poolType.poolTextHorizontal,
+              poolType.stageTextHorizontal,
+              shapeType.name,
+              shapeTypes as PoolType[],
+            )
+            break
+          }
           default:
             shapeEntity = new ShapeEntity(
               left,
@@ -2482,6 +2503,7 @@ const Header: FC<HeaderProps> = ({
     const enableUMLFrameShapes = false
     const enableERCustomShapes = false
     const enableMockupCustomShapes = false
+    const enablePoolShapes = true
 
     if (enableShapes) handleGenerateIconsForShape(ShapeTypes, ShapeEntity, 5)
     if (enableLine) handleGenerateIconsForConnector()
@@ -2502,6 +2524,7 @@ const Header: FC<HeaderProps> = ({
     if (enableUMLFrameShapes) handleGenerateIconsForShape(UMLFrameShapeTypes, UMLFrameShape, 5)
     if (enableERCustomShapes) handleGenerateIconsForShape(ERCustomShapeTypes, ERCustomShape, 5)
     if (enableMockupCustomShapes) handleGenerateIconsForShape(MockupCustomShapeTypes, MockupCustomShape, 1)
+    if (enablePoolShapes) handleGenerateIconsForShape(PoolCustomContainerTypes, PoolCustomContainer, 5)
   }
 
   const handleTestCode = () => {

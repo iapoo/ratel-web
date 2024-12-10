@@ -257,6 +257,7 @@ export class PoolCustomContainer extends ContainerEntity {
   private static readonly DEFAULT_STAGE_SIZE = 250
   private static readonly DEFAULT_STAGE_LABEL_TEXT = 'Stage'
   private static readonly DEFAULT_POOL_LABEL_TEXT = 'Pool'
+  private static readonly DEFAULT_HEADER_LABEL_TEXT = 'Header'
   private _horizontal: boolean
   private _poolCount: number
   private _stageCount: number
@@ -645,6 +646,8 @@ export class PoolCustomContainer extends ContainerEntity {
     this.removeAllItems()
     if (this._horizontal) {
       const header = new PoolLabelEntity(0, 0, PoolCustomContainer.DEFAULT_HEADER_SIZE, this.height, this._poolTextHorizontal)
+      header.text = PoolCustomContainer.DEFAULT_HEADER_LABEL_TEXT
+      this.applyStyle(header)
       this.addItem(header)
       if (this._stageCount > 1) {
         const stageWidth = (this.width - header.width) / this._stageCount
@@ -652,6 +655,7 @@ export class PoolCustomContainer extends ContainerEntity {
         for (let i = 0; i < this._stageCount; i++) {
           const stageLabel = new PoolLabelEntity(header.width + stageWidth * i, 0, stageWidth, stageHeight, this._stageTextHorizontal)
           stageLabel.text = PoolCustomContainer.DEFAULT_STAGE_LABEL_TEXT
+          this.applyStyle(stageLabel)
           this.addItem(stageLabel)
         }
         if (this._poolCount === 1) {
@@ -659,6 +663,7 @@ export class PoolCustomContainer extends ContainerEntity {
           const poolLabelHeight = this.height - stageHeight
           const poolLabel = new PoolLabelEntity(header.width, stageHeight, poolLabelWidth, poolLabelHeight, this._poolTextHorizontal)
           poolLabel.text = PoolCustomContainer.DEFAULT_POOL_LABEL_TEXT
+          this.applyStyle(poolLabel)
           this.addItem(poolLabel)
         } else if (this._poolCount > 1) {
           const poolLabelWidth = PoolCustomContainer.DEFAULT_POOL_LABEL_SIZE
@@ -666,6 +671,7 @@ export class PoolCustomContainer extends ContainerEntity {
           for (let i = 0; i < this._poolCount; i++) {
             const poolLabel = new PoolLabelEntity(header.width, stageHeight + poolLabelHeight * i, poolLabelWidth, poolLabelHeight, this._poolTextHorizontal)
             poolLabel.text = PoolCustomContainer.DEFAULT_POOL_LABEL_TEXT
+            this.applyStyle(poolLabel)
             this.addItem(poolLabel)
           }
         }
@@ -675,6 +681,7 @@ export class PoolCustomContainer extends ContainerEntity {
           const poolLabelHeight = this.height
           const poolLabel = new PoolLabelEntity(header.width, 0, poolLabelWidth, poolLabelHeight, this._poolTextHorizontal)
           poolLabel.text = PoolCustomContainer.DEFAULT_POOL_LABEL_TEXT
+          this.applyStyle(poolLabel)
           this.addItem(poolLabel)
         } else if (this._poolCount > 1) {
           const poolLabelWidth = PoolCustomContainer.DEFAULT_POOL_LABEL_SIZE
@@ -682,12 +689,14 @@ export class PoolCustomContainer extends ContainerEntity {
           for (let i = 0; i < this._poolCount; i++) {
             const poolLabel = new PoolLabelEntity(header.width, poolLabelHeight * i, poolLabelWidth, poolLabelHeight, this._poolTextHorizontal)
             poolLabel.text = PoolCustomContainer.DEFAULT_POOL_LABEL_TEXT
+            this.applyStyle(poolLabel)
             this.addItem(poolLabel)
           }
         }
       }
     } else {
       const header = new PoolLabelEntity(0, 0, this.width, PoolCustomContainer.DEFAULT_HEADER_SIZE, this._poolTextHorizontal)
+      this.applyStyle(header)
       this.addItem(header)
       if (this._stageCount > 1) {
         const stageWidth = PoolCustomContainer.DEFAULT_STAGE_LABEL_SIZE
@@ -695,6 +704,7 @@ export class PoolCustomContainer extends ContainerEntity {
         for (let i = 0; i < this._stageCount; i++) {
           const stageLabel = new PoolLabelEntity(0, header.height + stageHeight * i, stageWidth, stageHeight, this._stageTextHorizontal)
           stageLabel.text = PoolCustomContainer.DEFAULT_STAGE_LABEL_TEXT
+          this.applyStyle(stageLabel)
           this.addItem(stageLabel)
         }
         if (this._poolCount === 1) {
@@ -702,6 +712,7 @@ export class PoolCustomContainer extends ContainerEntity {
           const poolLabelHeight = PoolCustomContainer.DEFAULT_POOL_LABEL_SIZE
           const poolLabel = new PoolLabelEntity(stageWidth, header.height, poolLabelWidth, poolLabelHeight, this._poolTextHorizontal)
           poolLabel.text = PoolCustomContainer.DEFAULT_POOL_LABEL_TEXT
+          this.applyStyle(poolLabel)
           this.addItem(poolLabel)
         } else if (this._poolCount > 1) {
           const poolLabelWidth = (this.width - stageWidth) / this._poolCount
@@ -709,6 +720,7 @@ export class PoolCustomContainer extends ContainerEntity {
           for (let i = 0; i < this._poolCount; i++) {
             const poolLabel = new PoolLabelEntity(stageWidth + poolLabelWidth * i, header.height, poolLabelWidth, poolLabelHeight, this._poolTextHorizontal)
             poolLabel.text = PoolCustomContainer.DEFAULT_POOL_LABEL_TEXT
+            this.applyStyle(poolLabel)
             this.addItem(poolLabel)
           }
         }
@@ -718,6 +730,7 @@ export class PoolCustomContainer extends ContainerEntity {
           const poolLabelHeight = PoolCustomContainer.DEFAULT_POOL_LABEL_SIZE
           const poolLabel = new PoolLabelEntity(0, header.height, poolLabelWidth, poolLabelHeight, this._poolTextHorizontal)
           poolLabel.text = PoolCustomContainer.DEFAULT_POOL_LABEL_TEXT
+          this.applyStyle(poolLabel)
           this.addItem(poolLabel)
         } else if (this._poolCount > 1) {
           const poolLabelWidth = this.width / this._poolCount
@@ -725,6 +738,7 @@ export class PoolCustomContainer extends ContainerEntity {
           for (let i = 0; i < this._poolCount; i++) {
             const poolLabel = new PoolLabelEntity(i * poolLabelWidth, header.height, poolLabelWidth, poolLabelHeight, this._poolTextHorizontal)
             poolLabel.text = PoolCustomContainer.DEFAULT_POOL_LABEL_TEXT
+            this.applyStyle(poolLabel)
             this.addItem(poolLabel)
           }
         }
@@ -930,13 +944,12 @@ export class PoolCustomContainer extends ContainerEntity {
   }
 
   private applyStyle(poolLabelEntity: PoolLabelEntity) {
-    const header = this.items[0]
-    poolLabelEntity.strokeColor = header.strokeColor
-    poolLabelEntity.fillColor = header.fillColor
-    poolLabelEntity.fontSize = header.fontSize
-    poolLabelEntity.fontColor = header.fontColor
-    poolLabelEntity.fontWeight = header.fontWeight
-    poolLabelEntity.fontSlant = header.fontSlant
+    poolLabelEntity.strokeColor = this.strokeColor
+    poolLabelEntity.fillColor = this.fillColor
+    poolLabelEntity.fontSize = this.fontSize
+    poolLabelEntity.fontColor = this.fontColor
+    poolLabelEntity.fontWeight = this.fontWeight
+    poolLabelEntity.fontSlant = this.fontSlant
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
