@@ -1,7 +1,7 @@
 /* eslint-disable max-params */
 import { Control, Line2D, Point2, Rectangle, Scale } from '@ratel-web/engine'
 import { Editor } from '../../Editor'
-import { Connector, FrameEntity, Item, LineEntity, LineType, ShapeEntity } from '../../Items'
+import { CodeContainer, Connector, FrameEntity, Item, LineEntity, LineType, ShapeEntity } from '../../Items'
 import { AdapterDirection, ConnectorType } from '../../Shapes'
 import { EditorUtils } from '../../Theme'
 import { AdapterAnchor, AdapterType } from './AdapterAnchor'
@@ -510,7 +510,9 @@ export class Holder extends Control {
           // this.addNode(this._topCreationAnchor)
           // this.addNode(this._rightCreationAnchor)
           // this.addNode(this._bottomCreationAnchor)
-          this.addNode(this._rotationAnchor)
+          if (!(this.target instanceof CodeContainer)) {
+            this.addNode(this._rotationAnchor)
+          }
           if (this._target instanceof ShapeEntity) {
             if (this._target.shapeType.modifiable) {
               this.addNode(this._modifyAnchor)
@@ -556,7 +558,9 @@ export class Holder extends Control {
         // this.removeNode(this._topCreationAnchor)
         // this.removeNode(this._rightCreationAnchor)
         // this.removeNode(this._bottomCreationAnchor)
-        this.removeNode(this._rotationAnchor)
+        if (!(this.target instanceof CodeContainer)) {
+          this.removeNode(this._rotationAnchor)
+        }
         if (this._target instanceof ShapeEntity) {
           if (this._target.shapeType.modifiable) {
             this.removeNode(this._modifyAnchor)

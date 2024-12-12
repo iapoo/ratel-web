@@ -2,6 +2,7 @@
 import { PluginManager } from '@/components/Workspace/Utils/PluginManager'
 import { EditOutlined } from '@ant-design/icons'
 import {
+  CodeContainerAction,
   ConnectorAction,
   ContainerAction,
   CustomConnectorAction,
@@ -42,6 +43,7 @@ import {
   UMLGridShapesForOther,
 } from '@ratel-web/editor/CustomItems/UML'
 import {
+  CodeContainerTypes,
   ContainerEntity,
   ContainerTypes,
   CustomConnector,
@@ -176,6 +178,13 @@ const Navigator: FC<NavigatorProps> = ({
   const addContainer = (type: string, folder: string) => {
     if (Utils.currentEditor) {
       Utils.currentEditor.action = new ContainerAction(Utils.currentEditor, type)
+      Utils.currentEditor.action.imageId = process.env.BASIC_PATH + `/${folder}/${type}.svg`
+    }
+  }
+
+  const addCodeContainer = (type: string, folder: string) => {
+    if (Utils.currentEditor) {
+      Utils.currentEditor.action = new CodeContainerAction(Utils.currentEditor, type)
       Utils.currentEditor.action.imageId = process.env.BASIC_PATH + `/${folder}/${type}.svg`
     }
   }
@@ -688,6 +697,11 @@ const Navigator: FC<NavigatorProps> = ({
   )
 
   // @ts-ignore
+  const codeContainers = CodeContainerTypes.map((shapeType) =>
+    generateIcons(shapeType.name, 'basic-icons', shapeType.width, shapeType.height, false, () => addCodeContainer(shapeType.name, 'basic-icons')),
+  )
+
+  // @ts-ignore
   const poolContainers = PoolCustomContainerTypes.map((shapeType) =>
     generateIcons(shapeType.name, 'basic-icons', shapeType.width, shapeType.height, false, () => addPoolContainer(shapeType.name, shapeType, 'basic-icons')),
   )
@@ -936,6 +950,7 @@ const Navigator: FC<NavigatorProps> = ({
           {line}
           {table}
           {containers}
+          {codeContainers}
         </Space>
       ),
     },

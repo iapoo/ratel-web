@@ -1,7 +1,7 @@
 import { Colors, Matrix, MouseCode, Point2, PointerEvent, Rectangle, Rotation } from '@ratel-web/engine'
 import { Action, MyShapeAction } from '../../Actions'
 import { Holder } from '../../Design'
-import { Connector, ContainerEntity, EditorItem, EditorItemInfo, Entity, Item, PoolCustomContainer, ShapeEntity, TableEntity } from '../../Items'
+import { CodeContainer, Connector, ContainerEntity, EditorItem, EditorItemInfo, Entity, Item, PoolCustomContainer, ShapeEntity, TableEntity } from '../../Items'
 import { PoolLabelEntity } from '../../Items/src/PoolLabelEntity'
 import { Operation, OperationHelper, OperationType } from '../../Operations'
 import { EditorUtils } from '../../Theme'
@@ -116,6 +116,17 @@ export class EditorEventHandler {
         }
       } else {
         this.removeSelection(e)
+      }
+    }
+    //Code Editor may still have focus and we check and force to
+    if (this._editor.inCodeEditing()) {
+      let forceFinish = true
+      const selectionLayer = this._editorContext.selectionLayer
+      if (selectionLayer.getEditorItemCount() === 1 && selectionLayer.getEditorItem(0) instanceof CodeContainer) {
+        forceFinish = false
+      }
+      if (forceFinish) {
+        this._editor.finishCodeEdit()
       }
     }
   }
@@ -1459,6 +1470,9 @@ export class EditorEventHandler {
     if (this._editor.action) {
       this._editor.selectionLayer.removeAllEditorItems()
       this._editor.selectionLayer.addEditorItems(this._editor.action.items)
+      if (this._editor.action.items.length === 1 && this._editor.action.items[0] instanceof CodeContainer) {
+        this._editor.beginCodeEdit()
+      }
       let editorItemInfos = OperationHelper.saveEditorItems(this._editor.action.items)
       let operation = new Operation(this._editor, OperationType.ADD_ITEMS, editorItemInfos, true, [])
       this._editor.operationService.addOperation(operation)
@@ -1672,7 +1686,9 @@ export class EditorEventHandler {
       }
       //console.log('Double click is detected')
       // this.handleDoubleClick(e)
-      if (theTarget instanceof Connector) {
+      if (theTarget instanceof CodeContainer) {
+        this._editor.beginCodeEdit()
+      } else if (theTarget instanceof Connector) {
         let origItemInfo = OperationHelper.saveEditorItem(theTarget)
         this.createTextBoxInConnector(theTarget, theTargetPoint.x, theTargetPoint.y)
         let editorItemInfo = OperationHelper.saveEditorItem(theTarget)

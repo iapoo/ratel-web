@@ -43,6 +43,8 @@ export class EditorContext {
   private _sizeChangeListeners = new Array<(e: EditorEvent) => void>(0)
   private _textEditStartListeners = new Array<(e: EditorEvent) => void>(0)
   private _textEditEndListeners = new Array<(e: EditorEvent) => void>(0)
+  private _codeEditStartListeners = new Array<(e: EditorEvent) => void>(0)
+  private _codeEditEndListeners = new Array<(e: EditorEvent) => void>(0)
   private _selectionResizedListeners = new Array<(e: EditorEvent) => void>(0)
   private _selectionResizingListeners = new Array<(e: EditorEvent) => void>(0)
   private _textEditStyleChangeListeners = new Array<(e: EditorEvent) => void>(0)
@@ -69,6 +71,7 @@ export class EditorContext {
   private _targetPoolXResizing: boolean = false
   private _targetPoolYResizing: boolean = false
   private _targetPoolIndex: number = 0 // -2: header, -1 stage region or pool region, 0+ stage index or pool index
+  private _codeEditing: boolean = false
 
   public constructor(editor: Editor) {
     this._editor = editor
@@ -119,6 +122,14 @@ export class EditorContext {
     this._tableLayer.addNode(this._tableActiveCellShape)
     this._textArea = document.createElement('textarea')
     this.initializeTextArea()
+  }
+
+  public get codeEditing() {
+    return this._codeEditing
+  }
+
+  public set codeEditing(value: boolean) {
+    this._codeEditing = value
   }
 
   public get inMoving() {
@@ -295,6 +306,14 @@ export class EditorContext {
 
   public get textEditEndListeners() {
     return this._textEditEndListeners
+  }
+
+  public get codeEditStartListeners() {
+    return this._codeEditStartListeners
+  }
+
+  public get codeEditEndListeners() {
+    return this._codeEditEndListeners
   }
 
   public get selectionResizedListeners() {

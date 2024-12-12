@@ -39,6 +39,7 @@ export interface MyShape {
 }
 
 export { CellEntity } from './src/CellEntity'
+export { CodeContainer, CodeContainerTypes } from './src/CodeContainer'
 export { Connector, ConnectorArrowTypes } from './src/Connector'
 export { ConnectorArrowInfo } from './src/ConnectorArrowInfo'
 export { ConnectorInfo } from './src/ConnectorInfo'

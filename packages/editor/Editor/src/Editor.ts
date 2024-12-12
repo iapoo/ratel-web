@@ -288,6 +288,44 @@ export class Editor extends Painter {
     return index >= 0
   }
 
+  public onCodeEditStart(callback: (e: EditorEvent) => void) {
+    const index = this._editorContext.codeEditStartListeners.indexOf(callback)
+    if (index < 0) {
+      this._editorContext.codeEditStartListeners.push(callback)
+    }
+  }
+
+  public removeCodeEditStart(callback: (e: EditorEvent) => void) {
+    const index = this._editorContext.codeEditStartListeners.indexOf(callback)
+    if (index >= 0) {
+      this._editorContext.codeEditStartListeners.splice(index, 1)
+    }
+  }
+
+  public hasCodeEditStart(callback: (e: EditorEvent) => void) {
+    const index = this._editorContext.codeEditStartListeners.indexOf(callback)
+    return index >= 0
+  }
+
+  public onCodeEditEnd(callback: (e: EditorEvent) => void) {
+    const index = this._editorContext.codeEditEndListeners.indexOf(callback)
+    if (index < 0) {
+      this._editorContext.codeEditEndListeners.push(callback)
+    }
+  }
+
+  public removeCodeEditEnd(callback: (e: EditorEvent) => void) {
+    const index = this._editorContext.codeEditEndListeners.indexOf(callback)
+    if (index >= 0) {
+      this._editorContext.codeEditEndListeners.splice(index, 1)
+    }
+  }
+
+  public hasCodeEditEnd(callback: (e: EditorEvent) => void) {
+    const index = this._editorContext.codeEditEndListeners.indexOf(callback)
+    return index >= 0
+  }
+
   public onTableTextEditStart(callback: (e: EditorEvent) => void) {
     const index = this._editorContext.tableTextEditStartListeners.indexOf(callback)
     if (index < 0) {
@@ -997,6 +1035,20 @@ export class Editor extends Painter {
     })
   }
 
+  public triggerCodeEditStart() {
+    this._editorContext.codeEditStartListeners.forEach((callback) => {
+      const event = new EditorEvent(this)
+      callback(event)
+    })
+  }
+
+  public triggerCodeEditEnd() {
+    this._editorContext.codeEditEndListeners.forEach((callback) => {
+      const event = new EditorEvent(this)
+      callback(event)
+    })
+  }
+
   public triggerTableTextEditStart() {
     this._editorContext.tableTextEditStartListeners.forEach((callback) => {
       const event = new EditorEvent(this)
@@ -1349,5 +1401,19 @@ export class Editor extends Painter {
 
   public setContentVisible(visible: boolean) {
     this._editorContext.contentLayer.visible = visible
+  }
+
+  public beginCodeEdit() {
+    this._editorContext.codeEditing = true
+    this.triggerCodeEditStart()
+  }
+
+  public finishCodeEdit() {
+    this._editorContext.codeEditing = false
+    this.triggerCodeEditEnd()
+  }
+
+  public inCodeEditing() {
+    return this._editorContext.codeEditing
   }
 }

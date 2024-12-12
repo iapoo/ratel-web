@@ -1,4 +1,5 @@
 export { Action } from './src/Action'
+export { CodeContainerAction } from './src/CodeContainerAction'
 export { ConnectorAction } from './src/ConnectorAction'
 export { ContainerAction } from './src/ContainerAction'
 export { CustomConnectorAction } from './src/CustomConnectorAction'
