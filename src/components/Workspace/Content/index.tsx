@@ -2747,6 +2747,7 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
       html2canvas(codeEditorRef.current.editor).then((canvas) => {
         const url = canvas.toDataURL()
         setCodeImage(url)
+        //SystemUtils.generateDownloadFile(url, `test.txt`)
         if (Utils.currentEditor && codeEditorTargetRef.current) {
           const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
           codeEditorTargetRef.current.codeContent = codeContent

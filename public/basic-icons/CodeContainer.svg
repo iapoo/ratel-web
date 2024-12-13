@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.dev/svgjs"  width="100" height="100" viewbox="0 0 100 100"   shape-rendering="geometricPrecision">
+    <g transform="translate(0, 0)">
+        <path fill="#FFFFFFFF" stroke="#323232FF" stroke-width="2"  d="M0 0L0 100L100 100L100 0L0 0Z"/>
+        <g transform="matrix(1.00, 0.00, 0.00, 1.00, 0.00, 0.00)">
+            <path fill="#323232FF" stroke="#323232FF" stroke-linecap="round" stroke-linejoin="round" stroke-width="0.1"   d="M32.55 61.38L32.55 67.66L7.05 55.81L7.05 51.16L32.55 39.34L32.55 45.63L15.08 52.91L12.42 53.47L12.42 53.66L15.08 54.25L32.55 61.38ZM41.67 74.91L36.45 74.91L55.45 25.50L60.64 25.50L41.67 74.91ZM92.83 56.44L66.11 68.28L66.11 62.16L84.80 54.72L87.42 54.19L87.42 54L84.80 53.38L66.11 46.06L66.11 39.97L92.83 51.78L92.83 56.44Z"/>
+        </g>
+    </g>
+</svg>

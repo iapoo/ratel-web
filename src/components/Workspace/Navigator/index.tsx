@@ -182,9 +182,9 @@ const Navigator: FC<NavigatorProps> = ({
     }
   }
 
-  const addCodeContainer = (type: string, folder: string) => {
+  const addCodeContainer = (type: string, folder: string, shapeType: ShapeType) => {
     if (Utils.currentEditor) {
-      Utils.currentEditor.action = new CodeContainerAction(Utils.currentEditor, type)
+      Utils.currentEditor.action = new CodeContainerAction(Utils.currentEditor, type, shapeType.width, shapeType.height)
       Utils.currentEditor.action.imageId = process.env.BASIC_PATH + `/${folder}/${type}.svg`
     }
   }
@@ -595,7 +595,7 @@ const Navigator: FC<NavigatorProps> = ({
     width: number,
     height: number,
     iconWidth: number,
-    iconheight: number,
+    iconHeight: number,
   ) => {
     const svgContent = await RequestUtils.fetchSvgFile(src)
     // console.log(`update ${id}`)
@@ -606,7 +606,7 @@ const Navigator: FC<NavigatorProps> = ({
     const factor = Number((svgWidth / iconWidth).toFixed(2))
     svg.viewbox(0, 0, svgWidth, height)
     svg.width(iconWidth)
-    svg.height(iconheight)
+    svg.height(iconHeight)
     // svg.attr('viewbox', `0 0 ${width} ${height}`)
     //console.log(`${svg}`)
     visitContainer(svg, factor)
@@ -698,7 +698,7 @@ const Navigator: FC<NavigatorProps> = ({
 
   // @ts-ignore
   const codeContainers = CodeContainerTypes.map((shapeType) =>
-    generateIcons(shapeType.name, 'basic-icons', shapeType.width, shapeType.height, false, () => addCodeContainer(shapeType.name, 'basic-icons')),
+    generateIcons(shapeType.name, 'basic-icons', 100, 100, false, () => addCodeContainer(shapeType.name, 'basic-icons', shapeType)),
   )
 
   // @ts-ignore

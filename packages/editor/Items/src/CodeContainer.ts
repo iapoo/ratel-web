@@ -5,7 +5,7 @@ import { Categories, Type } from './Item'
 import { ShapeConstants, ShapeEntity } from './ShapeEntity'
 
 const TYPE_CODE_CONTAINER = 'CodeContainer'
-const DESC_CODE_CONTAINER = 'CodeContainer'
+const DESC_CODE_CONTAINER = 'Code Editor'
 const TEXT_CODE_CONTAINER = ''
 
 export const CodeContainerTypes = [
@@ -16,8 +16,8 @@ export const CodeContainerTypes = [
     text: TEXT_CODE_CONTAINER,
     left: 0,
     top: 0,
-    width: 200,
-    height: 200,
+    width: 360,
+    height: 320,
     enableMask: false,
     modifiable: false,
     modifierX: 0,
