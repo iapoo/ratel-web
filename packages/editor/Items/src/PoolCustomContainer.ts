@@ -696,6 +696,7 @@ export class PoolCustomContainer extends ContainerEntity {
       }
     } else {
       const header = new PoolLabelEntity(0, 0, this.width, PoolCustomContainer.DEFAULT_HEADER_SIZE, this._poolTextHorizontal)
+      header.text = PoolCustomContainer.DEFAULT_HEADER_LABEL_TEXT
       this.applyStyle(header)
       this.addItem(header)
       if (this._stageCount > 1) {
@@ -954,7 +955,6 @@ export class PoolCustomContainer extends ContainerEntity {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected parseEntityShapeType(type: string): EntityShapeType {
-    let shapeType = EntityShapeType.CustomContainer
-    return shapeType
+    return EntityShapeType.CustomContainer
   }
 }

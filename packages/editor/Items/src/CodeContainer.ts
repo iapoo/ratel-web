@@ -103,15 +103,13 @@ export class CodeContainer extends ShapeEntity {
     // }
     const blob2 = ImageUtils.convertBase64StringToUInt8Array(theThis.image)
     if (blob2) {
-      const code = Image.make(blob2.buffer)
-      theThis.imageData = code
+      theThis.imageData = Image.make(blob2.buffer)
     }
-    console.log(`${theThis}`)
+    //console.log(`${theThis}`)
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   protected parseEntityShapeType(type: string): EntityShapeType {
-    let shapeType = EntityShapeType.CustomShape
-    return shapeType
+    return EntityShapeType.CustomShape
   }
 }
