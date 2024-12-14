@@ -944,7 +944,7 @@ export class PoolCustomContainer extends ContainerEntity {
     }
   }
 
-  private applyStyle(poolLabelEntity: PoolLabelEntity) {
+  public applyStyle(poolLabelEntity: PoolLabelEntity) {
     poolLabelEntity.strokeColor = this.strokeColor
     poolLabelEntity.fillColor = this.fillColor
     poolLabelEntity.fontSize = this.fontSize

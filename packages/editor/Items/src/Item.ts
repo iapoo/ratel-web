@@ -53,6 +53,7 @@ export class Categories {
   public static EXTENSION_SVG = 'ExtensionSvg'
   public static POOL = 'Pool'
   public static CODE_CONTAINER = 'CodeContainer'
+  public static POOL_LABEL = 'PoolLabel'
 }
 
 export abstract class Item implements EditorItem {

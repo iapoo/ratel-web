@@ -1,5 +1,6 @@
 /* eslint-disable max-params */
 import { PoolLabelShape } from '../../Shapes'
+import { Categories } from './Item'
 import { ShapeConstants, ShapeEntity, ShapeOptions, ShapeType, ShapeTypes } from './ShapeEntity'
 
 export class PoolLabelEntity extends ShapeEntity {
@@ -22,6 +23,10 @@ export class PoolLabelEntity extends ShapeEntity {
     //this.strokeColor = Colors.Gray
     this.lineWidth = 1.5
     // this._shape.filled = false
+  }
+
+  public get category(): string {
+    return Categories.POOL_LABEL
   }
 
   public get textHorizontal() {

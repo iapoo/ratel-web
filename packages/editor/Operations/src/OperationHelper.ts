@@ -5,6 +5,7 @@ import { Editor } from '../../Editor'
 import {
   Categories,
   CellEntity,
+  CodeContainer,
   Connector,
   ConnectorInfo,
   ContainerEntity,
@@ -37,6 +38,7 @@ import {
   Item,
   LineEntity,
   LineInfo,
+  PoolCustomContainer,
   ShapeEntity,
   ShapeInfo,
   ShapeType,
@@ -45,11 +47,15 @@ import {
   TableEntity,
   TableInfo,
 } from '../../Items'
+import { CodeContainerInfo } from '../../Items/src/CodeContainerInfo'
 import { ExtensionConnectorInfo } from '../../Items/src/ExtensionConnectorInfo'
 import { ExtensionContainerInfo } from '../../Items/src/ExtensionContainerInfo'
 import { ExtensionImageContainerInfo } from '../../Items/src/ExtensionImageContainerInfo'
 import { ExtensionSvgContainerInfo } from '../../Items/src/ExtensionSvgContainerInfo'
 import { ExtensionTableInfo } from '../../Items/src/ExtensionTableInfo'
+import { PoolCustomContainerInfo } from '../../Items/src/PoolCustomContainerInfo'
+import { PoolLabelEntity } from '../../Items/src/PoolLabelEntity'
+import { PoolLabelInfo } from '../../Items/src/PoolLabelInfo'
 import { ConnectorMode, ConnectorType, Style, StyleInfo } from '../../Shapes'
 import {
   CommonUtils,
@@ -141,6 +147,15 @@ export class OperationHelper {
         break
       case Categories.EXTENSION_SVG:
         editorItem = this.loadExtensionSvgContainer(itemInfo)
+        break
+      case Categories.POOL:
+        editorItem = this.loadPool(itemInfo, editor)
+        break
+      case Categories.POOL_LABEL:
+        editorItem = this.loadPoolLabelEntity(itemInfo)
+        break
+      case Categories.CODE_CONTAINER:
+        editorItem = this.loadCodeContainer(itemInfo)
         break
       case Categories.SHAPE:
       default:
@@ -642,6 +657,92 @@ export class OperationHelper {
     return extensionSvgContainer
   }
 
+  public static loadPool(itemInfo: EditorItemInfo, editor: Editor): ShapeEntity {
+    let poolCustomContainerInfo = itemInfo as PoolCustomContainerInfo
+    const poolCustomContainer = new PoolCustomContainer(
+      poolCustomContainerInfo.left,
+      poolCustomContainerInfo.top,
+      poolCustomContainerInfo.width,
+      poolCustomContainerInfo.height,
+      poolCustomContainerInfo.poolCount,
+      poolCustomContainerInfo.stageCount,
+      poolCustomContainerInfo.horizontal,
+      poolCustomContainerInfo.poolTextHorizontal,
+      poolCustomContainerInfo.stageTextHorizontal,
+    )
+    poolCustomContainer.type = poolCustomContainerInfo.type
+    poolCustomContainer.text = poolCustomContainerInfo.text
+    poolCustomContainer.id = poolCustomContainerInfo.id
+    if (poolCustomContainerInfo.rotation) {
+      poolCustomContainer.rotation = new Rotation(poolCustomContainerInfo.rotation, poolCustomContainer.width / 2, poolCustomContainer.height / 2)
+    }
+    poolCustomContainer.shape.modifier = CommonUtils.parsePointString(poolCustomContainerInfo.modifier)
+    poolCustomContainer.shape.controller = CommonUtils.parsePointString(poolCustomContainerInfo.controller)
+    poolCustomContainer.shape.adapter = CommonUtils.parsePointString(poolCustomContainerInfo.adapter)
+    poolCustomContainer.shape.adapterSize = poolCustomContainerInfo.adapterSize
+
+    poolCustomContainer.removeAllItems()
+
+    itemInfo.items.forEach((childItemInfo) => {
+      let childItem = OperationHelper.loadItem(childItemInfo, editor)
+      poolCustomContainer.addItem(childItem)
+    })
+
+    return poolCustomContainer
+  }
+
+  public static loadPoolLabelEntity(itemInfo: EditorItemInfo): PoolLabelEntity {
+    let poolLabelInfo = itemInfo as PoolLabelInfo
+    const poolLabelEntity = new PoolLabelEntity(
+      poolLabelInfo.left,
+      poolLabelInfo.top,
+      poolLabelInfo.width,
+      poolLabelInfo.height,
+      poolLabelInfo.textHorizontal,
+      {
+        shapeType: poolLabelInfo.type,
+      },
+    )
+    poolLabelEntity.textHorizontal = poolLabelInfo.textHorizontal
+    poolLabelEntity.type = poolLabelInfo.type
+    poolLabelEntity.text = poolLabelInfo.text
+    poolLabelEntity.textAlignment = CommonUtils.parseTextAlignment(poolLabelInfo.textAlignment)
+    poolLabelEntity.textVerticalAlignment = CommonUtils.parseTextVerticalAligment(poolLabelInfo.textVerticalAlignment)
+    poolLabelEntity.id = poolLabelInfo.id
+    if (poolLabelInfo.rotation) {
+      poolLabelEntity.rotation = new Rotation(poolLabelInfo.rotation, poolLabelEntity.width / 2, poolLabelEntity.height / 2)
+    }
+    poolLabelEntity.shape.modifier = CommonUtils.parsePointString(poolLabelInfo.modifier)
+    poolLabelEntity.shape.adapter = CommonUtils.parsePointString(poolLabelInfo.adapter)
+    OperationHelper.fixStyleInfo(poolLabelInfo)
+    poolLabelEntity.shape.styles = StyleInfo.makeStyles(poolLabelInfo.styles)
+    return poolLabelEntity
+  }
+
+  public static loadCodeContainer(itemInfo: EditorItemInfo): ShapeEntity {
+    let codeContainerInfo = itemInfo as CodeContainerInfo
+    const codeContainer = new CodeContainer(
+      codeContainerInfo.left,
+      codeContainerInfo.top,
+      codeContainerInfo.width,
+      codeContainerInfo.height,
+      codeContainerInfo.codeContent,
+      codeContainerInfo.codeImage,
+    )
+    codeContainer.type = codeContainerInfo.type
+    codeContainer.text = codeContainerInfo.text
+    codeContainer.id = codeContainerInfo.id
+    if (codeContainerInfo.rotation) {
+      codeContainer.rotation = new Rotation(codeContainerInfo.rotation, codeContainer.width / 2, codeContainer.height / 2)
+    }
+    codeContainer.shape.modifier = CommonUtils.parsePointString(codeContainerInfo.modifier)
+    codeContainer.shape.controller = CommonUtils.parsePointString(codeContainerInfo.controller)
+    codeContainer.shape.adapter = CommonUtils.parsePointString(codeContainerInfo.adapter)
+    codeContainer.shape.adapterSize = codeContainerInfo.adapterSize
+
+    return codeContainer
+  }
+
   public static loadImageContainer(itemInfo: EditorItemInfo): ShapeEntity {
     let imageContainerInfo = itemInfo as ImageContainerInfo
     const imageContainer = new ImageContainer(
@@ -1089,6 +1190,15 @@ export class OperationHelper {
       case Categories.EXTENSION_SVG:
         editorItemInfo = this.saveExtensionSvgContainer(editorItem as ExtensionSvgContainer)
         break
+      case Categories.POOL:
+        editorItemInfo = this.savePool(editorItem as PoolCustomContainer)
+        break
+      case Categories.POOL_LABEL:
+        editorItemInfo = this.savePoolLabel(editorItem as PoolLabelEntity)
+        break
+      case Categories.CODE_CONTAINER:
+        editorItemInfo = this.saveCodeContainer(editorItem as CodeContainer)
+        break
       case Categories.SHAPE:
       default:
         editorItemInfo = this.saveShape(editorItem as ShapeEntity)
@@ -1265,6 +1375,80 @@ export class OperationHelper {
     extensionSvgContainerInfo.enableStrokeColor = extensionSvgContainer.enableStrokeColor
 
     return extensionSvgContainerInfo
+  }
+
+  public static savePool(poolCustomContainer: PoolCustomContainer): EditorItemInfo {
+    let styleInfos: StyleInfo[] = Style.makeStyleInfos(poolCustomContainer.shape.styles)
+    let poolCustomContainerInfo = new PoolCustomContainerInfo(
+      poolCustomContainer.type,
+      poolCustomContainer.category,
+      poolCustomContainer.left,
+      poolCustomContainer.top,
+      poolCustomContainer.width,
+      poolCustomContainer.height,
+      poolCustomContainer.poolCount,
+      poolCustomContainer.stageCount,
+      poolCustomContainer.horizontal,
+      poolCustomContainer.poolTextHorizontal,
+      poolCustomContainer.stageTextHorizontal,
+      poolCustomContainer.text,
+      poolCustomContainer.rotation.radius,
+      styleInfos,
+    )
+    poolCustomContainerInfo.rotation = poolCustomContainer.rotation.radius
+    poolCustomContainerInfo.modifier = poolCustomContainer.shape.modifier.x + ',' + poolCustomContainer.shape.modifier.y
+    poolCustomContainerInfo.controller = poolCustomContainer.shape.controller.x + ',' + poolCustomContainer.shape.controller.y
+    poolCustomContainerInfo.adapter = poolCustomContainer.shape.adapter.x + ',' + poolCustomContainer.shape.adapter.y
+    poolCustomContainerInfo.adapterSize = poolCustomContainer.shape.adapterSize
+
+    return poolCustomContainerInfo
+  }
+
+  public static savePoolLabel(poolLabelEntity: PoolLabelEntity): EditorItemInfo {
+    let styleInfos: StyleInfo[] = Style.makeStyleInfos(poolLabelEntity.shape.styles)
+    let poolLabelInfo = new PoolLabelInfo(
+      poolLabelEntity.type,
+      poolLabelEntity.category,
+      poolLabelEntity.left,
+      poolLabelEntity.top,
+      poolLabelEntity.width,
+      poolLabelEntity.height,
+      poolLabelEntity.text,
+      poolLabelEntity.rotation.radius,
+      styleInfos,
+    )
+    poolLabelInfo.textHorizontal = poolLabelEntity.textHorizontal
+    poolLabelInfo.rotation = poolLabelEntity.rotation.radius
+    poolLabelInfo.modifier = poolLabelEntity.shape.modifier.x + ',' + poolLabelEntity.shape.modifier.y
+    poolLabelInfo.controller = poolLabelEntity.shape.controller.x + ',' + poolLabelEntity.shape.controller.y
+    poolLabelInfo.adapter = poolLabelEntity.shape.adapter.x + ',' + poolLabelEntity.shape.adapter.y
+    poolLabelInfo.adapterSize = poolLabelEntity.shape.adapterSize
+
+    return poolLabelInfo
+  }
+
+  public static saveCodeContainer(codeContainer: CodeContainer): EditorItemInfo {
+    let styleInfos: StyleInfo[] = Style.makeStyleInfos(codeContainer.shape.styles)
+    let codeContainerInfo = new CodeContainerInfo(
+      codeContainer.type,
+      codeContainer.category,
+      codeContainer.left,
+      codeContainer.top,
+      codeContainer.width,
+      codeContainer.height,
+      codeContainer.text,
+      codeContainer.rotation.radius,
+      styleInfos,
+    )
+    codeContainerInfo.rotation = codeContainer.rotation.radius
+    codeContainerInfo.modifier = codeContainer.shape.modifier.x + ',' + codeContainer.shape.modifier.y
+    codeContainerInfo.controller = codeContainer.shape.controller.x + ',' + codeContainer.shape.controller.y
+    codeContainerInfo.adapter = codeContainer.shape.adapter.x + ',' + codeContainer.shape.adapter.y
+    codeContainerInfo.adapterSize = codeContainer.shape.adapterSize
+    codeContainerInfo.codeImage = codeContainer.codeImage
+    codeContainerInfo.codeContent = codeContainer.codeContent
+
+    return codeContainerInfo
   }
 
   public static saveCustomImageShape(imageContainer: ImageContainer): EditorItemInfo {
