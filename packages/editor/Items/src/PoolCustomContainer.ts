@@ -297,6 +297,7 @@ export class PoolCustomContainer extends ContainerEntity {
       this.buildShape,
       customTypeInfo,
     )
+    this.filled = false
     this.initializeTheme()
     this.initializeShape()
     this.refreshPools()

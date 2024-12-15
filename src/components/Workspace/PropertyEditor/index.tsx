@@ -2,7 +2,7 @@
 import { Editor, EditorEvent } from '@ratel-web/editor/Editor'
 import { Connector, ConnectorArrowTypes, EditorItem } from '@ratel-web/editor/Items'
 import { Operation, OperationType } from '@ratel-web/editor/Operations'
-import { DocumentThemeType, DocumentThemeTypes, DocumentThemes } from '@ratel-web/editor/Theme'
+import { DocumentThemes, DocumentThemeType, DocumentThemeTypes } from '@ratel-web/editor/Theme'
 import { CommonUtils, Constants, EditorHelper } from '@ratel-web/editor/Utils'
 import { Button, Checkbox, ColorPicker, Divider, InputNumber, Radio, RadioChangeEvent, Select, Tabs, TabsProps, Tooltip } from 'antd'
 import { CheckboxChangeEvent } from 'antd/es/checkbox'
@@ -282,234 +282,72 @@ const PropertyEditor: FC<PropertyEditorProps> = ({ previousEditor, currentEditor
   }
 
   const handleEnableFillChange = (e: CheckboxChangeEvent) => {
-    if (Utils.currentEditor) {
-      setEnableFill(e.target.checked)
-      const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
-      const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      editorItems.forEach((editorItem: EditorItem) => {
-        editorItem.filled = e.target.checked
-      })
-      const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      const operation: Operation = new Operation(
-        Utils.currentEditor,
-        OperationType.UPDATE_ITEMS,
-        afterSelections,
-        true,
-        beforeSelections,
-        '',
-        null,
-        null,
-        null,
-        null,
-      )
-      Utils.currentEditor.operationService.addOperation(operation)
-      Utils.currentEditor.triggerOperationChange()
-    }
+    setEnableFill(e.target.checked)
+    SystemUtils.updateEditorItem((editorItem) => {
+      editorItem.filled = e.target.checked
+    }, false)
   }
 
   const handleEnableStrokeChange = (e: CheckboxChangeEvent) => {
-    if (Utils.currentEditor) {
-      setEnableStroke(e.target.checked)
-      const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
-      const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      editorItems.forEach((editorItem: EditorItem) => {
-        editorItem.stroked = e.target.checked
-      })
-      const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      const operation: Operation = new Operation(
-        Utils.currentEditor,
-        OperationType.UPDATE_ITEMS,
-        afterSelections,
-        true,
-        beforeSelections,
-        '',
-        null,
-        null,
-        null,
-        null,
-      )
-      Utils.currentEditor.operationService.addOperation(operation)
-      Utils.currentEditor.triggerOperationChange()
-    }
+    setEnableStroke(e.target.checked)
+    SystemUtils.updateEditorItem((editorItem) => {
+      editorItem.stroked = e.target.checked
+    }, false)
   }
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleFontSizeChange = (value: any) => {
     setFontSize(value)
-    if (Utils.currentEditor) {
-      const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
-      const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      editorItems.forEach((editorItem: EditorItem) => {
-        //let shape = editorItem.shape
-        //shape.font = new Font(EngineUtils.FONT_NAME_DEFAULT, value)
-        //shape.markDirty()
-        editorItem.fontSize = value
-      })
-      Utils.currentEditor.focus()
-      const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      const operation: Operation = new Operation(
-        Utils.currentEditor,
-        OperationType.UPDATE_ITEMS,
-        afterSelections,
-        true,
-        beforeSelections,
-        '',
-        null,
-        null,
-        null,
-        null,
-      )
-      Utils.currentEditor.operationService.addOperation(operation)
-      Utils.currentEditor.triggerOperationChange()
-    }
+    SystemUtils.updateEditorItem((editorItem) => {
+      editorItem.fontSize = value
+    }, true)
   }
 
   const handleLineWidthChange = (value: number | null) => {
     if (value !== null) {
       setLineWidth(value)
-      if (Utils.currentEditor) {
-        const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
-        const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-        editorItems.forEach((editorItem: EditorItem) => {
-          editorItem.lineWidth = value
-          //let shape = editorItem.shape
-          //let stroke = shape.stroke
-          //stroke.setStrokeWidth(value)
-          //shape.font = new Font(EngineUtils.FONT_NAME_DEFAULT, value)
-          //shape.markDirty()
-        })
-        const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-        const operation: Operation = new Operation(
-          Utils.currentEditor,
-          OperationType.UPDATE_ITEMS,
-          afterSelections,
-          true,
-          beforeSelections,
-          '',
-          null,
-          null,
-          null,
-          null,
-        )
-        Utils.currentEditor.operationService.addOperation(operation)
-        Utils.currentEditor.triggerOperationChange()
-      }
+      SystemUtils.updateEditorItem((editorItem) => {
+        editorItem.lineWidth = value
+      }, false)
     }
   }
 
   const handleFillColorChange = (value: any) => {
     setFillColor(value)
-    if (Utils.currentEditor) {
-      const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
-      const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      editorItems.forEach((editorItem: EditorItem) => {
-        let color = CommonUtils.parseColorString(value.toHexString())
-        if (color) {
-          editorItem.fillColor = color
-        }
-      })
-      const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      const operation: Operation = new Operation(
-        Utils.currentEditor,
-        OperationType.UPDATE_ITEMS,
-        afterSelections,
-        true,
-        beforeSelections,
-        '',
-        null,
-        null,
-        null,
-        null,
-      )
-      Utils.currentEditor.operationService.addOperation(operation)
-      Utils.currentEditor.triggerOperationChange()
-    }
+    SystemUtils.updateEditorItem((editorItem) => {
+      const color = CommonUtils.parseColorString(value.toHexString())
+      if (color) {
+        editorItem.fillColor = color
+      }
+    }, false)
   }
 
   const handleStrokeColorChange = (value: any) => {
     setStrokeColor(value)
-    if (Utils.currentEditor) {
-      const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
-      const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      editorItems.forEach((editorItem: EditorItem) => {
-        let color = CommonUtils.parseColorString(value.toHexString())
-        if (color) {
-          editorItem.strokeColor = color
-        }
-      })
-      const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      const operation: Operation = new Operation(
-        Utils.currentEditor,
-        OperationType.UPDATE_ITEMS,
-        afterSelections,
-        true,
-        beforeSelections,
-        '',
-        null,
-        null,
-        null,
-        null,
-      )
-      Utils.currentEditor.operationService.addOperation(operation)
-      Utils.currentEditor.triggerOperationChange()
-    }
+    SystemUtils.updateEditorItem((editorItem) => {
+      const color = CommonUtils.parseColorString(value.toHexString())
+      if (color) {
+        editorItem.strokeColor = color
+      }
+    }, false)
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleFontColorChange = (value: any) => {
     setFontColor(value)
-    if (Utils.currentEditor) {
-      const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
-      const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      editorItems.forEach((editorItem: EditorItem) => {
-        let color = CommonUtils.parseColorString(value.toHexString())
-        if (color) {
-          editorItem.fontColor = color
-        }
-      })
-      Utils.currentEditor.focus()
-      const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      const operation: Operation = new Operation(
-        Utils.currentEditor,
-        OperationType.UPDATE_ITEMS,
-        afterSelections,
-        true,
-        beforeSelections,
-        '',
-        null,
-        null,
-        null,
-        null,
-      )
-      Utils.currentEditor.operationService.addOperation(operation)
-      Utils.currentEditor.triggerOperationChange()
-    }
+    SystemUtils.updateEditorItem((editorItem) => {
+      let color = CommonUtils.parseColorString(value.toHexString())
+      if (color) {
+        editorItem.fontColor = color
+      }
+    }, false)
   }
 
   const handleStrokeDashStyleChange = (value: string) => {
     setStrokeDashStyle(value)
-    if (Utils.currentEditor) {
-      const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
-      const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      editorItems.forEach((editorItem: EditorItem) => {
-        let strokeDashStyle = CommonUtils.parseStrokeDashStyle(value)
-        editorItem.strokeDashStyle = strokeDashStyle
-      })
-      const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      const operation: Operation = new Operation(
-        Utils.currentEditor,
-        OperationType.UPDATE_ITEMS,
-        afterSelections,
-        true,
-        beforeSelections,
-        '',
-        null,
-        null,
-        null,
-        null,
-      )
-      Utils.currentEditor.operationService.addOperation(operation)
-      Utils.currentEditor.triggerOperationChange()
-    }
+    SystemUtils.updateEditorItem((editorItem) => {
+      editorItem.strokeDashStyle = CommonUtils.parseStrokeDashStyle(value)
+    }, false)
   }
 
   const handleConnectorLineTypeChange = (value: string) => {
@@ -558,193 +396,52 @@ const PropertyEditor: FC<PropertyEditorProps> = ({ previousEditor, currentEditor
 
   const handleConnectorLineModeChange = (value: string) => {
     setConnectorLineMode(value)
-    if (Utils.currentEditor) {
-      const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
-      const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      editorItems.forEach((editorItem: EditorItem) => {
-        if (editorItem instanceof Connector) {
-          editorItem.connectorMode = CommonUtils.parseConnectorMode(value)
-        }
-      })
-      Utils.currentEditor.focus()
-      Utils.currentEditor.triggerTextEditStyleChange()
-      const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      const operation: Operation = new Operation(
-        Utils.currentEditor,
-        OperationType.UPDATE_ITEMS,
-        afterSelections,
-        true,
-        beforeSelections,
-        '',
-        null,
-        null,
-        null,
-        null,
-      )
-      Utils.currentEditor.operationService.addOperation(operation)
-      Utils.currentEditor.triggerOperationChange()
-    }
+    SystemUtils.updateConnector((connector) => {
+      connector.connectorMode = CommonUtils.parseConnectorMode(value)
+    })
   }
 
   const handleDoubleLineGapChange = (value: number) => {
     setDoubleLineGap(value)
-    if (Utils.currentEditor) {
-      const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
-      const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      editorItems.forEach((editorItem: EditorItem) => {
-        if (editorItem instanceof Connector) {
-          editorItem.connectorDoubleLineGap = value
-        }
-      })
-      Utils.currentEditor.focus()
-      Utils.currentEditor.triggerTextEditStyleChange()
-      const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      const operation: Operation = new Operation(
-        Utils.currentEditor,
-        OperationType.UPDATE_ITEMS,
-        afterSelections,
-        true,
-        beforeSelections,
-        '',
-        null,
-        null,
-        null,
-        null,
-      )
-      Utils.currentEditor.operationService.addOperation(operation)
-      Utils.currentEditor.triggerOperationChange()
-    }
+    SystemUtils.updateConnector((connector) => {
+      connector.connectorDoubleLineGap = value
+    })
   }
 
   const handleDoubleLineArrowLengthChange = (value: number) => {
     setDoubleLineGap(value)
-    if (Utils.currentEditor) {
-      const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
-      const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      editorItems.forEach((editorItem: EditorItem) => {
-        if (editorItem instanceof Connector) {
-          editorItem.connectorDoubleLineArrowLength = value
-        }
-      })
-      Utils.currentEditor.focus()
-      Utils.currentEditor.invalidateHolder()
-      const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      const operation: Operation = new Operation(
-        Utils.currentEditor,
-        OperationType.UPDATE_ITEMS,
-        afterSelections,
-        true,
-        beforeSelections,
-        '',
-        null,
-        null,
-        null,
-        null,
-      )
-      Utils.currentEditor.operationService.addOperation(operation)
-      Utils.currentEditor.triggerOperationChange()
-    }
+    SystemUtils.updateConnector((connector) => {
+      connector.connectorDoubleLineArrowLength = value
+    })
   }
 
   const handleDoubleLineArrowDistanceChange = (value: number) => {
     setDoubleLineGap(value)
-    if (Utils.currentEditor) {
-      const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
-      const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      editorItems.forEach((editorItem: EditorItem) => {
-        if (editorItem instanceof Connector) {
-          editorItem.connectorDoubleLineArrowDistance = value
-        }
-      })
-      Utils.currentEditor.focus()
-      Utils.currentEditor.invalidateHolder()
-      const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      const operation: Operation = new Operation(
-        Utils.currentEditor,
-        OperationType.UPDATE_ITEMS,
-        afterSelections,
-        true,
-        beforeSelections,
-        '',
-        null,
-        null,
-        null,
-        null,
-      )
-      Utils.currentEditor.operationService.addOperation(operation)
-      Utils.currentEditor.triggerOperationChange()
-    }
+    SystemUtils.updateConnector((connector) => {
+      connector.connectorDoubleLineArrowDistance = value
+    })
   }
 
   const handleConnectorArrowStartTypeChange = (value: string) => {
-    //console.log(`orig value = ${connectorLineStartArrow}`)
     setConnectorLineStartArrow(value)
-    if (Utils.currentEditor) {
-      const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
-      const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      editorItems.forEach((editorItem: EditorItem) => {
-        if (editorItem instanceof Connector) {
-          ConnectorArrowTypes.forEach((connectorArrayType) => {
-            if (connectorArrayType.name === value) {
-              const startArrow = SystemUtils.cloneConnectorLineArrowType(connectorArrayType)
-              editorItem.startArrow = startArrow
-            }
-          })
+    SystemUtils.updateConnector((connector) => {
+      ConnectorArrowTypes.forEach((connectorArrayType) => {
+        if (connectorArrayType.name === value) {
+          connector.startArrow = SystemUtils.cloneConnectorLineArrowType(connectorArrayType)
         }
       })
-      Utils.currentEditor.focus()
-      Utils.currentEditor.invalidateHolder()
-      const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      const operation: Operation = new Operation(
-        Utils.currentEditor,
-        OperationType.UPDATE_ITEMS,
-        afterSelections,
-        true,
-        beforeSelections,
-        '',
-        null,
-        null,
-        null,
-        null,
-      )
-      Utils.currentEditor.operationService.addOperation(operation)
-      Utils.currentEditor.triggerOperationChange()
-    }
+    })
   }
 
   const handleConnectorArrowEndTypeChange = (value: string) => {
     setConnectorLineEndArrow(value)
-    if (Utils.currentEditor) {
-      const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
-      const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      editorItems.forEach((editorItem: EditorItem) => {
-        if (editorItem instanceof Connector) {
-          ConnectorArrowTypes.forEach((connectorArrayType) => {
-            if (connectorArrayType.name === value) {
-              const endArrow = SystemUtils.cloneConnectorLineArrowType(connectorArrayType)
-              editorItem.endArrow = endArrow
-            }
-          })
+    SystemUtils.updateConnector((connector) => {
+      ConnectorArrowTypes.forEach((connectorArrayType) => {
+        if (connectorArrayType.name === value) {
+          connector.endArrow = SystemUtils.cloneConnectorLineArrowType(connectorArrayType)
         }
       })
-      Utils.currentEditor.focus()
-      Utils.currentEditor.invalidateHolder()
-      const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-      const operation: Operation = new Operation(
-        Utils.currentEditor,
-        OperationType.UPDATE_ITEMS,
-        afterSelections,
-        true,
-        beforeSelections,
-        '',
-        null,
-        null,
-        null,
-        null,
-      )
-      Utils.currentEditor.operationService.addOperation(operation)
-      Utils.currentEditor.triggerOperationChange()
-    }
+    })
   }
 
   const doHandleShapeStyleChange = (item: EditorItem, styleName: string) => {

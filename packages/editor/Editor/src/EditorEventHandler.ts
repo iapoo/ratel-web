@@ -1,8 +1,19 @@
 import { Colors, Matrix, MouseCode, Point2, PointerEvent, Rectangle, Rotation } from '@ratel-web/engine'
 import { Action, MyShapeAction } from '../../Actions'
 import { Holder } from '../../Design'
-import { CodeContainer, Connector, ContainerEntity, EditorItem, EditorItemInfo, Entity, Item, PoolCustomContainer, ShapeEntity, TableEntity } from '../../Items'
-import { PoolLabelEntity } from '../../Items/src/PoolLabelEntity'
+import {
+  CodeContainer,
+  Connector,
+  ContainerEntity,
+  EditorItem,
+  EditorItemInfo,
+  Entity,
+  Item,
+  PoolCustomContainer,
+  PoolLabelEntity,
+  ShapeEntity,
+  TableEntity,
+} from '../../Items'
 import { Operation, OperationHelper, OperationType } from '../../Operations'
 import { EditorUtils } from '../../Theme'
 import { ControllerLayer } from './ControllerLayer'
@@ -183,7 +194,9 @@ export class EditorEventHandler {
     //fixed item is in text edit mode and mouse over on it now
     const isFixedItemSelected = hasFixedItems && !editorItem!.fixed && ifFixedItemIsTarget && editorItem !== this._editorContext.target
     //parent is in text edit mode and mouse over on it now
-    const isParentItemSelected = editorItem ? !hasFixedItems && !editorItem!.fixed && editorItem === this._editorContext.target : false
+    const isParentItemSelected = editorItem ? !hasFixedItems && !editorItem.fixed && editorItem === this._editorContext.target : false
+    //Fixed item is clicked and it is in text mode
+    const isFixedItemInTextEditing = editorItem ? hasFixedItems && ifFixedItemIsTarget && !editorItem.fixed && editorItem !== this._editorContext.target : false
     // console.log(
     //   ` Find editor item edge = ${isEdge}, hasFixedItems=${hasFixedItems} isFixedItemSelected=${isFixedItemSelected} isParentItemSelected=${isParentItemSelected} `,
     // )
@@ -276,9 +289,13 @@ export class EditorEventHandler {
               this._editor.updateEditorMode(EditorMode.MOVE)
             }
           }
-        } else if (this._editorContext.textFocused && this._editorContext.textSelecting && (isParentItemSelected || isFixedItemSelected)) {
+        } else if (
+          this._editorContext.textFocused &&
+          this._editorContext.textSelecting &&
+          (isParentItemSelected || isFixedItemSelected || isFixedItemInTextEditing)
+        ) {
           const targetPoint = this.findEditorItemPoint(this._editorContext.target!, e.x, e.y)
-          editorItem.shape.enterTo(targetPoint.x, targetPoint.y)
+          this._editorContext.target!.shape.enterTo(targetPoint.x, targetPoint.y)
           this._editor.updateEditorMode(EditorMode.TEXT)
         } else if (this._editorContext.textFocused && (isParentItemSelected || isFixedItemSelected)) {
           this._editor.updateEditorMode(EditorMode.TEXT)
@@ -1614,13 +1631,28 @@ export class EditorEventHandler {
       this._editor.triggerSelectionResized()
     }
     if (this._editorContext.target !== clickedEditorItem) {
-      if (this._editorContext.target) {
-        this._editorContext.target.shape.focused = false
-        this._editor.checkAndEndTextEdit()
-        this._editor.finishTextEditOperation()
+      //Need to check pool label here
+      if (
+        clickedEditorItem instanceof PoolCustomContainer &&
+        this._editorContext.target &&
+        this._editorContext.target.shape.focused &&
+        this.ifFixedItemIsTarget(clickedEditorItem, e.x, e.y)
+      ) {
+        const targetItemPoint = this.findEditorItemPoint(this._editorContext.target, e.x, e.y)
+        this._editorContext.textArea.focus()
+        this.updateTextCursorLocation(this._editorContext.target, targetItemPoint.x, targetItemPoint.y)
+        this._editorContext.target.shape.enterTo(targetItemPoint.x, targetItemPoint.y)
+        this._editorContext.textSelecting = false
+        this._editor.triggerTextEditStyleChange()
+      } else {
+        if (this._editorContext.target) {
+          this._editorContext.target.shape.focused = false
+          this._editor.checkAndEndTextEdit()
+          this._editor.finishTextEditOperation()
+        }
+        this._editorContext.target = clickedEditorItem
+        this._editorContext.targetTime = Date.now()
       }
-      this._editorContext.target = clickedEditorItem
-      this._editorContext.targetTime = Date.now()
     } else {
       if (clickedEditorItem instanceof TableEntity) {
         if (!clickedEditorItem.locked) {
@@ -1714,6 +1746,7 @@ export class EditorEventHandler {
    *  -2: header, -1 stage region or pool region, 0+ stage index or pool index
    * @param editorItem
    * @param e
+   * @Param updateResizing
    * @private
    */
   private handleMouseOverOnPool(editorItem: PoolCustomContainer, e: PointerEvent, updateResizing: boolean) {
@@ -1901,11 +1934,18 @@ export class EditorEventHandler {
           const isParentItemSelected =
             (!hasFixedItems && !editorItem.fixed && editorItem !== this._editorContext.target) ||
             (hasFixedItems && !editorItem.fixed && !ifFixedItemIsTarget && editorItem !== this._editorContext.target)
+          //Fixed item is clicked and it is in text mode
+          const isFixedItemInTextEditing = hasFixedItems && ifFixedItemIsTarget && !editorItem.fixed && editorItem !== this._editorContext.target
           if (isFixedItemSelected || isParentItemSelected) {
             this.updateSelection(editorItem, e)
             this._editor.beginOperation(editorItem)
             this._editorContext.inMoving = true
             this.startMoveOutline(e)
+          } else if (isFixedItemInTextEditing && this._editorContext.target) {
+            const targetItemPoint = this.findEditorItemPoint(this._editorContext.target, e.x, e.y)
+            this.updateTextCursorLocation(this._editorContext.target, targetItemPoint.x, targetItemPoint.y)
+            this._editorContext.target.shape.enter(targetItemPoint.x, targetItemPoint.y)
+            this._editorContext.textSelecting = true
           } else {
             this.updateTextCursorLocation(editorItem, targetPoint.x, targetPoint.y)
             editorItem.shape.enter(targetPoint.x, targetPoint.y)
@@ -2194,5 +2234,15 @@ export class EditorEventHandler {
     }
     this._editorContext.startPointX = e.x
     this._editorContext.startPointY = e.y
+  }
+
+  /**
+   * Mouse down on Pool while it is in text editing
+   * @param editorItem
+   * @param e
+   * @private
+   */
+  private handleTextEdittingInPoolCustomContainer(editorItem: PoolCustomContainer, e: PointerEvent) {
+    this.handleMouseOverOnPool(editorItem, e, true)
   }
 }

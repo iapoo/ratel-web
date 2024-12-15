@@ -2,11 +2,13 @@
  * 定义一些全局方法和状态信息
  */
 
-import moment from 'moment'
+import { Utils } from '@/components/Workspace/Utils/Utils'
 import { EditorMode } from '@ratel-web/editor/Editor'
-import { ConnectorArrowType, ConnectorArrowTypes } from '@ratel-web/editor/Items'
-import { Constants } from '@ratel-web/editor/Utils'
+import { Connector, ConnectorArrowType, ConnectorArrowTypes, EditorItem, PoolCustomContainer, PoolLabelEntity, TableEntity } from '@ratel-web/editor/Items'
+import { Operation, OperationType } from '@ratel-web/editor/Operations'
+import { Constants, EditorHelper } from '@ratel-web/editor/Utils'
 import { Point2 } from '@ratel-web/engine'
+import moment from 'moment'
 
 export enum OSType {
   MACOS,
@@ -55,10 +57,7 @@ export class SystemUtils {
       // @ts-ignore
       const pattern = urlObj[key]
       // @ts-ignore
-      urlObj[key] =
-        key === 'query'
-          ? pattern.exec(theUrl) && SystemUtils.formatQuery(pattern.exec(theUrl)[1])
-          : pattern.exec(theUrl) && pattern.exec(theUrl)[1]
+      urlObj[key] = key === 'query' ? pattern.exec(theUrl) && SystemUtils.formatQuery(pattern.exec(theUrl)[1]) : pattern.exec(theUrl) && pattern.exec(theUrl)[1]
     }
     return urlObj
   }
@@ -210,5 +209,94 @@ export class SystemUtils {
       result += randomChar
     }
     return result
+  }
+
+  /**
+   * Generic update operation for item attribute update
+   * @param update
+   * @param isTextUpdate
+   */
+  public static updateEditorItem = (update: (editorItem: EditorItem) => void, isTextUpdate: boolean) => {
+    if (Utils.currentEditor) {
+      const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
+      const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
+      editorItems.forEach((editorItem: EditorItem) => {
+        if (editorItem instanceof PoolCustomContainer && editorItems.length === 1) {
+          if (Utils.currentEditor?.target && Utils.currentEditor?.target !== editorItem) {
+            update(Utils.currentEditor.target)
+          } else {
+            update(editorItem)
+            editorItem.items.forEach((child) => {
+              if (child instanceof PoolLabelEntity) {
+                update(child)
+              }
+            })
+          }
+        } else if (editorItem instanceof TableEntity) {
+          if (Utils.currentEditor?.targetItem) {
+            update(Utils.currentEditor.targetItem)
+          } else {
+            editorItem.items.forEach((child) => {
+              update(child)
+            })
+          }
+        } else {
+          update(editorItem)
+        }
+      })
+      Utils.currentEditor.focus()
+      if (isTextUpdate) {
+        Utils.currentEditor.triggerTextEditStyleChange()
+      }
+      const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
+      const operation: Operation = new Operation(
+        Utils.currentEditor,
+        OperationType.UPDATE_ITEMS,
+        afterSelections,
+        true,
+        beforeSelections,
+        '',
+        null,
+        null,
+        null,
+        null,
+      )
+      Utils.currentEditor.operationService.addOperation(operation)
+      Utils.currentEditor.triggerOperationChange()
+    }
+  }
+
+  /**
+   * Generic update operation for item attribute update
+   * @param update
+   * @param isTextUpdate
+   */
+  public static updateConnector = (update: (connector: Connector) => void) => {
+    if (Utils.currentEditor) {
+      const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
+      const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
+      editorItems.forEach((editorItem: EditorItem) => {
+        if (editorItem instanceof Connector) {
+          update(editorItem)
+        }
+      })
+      Utils.currentEditor.focus()
+      Utils.currentEditor.triggerTextEditStyleChange()
+      const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
+      const operation: Operation = new Operation(
+        Utils.currentEditor,
+        OperationType.UPDATE_ITEMS,
+        afterSelections,
+        true,
+        beforeSelections,
+        '',
+        null,
+        null,
+        null,
+        null,
+      )
+      Utils.currentEditor.operationService.addOperation(operation)
+      Utils.currentEditor.triggerOperationChange()
+    }
   }
 }
