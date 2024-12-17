@@ -266,3 +266,26 @@ export const PageTypes = [
     height: 192,
   },
 ]
+
+export class Languages {
+  public static C = 'C'
+  public static CPP = 'C++'
+  public static CSharp = 'C#'
+  public static CSS = 'CSS'
+  public static D = 'D'
+  public static DART = 'DART'
+  public static GO = 'Go'
+  public static HTML = 'HTML'
+  public static KOTLIN = 'Kotlin'
+  public static Java = 'Java'
+  public static Javascript = 'Javascript'
+  public static JSON = 'JSON'
+  public static PHP = 'PHP'
+  public static PlainText = 'Plain Text'
+  public static PYTHON = 'Python'
+  public static RUBY = 'Ruby'
+  public static RUST = 'RUST'
+  public static SQL = 'SQL'
+  public static SWIFT = 'Swift'
+  public static TYPESCRIPT = 'Typescript'
+}

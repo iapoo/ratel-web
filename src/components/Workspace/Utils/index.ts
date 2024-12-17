@@ -5,10 +5,12 @@ export {
   DoubleLineArrowDistanceOptions,
   DoubleLineArrowLengthOptions,
   FontSizeOptions,
+  Languages,
   LineWidthOptions,
   PageTypes,
   StrokeDashStyles,
 } from './Consts'
+export { EditorUtils } from './EditorUtils'
 export { RequestUtils } from './RequestUtils'
 export { SystemUtils } from './SystemUtils'
 export { Utils } from './Utils'

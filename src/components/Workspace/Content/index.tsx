@@ -1,6 +1,6 @@
 /* eslint-disable radix,@typescript-eslint/no-use-before-define */
 /* eslint-disable @typescript-eslint/prefer-for-of */
-import { EditorUtils } from '@/components/Workspace/Utils/EditorUtils'
+import { EditorUtils, Languages } from '@/components/Workspace/Utils'
 import {
   AlignCenterOutlined,
   AlignLeftOutlined,
@@ -16,11 +16,13 @@ import {
   InsertRowLeftOutlined,
   InsertRowRightOutlined,
   ItalicOutlined,
+  OrderedListOutlined,
   UnderlineOutlined,
   VerticalAlignBottomOutlined,
   VerticalAlignMiddleOutlined,
   VerticalAlignTopOutlined,
 } from '@ant-design/icons'
+import { LanguageSupport, StreamLanguage } from '@codemirror/language'
 import type { ViewUpdate } from '@codemirror/view'
 import type { DragEndEvent } from '@dnd-kit/core'
 import { DndContext, PointerSensor, useSensor } from '@dnd-kit/core'
@@ -32,6 +34,7 @@ import { Operation, OperationHelper, OperationType } from '@ratel-web/editor/Ope
 import { ThemeUtils } from '@ratel-web/editor/Theme'
 import { CommonUtils, Constants, EditorHelper } from '@ratel-web/editor/Utils'
 import { Engine, FontSlant, FontWeight, MouseCode, Node, Point2, PointerEvent, TextDecoration } from '@ratel-web/engine'
+import { ValueType } from '@rc-component/mini-decimal'
 import { SVG } from '@svgdotjs/svg.js'
 import { langs } from '@uiw/codemirror-extensions-langs'
 import CodeMirror, { ReactCodeMirrorRef } from '@uiw/react-codemirror'
@@ -192,6 +195,9 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
   const [poolToolbarLeft, setPoolToolbarLeft] = useState<number>(0)
   const [poolToolbarTop, setPoolToolbarTop] = useState<number>(0)
   const [poolToolbarVisible, setPoolToolbarVisible] = useState<boolean>(false)
+  const [codeContainerToolbarLeft, setCodeContainerToolbarLeft] = useState<number>(0)
+  const [codeContainerToolbarTop, setCodeContainerToolbarTop] = useState<number>(0)
+  const [codeContainerToolbarVisible, setCodeContainerToolbarVisible] = useState<boolean>(false)
   const [fontSize, setFontSize] = useState<number>(Constants.FONT_SIZE_DEFAULT)
   const [fontColor, setFontColor] = useState<string>(Constants.COLOR_FONT_DEFAULT)
   //const [fontWeight, setFontWeight] = useState<string>(Constants.FONT_WEIGHT_NORMAL)
@@ -218,18 +224,21 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
   const [poolStageTextHorizontal, setPoolStageTextHorizontal] = useState(true)
   const [editorCursor, setEditorCursor] = useState<string>(Constants.EDITOR_CURSOR_AUTO)
   const [codeContent, setCodeContent] = useState<string>('')
-  const [codeEditorVisible, setCodeEditorVisible] = useState<boolean>(false)
+  const [codeContainerVisible, setCodeContainerVisible] = useState<boolean>(false)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [codeImage, setCodeImage] = useState<string>('')
-  const [codeEditorLeft, setCodeEditorLeft] = useState<number>(0)
-  const [codeEditorTop, setCodeEditorTop] = useState<number>(0)
-  const [codeEditorWidth, setCodeEditorWidth] = useState<number>(100)
-  const [codeEditorHeight, setCodeEditorHeight] = useState<number>(100)
+  const [codeContainerLeft, setCodeContainerLeft] = useState<number>(0)
+  const [codeContainerTop, setCodeContainerTop] = useState<number>(0)
+  const [codeContainerWidth, setCodeContainerWidth] = useState<number>(100)
+  const [codeContainerHeight, setCodeContainerHeight] = useState<number>(100)
+  const [languageSupport, setLanguageSupport] = useState<LanguageSupport | StreamLanguage<unknown> | undefined>(undefined)
+  const [codeLanguage, setCodeLanguage] = useState<ValueType>(Languages.PlainText)
+  const [showLineNumber, setShowLineNumber] = useState<boolean>(true)
   const newTabIndex = useRef(4)
   const [panes, setPanes] = useState(initialPanes)
   const panesRef = useRef(initialPanes)
-  const codeEditorRef = useRef<ReactCodeMirrorRef>()
-  const codeEditorTargetRef = useRef<CodeContainer>()
+  const codeContainerRef = useRef<ReactCodeMirrorRef>()
+  const codeContainerTargetRef = useRef<CodeContainer>()
   const sensor = useSensor(PointerSensor, { activationConstraint: { distance: 10 } })
   // const [paneTititle, setPaneTitle, ] = useState<string>('hello')
   //const paneTitleRef = useRef(null)
@@ -486,6 +495,7 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
     setTextToolbarVisible(false)
     setTableToolbarVisible(false)
     setPoolToolbarVisible(false)
+    setCodeContainerVisible(false)
   }
   //
   // const saveData = () => {}
@@ -746,6 +756,7 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
   const handleSelectionChange = (e: EditorEvent) => {
     let tableSelected = false
     let poolSelected = false
+    let codeContainerSelected = false
     if (Utils.currentEditor && e.source.selectionLayer.getEditorItemCount() === 1) {
       let item = e.source.selectionLayer.getEditorItem(0) as Item
       let container = document.getElementById('editor-container')
@@ -769,6 +780,11 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
         setPoolHorizontal(item.horizontal)
         setPoolTextHorizontal(item.poolTextHorizontal)
         setPoolStageTextHorizontal(item.stageTextHorizontal)
+      } else if (item instanceof CodeContainer) {
+        setCodeContainerToolbarLeft(left + position.left)
+        setCodeContainerToolbarTop(top + position.top)
+        setCodeContainerToolbarVisible(true)
+        codeContainerSelected = true
       }
       refreshSelectionInfo(Utils.currentEditor)
     }
@@ -777,6 +793,9 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
     }
     if (!poolSelected) {
       setPoolToolbarVisible(false)
+    }
+    if (!codeContainerSelected) {
+      setCodeContainerToolbarVisible(false)
     }
     if (Utils.currentEditor && e.source.selectionLayer.getEditorItemCount() > 0) {
       setPopupType(PopupType.SHAPES)
@@ -826,11 +845,19 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
         setPoolTextHorizontal(item.poolTextHorizontal)
         setPoolStageTextHorizontal(item.stageTextHorizontal)
       } else if (item instanceof CodeContainer && Utils.currentEditor.inCodeEditing()) {
-        setCodeEditorLeft(left + position.left)
-        setCodeEditorTop(top + position.top)
-        setCodeEditorWidth(item.width)
-        setCodeEditorHeight(item.height)
-        setCodeEditorVisible(true)
+        setCodeContainerLeft(left + position.left)
+        setCodeContainerTop(top + position.top)
+        setCodeContainerWidth(item.width)
+        setCodeContainerHeight(item.height)
+        setCodeContainerVisible(true)
+        setCodeContainerToolbarLeft(left + position.left)
+        setCodeContainerToolbarTop(top + position.top)
+        setCodeContainerToolbarVisible(true)
+      } else if (item instanceof CodeContainer) {
+        setCodeContainerToolbarLeft(left + position.left)
+        setCodeContainerToolbarTop(top + position.top)
+        setCodeContainerToolbarVisible(true)
+        Utils.currentEditor.beginCodeEdit()
       }
     }
   }
@@ -849,7 +876,8 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
       } else if (item instanceof PoolCustomContainer) {
         setPoolToolbarVisible(false)
       } else if (item instanceof CodeContainer) {
-        setCodeEditorVisible(false)
+        setCodeContainerVisible(false)
+        setCodeContainerToolbarVisible(false)
       }
     }
   }
@@ -2717,19 +2745,19 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
       let left = point.x * Utils.currentEditor.zoom - scrollLeft
       let top = point.y * Utils.currentEditor.zoom - scrollTop
       if (item instanceof CodeContainer && Utils.currentEditor.inCodeEditing()) {
-        setCodeEditorLeft(left + position.left)
-        setCodeEditorTop(top + position.top)
-        // setCodeEditorLeft(left)
-        //setCodeEditorTop(top)
-        setCodeEditorWidth(item.width)
-        setCodeEditorHeight(item.height)
-        setCodeEditorVisible(true)
-        codeEditorTargetRef.current = item
+        setCodeContainerLeft(left + position.left)
+        setCodeContainerTop(top + position.top)
+        // setCodeContainerLeft(left)
+        //setCodeContainerTop(top)
+        setCodeContainerWidth(item.width)
+        setCodeContainerHeight(item.height)
+        setCodeContainerVisible(true)
+        codeContainerTargetRef.current = item
         //setCodeContent(item.codeContent)
-        if (codeEditorRef.current?.view?.state) {
-          const text = codeEditorRef.current.view.state.doc
+        if (codeContainerRef.current?.view?.state) {
+          const text = codeContainerRef.current.view.state.doc
           const textLength = text.length
-          codeEditorRef.current.view.dispatch({ changes: { from: 0, to: textLength, insert: item.codeContent } })
+          codeContainerRef.current.view.dispatch({ changes: { from: 0, to: textLength, insert: item.codeContent } })
         }
       }
       refreshSelectionInfo(Utils.currentEditor)
@@ -2738,20 +2766,24 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleCodeEditEnd = (e: EditorEvent) => {
-    if (Utils.currentEditor && codeEditorTargetRef.current) {
-      console.log(`code target = ${codeEditorTargetRef.current}`)
+    if (Utils.currentEditor && codeContainerTargetRef.current) {
+      console.log(`code target = ${codeContainerTargetRef.current}`)
     }
-    if (codeEditorRef.current && codeEditorRef.current.editor && codeEditorRef.current.state && codeEditorRef.current.view?.state) {
-      const codeContent = codeEditorRef.current.view.state.doc.toString()
+    if (codeContainerRef.current && codeContainerRef.current.editor && codeContainerRef.current.state && codeContainerRef.current.view?.state) {
+      //TODO: FIXME, doesn't work and so comment now. Move & reset selection to start,
+      //codeContainerRef.current.view.dispatch({ selection: { anchor: 0, head: 0 } })
+      //codeContainerRef.current.view.dispatch({ selection: EditorSelection.create([EditorSelection.cursor(0)], 0) })
+
+      const codeContent = codeContainerRef.current.view.state.doc.toString()
       setCodeContent(codeContent ? codeContent : '')
-      html2canvas(codeEditorRef.current.editor).then((canvas) => {
+      html2canvas(codeContainerRef.current.editor).then((canvas) => {
         const url = canvas.toDataURL()
         setCodeImage(url)
         //SystemUtils.generateDownloadFile(url, `test.txt`)
-        if (Utils.currentEditor && codeEditorTargetRef.current) {
+        if (Utils.currentEditor && codeContainerTargetRef.current) {
           const beforeSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
-          codeEditorTargetRef.current.codeContent = codeContent
-          codeEditorTargetRef.current.codeImage = url
+          codeContainerTargetRef.current.codeContent = codeContent
+          codeContainerTargetRef.current.codeImage = url
           const afterSelections = EditorHelper.generateEditorSelections(Utils.currentEditor)
           const operation: Operation = new Operation(
             Utils.currentEditor,
@@ -2767,11 +2799,11 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
           )
           Utils.currentEditor.operationService.addOperation(operation)
           Utils.currentEditor.triggerOperationChange()
-          codeEditorTargetRef.current = undefined
+          codeContainerTargetRef.current = undefined
         }
       })
     }
-    setCodeEditorVisible(false)
+    setCodeContainerVisible(false)
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -2780,11 +2812,11 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
   }
 
   const handleCodeFocus = () => {
-    if (codeEditorRef.current && Utils.currentEditor) {
+    if (codeContainerRef.current && Utils.currentEditor) {
       const editorItems = Utils.currentEditor.selectionLayer.getAllEditorItems()
       editorItems.forEach((editorItem: EditorItem) => {
         if (editorItem instanceof CodeContainer) {
-          codeEditorTargetRef.current = editorItem
+          codeContainerTargetRef.current = editorItem
         }
       })
     }
@@ -2793,6 +2825,106 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
   const handleCodeBlur = () => {
     if (Utils.currentEditor) {
       Utils.currentEditor.finishCodeEdit()
+    }
+  }
+
+  const codeLanguages = [
+    { value: Languages.PlainText, label: Languages.PlainText },
+    { value: Languages.C, label: Languages.C },
+    { value: Languages.CPP, label: Languages.CPP },
+    { value: Languages.CSharp, label: Languages.CSharp },
+    { value: Languages.CSS, label: Languages.CSS },
+    { value: Languages.D, label: Languages.D },
+    { value: Languages.DART, label: Languages.DART },
+    { value: Languages.GO, label: Languages.GO },
+    { value: Languages.HTML, label: Languages.HTML },
+    { value: Languages.KOTLIN, label: Languages.KOTLIN },
+    { value: Languages.Java, label: Languages.Java },
+    { value: Languages.Javascript, label: Languages.Javascript },
+    { value: Languages.JSON, label: Languages.JSON },
+    { value: Languages.PHP, label: Languages.PHP },
+    { value: Languages.PYTHON, label: Languages.PYTHON },
+    { value: Languages.RUBY, label: Languages.RUBY },
+    { value: Languages.RUST, label: Languages.RUST },
+    { value: Languages.SQL, label: Languages.SQL },
+    { value: Languages.SWIFT, label: Languages.SWIFT },
+    { value: Languages.TYPESCRIPT, label: Languages.TYPESCRIPT },
+  ]
+
+  const handleCodeLanguageChange = (value: ValueType) => {
+    setCodeLanguage(value)
+    switch (value) {
+      case Languages.C:
+        setLanguageSupport(langs.c())
+        break
+      case Languages.CPP:
+        setLanguageSupport(langs.cpp())
+        break
+      case Languages.CSharp:
+        setLanguageSupport(langs.csharp())
+        break
+      case Languages.CSS:
+        setLanguageSupport(langs.css())
+        break
+      case Languages.D:
+        setLanguageSupport(langs.d())
+        break
+      case Languages.DART:
+        setLanguageSupport(langs.dart())
+        break
+      case Languages.GO:
+        setLanguageSupport(langs.go())
+        break
+      case Languages.HTML:
+        setLanguageSupport(langs.html())
+        break
+      case Languages.KOTLIN:
+        setLanguageSupport(langs.kotlin())
+        break
+      case Languages.Javascript:
+        setLanguageSupport(langs.javascript())
+        break
+      case Languages.Java:
+        setLanguageSupport(langs.java())
+        break
+      case Languages.JSON:
+        setLanguageSupport(langs.json())
+        break
+      case Languages.PHP:
+        setLanguageSupport(langs.php())
+        break
+      case Languages.PYTHON:
+        setLanguageSupport(langs.python())
+        break
+      case Languages.RUBY:
+        setLanguageSupport(langs.ruby())
+        break
+      case Languages.RUST:
+        setLanguageSupport(langs.rust())
+        break
+      case Languages.SQL:
+        setLanguageSupport(langs.sql())
+        break
+      case Languages.SWIFT:
+        setLanguageSupport(langs.swift())
+        break
+      case Languages.TYPESCRIPT:
+        setLanguageSupport(langs.typescript())
+        break
+      case Languages.PlainText:
+      default:
+        setLanguageSupport(undefined)
+        break
+    }
+    if (Utils.currentEditor) {
+      Utils.currentEditor.beginCodeEdit()
+    }
+  }
+
+  const handleShowLineNumberChanged = () => {
+    setShowLineNumber(!showLineNumber)
+    if (Utils.currentEditor) {
+      Utils.currentEditor.beginCodeEdit()
     }
   }
 
@@ -3066,25 +3198,58 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
     </FloatButton.Group>
   )
 
-  const codeEditor = (
+  const codeContainerToolbars = (
+    <FloatButton.Group
+      style={{
+        left: codeContainerToolbarLeft,
+        top: codeContainerToolbarTop - 40,
+        height: 32,
+        display: codeContainerToolbarVisible ? 'block' : 'none',
+      }}
+    >
+      <Space
+        direction="horizontal"
+        style={{
+          backgroundColor: Utils.currentEditor?.enableDarkTheme ? workspaceBackground : 'white',
+          borderColor: 'silver',
+          borderWidth: 1,
+          borderStyle: 'solid',
+          padding: 2,
+        }}
+      >
+        <Tooltip title={<FormattedMessage id="workspace.header.title.pool-toolbar.add-pool" />}>
+          <Select size="small" value={codeLanguage} onChange={handleCodeLanguageChange} style={{ width: 100 }} options={codeLanguages} bordered={false} />
+        </Tooltip>
+        <Divider type="vertical" style={{ margin: 0 }} />
+        <Tooltip title={<FormattedMessage id="workspace.header.title.pool-toolbar.delete-pool" />}>
+          <Button type={showLineNumber ? 'primary' : 'text'} size="small" icon={<OrderedListOutlined />} onClick={handleShowLineNumberChanged} />
+        </Tooltip>
+      </Space>
+    </FloatButton.Group>
+  )
+
+  const codeContainer = (
     <CodeMirror
-      ref={codeEditorRef as MutableRefObject<ReactCodeMirrorRef>}
+      ref={codeContainerRef as MutableRefObject<ReactCodeMirrorRef>}
       value={codeContent}
-      extensions={[langs.java()]}
+      extensions={languageSupport ? [languageSupport] : []}
       //language={'JavaScript'}
       //rehypePlugins={[[rehypePrism, { ignoreMissing: true, showLineNumbers: true }]]}
       onChange={handleCodeChange}
       onBlur={handleCodeBlur}
       onFocus={handleCodeFocus}
-      width={codeEditorWidth + 'px'}
-      height={codeEditorHeight + 'px'}
+      width={codeContainerWidth + 'px'}
+      height={codeContainerHeight + 'px'}
+      basicSetup={{
+        lineNumbers: showLineNumber,
+      }}
       style={{
         position: 'fixed',
-        left: codeEditorLeft,
-        top: codeEditorTop,
-        width: codeEditorWidth,
-        height: codeEditorHeight,
-        display: codeEditorVisible ? 'block' : 'none',
+        left: codeContainerLeft,
+        top: codeContainerTop,
+        width: codeContainerWidth,
+        height: codeContainerHeight,
+        display: codeContainerVisible ? 'block' : 'none',
         backgroundColor: '#F5F5F5',
         overflow: 'auto',
         fontFamily: 'ui-monospace, SF Mono, Consolas, Menlo, monospace',
@@ -3111,7 +3276,8 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
           {textToolbars}
           {tableToolbars}
           {poolToolbars}
-          {codeEditor}
+          {codeContainer}
+          {codeContainerToolbars}
           <div style={{ width: contentWidth, height: contentHeight }}>
             <div style={{ width: '100%', height: Editor.SHADOW_SIZE, backgroundColor: workspaceBackground }} />
             <div style={{ width: '100%', height: editorHeight, boxSizing: 'border-box' }}>
