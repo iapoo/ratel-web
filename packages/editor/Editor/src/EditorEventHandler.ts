@@ -935,6 +935,8 @@ export class EditorEventHandler {
         } else if (selection === containerEntity) {
           // It occurs when container selected and then create new shape into the container
           //Do nothing here
+        } else if (selection instanceof Connector) {
+          // Do nothing for Connector
         } else {
           const [sLeft, sTop] = Editor.getItemsBoundary([selection])
           const [cLeft, cTop] = Editor.getItemsBoundary([containerEntity])
