@@ -857,7 +857,9 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
         setCodeContainerToolbarLeft(left + position.left)
         setCodeContainerToolbarTop(top + position.top)
         setCodeContainerToolbarVisible(true)
-        Utils.currentEditor.beginCodeEdit()
+        //Utils.currentEditor.beginCodeEdit()
+        //refresh code editor appearance
+        //handleCodeEditEnd(e)
       }
     }
   }

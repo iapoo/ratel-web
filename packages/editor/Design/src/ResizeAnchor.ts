@@ -2,7 +2,7 @@
 /* eslint-disable complexity */
 import { Point2, Rectangle, Rotation } from '@ratel-web/engine'
 import { Editor, EditorMode, SelectionLayer } from '../../Editor'
-import { EditorItem, TableEntity } from '../../Items'
+import { CodeContainer, EditorItem, TableEntity } from '../../Items'
 import { EntityShapeFreezeType } from '../../Shapes'
 import { EditorUtils } from '../../Theme'
 import { Anchor } from './Anchor'
@@ -77,6 +77,10 @@ export class ResizeAnchor extends Anchor {
       theSelectionLayer.inHolder = true
       theSelectionLayer.removeAllEditorItems()
       theSelectionLayer.addEditorItem(this.target)
+    }
+    //Code Container has independent component which need additional handle here
+    if (theSelectionLayer.getEditorItemCount() === 1 && this.target instanceof CodeContainer) {
+      this.editor.beginCodeEdit()
     }
     this.editor.finishOperation(this.target)
   }
