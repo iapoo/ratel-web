@@ -206,7 +206,7 @@ const Header: FC<HeaderProps> = ({
   const [connectorLineType, setConnectorLineType] = useState<string>(Constants.CONNECTOR_LINE_TYPE_STRAIGHT)
   const [connectorLineMode, setConnectorLineMode] = useState<string>(Constants.CONNECTOR_LINE_MODE_SIGNLE)
   const [connectorLineStartArrow, setConnectorLineStartArrow] = useState<string>(ConnectorArrowTypes[0].name)
-  const [connectorLineEndArrow, setConnectorLineEndArrow] = useState<string>(ConnectorArrowTypes[0].name)
+  const [connectorLineEndArrow, setConnectorLineEndArrow] = useState<string>(ConnectorArrowTypes[1].name)
   const [connectorSelected, setConnectorSelected] = useState<boolean>(false)
   const [teamWindowVisible, setTeamWindowVisible] = useState<boolean>(false)
   const [shareWindowVisible, setShareWindowVisible] = useState<boolean>(false)
@@ -480,7 +480,7 @@ const Header: FC<HeaderProps> = ({
     setFontColor(Constants.COLOR_FONT_DEFAULT)
     setStrokeDashStyle(Constants.STROKE_DASH_STYLE_SOLID)
     setConnectorLineStartArrow(ConnectorArrowTypes[0].name)
-    setConnectorLineEndArrow(ConnectorArrowTypes[0].name)
+    setConnectorLineEndArrow(ConnectorArrowTypes[1].name)
   }
 
   const handleSelectionChange = (e: EditorEvent) => {

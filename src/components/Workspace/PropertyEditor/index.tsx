@@ -50,7 +50,7 @@ const PropertyEditor: FC<PropertyEditorProps> = ({ previousEditor, currentEditor
   const [connectorLineType, setConnectorLineType] = useState<string>(Constants.CONNECTOR_LINE_TYPE_STRAIGHT)
   const [connectorLineMode, setConnectorLineMode] = useState<string>(Constants.CONNECTOR_LINE_MODE_SIGNLE)
   const [connectorLineStartArrow, setConnectorLineStartArrow] = useState<string>(ConnectorArrowTypes[0].name)
-  const [connectorLineEndArrow, setConnectorLineEndArrow] = useState<string>(ConnectorArrowTypes[0].name)
+  const [connectorLineEndArrow, setConnectorLineEndArrow] = useState<string>(ConnectorArrowTypes[1].name)
   const [doubleLineGap, setDoubleLineGap] = useState<number>(Constants.DOUBLE_LINE_GAP_DEFAULT)
   const [connectorSelected, setConnectorSelected] = useState<boolean>(false)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
