@@ -55,6 +55,9 @@ export class CustomCodeShape extends EntityShape {
         true,
       )
     }
+    if (this.stroked) {
+      graphics.drawPath(this.path, this.stroke)
+    }
   }
 
   public update() {

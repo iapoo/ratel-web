@@ -3244,6 +3244,9 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
       height={codeContainerHeight + 'px'}
       basicSetup={{
         lineNumbers: showLineNumber,
+        highlightActiveLine: false,
+        highlightActiveLineGutter: false,
+        foldGutter: false,
       }}
       style={{
         position: 'fixed',
@@ -3252,8 +3255,9 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
         width: codeContainerWidth,
         height: codeContainerHeight,
         display: codeContainerVisible ? 'block' : 'none',
-        backgroundColor: '#F5F5F5',
+        //backgroundColor: '#F5F5F5',
         overflow: 'auto',
+        fontSize: fontSize,
         fontFamily: 'ui-monospace, SF Mono, Consolas, Menlo, monospace',
       }}
     />

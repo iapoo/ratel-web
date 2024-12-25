@@ -1687,7 +1687,7 @@ export class EditorEventHandler {
 
   private handleMouseUpDefault(clickedEditorItem: EditorItem, e: PointerEvent) {
     const targetPoint = this.findEditorItemPoint(clickedEditorItem, e.x, e.y)
-    if (clickedEditorItem instanceof TableEntity || clickedEditorItem instanceof PoolCustomContainer) {
+    if (clickedEditorItem instanceof TableEntity || clickedEditorItem instanceof PoolCustomContainer || clickedEditorItem instanceof CodeContainer) {
       //Need this to update toolbar in time
       this._editor.triggerSelectionResized()
     }

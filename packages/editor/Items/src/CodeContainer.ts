@@ -61,9 +61,10 @@ export class CodeContainer extends ShapeEntity {
     this._codeContent = codeContent
     const customTypeInfo = this.parseTypeInfo({ shapeType: TYPE_CODE_CONTAINER })
     this._shape = new CustomCodeShape(left, top, width, height, codeImage, this.buildShape, customTypeInfo)
-    this.stroked = false
     this.filled = false
     this.initializeTheme()
+    this.lineWidth = 0.25
+    this.useTheme = false
   }
 
   public get codeImage() {

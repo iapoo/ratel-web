@@ -51,6 +51,7 @@ import {
 } from '@ratel-web/editor/CustomItems/UML'
 import { Editor, EditorEvent } from '@ratel-web/editor/Editor'
 import {
+  CodeContainer,
   Connector,
   ConnectorArrowTypes,
   ContainerEntity,
@@ -200,6 +201,7 @@ const Header: FC<HeaderProps> = ({
   const [fontItalic, setFontItalic] = useState<boolean>(false)
   const [fontUnderline, setFontUnderline] = useState<boolean>(false)
   const [selectionValid, setSelectionValid] = useState<boolean>(false)
+  const [codeContainerSelected, setCodeContainerSelected] = useState<boolean>(false)
   const [editorUndoable, setEditorUndoable] = useState<boolean>(false)
   const [editorRedoable, setEditorRedoable] = useState<boolean>(false)
   const [strokeDashStyle, setStrokeDashStyle] = useState<string>(Constants.STROKE_DASH_STYLE_SOLID)
@@ -404,6 +406,11 @@ const Header: FC<HeaderProps> = ({
       } else {
         setSelectionValid(false)
       }
+      if (currentEditor.selectionLayer.getEditorItemCount() === 1 && currentEditor.selectionLayer.getEditorItem(0) instanceof CodeContainer) {
+        setCodeContainerSelected(true)
+      } else {
+        setCodeContainerSelected(false)
+      }
       let connectorSelected = true
       if (currentEditor.selectionLayer.getEditorItemCount() > 0) {
         currentEditor.selectionLayer.getAllEditorItems().forEach((editorItem: EditorItem) => {
@@ -490,6 +497,11 @@ const Header: FC<HeaderProps> = ({
     } else {
       setSelectionValid(false)
     }
+    if (e.source.selectionLayer.getEditorItemCount() === 1 && e.source.selectionLayer.getEditorItem(0) instanceof CodeContainer) {
+      setCodeContainerSelected(true)
+    } else {
+      setCodeContainerSelected(false)
+    }
     let connectorSelected = true
     if (e.source.selectionLayer.getEditorItemCount() > 0) {
       e.source.selectionLayer.getAllEditorItems().forEach((editorItem: EditorItem) => {
@@ -514,6 +526,11 @@ const Header: FC<HeaderProps> = ({
       setSelectionValid(true)
     } else {
       setSelectionValid(false)
+    }
+    if (e.source.selectionLayer.getEditorItemCount() === 1 && e.source.selectionLayer.getEditorItem(0) instanceof CodeContainer) {
+      setCodeContainerSelected(true)
+    } else {
+      setCodeContainerSelected(false)
     }
     let connectorSelected = true
     if (e.source.selectionLayer.getEditorItemCount() > 0) {
@@ -2812,7 +2829,7 @@ const Header: FC<HeaderProps> = ({
                   onChange={handleFontNameChange}
                   style={{ width: 120 }}
                   popupMatchSelectWidth={false}
-                  disabled={!selectionValid}
+                  disabled={!selectionValid || codeContainerSelected}
                   options={FontNameOptions}
                   bordered={false}
                 />
@@ -2829,14 +2846,20 @@ const Header: FC<HeaderProps> = ({
                 />
               </Tooltip>
               <Tooltip title={<FormattedMessage id="workspace.header.title.font-bold" />}>
-                <Button type={fontBold ? 'primary' : 'text'} size="small" icon={<BoldOutlined />} disabled={!selectionValid} onClick={handleBoldChanged} />
+                <Button
+                  type={fontBold ? 'primary' : 'text'}
+                  size="small"
+                  icon={<BoldOutlined />}
+                  disabled={!selectionValid || codeContainerSelected}
+                  onClick={handleBoldChanged}
+                />
               </Tooltip>
               <Tooltip title={<FormattedMessage id="workspace.header.title.font-italic" />}>
                 <Button
                   type={fontItalic ? 'primary' : 'text'}
                   size="small"
                   icon={<ItalicOutlined />}
-                  disabled={!selectionValid}
+                  disabled={!selectionValid || codeContainerSelected}
                   onClick={handleItalicChanged}
                 />
               </Tooltip>
@@ -2845,7 +2868,7 @@ const Header: FC<HeaderProps> = ({
                   type={fontUnderline ? 'primary' : 'text'}
                   size="small"
                   icon={<UnderlineOutlined />}
-                  disabled={!selectionValid}
+                  disabled={!selectionValid || codeContainerSelected}
                   onClick={handleUnderlineChanged}
                 />
               </Tooltip>
@@ -2855,7 +2878,7 @@ const Header: FC<HeaderProps> = ({
                   type={textAlignment === Constants.TEXT_ALIGNMENT_LEFT ? 'primary' : 'text'}
                   size="small"
                   icon={<AlignLeftOutlined />}
-                  disabled={!selectionValid}
+                  disabled={!selectionValid || codeContainerSelected}
                   onClick={() => handleTextAlignmentChanged(Constants.TEXT_ALIGNMENT_LEFT)}
                 />
               </Tooltip>
@@ -2864,7 +2887,7 @@ const Header: FC<HeaderProps> = ({
                   type={textAlignment === Constants.TEXT_ALIGNMENT_CENTER ? 'primary' : 'text'}
                   size="small"
                   icon={<AlignCenterOutlined />}
-                  disabled={!selectionValid}
+                  disabled={!selectionValid || codeContainerSelected}
                   onClick={() => handleTextAlignmentChanged(Constants.TEXT_ALIGNMENT_CENTER)}
                 />
               </Tooltip>
@@ -2873,7 +2896,7 @@ const Header: FC<HeaderProps> = ({
                   type={textAlignment === Constants.TEXT_ALIGNMENT_RIGHT ? 'primary' : 'text'}
                   size="small"
                   icon={<AlignRightOutlined />}
-                  disabled={!selectionValid}
+                  disabled={!selectionValid || codeContainerSelected}
                   onClick={() => handleTextAlignmentChanged(Constants.TEXT_ALIGNMENT_RIGHT)}
                 />
               </Tooltip>
@@ -2883,7 +2906,7 @@ const Header: FC<HeaderProps> = ({
                   type={textVerticalAlignment === Constants.PLACE_HOLDER_ALIGNMENT_TOP ? 'primary' : 'text'}
                   size="small"
                   icon={<VerticalAlignTopOutlined />}
-                  disabled={!selectionValid}
+                  disabled={!selectionValid || codeContainerSelected}
                   onClick={() => handleTextVerticalAlignmentChanged(Constants.PLACE_HOLDER_ALIGNMENT_TOP)}
                 />
               </Tooltip>
@@ -2892,7 +2915,7 @@ const Header: FC<HeaderProps> = ({
                   type={textVerticalAlignment === Constants.PLACE_HOLDER_ALIGNMENT_MIDDLE ? 'primary' : 'text'}
                   size="small"
                   icon={<VerticalAlignMiddleOutlined />}
-                  disabled={!selectionValid}
+                  disabled={!selectionValid || codeContainerSelected}
                   onClick={() => handleTextVerticalAlignmentChanged(Constants.PLACE_HOLDER_ALIGNMENT_MIDDLE)}
                 />
               </Tooltip>
@@ -2901,7 +2924,7 @@ const Header: FC<HeaderProps> = ({
                   type={textVerticalAlignment === Constants.PLACE_HOLDER_ALIGNMENT_BOTTOM ? 'primary' : 'text'}
                   size="small"
                   icon={<VerticalAlignBottomOutlined />}
-                  disabled={!selectionValid}
+                  disabled={!selectionValid || codeContainerSelected}
                   onClick={() => handleTextVerticalAlignmentChanged(Constants.PLACE_HOLDER_ALIGNMENT_BOTTOM)}
                 />
               </Tooltip>
@@ -2913,7 +2936,7 @@ const Header: FC<HeaderProps> = ({
                   trigger="hover"
                   onChange={handleFillColorChange}
                   onChangeComplete={handleFillColorChangeComplete}
-                  disabled={!selectionValid}
+                  disabled={!selectionValid || codeContainerSelected}
                   destroyTooltipOnHide={true}
                 />
               </Tooltip>
@@ -2935,7 +2958,7 @@ const Header: FC<HeaderProps> = ({
                   trigger="hover"
                   onChange={handleFontColorChange}
                   onChangeComplete={handleFontColorChangeComplete}
-                  disabled={!selectionValid}
+                  disabled={!selectionValid || codeContainerSelected}
                   destroyTooltipOnHide={true}
                 />
               </Tooltip>
@@ -2948,7 +2971,7 @@ const Header: FC<HeaderProps> = ({
                   onChange={handleLineWidthChange}
                   size="small"
                   style={{ width: 50, display: 'none' }}
-                  disabled={!selectionValid}
+                  disabled={!selectionValid || codeContainerSelected}
                 />
                 <Select
                   size="small"
