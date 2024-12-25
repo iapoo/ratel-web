@@ -93,7 +93,7 @@ export class EditorEventHandler {
         this.createConnector(clickedEditorItem, e)
       } else if (clickedEditorItem) {
         if (!theSelectionLayer.hasEditorItem(clickedEditorItem)) {
-          this.updateSelection(clickedEditorItem, e)
+          this.updateSelection(clickedEditorItem)
           //if (!((clickedEditorItem as Item).parent instanceof FrameEntity || clickedEditorItem.fixed)) {
           // this._editorContext.inMoving = true
           //}
@@ -121,7 +121,7 @@ export class EditorEventHandler {
             //if (!((clickedEditorItem as Item).parent instanceof FrameEntity) || clickedEditorItem.fixed) {
             this._editor.beginOperation(clickedEditorItem)
             this._editorContext.inMoving = true
-            this.startMoveOutline(e)
+            this.startMoveOutline()
             //}
           }
         }
@@ -172,7 +172,7 @@ export class EditorEventHandler {
     if (this._editorContext.inMoving) {
       // Shape is moved out of container here
       this.removeItemsFromContainer(e)
-      this.endMoveOutline(e)
+      this.endMoveOutline()
       this._editorContext.inMoving = false
       this._editorContext.moveStarted = false
     }
@@ -444,7 +444,7 @@ export class EditorEventHandler {
     const theSelectionLayer = this._editor.selectionLayer as SelectionLayer
     if (clickedEditorItem) {
       if (!theSelectionLayer.hasEditorItem(clickedEditorItem)) {
-        this.updateSelection(clickedEditorItem, e)
+        this.updateSelection(clickedEditorItem)
       } else if (this._editorContext.textFocused) {
         if (clickedEditorItem.shape.selection.length === 0) {
           const targetPoint = this.findEditorItemPoint(clickedEditorItem, e.x, e.y)
@@ -570,11 +570,11 @@ export class EditorEventHandler {
       this.startContainerSelection()
       this.handleContainerSelection(containerEntity)
       this.handleDefaultMoveInMoving(e)
-      this.handleMoveOutline(e)
+      this.handleMoveOutline()
     } else {
       this.endContainerSelection()
       this.handleDefaultMoveInMoving(e)
-      this.handleMoveOutline(e)
+      this.handleMoveOutline()
     }
   }
 
@@ -689,18 +689,15 @@ export class EditorEventHandler {
       }
     }
   }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private startMoveOutline(e: PointerEvent) {
+  private startMoveOutline() {
     this._editorContext.moveLayer.addNode(this._editorContext.selectionOutlineShape)
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private endMoveOutline(e: PointerEvent) {
+  private endMoveOutline() {
     this._editorContext.moveLayer.removeNode(this._editorContext.selectionOutlineShape)
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private handleMoveOutline(e: PointerEvent) {
+  private handleMoveOutline() {
     //Don't show outline if only connector selected
     if (this._editor.selectionLayer.getEditorItemCount() === 1 && this._editor.selectionLayer.getEditorItem(0) instanceof Connector) {
       return
@@ -1197,9 +1194,54 @@ export class EditorEventHandler {
   }
 
   private handleOperationUndoUpdateItems(items: EditorItemInfo[]) {
+    const selectedItems = this._editorContext.selectionLayer.getAllEditorItems()
+    let restoreSelectionOutline = selectedItems.length === items.length
     items.forEach((editorItemInfo) => {
       this.handleUpdateEditorItem(editorItemInfo)
+      if (restoreSelectionOutline) {
+        let found = false
+        selectedItems.forEach((selectedItem) => {
+          if (selectedItem.id === editorItemInfo.id) {
+            found = true
+          }
+        })
+        if (!found) {
+          restoreSelectionOutline = false
+        }
+      }
     })
+    if (restoreSelectionOutline) {
+      this.restoreSelectionOutline(selectedItems)
+    }
+  }
+
+  private findEditorItemById(id: string, editorItems: EditorItem[]): EditorItem | undefined {
+    for (let i = 0; i < editorItems.length; i++) {
+      const editorItem = editorItems[i]
+      if (editorItem.id === id) {
+        return editorItem
+      }
+      let foundEditorItem = this.findEditorItemById(id, editorItem.items)
+      if (foundEditorItem) {
+        return foundEditorItem
+      }
+    }
+    return undefined
+  }
+  private restoreSelectionOutline(selectedItems: EditorItem[]) {
+    const newSelectedItems: EditorItem[] = []
+    const editorItems = this._editorContext.contentLayer.getAllEditorItems()
+    selectedItems.forEach((selectedItem) => {
+      const item = this.findEditorItemById(selectedItem.id, editorItems)
+      if (item) {
+        newSelectedItems.push(item)
+      }
+    })
+    if (newSelectedItems.length > 0) {
+      this._editorContext.selectionLayer.removeAllEditorItems()
+      this._editor.selectionLayer.addEditorItems(newSelectedItems)
+    }
+    this.handleMoveOutline()
   }
 
   private handleOperationUndoAddSelectionItems(items: EditorItemInfo[]) {
@@ -1245,9 +1287,25 @@ export class EditorEventHandler {
   }
 
   private handleOperationRedoUpdateItems(items: EditorItemInfo[]) {
+    const selectedItems = this._editorContext.selectionLayer.getAllEditorItems()
+    let restoreSelectionOutline = selectedItems.length === items.length
     items.forEach((editorItemInfo) => {
       this.handleUpdateEditorItem(editorItemInfo)
+      if (restoreSelectionOutline) {
+        let found = false
+        selectedItems.forEach((selectedItem) => {
+          if (selectedItem.id === editorItemInfo.id) {
+            found = true
+          }
+        })
+        if (!found) {
+          restoreSelectionOutline = false
+        }
+      }
     })
+    if (restoreSelectionOutline) {
+      this.restoreSelectionOutline(selectedItems)
+    }
   }
 
   private handleOperationRedoAddSelectionItems(items: EditorItemInfo[]) {
@@ -1339,6 +1397,7 @@ export class EditorEventHandler {
     //item.boundary = Rectangle.makeLTWH(editorItemInfo.left, editorItemInfo.top, editorItemInfo.width, editorItemInfo.height)
     //item.rotation = new Rotation(item.width / 2, item.height / 2, editorItemInfo.rotation)
     //item.text = editorItemInfo.text
+
     this.handleRemoveEditorItem(item.id)
     return this.handleAddEditorItem(editorItemInfo)
   }
@@ -1436,7 +1495,7 @@ export class EditorEventHandler {
     this.handleTableActiveCellShape()
   }
 
-  private updateSelection(clickedEditorItem: EditorItem, e: PointerEvent) {
+  private updateSelection(clickedEditorItem: EditorItem) {
     const theSelectionLayer = this._editor.selectionLayer as SelectionLayer
     theSelectionLayer.inHolder = true
     theSelectionLayer.removeAllEditorItems()
@@ -1447,7 +1506,7 @@ export class EditorEventHandler {
     this._editor.beginOperation(clickedEditorItem)
     this._editor.checkAndEndTextEdit()
     this._editor.finishTextEditOperation()
-    this.startMoveOutline(e)
+    this.startMoveOutline()
     if (this._editorContext.target) {
       this._editorContext.target.shape.focused = false
     }
@@ -1517,7 +1576,7 @@ export class EditorEventHandler {
       this._editorContext.targetItemIndex = -1
       this.handleTableActiveCellShape()
       this._editorContext.inMoving = true
-      this.startMoveOutline(e)
+      this.startMoveOutline()
     } else if (targetColumn) {
       // console.log('========0')
       this._editor.checkAndEndTextEdit()
@@ -1531,7 +1590,7 @@ export class EditorEventHandler {
       this.handleTableActiveCellShape()
       this._editorContext.targetItemIndex = -1
       this._editorContext.inMoving = true
-      this.startMoveOutline(e)
+      this.startMoveOutline()
     } else if (!onlyResizing) {
       const itemIndex = this.findTableItemIndex(clickedEditorItem, targetPoint.x, targetPoint.y)
       if (this._editorContext.targetItemIndex !== itemIndex) {
@@ -1545,7 +1604,7 @@ export class EditorEventHandler {
         this._editorContext.inMoving = true
         this._editor.checkAndStartTextEdit()
         this._editor.beginTextEditOperation(clickedEditorItem)
-        this.startMoveOutline(e)
+        this.startMoveOutline()
         const cellPoint = this.findEditorItemPoint(this._editorContext.targetItem, e.x, e.y)
         this.updateTextCursorLocation(this._editorContext.targetItem, cellPoint.x, cellPoint.y)
         this._editorContext.targetItem.shape.enter(cellPoint.x, cellPoint.y)
@@ -1562,7 +1621,7 @@ export class EditorEventHandler {
           this._editorContext.inMoving = true
           this._editor.checkAndEndTextEdit()
           this._editor.finishTextEditOperation()
-          this.startMoveOutline(e)
+          this.startMoveOutline()
         }
       }
     }
@@ -1923,7 +1982,7 @@ export class EditorEventHandler {
     this.handleMouseOverOnPool(editorItem, e, true)
     if (!onlyResizing) {
       if (this._editorContext.targetPoolXResizing || this._editorContext.targetPoolYResizing) {
-        this.updateSelection(editorItem, e)
+        this.updateSelection(editorItem)
         this._editorContext.target = editorItem
       } else {
         if (this._editorContext.textFocused) {
@@ -1939,10 +1998,10 @@ export class EditorEventHandler {
           //Fixed item is clicked and it is in text mode
           const isFixedItemInTextEditing = hasFixedItems && ifFixedItemIsTarget && !editorItem.fixed && editorItem !== this._editorContext.target
           if (isFixedItemSelected || isParentItemSelected) {
-            this.updateSelection(editorItem, e)
+            this.updateSelection(editorItem)
             this._editor.beginOperation(editorItem)
             this._editorContext.inMoving = true
-            this.startMoveOutline(e)
+            this.startMoveOutline()
           } else if (isFixedItemInTextEditing && this._editorContext.target) {
             const targetItemPoint = this.findEditorItemPoint(this._editorContext.target, e.x, e.y)
             this.updateTextCursorLocation(this._editorContext.target, targetItemPoint.x, targetItemPoint.y)
@@ -1957,12 +2016,12 @@ export class EditorEventHandler {
           if (!editorItem.locked) {
             this._editor.beginOperation(editorItem)
             this._editorContext.inMoving = true
-            this.startMoveOutline(e)
+            this.startMoveOutline()
           }
         }
       }
     } else {
-      this.updateSelection(editorItem, e)
+      this.updateSelection(editorItem)
       this._editorContext.target = editorItem
     }
   }
