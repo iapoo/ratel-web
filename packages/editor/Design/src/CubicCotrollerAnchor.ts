@@ -27,6 +27,7 @@ export class CubicControllerAnchor extends Anchor {
   public handlePointerEnter(): void {}
 
   public handlePointerLeave(): void {}
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public handlePointerClick(x: number, y: number) {}
   public handlePointerDown(x: number, y: number) {
     if (!this.target) {
@@ -35,14 +36,15 @@ export class CubicControllerAnchor extends Anchor {
     this._moving = true
     this._startX = x
     this._startY = y
-    this.editor.beginOperation(this.target)
+    this.editor.beginOperation()
   }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public handlePointerUp(x: number, y: number) {
     if (!this.target) {
       return
     }
     this._moving = false
-    this.editor.finishOperation(this.target)
+    this.editor.finishOperation()
   }
   public handlePointerMove(x: number, y: number) {
     if (!this.target) {

@@ -1221,36 +1221,36 @@ export class Editor extends Painter {
     }
   }
 
-  public beginOperation(editorItem: EditorItem) {
-    const theItem = editorItem as Item
-    if (theItem.parent) {
-      this._editorContext.startEditorItemInfos.length = 0
-      let editorItemInfo = OperationHelper.saveEditorItem(theItem.parent)
-      this._editorContext.startEditorItemInfos.push(editorItemInfo)
-    } else {
-      this._editorContext.startEditorItemInfos.length = 0
-      let editorItemInfo = OperationHelper.saveEditorItem(editorItem)
+  public beginOperation() {
+    const selectedEditorItems = this.selectionLayer.getAllEditorItems()
+    this._editorContext.startEditorItemInfos.length = 0
+    for (let i = 0; i < selectedEditorItems.length; i++) {
+      let operationItem = selectedEditorItems[i] as Item
+      while (operationItem.parent) {
+        operationItem = operationItem.parent
+      }
+      let editorItemInfo = OperationHelper.saveEditorItem(operationItem)
       this._editorContext.startEditorItemInfos.push(editorItemInfo)
     }
   }
 
-  public finishOperation(editorItem: EditorItem) {
-    const theItem = editorItem as Item
-    if (theItem.parent) {
-      let origItemInfo = this._editorContext.startEditorItemInfos[0]
-      let editorItemInfo = OperationHelper.saveEditorItem(theItem.parent)
-      let operation = new Operation(this, OperationType.UPDATE_ITEMS, [editorItemInfo], true, [origItemInfo])
-      this._operationService.addOperation(operation)
-      this.triggerOperationChange()
-      this._editorContext.startEditorItemInfos.length = 0
-    } else {
-      let origItemInfo = this._editorContext.startEditorItemInfos[0]
-      let editorItemInfo = OperationHelper.saveEditorItem(editorItem)
-      let operation = new Operation(this, OperationType.UPDATE_ITEMS, [editorItemInfo], true, [origItemInfo])
-      this._operationService.addOperation(operation)
-      this.triggerOperationChange()
-      this._editorContext.startEditorItemInfos.length = 0
+  public finishOperation() {
+    const selectedEditorItems = this.selectionLayer.getAllEditorItems()
+    let origItemInfos: EditorItemInfo[] = []
+    origItemInfos = origItemInfos.concat(this._editorContext.startEditorItemInfos)
+    const editorItemInfos: EditorItemInfo[] = []
+    for (let i = 0; i < selectedEditorItems.length; i++) {
+      let operationItem = selectedEditorItems[i] as Item
+      while (operationItem.parent) {
+        operationItem = operationItem.parent
+      }
+      let editorItemInfo = OperationHelper.saveEditorItem(operationItem)
+      editorItemInfos.push(editorItemInfo)
     }
+    let operation = new Operation(this, OperationType.UPDATE_ITEMS, editorItemInfos, true, origItemInfos)
+    this._operationService.addOperation(operation)
+    this.triggerOperationChange()
+    this._editorContext.startEditorItemInfos.length = 0
   }
 
   public dispose() {

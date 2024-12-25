@@ -42,7 +42,7 @@ export class AdapterAnchor extends Anchor {
     this._adaptering = true
     this._startX = x
     this._startY = y
-    this.editor.beginOperation(this.target)
+    this.editor.beginOperation()
   }
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public handlePointerUp(x: number, y: number) {
@@ -50,7 +50,7 @@ export class AdapterAnchor extends Anchor {
       return
     }
     this._adaptering = false
-    this.editor.finishOperation(this.target)
+    this.editor.finishOperation()
   }
   public handlePointerMove(x: number, y: number) {
     if (!this.target) {

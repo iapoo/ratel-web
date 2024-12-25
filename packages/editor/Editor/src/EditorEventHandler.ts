@@ -119,7 +119,7 @@ export class EditorEventHandler {
         } else {
           if (!clickedEditorItem.locked) {
             //if (!((clickedEditorItem as Item).parent instanceof FrameEntity) || clickedEditorItem.fixed) {
-            this._editor.beginOperation(clickedEditorItem)
+            this._editor.beginOperation()
             this._editorContext.inMoving = true
             this.startMoveOutline()
             //}
@@ -164,7 +164,7 @@ export class EditorEventHandler {
       }
     }
     if (this._editorContext.inMoving && this._editorContext.moveStarted && this._editorContext.target && this._editorContext.startEditorItemInfos.length > 0) {
-      this._editor.finishOperation(this._editorContext.target)
+      this._editor.finishOperation()
     }
     if (this._editorContext.inRangeSelecting) {
       this.endRangeSelecting(e)
@@ -1503,7 +1503,7 @@ export class EditorEventHandler {
     this._editor.triggerSelectionChange()
     this._editorContext.targetColumnResizing = false
     this._editorContext.targetRowResizing = false
-    this._editor.beginOperation(clickedEditorItem)
+    this._editor.beginOperation()
     this._editor.checkAndEndTextEdit()
     this._editor.finishTextEditOperation()
     this.startMoveOutline()
@@ -1626,7 +1626,7 @@ export class EditorEventHandler {
       }
     }
 
-    this._editor.beginOperation(clickedEditorItem)
+    this._editor.beginOperation()
   }
 
   private handleMouseUpForConnectorCreation() {
@@ -1999,7 +1999,7 @@ export class EditorEventHandler {
           const isFixedItemInTextEditing = hasFixedItems && ifFixedItemIsTarget && !editorItem.fixed && editorItem !== this._editorContext.target
           if (isFixedItemSelected || isParentItemSelected) {
             this.updateSelection(editorItem)
-            this._editor.beginOperation(editorItem)
+            this._editor.beginOperation()
             this._editorContext.inMoving = true
             this.startMoveOutline()
           } else if (isFixedItemInTextEditing && this._editorContext.target) {
@@ -2014,7 +2014,7 @@ export class EditorEventHandler {
           }
         } else {
           if (!editorItem.locked) {
-            this._editor.beginOperation(editorItem)
+            this._editor.beginOperation()
             this._editorContext.inMoving = true
             this.startMoveOutline()
           }

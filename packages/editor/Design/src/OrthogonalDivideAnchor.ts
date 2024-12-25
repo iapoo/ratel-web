@@ -64,7 +64,7 @@ export class OrthogonalDivideAnchor extends Anchor {
       //this._orthogonals.length = 0
       this._orthogonalPoints = this._orthogonalPoints.concat(this.target.orthogonalPoints)
       //this._orthogonals = this._orthogonals.concat(this.target.orthogonals)
-      this.editor.beginOperation(this.target)
+      this.editor.beginOperation()
     }
   }
 
@@ -75,7 +75,7 @@ export class OrthogonalDivideAnchor extends Anchor {
     const theSelectionLayer = this.editor.selectionLayer as SelectionLayer
     const moveX = x - this._startX
     const moveY = y - this._startY
-    if (this.target instanceof Connector && (moveX != 0 || moveY != 0)) {
+    if (this.target instanceof Connector && (moveX !== 0 || moveY !== 0)) {
       this.target.markOrthogonalPointsModified()
     }
     if (!theSelectionLayer.hasEditorItem(this.target)) {
@@ -85,7 +85,7 @@ export class OrthogonalDivideAnchor extends Anchor {
     }
     this.editor.triggerSelectionChange()
     this._moving = false
-    this.editor.finishOperation(this.target)
+    this.editor.finishOperation()
   }
 
   public handlePointerMove(x: number, y: number) {
@@ -137,6 +137,7 @@ export class OrthogonalDivideAnchor extends Anchor {
             this.target.orthogonalPoints = orthogonalPoints
             //console.log(`length = ${orthogonals.length}`)
           } else {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const leftPoint = new Point2(orthogonalPoint.x, orthogonalPoint.y)
             const currentPoint = new Point2(orthogonalPoint.x + moveX, orthogonalPoint.y)
             const nextPoint = new Point2(orthogonalPoint.x + moveX, (orthogonalPoint.y + nextOrthogonalPoint.y) / 2)
@@ -160,10 +161,11 @@ export class OrthogonalDivideAnchor extends Anchor {
             //})
           }
         } else {
-          if (orthogonalPoint.y == nextOrthogonalPoint.y) {
+          if (orthogonalPoint.y === nextOrthogonalPoint.y) {
             const leftPoint = new Point2((orthogonalPoint.x + nextOrthogonalPoint.x) / 2, orthogonalPoint.y)
             const currentPoint = new Point2((orthogonalPoint.x + nextOrthogonalPoint.x) / 2, orthogonalPoint.y + moveY)
             const nextPoint = new Point2(nextOrthogonalPoint.x, nextOrthogonalPoint.y + moveY)
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const rightPoint = new Point2(nextOrthogonalPoint.x, nextOrthogonalPoint.y)
             // orthogonals.splice(lineIndex, 0, leftPoint.x / orthogonalWidth, leftPoint.y / orthogonalHeight,
             //   currentPoint.x / orthogonalWidth, currentPoint.y / orthogonalHeight,
@@ -181,6 +183,7 @@ export class OrthogonalDivideAnchor extends Anchor {
             const leftPoint = new Point2(orthogonalPoint.x, (orthogonalPoint.y + nextOrthogonalPoint.y) / 2)
             const currentPoint = new Point2(orthogonalPoint.x + moveX, (orthogonalPoint.y + nextOrthogonalPoint.y) / 2)
             const nextPoint = new Point2(nextOrthogonalPoint.x + moveX, nextOrthogonalPoint.y)
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const rightPoint = new Point2(nextOrthogonalPoint.x, nextOrthogonalPoint.y)
             // orthogonals.splice(lineIndex, 0, leftPoint.x / orthogonalWidth, leftPoint.y / orthogonalHeight,
             //   currentPoint.x / orthogonalWidth, currentPoint.y / orthogonalHeight,
@@ -239,7 +242,7 @@ export class OrthogonalDivideAnchor extends Anchor {
       const orthogonalPoints = this.target.orthogonalPoints
       const orthogonalPoint = orthogonalPoints[this._index]
       const nextOrthogonalPoint = orthogonalPoints[this._index + 1]
-      if (orthogonalPoint.y == nextOrthogonalPoint.y) {
+      if (orthogonalPoint.y === nextOrthogonalPoint.y) {
         this.editor.updateEditorMode(EditorMode.N_RESIZE)
       } else {
         this.editor.updateEditorMode(EditorMode.W_RESIZE)

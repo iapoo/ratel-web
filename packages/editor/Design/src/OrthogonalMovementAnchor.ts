@@ -51,7 +51,7 @@ export class OrthogonalMovementAnchor extends Anchor {
     if (this.target instanceof Connector) {
       this._orthogonalPoints.length = 0
       this._orthogonalPoints = this._orthogonalPoints.concat(this.target.orthogonalPoints)
-      this.editor.beginOperation(this.target)
+      this.editor.beginOperation()
       //if(this._orthogonalPoints.length == 0) {
       //  console.log(`Exception is here`)
       //}
@@ -76,7 +76,7 @@ export class OrthogonalMovementAnchor extends Anchor {
     this.editor.triggerSelectionChange()
 
     this._moving = false
-    this.editor.finishOperation(this.target)
+    this.editor.finishOperation()
   }
 
   public handlePointerMove(x: number, y: number) {

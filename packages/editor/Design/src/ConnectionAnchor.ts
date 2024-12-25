@@ -45,7 +45,7 @@ export class ConnectionAnchor extends Anchor {
       this._sourceY = this.target.start.y
       this._targetX = this.target.end.x
       this._targetY = this.target.end.y
-      this.editor.beginOperation(this.target)
+      this.editor.beginOperation()
     }
   }
 
@@ -62,7 +62,7 @@ export class ConnectionAnchor extends Anchor {
       theSelectionLayer.addEditorItem(this.target)
     }
     this.editor.triggerSelectionChange()
-    this.editor.finishOperation(this.target)
+    this.editor.finishOperation()
   }
 
   public handlePointerMove(x: number, y: number) {
@@ -108,7 +108,7 @@ export class ConnectionAnchor extends Anchor {
         if (this._fromSource) {
           if (this.target.source) {
             if (editorItem && isEdge) {
-              if (this.target.source != editorItem) {
+              if (this.target.source !== editorItem) {
                 const inEditorItem = this.editor.isInEditorItem(editorItem, point.x, point.y)
                 const sourceJoint = this.editor.findEditorItemJoint(editorItem, point.x, point.y, inEditorItem)
                 const startDirection = this.editor.findConnectorDirection(editorItem, point.x, point.y)
