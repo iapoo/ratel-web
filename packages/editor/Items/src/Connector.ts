@@ -598,7 +598,6 @@ export class Connector extends Item {
     super(Math.min(start.x, end.x), Math.min(start.y, end.y), Math.abs(start.x - end.x), Math.abs(start.y - end.y))
     this._start = start
     this._end = end
-    this._orthogonalPoints = this.initializeOrthogonalPoints(true, true)
     this._shape = new ConnectorShape(start.x, start.y, end.x, end.y, startDirection, endDirection, this._orthogonalPoints)
     this._connectorShape = this._shape as ConnectorShape
     this.type = Connector.CONNECTOR_TYPE_CONNECTOR
@@ -625,11 +624,12 @@ export class Connector extends Item {
     this._orthogonalPointsStartLength = 0
     this._orthogonalPointsEndLength = 0
     this.initializeCurveModifiers()
-    this._connectorShape.orthogonalPoints = this._orthogonalPoints
     this._connectorDoubleLineGap = Constants.DOUBLE_LINE_GAP_DEFAULT
     this._connectorDoubleLineArrowLength = Constants.DOUBLE_LINE_ARROW_LENGTH_DEFAULT
     this._connectorDoubleLineArrowDistance = Constants.DOUBLE_LINE_ARROW_DISTANCE_DEFAULT
     this.updateTheme()
+    this._orthogonalPoints = this.initializeOrthogonalPoints(true, true)
+    this._connectorShape.orthogonalPoints = this._orthogonalPoints
   }
 
   public get autoRefreshOrthogonalPoints() {
