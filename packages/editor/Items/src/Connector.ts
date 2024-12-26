@@ -598,7 +598,7 @@ export class Connector extends Item {
     super(Math.min(start.x, end.x), Math.min(start.y, end.y), Math.abs(start.x - end.x), Math.abs(start.y - end.y))
     this._start = start
     this._end = end
-    this._shape = new ConnectorShape(start.x, start.y, end.x, end.y, startDirection, endDirection, this._orthogonalPoints)
+    this._shape = new ConnectorShape(start.x, start.y, end.x, end.y, startDirection, endDirection)
     this._connectorShape = this._shape as ConnectorShape
     this.type = Connector.CONNECTOR_TYPE_CONNECTOR
     this._connectorType = ConnectorType.Orthogonal
