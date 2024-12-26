@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import { PluginManager } from '@/components/Workspace/Utils/PluginManager'
+import { useIntl } from '@@/exports'
 import { EditOutlined } from '@ant-design/icons'
 import {
   CodeContainerAction,
@@ -69,7 +70,7 @@ import { Element, Path, SVG, Svg } from '@svgdotjs/svg.js'
 import { Button, Collapse, CollapseProps, Popover, Space, theme } from 'antd'
 import React, { FC, MouseEventHandler, UIEvent, createRef, useEffect, useState } from 'react'
 import { FormattedMessage } from 'umi'
-import { RequestUtils, Utils } from '../Utils'
+import { RequestUtils, SystemUtils, Utils } from '../Utils'
 import { MyShapes } from '../Utils/RequestUtils'
 import MyShapesWindowPage from './MyShapesWindow'
 
@@ -97,6 +98,8 @@ const Navigator: FC<NavigatorProps> = ({
   onMyShapesLoaded, //, loginCompleted, logoutCompleted
 }) => {
   const token = theme.useToken()
+  const intl = useIntl()
+
   //const workspaceBackground = token.token.colorBgElevated
   const scrollbarTrackColor = token.token.colorBgContainer
   const scrollbarThumbColor = token.token.colorTextQuaternary
@@ -854,8 +857,12 @@ const Navigator: FC<NavigatorProps> = ({
   )
 
   const handleModifyMyShapes = (event: MouseEvent) => {
-    setMyShapesWindowVisible(!myShapesWindowVisible)
-    event.stopPropagation()
+    if (RequestUtils.online) {
+      setMyShapesWindowVisible(!myShapesWindowVisible)
+      event.stopPropagation()
+    } else {
+      SystemUtils.handleInternalError(intl.formatMessage({ id: 'workspace.content.message-login-is-required' }))
+    }
   }
 
   const handleMyShapesWindowOk = () => {
