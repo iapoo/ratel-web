@@ -1,4 +1,4 @@
-import { Colors, Matrix, MouseCode, Point2, PointerEvent, Rectangle, Rotation } from '@ratel-web/engine'
+import { Matrix, MouseCode, Point2, PointerEvent, Rectangle, Rotation } from '@ratel-web/engine'
 import { Action, MyShapeAction } from '../../Actions'
 import { Holder } from '../../Design'
 import {
@@ -86,7 +86,9 @@ export class EditorEventHandler {
     } else {
       const clickedEditorItem = this._editor.findEditorItem(e.x, e.y, false)
       const theSelectionLayer = this._editorContext.selectionLayer as SelectionLayer
-      const isEdge = clickedEditorItem ? this._editor.hasEditorItemJoint(clickedEditorItem, e.x, e.y) && !clickedEditorItem.fixed : false
+      const isEdge = clickedEditorItem
+        ? this._editor.hasEditorItemJoint(clickedEditorItem, e.x, e.y) && !clickedEditorItem.fixed && !((clickedEditorItem as Item).parent instanceof Connector)
+        : false
       const inClickEditorItem = clickedEditorItem ? this._editor.isInEditorItem(clickedEditorItem, e.x, e.y) : false
       if (clickedEditorItem && isEdge && !inClickEditorItem) {
         //Create connector
@@ -189,7 +191,9 @@ export class EditorEventHandler {
     const theSelectionLayer: SelectionLayer = this._editor.selectionLayer as SelectionLayer
     const editorItem = this._editor.findEditorItem(e.x, e.y, false)
     //console.log(`Finding ...... ${editorItem}`)
-    const isEdge = editorItem ? this._editor.hasEditorItemJoint(editorItem, e.x, e.y) && !editorItem.fixed : false
+    const isEdge = editorItem
+      ? this._editor.hasEditorItemJoint(editorItem, e.x, e.y) && !editorItem.fixed && !((editorItem as Item).parent instanceof Connector)
+      : false
     const hasFixedItems = editorItem ? this.hasFixedItems(editorItem, e.x, e.y) : false
     const ifFixedItemIsTarget = editorItem ? this.ifFixedItemIsTarget(editorItem, e.x, e.y) : false
     //fixed item is in text edit mode and mouse over on it now
@@ -589,7 +593,9 @@ export class EditorEventHandler {
     const theControllerLayer = this._editorContext.controllerLayer as ControllerLayer
     const connector = theControllerLayer.getEditorItem(0) as Connector
     const editorItem = this._editor.findEditorItem(e.x, e.y, false)
-    const isEdge = editorItem ? this._editor.hasEditorItemJoint(editorItem, e.x, e.y) && !editorItem.fixed : false
+    const isEdge = editorItem
+      ? this._editor.hasEditorItemJoint(editorItem, e.x, e.y) && !editorItem.fixed && !((editorItem as Item).parent instanceof Connector)
+      : false
     //console.log(`create connector ...1 ${editorItem !== connector.source} ${isEdge}`)
     if (editorItem && isEdge) {
       // && editorItem !== connector.source) {
@@ -628,8 +634,10 @@ export class EditorEventHandler {
   private createTextBoxInConnector(connector: Connector, x: number, y: number) {
     const textBox = new ShapeEntity(x - 40, y - 15, 40, 20)
     textBox.text = 'text'
-    textBox.fillColor = Colors.Transparent
-    textBox.strokeColor = Colors.Transparent
+    // textBox.fillColor = Colors.Transparent
+    // textBox.strokeColor = Colors.Transparent
+    textBox.stroked = false
+    textBox.filled = false
     connector.addItem(textBox)
   }
 
@@ -706,6 +714,7 @@ export class EditorEventHandler {
   private handleMoveOutline() {
     //Don't show outline if only connector selected
     if (this._editor.selectionLayer.getEditorItemCount() === 1 && this._editor.selectionLayer.getEditorItem(0) instanceof Connector) {
+      this._editorContext.selectionOutlineShape.boundary = Rectangle.makeLTWH(0, 0, 0, 0)
       return
     }
     const [left, top, right, bottom] = this._editor.getSelectionBoundary()

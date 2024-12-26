@@ -808,23 +808,36 @@ export class Editor extends Painter {
     const shape = editorItem.shape
     if (editorItem instanceof Connector && excludeConnector) {
       result = undefined
-    } else {
-      if (shape.intersects(x - Editor.TEST_RADIUS, y - Editor.TEST_RADIUS, Editor.TEST_SIZE, Editor.TEST_SIZE)) {
-        result = editorItem
-        if (editorItem.fixed) {
-          result = (editorItem as Item).parent
+    } else if (editorItem instanceof Connector) {
+      let textBoxFound = false
+      for (let i = count - 1; i >= 0; i--) {
+        const child = editorItem.items[i]
+        let childResult = this.findEditorItemDetail(child, x, y, excludeConnector)
+        if (childResult) {
+          result = childResult
+          textBoxFound = true
+        }
+      }
+      if (!textBoxFound) {
+        if (shape.intersects(x - Editor.TEST_RADIUS, y - Editor.TEST_RADIUS, Editor.TEST_SIZE, Editor.TEST_SIZE)) {
+          result = editorItem
         } else {
-          for (let i = count - 1; i >= 0; i--) {
-            const child = editorItem.items[i]
-            let childResult = this.findEditorItemDetail(child, x, y, excludeConnector)
-            if (childResult) {
-              result = childResult
-              break
-            }
+          result = undefined
+        }
+      }
+    } else if (shape.intersects(x - Editor.TEST_RADIUS, y - Editor.TEST_RADIUS, Editor.TEST_SIZE, Editor.TEST_SIZE)) {
+      result = editorItem
+      if (editorItem.fixed) {
+        result = (editorItem as Item).parent
+      } else {
+        for (let i = count - 1; i >= 0; i--) {
+          const child = editorItem.items[i]
+          let childResult = this.findEditorItemDetail(child, x, y, excludeConnector)
+          if (childResult) {
+            result = childResult
+            break
           }
         }
-        // if(!(editorItem instanceof TableEntity) && !(editorItem instanceof FrameEntity)) {
-        //if (!(editorItem instanceof TableEntity)) {
       }
     }
     return result
