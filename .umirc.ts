@@ -35,7 +35,7 @@ export default defineConfig({
     'process.env.ROCKIE_WEB_SERVER': '192.168.0.215',
     'process.env.ROCKIE_WEB_PORT': '8081',
     'process.env.ROCKIE_WEB_PATH': '',
-    'process.env.PRODUCTION_VERSION': '0.1.0',
+    'process.env.PRODUCTION_VERSION': '0.2.0',
     'process.env.ENV_NAME': 'default',
     'process.env.AD_ENABLED': 'false',
   },
@@ -59,5 +59,5 @@ export default defineConfig({
   ],
   npmClient: 'npm',
   //Disable msfu since it cause debug doesn't work for packages folder
-  mfsu: false
+  mfsu: false,
 })
