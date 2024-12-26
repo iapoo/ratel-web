@@ -361,8 +361,13 @@ export class EditorEventHandler {
         let x = this._editor.alignToGridSize(point.x / this._editor.zoom - width / 2)
         let y = this._editor.alignToGridSize(point.y / this._editor.zoom - height / 2)
         this._editor.action.items.forEach((item) => {
-          item.boundary = Rectangle.makeLTWH(x + item.left - left, y + item.top - top, item.width, item.height)
-          clickedEditorItem.addItem(item)
+          if (item instanceof Connector) {
+            this._editor.contentLayer.addEditorItem(item)
+            this.handleActionOperation()
+          } else {
+            item.boundary = Rectangle.makeLTWH(x + item.left - left, y + item.top - top, item.width, item.height)
+            clickedEditorItem.addItem(item)
+          }
         })
         this._editor.selectionLayer.removeAllEditorItems()
         this._editor.selectionLayer.addEditorItems(this._editor.action.items)
