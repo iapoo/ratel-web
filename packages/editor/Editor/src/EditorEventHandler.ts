@@ -126,7 +126,8 @@ export class EditorEventHandler {
           }
         }
       } else {
-        this.removeSelection(e)
+        this.removeSelection()
+        this.startRangeSelecting(e)
       }
     }
     //Code Editor may still have focus and we check and force to
@@ -453,7 +454,7 @@ export class EditorEventHandler {
         }
       }
     } else {
-      this.removeSelection(e)
+      this.removeSelection()
     }
   }
 
@@ -1517,12 +1518,11 @@ export class EditorEventHandler {
     this._editorContext.targetItemIndex = -1
   }
 
-  private removeSelection(e: PointerEvent) {
+  private removeSelection() {
     const theSelectionLayer = this._editor.selectionLayer as SelectionLayer
     theSelectionLayer.removeAllEditorItems()
     this._editor.triggerSelectionChange()
     this.cleanupOperation()
-    this.startRangeSelecting(e)
   }
 
   private createConnector(clickedEditorItem: EditorItem, e: PointerEvent) {
