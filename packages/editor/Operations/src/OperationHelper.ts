@@ -95,7 +95,7 @@ export class OperationHelper {
         editorItem = this.loadConnector(itemInfo, editor)
         break
       case Categories.CONTAINER:
-        editorItem = this.loadContainerEntity(itemInfo)
+        editorItem = this.loadContainerEntity(itemInfo, editor)
         break
       case Categories.TABLE:
         editorItem = this.loadTableEntity(itemInfo)
@@ -107,7 +107,7 @@ export class OperationHelper {
         editorItem = this.loadFrame(itemInfo, editor)
         break
       case Categories.GROUP:
-        editorItem = this.loadGroup(itemInfo)
+        editorItem = this.loadGroup(itemInfo, editor)
         break
       case Categories.CUSTOM_SHAPE:
         editorItem = this.loadCustomEntity(itemInfo)
@@ -119,7 +119,7 @@ export class OperationHelper {
         editorItem = this.loadImageContainer(itemInfo)
         break
       case Categories.EXTENDED_CONTAINER:
-        editorItem = this.loadExtendedContainerEntity(itemInfo)
+        editorItem = this.loadExtendedContainerEntity(itemInfo, editor)
         break
       case Categories.EXTENDED_SHAPE:
         editorItem = this.loadExtendedShapeEntity(itemInfo)
@@ -128,7 +128,7 @@ export class OperationHelper {
         editorItem = this.loadCustomConnector(itemInfo, editor)
         break
       case Categories.CUSTOM_CONTAINER:
-        editorItem = this.loadCustomContainerEntity(itemInfo)
+        editorItem = this.loadCustomContainerEntity(itemInfo, editor)
         break
       case Categories.EXTENSION_ENTITY:
         editorItem = this.loadExtensionEntity(itemInfo)
@@ -137,7 +137,7 @@ export class OperationHelper {
         editorItem = this.loadExtensionConnector(itemInfo, editor)
         break
       case Categories.EXTENSION_CONTAINER:
-        editorItem = this.loadExtensionContainer(itemInfo)
+        editorItem = this.loadExtensionContainer(itemInfo, editor)
         break
       case Categories.EXTENSION_TABLE:
         editorItem = this.loadExtensionTable(itemInfo)
@@ -483,7 +483,7 @@ export class OperationHelper {
     return frameEntity
   }
 
-  public static loadGroup(itemInfo: EditorItemInfo): ShapeEntity {
+  public static loadGroup(itemInfo: EditorItemInfo, editor: Editor): ShapeEntity {
     if (!OperationHelper.initialized) {
       OperationHelper.initializeCustomEntities()
     }
@@ -501,7 +501,7 @@ export class OperationHelper {
 
     containerEntity.removeAllItems()
     itemInfo.items.forEach((childItemInfo) => {
-      let childItem = OperationHelper.loadTableCellEntity(childItemInfo)
+      let childItem = OperationHelper.loadItem(childItemInfo, editor)
       containerEntity.addItem(childItem)
     })
     return containerEntity
@@ -810,7 +810,7 @@ export class OperationHelper {
     return imageContainer
   }
 
-  public static loadContainerEntity(itemInfo: EditorItemInfo): ContainerEntity {
+  public static loadContainerEntity(itemInfo: EditorItemInfo, editor: Editor): ContainerEntity {
     const containerInfo = itemInfo as ContainerInfo
     const containerEntity = new ContainerEntity(itemInfo.left, itemInfo.top, itemInfo.width, itemInfo.height, {
       shapeType: containerInfo.type,
@@ -826,13 +826,13 @@ export class OperationHelper {
 
     containerEntity.removeAllItems()
     itemInfo.items.forEach((childItemInfo) => {
-      let childItem = OperationHelper.loadTableCellEntity(childItemInfo)
+      let childItem = OperationHelper.loadItem(childItemInfo, editor)
       containerEntity.addItem(childItem)
     })
     return containerEntity
   }
 
-  public static loadExtendedContainerEntity(itemInfo: EditorItemInfo): ContainerEntity {
+  public static loadExtendedContainerEntity(itemInfo: EditorItemInfo, editor: Editor): ContainerEntity {
     if (!OperationHelper.initialized) {
       OperationHelper.initializeCustomEntities()
     }
@@ -863,13 +863,13 @@ export class OperationHelper {
 
     containerEntity.removeAllItems()
     itemInfo.items.forEach((childItemInfo) => {
-      let childItem = OperationHelper.loadTableCellEntity(childItemInfo)
+      let childItem = OperationHelper.loadItem(childItemInfo, editor)
       containerEntity.addItem(childItem)
     })
     return containerEntity
   }
 
-  public static loadCustomContainerEntity(itemInfo: EditorItemInfo): CustomContainerEntity {
+  public static loadCustomContainerEntity(itemInfo: EditorItemInfo, editor: Editor): CustomContainerEntity {
     if (!OperationHelper.initialized) {
       OperationHelper.initializeCustomEntities()
     }
@@ -893,13 +893,13 @@ export class OperationHelper {
 
     containerEntity.removeAllItems()
     itemInfo.items.forEach((childItemInfo) => {
-      let childItem = OperationHelper.loadTableCellEntity(childItemInfo)
+      let childItem = OperationHelper.loadItem(childItemInfo, editor)
       containerEntity.addItem(childItem)
     })
     return containerEntity
   }
 
-  public static loadExtensionContainer(itemInfo: EditorItemInfo): CustomContainerEntity {
+  public static loadExtensionContainer(itemInfo: EditorItemInfo, editor: Editor): CustomContainerEntity {
     if (!OperationHelper.initialized) {
       OperationHelper.initializeCustomEntities()
     }
@@ -947,7 +947,7 @@ export class OperationHelper {
 
     extensionContainer.removeAllItems()
     itemInfo.items.forEach((childItemInfo) => {
-      let childItem = OperationHelper.loadTableCellEntity(childItemInfo)
+      let childItem = OperationHelper.loadItem(childItemInfo, editor)
       extensionContainer.addItem(childItem)
     })
     return extensionContainer
