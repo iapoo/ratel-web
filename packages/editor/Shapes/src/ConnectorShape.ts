@@ -390,21 +390,21 @@ export class ConnectorShape extends EntityShape {
   public intersects(left: number, top: number, width: number, height: number) {
     if (this.worldInverseTransform) {
       const point = new Point2(left + width * 0.5, top + height * 0.5)
-      const invesePoint = this.worldInverseTransform.makePoint(point)
+      const inversePoint = this.worldInverseTransform.makePoint(point)
       let distance = 0
       switch (this.connectorType) {
         case ConnectorType.Orthogonal:
-          distance = this.getOrthogonalNearstDistance(invesePoint.x, invesePoint.y)
+          distance = this.getOrthogonalNearestDistance(inversePoint.x, inversePoint.y)
           break
         case ConnectorType.Curve:
-          distance = this.getCurveNearstDistance(invesePoint.x, invesePoint.y)
+          distance = this.getCurveNearestDistance(inversePoint.x, inversePoint.y)
           break
         case ConnectorType.StraightLine:
         default:
-          distance = this.getStraightNearstDistance(invesePoint.x, invesePoint.y)
+          distance = this.getStraightNearestDistance(inversePoint.x, inversePoint.y)
           break
       }
-      //console.log(`distance = ${distance} left=${left} y=${top} width=${width} height=${height} left2=${this.left} top2=${this.top}  x=${point.x} y=${point.y}  xx=${invesePoint.x}  yy= ${invesePoint.y}`)
+      //console.log(`distance = ${distance} left=${left} y=${top} width=${width} height=${height} left2=${this.left} top2=${this.top}  x=${point.x} y=${point.y}  xx=${inversePoint.x}  yy= ${inversePoint.y}`)
       return distance <= ConnectorShape.DETECTION_DISTANCE
     }
     return false
@@ -521,10 +521,28 @@ export class ConnectorShape extends EntityShape {
           this.updateStraightLinePath()
           break
       }
-      if (this._orthogonalPoints.length > 0) {
+
+      if (this.connectorType === ConnectorType.Orthogonal && this._orthogonalPoints.length > 0) {
         this.updateArrows(this._orthogonalPoints[0], this._startDirection, this._startArrow, this._startArrowPath)
         this.updateArrows(this._orthogonalPoints[this._orthogonalPoints.length - 1], this._endDirection, this._endArrow, this._endArrowPath)
       }
+
+      if (this.connectorType === ConnectorType.StraightLine && this._orthogonalPoints.length > 0) {
+        this.updateArrows(this._orthogonalPoints[0], ConnectorDirection.Right, this._startArrow, this._startArrowPath)
+        this.updateArrows(this._orthogonalPoints[this._orthogonalPoints.length - 1], ConnectorDirection.Left, this._endArrow, this._endArrowPath)
+        const start = this._orthogonalPoints[0]
+        const end = this._orthogonalPoints[this._orthogonalPoints.length - 1]
+        const base = new Point2(start.x + 1, start.y)
+        const startAngle = MathUtils.getAngleIn3PointsEx(start.x, start.y, base.x, base.y, end.x, end.y)
+        //console.log(`angle= ${startAngle} start.x = ${start.x} start.y= ${start.y} end.x = ${end.x}, end.y = ${end.y} base.x = ${base.x} base.y = ${base.y}`)
+        const startTransform = new Matrix()
+        const endTransform = new Matrix()
+        startTransform.rotate(startAngle, start.x, start.y)
+        endTransform.rotate(startAngle, end.x, end.y)
+        this._startArrowPath.transform(startTransform)
+        this._endArrowPath.transform(endTransform)
+      }
+
       if (this.connectorType === ConnectorType.Curve) {
         this.updateArrowsInCurve()
       }
@@ -1516,14 +1534,13 @@ export class ConnectorShape extends EntityShape {
     //}
   }
 
-  private getStraightNearstDistance(x: number, y: number) {
+  private getStraightNearestDistance(x: number, y: number) {
     const start = new Point2(this.start.x - this.left, this.start.y - this.top)
     const end = new Point2(this.end.x - this.left, this.end.y - this.top)
-    const distance = Line.pointDistance(start.x, start.y, end.x, end.y, x, y)
-    return distance
+    return Line.pointDistance(start.x, start.y, end.x, end.y, x, y)
   }
 
-  private getOrthogonalNearstDistance(x: number, y: number) {
+  private getOrthogonalNearestDistance(x: number, y: number) {
     let distance = 99999
     const points = this._orthogonalPoints
     const count = points.length
@@ -1536,13 +1553,12 @@ export class ConnectorShape extends EntityShape {
     return distance
   }
 
-  private getCurveNearstDistance(x: number, y: number) {
+  private getCurveNearestDistance(x: number, y: number) {
     const start = new Point2(this.start.x - this.left, this.start.y - this.top)
     const end = new Point2(this.end.x - this.left, this.end.y - this.top)
     const startModifier = new Point2(start.x + this._curveStartModifier.x * this.width, start.y + this.curveStartModifier.y * this.height)
     const endModifier = new Point2(end.x + this.curveEndModifier.x * this.width, end.y + this.curveEndModifier.y * this.height)
 
-    const distance = Cubic.pointDistance(start.x, start.y, startModifier.x, startModifier.y, endModifier.x, endModifier.y, end.x, end.y, x, y)
-    return distance
+    return Cubic.pointDistance(start.x, start.y, startModifier.x, startModifier.y, endModifier.x, endModifier.y, end.x, end.y, x, y)
   }
 }

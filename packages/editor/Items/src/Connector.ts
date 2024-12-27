@@ -3188,6 +3188,7 @@ export class Connector extends Item {
       }
     }
   }
+
   private initializeOrthogonalPointsLeftWithoutTarget(targetPosition: TargetPosition, points: Point2[], start: Point2, end: Point2) {
     const arrowDirection = this.detectArrowDirection(start, end)
     switch (targetPosition) {
