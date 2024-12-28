@@ -99,6 +99,7 @@ export class EditorEventHandler {
           //if (!((clickedEditorItem as Item).parent instanceof FrameEntity || clickedEditorItem.fixed)) {
           // this._editorContext.inMoving = true
           //}
+          console.log(`Check start info count on mouse down = ${this._editorContext.startEditorItemInfos.length}`)
           if (!clickedEditorItem.locked) {
             this._editorContext.inMoving = true
           }
@@ -108,6 +109,7 @@ export class EditorEventHandler {
             }
           } else if (clickedEditorItem instanceof PoolCustomContainer) {
             this.selectPoolCustomContainer(clickedEditorItem, e, true)
+          } else {
           }
         } else if (clickedEditorItem instanceof TableEntity) {
           this.selectTable(clickedEditorItem, e, false)
@@ -147,6 +149,7 @@ export class EditorEventHandler {
 
   public handlePointerUp(e: PointerEvent) {
     //console.log(`Pointer up event = ${e}`)
+    console.log(`Check start info count on mouse up = ${this._editorContext.startEditorItemInfos.length}`)
     if (e.mouseCode === MouseCode.RIGHT_MOUSE_UP) {
       return
     }
@@ -1214,12 +1217,7 @@ export class EditorEventHandler {
     items.forEach((editorItemInfo) => {
       this.handleUpdateEditorItem(editorItemInfo)
       if (restoreSelectionOutline) {
-        let found = false
-        selectedItems.forEach((selectedItem) => {
-          if (selectedItem.id === editorItemInfo.id) {
-            found = true
-          }
-        })
+        const found = this.findSelectedItem(editorItemInfo, selectedItems)
         if (!found) {
           restoreSelectionOutline = false
         }
@@ -1243,6 +1241,25 @@ export class EditorEventHandler {
     }
     return undefined
   }
+
+  private findSelectedItem(editorItemInfo: EditorItemInfo, selectedItems: EditorItem[]) {
+    let found = false
+    for (let i = 0; i < selectedItems.length; i++) {
+      const selectedItem = selectedItems[i]
+      if (selectedItem.id === editorItemInfo.id) {
+        found = true
+      }
+    }
+    for (let i = 0; i < editorItemInfo.items.length; i++) {
+      const childInfo = editorItemInfo.items[i]
+      const foundAsChild = this.findSelectedItem(childInfo, selectedItems)
+      if (foundAsChild) {
+        found = true
+      }
+    }
+    return found
+  }
+
   private restoreSelectionOutline(selectedItems: EditorItem[]) {
     const newSelectedItems: EditorItem[] = []
     const editorItems = this._editorContext.contentLayer.getAllEditorItems()
@@ -1307,12 +1324,7 @@ export class EditorEventHandler {
     items.forEach((editorItemInfo) => {
       this.handleUpdateEditorItem(editorItemInfo)
       if (restoreSelectionOutline) {
-        let found = false
-        selectedItems.forEach((selectedItem) => {
-          if (selectedItem.id === editorItemInfo.id) {
-            found = true
-          }
-        })
+        const found = this.findSelectedItem(editorItemInfo, selectedItems)
         if (!found) {
           restoreSelectionOutline = false
         }
@@ -1494,7 +1506,7 @@ export class EditorEventHandler {
       this._editorContext.target.shape.focused = false
     }
     this._editor.checkAndEndTextEdit()
-    this._editor.finishTextEditOperation()
+    //this._editor.finishTextEditOperation()
     if (this._editorContext.target) {
       this._editorContext.target.shape.focused = false
     }
@@ -1520,7 +1532,7 @@ export class EditorEventHandler {
     this._editorContext.targetRowResizing = false
     this._editor.beginOperation()
     this._editor.checkAndEndTextEdit()
-    this._editor.finishTextEditOperation()
+    //this._editor.finishTextEditOperation()
     this.startMoveOutline()
     if (this._editorContext.target) {
       this._editorContext.target.shape.focused = false
@@ -1580,7 +1592,7 @@ export class EditorEventHandler {
     if (targetRow) {
       // console.log('========1')
       this._editor.checkAndEndTextEdit()
-      this._editor.finishTextEditOperation()
+      //this._editor.finishTextEditOperation()
       this._editorContext.targetRowResizing = true
       this._editorContext.targetRowIndex = targetRowIndex
       if (this._editorContext.targetItem) {
@@ -1594,7 +1606,7 @@ export class EditorEventHandler {
     } else if (targetColumn) {
       // console.log('========0')
       this._editor.checkAndEndTextEdit()
-      this._editor.finishTextEditOperation()
+      //this._editor.finishTextEditOperation()
       this._editorContext.targetColumnResizing = targetColumn
       this._editorContext.targetColumnIndex = targetColumnIndex
       if (this._editorContext.targetItem) {
@@ -1634,7 +1646,7 @@ export class EditorEventHandler {
         } else {
           this._editorContext.inMoving = true
           this._editor.checkAndEndTextEdit()
-          this._editor.finishTextEditOperation()
+          //this._editor.finishTextEditOperation()
           this.startMoveOutline()
         }
       }
@@ -1723,7 +1735,7 @@ export class EditorEventHandler {
         if (this._editorContext.target) {
           this._editorContext.target.shape.focused = false
           this._editor.checkAndEndTextEdit()
-          this._editor.finishTextEditOperation()
+          //this._editor.finishTextEditOperation()
         }
         this._editorContext.target = clickedEditorItem
         this._editorContext.targetTime = Date.now()

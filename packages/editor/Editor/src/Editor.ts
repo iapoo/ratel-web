@@ -1130,6 +1130,7 @@ export class Editor extends Painter {
     if (this._editorContext.textFocused) {
       this._editorContext.textFocused = false
       this.triggerTextEditEnd()
+      this.finishTextEditOperation()
     }
   }
 
