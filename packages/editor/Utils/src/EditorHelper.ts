@@ -66,7 +66,7 @@ export class EditorHelper {
     return selections
   }
 
-  public static pasteSelections(selections: EditorItemInfo[], editor: Editor, pasteFromSystem: boolean, pasteLocation: Point2) {
+  public static pasteSelections(selections: EditorItemInfo[], editor: Editor, pasteFromSystem: boolean, pasteLocation: Point2, copyLocation: Point2) {
     if (selections.length > 0) {
       let offsetX = editor.alignToGridSize(EditorHelper.DEFAULT_OFFSET_X)
       let offsetY = editor.alignToGridSize(EditorHelper.DEFAULT_OFFSET_Y)
@@ -76,15 +76,30 @@ export class EditorHelper {
       }
       //refresh connections of shapes & Setup new location
       let editorItems: Array<EditorItem> = []
+      //Recalculate boundary for paste since some of them may be in container
+      selections.forEach((selection) => {
+        let editorItem = OperationHelper.loadItem(selection, editor)
+        if (editorItem instanceof Connector && editorItem.start && editorItem.end) {
+          //Skip  connectors
+        } else if (editorItem instanceof Item) {
+          editorItem.boundary = Rectangle.makeLTWH(editorItem.left + offsetX, editorItem.top + offsetY, editorItem.width, editorItem.height)
+        }
+        editorItems.push(editorItem)
+      })
       selections.forEach((selection) => {
         let editorItem = OperationHelper.loadItem(selection, editor)
         if (editorItem instanceof Connector && editorItem.start && editorItem.end) {
           const start = editorItem.start
           const end = editorItem.end
-          editorItem.start = new Point2(start.x + offsetX, start.y + offsetY)
-          editorItem.end = new Point2(end.x + offsetX, end.y + offsetY)
+          editorItem.start = new Point2(start.x + offsetX + copyLocation.x, start.y + offsetY + copyLocation.y)
+          editorItem.end = new Point2(end.x + offsetX + copyLocation.x, end.y + offsetY + copyLocation.y)
         } else if (editorItem instanceof Item) {
-          editorItem.boundary = Rectangle.makeLTWH(editorItem.left + offsetX, editorItem.top + offsetY, editorItem.width, editorItem.height)
+          editorItem.boundary = Rectangle.makeLTWH(
+            editorItem.left + offsetX + copyLocation.x,
+            editorItem.top + offsetY + copyLocation.y,
+            editorItem.width,
+            editorItem.height,
+          )
         }
         editorItems.push(editorItem)
       })

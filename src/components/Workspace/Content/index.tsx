@@ -216,6 +216,7 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
   const [popupMenuVisible, setPopupMenuVisible] = useState<boolean>(false)
   const [popupType, setPopupType] = useState<PopupType>(PopupType.EDITOR)
   const [pasteLocation, setPasteLocation] = useState<Point2>(new Point2())
+  const [copyLocation, setCopyLocation] = useState<Point2>(new Point2())
   const [pasteFromSystem, setPasteFromSystem] = useState<boolean>(true)
   const [tableEdittable, setTableEdittable] = useState<boolean>(false)
   const [poolEdittable, setPoolEdittable] = useState<boolean>(true)
@@ -1605,6 +1606,15 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
     }
   }
 
+  const handleCopyLocation = () => {
+    if (Utils.currentEditor && Utils.currentEditor.selectionLayer.getEditorItemCount() > 0) {
+      const firstSelection = Utils.currentEditor.selectionLayer.getEditorItem(0)
+      const copyPoint = firstSelection.worldTransform.makePoint(new Point2(0, 0))
+      const copyLocation = new Point2(copyPoint.x - firstSelection.left, copyPoint.y - firstSelection.top)
+      setCopyLocation(copyLocation)
+    }
+  }
+
   /**
    * Handle copy command from system or application.
    * @param e
@@ -1623,6 +1633,7 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
         }
       } else {
         let data = EditorHelper.exportEditorSelections(Utils.currentEditor)
+        handleCopyLocation()
         //data = `a${data}a`
         e.clipboardData.clearData()
         e.clipboardData.setData('text/plain', data)
@@ -1638,6 +1649,7 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
     if (Utils.currentEditor) {
       console.log(`copy is triggered`)
       const data = EditorHelper.exportEditorSelections(Utils.currentEditor)
+      handleCopyLocation()
       //let dataTransfer = new DataTransfer()
       //dataTransfer.dropEffect = 'none'
       //dataTransfer.effectAllowed = "uninitialized"
@@ -1715,6 +1727,7 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
         }
       } else {
         let data = EditorHelper.exportEditorSelections(Utils.currentEditor)
+        handleCopyLocation()
         //data = `a${data}a`
         e.clipboardData.clearData()
         e.clipboardData.setData('text/plain', data)
@@ -1736,6 +1749,7 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
         return
       }
       const data = EditorHelper.exportEditorSelections(Utils.currentEditor)
+      handleCopyLocation()
       EditorHelper.deleteSelections(Utils.currentEditor)
       await clipboard.writeText(data)
     }
@@ -1759,7 +1773,7 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
       } else {
         let selections = EditorHelper.readSelections(data)
         console.log(`paste selections = ${selections}`)
-        EditorHelper.pasteSelections(selections, Utils.currentEditor, pasteFromSystem, pasteLocation)
+        EditorHelper.pasteSelections(selections, Utils.currentEditor, pasteFromSystem, pasteLocation, copyLocation)
       }
       e.preventDefault()
     }
