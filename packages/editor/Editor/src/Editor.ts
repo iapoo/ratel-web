@@ -1246,6 +1246,7 @@ export class Editor extends Painter {
       let editorItemInfo = OperationHelper.saveEditorItem(operationItem)
       this._editorContext.startEditorItemInfos.push(editorItemInfo)
     }
+    console.log(`Begin operation = ${this._editorContext.startEditorItemInfos}`)
   }
 
   public finishOperation() {
@@ -1265,6 +1266,7 @@ export class Editor extends Painter {
     this._operationService.addOperation(operation)
     this.triggerOperationChange()
     this._editorContext.startEditorItemInfos.length = 0
+    console.log(`Finish operation = ${operation}`)
   }
 
   public dispose() {

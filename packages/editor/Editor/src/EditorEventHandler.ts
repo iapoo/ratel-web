@@ -96,10 +96,11 @@ export class EditorEventHandler {
       } else if (clickedEditorItem) {
         if (!theSelectionLayer.hasEditorItem(clickedEditorItem)) {
           this.updateSelection(clickedEditorItem)
+          this._editorContext.target = clickedEditorItem
           //if (!((clickedEditorItem as Item).parent instanceof FrameEntity || clickedEditorItem.fixed)) {
           // this._editorContext.inMoving = true
           //}
-          console.log(`Check start info count on mouse down = ${this._editorContext.startEditorItemInfos.length}`)
+          //console.log(`Check start info count on mouse down = ${this._editorContext.startEditorItemInfos.length}`)
           if (!clickedEditorItem.locked) {
             this._editorContext.inMoving = true
           }
@@ -124,6 +125,7 @@ export class EditorEventHandler {
           if (!clickedEditorItem.locked) {
             //if (!((clickedEditorItem as Item).parent instanceof FrameEntity) || clickedEditorItem.fixed) {
             this._editor.beginOperation()
+            this._editorContext.target = clickedEditorItem
             this._editorContext.inMoving = true
             this.startMoveOutline()
             //}
@@ -149,7 +151,7 @@ export class EditorEventHandler {
 
   public handlePointerUp(e: PointerEvent) {
     //console.log(`Pointer up event = ${e}`)
-    console.log(`Check start info count on mouse up = ${this._editorContext.startEditorItemInfos.length}`)
+    //console.log(`Check start info count on mouse up = ${this._editorContext.startEditorItemInfos.length}`)
     if (e.mouseCode === MouseCode.RIGHT_MOUSE_UP) {
       return
     }
@@ -162,12 +164,21 @@ export class EditorEventHandler {
       //console.log(`It is a exception here, shouldn't be reached`)
       this.handleMouseUpForConnectorCreation()
     } else if (this._editorContext.inContainerSelection) {
+      //Editor target is undefined if move unselected shape into container and we can use following code to resolve this
+      // const clickedEditorItem = this._editor.findEditorItem(e.x, e.y, false)
+      // if (clickedEditorItem) {
+      //   this.handleMouseUpDefault(clickedEditorItem, e)
+      // }
       this.finishContainerSelection(e)
     } else {
       const clickedEditorItem = this._editor.findEditorItem(e.x, e.y, false)
       if (clickedEditorItem) {
         this.handleMouseUpDefault(clickedEditorItem, e)
       }
+    }
+    if (this._editorContext.inMoving) {
+      // Shape is moved out of container here
+      this.removeItemsFromContainer(e)
     }
     if (this._editorContext.inMoving && this._editorContext.moveStarted && this._editorContext.target && this._editorContext.startEditorItemInfos.length > 0) {
       this._editor.finishOperation()
@@ -176,8 +187,6 @@ export class EditorEventHandler {
       this.endRangeSelecting(e)
     }
     if (this._editorContext.inMoving) {
-      // Shape is moved out of container here
-      this.removeItemsFromContainer(e)
       this.endMoveOutline()
       this._editorContext.inMoving = false
       this._editorContext.moveStarted = false
@@ -1091,7 +1100,7 @@ export class EditorEventHandler {
           this.handleOperationUndoRemoveItems(operation.itemInfos)
           break
         case OperationType.UPDATE_ITEMS:
-          this.handleOperationUndoUpdateItems(operation.origItemInfos)
+          this.handleOperationUndoUpdateItems(operation.itemInfos, operation.origItemInfos)
           break
         case OperationType.ADD_SELECTION_ITEMS:
           this.handleOperationUndoAddSelectionItems(operation.itemInfos)
@@ -1146,7 +1155,7 @@ export class EditorEventHandler {
           this.handleOperationRedoRemoveItems(operation.itemInfos)
           break
         case OperationType.UPDATE_ITEMS:
-          this.handleOperationRedoUpdateItems(operation.itemInfos)
+          this.handleOperationRedoUpdateItems(operation.itemInfos, operation.origItemInfos)
           break
         case OperationType.ADD_SELECTION_ITEMS:
           this.handleOperationRedoAddSelectionItems(operation.itemInfos)
@@ -1211,20 +1220,28 @@ export class EditorEventHandler {
     })
   }
 
-  private handleOperationUndoUpdateItems(items: EditorItemInfo[]) {
+  /**
+   * Items are very different if they are moved into our out from container.
+   * @param itemInfos
+   * @param origItemInfos
+   * @private
+   */
+  private handleOperationUndoUpdateItems(itemInfos: EditorItemInfo[], origItemInfos: EditorItemInfo[]) {
     const selectedItems = this._editorContext.selectionLayer.getAllEditorItems()
-    let restoreSelectionOutline = selectedItems.length === items.length
-    items.forEach((editorItemInfo) => {
-      this.handleUpdateEditorItem(editorItemInfo)
-      if (restoreSelectionOutline) {
-        const found = this.findSelectedItem(editorItemInfo, selectedItems)
-        if (!found) {
-          restoreSelectionOutline = false
+    let restoreSelectionOutline = selectedItems.length === origItemInfos.length
+    if (itemInfos.length === origItemInfos.length) {
+      origItemInfos.forEach((origEditorItemInfo, index) => {
+        this.handleUpdateEditorItem(origEditorItemInfo, itemInfos[index])
+        if (restoreSelectionOutline) {
+          const found = this.findSelectedItem(origEditorItemInfo, selectedItems)
+          if (!found) {
+            restoreSelectionOutline = false
+          }
         }
+      })
+      if (restoreSelectionOutline) {
+        this.restoreSelectionOutline(selectedItems)
       }
-    })
-    if (restoreSelectionOutline) {
-      this.restoreSelectionOutline(selectedItems)
     }
   }
 
@@ -1318,20 +1335,28 @@ export class EditorEventHandler {
     this.handleTableActiveCellShape()
   }
 
-  private handleOperationRedoUpdateItems(items: EditorItemInfo[]) {
+  /**
+   * Items are very different if they are moved into our out from container.
+   * @param itemInfos
+   * @param origItemInfos
+   * @private
+   */
+  private handleOperationRedoUpdateItems(itemInfos: EditorItemInfo[], origItemInfos: EditorItemInfo[]) {
     const selectedItems = this._editorContext.selectionLayer.getAllEditorItems()
-    let restoreSelectionOutline = selectedItems.length === items.length
-    items.forEach((editorItemInfo) => {
-      this.handleUpdateEditorItem(editorItemInfo)
-      if (restoreSelectionOutline) {
-        const found = this.findSelectedItem(editorItemInfo, selectedItems)
-        if (!found) {
-          restoreSelectionOutline = false
+    let restoreSelectionOutline = selectedItems.length === itemInfos.length
+    if (itemInfos.length === origItemInfos.length) {
+      itemInfos.forEach((editorItemInfo, index) => {
+        this.handleUpdateEditorItem(editorItemInfo, origItemInfos[index])
+        if (restoreSelectionOutline) {
+          const found = this.findSelectedItem(editorItemInfo, selectedItems)
+          if (!found) {
+            restoreSelectionOutline = false
+          }
         }
+      })
+      if (restoreSelectionOutline) {
+        this.restoreSelectionOutline(selectedItems)
       }
-    })
-    if (restoreSelectionOutline) {
-      this.restoreSelectionOutline(selectedItems)
     }
   }
 
@@ -1386,21 +1411,48 @@ export class EditorEventHandler {
     }
   }
 
-  private handleUpdateEditorItem(editorItemInfo: EditorItemInfo): boolean {
-    let items = this._editorContext.contentLayer.getAllEditorItems()
-    let count = items.length
-    for (let i = count - 1; i >= 0; i--) {
-      let item = items[i] as Item
-      if (item.id === editorItemInfo.id) {
-        this.updateEditorItemDetail(item, editorItemInfo)
-        return true
-      }
-      let found = this.updateEditorItem(item, editorItemInfo)
-      if (found) {
+  private containsItemIdInContainer(itemId: string, containerInfo: EditorItemInfo) {
+    if (containerInfo.id === itemId) {
+      return true
+    }
+    for (let i = 0; i < containerInfo.items.length; i++) {
+      const inContainer = this.containsItemIdInContainer(itemId, containerInfo.items[i])
+      if (inContainer) {
         return true
       }
     }
     return false
+  }
+
+  private handleUpdateEditorItem(toEditorItemInfo: EditorItemInfo, fromEditorItemInfo: EditorItemInfo): boolean {
+    //Id is difference if item is moved from or out of container.
+    if (toEditorItemInfo.id === fromEditorItemInfo.id) {
+      let items = this._editorContext.contentLayer.getAllEditorItems()
+      let count = items.length
+      for (let i = count - 1; i >= 0; i--) {
+        let item = items[i] as Item
+        if (item.id === toEditorItemInfo.id) {
+          this.updateEditorItemDetail(item, toEditorItemInfo)
+          return true
+        }
+        let found = this.updateEditorItem(item, toEditorItemInfo)
+        if (found) {
+          return true
+        }
+      }
+      return false
+    } else {
+      const targetInContainer = this.containsItemIdInContainer(toEditorItemInfo.id, fromEditorItemInfo)
+      if (targetInContainer) {
+        this.handleRemoveEditorItem(toEditorItemInfo.id)
+        this.handleAddEditorItem(toEditorItemInfo)
+      } else {
+        this.handleRemoveEditorItem(toEditorItemInfo.id)
+        this.handleRemoveEditorItem(fromEditorItemInfo.id)
+        this.handleAddEditorItem(toEditorItemInfo)
+      }
+      return true
+    }
   }
 
   private updateEditorItem(item: Item, editorItemInfo: EditorItemInfo): boolean {
@@ -1490,7 +1542,7 @@ export class EditorEventHandler {
     for (let i = count - 1; i >= 0; i--) {
       let childItem = item.items[i] as Item
       if (childItem.id === id) {
-        childItem.removeItemAt(i)
+        item.removeItemAt(i)
         return true
       }
       let found = this.removeItemById(childItem, childItem.id)
