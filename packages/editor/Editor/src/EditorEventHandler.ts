@@ -1743,6 +1743,10 @@ export class EditorEventHandler {
         this.updateTextCursorLocation(this._editorContext.targetItem, cellPoint.x, cellPoint.y)
         this._editorContext.targetItem.shape.enterTo(cellPoint.x, cellPoint.y)
         this._editorContext.textSelecting = false
+        // Check double click
+        if (nowTime - this._editorContext.targetTime < EditorEventHandler.DOUBLE_CLICK_TIME) {
+          this._editorContext.targetItem.shape.selectAll()
+        }
         this._editor.triggerTextEditStyleChange()
       } else {
         // Check double click
