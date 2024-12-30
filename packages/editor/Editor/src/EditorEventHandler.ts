@@ -1617,6 +1617,8 @@ export class EditorEventHandler {
     // const sourceJoint = new Point2(targetPoint.x - targetEntity.left, targetPoint.y - targetEntity.top)
     connector.source = targetEntity
     connector.sourceJoint = targetPoint
+    //Need to set up startDirection again since constructor may reset it cause empty source and empty target.
+    connector.startDirection = startDirection
     theControllerLayer.removeAllEditorItems()
     theControllerLayer.addEditorItem(connector)
     targetEntity.addSourceConnector(connector)
