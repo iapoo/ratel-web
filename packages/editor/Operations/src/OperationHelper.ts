@@ -230,6 +230,23 @@ export class OperationHelper {
     return editorItem
   }
 
+  private static refreshConnector(connectorInfo: ConnectorInfo, connector: Connector, items: EditorItem[]) {
+    items.forEach((item) => {
+      if (connectorInfo.source === item.id) {
+        let entity = item as Entity
+        connector.source = entity
+        entity.addSourceConnector(connector)
+      }
+      if (connectorInfo.target === item.id) {
+        let entity = item as Entity
+        connector.target = entity
+        entity.addTargetConnector(connector)
+      }
+      if (item.items.length > 0) {
+        OperationHelper.refreshConnector(connectorInfo, connector, item.items)
+      }
+    })
+  }
   public static refreshItem(itemInfo: EditorItemInfo, items: EditorItem[]) {
     if (itemInfo.category === Categories.CONNECTOR || itemInfo.category === Categories.CUSTOM_CONNECTOR) {
       let connectorInfo = itemInfo as ConnectorInfo
@@ -239,19 +256,9 @@ export class OperationHelper {
           connector = item as Connector
         }
       })
-      items.forEach((item) => {
-        if (connectorInfo.source === item.id && connector) {
-          let entity = item as Entity
-          connector.source = entity
-          entity.addSourceConnector(connector)
-        }
-        if (connectorInfo.target === item.id && connector) {
-          let entity = item as Entity
-          connector.target = entity
-          entity.addTargetConnector(connector)
-        }
-      })
-      //console.log(connector)
+      if (connector) {
+        OperationHelper.refreshConnector(connectorInfo, connector, items)
+      }
     }
   }
 
