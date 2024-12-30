@@ -80,15 +80,6 @@ export class EditorHelper {
       selections.forEach((selection) => {
         let editorItem = OperationHelper.loadItem(selection, editor)
         if (editorItem instanceof Connector && editorItem.start && editorItem.end) {
-          //Skip  connectors
-        } else if (editorItem instanceof Item) {
-          editorItem.boundary = Rectangle.makeLTWH(editorItem.left + offsetX, editorItem.top + offsetY, editorItem.width, editorItem.height)
-        }
-        editorItems.push(editorItem)
-      })
-      selections.forEach((selection) => {
-        let editorItem = OperationHelper.loadItem(selection, editor)
-        if (editorItem instanceof Connector && editorItem.start && editorItem.end) {
           const start = editorItem.start
           const end = editorItem.end
           editorItem.start = new Point2(start.x + offsetX + copyLocation.x, start.y + offsetY + copyLocation.y)
@@ -103,7 +94,7 @@ export class EditorHelper {
         }
         editorItems.push(editorItem)
       })
-      //regenerate item id & load
+      //associate connectors
       selections.forEach((selection) => {
         EditorHelper.refreshSelections(selection, editorItems)
       })

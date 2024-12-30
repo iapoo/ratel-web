@@ -65,7 +65,9 @@ const BasicLayout: React.FC = () => {
     setWindowHeight(newWindowHeight)
   }
   // `${windowHeight - 128}px`
-  console.log(`window Width =  ${windowWidth}, height = ${windowHeight}`)
+  if (false) {
+    console.log(`window Width =  ${windowWidth}, height = ${windowHeight}`)
+  }
   return (
     <div style={{ width: '100%', height: '100%' }}>
       <div style={{ width: '100%', height: '100%' }}>
