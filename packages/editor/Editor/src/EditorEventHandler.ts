@@ -904,6 +904,23 @@ export class EditorEventHandler {
     this._editorContext.inRangeSelecting = true
   }
 
+  private checkAndPopulateItemInRangeSelection(item: Item, left: number, top: number, right: number, bottom: number) {
+    const [boundaryLeft, boundaryTop, boundaryRight, boundaryBottom] = Editor.getItemsBoundary([item])
+    if (boundaryLeft >= left && boundaryTop >= top && boundaryRight <= right && boundaryBottom <= bottom) {
+      this._editor.selectionLayer.addEditorItem(item)
+    } else if (
+      item instanceof ContainerEntity &&
+      Math.max(boundaryLeft, left) <= Math.min(boundaryRight, right) &&
+      Math.max(boundaryTop, top) <= Math.min(boundaryBottom, bottom)
+    ) {
+      item.items.forEach((child) => {
+        if (!child.fixed) {
+          this.checkAndPopulateItemInRangeSelection(child as Item, left, top, right, bottom)
+        }
+      })
+    }
+  }
+
   private endRangeSelecting(e: PointerEvent) {
     this._editorContext.inRangeSelecting = false
     this._editorContext.rangeLayer.removeNode(this._editorContext.rangeSelectionShape)
@@ -913,10 +930,8 @@ export class EditorEventHandler {
     let bottom = Math.max(this._editorContext.startPointY, e.y) - this._editor.verticalSpace
     let itemCount = this._editor.contentLayer.getEditorItemCount()
     for (let i = 0; i < itemCount; i++) {
-      let item = this._editor.contentLayer.getEditorItem(i)
-      if (item.left > left && item.top > top && item.right < right && item.bottom < bottom) {
-        this._editor.selectionLayer.addEditorItem(item)
-      }
+      let item = this._editor.contentLayer.getEditorItem(i) as Item
+      this.checkAndPopulateItemInRangeSelection(item, left, top, right, bottom)
     }
     this._editor.triggerSelectionChange()
   }
