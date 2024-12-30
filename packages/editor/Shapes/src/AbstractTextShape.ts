@@ -494,7 +494,7 @@ export abstract class AbstractTextShape extends Shape {
   }
 
   public selectAll() {
-    this.select(0, this._text.length - 1)
+    this.select(0, this._text.length)
   }
 
   public select(start: number, end: number) {
@@ -559,7 +559,7 @@ export abstract class AbstractTextShape extends Shape {
         for (const run of firstLine.runs) {
           for (let index = 0; index < run.indices.length - 1; index++) {
             if (newX - this.getTextPaddingX() >= run.positions[index * 2] && newX - this.getTextPaddingX() <= run.positions[index * 2 + 2]) {
-              console.log(`Enter index = ${run.indices[index]}`)
+              //console.log(`Enter index = ${run.indices[index]}`)
               this.select(run.indices[index], run.indices[index])
             }
           }
@@ -575,7 +575,7 @@ export abstract class AbstractTextShape extends Shape {
         for (const run of lastLine.runs) {
           for (let index = 0; index < run.indices.length - 1; index++) {
             if (newX - this.getTextPaddingX() >= run.positions[index * 2] && newX - this.getTextPaddingX() <= run.positions[index * 2 + 2]) {
-              console.log(`Enter index = ${run.indices[index]}`)
+              //console.log(`Enter index = ${run.indices[index]}`)
               this.select(run.indices[index], run.indices[index])
             }
           }
@@ -595,7 +595,7 @@ export abstract class AbstractTextShape extends Shape {
             for (const run of line.runs) {
               for (let index = 0; index < run.indices.length - 1; index++) {
                 if (newX - this.getTextPaddingX() >= run.positions[index * 2] && newX - this.getTextPaddingX() <= run.positions[index * 2 + 2]) {
-                  console.log(`Enter index = ${run.indices[index]}`)
+                  //console.log(`Enter index = ${run.indices[index]}`)
                   this.select(run.indices[index], run.indices[index])
                   selected = true
                   break
@@ -632,7 +632,7 @@ export abstract class AbstractTextShape extends Shape {
         for (const run of firstLine.runs) {
           for (let index = 0; index < run.indices.length - 1; index++) {
             if (newX - this.getTextPaddingX() >= run.positions[index * 2] && newX - this.getTextPaddingX() <= run.positions[index * 2 + 2]) {
-              console.log(`Enter index = ${run.indices[index]}`)
+              //console.log(`Enter index = ${run.indices[index]}`)
               this.selectTo(run.indices[index])
             }
           }
@@ -648,7 +648,7 @@ export abstract class AbstractTextShape extends Shape {
         for (const run of lastLine.runs) {
           for (let index = 0; index < run.indices.length - 1; index++) {
             if (newX - this.getTextPaddingX() >= run.positions[index * 2] && newX - this.getTextPaddingX() <= run.positions[index * 2 + 2]) {
-              console.log(`Enter index = ${run.indices[index]}`)
+              //console.log(`Enter index = ${run.indices[index]}`)
               this.selectTo(run.indices[index])
             }
           }
@@ -668,7 +668,7 @@ export abstract class AbstractTextShape extends Shape {
             for (const run of line.runs) {
               for (let index = 0; index < run.indices.length - 1; index++) {
                 if (newX - this.getTextPaddingX() >= run.positions[index * 2] && newX - this.getTextPaddingX() <= run.positions[index * 2 + 2]) {
-                  console.log(`Enter index = ${run.indices[index]}`)
+                  //console.log(`Enter index = ${run.indices[index]}`)
                   this.selectTo(run.indices[index])
                   selected = true
                   break

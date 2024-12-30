@@ -1808,6 +1808,10 @@ export class EditorEventHandler {
             this._editorContext.target.shape.enterTo(targetPoint.x, targetPoint.y)
             this._editorContext.textSelecting = false
             this._editor.triggerTextEditStyleChange()
+            // Check double click
+            if (nowTime - this._editorContext.targetTime < EditorEventHandler.DOUBLE_CLICK_TIME) {
+              this._editorContext.target.shape.selectAll()
+            }
           } else {
             // Check double click
             if (nowTime - this._editorContext.targetTime < EditorEventHandler.DOUBLE_CLICK_TIME) {
@@ -1857,7 +1861,7 @@ export class EditorEventHandler {
           break
         }
       }
-      //console.log('Double click is detected')
+      console.log('Double click is detected')
       // this.handleDoubleClick(e)
       if (theTarget instanceof CodeContainer) {
         this._editor.beginCodeEdit()
@@ -1872,9 +1876,7 @@ export class EditorEventHandler {
         this._editorContext.textArea.focus()
         theTarget.shape.enter(theTargetPoint.x, theTargetPoint.y)
         this._editor.checkAndStartTextEdit()
-        if (theTarget) {
-          theTarget.shape.focused = true
-        }
+        theTarget.shape.focused = true
         this._editorContext.textArea.textContent = ''
         this.updateTextCursorLocation(theTarget, theTargetPoint.x, theTargetPoint.y)
         this._editor.triggerTextEditStyleChange()
