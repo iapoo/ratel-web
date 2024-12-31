@@ -1,4 +1,4 @@
-import { Colors, Point2, StrokeDashStyle } from '@ratel-web/engine'
+import { Point2, StrokeDashStyle } from '@ratel-web/engine'
 import { CustomConnector, CustomConnectorTypeInfo, ShapeEntity } from '../../../Items'
 import { ConnectorDirection, ConnectorType } from '../../../Shapes'
 
@@ -346,16 +346,16 @@ export class UMLConnector extends CustomConnector {
       case UMLConnectors.TYPE_INCLUDE: {
         const textBox = new ShapeEntity(width / 2 - 50, height / 2 - 25, 100, 30)
         textBox.text = '<<include>>'
-        textBox.fillColor = Colors.Transparent
-        textBox.strokeColor = Colors.Transparent
+        textBox.stroked = false
+        textBox.filled = false
         this.addItem(textBox)
         break
       }
       case UMLConnectors.TYPE_EXTEND: {
         const textBox = new ShapeEntity(width / 2 - 50, height / 2 - 25, 100, 30)
         textBox.text = '<<extend>>'
-        textBox.fillColor = Colors.Transparent
-        textBox.strokeColor = Colors.Transparent
+        textBox.stroked = false
+        textBox.filled = false
         this.addItem(textBox)
         break
       }
