@@ -44,6 +44,12 @@ const templateMap: TemplateInfo[] = [
   },
   {
     category: 'UML',
+    name: 'UML Sequence Diagram',
+    path: process.env.BASIC_PATH + '/template/basic/UMLSequenceDiagram.ratel',
+    image: process.env.BASIC_PATH + '/template/basic/UMLSequenceDiagram.png',
+  },
+  {
+    category: 'UML',
     name: 'UML Class Diagram',
     path: process.env.BASIC_PATH + '/template/basic/UMLClassDiagram.ratel',
     image: process.env.BASIC_PATH + '/template/basic/UMLClassDiagram.png',
