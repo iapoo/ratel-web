@@ -587,8 +587,9 @@ export class EditorEventHandler {
   }
 
   private handlePointMoveInMoving(e: PointerEvent) {
-    const containerEntity = this.findContainerEntity(e.x, e.y)
-    if (containerEntity && this.checkIfSelectionInContainer(containerEntity)) {
+    const [left, top, right, bottom] = this._editor.getSelectionBoundary()
+    const containerEntity = this.findContainerEntityCoverBoundary(e.x, e.y, left, top, right, bottom)
+    if (containerEntity) {
       this.startContainerSelection()
       this.handleContainerSelection(containerEntity)
       this.handleDefaultMoveInMoving(e)
@@ -964,7 +965,8 @@ export class EditorEventHandler {
   }
 
   private finishContainerSelection(e: PointerEvent) {
-    const containerEntity = this.findContainerEntity(e.x, e.y)
+    const [left, top, right, bottom] = this._editor.getSelectionBoundary()
+    const containerEntity = this.findContainerEntityCoverBoundary(e.x, e.y, left, top, right, bottom)
     if (this._editorContext.inContainerSelection && containerEntity) {
       let selectionCount = this._editor.selectionLayer.getEditorItemCount()
       for (let i = 0; i < selectionCount; i++) {
@@ -1020,6 +1022,114 @@ export class EditorEventHandler {
   }
 
   /**
+   * Check if container exists on x,y and within boundary left, top, right and bottom.
+   * @param x
+   * @param y
+   * @param left
+   * @param top
+   * @param right
+   * @param bottom
+   * @private
+   */
+  private findContainerEntityCoverBoundary(x: number, y: number, left: number, top: number, right: number, bottom: number): ContainerEntity | undefined {
+    let result
+    const count = this._editor.contentLayer.getEditorItemCount()
+    for (let i = 0; i < count; i++) {
+      const editorItem = this._editor.contentLayer.getEditorItem(i) as Item
+      const [cLeft, cTop, cRight, cBottom] = Editor.getItemsBoundary([editorItem])
+      if (
+        editorItem instanceof ContainerEntity &&
+        !(editorItem instanceof TableEntity) &&
+        cLeft <= left &&
+        cTop <= top &&
+        cRight >= right &&
+        cBottom >= bottom
+      ) {
+        const containerEntity = this.findContainerEntityInContainerCoverBoundary(x, y, editorItem, left, top, right, bottom)
+        //console.log(`Enter container now with container = ${containerEntity}, left=${containerEntity ? containerEntity.left : 0}...`)
+        if (containerEntity) {
+          result = containerEntity
+        }
+      }
+    }
+    return result
+  }
+
+  /**
+   * Check if container exists on x,y and within boundary left, top, right and bottom.
+   * @param x
+   * @param y
+   * @param container
+   * @param left
+   * @param top
+   * @param right
+   * @param bottom
+   * @private
+   */
+  private findContainerEntityInContainerCoverBoundary(
+    x: number,
+    y: number,
+    container: ContainerEntity,
+    left: number,
+    top: number,
+    right: number,
+    bottom: number,
+  ): ContainerEntity | undefined {
+    let result
+    const count = container.items.length
+    for (let i = 0; i < count; i++) {
+      const editorItem = container.items[i] as Item
+      const [cLeft, cTop, cRight, cBottom] = Editor.getItemsBoundary([editorItem])
+      //console.log(`Finding items ${x}    ${y}    ==== ${shape.position.x}    ${shape.position.y}`)
+      //console.log(`check container: ${editorItem instanceof ContainerEntity}`)
+      if (
+        editorItem instanceof ContainerEntity &&
+        !(editorItem instanceof TableEntity) &&
+        cLeft <= left &&
+        cTop <= top &&
+        cRight >= right &&
+        cBottom >= bottom
+      ) {
+        const containerEntity = this.findContainerEntityInContainerCoverBoundary(x, y, editorItem, left, top, right, bottom)
+        if (containerEntity) {
+          result = containerEntity
+        }
+      }
+    }
+    if (!result) {
+      //console.log(`check container now....`)
+      let inSelection = false
+      //Check and Skip if current container is in selection (moving container). However, skip check if in creating shapes.
+      if (!this._editor.action || this._editor.action.items.length === 0) {
+        const selectionCount = this._editor.selectionLayer.getEditorItemCount()
+        for (let j = 0; j < selectionCount; j++) {
+          const selection = this._editor.selectionLayer.getEditorItem(j)
+          if (container === selection) {
+            inSelection = true
+          }
+        }
+      }
+      //TODO: Need to check & explain why following code here
+      // const controlCount = this.controllerLayer.getEditorItemCount()
+      // for (let j = 0; j < controlCount; j++) {
+      //   const selection = this.controllerLayer.getEditorItem(j)
+      //   if (editorItem === selection) {
+      //     console.log(`check container now for controller ....`)
+      //     inSelection = true
+      //   }
+      // }
+      if (!inSelection) {
+        result = container
+      }
+      //console.log(
+      //  `check container now.... result= ${result}  selectionCount = ${selectionCount}  controlCount = ${controlCount} inSelection = ${inSelection}`,
+      //)
+    }
+
+    return result
+  }
+
+  /**
    * Check if container exists on x,y
    * @param x
    * @param y
@@ -1037,6 +1147,7 @@ export class EditorEventHandler {
         shape.intersects(x - Editor.TEST_RADIUS, y - Editor.TEST_RADIUS, Editor.TEST_SIZE, Editor.TEST_SIZE)
       ) {
         const containerEntity = this.findContainerEntityInContainer(x, y, editorItem)
+        console.log(`Enter container now with container = ${containerEntity}, left=${containerEntity ? containerEntity.left : 0}...`)
         if (containerEntity) {
           result = containerEntity
         }
