@@ -1147,7 +1147,7 @@ export class EditorEventHandler {
         shape.intersects(x - Editor.TEST_RADIUS, y - Editor.TEST_RADIUS, Editor.TEST_SIZE, Editor.TEST_SIZE)
       ) {
         const containerEntity = this.findContainerEntityInContainer(x, y, editorItem)
-        console.log(`Enter container now with container = ${containerEntity}, left=${containerEntity ? containerEntity.left : 0}...`)
+        //console.log(`Enter container now with container = ${containerEntity}, left=${containerEntity ? containerEntity.left : 0}...`)
         if (containerEntity) {
           result = containerEntity
         }
