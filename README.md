@@ -18,6 +18,7 @@ Please visit: <https://ratel.ivipa.com>
 - Support code editor with syntax highlight as shape in diagram
 - Support library feature, can add selected shapes as library or load image or svg as library (Require internet).
 - Support share management, team management (Require internet)
+- Support deploy to local environment(including desktop & backend server)
 
 ## Try
 
