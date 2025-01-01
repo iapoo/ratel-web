@@ -1903,6 +1903,7 @@ export class EditorEventHandler {
     }
     if (this._editorContext.target !== clickedEditorItem) {
       //Need to check pool label here
+      const nowTime = Date.now()
       if (
         clickedEditorItem instanceof PoolCustomContainer &&
         this._editorContext.target &&
@@ -1915,6 +1916,12 @@ export class EditorEventHandler {
         this._editorContext.target.shape.enterTo(targetItemPoint.x, targetItemPoint.y)
         this._editorContext.textSelecting = false
         this._editor.triggerTextEditStyleChange()
+        // Check double click
+        //console.log(`Double check for pool container`)
+        if (nowTime - this._editorContext.targetTime < EditorEventHandler.DOUBLE_CLICK_TIME) {
+          this._editorContext.target.shape.selectAll()
+        }
+        this._editorContext.targetTime = nowTime
       } else {
         if (this._editorContext.target) {
           this._editorContext.target.shape.focused = false
@@ -1991,7 +1998,7 @@ export class EditorEventHandler {
           break
         }
       }
-      console.log('Double click is detected')
+      //console.log('Double click is detected')
       // this.handleDoubleClick(e)
       if (theTarget instanceof CodeContainer) {
         this._editor.beginCodeEdit()
@@ -2185,7 +2192,11 @@ export class EditorEventHandler {
         this._editorContext.targetPoolYResizing = yResizing
       }
     } else {
-      this._editor.updateEditorMode(EditorMode.MOVE)
+      if (this._editorContext.target && this._editorContext.target.shape.focused && this.ifFixedItemIsTarget(editorItem, e.x, e.y)) {
+        this._editor.updateEditorMode(EditorMode.TEXT)
+      } else {
+        this._editor.updateEditorMode(EditorMode.MOVE)
+      }
     }
   }
 
