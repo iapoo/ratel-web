@@ -1482,7 +1482,7 @@ export abstract class AbstractTextShape extends Shape {
   }
 
   private getLinesIndicesToPath(startIndex: number, endIndex: number, targetPath: Path) {
-    console.log(`getLinesIndicesToPath=> ${startIndex}  ${endIndex}`)
+    //console.log(`getLinesIndicesToPath=> ${startIndex}  ${endIndex}`)
     if (startIndex === endIndex) {
       return undefined
     }
