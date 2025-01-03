@@ -1,6 +1,6 @@
 # Introduction to Ratel
 
-![Logo](images/favicon-128.png)
+![Logo](/images/favicon-128.png)
 
 ## About Ratel
 

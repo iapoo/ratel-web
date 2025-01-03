@@ -1,6 +1,6 @@
 # Ratel介绍
 
-![Logo](images/favicon-128.png)
+![Logo](/images/favicon-128.png)
 
 ## 关于Ratel
 
