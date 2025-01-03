@@ -12,6 +12,8 @@
 /.umi-production
 /.umi-test
 /dist
+/docs/.vitepress/dist
+/docs/.vitepress/cache
 /.mfsu
 #/.vscode
 .swc
