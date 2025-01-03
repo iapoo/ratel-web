@@ -2,6 +2,7 @@ import { defineConfig } from 'vitepress'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
+  base: '/ratel-web/',
   title: "Ratel",
   description: "Ratel",
   head: [['link', { rel: 'icon', href: '/favicon.png' }]],
