@@ -11,7 +11,7 @@ hero:
       text: About Ratel
       link: /about
     - theme: alt
-      text: Quck Guide
+      text: Quick Guide
       link: /quick-guide
     - theme: alt
       text: Document

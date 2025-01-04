@@ -12,7 +12,7 @@ export default defineConfig({
       lang: 'en',
     },
     zh: {
-      label: 'Chinese',
+      label: '中文',
       lang: 'zh',
     },
   },
@@ -31,14 +31,14 @@ export default defineConfig({
         text: 'Introduction',
         items: [
           { text: 'About Ratel', link: '/about' },
-          { text: 'Quck guide', link: '/quick-guide' },
+          { text: 'Quick guide', link: '/quick-guide' },
         ]
       },
       {
         text: 'Usage',
         items: [
           { text: 'About Ratel', link: '/about' },
-          { text: 'Quck guide', link: '/quick-guide' },
+          { text: 'Quick guide', link: '/quick-guide' },
         ]
       },
       {

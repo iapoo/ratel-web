@@ -1,6 +1,6 @@
-# Environmet Setup
+# Environment Setup
 
-## Environment preparement
+## Prepare Environment
 
 ### ratel-web
 

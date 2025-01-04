@@ -28,7 +28,7 @@ Docker环境
 
 - 在/app子目录运行： npm run electron:mac (MacOS版本桌面程序)
 
-- 在/app子目录运行： npm run electron:linux (Linux/Unbuntu版本桌面程序)
+- 在/app子目录运行： npm run electron:linux (Linux/Ubuntu版本桌面程序)
 
 ### ratel-server
 
