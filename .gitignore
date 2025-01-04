@@ -12,6 +12,7 @@
 /.umi-production
 /.umi-test
 /dist
+/docs/node_modules
 /docs/.vitepress/dist
 /docs/.vitepress/cache
 /.mfsu

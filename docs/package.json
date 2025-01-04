@@ -1,0 +1,23 @@
+{
+  "name": "ratel-doc",
+  "version": "0.1.0",
+  "private": true,
+  "homepage": "https://ratel.ivipa.com",
+  "author": {
+    "name": "sean.yang",
+    "email": "sean.yang@ivipa.com",
+    "url": "https://ratel.ivipa.com"
+  },
+  "scripts": {
+    "docs:build": "vitepress build .",
+    "docs:dev": "vitepress dev .",
+    "docs:preview": "vitepress dev ."
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "vitepress": "^1.5.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

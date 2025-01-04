@@ -1,4 +1,4 @@
-name: Deploy Ratel Web site to Pages
+name: Deploy Ratel Web doc to Pages
 
 on:
   push:
@@ -32,8 +32,10 @@ jobs:
         uses: actions/configure-pages@v4
       - name: Install dependencies
         run: npm install
+        working-directory: ./docs
       - name: Build with Doc
         run: npm run docs:build
+        working-directory: ./docs
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
