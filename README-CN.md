@@ -8,6 +8,8 @@ Ratel是一个开源通用的图形编辑器，可以用于创作流程图、UML
 
 网站: <https://ratel.ivipa.com>
 
+文档: <https://iapoo.github.io/ratel-web/>
+
 ## 主要功能
 
 - 支持基本图形、流程图、UML、原型图、泳道、源代码编辑图形等等.

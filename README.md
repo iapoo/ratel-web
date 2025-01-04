@@ -8,6 +8,8 @@ Ratel is open source general diagram editor for flowchart, UML and other diagram
 
 Please visit: <https://ratel.ivipa.com>
 
+Document: <https://iapoo.github.io/ratel-web/>
+
 ## Main Features
 
 - Support basic shapes, flow chart, UML, Mockup, Pool, Code Textarea and so on.
