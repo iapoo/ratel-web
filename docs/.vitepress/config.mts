@@ -1,67 +1,13 @@
 import { defineConfig } from 'vitepress'
+import {en} from './en'
+import {zh} from './zh'
+import {shared} from './shared'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  base: '/ratel-web/',
-  title: "Ratel",
-  description: "Ratel",
-  head: [['link', { rel: 'icon', href: './favicon.png' }]],
+  ...shared,
   locales: {
-    root: {
-      label: 'English',
-      lang: 'en',
-    },
-    zh: {
-      label: '中文',
-      lang: 'zh',
-    },
-  },
-  themeConfig: {
-    logo: {
-      src: '/images/favicon-128.png',
-      alt: 'logo'
-    },
-    // https://vitepress.dev/reference/default-theme-config
-    nav: [
-      { text: 'Home', link: '/index' },
-      { text: 'Document', link: '/about' }
-    ],
-    sidebar: [
-      {
-        text: 'Introduction',
-        items: [
-          { text: 'About Ratel', link: '/about' },
-          { text: 'Quick guide', link: '/quick-guide' },
-        ]
-      },
-      {
-        text: 'Usage',
-        items: [
-          { text: 'About Ratel', link: '/about' },
-          { text: 'Quick guide', link: '/quick-guide' },
-        ]
-      },
-      {
-        text: 'Installation',
-        items: [
-          { text: 'Installation', link: '/installation' },
-        ]
-      },
-      {
-        text: 'Build',
-        items: [
-          { text: 'Build', link: '/build' }
-        ]
-      }
-    ],
-
-    socialLinks: [
-      { icon: 'github', link: 'https://github.com/iapoo/ratel-web' }
-    ],
-
-    footer: {
-      message: '',
-      copyright: `Copyright © 2024-${new Date().getFullYear()} Ivipa`
-    },
+    root: {label: 'English', ...en},
+    zh: {label: '简体中文', ...zh},
   }
 })
