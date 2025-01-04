@@ -5,7 +5,7 @@ export default defineConfig({
   base: '/ratel-web/',
   title: "Ratel",
   description: "Ratel",
-  head: [['link', { rel: 'icon', href: '/favicon.png' }]],
+  head: [['link', { rel: 'icon', href: './favicon.png' }]],
   locales: {
     root: {
       label: 'English',
