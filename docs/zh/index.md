@@ -9,13 +9,13 @@ hero:
   actions:
     - theme: brand
       text: 关于Ratel
-      link: /about
+      link: /zh/about
     - theme: alt
       text: 快速开始
-      link: /quick-guide
+      link: /zh/quick-guide
     - theme: alt
       text: 文档
-      link: /about
+      link: /zh/about
   image:
     src: /images/ratel-web.png
     alt: Ratel

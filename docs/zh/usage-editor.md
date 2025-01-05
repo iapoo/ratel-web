@@ -2,9 +2,15 @@
 
 ## 文档操作
 
+![Management](/images/editor-file.png)
+
 ### 新建文档
 
+![Management](/images/editor-new-document.png)
+
 ### 打开在线文档
+
+![Management](/images/editor-open-online.png)
 
 ### 保存在线文档
 

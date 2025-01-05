@@ -2,9 +2,15 @@
 
 ## Document operation
 
+![Management](/images/editor-file.png)
+
 ### New Document
 
+![Management](/images/editor-new-document.png)
+
 ### Open online document
+
+![Management](/images/editor-open-online.png)
 
 ### Save online documents
 
