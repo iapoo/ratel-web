@@ -378,7 +378,7 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
     } else {
       let documentData = treeMap?.get(DOC + documentId)
       if (isDocument(documentData)) {
-        if (selectedDocumentName === documentData.documentName && selectedDocumentId == documentData.documentId) {
+        if (selectedDocumentName === documentData.documentName && selectedDocumentId === documentData.documentId) {
           doSaveFile(folderId, true, documentData.documentId, documentData.documentName)
         } else {
           setConfirmOverwriteWindowVisible(true)
@@ -436,14 +436,20 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
   return (
     <div>
       <Modal
-        title={<FormattedMessage id="workspace.header.window.open-file.title" />}
+        title={
+          disableFileName ? (
+            <FormattedMessage id="workspace.header.window.open-file.save-title" />
+          ) : (
+            <FormattedMessage id="workspace.header.window.open-file.open-title" />
+          )
+        }
         centered
         open={visible}
         onOk={onOk}
         onCancel={onCancel}
         maskClosable={false}
       >
-        <div style={{ width: '100%', height: '480px' }}>
+        <div style={{ width: '100%', maxHeight: '480px' }}>
           <Space wrap>
             <Button onClick={openAddFolder}>
               <FormattedMessage id="workspace.header.window.open-file.add-folder" />
@@ -458,27 +464,13 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
           <div
             style={{
               width: '100%',
-              height: '440px',
               borderWidth: '1px',
               borderColor: 'silver',
               borderStyle: 'solid',
               marginTop: '8px',
             }}
           >
-            <Tree
-              style={{ width: '100%', height: '100%', margin: '8px' }}
-              height={420}
-              showLine
-              showIcon
-              //checkable
-              selectable
-              //defaultExpandedKeys={['0-0-0', '0-0-1']}
-              //defaultSelectedKeys={['0-0-0', '0-0-1']}
-              //defaultCheckedKeys={['0-0-0', '0-0-1']}
-              onSelect={onFolderSelect}
-              //onCheck={onCheck}
-              treeData={treeData}
-            />
+            <Tree style={{ width: '100%' }} height={420} showLine showIcon selectable onSelect={onFolderSelect} treeData={treeData} />
           </div>
         </div>
       </Modal>
@@ -502,12 +494,12 @@ const OpenFileWindowPage: FC<OpenFileWindowProps> = ({
           autoComplete="off"
         >
           <Form.Item
-            label={<FormattedMessage id="workspace.header.window.open-file.add-folder.foler-name" />}
+            label={<FormattedMessage id="workspace.header.window.open-file.add-folder.folder-name" />}
             name="folderName"
             rules={[
               {
                 required: true,
-                message: <FormattedMessage id="workspace.header.window.open-file.add-folder.input-new-foler-name" />,
+                message: <FormattedMessage id="workspace.header.window.open-file.add-folder.input-new-folder-name" />,
               },
             ]}
           >

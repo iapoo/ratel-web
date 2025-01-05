@@ -3152,7 +3152,7 @@ const Header: FC<HeaderProps> = ({
       {/* <Modal title={<FormattedMessage id='workspace.header.message-title-document-modified'/>} centered open={discardModifiedDocumentWindowVisible} onOk={confirmDiscardModifiedDocument} onCancel={cancelDiscardModifiedDocument} okText="确认" cancelText="取消" >
         <Form name="exportForm" form={exportForm} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }} style={{ maxWidth: 600 }} initialValues={{ remember: true }}
             onFinish={onExportFormFinish} autoComplete="off">
-            <Form.Item label={<FormattedMessage id='workspace.header.window.open-file.add-folder.foler-name' />} name="folderName" rules={[{ required: true, message: <FormattedMessage id='workspace.header.window.open-file.add-folder.input-new-foler-name' /> }]} >
+            <Form.Item label={<FormattedMessage id='workspace.header.window.open-file.add-folder.folder-name' />} name="folderName" rules={[{ required: true, message: <FormattedMessage id='workspace.header.window.open-file.add-folder.input-new-folder-name' /> }]} >
               <Input />
             </Form.Item>
             </Form>
@@ -3160,7 +3160,7 @@ const Header: FC<HeaderProps> = ({
       <Modal title={<FormattedMessage id='workspace.header.message-title-document-modified'/>} centered open={discardModifiedDocumentWindowVisible} onOk={confirmDiscardModifiedDocument} onCancel={cancelDiscardModifiedDocument} okText="确认" cancelText="取消" >
       <Form name="downloadDocumentForm" form={downloadDocumentForm} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }} style={{ maxWidth: 600 }} initialValues={{ remember: true }}
             onFinish={onDownloadDocumentFormFinish} autoComplete="off">
-            <Form.Item label={<FormattedMessage id='workspace.header.window.open-file.add-folder.foler-name' />} name="folderName" rules={[{ required: true, message: <FormattedMessage id='workspace.header.window.open-file.add-folder.input-new-foler-name' /> }]} >
+            <Form.Item label={<FormattedMessage id='workspace.header.window.open-file.add-folder.folder-name' />} name="folderName" rules={[{ required: true, message: <FormattedMessage id='workspace.header.window.open-file.add-folder.input-new-folder-name' /> }]} >
               <Input />
             </Form.Item>
             </Form>

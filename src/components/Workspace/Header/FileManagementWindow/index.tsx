@@ -520,12 +520,12 @@ const FileManagementWindowPage: FC<FileManagementWindowProps> = ({
           autoComplete="off"
         >
           <Form.Item
-            label={<FormattedMessage id="workspace.header.window.open-file.add-folder.foler-name" />}
+            label={<FormattedMessage id="workspace.header.window.open-file.add-folder.folder-name" />}
             name="folderName"
             rules={[
               {
                 required: true,
-                message: <FormattedMessage id="workspace.header.window.open-file.add-folder.input-new-foler-name" />,
+                message: <FormattedMessage id="workspace.header.window.open-file.add-folder.input-new-folder-name" />,
               },
             ]}
           >
