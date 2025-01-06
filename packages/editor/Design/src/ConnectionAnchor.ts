@@ -75,8 +75,9 @@ export class ConnectionAnchor extends Anchor {
       return
     }
     const point = this.worldTransform.makePoint(new Point2(x, y))
-    const moveX = point.x - this._startX
-    const moveY = point.y - this._startY
+    //console.log(`Check x = ${x} y = ${y} , px = ${point.x}, py = ${point.y}`)
+    const moveX = point.x / this.editor.zoom - this._startX / this.editor.zoom
+    const moveY = point.y / this.editor.zoom - this._startY / this.editor.zoom
     let newStartX, newStartY, newEndX, newEndY, newWidth, newHeight
     if (this._fromSource) {
       newStartX = this._sourceX + moveX
@@ -104,7 +105,7 @@ export class ConnectionAnchor extends Anchor {
         const item = this.editor.findEditorItem(point.x, point.y, true)
         const editorItem = item as Item
         const isEdge = editorItem ? this.editor.hasEditorItemJoint(editorItem, point.x, point.y) : false
-        // console.log(`editorItem= ${editorItem} isEdge=${isEdge}`)
+        //console.log(`editorItem= ${editorItem} isEdge=${isEdge}`)
         if (this._fromSource) {
           if (this.target.source) {
             if (editorItem && isEdge) {
@@ -113,17 +114,17 @@ export class ConnectionAnchor extends Anchor {
                 const sourceJoint = this.editor.findEditorItemJoint(editorItem, point.x, point.y, inEditorItem)
                 const startDirection = this.editor.findConnectorDirection(editorItem, point.x, point.y)
                 this.target.source.removeSourceConnector(this.target)
-                this.target.startDirection = startDirection
                 this.target.source = editorItem
                 this.target.sourceJoint = sourceJoint
+                this.target.startDirection = startDirection
                 editorItem.addSourceConnector(this.target)
                 // console.log(`source is removed & added`)
               } else {
                 const inEditorItem = this.editor.isInEditorItem(editorItem, point.x, point.y)
                 const sourceJoint = this.editor.findEditorItemJoint(editorItem, point.x, point.y, inEditorItem)
                 const startDirection = this.editor.findConnectorDirection(editorItem, point.x, point.y)
-                this.target.startDirection = startDirection
                 this.target.sourceJoint = sourceJoint
+                this.target.startDirection = startDirection
                 // console.log(`source isn't changed`)
               }
             } else {
@@ -136,9 +137,9 @@ export class ConnectionAnchor extends Anchor {
               const inEditorItem = this.editor.isInEditorItem(editorItem, point.x, point.y)
               const sourceJoint = this.editor.findEditorItemJoint(editorItem, point.x, point.y, inEditorItem)
               const startDirection = this.editor.findConnectorDirection(editorItem, point.x, point.y)
-              this.target.startDirection = startDirection
               this.target.source = editorItem
               this.target.sourceJoint = sourceJoint
+              this.target.startDirection = startDirection
               editorItem.addSourceConnector(this.target)
               // console.log(`source is added`)
             } else {
@@ -153,17 +154,17 @@ export class ConnectionAnchor extends Anchor {
                 const targetJoint = this.editor.findEditorItemJoint(editorItem, point.x, point.y, inEditorItem)
                 const endDirection = this.editor.findConnectorDirection(editorItem, point.x, point.y)
                 this.target.target.removeTargetConnector(this.target)
-                this.target.endDirection = endDirection
                 this.target.target = editorItem
                 this.target.targetJoint = targetJoint
+                this.target.endDirection = endDirection
                 editorItem.addTargetConnector(this.target)
                 // console.log(`target is removed & added`)
               } else {
                 const inEditorItem = this.editor.isInEditorItem(editorItem, point.x, point.y)
                 const targetJoint = this.editor.findEditorItemJoint(editorItem, point.x, point.y, inEditorItem)
                 const endDirection = this.editor.findConnectorDirection(editorItem, point.x, point.y)
-                this.target.endDirection = endDirection
                 this.target.targetJoint = targetJoint
+                this.target.endDirection = endDirection
                 // console.log(`taget isn't changed`)
               }
             } else {
@@ -176,9 +177,9 @@ export class ConnectionAnchor extends Anchor {
               const inEditorItem = this.editor.isInEditorItem(editorItem, point.x, point.y)
               const targetJoint = this.editor.findEditorItemJoint(editorItem, point.x, point.y, inEditorItem)
               const endDirection = this.editor.findConnectorDirection(editorItem, point.x, point.y)
-              this.target.endDirection = endDirection
               this.target.target = editorItem
               this.target.targetJoint = targetJoint
+              this.target.endDirection = endDirection
               editorItem.addTargetConnector(this.target)
               // console.log(`target is added`)
             } else {

@@ -996,7 +996,7 @@ export class Editor extends Painter {
     targetY = targetY * this.zoom + this.verticalSpace
 
     if (editorItem.shape.worldInverseTransform) {
-      return editorItem.shape.worldInverseTransform.makePoint(new Point2(targetX / this._zoom, targetY / this._zoom))
+      return editorItem.shape.worldInverseTransform.makePoint(new Point2(targetX, targetY))
     }
     return new Point2(x / this._zoom, y / this._zoom)
   }
