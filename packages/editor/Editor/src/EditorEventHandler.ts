@@ -925,10 +925,10 @@ export class EditorEventHandler {
   private endRangeSelecting(e: PointerEvent) {
     this._editorContext.inRangeSelecting = false
     this._editorContext.rangeLayer.removeNode(this._editorContext.rangeSelectionShape)
-    let left = Math.min(this._editorContext.startPointX, e.x) - this._editor.horizontalSpace
-    let top = Math.min(this._editorContext.startPointY, e.y) - this._editor.verticalSpace
-    let right = Math.max(this._editorContext.startPointX, e.x) - this._editor.horizontalSpace
-    let bottom = Math.max(this._editorContext.startPointY, e.y) - this._editor.verticalSpace
+    let left = (Math.min(this._editorContext.startPointX, e.x) - this._editor.horizontalSpace) / this._editor.zoom
+    let top = (Math.min(this._editorContext.startPointY, e.y) - this._editor.verticalSpace) / this._editor.zoom
+    let right = (Math.max(this._editorContext.startPointX, e.x) - this._editor.horizontalSpace) / this._editor.zoom
+    let bottom = (Math.max(this._editorContext.startPointY, e.y) - this._editor.verticalSpace) / this._editor.zoom
     let itemCount = this._editor.contentLayer.getEditorItemCount()
     for (let i = 0; i < itemCount; i++) {
       let item = this._editor.contentLayer.getEditorItem(i) as Item
