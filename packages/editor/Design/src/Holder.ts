@@ -19,7 +19,7 @@ import { RotationAnchor } from './RotationAnchor'
 
 export class Holder extends Control {
   public static readonly PADDING = 32
-  public static readonly ANCHOR_RADIUS = 4
+  public static readonly ANCHOR_RADIUS = 5
   public static readonly ANCHOR_DISTANCE = 24
   private _divideAnchors: DivideAnchor[] = []
   private _rotationAnchor: RotationAnchor
@@ -228,32 +228,32 @@ export class Holder extends Control {
     this._startCubicControllerAnchor.scale = new Scale(1 / this.editor.zoom, 1 / this.editor.zoom)
     this._endCubicControllerAnchor.scale = new Scale(1 / this.editor.zoom, 1 / this.editor.zoom)
 
-    this._rotationAnchor.left = this._target.width - Holder.ANCHOR_RADIUS
-    this._rotationAnchor.top = -Holder.ANCHOR_DISTANCE
-    this._leftResizeAnchor.left = -Holder.ANCHOR_RADIUS
-    this._leftResizeAnchor.top = this._target.height / 2 - Holder.ANCHOR_RADIUS
-    this.leftTopResizeAnchor.left = -Holder.ANCHOR_RADIUS
-    this.leftTopResizeAnchor.top = -Holder.ANCHOR_RADIUS
-    this.topResizeAnchor.left = this._target.width / 2 - Holder.ANCHOR_RADIUS
-    this.topResizeAnchor.top = -Holder.ANCHOR_RADIUS
-    this._rightTopResizeAnchor.left = this._target.width - Holder.ANCHOR_RADIUS
-    this._rightTopResizeAnchor.top = -Holder.ANCHOR_RADIUS
-    this._rightResizeAnchor.left = this._target.width - Holder.ANCHOR_RADIUS
-    this._rightResizeAnchor.top = this._target.height / 2 - Holder.ANCHOR_RADIUS
-    this._rightBottomResizeAnchor.left = this._target.width - Holder.ANCHOR_RADIUS
-    this._rightBottomResizeAnchor.top = this._target.height - Holder.ANCHOR_RADIUS
-    this._bottomResizeAnchor.left = this._target.width / 2 - Holder.ANCHOR_RADIUS
-    this._bottomResizeAnchor.top = this._target.height - Holder.ANCHOR_RADIUS
-    this._leftBottomResizeAnchor.left = -Holder.ANCHOR_RADIUS
-    this._leftBottomResizeAnchor.top = this._target.height - Holder.ANCHOR_RADIUS
-    this._leftCreationAnchor.left = -Holder.ANCHOR_DISTANCE
-    this._leftCreationAnchor.top = this._target.height / 2 - Holder.ANCHOR_RADIUS
-    this._topCreationAnchor.left = this._target.width / 2 - Holder.ANCHOR_RADIUS
-    this._topCreationAnchor.top = -Holder.ANCHOR_DISTANCE
-    this._rightCreationAnchor.left = this._target.width + Holder.ANCHOR_DISTANCE
-    this._rightCreationAnchor.top = this._target.height / 2 - Holder.ANCHOR_RADIUS
-    this._bottomCreationAnchor.left = this._target.width / 2 - Holder.ANCHOR_RADIUS
-    this._bottomCreationAnchor.top = this._target.height + Holder.ANCHOR_DISTANCE
+    this._rotationAnchor.left = this._target.width - Holder.ANCHOR_RADIUS / this.editor.zoom
+    this._rotationAnchor.top = -Holder.ANCHOR_DISTANCE / this.editor.zoom
+    this._leftResizeAnchor.left = -Holder.ANCHOR_RADIUS / this.editor.zoom
+    this._leftResizeAnchor.top = this._target.height / 2 - Holder.ANCHOR_RADIUS / this.editor.zoom
+    this.leftTopResizeAnchor.left = -Holder.ANCHOR_RADIUS / this.editor.zoom
+    this.leftTopResizeAnchor.top = -Holder.ANCHOR_RADIUS / this.editor.zoom
+    this.topResizeAnchor.left = this._target.width / 2 - Holder.ANCHOR_RADIUS / this.editor.zoom
+    this.topResizeAnchor.top = -Holder.ANCHOR_RADIUS / this.editor.zoom
+    this._rightTopResizeAnchor.left = this._target.width - Holder.ANCHOR_RADIUS / this.editor.zoom
+    this._rightTopResizeAnchor.top = -Holder.ANCHOR_RADIUS / this.editor.zoom
+    this._rightResizeAnchor.left = this._target.width - Holder.ANCHOR_RADIUS / this.editor.zoom
+    this._rightResizeAnchor.top = this._target.height / 2 - Holder.ANCHOR_RADIUS / this.editor.zoom
+    this._rightBottomResizeAnchor.left = this._target.width - Holder.ANCHOR_RADIUS / this.editor.zoom
+    this._rightBottomResizeAnchor.top = this._target.height - Holder.ANCHOR_RADIUS / this.editor.zoom
+    this._bottomResizeAnchor.left = this._target.width / 2 - Holder.ANCHOR_RADIUS / this.editor.zoom
+    this._bottomResizeAnchor.top = this._target.height - Holder.ANCHOR_RADIUS / this.editor.zoom
+    this._leftBottomResizeAnchor.left = -Holder.ANCHOR_RADIUS / this.editor.zoom
+    this._leftBottomResizeAnchor.top = this._target.height - Holder.ANCHOR_RADIUS / this.editor.zoom
+    this._leftCreationAnchor.left = -Holder.ANCHOR_DISTANCE / this.editor.zoom
+    this._leftCreationAnchor.top = this._target.height / 2 - Holder.ANCHOR_RADIUS / this.editor.zoom
+    this._topCreationAnchor.left = this._target.width / 2 - Holder.ANCHOR_RADIUS / this.editor.zoom
+    this._topCreationAnchor.top = -Holder.ANCHOR_DISTANCE / this.editor.zoom
+    this._rightCreationAnchor.left = this._target.width + Holder.ANCHOR_DISTANCE / this.editor.zoom
+    this._rightCreationAnchor.top = this._target.height / 2 - Holder.ANCHOR_RADIUS / this.editor.zoom
+    this._bottomCreationAnchor.left = this._target.width / 2 - Holder.ANCHOR_RADIUS / this.editor.zoom
+    this._bottomCreationAnchor.top = this._target.height + Holder.ANCHOR_DISTANCE / this.editor.zoom
 
     if (this.target instanceof ShapeEntity) {
       let shapeType = this.target.shapeType
@@ -268,8 +268,8 @@ export class Holder extends Control {
         x = (endX - startX) * this.target.shape.modifier.x + startX
         y = (endY - startY) * this.target.shape.modifier.y + startY
       }
-      this._modifyAnchor.left = x - Holder.ANCHOR_RADIUS
-      this._modifyAnchor.top = y - Holder.ANCHOR_RADIUS
+      this._modifyAnchor.left = x - Holder.ANCHOR_RADIUS / this.editor.zoom
+      this._modifyAnchor.top = y - Holder.ANCHOR_RADIUS / this.editor.zoom
       //console.log(`Modify Anchor left= ${this._modifyAnchor.left} top = ${this._modifyAnchor.top}`)
       let controllerStartX = shapeType.controllerStartX * this.target.width
       let controllerStartY = shapeType.controllerStartY * this.target.height
@@ -282,8 +282,8 @@ export class Holder extends Control {
         controllerX = (controllerEndX - controllerStartX) * this.target.shape.controller.x + controllerStartX
         controllerY = (controllerEndY - controllerStartY) * this.target.shape.controller.y + controllerStartY
       }
-      this._controllerAnchor.left = controllerX - Holder.ANCHOR_RADIUS
-      this._controllerAnchor.top = controllerY - Holder.ANCHOR_RADIUS
+      this._controllerAnchor.left = controllerX - Holder.ANCHOR_RADIUS / this.editor.zoom
+      this._controllerAnchor.top = controllerY - Holder.ANCHOR_RADIUS / this.editor.zoom
       let startAdapterX = shapeType.adapterStartX * this.target.width
       let startAdapterY = shapeType.adapterStartY * this.target.height
       let endAdapterX = shapeType.adapterEndX * this.target.width
@@ -304,66 +304,66 @@ export class Holder extends Control {
             ? adapterY + (endAdapterY - startAdapterY) * this.target.shape.adapterSize
             : adapterY
       }
-      this._startAdapterAnchor.left = adapterX - Holder.ANCHOR_RADIUS
-      this._startAdapterAnchor.top = adapterY - Holder.ANCHOR_RADIUS
-      this._endAdapterAnchor.left = adapterEndX - Holder.ANCHOR_RADIUS
-      this._endAdapterAnchor.top = adapterEndY - Holder.ANCHOR_RADIUS
+      this._startAdapterAnchor.left = adapterX - Holder.ANCHOR_RADIUS / this.editor.zoom
+      this._startAdapterAnchor.top = adapterY - Holder.ANCHOR_RADIUS / this.editor.zoom
+      this._endAdapterAnchor.left = adapterEndX - Holder.ANCHOR_RADIUS / this.editor.zoom
+      this._endAdapterAnchor.top = adapterEndY - Holder.ANCHOR_RADIUS / this.editor.zoom
     }
 
     if (this._target instanceof Connector) {
-      this._sourceConnectionAnchor.left = this._target.start.x - this._target.left - Holder.ANCHOR_RADIUS
-      this._sourceConnectionAnchor.top = this._target.start.y - this._target.top - Holder.ANCHOR_RADIUS
+      this._sourceConnectionAnchor.left = this._target.start.x - this._target.left - Holder.ANCHOR_RADIUS / this.editor.zoom
+      this._sourceConnectionAnchor.top = this._target.start.y - this._target.top - Holder.ANCHOR_RADIUS / this.editor.zoom
       //console.log(`left = ${this._sourceConnectionAnchor.left}, top = ${this._sourceConnectionAnchor.top}`)
-      this._targetConnectionAnchor.left = this._target.end.x - this._target.left - Holder.ANCHOR_RADIUS
-      this._targetConnectionAnchor.top = this._target.end.y - this._target.top - Holder.ANCHOR_RADIUS
+      this._targetConnectionAnchor.left = this._target.end.x - this._target.left - Holder.ANCHOR_RADIUS / this.editor.zoom
+      this._targetConnectionAnchor.top = this._target.end.y - this._target.top - Holder.ANCHOR_RADIUS / this.editor.zoom
       this._startCubicControllerLine.start = new Point2(
-        this._sourceConnectionAnchor.left + Holder.ANCHOR_RADIUS,
-        this._sourceConnectionAnchor.top + Holder.ANCHOR_RADIUS,
+        this._sourceConnectionAnchor.left + Holder.ANCHOR_RADIUS / this.editor.zoom,
+        this._sourceConnectionAnchor.top + Holder.ANCHOR_RADIUS / this.editor.zoom,
       )
       this._startCubicControllerLine.end = new Point2(
-        this._sourceConnectionAnchor.left + Holder.ANCHOR_RADIUS + this._target.curveStartModifier.x * this._target.width,
-        this._sourceConnectionAnchor.top + Holder.ANCHOR_RADIUS + this._target.curveStartModifier.y * this._target.height,
+        this._sourceConnectionAnchor.left + Holder.ANCHOR_RADIUS / this.editor.zoom + this._target.curveStartModifier.x * this._target.width,
+        this._sourceConnectionAnchor.top + Holder.ANCHOR_RADIUS / this.editor.zoom + this._target.curveStartModifier.y * this._target.height,
       )
       //console.log(`${this._startCubicControllerLine.start.x}  ${this._startCubicControllerLine.start.y}  ${this._startCubicControllerLine.end.x}  ${this._startCubicControllerLine.end.y}`)
       this._endCubicControllerLine.start = new Point2(
-        this._targetConnectionAnchor.left + Holder.ANCHOR_RADIUS,
-        this._targetConnectionAnchor.top + Holder.ANCHOR_RADIUS,
+        this._targetConnectionAnchor.left + Holder.ANCHOR_RADIUS / this.editor.zoom,
+        this._targetConnectionAnchor.top + Holder.ANCHOR_RADIUS / this.editor.zoom,
       )
       this._endCubicControllerLine.end = new Point2(
-        this._targetConnectionAnchor.left + Holder.ANCHOR_RADIUS + this._target.curveEndModifier.x * this._target.width,
-        this._targetConnectionAnchor.top + Holder.ANCHOR_RADIUS + this._target.curveEndModifier.y * this._target.height,
+        this._targetConnectionAnchor.left + Holder.ANCHOR_RADIUS / this.editor.zoom + this._target.curveEndModifier.x * this._target.width,
+        this._targetConnectionAnchor.top + Holder.ANCHOR_RADIUS / this.editor.zoom + this._target.curveEndModifier.y * this._target.height,
       )
       //console.log(`${this._endCubicControllerLine.start.x}  ${this._endCubicControllerLine.start.y}  ${this._endCubicControllerLine.end.x}  ${this._endCubicControllerLine.end.y}`)
-      this._startCubicControllerAnchor.left = this._startCubicControllerLine.end.x - Holder.ANCHOR_RADIUS
-      this._startCubicControllerAnchor.top = this._startCubicControllerLine.end.y - Holder.ANCHOR_RADIUS
-      this._endCubicControllerAnchor.left = this._endCubicControllerLine.end.x - Holder.ANCHOR_RADIUS
-      this._endCubicControllerAnchor.top = this._endCubicControllerLine.end.y - Holder.ANCHOR_RADIUS
+      this._startCubicControllerAnchor.left = this._startCubicControllerLine.end.x - Holder.ANCHOR_RADIUS / this.editor.zoom
+      this._startCubicControllerAnchor.top = this._startCubicControllerLine.end.y - Holder.ANCHOR_RADIUS / this.editor.zoom
+      this._endCubicControllerAnchor.left = this._endCubicControllerLine.end.x - Holder.ANCHOR_RADIUS / this.editor.zoom
+      this._endCubicControllerAnchor.top = this._endCubicControllerLine.end.y - Holder.ANCHOR_RADIUS / this.editor.zoom
     }
     if (this._target instanceof LineEntity) {
       switch (this._target.lineType) {
         case LineType.LEFT_TOP:
-          this._startAnchor.left = -Holder.ANCHOR_RADIUS
-          this._startAnchor.top = -Holder.ANCHOR_RADIUS
-          this._endAnchor.left = this._target.width - Holder.ANCHOR_RADIUS
-          this._endAnchor.top = this._target.height - Holder.ANCHOR_RADIUS
+          this._startAnchor.left = -Holder.ANCHOR_RADIUS / this.editor.zoom
+          this._startAnchor.top = -Holder.ANCHOR_RADIUS / this.editor.zoom
+          this._endAnchor.left = this._target.width - Holder.ANCHOR_RADIUS / this.editor.zoom
+          this._endAnchor.top = this._target.height - Holder.ANCHOR_RADIUS / this.editor.zoom
           break
         case LineType.LEFT_BOTTOM:
-          this._startAnchor.left = -Holder.ANCHOR_RADIUS
-          this._startAnchor.top = this._target.height - -Holder.ANCHOR_RADIUS
-          this._endAnchor.left = this._target.width - Holder.ANCHOR_RADIUS
-          this._endAnchor.top = -Holder.ANCHOR_RADIUS
+          this._startAnchor.left = -Holder.ANCHOR_RADIUS / this.editor.zoom
+          this._startAnchor.top = this._target.height - -Holder.ANCHOR_RADIUS / this.editor.zoom
+          this._endAnchor.left = this._target.width - Holder.ANCHOR_RADIUS / this.editor.zoom
+          this._endAnchor.top = -Holder.ANCHOR_RADIUS / this.editor.zoom
           break
         case LineType.RIGHT_TOP:
-          this._startAnchor.left = this._target.width - Holder.ANCHOR_RADIUS
-          this._startAnchor.top = -Holder.ANCHOR_RADIUS
-          this._endAnchor.left = -Holder.ANCHOR_RADIUS
-          this._endAnchor.top = this._target.height - Holder.ANCHOR_RADIUS
+          this._startAnchor.left = this._target.width - Holder.ANCHOR_RADIUS / this.editor.zoom
+          this._startAnchor.top = -Holder.ANCHOR_RADIUS / this.editor.zoom
+          this._endAnchor.left = -Holder.ANCHOR_RADIUS / this.editor.zoom
+          this._endAnchor.top = this._target.height - Holder.ANCHOR_RADIUS / this.editor.zoom
           break
         case LineType.RIGHT_BOTTOM:
-          this._startAnchor.left = this._target.width - Holder.ANCHOR_RADIUS
-          this._startAnchor.top = this._target.height - Holder.ANCHOR_RADIUS
-          this._endAnchor.left = -Holder.ANCHOR_RADIUS
-          this._endAnchor.top = -Holder.ANCHOR_RADIUS
+          this._startAnchor.left = this._target.width - Holder.ANCHOR_RADIUS / this.editor.zoom
+          this._startAnchor.top = this._target.height - Holder.ANCHOR_RADIUS / this.editor.zoom
+          this._endAnchor.left = -Holder.ANCHOR_RADIUS / this.editor.zoom
+          this._endAnchor.top = -Holder.ANCHOR_RADIUS / this.editor.zoom
           break
       }
     }
@@ -403,11 +403,11 @@ export class Holder extends Control {
           const orthogonalPoint = orthogonalPoints[orthogonalDivideAnchor.index]
           const nextOrthogonalPoint = orthogonalPoints[orthogonalDivideAnchor.index + 1]
           if (orthogonalDivideAnchor.isLeft) {
-            orthogonalDivideAnchor.left = orthogonalPoint.x * 0.75 + nextOrthogonalPoint.x * 0.25 - Holder.ANCHOR_RADIUS
-            orthogonalDivideAnchor.top = orthogonalPoint.y * 0.75 + nextOrthogonalPoint.y * 0.25 - Holder.ANCHOR_RADIUS
+            orthogonalDivideAnchor.left = orthogonalPoint.x * 0.75 + nextOrthogonalPoint.x * 0.25 - Holder.ANCHOR_RADIUS / this.editor.zoom
+            orthogonalDivideAnchor.top = orthogonalPoint.y * 0.75 + nextOrthogonalPoint.y * 0.25 - Holder.ANCHOR_RADIUS / this.editor.zoom
           } else {
-            orthogonalDivideAnchor.left = orthogonalPoint.x * 0.25 + nextOrthogonalPoint.x * 0.75 - Holder.ANCHOR_RADIUS
-            orthogonalDivideAnchor.top = orthogonalPoint.y * 0.25 + nextOrthogonalPoint.y * 0.75 - Holder.ANCHOR_RADIUS
+            orthogonalDivideAnchor.left = orthogonalPoint.x * 0.25 + nextOrthogonalPoint.x * 0.75 - Holder.ANCHOR_RADIUS / this.editor.zoom
+            orthogonalDivideAnchor.top = orthogonalPoint.y * 0.25 + nextOrthogonalPoint.y * 0.75 - Holder.ANCHOR_RADIUS / this.editor.zoom
           }
         }
       })
@@ -415,8 +415,8 @@ export class Holder extends Control {
         if (orthogonalPoints.length > orthogonalMovementAnchor.index + 1) {
           const orthogonalPoint = orthogonalPoints[orthogonalMovementAnchor.index]
           const nextOrthogonalPoint = orthogonalPoints[orthogonalMovementAnchor.index + 1]
-          orthogonalMovementAnchor.left = (orthogonalPoint.x + nextOrthogonalPoint.x) / 2 - Holder.ANCHOR_RADIUS
-          orthogonalMovementAnchor.top = (orthogonalPoint.y + nextOrthogonalPoint.y) / 2 - Holder.ANCHOR_RADIUS
+          orthogonalMovementAnchor.left = (orthogonalPoint.x + nextOrthogonalPoint.x) / 2 - Holder.ANCHOR_RADIUS / this.editor.zoom
+          orthogonalMovementAnchor.top = (orthogonalPoint.y + nextOrthogonalPoint.y) / 2 - Holder.ANCHOR_RADIUS / this.editor.zoom
           //console.log(`pos= ${orthogonalMovementAnchor.left}, ${orthogonalMovementAnchor.top}`)
         }
       })
@@ -440,14 +440,14 @@ export class Holder extends Control {
         orthogonalDivideAnchor2.scale = new Scale(1 / this.editor.zoom, 1 / this.editor.zoom)
         orthogonalMovementAnchor.scale = new Scale(1 / this.editor.zoom, 1 / this.editor.zoom)
         orthogonalMovementAnchor.target = this._target
-        orthogonalMovementAnchor.left = (orthogonalPoint.x + nextOrthogonalPoint.x) / 2 - Holder.ANCHOR_RADIUS
-        orthogonalMovementAnchor.top = (orthogonalPoint.y + nextOrthogonalPoint.y) / 2 - Holder.ANCHOR_RADIUS
+        orthogonalMovementAnchor.left = (orthogonalPoint.x + nextOrthogonalPoint.x) / 2 - Holder.ANCHOR_RADIUS / this.editor.zoom
+        orthogonalMovementAnchor.top = (orthogonalPoint.y + nextOrthogonalPoint.y) / 2 - Holder.ANCHOR_RADIUS / this.editor.zoom
         orthogonalDivideAnchor1.target = this._target
-        orthogonalDivideAnchor1.left = orthogonalPoint.x * 0.75 + nextOrthogonalPoint.x * 0.25 - Holder.ANCHOR_RADIUS
-        orthogonalDivideAnchor1.top = orthogonalPoint.y * 0.75 + nextOrthogonalPoint.y * 0.25 - Holder.ANCHOR_RADIUS
+        orthogonalDivideAnchor1.left = orthogonalPoint.x * 0.75 + nextOrthogonalPoint.x * 0.25 - Holder.ANCHOR_RADIUS / this.editor.zoom
+        orthogonalDivideAnchor1.top = orthogonalPoint.y * 0.75 + nextOrthogonalPoint.y * 0.25 - Holder.ANCHOR_RADIUS / this.editor.zoom
         orthogonalDivideAnchor2.target = this._target
-        orthogonalDivideAnchor2.left = orthogonalPoint.x * 0.25 + nextOrthogonalPoint.x * 0.75 - Holder.ANCHOR_RADIUS
-        orthogonalDivideAnchor2.top = orthogonalPoint.y * 0.25 + nextOrthogonalPoint.y * 0.75 - Holder.ANCHOR_RADIUS
+        orthogonalDivideAnchor2.left = orthogonalPoint.x * 0.25 + nextOrthogonalPoint.x * 0.75 - Holder.ANCHOR_RADIUS / this.editor.zoom
+        orthogonalDivideAnchor2.top = orthogonalPoint.y * 0.25 + nextOrthogonalPoint.y * 0.75 - Holder.ANCHOR_RADIUS / this.editor.zoom
         this._orthogonalDivideAnchors.push(orthogonalDivideAnchor1)
         this._orthogonalDivideAnchors.push(orthogonalDivideAnchor2)
         this._orthogonalMovementAnchors.push(orthogonalMovementAnchor)
