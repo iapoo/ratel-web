@@ -1201,8 +1201,9 @@ const Header: FC<HeaderProps> = ({
     { value: 1.25, label: '125%' },
     { value: 1.5, label: '150%' },
     { value: 2, label: '200%' },
-    { value: 3, label: '300%' },
-    { value: 4, label: '400%' },
+    // Looks skia can't support such surface and we need to fix this some later
+    // { value: 3, label: '300%' },
+    // { value: 4, label: '400%' },
   ]
 
   const handleShowGrid = () => {
