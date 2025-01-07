@@ -77,6 +77,14 @@ interface Pane {
   initialized: boolean
   scrollLeft: number
   scrollTop: number
+  viewWidth: number
+  viewHeight: number
+  contentWidth: number
+  contentHeight: number
+  editorWorkWidth: number
+  editorWorkHeight: number
+  editorHorizontalSpace: number
+  editorVerticalSpace: number
 }
 
 interface ContentProps {
@@ -107,6 +115,14 @@ const initialPanes: Pane[] = [
     initialized: false,
     scrollLeft: 0,
     scrollTop: 0,
+    viewWidth: 0,
+    viewHeight: 0,
+    contentWidth: 0,
+    contentHeight: 0,
+    editorWorkWidth: 0,
+    editorWorkHeight: 0,
+    editorHorizontalSpace: 0,
+    editorVerticalSpace: 0,
   },
   {
     title: DOCUMENT_PREFIX + '2',
@@ -116,6 +132,14 @@ const initialPanes: Pane[] = [
     initialized: false,
     scrollLeft: 0,
     scrollTop: 0,
+    viewWidth: 0,
+    viewHeight: 0,
+    contentWidth: 0,
+    contentHeight: 0,
+    editorWorkWidth: 0,
+    editorWorkHeight: 0,
+    editorHorizontalSpace: 0,
+    editorVerticalSpace: 0,
   },
   {
     title: DOCUMENT_PREFIX + '3',
@@ -125,6 +149,14 @@ const initialPanes: Pane[] = [
     initialized: false,
     scrollLeft: 0,
     scrollTop: 0,
+    viewWidth: 0,
+    viewHeight: 0,
+    contentWidth: 0,
+    contentHeight: 0,
+    editorWorkWidth: 0,
+    editorWorkHeight: 0,
+    editorHorizontalSpace: 0,
+    editorVerticalSpace: 0,
   },
 ]
 
@@ -287,7 +319,7 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
     }
   })
 
-  const updateEditorSize = (panes: Pane[]) => {
+  const updateEditorSize = (panes: Pane[], fromZoomChange: boolean) => {
     const contentContainer = document.getElementById('content-container')
     if (contentContainer) {
       const horizontalSpace = contentContainer.clientWidth - MIN_VISUAL_SIZE
@@ -336,18 +368,43 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
         setEditorHeight(newEditorHeight)
       }
     }
-    const currentPane = findCurrentPane(panes)
-    if (contentContainer && currentPane) {
+    const currentPane = findCurrentPane(panesRef.current)
+    if (contentContainer && currentPane && Utils.currentEditor) {
+      const oldEditorWorkWidth = currentPane.editorWorkWidth
+      const oldEditorWorkHeight = currentPane.editorWorkHeight
+      const oldEditorHorizontalSpace = currentPane.editorHorizontalSpace
+      const oldEditorVerticalSpace = currentPane.editorVerticalSpace
+      const oldScrollLeft = currentPane.scrollLeft
+      const oldScrollTop = currentPane.scrollTop
       if (currentPane.initialized) {
-        if (contentContainer.scrollWidth > contentContainer.clientWidth) {
-          contentContainer.scrollLeft = currentPane.scrollLeft
+        if (fromZoomChange) {
+          const oldScreenCenterX = oldScrollLeft + contentContainer.clientWidth / 2
+          const oldEditorRatioX = (oldScreenCenterX - oldEditorHorizontalSpace) / oldEditorWorkWidth
+          const oldScreenCenterY = oldScrollTop + contentContainer.clientHeight / 2
+          const oldEditorRatioY = (oldScreenCenterY - oldEditorVerticalSpace) / oldEditorWorkHeight
+          const newScrollLeft = Utils.currentEditor.workWidth * oldEditorRatioX + Utils.currentEditor.horizontalSpace - contentContainer.clientWidth * 0.5
+          const newScrollTop = Utils.currentEditor.workHeight * oldEditorRatioY + Utils.currentEditor.verticalSpace - contentContainer.clientHeight * 0.5
+          if (contentContainer.scrollWidth > contentContainer.clientWidth) {
+            contentContainer.scrollLeft = newScrollLeft //currentPane.scrollLeft
+          } else {
+            contentContainer.scrollLeft = 0
+          }
+          if (contentContainer.scrollHeight > contentContainer.clientHeight) {
+            contentContainer.scrollTop = newScrollTop // currentPane.scrollTop
+          } else {
+            contentContainer.scrollTop = 0
+          }
         } else {
-          contentContainer.scrollLeft = 0
-        }
-        if (contentContainer.scrollHeight > contentContainer.clientHeight) {
-          contentContainer.scrollTop = currentPane.scrollTop
-        } else {
-          contentContainer.scrollTop = 0
+          if (contentContainer.scrollWidth > contentContainer.clientWidth) {
+            contentContainer.scrollLeft = currentPane.scrollLeft
+          } else {
+            contentContainer.scrollLeft = 0
+          }
+          if (contentContainer.scrollHeight > contentContainer.clientHeight) {
+            contentContainer.scrollTop = currentPane.scrollTop
+          } else {
+            contentContainer.scrollTop = 0
+          }
         }
       } else {
         if (contentContainer.scrollWidth > contentContainer.clientWidth) {
@@ -371,6 +428,12 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
         // newPane.initialized = true
         // setPanes(newPanes)
       }
+      currentPane.contentWidth = Math.round(Utils.currentEditor.width + Editor.SHADOW_SIZE * 2)
+      currentPane.contentHeight = Math.round(Utils.currentEditor.height + Editor.SHADOW_SIZE * 2)
+      currentPane.editorWorkWidth = Utils.currentEditor.workWidth
+      currentPane.editorWorkHeight = Utils.currentEditor.workHeight
+      currentPane.editorHorizontalSpace = Utils.currentEditor.horizontalSpace
+      currentPane.editorVerticalSpace = Utils.currentEditor.verticalSpace
     }
   }
 
@@ -431,7 +494,7 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
     //setPaneTitle(newPanes[0].title)
     Utils.loadData = loadData
     Utils.checkIfModified = checkIfDocumentModified
-    updateEditorSize(newPanes)
+    updateEditorSize(newPanes, false)
     updateScroll()
     checkIfDocumentModified(false)
     oldEditor?.removeSelectionChange(handleSelectionChange)
@@ -490,7 +553,7 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
     panes.forEach((pane) => {
       Utils.editors.push(pane.editor!)
     })
-    updateEditorSize(panes)
+    updateEditorSize(panes, false)
 
     //Need to hide toolbar & terminate editting operations here
     setTextToolbarVisible(false)
@@ -523,6 +586,14 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
         initialized: false,
         scrollLeft: 0,
         scrollTop: 0,
+        viewWidth: 0,
+        viewHeight: 0,
+        contentWidth: 0,
+        contentHeight: 0,
+        editorWorkWidth: 0,
+        editorWorkHeight: 0,
+        editorHorizontalSpace: 0,
+        editorVerticalSpace: 0,
       }
       const canvasId = 'editor-' + pane.key
       const canvas = document.createElement('canvas')
@@ -531,6 +602,8 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
       canvas.id = canvasId
       const editor = new Editor(canvas)
       pane.editor = editor
+      pane.editorWorkWidth = editor.width
+      pane.editorWorkHeight = editor.height
       editor.key = pane.key
       //editor.origWidth = sheetData.width
       //editor.origHeight = sheetData.height
@@ -975,6 +1048,14 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
       initialized: false,
       scrollLeft: 0,
       scrollTop: 0,
+      viewWidth: 0,
+      viewHeight: 0,
+      contentWidth: 0,
+      contentHeight: 0,
+      editorWorkWidth: 0,
+      editorWorkHeight: 0,
+      editorHorizontalSpace: 0,
+      editorVerticalSpace: 0,
     }
 
     //It may be called multiple times since event is listened by multiple editor
@@ -995,6 +1076,8 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
     const editor = fromEditor ? fromEditor : new Editor(canvas)
     editor.theme = ThemeUtils.getDocumentTheme(documentThemeName)
     pane.editor = editor
+    pane.editorWorkWidth = editor.width
+    pane.editorWorkHeight = editor.height
     editor.key = pane.key
     editor.title = pane.title
     // @ts-ignore
@@ -1243,7 +1326,7 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleEditorSizeChange = (event: EditorEvent) => {
-    updateEditorSize(panes)
+    updateEditorSize(panes, true)
   }
 
   const handleEditorOperationEvent = (event: EditorOperationEvent) => {
@@ -2517,6 +2600,14 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
         initialized: pane.initialized,
         scrollLeft: pane.scrollLeft,
         scrollTop: pane.scrollTop,
+        viewWidth: pane.viewWidth,
+        viewHeight: pane.viewHeight,
+        contentWidth: pane.contentWidth,
+        contentHeight: pane.contentHeight,
+        editorWidth: pane.editorWorkWidth,
+        editorHeight: pane.editorWorkHeight,
+        editorHorizontalSpace: pane.editorHorizontalSpace,
+        editorVerticalSpace: pane.editorVerticalSpace,
       }
       newPanes.push(newPane)
     })

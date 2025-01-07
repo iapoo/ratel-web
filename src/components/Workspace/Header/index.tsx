@@ -1533,8 +1533,7 @@ const Header: FC<HeaderProps> = ({
         }
       }
       if (update) {
-        setZoom(zoomOptions[zoomIndex].value)
-        Utils.currentEditor.zoom = zoomOptions[zoomIndex].value
+        handleZoom(zoomOptions[zoomIndex].value)
       }
     }
   }
