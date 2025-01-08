@@ -2604,8 +2604,8 @@ const Content: FC<ContentProps> = ({ onEditorChange, onMyShapesUpdated, x, y, sh
         viewHeight: pane.viewHeight,
         contentWidth: pane.contentWidth,
         contentHeight: pane.contentHeight,
-        editorWidth: pane.editorWorkWidth,
-        editorHeight: pane.editorWorkHeight,
+        editorWorkWidth: pane.editorWorkWidth,
+        editorWorkHeight: pane.editorWorkHeight,
         editorHorizontalSpace: pane.editorHorizontalSpace,
         editorVerticalSpace: pane.editorVerticalSpace,
       }
